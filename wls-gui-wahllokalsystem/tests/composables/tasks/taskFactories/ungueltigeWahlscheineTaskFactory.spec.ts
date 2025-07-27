@@ -18,8 +18,7 @@ vi.mock("@/stores/wahlbezirkStore.ts", () => ({
 }));
 
 describe("ungueltigeWahlscheineTaskFactory.ts", () => {
-  const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
-    useTasksTestDataFactory();
+  const { prepareTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useUngueltigeWahlscheineTaskFactory();
 
   beforeEach(() => {
@@ -41,20 +40,30 @@ describe("ungueltigeWahlscheineTaskFactory.ts", () => {
     ])(
       "should_return'$taskCreatedAsString'Task_when_calledWithWahlbezirkArt$wahlbezirkArt",
       ({ wahlbezirkArt, tasksCreated }) => {
-        const extendedWahlMetaDataOne = createExtendedWahlMetaData();
-        const extendedWahlMetaDataTwo = createExtendedWahlMetaData();
         const taskFactoryContext: TaskFactoryContext =
-          prepareTaskFactoryContext()
-            .extendedWahlMetaData([
-              extendedWahlMetaDataOne,
-              extendedWahlMetaDataTwo,
-            ])
-            .wahlbezirkArt(wahlbezirkArt)
-            .build();
+          prepareTaskFactoryContext().wahlbezirkArt(wahlbezirkArt).build();
         const result = createTasks(taskFactoryContext);
 
         expect(result.length).toStrictEqual(tasksCreated);
       }
     );
+
+    it("should_returnOneTaskWithExpectedCallback_when_calledWithCorrectWahlbezirkArt", () => {
+      mockDefinitions.initUngueltigeWahlscheine.mockReturnValue(
+        Promise.resolve()
+      );
+
+      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
+        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      const result = createTasks(taskFactoryContext);
+
+      expect(result.length).toStrictEqual(1);
+
+      result[0].callback();
+
+      expect(mockDefinitions.initUngueltigeWahlscheine).toHaveBeenCalledOnce();
+    });
   });
 });

@@ -46,6 +46,11 @@ class ZurueckweisungsgrundConverterTest {
         }
 
         @Test
+        void should_convertToEmptyArray_when_givenNull() {
+            Assertions.assertThat(unitUnderTest.convertToEntityAttribute("")).isEqualTo(new Zurueckweisungsgrund[0]);
+        }
+
+        @Test
         void should_convertCorrectly_when_givenValidArguments() {
             val argument = "ZUGELASSEN,GEGENSTAND_IM_UMSCHLAG,NICHT_WAHLBERECHTIGT";
 

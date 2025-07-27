@@ -1,3 +1,3 @@
 alter table ZURUECKWEISEGRUENDE
-    modify ZURUECKWEISEGRUENDE null
+    alter column ZURUECKWEISEGRUENDE set null
 

@@ -263,6 +263,7 @@ services:
     environment:
       - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
       - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
+      - CONFIG_MAP5XXTO400=false
       - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
@@ -296,6 +297,7 @@ services:
     environment:
       - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
       - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
+      - CONFIG_MAP5XXTO400=false
       - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}

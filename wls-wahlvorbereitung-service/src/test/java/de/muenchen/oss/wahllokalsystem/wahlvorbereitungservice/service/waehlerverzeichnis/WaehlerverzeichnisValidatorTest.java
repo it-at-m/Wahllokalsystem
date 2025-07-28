@@ -49,7 +49,8 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
+                    .isSameAs(mockedException);
         }
 
         @Test
@@ -60,7 +61,8 @@ class WaehlerverzeichnisValidatorTest {
             val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
             Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference)).isSameAs(mockedException);
+            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
+                    .isSameAs(mockedException);
         }
 
         private BezirkIDUndWaehlerverzeichnisNummer initValid() {

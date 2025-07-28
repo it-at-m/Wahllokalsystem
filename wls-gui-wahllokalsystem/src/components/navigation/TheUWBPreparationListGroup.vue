@@ -1,9 +1,9 @@
 <template>
-  <v-list-group value="Wahlvorbereitung">
+  <v-list-group value="Wahl">
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
-        title="Wahlvorbereitung"
+        title="Wahl"
       />
     </template>
     <v-list-item

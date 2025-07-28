@@ -26,8 +26,10 @@
           </tr>
           <tr>
             <td><b>Zurückweisungsgrund</b></td>
-            <td />
-            <td />
+            <td
+              v-for="(_, index) in sumGueltig"
+              :key="index"
+            />
           </tr>
           <tr
             v-for="(beanstandung, index) in ungueltigeeinzelsummen"
@@ -92,18 +94,18 @@ function calculateSums() {
       };
     });
 
-    wahlen.value.forEach((wahl) => {
+    wahlen.value.forEach((wahl, wahlIndex) => {
       wahl.beanstandeteWahlbriefe.forEach((beanstandeteWahlbrief) => {
         if (wahlen.value) {
           if (beanstandeteWahlbrief === ZurueckweisungsgrundEnum.Zugelassen) {
-            sumGueltig.value[wahlen.value.indexOf(wahl)] += 1;
+            sumGueltig.value[wahlIndex] += 1;
           } else {
-            sumUngueltig.value[wahlen.value.indexOf(wahl)] += 1;
+            sumUngueltig.value[wahlIndex] += 1;
             tempUngueltigeEinzelstimmen[
               gruendeUngueltig.findIndex(
                 (value) => value === beanstandeteWahlbrief
               )
-            ].ungueltig[wahlen.value.indexOf(wahl)] += 1;
+            ].ungueltig[wahlIndex] += 1;
           }
         }
       });

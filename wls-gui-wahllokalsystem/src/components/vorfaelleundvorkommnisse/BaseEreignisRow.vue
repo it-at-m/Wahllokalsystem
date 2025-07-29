@@ -11,7 +11,6 @@
         <v-col cols="7"
           ><base-date-input
             v-model="dateOnly"
-            :rules="[REQUIRED]"
             label="Datum"
         /></v-col>
       </v-row>

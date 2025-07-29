@@ -6,7 +6,12 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
-import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
+import {
+  enableAutoUnmount,
+  flushPromises,
+  mount,
+  VueWrapper,
+} from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
   afterEach,
@@ -20,6 +25,7 @@ import {
 import { nextTick } from "vue";
 
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
+import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -117,59 +123,6 @@ describe("TheEreignisseRow.vue", () => {
         getSnapshotFilename(context)
       );
     });
-    it("should_showErrorMessage_when_beschreibungIsNotSetCorrectly", async () => {
-      const ereignisStore = useEreignisStore();
-      const ereigniseintraege = [] as Ereignis[];
-
-      const date = new Date();
-      date.setHours(12, 0);
-      ereigniseintraege.push(
-        EreignisBuilder.createComplete().withUhrzeit(date).withBeschreibung(``)
-      );
-
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
-
-      await nextTick();
-
-      // Triggern des Updates der VTextarea mit weniger als 4 Zeichen
-      const textarea = wrapper.findComponent({ name: "VTextarea" });
-      expect(textarea.exists()).toBe(true); // Überprüfen, ob die Textarea existiert
-      await textarea.setValue("abc"); // weniger als 4 Zeichen
-
-      await nextTick();
-
-      // Überprüfen, ob die Fehlermeldung angezeigt wird
-      const errorMessage = wrapper.get(".v-messages__message");
-      expect(errorMessage.text()).toContain("Minimale Länge ist 4 Zeichen.");
-    });
-
-    it("should_showErrorMessage_when_uhrzeitIsNotSetCorrectly", async () => {
-      const ereignisStore = useEreignisStore();
-      const ereigniseintraege = [] as Ereignis[];
-
-      const date = new Date();
-      date.setHours(12, 0);
-      ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Beschreibung`)
-      );
-
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
-
-      await nextTick();
-
-      // Triggern des Updates des VTextfield mit undefined
-      const textfield = wrapper.findComponent({ name: "v-text-field" });
-      expect(textfield.exists()).toBe(true); // Überprüfen, ob das Textfeld existiert
-      await textfield.setValue(undefined);
-
-      await nextTick();
-
-      // Überprüfen, ob die Fehlermeldung angezeigt wird
-      const errorMessage = wrapper.get(".v-messages__message");
-      expect(errorMessage.text()).toContain("Feld darf nicht leer sein.");
-    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
@@ -189,12 +142,10 @@ describe("TheEreignisseRow.vue", () => {
 
       await nextTick();
 
-      const deleteIcon = wrapper.findComponent(
-        '[data-test="delete-ereignis-icon"]'
-      );
-      expect(deleteIcon.exists()).toBe(true);
+      const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
+      baseEreignisRow.vm.$emit("delete");
 
-      await deleteIcon.trigger("click");
+      await flushPromises();
 
       const deleteDialog = wrapper.findComponent(YesNoDialog);
       expect(deleteDialog.exists()).toBe(true);
@@ -205,38 +156,6 @@ describe("TheEreignisseRow.vue", () => {
       expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
         0
       );
-    });
-
-    it("should_triggerUpdateUhrzeitInStore_when_uhrzeitOfEreignisWasChanged", async () => {
-      const ereignisStore = useEreignisStore();
-
-      const ereigniseintraege = [] as Ereignis[];
-      for (let i = 0; i < 5; i++) {
-        const date = new Date();
-        date.setHours(i, 0);
-        ereigniseintraege.push(
-          EreignisBuilder.createComplete()
-            .withUhrzeit(date)
-            .withBeschreibung(`Vorfall Nr.: ${i}`)
-        );
-      }
-
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
-
-      await nextTick();
-
-      const indexOfTimeInputForChange = 3;
-      const firstEreignisTimeinput = wrapper.findAllComponents(
-        '[data-test="baseTimeInput"]'
-      )[indexOfTimeInputForChange];
-      const newValue = new Date();
-      await firstEreignisTimeinput.setValue(newValue);
-
-      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledWith(
-        newValue,
-        indexOfTimeInputForChange
-      );
-      expect(ereignisStore.updateUhrzeitByIndex).toHaveBeenCalledTimes(1);
     });
   });
 });

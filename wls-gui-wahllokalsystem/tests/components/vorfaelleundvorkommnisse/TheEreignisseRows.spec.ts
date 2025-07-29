@@ -25,13 +25,13 @@ import {
 import { nextTick } from "vue";
 
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
-import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
+import BaseEreignisRows from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
+import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
-describe("TheEreignisseRow.vue", () => {
+describe("TheEreignisseRows.vue", () => {
   let wrapper: VueWrapper;
   vi.stubGlobal("visualViewport", new EventTarget());
   // Mock the ResizeObserver
@@ -48,7 +48,7 @@ describe("TheEreignisseRow.vue", () => {
   });
 
   beforeEach(() => {
-    wrapper = mount(TheEreignisseRow, {
+    wrapper = mount(TheEreignisseRows, {
       global: {
         plugins: [
           createTestingPinia({
@@ -142,7 +142,7 @@ describe("TheEreignisseRow.vue", () => {
 
       await nextTick();
 
-      const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
+      const baseEreignisRow = wrapper.findComponent(BaseEreignisRows);
       baseEreignisRow.vm.$emit("delete");
 
       await flushPromises();

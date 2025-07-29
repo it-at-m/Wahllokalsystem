@@ -7,7 +7,7 @@
     <v-card-title>Dokumentation eingetretener Ereignisse</v-card-title>
     <v-card-text>
       <v-form v-model="ereignisseValidForm">
-        <the-ereignisse-row />
+        <the-ereignisse-rows />
       </v-form>
     </v-card-text>
     <v-card-actions>
@@ -42,7 +42,7 @@ import {
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
-import TheEreignisseRow from "@/components/vorfaelleundvorkommnisse/TheEreignisseRow.vue";
+import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();

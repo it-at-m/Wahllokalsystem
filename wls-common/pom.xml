@@ -324,6 +324,30 @@
                 <role>developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>vjohnslhm</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/vjohnslhm</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>DanielOber</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/DanielOber</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>ThoGro</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/ThoGro</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
 </project>

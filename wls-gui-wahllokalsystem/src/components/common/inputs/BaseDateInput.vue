@@ -12,24 +12,22 @@
 import { computed } from "vue";
 import { VTextField } from "vuetify/components";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+
+const { toIsoDate } = useDateTimeFormatter();
+
 const model = defineModel<Date>();
 
-const formatedDate = computed(() => {
-  return (
-    model.value?.toLocaleDateString("en-CA", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }) ?? null
-  );
-});
+const formatedDate = computed(() =>
+  model.value ? toIsoDate(model.value) : null
+);
 
 function onClearClicked() {
   model.value = undefined;
 }
 
 function onModelValueChanged(newValue?: string) {
-  if (newValue) {
+  if (newValue && model.value) {
     const valueAsDate = new Date(newValue);
     const cloneOfModel = new Date(model.value);
     cloneOfModel.setFullYear(

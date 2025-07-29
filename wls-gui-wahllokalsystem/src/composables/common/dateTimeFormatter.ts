@@ -91,9 +91,18 @@ export function useDateTimeFormatter() {
     }
   }
 
+  function toIsoDate(dateToFormat: Date) {
+    return dateToFormat.toLocaleDateString("en-CA", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
   return {
     time,
     toHhMm,
+    toIsoDate,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,

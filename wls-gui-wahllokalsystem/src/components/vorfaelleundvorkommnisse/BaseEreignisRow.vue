@@ -12,6 +12,7 @@
           ><base-date-input
             v-model="dateOnly"
             :rules="[REQUIRED]"
+            label="Datum"
         /></v-col>
       </v-row>
     </v-col>
@@ -44,7 +45,7 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { PropType } from "vue";
 
 import { computed, watch } from "vue";
-import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
+import { VCol, VIcon, VRow, VTextarea, VTextField } from "vuetify/components";
 
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";

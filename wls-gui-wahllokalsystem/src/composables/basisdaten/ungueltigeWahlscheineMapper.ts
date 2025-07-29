@@ -2,17 +2,20 @@ import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlsc
 
 const NEW_LINE = "\n";
 const VALUE_DELIMITER = ";";
+const REGEX_PART_LEADING_WHITESPACES = /^([\s"]+)/g;
+const REGEX_PART_TRAILING_WHITESPACES = /([\s"]+)$/g;
 
 export function useUngueltigeWahlscheineMapper() {
   const removeSpacesAndQuotationsCallback = (entry: string) =>
-    entry.replace(/[\s"]+/g, "");
+    entry
+      .replace(REGEX_PART_LEADING_WHITESPACES, "")
+      .replace(REGEX_PART_TRAILING_WHITESPACES, "");
 
   function toModel(
     ungueltigeWahlscheineCSVString: string
   ): UngueltigerWahlschein[] {
     return ungueltigeWahlscheineCSVString
       .split(NEW_LINE)
-      .map(removeSpacesAndQuotationsCallback)
       .map((line) => _csvLineToModel(line))
       .filter((ungueltigerWahlschein) => ungueltigerWahlschein !== undefined);
   }
@@ -21,11 +24,12 @@ export function useUngueltigeWahlscheineMapper() {
     ungueltigerWahlscheinLine: string
   ): UngueltigerWahlschein | undefined {
     const values = ungueltigerWahlscheinLine.split(VALUE_DELIMITER);
-    return values.length > 2
+    const cleanedValues = values.map(removeSpacesAndQuotationsCallback);
+    return cleanedValues.length > 2
       ? {
-          familienname: values[0],
-          vorname: values[1],
-          wahlscheinnummer: values[2],
+          familienname: cleanedValues[0],
+          vorname: cleanedValues[1],
+          wahlscheinnummer: cleanedValues[2],
         }
       : undefined;
   }

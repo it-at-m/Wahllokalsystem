@@ -1,4 +1,5 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
+import type { TestingPinia } from "@pinia/testing";
 import type { VueWrapper } from "@vue/test-utils";
 
 import { createTestingPinia } from "@pinia/testing";
@@ -10,6 +11,7 @@ import {
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 
 import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -31,6 +33,7 @@ declare module "@vue/runtime-core" {
 
 describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
   let wrapper: VueWrapper;
+  let testPinia: TestingPinia;
 
   const { prepareWahl } = useWahlTestDataFactory();
 
@@ -42,7 +45,7 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
   ];
 
   beforeEach(() => {
-    const testPinia = createTestingPinia({
+    testPinia = createTestingPinia({
       createSpy: vi.fn,
     });
 
@@ -75,6 +78,52 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
       wrapper.vm.ungueltigeeinzelsummen.forEach((row) => {
         if (row.grund === "KEIN_ORIGINAL_SCHEIN") {
           expect(row.ungueltig).toEqual([1, 0]);
+        } else {
+          expect(row.ungueltig).toEqual([0, 0]);
+        }
+      });
+    });
+
+    it("should_reCalculateSums_when_wahlenObjectChanged", async () => {
+      expect(wrapper.vm.sumGueltig).toEqual([1, 2]);
+      expect(wrapper.vm.sumUngueltig).toEqual([1, 0]);
+      wrapper.vm.ungueltigeeinzelsummen.forEach((row) => {
+        if (row.grund === "KEIN_ORIGINAL_SCHEIN") {
+          expect(row.ungueltig).toEqual([1, 0]);
+        } else {
+          expect(row.ungueltig).toEqual([0, 0]);
+        }
+      });
+      //Change wahlen
+      const changedWahlen: Wahl[] = [
+        prepareWahl()
+          .beanstandeteWahlbriefe([
+            "KEIN_ORIGINAL_SCHEIN",
+            "ZUGELASSEN",
+            "ZUGELASSEN",
+          ])
+          .build(),
+        prepareWahl()
+          .beanstandeteWahlbriefe([
+            "ZUGELASSEN",
+            "ZUGELASSEN",
+            "NICHT_WAHLBERECHTIGT",
+          ])
+          .build(),
+      ];
+
+      const wahlenStore = useWahlenStore(testPinia);
+      wahlenStore.wahlen = changedWahlen;
+
+      await nextTick();
+
+      expect(wrapper.vm.sumGueltig).toEqual([2, 2]);
+      expect(wrapper.vm.sumUngueltig).toEqual([1, 1]);
+      wrapper.vm.ungueltigeeinzelsummen.forEach((row) => {
+        if (row.grund === "KEIN_ORIGINAL_SCHEIN") {
+          expect(row.ungueltig).toEqual([1, 0]);
+        } else if (row.grund === "NICHT_WAHLBERECHTIGT") {
+          expect(row.ungueltig).toEqual([0, 1]);
         } else {
           expect(row.ungueltig).toEqual([0, 0]);
         }

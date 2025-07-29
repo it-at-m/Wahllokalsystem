@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { VCard, VCardText, VCardTitle, VTable } from "vuetify/components";
 
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
@@ -71,6 +71,14 @@ const ungueltigeeinzelsummen = ref<ZurueckweisungRow[]>([]);
 onMounted(() => {
   calculateSums();
 });
+
+watch(
+  () => wahlen.value,
+  () => {
+    calculateSums();
+  },
+  { deep: true }
+);
 
 interface ZurueckweisungRow {
   ungueltig: number[];

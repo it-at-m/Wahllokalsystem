@@ -1,21 +1,24 @@
 <template>
   <base-card-config-parameter-display
-      :config-parameter="configParameter"
-      @click="showDialog"
+    :config-parameter="configParameter"
+    @click="showDialog"
   />
-  <div ref="dialogRef" v-if="visible" >
+  <div
+    ref="dialogRef"
+    v-if="visible"
+  >
     <v-confirm-edit
-        :model-value="visible"
-        persistent
-        max-width="648px"
-        data-test="dialog-configparameter-override-wert"
-        update:model-Value="updateVisible"
-        >
-      <template v-slot:default="{actions}">
+      :model-value="visible"
+      persistent
+      max-width="648px"
+      data-test="dialog-configparameter-override-wert"
+      update:model-Value="updateVisible"
+    >
+      <template v-slot:default="{ actions }">
         <v-card
-            max-width="600"
-            style="background-color: #ffb74d"
-            :title="`Dialog Konfigurationsparameter ${ configParameter.name }`"
+          max-width="600"
+          style="background-color: #ffb74d"
+          :title="`Dialog Konfigurationsparameter ${configParameter.name}`"
         >
           <template v-slot:text>
             <v-row class="my-2 align-center">
@@ -24,30 +27,30 @@
             </v-row>
             <v-row class="my-2 align-center">
               <v-col cols="6">Wert:</v-col>
-              <v-col cols="6">{{ configParameter?.wert }}
+              <v-col cols="6"
+                >{{ configParameter?.wert }}
                 <v-card-actions>
-                  <v-btn
-                      @click="resetValue"
-                  >Zurücksetzen</v-btn>
+                  <v-btn @click="resetValue">Zurücksetzen</v-btn>
                 </v-card-actions>
               </v-col>
             </v-row>
-            <v-spacer></v-spacer>
+            <v-spacer/>
             <v-text-field
-                v-model="model"
-                @input="isChanged = true"
-                messages="Bitte geben Sie einen Text in das Eingabefeld ein und bestätigen Sie, ob Sie den neuen Wert übernehmen wollen."
+              v-model="model"
+              @input="isChanged = true"
+              messages="Bitte geben Sie einen Text in das Eingabefeld ein und bestätigen Sie, ob Sie den neuen Wert übernehmen wollen."
             />
           </template>
           <template v-slot:actions>
-              <base-button-cancel
-                  color="red"
-                  :disabled="!isChanged"
-                  @click="onConfigParameterEditCanceled"/>
-              <base-button-confirm
-                  :disabled="!isChanged"
-                  @click="onConfigParameterEditCommited"/>
-
+            <base-button-cancel
+              color="red"
+              :disabled="!isChanged"
+              @click="onConfigParameterEditCanceled"
+            />
+            <base-button-confirm
+              :disabled="!isChanged"
+              @click="onConfigParameterEditCommited"
+            />
           </template>
         </v-card>
       </template>
@@ -57,14 +60,18 @@
 
 <script setup lang="ts">
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
-import {type PropType} from "vue";
-import { shallowRef,ref } from 'vue'
-import { defineEmits, defineProps } from "vue";
+import type { PropType } from "vue";
+
+import { defineEmits, defineProps, ref, shallowRef } from "vue";
 import {
-  VCard, VCol,
-  VConfirmEdit, VRow,
-  VTextField,VBtn
+  VBtn,
+  VCard,
+  VCol,
+  VConfirmEdit,
+  VRow,
+  VTextField,
 } from "vuetify/components";
+
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
 import BaseCardConfigParameterDisplay from "@/components/config-parameter/BaseCardConfigParameterDisplay.vue";
@@ -76,8 +83,8 @@ const props = defineProps({
   },
 });
 
-const model = shallowRef(props.configParameter.wert)
-const visible = ref(false)
+const model = shallowRef(props.configParameter.wert);
+const visible = ref(false);
 const isChanged = ref(false);
 const dialogRef = ref();
 
@@ -99,7 +106,10 @@ function onConfigParameterEditCanceled() {
 }
 
 function onConfigParameterEditCommited() {
-  emit("commitEdit", `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`);
+  emit(
+    "commitEdit",
+    `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`
+  );
   props.configParameter.wert = model.value;
   hideDialog(); // Schließe den Dialog
 }
@@ -122,5 +132,4 @@ function resetModel() {
   model.value = props.configParameter.wert; // Setze das Modell zurück
   isChanged.value = false; // Setze isChanged zurück
 }
-
 </script>

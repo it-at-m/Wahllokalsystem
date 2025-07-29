@@ -8,6 +8,16 @@ import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisR
 const meta: Meta<typeof BaseEreignisRow> = {
   component: BaseEreignisRow,
   argTypes: {
+    modelValue: {
+      description: "Verwaltete Ereigniszeile",
+      table: {
+        category: "props",
+        type: {
+          summary: `Ereignis`,
+        },
+        required: true,
+      },
+    },
     onDelete: {
       table: {
         disable: true,

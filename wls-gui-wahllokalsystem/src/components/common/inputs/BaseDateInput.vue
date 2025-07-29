@@ -3,6 +3,7 @@
     :model-value="formatedDate"
     type="date"
     :rules="[REQUIRED]"
+    label="Datum"
     clearable
     @update:model-value="onModelValueChanged"
     @clear="onClearClicked"

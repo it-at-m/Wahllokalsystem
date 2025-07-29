@@ -15,6 +15,7 @@
         Neuen Beschluss erfassen
       </v-btn>
       <base-button-save
+        active
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveClicked"

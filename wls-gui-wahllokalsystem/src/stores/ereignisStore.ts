@@ -153,9 +153,6 @@ export const useEreignisStore = defineStore(storeID, () => {
     isSaving.value = true;
     try {
       sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
-      console.log(
-        `ereigniseintraege > ${JSON.stringify(wahlbezirkEreignisse.value.ereigniseintraege)}`
-      );
       await saveEreignisse(
         currentUserWahlbezirkID.value,
         wahlbezirkEreignisse.value

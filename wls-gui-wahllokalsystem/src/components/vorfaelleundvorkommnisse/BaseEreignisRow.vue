@@ -67,7 +67,6 @@ const { dateOnly, timeOnly, dateAndTimeCombined } =
   useDateAndTime(ereignisUhrzeit);
 
 watch(dateAndTimeCombined, (newValue) => {
-  console.debug(`watch of dateAndTimeCombined - newValue: ${newValue}`);
   if (model.value.uhrzeit?.getTime() !== newValue?.getTime()) {
     model.value.uhrzeit = newValue ?? undefined;
   }

@@ -6,10 +6,7 @@ export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
   const dateOnly = ref<Date | undefined>(initState.value);
   const timeOnly = ref<Date | undefined>(initState.value);
 
-  watch(initState, (value, oldValue) => {
-    console.debug(
-      `useDateAndTime - watch of date - value: ${value}, oldValue: ${oldValue}, dateAndTimeCombined: ${dateAndTimeCombined.value}`
-    );
+  watch(initState, (value) => {
     if (value?.getTime() !== dateAndTimeCombined.value?.getTime()) {
       _syncChronoComponents(value);
     }
@@ -29,12 +26,8 @@ export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
         timeOnly.value.getSeconds(),
         timeOnly.value.getMilliseconds()
       );
-      console.debug(
-        `dateAndTimeCombined - result: ${JSON.stringify(combinedDate)}`
-      );
       return combinedDate;
     } else {
-      console.debug(`dateAndTimeCombined - result: null`);
       return null;
     }
   });

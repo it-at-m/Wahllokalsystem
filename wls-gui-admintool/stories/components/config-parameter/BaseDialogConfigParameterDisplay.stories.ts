@@ -36,6 +36,7 @@ const meta: Meta<typeof BaseDialogConfigParameterDisplay> = {
             name: "Willkommenstext",
             beschreibung: "Begrüßungstext auf der Anmeldemaske",
             wert: "Herzlich willkommen zur Wahl!",
+            defaultValue: "Herzlich willkommen zur Testwahl!",
         } as InfomanagementConfigParameter,
 
         onCancelEdit: fn(),

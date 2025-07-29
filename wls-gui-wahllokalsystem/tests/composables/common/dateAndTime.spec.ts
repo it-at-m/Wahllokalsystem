@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from "vue";
+import type { Ref } from "vue";
 
 import { beforeEach, describe, expect, it } from "vitest";
 import { computed, nextTick, ref } from "vue";

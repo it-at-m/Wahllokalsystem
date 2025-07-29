@@ -1,4 +1,3 @@
-import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { VueWrapper } from "@vue/test-utils";
 
 import {
@@ -9,16 +8,10 @@ import {
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
 import { VTextarea, VTextField } from "vuetify/components";
 
-import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
-import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 const { createEreignis, prepareEreignis } =
   useVorfaelleundvorkommnisseTestDataFactory();

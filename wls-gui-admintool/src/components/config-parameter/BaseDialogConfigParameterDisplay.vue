@@ -1,84 +1,126 @@
 <template>
-  <v-dialog
-      :model-value="visible"
-      persistent
-      max-width="648px"
-      data-test="dialog-configparameter-override-wert"
-      @update:model-value="updateVisible"
-  >
-    <v-card
-    :title="`${configParameter.name} - Wertänderung`"
-    :subtitle="configParameter.beschreibung">
-      <v-card-text>
-        <div data-test="div-confirm-information">
-           Bitte geben Sie ein Text in das Eingabefeld ein und bestätigen Sie, ob Sie den neuen Wert übernehmen wollen.
-        </div>
-        <v-text-field
-            v-model="configParameter.wert"
-            :label="`Bitte geben Sie einen Wert für Konfigurationsparameter '${configParameter.name}' an`"
-            class="mt-2"
-            autofocus
-            data-test="textfield-confirm-text"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <base-button-cancel
-            @click="onConfigParameterEditCanceled"
-            data-test="cancel-edit-button"/>
-        <base-button-confirm
-            @click="onConfigParameterEditCommited"
-            data-test="comit-edit-button"
-        />
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <base-card-config-parameter-display
+      :config-parameter="configParameter"
+      @click="showDialog"
+  />
+  <div ref="dialogRef" v-if="visible" >
+    <v-confirm-edit
+        :model-value="visible"
+        persistent
+        max-width="648px"
+        data-test="dialog-configparameter-override-wert"
+        update:model-Value="updateVisible"
+        >
+      <template v-slot:default="{actions}">
+        <v-card
+            max-width="600"
+            style="background-color: #ffb74d"
+            :title="`Dialog Konfigurationsparameter ${ configParameter.name }`"
+        >
+          <template v-slot:text>
+            <v-row class="my-2 align-center">
+              <v-col cols="6">Standardwert:</v-col>
+              <v-col cols="6">{{ configParameter?.defaultValue }}</v-col>
+            </v-row>
+            <v-row class="my-2 align-center">
+              <v-col cols="6">Wert:</v-col>
+              <v-col cols="6">{{ configParameter?.wert }}
+                <v-card-actions>
+                  <v-btn
+                      @click="resetValue"
+                  >Zurücksetzen</v-btn>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+            <v-spacer></v-spacer>
+            <v-text-field
+                v-model="model"
+                @input="isChanged = true"
+                messages="Bitte geben Sie einen Text in das Eingabefeld ein und bestätigen Sie, ob Sie den neuen Wert übernehmen wollen."
+            />
+          </template>
+          <template v-slot:actions>
+              <base-button-cancel
+                  color="red"
+                  :disabled="!isChanged"
+                  @click="onConfigParameterEditCanceled"/>
+              <base-button-confirm
+                  :disabled="!isChanged"
+                  @click="onConfigParameterEditCommited"/>
+
+          </template>
+        </v-card>
+      </template>
+    </v-confirm-edit>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 import {type PropType} from "vue";
+import { shallowRef,ref } from 'vue'
 import { defineEmits, defineProps } from "vue";
 import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VDialog,
-  VTextField,
+  VCard, VCol,
+  VConfirmEdit, VRow,
+  VTextField,VBtn
 } from "vuetify/components";
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
+import BaseCardConfigParameterDisplay from "@/components/config-parameter/BaseCardConfigParameterDisplay.vue";
 
 const props = defineProps({
   configParameter: {
     type: Object as PropType<InfomanagementConfigParameter>,
     required: true,
   },
-  visible: {
-    type: Boolean,
-    required: true,
-  },
 });
 
+const model = shallowRef(props.configParameter.wert)
+const visible = ref(false)
+const isChanged = ref(false);
+const dialogRef = ref();
 
 const emit = defineEmits<{
   cancelEdit: [wert: string];
   commitEdit: [wert: string];
-  update: [boolean]
 }>();
 
+defineExpose({
+  showDialog,
+  hideDialog,
+  resetValue,
+});
 
 function onConfigParameterEditCanceled() {
   emit("cancelEdit", "Kein Payload, Keine Änderung");
-  updateVisible(false);
+  resetModel(); // Setze isChanged zurück
+  hideDialog();
 }
 
 function onConfigParameterEditCommited() {
-  emit("commitEdit", `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${props.configParameter.wert}'`);
-  updateVisible(false);
+  emit("commitEdit", `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`);
+  props.configParameter.wert = model.value;
+  hideDialog(); // Schließe den Dialog
 }
 
-function updateVisible(value: boolean) {
-  emit('update', value);
+function resetValue() {
+  model.value = props.configParameter.defaultValue; // Setze den Wert auf den Standardwert
+  props.configParameter.wert = model.value; // Aktualisiere den Wert des Konfigurationsparameters
+  isChanged.value = true; // Setze isChanged auf true, um den Zustand zu reflektieren
+}
+
+function showDialog() {
+  visible.value = true;
+}
+
+function hideDialog() {
+  visible.value = false;
+}
+
+function resetModel() {
+  model.value = props.configParameter.wert; // Setze das Modell zurück
+  isChanged.value = false; // Setze isChanged zurück
 }
 
 </script>

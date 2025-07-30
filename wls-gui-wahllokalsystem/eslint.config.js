@@ -51,6 +51,7 @@ export default [
           math: "always",
         },
       ],
+      "vue/no-multiple-template-root": ["error"],
     },
   },
   // overrides for specific files or directories

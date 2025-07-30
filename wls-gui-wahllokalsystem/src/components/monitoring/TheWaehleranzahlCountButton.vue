@@ -3,6 +3,7 @@
     class="bg-white mr-5"
     color="primary"
     prepend-icon="$addCircle"
+    min-width="180"
     @keydown.enter.prevent
     @keyup.enter="onWaehleranzahlClicked"
     @click="onWaehleranzahlClicked"

@@ -21,6 +21,10 @@ describe("inputFeedbackUtils.ts", () => {
         inputFeedbackType: InputFeedbackTypeEnum.information,
         expectedResult: "border-info",
       },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.success,
+        expectedResult: "border-success",
+      },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
       (params) => {
@@ -41,6 +45,10 @@ describe("inputFeedbackUtils.ts", () => {
       {
         inputFeedbackType: InputFeedbackTypeEnum.information,
         expectedResult: "info",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.success,
+        expectedResult: "success",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
@@ -63,6 +71,10 @@ describe("inputFeedbackUtils.ts", () => {
         inputFeedbackType: InputFeedbackTypeEnum.information,
         expectedResult: "$information",
       },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.success,
+        expectedResult: "$valid",
+      },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
       (params) => {
@@ -81,6 +93,10 @@ describe("inputFeedbackUtils.ts", () => {
       {
         inputFeedbackType: InputFeedbackTypeEnum.information,
         expectedResult: "text-info",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.success,
+        expectedResult: "text-success",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",

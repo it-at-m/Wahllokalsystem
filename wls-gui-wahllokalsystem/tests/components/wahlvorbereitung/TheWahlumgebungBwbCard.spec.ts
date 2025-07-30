@@ -41,6 +41,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       wahlart: WahlWahlartEnum.Btw,
       farbe: undefined,
       nummer: undefined,
+      beanstandeteWahlbriefe: [],
     },
     {
       wahlID: "wahlID2",
@@ -51,6 +52,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       wahlart: WahlWahlartEnum.Obw,
       farbe: undefined,
       nummer: undefined,
+      beanstandeteWahlbriefe: [],
     },
   ];
 

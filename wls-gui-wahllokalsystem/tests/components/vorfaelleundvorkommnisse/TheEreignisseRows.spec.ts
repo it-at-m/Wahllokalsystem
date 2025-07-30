@@ -25,7 +25,7 @@ import {
 import { nextTick } from "vue";
 
 import YesNoDialog from "@/components/common/YesNoDialog.vue";
-import BaseEreignisRows from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
+import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -142,7 +142,7 @@ describe("TheEreignisseRows.vue", () => {
 
       await nextTick();
 
-      const baseEreignisRow = wrapper.findComponent(BaseEreignisRows);
+      const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
       baseEreignisRow.vm.$emit("delete");
 
       await flushPromises();

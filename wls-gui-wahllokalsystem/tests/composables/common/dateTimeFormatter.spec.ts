@@ -11,6 +11,7 @@ describe("dateTimeFormatter.ts", () => {
     getDateFromTimeString,
     toGermanDateFormat,
     toGermanDateWithLongMonth,
+    toIsoDate,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -161,5 +162,17 @@ describe("dateTimeFormatter.ts", () => {
         expect(toGermanDateFormat(datestring)).toBe(undefined);
       }
     );
+  });
+
+  describe("toIsoDate", () => {
+    it("should_returnDateOnlyAsIsoDate_when_dateIsGiven", () => {
+      const result = toIsoDate(new Date("2025-07-30"));
+      expect(result).toStrictEqual("2025-07-30");
+    });
+
+    it("should_returnEmptyString_when_dateIsInvalid", () => {
+      const result = toIsoDate(new Date("2025-29-45"));
+      expect(result).toStrictEqual("");
+    });
   });
 });

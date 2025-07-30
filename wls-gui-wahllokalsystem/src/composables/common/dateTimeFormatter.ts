@@ -92,6 +92,10 @@ export function useDateTimeFormatter() {
   }
 
   function toIsoDate(dateToFormat: Date) {
+    if (!isValidDate(dateToFormat)) {
+      return NO_VALUE_DEFAULT;
+    }
+
     return dateToFormat.toLocaleDateString("en-CA", {
       day: "2-digit",
       month: "2-digit",

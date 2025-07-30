@@ -27,8 +27,6 @@ on:
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
 
-
-
 jobs:
   run-mvn-release-prepare:
     runs-on: ubuntu-latest

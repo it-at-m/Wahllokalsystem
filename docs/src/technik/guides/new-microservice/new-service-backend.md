@@ -62,6 +62,49 @@ jobs:
       pom-dir: 'wls-<domain>-service'
 ```
 
+```yml {20} [dispatch-microserivce-maven-release.yml]
+name: dispatch microserivce maven release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        required: true
+        description: release version to build
+      development-version:
+        required: true
+        description: next development version to set
+      service:
+        required: true
+        type: choice
+        description: service/directory to build (wls-broadcast-service, ...)
+        options:
+          - wls-auth-service
+          - wls-basisdaten-service
+          - ...
+          - wls-<domain>-service
+```
+
+```yml {14} [dispatch-build-github-container-image.yml]
+name: dispatch build github container image
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        required: true
+        type: choice
+        description: service/directory to build (wls-broadcast-service, ...)
+        options:
+          - wls-auth-service
+          - wls-basisdaten-service
+          - ...
+          - wls-<domain>-service
+      tag:
+        required: false
+        description: 'optional: gittag'
+```
+
 :::
 <!-- prettier-ignore-end -->
 ## Datenbank einrichten

@@ -12,7 +12,8 @@
     </v-main>
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
+      v-if="isUWB"
+      data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
   </v-app>
 </template>
@@ -33,11 +34,10 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
-const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { initWahlen } = useWahlenStore();

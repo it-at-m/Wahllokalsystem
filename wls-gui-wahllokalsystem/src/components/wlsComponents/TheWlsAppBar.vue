@@ -28,7 +28,7 @@
             v-if="
               eroeffnungsuhrzeitSent !== undefined &&
               schliessungsuhrzeitSent === undefined &&
-              currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+              isUWB
             "
           />
           <wls-clock class="navbar-text mx-2" />
@@ -47,12 +47,8 @@
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
-        <the-b-w-b-preparation-list-group
-          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
-        />
-        <the-u-w-b-preparation-list-group
-          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
-        />
+        <the-b-w-b-preparation-list-group v-if="isBWB" />
+        <the-u-w-b-preparation-list-group v-if="isUWB" />
         <v-list-item
           title="Ereignisse"
           :to="ROUTE_EREIGNISSE"
@@ -87,18 +83,13 @@ import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
 
 const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const {
-  user,
-  currentUserWahltag,
-  currentUserWahlbezirkNummer,
-  currentUserWahlbezirksArt,
-} = storeToRefs(useUserStore());
+const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
+  storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );

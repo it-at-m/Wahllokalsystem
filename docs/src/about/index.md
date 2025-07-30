@@ -45,7 +45,7 @@ trotzdem möglich. Das erfolgreiche Laden ermöglicht später auch eine reibungs
 Folgende Daten werden bei einer **Kommunalwahl** von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk"
 geladen:
 *Wahlvorstand*, *Wahlvorschläge*, *Kopfdaten*, *Konfigurationen*, *Handbuch*, *Wahlvorbereitung*, *Eröffnungsuhrzeit*,
-*Störungen*, *Druckstatus*, *Stapel c - gültige Stimmzettel*, *Stapel c - ungültige Stimmzettel*, *Stapel b -
+*Ereignisse*, *Druckstatus*, *Stapel c - gültige Stimmzettel*, *Stapel c - ungültige Stimmzettel*, *Stapel b -
 ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*, *Stapel b*, *Begründung Stapel ab*,
 *Stapel b-c*, *FortsetzungsUhrzeit*, *UnterbrechungsUhrzeit*
 

@@ -63,7 +63,7 @@ jobs:
 ```
 
 ```yml {20} [dispatch-microserivce-maven-release.yml]
-name: dispatch microserivce maven release
+name: dispatch microservice maven release
 
 on:
   workflow_dispatch:

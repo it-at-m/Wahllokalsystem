@@ -17,6 +17,7 @@ on:
           - wls-ergebnismeldung-service
           - wls-infomanagement-service
           - wls-monitoring-service
+          - wls-vorfaelleundvorkommnisse-service
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
       tag:

@@ -35,8 +35,8 @@
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <org.springdoc.version>2.8.5</org.springdoc.version>
-        <wls.common.version>1.6.2</wls.common.version>
+        <org.springdoc.version>2.8.9</org.springdoc.version>
+        <wls.common.version>1.6.3</wls.common.version>
         <com.tngtech.archunit.version>1.4.1</com.tngtech.archunit.version>
     </properties>
 
@@ -639,7 +639,7 @@
                     <dependency>
                         <groupId>org.webjars</groupId>
                         <artifactId>bootstrap</artifactId>
-                        <version>5.3.5</version>
+                        <version>5.3.7</version>
                         <type>pom</type>
                     </dependency>
                 </dependencies>

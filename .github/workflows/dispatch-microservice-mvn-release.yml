@@ -14,12 +14,12 @@ on:
         type: choice
         description: service/directory to build (wls-broadcast-service, ...)
         options:
-          - wls-admin-service # ??
+          - wls-admin-service
           - wls-auth-service
           - wls-basisdaten-service
           - wls-briefwahl-service
           - wls-broadcast-service
-          - wls-eai-service # ??
+          - wls-eai-service
           - wls-ergebnismeldung-service
           - wls-infomanagement-service
           - wls-monitoring-service

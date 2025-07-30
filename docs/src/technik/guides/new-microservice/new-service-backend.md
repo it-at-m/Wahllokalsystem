@@ -62,7 +62,7 @@ jobs:
       pom-dir: 'wls-<domain>-service'
 ```
 
-```yml {20} [dispatch-microserivce-maven-release.yml]
+```yml {20} [dispatch-microservice-maven-release.yml]
 name: dispatch microservice maven release
 
 on:

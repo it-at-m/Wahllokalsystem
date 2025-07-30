@@ -84,7 +84,7 @@ describe("TheEreignisseRows.vue", () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
-      const date = new Date();
+      const date = new Date("2025-07-29");
       date.setHours(12, 0);
       ereigniseintraege.push(
         EreignisBuilder.createComplete()
@@ -106,7 +106,7 @@ describe("TheEreignisseRows.vue", () => {
 
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 0; i < 5; i++) {
-        const date = new Date();
+        const date = new Date("2025-07-29");
         date.setHours(i, 0);
         ereigniseintraege.push(
           EreignisBuilder.createComplete()

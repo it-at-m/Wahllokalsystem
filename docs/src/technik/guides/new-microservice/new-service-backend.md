@@ -81,7 +81,7 @@ on:
         options:
           - wls-auth-service
           - wls-basisdaten-service
-          - ...
+          # - further services -
           - wls-<domain>-service
 ```
 
@@ -98,7 +98,7 @@ on:
         options:
           - wls-auth-service
           - wls-basisdaten-service
-          - ...
+          # - further services -
           - wls-<domain>-service
       tag:
         required: false

@@ -5,41 +5,41 @@
       <v-table>
         <tbody>
           <tr>
-            <td>
-              <b>Zugelassen</b>
-            </td>
+            <td class="font-weight-bold">Zugelassen</td>
             <td
-              v-for="(value, index) in sumGueltig"
+              v-for="(value, index) in summeGueltigerWahlbriefe"
               :key="index"
+              class="font-weight-bold"
             >
               {{ value }}
             </td>
           </tr>
           <tr>
-            <td><b>Nicht zugelassen</b></td>
+            <td class="font-weight-bold">Nicht zugelassen</td>
             <td
-              v-for="(value, index) in sumUngueltig"
+              v-for="(value, index) in summeUngueltigerWahlbriefe"
               :key="index"
+              class="font-weight-bold"
             >
               {{ value }}
             </td>
           </tr>
           <tr>
-            <td><b>Zurückweisungsgrund</b></td>
+            <td class="font-weight-bold">Zurückweisungsgrund</td>
             <td
-              v-for="(_, index) in sumGueltig"
+              v-for="(_, index) in summeGueltigerWahlbriefe"
               :key="index"
             />
           </tr>
           <tr
-            v-for="(beanstandung, index) in ungueltigeeinzelsummen"
+            v-for="(beanstandung, index) in summenZurueckweisungsgruende"
             :key="index"
           >
             <td>
               {{ zurueckweisungsgrundEnumToDisplayString(beanstandung.grund) }}
             </td>
             <td
-              v-for="(value, idx) in beanstandung.ungueltig"
+              v-for="(value, idx) in beanstandung.summen"
               :key="idx"
             >
               {{ value }}
@@ -53,73 +53,16 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
 import { VCard, VCardText, VCardTitle, VTable } from "vuetify/components";
 
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
-const { wahlen } = storeToRefs(useWahlenStore());
+const {
+  summeGueltigerWahlbriefe,
+  summeUngueltigerWahlbriefe,
+  summenZurueckweisungsgruende,
+} = storeToRefs(useWahlenStore());
 const { zurueckweisungsgrundEnumToDisplayString } =
   useBeanstandeteWahlbriefeMapper();
-
-const sumGueltig = ref<number[]>([]);
-const sumUngueltig = ref<number[]>([]);
-const ungueltigeeinzelsummen = ref<ZurueckweisungRow[]>([]);
-
-onMounted(() => {
-  calculateSums();
-});
-
-watch(
-  () => wahlen.value,
-  () => {
-    calculateSums();
-  },
-  { deep: true }
-);
-
-interface ZurueckweisungRow {
-  ungueltig: number[];
-  grund: ZurueckweisungsgrundEnum;
-}
-
-function calculateSums() {
-  if (wahlen.value) {
-    const anzahlWahlen = wahlen.value.length;
-    sumGueltig.value = new Array(anzahlWahlen).fill(0);
-    sumUngueltig.value = new Array(anzahlWahlen).fill(0);
-
-    const tempUngueltigeEinzelstimmen: ZurueckweisungRow[] = [];
-    const gruendeUngueltig = Object.values(ZurueckweisungsgrundEnum).filter(
-      (grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen
-    );
-    gruendeUngueltig.forEach((grund, index) => {
-      tempUngueltigeEinzelstimmen[index] = {
-        ungueltig: new Array(anzahlWahlen).fill(0),
-        grund: grund,
-      };
-    });
-
-    wahlen.value.forEach((wahl, wahlIndex) => {
-      wahl.beanstandeteWahlbriefe.forEach((beanstandeteWahlbrief) => {
-        if (wahlen.value) {
-          if (beanstandeteWahlbrief === ZurueckweisungsgrundEnum.Zugelassen) {
-            sumGueltig.value[wahlIndex] += 1;
-          } else {
-            sumUngueltig.value[wahlIndex] += 1;
-            tempUngueltigeEinzelstimmen[
-              gruendeUngueltig.findIndex(
-                (value) => value === beanstandeteWahlbrief
-              )
-            ].ungueltig[wahlIndex] += 1;
-          }
-        }
-      });
-    });
-
-    ungueltigeeinzelsummen.value = tempUngueltigeEinzelstimmen;
-  }
-}
 </script>

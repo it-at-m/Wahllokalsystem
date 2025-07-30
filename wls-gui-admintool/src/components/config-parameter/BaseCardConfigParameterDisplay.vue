@@ -1,47 +1,31 @@
 <template>
-  <v-card
-    class="card"
-    :title="configParameter.name"
-    :subtitle="configParameter?.beschreibung"
-  >
-    <v-divider class="card-divider" />
-    <v-card-text class="card-content">
-      <v-row>
-        <v-col
-          cols="1"
-          class="mx-1 d-flex align-center"
+  <v-card>
+    <v-row>
+      <v-col
+        cols="3"
+        class="pa-0"
+        v-for="(item, index) in configParameterItems"
+        :key="index"
+      >
+        <v-card
+          :subtitle="item.subtitle"
+          height="200px"
         >
-          Wert:
-        </v-col>
-        <v-col
-          cols="3"
-          class="mx-1 d-flex align-center"
-        >
-          <v-card-actions class="card-action">
-            {{ configParameter?.wert }}
-            <v-btn
-              class="v-button"
-              icon="$edit"
-              @click="onConfigParameterEditClicked"
-              data-test="click-edit-button"
-            />
-          </v-card-actions>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          cols="1"
-          class="mx-1 d-flex align-center"
-        >
-          Standardwert:
-        </v-col>
-        <v-col
-          cols="3"
-          class="mx-1 d-flex align-center"
-          >'{{ configParameter?.defaultValue }}'</v-col
-        >
-      </v-row>
-    </v-card-text>
+          <v-divider class="card-divider" />
+          <v-card-text>
+            {{ item.key }}
+            <v-card-actions v-if="item.key === props.configParameter.wert">
+              <v-btn
+                icon="$edit"
+                @click="onConfigParameterEditClicked"
+                data-test="click-edit-button"
+                class="ml-auto"
+              />
+            </v-card-actions>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -49,7 +33,7 @@
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 import type { PropType } from "vue";
 
-import { defineEmits, defineProps } from "vue";
+import { defineEmits, defineProps, ref } from "vue";
 import {
   VBtn,
   VCard,
@@ -66,6 +50,13 @@ const props = defineProps({
     required: true,
   },
 });
+
+const configParameterItems = ref([
+  { subtitle: "Konfigurationsparameter", key: props.configParameter.name },
+  { subtitle: "Beschreibung", key: props.configParameter.beschreibung },
+  { subtitle: "Wert", key: props.configParameter.wert },
+  { subtitle: "Standardwert", key: props.configParameter.defaultValue },
+]);
 
 const emit = defineEmits<(event: "clickEdit", name: string) => void>();
 

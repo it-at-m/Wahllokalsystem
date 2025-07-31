@@ -53,7 +53,7 @@
         <the-b-w-b-election-list-group
           v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
         />
-        <the-u-w-b-preparation-list-group
+        <the-u-w-b-election-list-group
           v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
         />
         <v-list-item
@@ -82,7 +82,7 @@ import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
-import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
+import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

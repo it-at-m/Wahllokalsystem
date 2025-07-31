@@ -1,5 +1,5 @@
 <template>
-  <v-list-group value="Wahlvorbereitung">
+  <v-list-group value="Wahlhandlung">
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"

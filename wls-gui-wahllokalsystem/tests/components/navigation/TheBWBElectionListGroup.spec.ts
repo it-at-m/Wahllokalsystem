@@ -7,14 +7,14 @@ import {
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
+import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-describe("TheBWBPreparationListGroup.vue", () => {
+describe("TheBWBElectionListGroup.vue", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
-    wrapper = mount(TheBWBPreparationListGroup, {
+    wrapper = mount(TheBWBElectionListGroup, {
       global: {
         plugins: [vuetify],
       },

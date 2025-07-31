@@ -73,7 +73,7 @@ registerRoute(new RegExp("/api/.+"), postRequestHandler, "POST");
  * handler functions
  ****************************************************************************************************************/
 async function postRequestHandler(event) {
-  log("POST request identified");
+  log(`POST request identified - ${event.request.url}`);
 
   try {
     // body can only be read once so a clone is needed to extract data for saving in idb
@@ -113,7 +113,7 @@ async function postRequestHandler(event) {
 }
 
 async function getRequestHandler(event) {
-  log("GET request identified");
+  log(`GET request identified - ${event.request.url}`);
 
   try {
     const response = await fetch(event.request);

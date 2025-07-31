@@ -1,9 +1,9 @@
 <template>
-  <v-list-group value="Wahl">
+  <v-list-group value="Wahlhandlung">
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
-        title="Wahl"
+        title="Wahlhandlung"
       />
     </template>
     <v-list-item
@@ -19,7 +19,7 @@
       :to="ROUTE_BEGINN_STIMMABGABE"
     />
     <v-list-item
-      title="Wahlhandlung"
+      title="Stimmabgabe"
       :to="ROUTE_WAHLSCHLIESSUNG"
     />
   </v-list-group>

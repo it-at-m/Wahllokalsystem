@@ -58,6 +58,25 @@ jobs:
       package-dir: "wls-gui-<frontend-name>"
 ```
 
+```yml {13} [dispatch-build-github-container-image-for-frontend.yml]
+name: dispatch build github container image for frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        required: true
+        type: choice
+        description: frontend-service/directory to build (wls-gui-wahllokalsystem, ...)
+        options:
+          - wls-gui-wahllokalsystem
+          - wls-gui-admintool
+          - wls-gui-<domain>
+      tag:
+        required: false
+        description: 'optional: gittag'
+```
+
 :::
 
 ## Routing im Gateway einrichten

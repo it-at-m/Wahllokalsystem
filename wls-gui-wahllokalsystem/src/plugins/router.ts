@@ -15,7 +15,6 @@ import {
 } from "@/constants";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -28,13 +27,13 @@ import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const permitNavigationOnlyForWahlbezirksArtUwb = () => {
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
-  return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
+  const { isUWB } = storeToRefs(useUserStore());
+  return isUWB.value;
 };
 
 const permitNavigationOnlyForWahlbezirksArtBwb = () => {
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
-  return currentUserWahlbezirksArt.value === WahlbezirksArtEnum.BWB;
+  const { isBWB } = storeToRefs(useUserStore());
+  return isBWB.value;
 };
 
 const routes = [

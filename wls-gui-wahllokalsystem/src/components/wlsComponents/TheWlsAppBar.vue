@@ -12,7 +12,10 @@
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
           <base-icon-wahlbezirksart class="mx-2" />
-          <span class="navbar-text mx-2">
+          <span
+            class="navbar-text mx-2"
+            style="white-space: nowrap"
+          >
             Wahlbezirk {{ wahlbezirknummer }}
           </span>
         </v-col>
@@ -31,7 +34,7 @@
               isUWB
             "
           />
-          <wls-clock class="navbar-text mx-2" />
+          <wls-clock class="navbar-text mx-2 mt-1" />
           <wls-heartbeat v-model:is-offline="isOffline" />
           <the-info-help-icon />
         </v-col>
@@ -47,8 +50,8 @@
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
-        <the-b-w-b-preparation-list-group v-if="isBWB" />
-        <the-u-w-b-preparation-list-group v-if="isUWB" />
+        <the-b-w-b-election-list-group v-if="isBWB" />
+        <the-u-w-b-election-list-group v-if="isUWB" />
         <v-list-item
           title="Ereignisse"
           :to="ROUTE_EREIGNISSE"
@@ -74,8 +77,8 @@ import {
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
-import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
-import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
+import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
+import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

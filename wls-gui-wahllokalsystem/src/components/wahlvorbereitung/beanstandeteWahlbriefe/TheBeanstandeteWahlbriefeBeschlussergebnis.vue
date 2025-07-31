@@ -35,7 +35,7 @@
             v-for="(beanstandung, index) in summenZurueckweisungsgruende"
             :key="index"
           >
-            <td>
+            <td style="text-indent: 20px">
               {{ zurueckweisungsgrundEnumToDisplayString(beanstandung.grund) }}
             </td>
             <td

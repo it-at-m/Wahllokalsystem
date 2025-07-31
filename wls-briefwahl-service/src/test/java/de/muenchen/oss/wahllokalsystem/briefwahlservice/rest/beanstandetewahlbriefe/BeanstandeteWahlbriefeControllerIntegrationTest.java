@@ -103,6 +103,45 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
         }
 
         @Test
+        @WithMockUser(
+                authorities = { Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
+                        Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE }
+        )
+        void should_returnDataWithEmptyZurueckweisegruende_when_dataIsPresentInRepo() throws Exception {
+            val wahlbezirkID1 = "wahlbezirkID1";
+            val wahlbezirkID2 = "wahlbezirkID2";
+
+            val waehlerverzeichnissNummer1 = 1L;
+            val waehlerverzeichnissNummer2 = 2L;
+
+            val beanstandeteWahlbriefe1 = new BeanstandeteWahlbriefe();
+            beanstandeteWahlbriefe1.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID1, waehlerverzeichnissNummer1));
+            beanstandeteWahlbriefe1.setBeanstandeteWahlbriefe(
+                    Map.of("wahl1", new Zurueckweisungsgrund[0], "wahl2",
+                            new Zurueckweisungsgrund[0]));
+            beanstandeteWahlbriefeRepository.save(beanstandeteWahlbriefe1);
+
+            val beanstandeteWahlbriefe2 = new BeanstandeteWahlbriefe();
+            beanstandeteWahlbriefe2.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID1, waehlerverzeichnissNummer2));
+            beanstandeteWahlbriefeRepository.save(beanstandeteWahlbriefe2);
+
+            val beanstandeteWahlbriefe3 = new BeanstandeteWahlbriefe();
+            beanstandeteWahlbriefe3.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID2, waehlerverzeichnissNummer1));
+            beanstandeteWahlbriefeRepository.save(beanstandeteWahlbriefe3);
+
+            val expectedZurueckweisungen = Map.of("wahl1",
+                    new Zurueckweisungsgrund[0], "wahl2",
+                    new Zurueckweisungsgrund[0]);
+            val expectedResponse = new BeanstandeteWahlbriefeDTO(wahlbezirkID1, waehlerverzeichnissNummer1, expectedZurueckweisungen);
+
+            val request = get("/businessActions/beanstandeteWahlbriefe/" + wahlbezirkID1 + "/" + waehlerverzeichnissNummer1);
+            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), BeanstandeteWahlbriefeDTO.class);
+            Assertions.assertThat(responseBody).usingRecursiveComparison().isEqualTo(expectedResponse);
+        }
+
+        @Test
         @WithMockUser(authorities = { Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE, Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE })
         void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
             val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0");

@@ -53,7 +53,7 @@
               </li>
               <li>
                 Erfassen Sie dies als besonderes Vorkommnis unter dem Punkt
-                "Störungen".
+                "Ereignisse".
               </li>
             </ul>
           </div>

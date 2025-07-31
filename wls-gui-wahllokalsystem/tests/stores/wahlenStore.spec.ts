@@ -377,13 +377,13 @@ describe("wahlenStore.ts", () => {
   });
 
   describe("summeGueltigerWahlbriefe", () => {
-    it("should_calculateSummeGueltigerWahlbriefe_whenBeanstandeteWahlbriefeIsEmpty", async () => {
+    it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([0]);
     });
 
-    it("should_calculateSummeGueltigerWahlbriefe_whenBeanstandeteWahlbriefeIsNotEmpty", async () => {
+    it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([1, 2]);
@@ -391,13 +391,13 @@ describe("wahlenStore.ts", () => {
   });
 
   describe("summeUngueltigerWahlbriefe", () => {
-    it("should_calculateSummeUngueltigerWahlbriefe_whenBeanstandeteWahlbriefeIsEmpty", async () => {
+    it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0]);
     });
 
-    it("should_calculateSummeUngueltigerWahlbriefe_whenBeanstandeteWahlbriefeIsNotEmpty", async () => {
+    it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0, 1]);
@@ -405,7 +405,7 @@ describe("wahlenStore.ts", () => {
   });
 
   describe("summenZurueckweisungsgruende", () => {
-    it("should_calculateSummenZurueckweisungsgruende_whenBeanstandeteWahlbriefeIsEmpty", async () => {
+    it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
 
       unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
@@ -413,7 +413,7 @@ describe("wahlenStore.ts", () => {
       });
     });
 
-    it("should_calculateSummenZurueckweisungsgruende_whenBeanstandeteWahlbriefeIsNotEmpty", async () => {
+    it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {

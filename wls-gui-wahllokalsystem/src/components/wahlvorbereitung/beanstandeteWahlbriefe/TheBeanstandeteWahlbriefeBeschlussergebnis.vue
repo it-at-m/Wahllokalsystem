@@ -24,7 +24,7 @@
               {{ value }}
             </td>
           </tr>
-          <tr class="bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">
+          <tr class="bg-grey-lighten-3">
             <td class="font-weight-bold">Zurückweisungsgrund</td>
             <td
               v-for="(_, index) in summeGueltigerWahlbriefe"

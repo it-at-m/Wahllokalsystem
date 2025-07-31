@@ -10,7 +10,7 @@
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-import BaseWahleroeffnungCard from "@/components/wahlvorbereitung/BaseWahleroeffnungCard.vue";
+import BaseWahleroeffnungCard from "@/components/wahlhandlung/BaseWahleroeffnungCard.vue";
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 

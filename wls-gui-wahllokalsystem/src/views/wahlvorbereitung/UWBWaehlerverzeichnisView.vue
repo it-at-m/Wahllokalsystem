@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import BaseWaehlerverzeichnisCheckCard from "@/components/wahlvorbereitung/BaseWaehlerverzeichnisCheckCard.vue";
+import BaseWaehlerverzeichnisCheckCard from "@/components/wahlhandlung/BaseWaehlerverzeichnisCheckCard.vue";
 </script>

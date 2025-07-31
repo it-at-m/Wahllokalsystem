@@ -1,8 +1,8 @@
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
-import type { Wahlvorbereitung } from "@/types/wahlvorbereitung/Wahlvorbereitung.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -11,8 +11,8 @@ import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/unguel
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useWaehlerverzeichnisService } from "@/composables/wahlvorbereitung/waehlerverzeichnisService.ts";
-import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
+import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
+import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

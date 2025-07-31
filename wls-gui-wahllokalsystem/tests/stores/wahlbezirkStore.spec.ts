@@ -1,6 +1,6 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
-import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -31,7 +31,7 @@ vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
     getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
   }),
 }));
-vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
+vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
@@ -40,7 +40,7 @@ vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
     postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
   }),
 }));
-vi.mock("@/composables/wahlvorbereitung/waehlerverzeichnisService.ts", () => ({
+vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
   useWaehlerverzeichnisService: () => ({
     createDefaultPflegeWaehlerverzeichnis: () =>
       mockedDefaultWaehlerverzeichnis,

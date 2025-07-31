@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import TheWahlbriefErfassungCard from "@/components/wahlvorbereitung/TheWahlbriefErfassungCard.vue";
+import TheWahlbriefErfassungCard from "@/components/wahlhandlung/TheWahlbriefErfassungCard.vue";
 </script>

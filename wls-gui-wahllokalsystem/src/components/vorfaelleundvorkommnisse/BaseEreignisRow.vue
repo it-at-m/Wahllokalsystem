@@ -13,7 +13,7 @@
     </v-col>
     <v-col>
       <v-textarea
-        v-model="model.beschreibung"
+        v-model="ereignisModel.beschreibung"
         :rules="[MIN_LENGTH(4), MAX_LENGTH(maxLengthForEreignisBeschreibung)]"
         rows="1"
         label="Beschreibung"
@@ -56,19 +56,19 @@ defineProps({
   },
 });
 
-const model = defineModel({
+const ereignisModel = defineModel({
   type: Object as PropType<Ereignis>,
   required: true,
 });
 
-const ereignisUhrzeit = computed(() => model.value.uhrzeit);
+const ereignisUhrzeit = computed(() => ereignisModel.value.uhrzeit);
 
 const { dateOnly, timeOnly, dateAndTimeCombined } =
   useDateAndTime(ereignisUhrzeit);
 
 watch(dateAndTimeCombined, (newValue) => {
-  if (model.value.uhrzeit?.getTime() !== newValue?.getTime()) {
-    model.value.uhrzeit = newValue ?? undefined;
+  if (ereignisModel.value.uhrzeit?.getTime() !== newValue?.getTime()) {
+    ereignisModel.value.uhrzeit = newValue ?? undefined;
   }
 });
 

@@ -65,6 +65,8 @@
     "msw": "2.10.4",
     "msw-storybook-addon": "2.0.5",
     "prettier": "3.6.2",
+    "sass-embedded": "1.87.0",
+    "sass-loader": "16.0.5",
     "storybook": "8.6.12",
     "typescript": "5.8.3",
     "unplugin-fonts": "1.3.1",

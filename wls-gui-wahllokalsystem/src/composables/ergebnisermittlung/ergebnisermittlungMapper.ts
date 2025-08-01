@@ -4,7 +4,7 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
-export function useErgebnismeldungMapper() {
+export function useErgebnisermittlungMapper() {
   function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
     {
       return {

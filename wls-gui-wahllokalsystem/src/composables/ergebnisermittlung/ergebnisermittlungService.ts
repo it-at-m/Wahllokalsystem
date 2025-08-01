@@ -2,15 +2,15 @@ import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzett
 
 import { StimmzettelumschlaegeControllerApi } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { Configuration } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
-import { useErgebnismeldungMapper } from "@/composables/ergebnismeldung/ergebnismeldungMapper.ts";
+import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { toDto } = useErgebnismeldungMapper();
+const { toDto } = useErgebnisermittlungMapper();
 const userNotificationService = useUserNotificationService();
 
-export function useErgebnismeldungService() {
+export function useErgebnisermittlungService() {
   const ergebnismeldungControllerApi = new StimmzettelumschlaegeControllerApi(
     new Configuration({
       basePath: ERGEBNISMELDUNG_SERVICE_API_URL,

@@ -22,6 +22,7 @@ export const WAHLHOTLINE = "089 233 96233";
 export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
 
 export const REQUEST_HEADER_OFFLINE_STRATEGY = "X-WLS-SW-STRATEGY";
+export const HTTP_HEADER_CONTENT_TYPE = "content-type";
 
 const WLS_SERVICE_API_URL = "/api/";
 

@@ -4,6 +4,7 @@ import {
   Configuration,
   EreignisControllerApi,
 } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts";
 import { VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL } from "@/constants";
@@ -11,6 +12,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const userNotificationService = useUserNotificationService();
 const { toModel, toDto } = useEreignisMapper();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useEreignisService() {
   const ereignisControllerApi = new EreignisControllerApi(
@@ -21,7 +23,7 @@ export function useEreignisService() {
 
   function getEreignisse(wahlbezirkID: string): Promise<WahlbezirkEreignisse> {
     return ereignisControllerApi
-      .getEreignisse(wahlbezirkID)
+      .getEreignisse(wahlbezirkID, axiosConfigWrapper.requestAsOfflineFirst())
       .then((response) => toModel(response.data));
   }
 
@@ -35,7 +37,8 @@ export function useEreignisService() {
     try {
       await ereignisControllerApi.postEreignisse(
         wahlbezirkID,
-        ereignisseWriteDto
+        ereignisseWriteDto,
+        axiosConfigWrapper.requestAsOfflineFirst()
       );
       if (sendNotification) {
         userNotificationService.addNotification(

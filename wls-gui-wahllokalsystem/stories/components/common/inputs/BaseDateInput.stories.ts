@@ -7,14 +7,6 @@ import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 const meta: Meta<typeof BaseDateInput> = {
   component: BaseDateInput,
   argTypes: {
-    modelValue: {
-      description: "Aktuell gewählter Wert",
-      table: {
-        category: "props",
-        type: { summary: "Date" },
-        required: true,
-      },
-    },
     "onUpdate:modelValue": {
       name: "update:modelValue", // to show name of event not eventHandler
       description:
@@ -23,10 +15,18 @@ const meta: Meta<typeof BaseDateInput> = {
         category: "events",
       },
     },
+    modelValue: {
+      description: "Aktuell gewählter Wert",
+      table: {
+        category: "props",
+        type: { summary: "Date" },
+        required: true,
+      },
+    },
   },
   args: {
-    "onUpdate:modelValue": fn(),
     modelValue: new Date(),
+    "onUpdate:modelValue": fn(),
   },
 };
 

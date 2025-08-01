@@ -23,6 +23,10 @@ export function useIndexDB() {
     return localforage.setItem(key, value);
   }
 
+  async function storeItem(key: string, data: unknown) {
+    await localforage.setItem(key, data);
+  }
+
   function setupIndexDB() {
     localforage.config({
       driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
@@ -37,5 +41,6 @@ export function useIndexDB() {
     getItemFromIDB,
     setItemInIDB,
     setupIndexDB,
+    storeItem,
   };
 }

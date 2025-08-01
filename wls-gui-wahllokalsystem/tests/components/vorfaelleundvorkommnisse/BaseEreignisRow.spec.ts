@@ -79,7 +79,7 @@ describe("BaseEreignisRow.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_openYesNoDialog_when_deleteIconIsClicked", async () => {
+    it("should_emitDeleteEvent_when_deleteIconIsClicked", async () => {
       const deleteIcon = wrapper.findComponent(
         '[data-test="delete-ereignis-icon"]'
       );

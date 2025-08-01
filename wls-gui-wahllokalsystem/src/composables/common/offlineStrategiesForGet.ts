@@ -20,7 +20,7 @@ interface StoredResponse {
 const { getItemFromIDB, storeItem } = useIndexDB();
 const { log, logError } = useLogging("offlineStrategies");
 
-export function useOfflineStrategies() {
+export function useOfflineStrategiesForGet() {
   const DEFAULT_OFFLINE_STRATEGY = FetchStrategiesEnum.STRATEGY_ONLINE_ONLY;
 
   const offlineStrategiesHandlers: Record<

@@ -6,14 +6,14 @@ import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useOfflineStrategies } from "@/composables/common/offlineStrategies.ts";
+import { useOfflineStrategiesForGet } from "@/composables/common/offlineStrategiesForGet.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
 const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
-const { findStrategy, handleRouteWithStrategy } = useOfflineStrategies();
+const { findStrategy, handleRouteWithStrategy } = useOfflineStrategiesForGet();
 const { log, logError } = useLogging("wahl-worker");
 
 /**

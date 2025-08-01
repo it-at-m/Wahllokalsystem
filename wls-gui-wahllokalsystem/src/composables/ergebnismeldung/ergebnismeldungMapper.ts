@@ -12,6 +12,7 @@ export function useErgebnismeldungMapper() {
         wahlbezirkID: dto.bezirkUndWahlID.wahlbezirkID,
         urneneroeffnungsUhrzeit: dto.urneneroeffnungsUhrzeit,
         anzahlWaehler: dto.anzahlWaehler,
+        anzahlWaehler2: dto.anzahlWaehler2,
       };
     }
   }
@@ -25,6 +26,7 @@ export function useErgebnismeldungMapper() {
         ),
         urneneroeffnungsUhrzeit: model.urneneroeffnungsUhrzeit,
         anzahlWaehler: model.anzahlWaehler,
+        anzahlWaehler2: model.anzahlWaehler2,
       };
     }
   }

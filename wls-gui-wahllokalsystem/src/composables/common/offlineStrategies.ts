@@ -27,9 +27,9 @@ export function useOfflineStrategies() {
     FetchStrategiesEnum,
     RouteHandlerCallback
   > = {
-    STRATEGY_OFFLINE_FIRST: _onlineFirstRequestHandler,
+    STRATEGY_OFFLINE_FIRST: _unhandledFetch,
     STRATEGY_ONLINE_FIRST: _onlineFirstRequestHandler,
-    STRATEGY_ONLINE_ONLY: _onlineFirstRequestHandler,
+    STRATEGY_ONLINE_ONLY: _unhandledFetch,
   };
 
   function findStrategy(request: Request): FetchStrategiesEnum {
@@ -52,6 +52,12 @@ export function useOfflineStrategies() {
     fetchStrategy: FetchStrategiesEnum
   ): Promise<Response> {
     return offlineStrategiesHandlers[fetchStrategy](options);
+  }
+
+  async function _unhandledFetch(
+    options: RouteHandlerCallbackOptions
+  ): Promise<Response> {
+    return await fetch(options.request);
   }
 
   async function _onlineFirstRequestHandler(

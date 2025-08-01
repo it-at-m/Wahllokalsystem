@@ -30,10 +30,6 @@ function onClearClicked() {
 }
 
 function onModelValueChanged(newValue?: string) {
-  if (newValue) {
-    model.value = new Date(newValue);
-  } else {
-    model.value = undefined;
-  }
+  model.value = newValue ? new Date(newValue) : undefined;
 }
 </script>

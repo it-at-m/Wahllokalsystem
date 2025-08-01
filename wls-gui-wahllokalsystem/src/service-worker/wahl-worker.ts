@@ -5,6 +5,7 @@ import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useOfflineStrategies } from "@/composables/common/offlineStrategies.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
@@ -13,6 +14,7 @@ declare let self: ServiceWorkerGlobalScope;
 
 const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
 const { findStrategy, handleRouteWithStrategy } = useOfflineStrategies();
+const { log, logError } = useLogging("wahl-worker");
 
 /**
  * delete old assets from previous sw versions
@@ -26,22 +28,12 @@ cleanupOutdatedCaches();
  */
 clientsClaim();
 
-console.log(`iteration - 10.2`);
-// log(`iteration - 10.2`);
+log(`iteration - 10.3`);
 
 /*****************************************************************************************************************
  * configuration
  ****************************************************************************************************************/
 setupIndexDB();
-console.log(`before wait`);
-
-console.log(`after wait`);
-
-/*****************************************************************************************************************
- * constants
- ****************************************************************************************************************/
-const logID = "wahlworker: ";
-const doLog = true;
 
 /*****************************************************************************************************************
  * event listeners
@@ -55,7 +47,7 @@ self.addEventListener("message", function (event) {
  * application is preparing to make everything available for offline use
  */
 self.oninstall = () => {
-  console.log(`on install - 1`);
+  log(`on install - ${new Date()}`);
   // forces a newly installed (waiting) service worker to become the active one right away
   // --> no restart is required for the new sw to be active
   self.skipWaiting();
@@ -120,7 +112,7 @@ async function postRequestHandler(event: RouteHandlerCallbackOptions) {
     // return original response
     return response;
   } catch (error) {
-    console.error("Error saving to IDB:", error);
+    logError("Error saving to IDB:", error);
 
     // return original response
     return await fetch(event.request);
@@ -134,12 +126,4 @@ async function getRequestHandler(options: RouteHandlerCallbackOptions) {
   return await handleRouteWithStrategy(options, strategy);
 }
 
-/*****************************************************************************************************************
- * utility
- ****************************************************************************************************************/
-function log(message: string) {
-  if (doLog) {
-    console.log(logID + message);
-  }
-}
 log("installed and took control");

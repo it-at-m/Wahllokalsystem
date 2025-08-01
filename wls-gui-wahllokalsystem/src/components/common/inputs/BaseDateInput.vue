@@ -30,15 +30,8 @@ function onClearClicked() {
 }
 
 function onModelValueChanged(newValue?: string) {
-  if (newValue && model.value) {
-    const valueAsDate = new Date(newValue);
-    const cloneOfModel = new Date(model.value);
-    cloneOfModel.setFullYear(
-      valueAsDate.getFullYear(),
-      valueAsDate.getMonth(),
-      valueAsDate.getDate()
-    );
-    model.value = cloneOfModel;
+  if (newValue) {
+    model.value = new Date(newValue);
   } else {
     model.value = undefined;
   }

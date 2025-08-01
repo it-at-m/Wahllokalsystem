@@ -1,7 +1,10 @@
 <template>
   <div>
-    <v-icon icon="$send" />Letzte Absendezeit:
-    {{ time(wahlvorstandStore.lastSending) }}
+    <v-icon
+      icon="$send"
+      class="mr-2"
+    />
+    Letzte Absendezeit: {{ time(wahlvorstandStore.lastSending) }}
   </div>
 </template>
 

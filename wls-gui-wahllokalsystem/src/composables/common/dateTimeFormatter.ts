@@ -96,11 +96,15 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    return dateToFormat.toLocaleDateString("en-CA", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const LANGUAGE_TAG_THAT_PRODUCES_ISO_DATE_ORDERED_STRING = "en-CA";
+    return dateToFormat.toLocaleDateString(
+      LANGUAGE_TAG_THAT_PRODUCES_ISO_DATE_ORDERED_STRING,
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
   }
 
   return {

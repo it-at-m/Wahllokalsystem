@@ -1,9 +1,9 @@
 import localforage from "localforage";
 
 export function useIndexDB() {
-  async function getItemFromIDB(key: string) {
+  async function getItemFromIDB<T>(key: string): Promise<T | null> {
     try {
-      return await localforage.getItem(key);
+      return await localforage.getItem<T>(key);
     } catch (error) {
       console.error("Fehler beim Laden aus IDB:", error);
       return null;

@@ -16,7 +16,12 @@ const { isValidDate } = useDateTimeUtils();
 
 const KONFIG_KEY_CHECK_ANWESENHEIT = "MELDUNGSZEIT_ANWESENHEIT_CHECK";
 
-const DEFAULT_TIME = "00:00:00";
+const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
+const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
+const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59:00";
+const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW = "17:59:00";
+const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW = "18:00:00";
+const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW = "18:00:00";
 
 export const useInfomanagementStore = defineStore(storeID, () => {
   const { currentUserWahltag } = storeToRefs(useUserStore());
@@ -49,7 +54,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       case WahlbezirksArtEnum.BWB:
         return _fruehesteEroeffnungsuhrzeitBWB.value;
       default:
-        return DEFAULT_TIME;
+        return "";
     }
   });
 
@@ -60,7 +65,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       case WahlbezirksArtEnum.BWB:
         return _spaetesteErfoeffnungsuhrzeitBWB.value;
       default:
-        return DEFAULT_TIME;
+        return "";
     }
   });
 
@@ -71,7 +76,7 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       case WahlbezirksArtEnum.BWB:
         return _fruehesteSchliessungsuhrzeitBWB.value;
       default:
-        return DEFAULT_TIME;
+        return "";
     }
   });
 
@@ -88,42 +93,42 @@ export const useInfomanagementStore = defineStore(storeID, () => {
   const _fruehesteEroeffnungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_EROEFFNUNGSZEIT_UW",
-      DEFAULT_TIME
+      DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW
     );
   });
 
   const _spaetesteErfoeffnungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "SPAETESTE_EROEFFNUNGSZEIT_UW",
-      DEFAULT_TIME
+      DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW
     );
   });
 
   const _fruehesteSchliessungsuhrzeitUWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_SCHLIESSUNGSZEIT_UW",
-      DEFAULT_TIME
+      DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW
     );
   });
 
   const _fruehesteEroeffnungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_EROEFFNUNGSZEIT_BW",
-      DEFAULT_TIME
+      DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW
     );
   });
 
   const _spaetesteErfoeffnungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "SPAETESTE_EROEFFNUNGSZEIT_BW",
-      DEFAULT_TIME
+      DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW
     );
   });
 
   const _fruehesteSchliessungsuhrzeitBWB = computed(() => {
     return _getKonfigParamValueOrDefault(
       "FRUEHESTE_SCHLIESSUNGSZEIT_BW",
-      DEFAULT_TIME
+      DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
     );
   });
 

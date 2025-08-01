@@ -1,8 +1,22 @@
+/// <reference lib="WebWorker" />
 /* eslint-disable no-console */
+import type { RouteHandlerCallbackOptions } from "workbox-core";
+
 import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
+
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+
+// declare let self: any;
+declare let self: ServiceWorkerGlobalScope;
+
+const {
+  getItemFromIDB: _getItemFromIDB,
+  setItemInIDB: _setItemInIDB,
+  setupIndexDB,
+} = useIndexDB();
 
 /**
  * delete old assets from previous sw versions
@@ -16,16 +30,16 @@ cleanupOutdatedCaches();
  */
 clientsClaim();
 
+console.log(`iteration - 10.2`);
+// log(`iteration - 10.2`);
+
 /*****************************************************************************************************************
  * configuration
  ****************************************************************************************************************/
-localforage.config({
-  driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
-  name: "wahldb",
-  version: 1.0,
-  storeName: "wahlstore",
-  description: "store for wahlnumber",
-});
+setupIndexDB();
+console.log(`before wait`);
+
+console.log(`after wait`);
 
 /*****************************************************************************************************************
  * constants
@@ -36,11 +50,16 @@ const doLog = true;
 /*****************************************************************************************************************
  * event listeners
  ****************************************************************************************************************/
+self.addEventListener("message", function (event) {
+  log("pin erhalten: " + event.data);
+});
+
 /**
  * 'install' event is always the first one sent to a service worker
  * application is preparing to make everything available for offline use
  */
 self.oninstall = () => {
+  console.log(`on install - 1`);
   // forces a newly installed (waiting) service worker to become the active one right away
   // --> no restart is required for the new sw to be active
   self.skipWaiting();
@@ -72,8 +91,8 @@ registerRoute(new RegExp("/api/.+"), postRequestHandler, "POST");
 /*****************************************************************************************************************
  * handler functions
  ****************************************************************************************************************/
-async function postRequestHandler(event) {
-  log(`POST request identified - ${event.request.url}`);
+async function postRequestHandler(event: RouteHandlerCallbackOptions) {
+  log(`POST request identified - uri: ${event.url}`);
 
   try {
     // body can only be read once so a clone is needed to extract data for saving in idb
@@ -112,8 +131,8 @@ async function postRequestHandler(event) {
   }
 }
 
-async function getRequestHandler(event) {
-  log(`GET request identified - ${event.request.url}`);
+async function getRequestHandler(event: RouteHandlerCallbackOptions) {
+  log(`GET request identified - uri: ${event.url}`);
 
   try {
     const response = await fetch(event.request);
@@ -168,28 +187,11 @@ async function getRequestHandler(event) {
 }
 
 /*****************************************************************************************************************
- * idb utility
- ****************************************************************************************************************/
-function _setItemInIDB(key, data, url, dirty) {
-  log("saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty);
-  const value = { data: data, url: url, dirty: dirty };
-  return localforage.setItem(key, value);
-}
-
-async function _getItemFromIDB(key) {
-  try {
-    return await localforage.getItem(key);
-  } catch (error) {
-    console.error("Fehler beim Laden aus IDB:", error);
-    return null;
-  }
-}
-
-/*****************************************************************************************************************
  * utility
  ****************************************************************************************************************/
-function log(message) {
+function log(message: string) {
   if (doLog) {
     console.log(logID + message);
   }
 }
+log("installed and took control");

@@ -1,22 +1,18 @@
 /// <reference lib="WebWorker" />
-/* eslint-disable no-console */
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
-import localforage from "localforage";
 import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
+import { useOfflineStrategies } from "@/composables/common/offlineStrategies.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
-const {
-  getItemFromIDB: _getItemFromIDB,
-  setItemInIDB: _setItemInIDB,
-  setupIndexDB,
-} = useIndexDB();
+const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
+const { findStrategy, handleRouteWithStrategy } = useOfflineStrategies();
 
 /**
  * delete old assets from previous sw versions
@@ -131,59 +127,11 @@ async function postRequestHandler(event: RouteHandlerCallbackOptions) {
   }
 }
 
-async function getRequestHandler(event: RouteHandlerCallbackOptions) {
-  log(`GET request identified - uri: ${event.url}`);
+async function getRequestHandler(options: RouteHandlerCallbackOptions) {
+  log(`GET request identified - uri: ${options.url}`);
 
-  try {
-    const response = await fetch(event.request);
-
-    try {
-      if (!response.ok) {
-        // get idb data as fallback
-        const storedData = await _getItemFromIDB("lastPostedData");
-        if (storedData) {
-          log("fetched from idb: " + JSON.stringify(storedData));
-          return new Response(JSON.stringify(storedData), {
-            status: 200,
-            statusText: "fetched from idb",
-          });
-        } else {
-          return new Response(
-            JSON.stringify({
-              error: "no data found in idb",
-              status: 500,
-            }),
-            { status: 500 }
-          );
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching idb data:", error);
-    }
-
-    // return original response
-    return response;
-  } catch (error) {
-    console.error("Error fetching remote data:", error);
-
-    // get idb data as fallback not only when response is not ok but also when fetching fails entirely
-    const storedData = await _getItemFromIDB("lastPostedData");
-    if (storedData) {
-      log("fetched from idb: " + JSON.stringify(storedData));
-      return new Response(JSON.stringify(storedData), {
-        status: 200,
-        statusText: "fetched from idb",
-      });
-    } else {
-      return new Response(
-        JSON.stringify({
-          error: "no data found in idb",
-          status: 500,
-        }),
-        { status: 500 }
-      );
-    }
-  }
+  const strategy = findStrategy(options.request);
+  return await handleRouteWithStrategy(options, strategy);
 }
 
 /*****************************************************************************************************************

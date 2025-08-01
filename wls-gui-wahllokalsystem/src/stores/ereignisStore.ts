@@ -13,7 +13,6 @@ import {
   getEreignisArtForDateRelatedToSchliessungsuhrzeit,
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
@@ -23,8 +22,7 @@ export const storeID = "vorfaelleundvorkommnisse";
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID, currentUserWahlbezirksArt } =
-    storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const isSaving = ref(false);
@@ -63,8 +61,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   );
 
   const hasMissingEreignisFlags = computed(() => {
-    const isUWB = currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB;
-    return isUWB
+    return isUWB.value
       ? hasMissingEreignisFlagsForUWB.value
       : hasMissingEreignisFlagsForBWB.value;
   });

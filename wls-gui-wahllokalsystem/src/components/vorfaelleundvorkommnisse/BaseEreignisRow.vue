@@ -3,8 +3,7 @@
     <v-col class="text-center mt-5 flex-grow-0">{{ lineNumber }}</v-col>
     <v-col
       cols="3"
-      class="flex-grow-0 flex-shrink-0"
-      style="min-width: 380px"
+      style="min-width: 380px; max-width: 380px"
     >
       <v-row>
         <v-col cols="7"><base-date-input v-model="dateOnly" /></v-col>

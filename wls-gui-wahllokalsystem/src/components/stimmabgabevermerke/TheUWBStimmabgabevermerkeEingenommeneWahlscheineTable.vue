@@ -1,0 +1,72 @@
+<template>
+  <v-table
+    v-if="stimmabgabevermerke != null"
+    data-test="uwb-stimmabgabevermerke-eingenommene-wahlscheine-table"
+  >
+    <thead>
+      <tr>
+        <th
+          v-for="wahldaten in stimmabgabevermerke.wahldaten"
+          :key="wahldaten.wahlID"
+        >
+          {{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          v-for="wahldaten in stimmabgabevermerke.wahldaten"
+          :key="wahldaten.wahlID"
+        >
+          <v-number-input
+            max-width="15rem"
+            :model-value="
+              getMapValue(
+                EingenommenerWahlscheinStimmzettelartEnum.Klein,
+                wahldaten
+              )
+            "
+            @update:model-value="
+              setMapValue(
+                EingenommenerWahlscheinStimmzettelartEnum.Klein,
+                wahldaten,
+                $event
+              )
+            "
+          />
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
+</template>
+<script setup lang="ts">
+import type { Wahldaten } from "@/types/stimmabgabermerke/Wahldaten.ts";
+
+import { storeToRefs } from "pinia";
+import { VNumberInput, VTable } from "vuetify/components";
+
+import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+
+const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
+const { getWahlNameOrBlankStringById } = useWahlenStore();
+
+const getMapValue = (
+  key: EingenommenerWahlscheinStimmzettelartEnum,
+  wahldaten: Wahldaten
+) => {
+  return wahldaten.eingenommeneWahlscheine.get(key);
+};
+
+const setMapValue = (
+  key: EingenommenerWahlscheinStimmzettelartEnum,
+  wahldaten: Wahldaten,
+  value: number
+) => {
+  wahldaten.eingenommeneWahlscheine.set(key, value);
+};
+</script>
+
+<style scoped></style>

@@ -4,10 +4,13 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useWahlscheineTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    return taskFactoryContext.extendedWahlMetaData.map(createTask);
+    return taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.BWB
+      ? taskFactoryContext.extendedWahlMetaData.map(createTask)
+      : [];
   }
 
   function createTask(extendedWahlMetaData: ExtendedWahlMetaData): Task {

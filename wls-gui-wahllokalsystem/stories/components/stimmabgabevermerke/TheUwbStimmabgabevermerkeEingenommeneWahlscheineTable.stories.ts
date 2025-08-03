@@ -6,7 +6,7 @@ import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/
 import pinia from "@/plugins/pinia.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const meta = {

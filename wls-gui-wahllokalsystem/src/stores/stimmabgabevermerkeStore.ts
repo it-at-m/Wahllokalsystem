@@ -1,4 +1,4 @@
-import type { Stimmabgabevermerke } from "@/types/stimmabgabermerke/Stimmabgabevermerke.ts";
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";

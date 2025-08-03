@@ -14,7 +14,7 @@ import { VNumberInput } from "vuetify/components";
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlNameOrBlankStringById: vi.fn(),

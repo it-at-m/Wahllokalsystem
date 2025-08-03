@@ -1,11 +1,11 @@
-import type { Stimmabgabevermerke } from "@/types/stimmabgabermerke/Stimmabgabevermerke.ts";
-import type { Wahldaten } from "@/types/stimmabgabermerke/Wahldaten.ts";
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
+import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();

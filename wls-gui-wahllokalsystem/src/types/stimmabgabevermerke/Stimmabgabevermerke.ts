@@ -1,4 +1,4 @@
-import type { Wahldaten } from "@/types/stimmabgabermerke/Wahldaten.ts";
+import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 export interface Stimmabgabevermerke {
   wahlbezirkID: string;

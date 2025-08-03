@@ -41,14 +41,14 @@
   </v-table>
 </template>
 <script setup lang="ts">
-import type { Wahldaten } from "@/types/stimmabgabermerke/Wahldaten.ts";
+import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { storeToRefs } from "pinia";
 import { VNumberInput, VTable } from "vuetify/components";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { getWahlNameOrBlankStringById } = useWahlenStore();

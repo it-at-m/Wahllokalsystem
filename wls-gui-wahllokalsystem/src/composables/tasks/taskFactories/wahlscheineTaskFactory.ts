@@ -1,0 +1,29 @@
+import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaData.ts";
+import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
+import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
+import type { Task } from "@/types/tasks/Task.ts";
+
+import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
+
+export function useWahlscheineTaskFactory(): TaskFactory {
+  function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    return taskFactoryContext.extendedWahlMetaData.map(createTask);
+  }
+
+  function createTask(extendedWahlMetaData: ExtendedWahlMetaData): Task {
+    const { loadWahlscheine } = useErgebnismeldungStore();
+    return {
+      name: `Wahlscheine - ${extendedWahlMetaData.wahlName}`,
+      callback: () => {
+        return loadWahlscheine(
+          extendedWahlMetaData.wahlID,
+          extendedWahlMetaData.wahlbezirkID
+        );
+      },
+    };
+  }
+
+  return {
+    createTasks,
+  };
+}

@@ -1,0 +1,74 @@
+<template>
+  <v-container>
+    <v-card>
+      <v-card-title>Zahl der Wahlurnen</v-card-title>
+      <v-card-text class="pb-0 pt-2">
+        <v-form
+          ref="wahlurnenForm"
+          v-model="anzahlWahlurnenValidForm"
+        >
+          <base-wahlumgebung-wahlurnen-div
+            :wahl-vorbereitung="briefwahlVorbereitung"
+          />
+          <v-checkbox
+            v-model="briefwahlVorbereitung.urneVersiegelt"
+            :label="checkboxLabelText"
+            data-test="checkboxAlleVersiegelt"
+          />
+          <v-card-actions>
+            <base-button-save
+              active
+              :disabled="isSaveButtonDisabled"
+              :loading="briefWahlVorbereitungIsSaving"
+              @click="onSaveWahlumgebungBWBClicked"
+            />
+          </v-card-actions>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-container>
+</template>
+
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
+import {
+  VCard,
+  VCardActions,
+  VCardText,
+  VCardTitle,
+  VCheckbox,
+  VContainer,
+  VForm,
+} from "vuetify/components";
+
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+
+const anzahlWahlurnenValidForm = ref<null | boolean>(null);
+
+const { wahlen } = storeToRefs(useWahlenStore());
+const { sendBriefwahlvorbereitung } = useWahlbezirkStore();
+const { briefWahlVorbereitungIsSaving, briefwahlVorbereitung } =
+  storeToRefs(useWahlbezirkStore());
+
+const isSaveButtonDisabled = computed(() => {
+  return (
+    anzahlWahlurnenValidForm.value !== true ||
+    !briefwahlVorbereitung.value.urneVersiegelt
+  );
+});
+
+const checkboxLabelText = computed(() => {
+  if (wahlen.value && wahlen.value?.length > 1) {
+    return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
+  }
+  return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
+});
+
+function onSaveWahlumgebungBWBClicked() {
+  sendBriefwahlvorbereitung();
+}
+</script>

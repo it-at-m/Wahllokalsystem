@@ -39,14 +39,14 @@ export function useEreignisService() {
       );
       if (sendNotification) {
         userNotificationService.addNotification(
-          "Die Störungen wurden erfolgreich gespeichert",
+          "Die Ereignisse wurden erfolgreich gespeichert",
           UserNotificationCategoryEnum.SUCCESS
         );
       }
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
-          "Das Speichern der Störungen schlug fehl.",
+          "Das Speichern der Ereignisse schlug fehl.",
           UserNotificationCategoryEnum.ERROR
         );
       }

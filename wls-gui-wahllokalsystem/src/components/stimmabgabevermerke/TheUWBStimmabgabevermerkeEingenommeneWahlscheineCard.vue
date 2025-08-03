@@ -11,13 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { VCard, VCardText, VCardTitle } from "vuetify/components";
 
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
-import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
-
-const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 </script>
 
 <style scoped></style>

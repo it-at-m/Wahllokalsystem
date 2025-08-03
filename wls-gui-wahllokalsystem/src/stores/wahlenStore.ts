@@ -7,6 +7,7 @@ import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
@@ -28,6 +29,55 @@ export const useWahlenStore = defineStore(storeID, () => {
       nummern.add(wahl.waehlerverzeichnisNummer);
     }
     return Array.from(nummern);
+  });
+
+  const summeGueltigerWahlbriefe = computed(() => {
+    if (!wahlen.value) return [];
+    return wahlen.value.map(
+      (wahl) =>
+        wahl.beanstandeteWahlbriefe.filter(
+          (brief) => brief === ZurueckweisungsgrundEnum.Zugelassen
+        ).length
+    );
+  });
+
+  const summeUngueltigerWahlbriefe = computed(() => {
+    if (!wahlen.value) return [];
+    return wahlen.value.map(
+      (wahl) =>
+        wahl.beanstandeteWahlbriefe.filter(
+          (brief) =>
+            brief !== ZurueckweisungsgrundEnum.Zugelassen && brief !== null
+        ).length
+    );
+  });
+
+  const summenZurueckweisungsgruende = computed(() => {
+    if (!wahlen.value) return [];
+    const anzahlWahlen = wahlen.value.length;
+    const summenZurueckweisungsgruende = Object.values(ZurueckweisungsgrundEnum)
+      .filter((grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen)
+      .map((grund) => ({
+        summen: new Array(anzahlWahlen).fill(0),
+        grund: grund,
+      }));
+
+    wahlen.value.forEach((wahl, wahlIndex) => {
+      if (
+        wahl.beanstandeteWahlbriefe &&
+        wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+      ) {
+        wahl.beanstandeteWahlbriefe.forEach((beanstandeterWahlbrief) => {
+          if (beanstandeterWahlbrief !== ZurueckweisungsgrundEnum.Zugelassen) {
+            const index = summenZurueckweisungsgruende.findIndex(
+              (item) => item.grund === beanstandeterWahlbrief
+            );
+            summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
+          }
+        });
+      }
+    });
+    return summenZurueckweisungsgruende;
   });
 
   async function initWahlen(sendNotification = true) {
@@ -138,6 +188,9 @@ export const useWahlenStore = defineStore(storeID, () => {
     deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
+    summeGueltigerWahlbriefe,
+    summeUngueltigerWahlbriefe,
+    summenZurueckweisungsgruende,
   };
 });
 

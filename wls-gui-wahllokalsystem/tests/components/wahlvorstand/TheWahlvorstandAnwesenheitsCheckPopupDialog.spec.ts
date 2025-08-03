@@ -18,6 +18,8 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 const mockDefinitions = vi.hoisted(() => ({
   resetAllAnwesenheiten: vi.fn(),
   routerPush: vi.fn(),
+  setupTimer: vi.fn(),
+  clearTimer: vi.fn(),
 }));
 
 let componentCallback: () => void;
@@ -33,8 +35,13 @@ vi.mock("@/composables/dateOfActionTimeout.ts", () => ({
     callback: () => void
   ) => {
     componentCallback = callback;
+    return {
+      setupTimer: mockDefinitions.setupTimer,
+      clearTimer: mockDefinitions.clearTimer,
+    };
   },
 }));
+
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({
     resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
@@ -128,6 +135,30 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
         [{ name: "wahlvorstand" }],
       ]);
       expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_resetTimer_when_componentIsUnmounted", async (context) => {
+      const { dateTimeToCheckAnwesenheit } = storeToRefs(
+        useInfomanagementStore()
+      );
+      // @ts-expect-error: cannot set readonly
+      dateTimeToCheckAnwesenheit.value = new Date("2026-06-26T18:21:23.123");
+
+      wrapper.unmount();
+
+      await expect(document.body.innerHTML).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+
+      expect(mockDefinitions.clearTimer).toHaveBeenCalledOnce();
+    });
+
+    it("should_startTimer_when_componentIsMounted", async (context) => {
+      await expect(document.body.innerHTML).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+
+      expect(mockDefinitions.setupTimer).toHaveBeenCalledOnce();
     });
   });
 });

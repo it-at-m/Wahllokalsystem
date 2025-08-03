@@ -40,3 +40,5 @@ export const INFOMANAGEMENT_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "infomanagement-service";
 export const BRIEFWAHL_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "briefwahl-service";
+export const ERGEBNISMELDUNG_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "ergebnismeldung-service";

@@ -159,16 +159,3 @@ describe("TheEreignisseRows.vue", () => {
     });
   });
 });
-
-function deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
-  dateToCalculateTheOffset: Date,
-  usedOffsetInHoursOnTestCreation: number
-) {
-  const result =
-    usedOffsetInHoursOnTestCreation + //+ cause UTC+2 is in timezoneOffset -120
-    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60);
-  console.debug(
-    `deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment - result: ${result}`
-  );
-  return result;
-}

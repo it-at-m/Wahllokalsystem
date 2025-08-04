@@ -171,9 +171,8 @@ function deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
   dateToCalculateTheOffset: Date,
   usedOffsetInHoursOnTestCreation: number
 ) {
-  const result =
+  return (
     usedOffsetInHoursOnTestCreation + //+ cause UTC+2 is in timezoneOffset -120
-    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60);
-  console.log(result);
-  return result;
+    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60)
+  );
 }

@@ -11,7 +11,7 @@ describe("dateTimeFormatter.ts", () => {
     getDateFromTimeString,
     toGermanDateFormat,
     toGermanDateWithLongMonth,
-    toIsoDate,
+    toYyyyMmDd,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -165,16 +165,30 @@ describe("dateTimeFormatter.ts", () => {
   });
 
   describe("toIsoDate", () => {
-    it.each(["2025-07-30", "0001-01-01", "0010-01-01", "0100-01-01"])(
-      "should_returnDateOnlyAsIsoDate_when_dateIsGivenAsString%s",
-      (dateString) => {
-        const result = toIsoDate(new Date(dateString));
-        expect(result).toStrictEqual(dateString);
+    it.each([
+      { dateStringToParse: "2025-07-30", expectedDateString: "2025-07-30" },
+      { dateStringToParse: "2025-12-30", expectedDateString: "2025-12-30" },
+      {
+        dateStringToParse: "2025-07-30T00:00:00.000",
+        expectedDateString: "2025-07-30",
+      },
+      {
+        dateStringToParse: "2025-07-30T23:59:59.999",
+        expectedDateString: "2025-07-30",
+      },
+      { dateStringToParse: "0100-01-01", expectedDateString: "0100-01-01" },
+      { dateStringToParse: "0010-01-01", expectedDateString: "0010-01-01" },
+      { dateStringToParse: "0001-01-01", expectedDateString: "0001-01-01" },
+    ])(
+      "should_returnDateOnlyAsIsoDate_when_dateIsGivenAsString'$dateStringToParse'",
+      ({ dateStringToParse, expectedDateString }) => {
+        const result = toYyyyMmDd(new Date(dateStringToParse));
+        expect(result).toStrictEqual(expectedDateString);
       }
     );
 
     it("should_returnEmptyString_when_dateIsInvalid", () => {
-      const result = toIsoDate(new Date("2025-29-45"));
+      const result = toYyyyMmDd(new Date("2025-29-45"));
       expect(result).toStrictEqual("");
     });
   });

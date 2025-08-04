@@ -3,7 +3,6 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
-  const INDEX_OF_TIME_SEPARATOR = 10;
 
   const { isValidDate } = useDateTimeUtils();
 
@@ -97,7 +96,7 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    return dateToFormat.toISOString().substring(0, INDEX_OF_TIME_SEPARATOR);
+    return `${leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
   }
 
   return {
@@ -112,5 +111,13 @@ export function useDateTimeFormatter() {
 }
 
 function leftPadTwoDigitsWithZero(number: number): string {
-  return `${number}`.padStart(2, "0");
+  return leftPadWithZero(number, 2);
+}
+
+function leftPadFourDigitsWithZero(number: number): string {
+  return leftPadWithZero(number, 4);
+}
+
+function leftPadWithZero(number: number, padLength: number): string {
+  return `${number}`.padStart(padLength, "0");
 }

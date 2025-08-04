@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    v-if="currentUserWahlbezirksArt === 'BWB'"
+    v-if="isBWB"
     prepend-icon="$printer"
     @click="onNachbesetzungDruckenClicked"
   >
@@ -24,11 +24,8 @@ const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
 const { toHhMm, toGermanDateWithLongMonth } = useDateTimeFormatter();
 
-const {
-  currentUserWahlbezirkNummer,
-  currentUserWahlbezirksArt,
-  currentUserHauptWahlID,
-} = storeToRefs(useUserStore());
+const { currentUserWahlbezirkNummer, isBWB, currentUserHauptWahlID } =
+  storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
 const wahlenStore = useWahlenStore();
 

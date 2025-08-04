@@ -101,7 +101,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahlen.value?.find((wahl) => wahl.wahlID === wahlID);
   }
 
-  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
+  function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
   }
@@ -177,7 +177,7 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   return {
     wahlen,
-    getWaehlerverzeichnisOrUndefinedById,
+    getWaehlerverzeichnisNummerOrUndefinedById,
     waehlerverzeichnisNummern,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,

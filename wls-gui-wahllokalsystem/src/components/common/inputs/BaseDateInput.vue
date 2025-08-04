@@ -6,7 +6,6 @@
     label="Datum"
     clearable
     @update:model-value="onModelValueChanged"
-    @clear="onClearClicked"
   />
 </template>
 
@@ -25,11 +24,7 @@ const formatedDate = computed(() =>
   model.value ? toIsoDate(model.value) : null
 );
 
-function onClearClicked() {
-  model.value = undefined;
-}
-
-function onModelValueChanged(newValue?: string) {
+function onModelValueChanged(newValue: string | null) {
   model.value = newValue ? new Date(newValue) : undefined;
 }
 </script>

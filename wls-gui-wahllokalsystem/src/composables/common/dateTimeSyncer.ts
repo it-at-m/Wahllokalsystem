@@ -2,7 +2,7 @@ import type { ComputedRef } from "vue";
 
 import { computed, ref, watch } from "vue";
 
-export function useDateAndTime(initState: ComputedRef<Date | undefined>) {
+export function useDateTimeSyncer(initState: ComputedRef<Date | undefined>) {
   const dateOnly = ref<Date | undefined>(initState.value);
   const timeOnly = ref<Date | undefined>(initState.value);
 

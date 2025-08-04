@@ -3,15 +3,15 @@ import type { Ref } from "vue";
 import { beforeEach, describe, expect, it } from "vitest";
 import { computed, nextTick, ref } from "vue";
 
-import { useDateAndTime } from "@/composables/common/dateAndTime.ts";
+import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 
-describe("dateAndTime.ts", () => {
-  let unitUnderTest: ReturnType<typeof useDateAndTime>;
+describe("dateTimeSyncer.ts", () => {
+  let unitUnderTest: ReturnType<typeof useDateTimeSyncer>;
   let initialState: Ref<Date | undefined>;
 
   beforeEach(() => {
     initialState = ref(new Date());
-    unitUnderTest = useDateAndTime(computed(() => initialState.value));
+    unitUnderTest = useDateTimeSyncer(computed(() => initialState.value));
   });
 
   describe("dateAndTimeCombined", () => {

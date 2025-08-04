@@ -43,7 +43,7 @@ import { VCol, VIcon, VRow, VTextarea } from "vuetify/components";
 
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import { useDateAndTime } from "@/composables/common/dateAndTime.ts";
+import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
 
 const maxLengthForEreignisBeschreibung = 500;
@@ -63,7 +63,7 @@ const ereignisModel = defineModel({
 const ereignisUhrzeit = computed(() => ereignisModel.value.uhrzeit);
 
 const { dateOnly, timeOnly, dateAndTimeCombined } =
-  useDateAndTime(ereignisUhrzeit);
+  useDateTimeSyncer(ereignisUhrzeit);
 
 watch(dateAndTimeCombined, (newValue) => {
   if (ereignisModel.value.uhrzeit?.getTime() !== newValue?.getTime()) {

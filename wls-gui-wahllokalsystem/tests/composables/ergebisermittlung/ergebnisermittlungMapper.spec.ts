@@ -4,10 +4,13 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
+
+const { generateRandomString } = useCommonTestDataFactory();
 
 describe("ergebnisermittlungMapper.ts", () => {
   const { toModel, toDto } = useErgebnisermittlungMapper();
@@ -19,11 +22,7 @@ describe("ergebnisermittlungMapper.ts", () => {
       const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
 
       const expectedModel: Stimmzettelumschlaege = {
-        wahlID: dto.bezirkUndWahlID.wahlID,
-        wahlbezirkID: dto.bezirkUndWahlID.wahlbezirkID,
-        urneneroeffnungsUhrzeit: dto.urneneroeffnungsUhrzeit,
         anzahlWaehler: dto.anzahlWaehler,
-        anzahlWaehler2: dto.anzahlWaehler2,
       };
 
       const result = toModel(dto);
@@ -35,24 +34,24 @@ describe("ergebnisermittlungMapper.ts", () => {
   describe("toDto", () => {
     it("should_returnDto_when_givenModel", () => {
       const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
 
       const expectedDto: StimmzettelumschlaegeDTO = {
-        bezirkUndWahlID: _createBezirkUndWahlIDDto(model),
-        urneneroeffnungsUhrzeit: model.urneneroeffnungsUhrzeit,
+        bezirkUndWahlID: _createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
         anzahlWaehler: model.anzahlWaehler,
-        anzahlWaehler2: model.anzahlWaehler2,
       };
 
-      const result = toDto(model);
+      const result = toDto(model, wahlID, wahlbezirkID);
 
       expect(result).toStrictEqual(expectedDto);
     });
   });
 
-  function _createBezirkUndWahlIDDto(model: Stimmzettelumschlaege) {
+  function _createBezirkUndWahlIDDto(wahlID: string, wahlbezirkID: string) {
     const dto: BezirkUndWahlID = {
-      wahlID: model.wahlID,
-      wahlbezirkID: model.wahlbezirkID,
+      wahlID: wahlID,
+      wahlbezirkID: wahlbezirkID,
     };
     return dto;
   }

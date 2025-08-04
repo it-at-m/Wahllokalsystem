@@ -27,7 +27,7 @@ export function useErgebnisermittlungService() {
       await ergebnismeldungControllerApi.postStimmzettelumschlaege(
         wahlID,
         wahlbezirkID,
-        toDto(stimmzettelumschlaege)
+        toDto(stimmzettelumschlaege, wahlID, wahlbezirkID)
       );
       if (sendNotification) {
         userNotificationService.addNotification(

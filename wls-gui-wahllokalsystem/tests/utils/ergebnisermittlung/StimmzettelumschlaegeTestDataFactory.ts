@@ -6,32 +6,21 @@ import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzett
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-const {
-  generateRandomString,
-  generateRandomNumber,
-  generateRandomDateTimeAsString,
-} = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 
 export function useStimmzettelumschlaegeTestDataFactory() {
   function createStimmzettelumschlaegeDto(): StimmzettelumschlaegeDTO {
-    const dto: StimmzettelumschlaegeDTO = {
+    return {
       bezirkUndWahlID: _createBezirkUndWahlIDDto(),
-      urneneroeffnungsUhrzeit: generateRandomDateTimeAsString(),
       anzahlWaehler: generateRandomNumber(3),
-      anzahlWaehler2: generateRandomNumber(3),
     };
-    return dto;
   }
 
   function createStimmzettelumschlaege(): Stimmzettelumschlaege {
-    const model: Stimmzettelumschlaege = {
-      wahlID: generateRandomString(10),
-      wahlbezirkID: generateRandomString(10),
-      urneneroeffnungsUhrzeit: generateRandomDateTimeAsString(),
+    return {
       anzahlWaehler: generateRandomNumber(3),
-      anzahlWaehler2: generateRandomNumber(3),
     };
-    return model;
   }
 
   function _createBezirkUndWahlIDDto() {

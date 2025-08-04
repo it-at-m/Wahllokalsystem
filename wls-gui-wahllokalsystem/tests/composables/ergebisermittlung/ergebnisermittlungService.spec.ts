@@ -60,7 +60,7 @@ describe("ergebnisermittlungService", () => {
         0
       );
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege],
+        [stimmzettelumschlaege, wahlID, wahlbezirkID],
       ]);
     });
 
@@ -80,7 +80,7 @@ describe("ergebnisermittlungService", () => {
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege],
+        [stimmzettelumschlaege, wahlID, wahlbezirkID],
       ]);
     });
 
@@ -106,22 +106,8 @@ describe("ergebnisermittlungService", () => {
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege],
+        [stimmzettelumschlaege, wahlID, wahlbezirkID],
       ]);
     });
-
-    /*it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCallAndNotificationFlagFalse", async () => {
-      mockDefinitions.getKonfigurations.mockRejectedValue(
-        new Error("api called failed")
-      );
-
-      await expect(async () =>
-        getKonfigurationsparameter(false)
-      ).rejects.toThrowError();
-
-      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
-        0
-      );
-    });*/
   });
 });

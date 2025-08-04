@@ -8,25 +8,23 @@ export function useErgebnisermittlungMapper() {
   function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
     {
       return {
-        wahlID: dto.bezirkUndWahlID.wahlID,
-        wahlbezirkID: dto.bezirkUndWahlID.wahlbezirkID,
-        urneneroeffnungsUhrzeit: dto.urneneroeffnungsUhrzeit,
         anzahlWaehler: dto.anzahlWaehler,
-        anzahlWaehler2: dto.anzahlWaehler2,
       };
     }
   }
 
-  function toDto(model: Stimmzettelumschlaege): StimmzettelumschlaegeDTO {
+  function toDto(
+    model: Stimmzettelumschlaege,
+    wahlID: string,
+    wahlbezirkID: string
+  ): StimmzettelumschlaegeDTO {
     {
       return {
         bezirkUndWahlID: _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
-          model.wahlID,
-          model.wahlbezirkID
+          wahlID,
+          wahlbezirkID
         ),
-        urneneroeffnungsUhrzeit: model.urneneroeffnungsUhrzeit,
         anzahlWaehler: model.anzahlWaehler,
-        anzahlWaehler2: model.anzahlWaehler2,
       };
     }
   }

@@ -5,12 +5,14 @@ import { computed, ref } from "vue";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
+const ergebnisermittlungService = useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
@@ -18,6 +20,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
+
+  const isStimmzettelumschlaegeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
     if (!wahlen.value) return [];
@@ -115,6 +119,22 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveStimmzettelumschlaege(wahlID: string) {
+    const wahl = getWahlOrUndefinedById(wahlID);
+    if (wahl) {
+      isStimmzettelumschlaegeSaving.value = true;
+      try {
+        await ergebnisermittlungService.saveStimmzettelumschlaege(
+          wahl.wahlID,
+          currentUserWahlbezirkID.value,
+          wahl.stimmzettelumschlaege
+        );
+      } finally {
+        isStimmzettelumschlaegeSaving.value = false;
+      }
+    }
+  }
+
   function getWahlNameOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
@@ -138,6 +158,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
+    saveStimmzettelumschlaege,
+    isStimmzettelumschlaegeSaving,
   };
 });
 

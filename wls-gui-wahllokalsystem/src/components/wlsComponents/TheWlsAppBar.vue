@@ -31,7 +31,7 @@
             v-if="
               eroeffnungsuhrzeitSent !== undefined &&
               schliessungsuhrzeitSent === undefined &&
-              currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB
+              isUWB
             "
           />
           <wls-clock class="navbar-text mx-2 mt-1" />
@@ -50,12 +50,8 @@
           title="Wahlvorstand"
           :to="ROUTE_WAHLVORSTAND"
         />
-        <the-b-w-b-preparation-list-group
-          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.BWB"
-        />
-        <the-u-w-b-preparation-list-group
-          v-if="currentUserWahlbezirksArt === WahlbezirksArtEnum.UWB"
-        />
+        <the-b-w-b-election-list-group v-if="isBWB" />
+        <the-u-w-b-election-list-group v-if="isUWB" />
         <v-list-item
           title="Ereignisse"
           :to="ROUTE_EREIGNISSE"
@@ -81,8 +77,8 @@ import {
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
-import TheBWBPreparationListGroup from "@/components/navigation/TheBWBPreparationListGroup.vue";
-import TheUWBPreparationListGroup from "@/components/navigation/TheUWBPreparationListGroup.vue";
+import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
+import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -90,18 +86,13 @@ import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum";
 
 const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();
-const {
-  user,
-  currentUserWahltag,
-  currentUserWahlbezirkNummer,
-  currentUserWahlbezirksArt,
-} = storeToRefs(useUserStore());
+const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
+  storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );

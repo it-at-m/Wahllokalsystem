@@ -191,4 +191,40 @@ describe("userStore.ts", () => {
       expect(unitUnderTest.currentUserWahlMetadata).toStrictEqual(wahlMetadata);
     });
   });
+
+  describe("isUWB", () => {
+    it("should_returnTrue_when_wahlbezirksArtIsUWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      expect(unitUnderTest.isUWB).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_wahlbezirksArtIsBWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      expect(unitUnderTest.isUWB).toStrictEqual(false);
+    });
+  });
+
+  describe("isBWB", () => {
+    it("should_returnTrue_when_wahlbezirksArtIsBWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      expect(unitUnderTest.isBWB).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_wahlbezirksArtIsUWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      expect(unitUnderTest.isBWB).toStrictEqual(false);
+    });
+  });
 });

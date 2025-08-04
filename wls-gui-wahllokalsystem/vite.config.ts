@@ -10,13 +10,6 @@ const serverPort = 8400;
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  css: {
-    preprocessorOptions: {
-      sass: {
-        api: "modern-compiler",
-      },
-    },
-  },
   plugins: [
     vue({
       template: { transformAssetUrls },

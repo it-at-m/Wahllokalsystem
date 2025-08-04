@@ -20,6 +20,11 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
+interface EreignisCreateTemplate {
+  beschreibung?: string;
+  uhrzeit?: Date;
+}
+
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
@@ -71,7 +76,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
 
-  function addEreignis(ereignisToAddTemplate?: Partial<Ereignis>) {
+  function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
     const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
 
     wahlbezirkEreignisse.value.ereigniseintraege?.push(ereignisToAdd);
@@ -157,14 +162,14 @@ export const useEreignisStore = defineStore(storeID, () => {
     }
   }
 
-  function _createEreignis(nonDefaultValues?: Partial<Ereignis>): Ereignis {
+  function _createEreignis(
+    nonDefaultValues?: EreignisCreateTemplate
+  ): Ereignis {
     const uhrzeit = nonDefaultValues?.uhrzeit ?? new Date();
-    const ereignisart =
-      nonDefaultValues?.ereignisart ??
-      getEreignisArtForDateRelatedToSchliessungsuhrzeit(
-        uhrzeit,
-        schliessungsuhrzeitSent.value
-      );
+    const ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
+      uhrzeit,
+      schliessungsuhrzeitSent.value
+    );
     const beschreibung = nonDefaultValues?.beschreibung;
 
     return {

@@ -175,7 +175,7 @@ function deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
     usedOffsetInHoursOnTestCreation + //+ cause UTC+2 is in timezoneOffset -120
     Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60);
   console.debug(
-    `deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment - result > ${result}`
+    `deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment - result: ${result}`
   );
   return result;
 }

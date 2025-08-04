@@ -108,7 +108,7 @@ describe("TheEreignisseRows.vue", () => {
       for (let i = 0; i < 5; i++) {
         const date = new Date("2025-07-29");
         date.setHours(
-          i +
+          i -
             deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
               date,
               2
@@ -171,8 +171,11 @@ function deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
   dateToCalculateTheOffset: Date,
   usedOffsetInHoursOnTestCreation: number
 ) {
-  return (
+  const result =
     usedOffsetInHoursOnTestCreation + //+ cause UTC+2 is in timezoneOffset -120
-    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60)
+    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60);
+  console.debug(
+    `deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment - result > ${result}`
   );
+  return result;
 }

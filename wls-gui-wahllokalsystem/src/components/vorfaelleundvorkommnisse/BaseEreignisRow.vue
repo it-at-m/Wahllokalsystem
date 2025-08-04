@@ -77,5 +77,3 @@ function onDeleteIconClicked() {
   emit("delete");
 }
 </script>
-
-<style scoped></style>

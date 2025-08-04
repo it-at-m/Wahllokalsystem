@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 
+import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard.vue";
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
@@ -10,7 +11,7 @@ import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabeve
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const meta = {
-  component: TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable,
+  component: TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard,
   args: {},
   decorators: [
     (story) => {

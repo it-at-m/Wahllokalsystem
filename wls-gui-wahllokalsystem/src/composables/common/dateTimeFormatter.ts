@@ -92,7 +92,7 @@ export function useDateTimeFormatter() {
     }
   }
 
-  function toIsoDate(dateToFormat: Date) {
+  function toYyyyMmDd(dateToFormat: Date) {
     if (!isValidDate(dateToFormat)) {
       return NO_VALUE_DEFAULT;
     }
@@ -103,7 +103,7 @@ export function useDateTimeFormatter() {
   return {
     time,
     toHhMm,
-    toIsoDate,
+    toYyyyMmDd,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,

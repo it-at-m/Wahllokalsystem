@@ -16,12 +16,12 @@ import { VTextField } from "vuetify/components";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { REQUIRED } from "@/util/rules.ts";
 
-const { toIsoDate } = useDateTimeFormatter();
+const { toYyyyMmDd } = useDateTimeFormatter();
 
 const model = defineModel<Date>();
 
 const formatedDate = computed(() =>
-  model.value ? toIsoDate(model.value) : null
+  model.value ? toYyyyMmDd(model.value) : null
 );
 
 function onModelValueChanged(newValue: string | null) {

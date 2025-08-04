@@ -107,7 +107,14 @@ describe("TheEreignisseRows.vue", () => {
       const ereigniseintraege = [] as Ereignis[];
       for (let i = 0; i < 5; i++) {
         const date = new Date("2025-07-29");
-        date.setHours(i, 0);
+        date.setHours(
+          i +
+            deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
+              date,
+              2
+            ),
+          0
+        );
         ereigniseintraege.push(
           EreignisBuilder.createComplete()
             .withUhrzeit(date)
@@ -159,3 +166,14 @@ describe("TheEreignisseRows.vue", () => {
     });
   });
 });
+
+function deltaBetweenUsedTimezoneOffsetDuringCreationAndRunningEnvironment(
+  dateToCalculateTheOffset: Date,
+  usedOffsetInHoursOnTestCreation: number
+) {
+  const result =
+    usedOffsetInHoursOnTestCreation + //+ cause UTC+2 is in timezoneOffset -120
+    Math.floor(dateToCalculateTheOffset.getTimezoneOffset() / 60);
+  console.log(result);
+  return result;
+}

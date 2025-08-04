@@ -3,6 +3,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
+  const INDEX_OF_TIME_SEPARATOR = 10;
 
   const { isValidDate } = useDateTimeUtils();
 
@@ -96,15 +97,7 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    const LANGUAGE_TAG_THAT_PRODUCES_ISO_DATE_ORDERED_STRING = "en-CA";
-    return dateToFormat.toLocaleDateString(
-      LANGUAGE_TAG_THAT_PRODUCES_ISO_DATE_ORDERED_STRING,
-      {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }
-    );
+    return dateToFormat.toISOString().substring(0, INDEX_OF_TIME_SEPARATOR);
   }
 
   return {

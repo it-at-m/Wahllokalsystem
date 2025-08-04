@@ -165,10 +165,13 @@ describe("dateTimeFormatter.ts", () => {
   });
 
   describe("toIsoDate", () => {
-    it("should_returnDateOnlyAsIsoDate_when_dateIsGiven", () => {
-      const result = toIsoDate(new Date("2025-07-30"));
-      expect(result).toStrictEqual("2025-07-30");
-    });
+    it.each(["2025-07-30", "0001-01-01", "0010-01-01", "0100-01-01"])(
+      "should_returnDateOnlyAsIsoDate_when_dateIsGivenAsString%s",
+      (dateString) => {
+        const result = toIsoDate(new Date(dateString));
+        expect(result).toStrictEqual(dateString);
+      }
+    );
 
     it("should_returnEmptyString_when_dateIsInvalid", () => {
       const result = toIsoDate(new Date("2025-29-45"));

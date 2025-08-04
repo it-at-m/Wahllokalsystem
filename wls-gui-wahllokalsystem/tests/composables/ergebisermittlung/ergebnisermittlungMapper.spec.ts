@@ -1,4 +1,7 @@
-import type { StimmzettelumschlaegeDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type {
+  BezirkUndWahlID,
+  StimmzettelumschlaegeDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
@@ -33,7 +36,7 @@ describe("ergebnisermittlungMapper.ts", () => {
     it("should_returnDto_when_givenModel", () => {
       const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
 
-      const expectedDto: StimmzettelumschlaegeDto = {
+      const expectedDto: StimmzettelumschlaegeDTO = {
         bezirkUndWahlID: _createBezirkUndWahlIDDto(model),
         urneneroeffnungsUhrzeit: model.urneneroeffnungsUhrzeit,
         anzahlWaehler: model.anzahlWaehler,
@@ -47,7 +50,7 @@ describe("ergebnisermittlungMapper.ts", () => {
   });
 
   function _createBezirkUndWahlIDDto(model: Stimmzettelumschlaege) {
-    const dto: BezirkUndWahlIDDTO = {
+    const dto: BezirkUndWahlID = {
       wahlID: model.wahlID,
       wahlbezirkID: model.wahlbezirkID,
     };

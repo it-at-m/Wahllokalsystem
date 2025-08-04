@@ -29,10 +29,12 @@ export function useErgebnisermittlungService() {
         wahlbezirkID,
         toDto(stimmzettelumschlaege)
       );
-      userNotificationService.addNotification(
-        "Stimmzettelumschlaege erfolgreich gespeichert.",
-        UserNotificationCategoryEnum.SUCCESS
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Stimmzettelumschlaege erfolgreich gespeichert.",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(

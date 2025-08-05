@@ -1,7 +1,9 @@
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
-import { StimmzettelumschlaegeControllerApi } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { Configuration } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
+import {
+  Configuration,
+  StimmzettelumschlaegeControllerApi,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";

@@ -1,12 +1,12 @@
 export interface Stimmzettelumschlaege {
-  anzahlWaehler: number | undefined;
+  anzahlWaehler: number;
 }
 
 export class StimmzettelumschlaegeBuilder implements Stimmzettelumschlaege {
-  constructor(public anzahlWaehler: number | undefined) {}
+  constructor(public anzahlWaehler: number) {}
 
   static create(): Stimmzettelumschlaege {
-    return new StimmzettelumschlaegeBuilder(undefined);
+    return new StimmzettelumschlaegeBuilder(0);
   }
 
   withAnzahlWaehler(anzahlWaehler: number) {

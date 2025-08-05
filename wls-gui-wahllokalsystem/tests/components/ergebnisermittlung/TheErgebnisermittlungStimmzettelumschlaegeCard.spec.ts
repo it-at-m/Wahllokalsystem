@@ -64,12 +64,12 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithDisabledSaveButton_when_anzahlIsUndefined", async (context) => {
+    it("should_renderWithDisabledSaveButton_when_anzahlIsZero", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: undefined })
+          .stimmzettelumschlaege({ anzahlWaehler: 0 })
           .build(),
       ];
 
@@ -195,7 +195,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: undefined })
+          .stimmzettelumschlaege({ anzahlWaehler: 0 })
           .build(),
       ];
 

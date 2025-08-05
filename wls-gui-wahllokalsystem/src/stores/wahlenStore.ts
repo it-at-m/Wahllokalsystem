@@ -18,6 +18,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   const { currentUserWahltagID, currentUserWahlbezirkID } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
+  const isBeanstandeteWahlbriefeTableValid = ref<null | boolean>(null);
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
@@ -188,6 +189,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
+    isBeanstandeteWahlbriefeTableValid,
     summeGueltigerWahlbriefe,
     summeUngueltigerWahlbriefe,
     summenZurueckweisungsgruende,

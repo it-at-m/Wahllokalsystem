@@ -89,7 +89,7 @@ describe("wahlenStore.ts", () => {
     });
   });
 
-  describe("getWaehlerverzeichnisOrUndefinedById", () => {
+  describe("getWaehlerverzeichnisNummerOrUndefinedById", () => {
     it("should_returnWaehlerverzeichnisNummer_when_calledWithId", () => {
       const wahlOne = createWahl();
       const wahlTwo = createWahl();
@@ -97,7 +97,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlTwo.wahlID
       );
 
@@ -111,7 +111,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlThree.wahlID
       );
 
@@ -375,4 +375,71 @@ describe("wahlenStore.ts", () => {
       expect(unitUnderTest.isBeanstandeteWahlbriefeSaving).toBe(false);
     });
   });
+
+  describe("summeGueltigerWahlbriefe", () => {
+    it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+
+      expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([0]);
+    });
+
+    it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+
+      expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([1, 2]);
+    });
+  });
+
+  describe("summeUngueltigerWahlbriefe", () => {
+    it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+
+      expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0]);
+    });
+
+    it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+
+      expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0, 1]);
+    });
+  });
+
+  describe("summenZurueckweisungsgruende", () => {
+    it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+
+      unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
+        expect(row.summen).toStrictEqual([0]);
+      });
+    });
+
+    it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
+      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+
+      unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
+        if (row.grund !== "GEGENSTAND_IM_UMSCHLAG") {
+          expect(row.summen).toStrictEqual([0, 0]);
+        } else {
+          expect(row.summen).toStrictEqual([0, 1]);
+        }
+      });
+    });
+  });
 });
+
+function _getWahlenWithoutBeanstandeteWahlbriefe() {
+  return [prepareWahl().beanstandeteWahlbriefe([]).build()];
+}
+
+function _getWahlenWithBeanstandeteWahlbriefe() {
+  return [
+    prepareWahl().beanstandeteWahlbriefe(["ZUGELASSEN"]).build(),
+    prepareWahl()
+      .beanstandeteWahlbriefe([
+        "ZUGELASSEN",
+        "GEGENSTAND_IM_UMSCHLAG",
+        "ZUGELASSEN",
+      ])
+      .build(),
+  ];
+}

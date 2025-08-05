@@ -5,7 +5,6 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
-import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -19,8 +18,7 @@ vi.mock("@/stores/wahlbezirkStore.ts", () => ({
 }));
 
 describe("ungueltigeWahlscheineTaskFactory.ts", () => {
-  const { prepareExtendedWahlMetaData, prepareTaskFactoryContext } =
-    useTasksTestDataFactory();
+  const { prepareTaskFactoryContext } = useTasksTestDataFactory();
   const { createTasks } = useUngueltigeWahlscheineTaskFactory();
 
   beforeEach(() => {
@@ -29,215 +27,33 @@ describe("ungueltigeWahlscheineTaskFactory.ts", () => {
 
   describe("createTasks", () => {
     it.each([
-      WahlWahlartEnum.Btw,
-      WahlWahlartEnum.Beb,
-      WahlWahlartEnum.Euw,
-      WahlWahlartEnum.Obw,
-      WahlWahlartEnum.Srw,
-      WahlWahlartEnum.Baw,
+      {
+        wahlbezirkArt: WahlbezirksArtEnum.UWB,
+        tasksCreated: 1,
+        taskCreatedAsString: "One",
+      },
+      {
+        wahlbezirkArt: WahlbezirksArtEnum.BWB,
+        tasksCreated: 0,
+        taskCreatedAsString: "Zero",
+      },
     ])(
-      "should_returnTaskListWithOneElement_when_calledWithCorrectWahlArt(%s)AndCorrectWahlbezirkArt(UWB)",
-      (input) => {
-        const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlArt(input)
-          .build();
+      "should_return'$taskCreatedAsString'Task_when_calledWithWahlbezirkArt$wahlbezirkArt",
+      ({ wahlbezirkArt, tasksCreated }) => {
         const taskFactoryContext: TaskFactoryContext =
-          prepareTaskFactoryContext()
-            .extendedWahlMetaData([extendedWahlMetaData])
-            .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-            .build();
-
+          prepareTaskFactoryContext().wahlbezirkArt(wahlbezirkArt).build();
         const result = createTasks(taskFactoryContext);
 
-        expect(result.length).toStrictEqual(1);
+        expect(result.length).toStrictEqual(tasksCreated);
       }
     );
 
-    it.each([
-      WahlWahlartEnum.Btw,
-      WahlWahlartEnum.Beb,
-      WahlWahlartEnum.Euw,
-      WahlWahlartEnum.Obw,
-      WahlWahlartEnum.Srw,
-      WahlWahlartEnum.Baw,
-    ])(
-      "should_returnTaskListWithZeroElements_when_calledWithCorrectWahlArt(%s)AndWrongWahlbezirkArt(BWB)",
-      (input) => {
-        const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlArt(input)
-          .build();
-        const taskFactoryContext: TaskFactoryContext =
-          prepareTaskFactoryContext()
-            .extendedWahlMetaData([extendedWahlMetaData])
-            .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-            .build();
-
-        const result = createTasks(taskFactoryContext);
-
-        expect(result.length).toStrictEqual(0);
-      }
-    );
-
-    it.each([
-      WahlWahlartEnum.Bzw,
-      WahlWahlartEnum.Ltw,
-      WahlWahlartEnum.Mbw,
-      WahlWahlartEnum.Svw,
-      WahlWahlartEnum.Ve,
-    ])(
-      "should_returnTaskListWithZeroElements_when_calledWithWrongWahlArt(%s)AndCorrectWahlbezirkArt(UWB)",
-      (input) => {
-        const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlArt(input)
-          .build();
-        const taskFactoryContext: TaskFactoryContext =
-          prepareTaskFactoryContext()
-            .extendedWahlMetaData([extendedWahlMetaData])
-            .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-            .build();
-
-        const result = createTasks(taskFactoryContext);
-
-        expect(result.length).toStrictEqual(0);
-      }
-    );
-
-    it.each([
-      WahlWahlartEnum.Bzw,
-      WahlWahlartEnum.Ltw,
-      WahlWahlartEnum.Mbw,
-      WahlWahlartEnum.Svw,
-      WahlWahlartEnum.Ve,
-    ])(
-      "should_returnTaskListWithZeroElements_when_calledWithWrongWahlArt(%s)AndWrongWahlbezirkArt(BWB)",
-      (input) => {
-        const extendedWahlMetaData = prepareExtendedWahlMetaData()
-          .wahlArt(input)
-          .build();
-        const taskFactoryContext: TaskFactoryContext =
-          prepareTaskFactoryContext()
-            .extendedWahlMetaData([extendedWahlMetaData])
-            .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-            .build();
-
-        const result = createTasks(taskFactoryContext);
-
-        expect(result.length).toStrictEqual(0);
-      }
-    );
-
-    it("should_returnOneTask_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyCorrectWahlArt", () => {
-      const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Beb)
-        .build();
-      const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Btw)
-        .build();
-      const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Euw)
-        .build();
-      const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Srw)
-        .build();
-
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([
-          extendedWahlMetaDataOne,
-          extendedWahlMetaDataTwo,
-          extendedWahlMetaDataThree,
-          extendedWahlMetaDataFour,
-        ])
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-        .build();
-
-      const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-    });
-
-    it("should_returnZeroTasks_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyWrongWahlArt", () => {
-      const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Bzw)
-        .build();
-      const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Ve)
-        .build();
-      const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Svw)
-        .build();
-      const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Mbw)
-        .build();
-
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([
-          extendedWahlMetaDataOne,
-          extendedWahlMetaDataTwo,
-          extendedWahlMetaDataThree,
-          extendedWahlMetaDataFour,
-        ])
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-        .build();
-
-      const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(0);
-    });
-
-    it("should_returnOneTask_when_calledWithMultipleWahlMetaDataObjectsWhichContainWrongAndCorrectWahlArt", () => {
-      const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Btw)
-        .build();
-      const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Beb)
-        .build();
-      const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Svw)
-        .build();
-      const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Mbw)
-        .build();
-
-      const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([
-          extendedWahlMetaDataOne,
-          extendedWahlMetaDataTwo,
-          extendedWahlMetaDataThree,
-          extendedWahlMetaDataFour,
-        ])
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-        .build();
-
-      const result = createTasks(taskFactoryContext);
-
-      expect(result.length).toStrictEqual(1);
-    });
-
-    it("should_returnOneTaskWithExpectedCallback_when_calledWithMultipleWahlMetaDataObjectsWhichContainOnlyCorrectWahlArt", () => {
-      const extendedWahlMetaDataOne = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Beb)
-        .build();
-      const extendedWahlMetaDataTwo = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Btw)
-        .build();
-      const extendedWahlMetaDataThree = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Euw)
-        .build();
-      const extendedWahlMetaDataFour = prepareExtendedWahlMetaData()
-        .wahlArt(WahlWahlartEnum.Srw)
-        .build();
-
+    it("should_returnOneTaskWithExpectedCallback_when_calledWithCorrectWahlbezirkArt", () => {
       mockDefinitions.initUngueltigeWahlscheine.mockReturnValue(
         Promise.resolve()
       );
 
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
-        .extendedWahlMetaData([
-          extendedWahlMetaDataOne,
-          extendedWahlMetaDataTwo,
-          extendedWahlMetaDataThree,
-          extendedWahlMetaDataFour,
-        ])
         .wahlbezirkArt(WahlbezirksArtEnum.UWB)
         .build();
 

@@ -1,6 +1,6 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
-import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlvorbereitung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -17,7 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getUngueltigeWahlscheine: vi.fn(),
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
-  getWaehlerverzeichnisOrUndefinedById: vi.fn(),
+  getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   mockedWahlen: vi.fn(),
 }));
 
@@ -31,7 +31,7 @@ vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
     getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
   }),
 }));
-vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
+vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
@@ -40,7 +40,7 @@ vi.mock("@/composables/wahlvorbereitung/wahlvorbereitungService", () => ({
     postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
   }),
 }));
-vi.mock("@/composables/wahlvorbereitung/waehlerverzeichnisService.ts", () => ({
+vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
   useWaehlerverzeichnisService: () => ({
     createDefaultPflegeWaehlerverzeichnis: () =>
       mockedDefaultWaehlerverzeichnis,
@@ -51,8 +51,8 @@ vi.mock("@/composables/wahlvorbereitung/waehlerverzeichnisService.ts", () => ({
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlen: ref(mockDefinitions.mockedWahlen),
-    getWaehlerverzeichnisOrUndefinedById:
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById,
+    getWaehlerverzeichnisNummerOrUndefinedById:
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
   }),
 }));
 
@@ -148,7 +148,7 @@ describe("wahlbezirkStore.ts", () => {
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const waehlerverzeichnisNummer = 12;
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         waehlerverzeichnisNummer
       );
 
@@ -163,7 +163,7 @@ describe("wahlbezirkStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         undefined
       );
 
@@ -401,7 +401,7 @@ describe("wahlbezirkStore.ts", () => {
       unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         mockedWaehlerverzeichnisNummer
       );
 
@@ -448,7 +448,7 @@ describe("wahlbezirkStore.ts", () => {
       unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         mockedWaehlerverzeichnisNummer
       );
 
@@ -486,7 +486,7 @@ describe("wahlbezirkStore.ts", () => {
     });
 
     it("should_notCallService_when_waehlerverzeichnisNummerInUserIsNotGiven", async () => {
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         undefined
       );
 

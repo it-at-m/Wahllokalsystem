@@ -240,9 +240,11 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
 
+      const saveButton = wrapper.findComponent(BaseButtonSave);
       mockDefinitions.saveStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );
+      await saveButton.trigger("click");
 
       expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalled();
     });

@@ -8,6 +8,7 @@
         <th
           v-for="wahldaten in stimmabgabevermerke.wahldaten"
           :key="wahldaten.wahlID"
+          class="pl-0 font-weight-bold"
         >
           {{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}
         </th>
@@ -18,9 +19,11 @@
         <td
           v-for="wahldaten in stimmabgabevermerke.wahldaten"
           :key="wahldaten.wahlID"
+          class="pl-0"
         >
           <v-number-input
             max-width="15rem"
+            class="mt-5 pl-0"
             :model-value="
               getMapValue(
                 EingenommenerWahlscheinStimmzettelartEnum.Klein,

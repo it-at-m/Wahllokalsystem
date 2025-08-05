@@ -238,9 +238,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       await flushPromises();
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
-      await saveButton.trigger("click");
-
-      const saveButton = wrapper.findComponent(BaseButtonSave);
       mockDefinitions.saveStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );

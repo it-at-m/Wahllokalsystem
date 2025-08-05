@@ -114,6 +114,31 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
+    it("should_renderWithDisabledSaveButton_when_anzahlExceedsMaximum", async (context) => {
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlen = [
+        prepareWahl()
+          .wahlID("123")
+          .stimmzettelumschlaege({ anzahlWaehler: 10000 })
+          .build(),
+      ];
+
+      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+        props: {
+          wahlId: "123",
+        },
+      });
+
+      await flushPromises();
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
     it("should_renderWithEnabledSaveButton_when_validAnzahlIsEntered", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [

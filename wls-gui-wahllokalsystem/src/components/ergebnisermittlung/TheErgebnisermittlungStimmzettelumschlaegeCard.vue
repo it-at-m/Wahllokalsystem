@@ -51,7 +51,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
 const props = defineProps<{
-  wahlID: string;
+  wahlId: string;
 }>();
 
 const {
@@ -60,7 +60,7 @@ const {
   isStimmzettelumschlaegeSaving,
 } = useWahlenStore();
 
-const wahl = getWahlOrUndefinedById(props.wahlID);
+const wahl = getWahlOrUndefinedById(props.wahlId);
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
@@ -69,6 +69,6 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 function onSaveAnzahlStimmzettelClicked() {
-  saveStimmzettelumschlaege(wahl.wahlID);
+  saveStimmzettelumschlaege(props.wahlId);
 }
 </script>

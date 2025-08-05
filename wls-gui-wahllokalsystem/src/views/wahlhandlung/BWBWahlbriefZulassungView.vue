@@ -10,6 +10,7 @@
       <v-tab
         value="one"
         :prepend-icon="isBeanstandeteWahlbriefeTableValid ? `$valid` : `$edit`"
+        data-test="wahlbriefe-zulassen-tab"
       >
         Wahlbriefe zulassen oder zurückweisen
       </v-tab>

@@ -11,7 +11,7 @@ import { VTextField } from "vuetify/components";
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-describe("BaseDateInput", (): void => {
+describe("BaseDateInput.vue", (): void => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {

@@ -126,7 +126,7 @@ describe("TheEreignisseRows.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_openYesNoDialog_when_deleteIconIsClicked", async () => {
+    it("should_openYesNoDialogAndDelete_when_deleteWasEmittedByARowAndDeletionWasConfirmed", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 

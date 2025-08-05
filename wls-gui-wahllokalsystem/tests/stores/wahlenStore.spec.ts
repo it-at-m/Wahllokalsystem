@@ -89,7 +89,7 @@ describe("wahlenStore.ts", () => {
     });
   });
 
-  describe("getWaehlerverzeichnisOrUndefinedById", () => {
+  describe("getWaehlerverzeichnisNummerOrUndefinedById", () => {
     it("should_returnWaehlerverzeichnisNummer_when_calledWithId", () => {
       const wahlOne = createWahl();
       const wahlTwo = createWahl();
@@ -97,7 +97,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlTwo.wahlID
       );
 
@@ -111,7 +111,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlThree.wahlID
       );
 

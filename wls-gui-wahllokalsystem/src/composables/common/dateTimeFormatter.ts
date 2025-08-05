@@ -11,9 +11,9 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    const hour = leftPadTwoDigitsWithZero(date.getHours());
-    const minute = leftPadTwoDigitsWithZero(date.getMinutes());
-    const second = leftPadTwoDigitsWithZero(date.getSeconds());
+    const hour = _leftPadTwoDigitsWithZero(date.getHours());
+    const minute = _leftPadTwoDigitsWithZero(date.getMinutes());
+    const second = _leftPadTwoDigitsWithZero(date.getSeconds());
 
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}${TIME_FIELD_SEPARATOR}${second}`;
   };
@@ -23,8 +23,8 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    const hour = leftPadTwoDigitsWithZero(date.getHours());
-    const minute = leftPadTwoDigitsWithZero(date.getMinutes());
+    const hour = _leftPadTwoDigitsWithZero(date.getHours());
+    const minute = _leftPadTwoDigitsWithZero(date.getMinutes());
 
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
@@ -97,6 +97,10 @@ export function useDateTimeFormatter() {
     }
 
     return `${leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
+  }
+
+  function _leftPadTwoDigitsWithZero(number: number): string {
+    return `${number}`.padStart(2, "0");
   }
 
   return {

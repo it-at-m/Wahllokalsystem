@@ -20,12 +20,10 @@
         Beschlussergebnis
       </v-tab>
     </v-tabs>
-
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
         <the-beanstandete-wahlbriefe-erfassen-card />
       </v-tabs-window-item>
-
       <v-tabs-window-item value="two">
         <the-beanstandete-wahlbriefe-beschlussergebnis />
       </v-tabs-window-item>

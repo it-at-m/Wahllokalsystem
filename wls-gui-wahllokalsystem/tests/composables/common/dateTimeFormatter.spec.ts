@@ -164,7 +164,7 @@ describe("dateTimeFormatter.ts", () => {
     );
   });
 
-  describe("toIsoDate", () => {
+  describe("toYyyyMmDd", () => {
     it.each([
       { dateStringToParse: "2025-07-30", expectedDateString: "2025-07-30" },
       { dateStringToParse: "2025-12-30", expectedDateString: "2025-12-30" },

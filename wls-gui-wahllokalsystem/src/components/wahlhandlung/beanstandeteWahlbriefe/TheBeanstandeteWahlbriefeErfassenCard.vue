@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <v-card-title>Wahlbriefe zulassen oder zurückweisen</v-card-title>
     <v-card-text>
       <v-form v-model="bedenklicheWahlbriefeFormValid">
         <the-beanstandete-wahlbriefe-table />
@@ -31,7 +30,6 @@ import {
   VCard,
   VCardActions,
   VCardText,
-  VCardTitle,
   VForm,
 } from "vuetify/components";
 

@@ -24,7 +24,7 @@ export function useErgebnisermittlungMapper() {
           wahlID,
           wahlbezirkID
         ),
-        anzahlWaehler: model.anzahlWaehler,
+        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
       };
     }
   }

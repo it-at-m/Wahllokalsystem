@@ -39,7 +39,7 @@ describe("ergebnisermittlungMapper.ts", () => {
 
       const expectedDto: StimmzettelumschlaegeDTO = {
         bezirkUndWahlID: _createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
-        anzahlWaehler: model.anzahlWaehler,
+        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
       };
 
       const result = toDto(model, wahlID, wahlbezirkID);

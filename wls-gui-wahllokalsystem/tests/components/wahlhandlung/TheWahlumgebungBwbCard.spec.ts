@@ -42,7 +42,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       farbe: undefined,
       nummer: undefined,
       beanstandeteWahlbriefe: [],
-      stimmzettelumschlaege: { anzahlWaehler: 0 },
+      stimmzettelumschlaege: { anzahlWaehler: null },
     },
     {
       wahlID: "wahlID2",
@@ -54,7 +54,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       farbe: undefined,
       nummer: undefined,
       beanstandeteWahlbriefe: [],
-      stimmzettelumschlaege: { anzahlWaehler: 0 },
+      stimmzettelumschlaege: { anzahlWaehler: null },
     },
   ];
 

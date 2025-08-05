@@ -1,15 +1,15 @@
 export interface Stimmzettelumschlaege {
-  anzahlWaehler: number;
+  anzahlWaehler: number | null;
 }
 
 export class StimmzettelumschlaegeBuilder implements Stimmzettelumschlaege {
-  constructor(public anzahlWaehler: number) {}
+  constructor(public anzahlWaehler: number | null) {}
 
   static create(): Stimmzettelumschlaege {
-    return new StimmzettelumschlaegeBuilder(0);
+    return new StimmzettelumschlaegeBuilder(null);
   }
 
-  withAnzahlWaehler(anzahlWaehler: number) {
+  withAnzahlWaehler(anzahlWaehler: number | null) {
     this.anzahlWaehler = anzahlWaehler;
     return this;
   }

@@ -96,11 +96,19 @@ export function useDateTimeFormatter() {
       return NO_VALUE_DEFAULT;
     }
 
-    return `${leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
+    return `${_leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${_leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${_leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
   }
 
   function _leftPadTwoDigitsWithZero(number: number): string {
-    return `${number}`.padStart(2, "0");
+    return _leftPadWithZero(number, 2);
+  }
+
+  function _leftPadFourDigitsWithZero(number: number): string {
+    return _leftPadWithZero(number, 4);
+  }
+
+  function _leftPadWithZero(number: number, padLength: number): string {
+    return `${number}`.padStart(padLength, "0");
   }
 
   return {
@@ -112,16 +120,4 @@ export function useDateTimeFormatter() {
     toGermanDateFormat,
     toGermanDateWithLongMonth,
   };
-}
-
-function leftPadTwoDigitsWithZero(number: number): string {
-  return leftPadWithZero(number, 2);
-}
-
-function leftPadFourDigitsWithZero(number: number): string {
-  return leftPadWithZero(number, 4);
-}
-
-function leftPadWithZero(number: number, padLength: number): string {
-  return `${number}`.padStart(padLength, "0");
 }

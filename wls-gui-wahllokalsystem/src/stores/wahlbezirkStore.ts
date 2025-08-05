@@ -40,7 +40,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     postWaehlerverzeichnis,
   } = useWaehlerverzeichnisService();
 
-  const { getWaehlerverzeichnisOrUndefinedById } = useWahlenStore();
+  const { getWaehlerverzeichnisNummerOrUndefinedById } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
@@ -127,7 +127,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function loadPflegeWaehlerverzeichnis(sendNotification = true) {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
       currentUserHauptWahlID.value
     );
     if (waehlerverzeichnisNummer !== undefined) {
@@ -173,7 +173,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function sendPflegeWaehlerverzeichnis() {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
       currentUserHauptWahlID.value
     );
     if (waehlerverzeichnisNummer !== undefined) {

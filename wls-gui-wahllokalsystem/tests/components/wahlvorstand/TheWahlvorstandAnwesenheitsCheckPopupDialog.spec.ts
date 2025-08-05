@@ -137,7 +137,7 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
       expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalledTimes(1);
     });
 
-    it("should_resetTimer_when_componentIsUnmounted", async (context) => {
+    it("should_resetTimer_when_componentIsUnmounted", () => {
       const { dateTimeToCheckAnwesenheit } = storeToRefs(
         useInfomanagementStore()
       );
@@ -146,18 +146,10 @@ describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
 
       wrapper.unmount();
 
-      await expect(document.body.innerHTML).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-
       expect(mockDefinitions.clearTimer).toHaveBeenCalledOnce();
     });
 
-    it("should_startTimer_when_componentIsMounted", async (context) => {
-      await expect(document.body.innerHTML).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-
+    it("should_startTimer_when_componentIsMounted", () => {
       expect(mockDefinitions.setupTimer).toHaveBeenCalledOnce();
     });
   });

@@ -38,7 +38,7 @@ describe("BaseDateInput.vue", (): void => {
       );
     });
 
-    it("should_renderError_when_notValuesIsSetAndIsValidated", async (context) => {
+    it("should_renderError_when_noValueIsSetAndIsValidated", async (context) => {
       const textfieldForDate = wrapper.findComponent(VTextField);
       await textfieldForDate.setValue(null);
 

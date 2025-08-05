@@ -17,7 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getUngueltigeWahlscheine: vi.fn(),
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
-  getWaehlerverzeichnisOrUndefinedById: vi.fn(),
+  getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   mockedWahlen: vi.fn(),
 }));
 
@@ -51,8 +51,8 @@ vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlen: ref(mockDefinitions.mockedWahlen),
-    getWaehlerverzeichnisOrUndefinedById:
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById,
+    getWaehlerverzeichnisNummerOrUndefinedById:
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
   }),
 }));
 
@@ -148,7 +148,7 @@ describe("wahlbezirkStore.ts", () => {
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const waehlerverzeichnisNummer = 12;
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         waehlerverzeichnisNummer
       );
 
@@ -163,7 +163,7 @@ describe("wahlbezirkStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         undefined
       );
 
@@ -401,7 +401,7 @@ describe("wahlbezirkStore.ts", () => {
       unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         mockedWaehlerverzeichnisNummer
       );
 
@@ -448,7 +448,7 @@ describe("wahlbezirkStore.ts", () => {
       unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         mockedWaehlerverzeichnisNummer
       );
 
@@ -486,7 +486,7 @@ describe("wahlbezirkStore.ts", () => {
     });
 
     it("should_notCallService_when_waehlerverzeichnisNummerInUserIsNotGiven", async () => {
-      mockDefinitions.getWaehlerverzeichnisOrUndefinedById.mockReturnValue(
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         undefined
       );
 

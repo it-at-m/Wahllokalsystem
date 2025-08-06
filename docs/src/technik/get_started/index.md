@@ -146,7 +146,7 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
    - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag`
 
 ::: tip
-Um die Initialisierung der lokalen DB, sowie die Suche nach den richtigen http-requests zu vereinfachen wurde ein 
-[`initOracleDB.http`-File](https://github.com/it-at-m/Wahllokalsystem/tree/dev/stack/http_requests/initOracleDB.http) 
-erstellt, welches alle oben genannten http-requests enthält.
+Um die Initialisierung der lokalen DB sowie die Suche nach den richtigen http-requests zu vereinfachen wurde das
+[`initOracleDB.http`-File](https://github.com/it-at-m/Wahllokalsystem/tree/dev/stack/http_requests/initOracleDB.http)
+erstellt, das alle oben genannte http-requests enthält.
 :::

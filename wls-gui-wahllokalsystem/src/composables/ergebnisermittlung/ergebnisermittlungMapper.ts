@@ -5,21 +5,18 @@ import type {
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
 export function useErgebnisermittlungMapper() {
-
   function toDto(
     model: Stimmzettelumschlaege,
     wahlID: string,
     wahlbezirkID: string
   ): StimmzettelumschlaegeDTO {
-    {
-      return {
-        bezirkUndWahlID: _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
-          wahlID,
-          wahlbezirkID
-        ),
-        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
-      };
-    }
+    return {
+      bezirkUndWahlID: _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
+        wahlID,
+        wahlbezirkID
+      ),
+      anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+    };
   }
 
   function _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
@@ -33,7 +30,6 @@ export function useErgebnisermittlungMapper() {
   }
 
   return {
-    toModel,
     toDto,
   };
 }

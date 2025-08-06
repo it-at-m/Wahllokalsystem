@@ -13,23 +13,9 @@ import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/er
 const { generateRandomString } = useCommonTestDataFactory();
 
 describe("ergebnisermittlungMapper.ts", () => {
-  const { toModel, toDto } = useErgebnisermittlungMapper();
-  const { createStimmzettelumschlaegeDto, createStimmzettelumschlaege } =
+  const { toDto } = useErgebnisermittlungMapper();
+  const { createStimmzettelumschlaege } =
     useStimmzettelumschlaegeTestDataFactory();
-
-  describe("toModel", () => {
-    it("should_returnModel_when_givenDto", () => {
-      const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
-
-      const expectedModel: Stimmzettelumschlaege = {
-        anzahlWaehler: dto.anzahlWaehler,
-      };
-
-      const result = toModel(dto);
-
-      expect(result).toStrictEqual(expectedModel);
-    });
-  });
 
   describe("toDto", () => {
     it("should_returnDto_when_givenModel", () => {

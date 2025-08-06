@@ -10,7 +10,7 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toDto } = useErgebnisermittlungMapper();
-const userNotificationService = useUserNotificationService();
+const { addNotification } = useUserNotificationService();
 
 export function useErgebnisermittlungService() {
   const ergebnismeldungControllerApi = new StimmzettelumschlaegeControllerApi(
@@ -32,14 +32,14 @@ export function useErgebnisermittlungService() {
         toDto(stimmzettelumschlaege, wahlID, wahlbezirkID)
       );
       if (sendNotification) {
-        userNotificationService.addNotification(
+        addNotification(
           "Stimmzettelumschlaege erfolgreich gespeichert.",
           UserNotificationCategoryEnum.SUCCESS
         );
       }
     } catch (error) {
       if (sendNotification) {
-        userNotificationService.addNotification(
+        addNotification(
           "Speichern der Stimmzettelumschlaege fehlgeschlagen.",
           UserNotificationCategoryEnum.ERROR
         );

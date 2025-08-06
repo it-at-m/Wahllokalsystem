@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>Zählen der Stimmzettel</v-card-title>
+      <v-card-title>Wahlurne öffnen und Stimmzettel zählen</v-card-title>
       <v-card-text class="pb-0 pt-2">
         <v-form
           ref="anzahlStimmzettelForm"

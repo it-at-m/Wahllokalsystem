@@ -5,13 +5,6 @@ import type {
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
 export function useErgebnisermittlungMapper() {
-  function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
-    {
-      return {
-        anzahlWaehler: dto.anzahlWaehler,
-      };
-    }
-  }
 
   function toDto(
     model: Stimmzettelumschlaege,

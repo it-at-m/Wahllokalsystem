@@ -13,11 +13,12 @@ const { toDto } = useErgebnisermittlungMapper();
 const { addNotification } = useUserNotificationService();
 
 export function useErgebnisermittlungService() {
-  const ergebnismeldungControllerApi = new StimmzettelumschlaegeControllerApi(
-    new Configuration({
-      basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
-    })
-  );
+  const stimmzettelumschlaegeControllerAPI =
+    new StimmzettelumschlaegeControllerApi(
+      new Configuration({
+        basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
+      })
+    );
 
   async function saveStimmzettelumschlaege(
     wahlID: string,
@@ -26,7 +27,7 @@ export function useErgebnisermittlungService() {
     sendNotification = true
   ): Promise<void> {
     try {
-      await ergebnismeldungControllerApi.postStimmzettelumschlaege(
+      await stimmzettelumschlaegeControllerAPI.postStimmzettelumschlaege(
         wahlID,
         wahlbezirkID,
         toDto(stimmzettelumschlaege, wahlID, wahlbezirkID)

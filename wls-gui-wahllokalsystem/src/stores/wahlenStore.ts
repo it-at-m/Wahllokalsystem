@@ -18,7 +18,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   const { currentUserWahltagID, currentUserWahlbezirkID } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
-  const isBeanstandeteWahlbriefeTableValid = ref<null | boolean>(null);
+  const isBeanstandeteWahlbriefeTableValid = ref<null | boolean>(true);
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {

@@ -116,5 +116,24 @@ describe("BWBWahlbriefZulassungView", () => {
         getSnapshotFilename(context)
       );
     });
+
+    it("should_renderWithValidIcon_when_beanstandeteWahlbriefeTableHasNoRows", async (context) => {
+      wrapper = mount(BWBWahlbriefZulassungView, {
+        global: {
+          plugins: [pinia, vuetify],
+        },
+      });
+
+      await flushPromises();
+
+      const wahlbriefeZulassenTab = wrapper.findComponent<typeof VTab>(
+        '[data-test="wahlbriefe-zulassen-tab"]'
+      );
+
+      expect(wahlbriefeZulassenTab.props("prependIcon")).toBe("$valid");
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
   });
 });

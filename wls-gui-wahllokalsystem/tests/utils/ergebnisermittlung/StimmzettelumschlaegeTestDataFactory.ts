@@ -12,7 +12,10 @@ const { generateRandomString, generateRandomNumber } =
 export function useStimmzettelumschlaegeTestDataFactory() {
   function createStimmzettelumschlaegeDto(): StimmzettelumschlaegeDTO {
     return {
-      bezirkUndWahlID: _createBezirkUndWahlIDDto(),
+      bezirkUndWahlID: createBezirkUndWahlIDDto(
+        generateRandomString(10),
+        generateRandomString(10)
+      ),
       anzahlWaehler: generateRandomNumber(3),
     };
   }
@@ -23,10 +26,10 @@ export function useStimmzettelumschlaegeTestDataFactory() {
     };
   }
 
-  function _createBezirkUndWahlIDDto() {
+  function createBezirkUndWahlIDDto(wahlID: string, wahlbezirkID: string) {
     const dto: BezirkUndWahlID = {
-      wahlID: generateRandomString(10),
-      wahlbezirkID: generateRandomString(10),
+      wahlID: wahlID,
+      wahlbezirkID: wahlbezirkID,
     };
     return dto;
   }
@@ -34,5 +37,6 @@ export function useStimmzettelumschlaegeTestDataFactory() {
   return {
     createStimmzettelumschlaegeDto,
     createStimmzettelumschlaege,
+    createBezirkUndWahlIDDto,
   };
 }

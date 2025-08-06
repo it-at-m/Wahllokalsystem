@@ -1,5 +1,3 @@
-import { mock } from "node:test";
-
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

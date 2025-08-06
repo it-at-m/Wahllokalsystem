@@ -5,17 +5,15 @@
       <v-card-text class="pb-0 pt-2">
         <v-form v-model="anzahlStimmzettelValidForm">
           <div class="d-flex flex-wrap justify-start">
-            <div>
-              <v-number-input
-                v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-                class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
-                min-width="20rem"
-                data-test="numberInputAnzahlStimmzettel"
-                label="Anzahl der Stimmzettel"
-                clearable
-              />
-            </div>
+            <v-number-input
+              v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
+              class="mr-4"
+              :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+              min-width="20rem"
+              data-test="numberInputAnzahlStimmzettel"
+              label="Anzahl der Stimmzettel"
+              clearable
+            />
           </div>
         </v-form>
       </v-card-text>

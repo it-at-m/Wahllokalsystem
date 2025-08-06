@@ -73,7 +73,7 @@ spring:
       routes:
         # ...
         - id: gui-<frontend-name> // [!code focus:4]
-          uri: http://kubernetes.docker.internal:<PORT>/
+          uri: http://host.docker.internal:<PORT>/
           predicates:
             - Path=/<frontend-name>/**
 ```

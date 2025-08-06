@@ -147,6 +147,6 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
 
 ::: tip
 Um die Initialisierung der lokalen DB sowie die Suche nach den richtigen http-requests zu vereinfachen wurde das
-[`initOracleDB.http`-File](https://github.com/it-at-m/Wahllokalsystem/tree/dev/stack/http_requests/initOracleDB.http)
+[`initOracleDB.http`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB.http)
 erstellt, das alle oben genannte http-requests enthält.
 :::

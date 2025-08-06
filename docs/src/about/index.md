@@ -220,3 +220,24 @@ Die vorhandene Liste kann über den Aktualisieren-Button erneut geladen werden.
 Ist die Liste leer oder konnte die Liste nicht geladen werden, erhält der Nutzer entsprechende Fehlermeldungen
 angezeigt.
 :::
+
+📃 **UseCase: `Beschluss zu uneindeutigen Wahlbriefen erfassen`**
+
+::: info Briefwahlbezirk {data-bwb="true"}
+Der Wahlvorstand kann über jeden bedenklichen Wahlbrief einen individuellen Beschluss fassen. Dabei wird zwischen der
+Gültigkeit des gesamten Wahlscheins und anschließend der einzelnen Stimmzettelumschläge unterschieden. Ein Wahlschein
+kann die Werte `Zugelassen`, `Wahlschein ungültig laut Liste`, `Kein Original-Wahlschein`, oder `Unterschrift auf
+Wahlschein fehlt` haben. Für die Stimmzettelumschläge gibt es die Zurückweisungsgründe `Zugelassen`,
+`Stimmzettelumschlag fehlt`, `Lose Stimmzettel`, `Wahlbrief und Stimmzettelumschlag offen`, `Wahlscheine ungleich
+Stimmzettelumschläge`, `Nicht-amtlicher Stimmzettelumschlag`, `Stimmzettelumschlag gefährdet Wahlgeheimnis`, `Gegenstand
+im Stimmzettelumschlag` oder `Für diese Wahl nicht wahlberechtigt`.
+
+Es muss immer zuerst der Beschluss für den gesamten Wahlschein gefasst werden. Ist der Wahlschein nicht `Zugelasen`, 
+bekommen die Stimmzettelumschläge der einzelnen Wahlen den gleichen Zurückweisungsgrund. Ist der Wahlschein 
+`Zugelassen`, wird der im Anschluss gewählte Stimmzettelumschlag-Zurückweisungsgrund auf die anderen Wahlen übertragen. 
+Der einzige Beschluss, der unabhängig für eine Wahl gefasst werden kann, ohne dass die anderen Wahlen den gleichen 
+Zurückweisungsgrund erhalten, ist `Für diese Wahl nicht Wahlberechtigt`.
+
+Der Wahlvorstand kann die Daten der Eingabemaske nur speichern, wenn für alle Wahlscheine und Stimmzettelumschläge ein
+valider Wert eingetragen wurde.
+:::

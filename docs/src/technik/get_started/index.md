@@ -139,8 +139,6 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
 3. `refarch-gateway-wls`-Service in Docker oder über das `docker-compose.yml` starten
 4. Das Wahllokalsystem-Frontend in Docker oder über `npm run dev` starten
    (siehe [Punkt 1](#start-via-gateway): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
-5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und folgende http-requests ausführen:
-   - `"basisdaten-service/wahltage.http"`: `GET wahltage`
-   - `"basisdaten-service/ungueltigeWahlscheine.http"`: `POST ungueltige Wahlscheine | user wls_all_uwb`
-   - `"basisdaten-service/wahltermindaten.http"`: `Put Wahltermindaten | user wls_all_uwb`
-   - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag`
+5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
+   http-requests aus dem File [`initOracleDB.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB.http)
+   ausführen

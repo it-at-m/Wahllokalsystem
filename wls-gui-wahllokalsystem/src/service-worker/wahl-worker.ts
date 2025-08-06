@@ -6,14 +6,14 @@ import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useOfflineStrategiesForGet } from "@/composables/common/offlineStrategiesForGet.ts";
+import { useOfflineStrategies } from "@/composables/common/offlineStrategies.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
 const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
-const { findStrategy, handleRouteWithStrategy } = useOfflineStrategiesForGet();
+const offlineStrategies = useOfflineStrategies();
 const { log, logError } = useLogging("wahl-worker");
 
 /**
@@ -79,51 +79,18 @@ registerRoute(new RegExp("/api/.+"), postRequestHandler, "POST");
 /*****************************************************************************************************************
  * handler functions
  ****************************************************************************************************************/
-async function postRequestHandler(event: RouteHandlerCallbackOptions) {
-  log(`POST request identified - uri: ${event.url}`);
+async function postRequestHandler(options: RouteHandlerCallbackOptions) {
+  log(`POST request identified - uri: ${options.url}`);
 
-  try {
-    // body can only be read once so a clone is needed to extract data for saving in idb
-    const requestClone = event.request.clone();
-
-    // check if there is a body sent with post request (eg broadcastMessageRead has no body).
-    // if no "" is returned to be saved as value in idb
-    const requestBody = await requestClone
-      .json()
-      .catch(() => "last message has been read"); // string is specific for broadcast service
-    const response = await fetch(event.request);
-    // set dirty flag to data that has to be synchronized
-    if (response.ok) {
-      await _setItemInIDB(
-        "lastPostedData",
-        requestBody,
-        requestClone.url,
-        false
-      );
-    } else {
-      await _setItemInIDB(
-        "lastPostedData",
-        requestBody,
-        requestClone.url,
-        true
-      );
-    }
-
-    // return original response
-    return response;
-  } catch (error) {
-    logError("Error saving to IDB:", error);
-
-    // return original response
-    return await fetch(event.request);
-  }
+  const strategy = offlineStrategies.findStrategy(options.request);
+  return await offlineStrategies.handleRouteWithStrategy(options, strategy);
 }
 
 async function getRequestHandler(options: RouteHandlerCallbackOptions) {
   log(`GET request identified - uri: ${options.url}`);
 
-  const strategy = findStrategy(options.request);
-  return await handleRouteWithStrategy(options, strategy);
+  const strategy = offlineStrategies.findStrategy(options.request);
+  return await offlineStrategies.handleRouteWithStrategy(options, strategy);
 }
 
 log("installed and took control");

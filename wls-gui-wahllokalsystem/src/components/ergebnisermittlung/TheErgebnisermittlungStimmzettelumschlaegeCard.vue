@@ -66,7 +66,7 @@ onMounted(() => {
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(() => {
-  return anzahlStimmzettelValidForm.value !== true;
+  return !anzahlStimmzettelValidForm.value;
 });
 
 function onSaveAnzahlStimmzettelClicked() {

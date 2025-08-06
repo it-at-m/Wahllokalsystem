@@ -60,9 +60,12 @@ const {
 const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
 
 const wahl = getWahlOrUndefinedById(props.wahlId);
-if (!wahl) {
-  throw new Error(`Wahl with ID ${props.wahlId} not found`);
-}
+onMounted(() => {
+  if (!wahl) {
+    throw new Error(`Wahl with ID ${props.wahlId} not found`);
+    );
+  }
+});
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 

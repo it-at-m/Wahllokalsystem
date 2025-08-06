@@ -56,8 +56,8 @@ const props = defineProps<{
 const {
   getWahlOrUndefinedById,
   saveStimmzettelumschlaege,
-  isStimmzettelumschlaegeSaving,
 } = useWahlenStore();
+const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
 
 const wahl = getWahlOrUndefinedById(props.wahlId);
 if (!wahl) {

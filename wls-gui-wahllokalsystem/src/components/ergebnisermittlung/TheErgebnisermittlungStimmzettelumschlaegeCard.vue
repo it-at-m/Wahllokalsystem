@@ -13,7 +13,7 @@
                 v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
                 class="mr-4"
                 :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
-                min-width="30rem"
+                min-width="20rem"
                 data-test="numberInputAnzahlStimmzettel"
                 label="Anzahl der Stimmzettel"
                 clearable

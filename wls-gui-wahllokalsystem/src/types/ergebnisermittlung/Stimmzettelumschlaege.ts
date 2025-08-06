@@ -8,5 +8,4 @@ export class StimmzettelumschlaegeBuilder implements Stimmzettelumschlaege {
   static create(): Stimmzettelumschlaege {
     return new StimmzettelumschlaegeBuilder(null);
   }
-
 }

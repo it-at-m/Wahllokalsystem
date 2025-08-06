@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card v-if="wahl">
       <v-card-title>Wahlurne öffnen und Stimmzettel zählen</v-card-title>
       <v-card-text class="pb-0 pt-2">
         <v-form v-model="anzahlStimmzettelValidForm">
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import {
   VCard,
   VCardActions,
@@ -53,13 +53,7 @@ const props = defineProps<{
 const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();
 const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
 
-const wahl = getWahlOrUndefinedById(props.wahlId);
-
-onMounted(() => {
-  if (!wahl) {
-    throw new Error(`Wahl with ID ${props.wahlId} not found`);
-  }
-});
+const wahl = computed(() => getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 

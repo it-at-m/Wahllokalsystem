@@ -232,10 +232,10 @@ Wahlschein fehlt` haben. Für die Stimmzettelumschläge gibt es die Zurückweisu
 Stimmzettelumschläge`, `Nicht-amtlicher Stimmzettelumschlag`, `Stimmzettelumschlag gefährdet Wahlgeheimnis`, `Gegenstand
 im Stimmzettelumschlag` oder `Für diese Wahl nicht wahlberechtigt`.
 
-Es muss immer zuerst der Beschluss für den gesamten Wahlschein gefasst werden. Ist der Wahlschein nicht `Zugelassen`, 
-bekommen die Stimmzettelumschläge der einzelnen Wahlen den gleichen Zurückweisungsgrund. Ist der Wahlschein 
-`Zugelassen`, wird der im Anschluss gewählte Stimmzettelumschlag-Zurückweisungsgrund auf die anderen Wahlen übertragen. 
-Der einzige Beschluss, der unabhängig für eine Wahl gefasst werden kann, ohne dass die anderen Wahlen den gleichen 
+Es muss immer zuerst der Beschluss für den gesamten Wahlschein gefasst werden. Ist der Wahlschein nicht `Zugelassen`,
+bekommen die Stimmzettelumschläge der einzelnen Wahlen den gleichen Zurückweisungsgrund. Ist der Wahlschein
+`Zugelassen`, wird der im Anschluss gewählte Stimmzettelumschlag-Zurückweisungsgrund auf die anderen Wahlen übertragen.
+Der einzige Beschluss, der unabhängig für eine Wahl gefasst werden kann, ohne dass die anderen Wahlen den gleichen
 Zurückweisungsgrund erhalten, ist `Für diese Wahl nicht Wahlberechtigt`.
 
 Der Wahlvorstand kann die Daten der Eingabemaske nur speichern, wenn für alle Wahlscheine und Stimmzettelumschläge ein

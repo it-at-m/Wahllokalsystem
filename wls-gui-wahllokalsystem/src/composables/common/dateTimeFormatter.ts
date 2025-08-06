@@ -91,13 +91,30 @@ export function useDateTimeFormatter() {
     }
   }
 
+  function toYyyyMmDd(dateToFormat: Date) {
+    if (!isValidDate(dateToFormat)) {
+      return NO_VALUE_DEFAULT;
+    }
+
+    return `${_leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${_leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${_leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
+  }
+
   function _leftPadTwoDigitsWithZero(number: number): string {
-    return `${number}`.padStart(2, "0");
+    return _leftPadWithZero(number, 2);
+  }
+
+  function _leftPadFourDigitsWithZero(number: number): string {
+    return _leftPadWithZero(number, 4);
+  }
+
+  function _leftPadWithZero(number: number, padLength: number): string {
+    return `${number}`.padStart(padLength, "0");
   }
 
   return {
     time,
     toHhMm,
+    toYyyyMmDd,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,

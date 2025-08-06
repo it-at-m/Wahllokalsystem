@@ -27,7 +27,7 @@ export function useOfflineStrategiesForGet() {
     FetchStrategiesEnum,
     RouteHandlerCallback
   > = {
-    STRATEGY_OFFLINE_FIRST: _unhandledFetch,
+    STRATEGY_OFFLINE_FIRST: _offlineFirstRequestHandler,
     STRATEGY_ONLINE_FIRST: _onlineFirstRequestHandler,
     STRATEGY_ONLINE_ONLY: _unhandledFetch,
   };
@@ -58,6 +58,27 @@ export function useOfflineStrategiesForGet() {
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     return await fetch(options.request);
+  }
+
+  async function _offlineFirstRequestHandler(
+    options: RouteHandlerCallbackOptions
+  ) {
+    log(`GET request identified - uri: ${options.url}`);
+
+    const dbKey = options.request.url;
+    const storedData = await getItemFromIDB<StoredResponse | null>(dbKey);
+    if (storedData) {
+      return _createResponse(storedData);
+    } else {
+      const fetchedResponse = await fetch(options.request);
+      //TODO handling 302 -> ReLogin
+      if (fetchedResponse.ok) {
+        await _storeResponse(fetchedResponse, dbKey);
+        return fetchedResponse;
+      } else {
+        return _createResponseNotFound();
+      }
+    }
   }
 
   async function _onlineFirstRequestHandler(

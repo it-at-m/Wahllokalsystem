@@ -18,6 +18,9 @@ export default defineConfig({
       },
     }),
     vuetify({
+      styles: {
+        configFile: "src/styles/settings.scss",
+      },
       autoImport: false,
     }),
     UnpluginFonts({

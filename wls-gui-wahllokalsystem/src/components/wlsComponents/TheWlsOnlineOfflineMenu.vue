@@ -46,9 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import {
   VBtn,
   VCard,

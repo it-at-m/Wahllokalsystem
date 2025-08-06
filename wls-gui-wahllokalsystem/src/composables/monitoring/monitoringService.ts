@@ -60,7 +60,7 @@ export function useMonitoringService() {
   async function postLastSeen(wahlbezirkID: string) {
     try {
       await wahllokalZustandControllerApi.postLastSeen(wahlbezirkID);
-    } catch (error) {
+    } catch {
       throw new Error("postLastSeen failed");
     }
   }

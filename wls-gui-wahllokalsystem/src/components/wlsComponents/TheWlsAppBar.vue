@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import {
   VAppBar,
   VAppBarNavIcon,

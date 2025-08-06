@@ -9,8 +9,4 @@ export class StimmzettelumschlaegeBuilder implements Stimmzettelumschlaege {
     return new StimmzettelumschlaegeBuilder(null);
   }
 
-  withAnzahlWaehler(anzahlWaehler: number | null) {
-    this.anzahlWaehler = anzahlWaehler;
-    return this;
-  }
 }

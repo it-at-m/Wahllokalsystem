@@ -64,7 +64,7 @@ import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 import { useInterval } from "@/composables/useInterval";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
-const INTERVAL_OF_30_SECONDS_AS_MILLISECONDS = 1000 * 60 * 30;
+const INTERVAL_OF_30_SECONDS_AS_MILLISECONDS = 1000 * 30;
 
 useInterval(() => {
   checkConnectionStatus();

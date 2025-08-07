@@ -1,6 +1,6 @@
-import type { BezirkUndWahlIDModel } from "@/types/ereignismeldung/BezirkUndWahlIDModel.ts";
+import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
 
 export interface Wahlscheine {
-  bezirkUndWahlID: BezirkUndWahlIDModel;
+  bezirkUndWahlID: BezirkUndWahlID;
   stimmabgabevermerke: number;
 }

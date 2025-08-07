@@ -1,11 +1,7 @@
-import type {
-  BezirkUndWahlID,
-  WahlscheineDTO,
-} from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlIDModel } from "@/types/ereignismeldung/BezirkUndWahlIDModel.ts";
+import type { BezirkUndWahlID, WahlscheineDTO, } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
 import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
-
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
@@ -20,7 +16,7 @@ export function useWahlscheineTestDataFactory() {
     };
   }
 
-  function createBezirkUndWahlIDModel(): BezirkUndWahlIDModel {
+  function createBezirkUndWahlIDModel(): BezirkUndWahlID {
     return {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(5),
@@ -45,8 +41,8 @@ export function useWahlscheineTestDataFactory() {
     return proxyBuilder<Wahlscheine>(createWahlscheine());
   }
 
-  function prepareBezirkUndWahlIDModel(): Builder<BezirkUndWahlIDModel> {
-    return proxyBuilder<BezirkUndWahlIDModel>(createBezirkUndWahlIDModel());
+  function prepareBezirkUndWahlIDModel(): Builder<BezirkUndWahlID> {
+    return proxyBuilder<BezirkUndWahlID>(createBezirkUndWahlIDModel());
   }
 
   function prepareWahlscheineDTO(): Builder<WahlscheineDTO> {
@@ -54,7 +50,7 @@ export function useWahlscheineTestDataFactory() {
   }
 
   function prepareBezirkUndWahlIDDTO(): Builder<BezirkUndWahlID> {
-    return proxyBuilder<BezirkUndWahlIDModel>(createBezirkUndWahlIDModel());
+    return proxyBuilder<BezirkUndWahlID>(createBezirkUndWahlIDModel());
   }
 
   return {

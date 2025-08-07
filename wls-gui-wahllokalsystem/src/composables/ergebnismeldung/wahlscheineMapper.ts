@@ -1,6 +1,6 @@
 import type { WahlscheineDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID } from "@/api/wls-clients/generated-monitoring-api";
-import type { BezirkUndWahlIDModel } from "@/types/ereignismeldung/BezirkUndWahlIDModel.ts";
+import type { BezirkUndWahlID as BezirkUndWahlIdDTO } from "@/api/wls-clients/generated-monitoring-api";
+import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
 import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
 
 export function useWahlscheineMapper() {
@@ -11,7 +11,7 @@ export function useWahlscheineMapper() {
     };
   }
 
-  function _toBezirkUndWahlIDModel(dto: BezirkUndWahlID): BezirkUndWahlIDModel {
+  function _toBezirkUndWahlIDModel(dto: BezirkUndWahlIdDTO): BezirkUndWahlID {
     return {
       wahlID: dto.wahlID,
       wahlbezirkID: dto.wahlbezirkID,

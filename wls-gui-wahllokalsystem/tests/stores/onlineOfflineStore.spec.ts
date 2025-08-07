@@ -49,7 +49,7 @@ describe("onlineOfflineStore.ts", () => {
     );
 
     it.each([true, false])(
-      "should_setIsOnlineTrue_when_callOfLastSeenSucceededAndInitialStateWas'%s'",
+      "should_setIsOnlineTrue_when_callOfLastSeenFailedAndInitialStateWas'%s'",
       async (initialStateOfIsOnline) => {
         const wahlbezirkID = "wahlbezirkID";
         useUserStore().user.wahlbezirkID = wahlbezirkID;

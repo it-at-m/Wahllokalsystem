@@ -3,7 +3,7 @@ spring:
     gateway:
       routes:
         - id: sso
-          uri: http://keycloak:8100/
+          uri: http://host.docker.internal:8100/
           predicates:
             - Path=/api/sso/userinfo
           filters:

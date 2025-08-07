@@ -267,7 +267,7 @@ services:
       - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://keycloak:8100
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://host.docker.internal:8100
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID_WLS}
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
@@ -301,7 +301,7 @@ services:
       - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://keycloak:8100
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://host.docker.internal:8100
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID_ADMIN}
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
@@ -322,7 +322,7 @@ services:
       - no-new-privileges:true
 
   wls-auth-service:
-    container_name: keycloak
+    container_name: wls-auth-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest
     depends_on:
       - wls-db-oracle
@@ -335,7 +335,7 @@ services:
       SPRING_LDAP_EMBEDDED_LDIF: file:/configLdap/users.ldif
       SPRING_PROFILES_ACTIVE: db-oracle,db-dummydata,dummy.ldap,plainTextLogging
       SPRING_DATASOURCE_URL: ${WLS_SERVICE_DB_URL}
-      SERVER_PORT: 8100
+      SERVER_PORT: 8080
       SERVICE_CONFIG_CLIENTS_INFOMANAGEMENT_BASEPATH: http://host.docker.internal:8201
       SERVICE_CONFIG_RSA_RSA_KEY_SETTING: STATIC_KEY
       SERVICE_CONFIG_RSA_PRIVATE-KEY: |
@@ -380,7 +380,7 @@ services:
     volumes:
       - './ldap:/configLdap'
     ports:
-      - 8100:8100
+      - 8100:8080
     networks:
       - services
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-const doLogging = import.meta.env.DEV;
 
 export function useLogging(loggerName: string) {
+  const doLogging = import.meta.env.DEV;
   function log(message: string) {
     if (doLogging) {
       console.log(`${loggerName}: ${message}`);

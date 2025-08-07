@@ -29,7 +29,7 @@ export function useWahlscheineTestDataFactory() {
 
   function createWahlscheineDTO(): WahlscheineDTO {
     return {
-      bezirkUndWahlID: createBezirkUndWahlID(),
+      bezirkUndWahlID: createBezirkUndWahlIDDTO(),
       stimmabgabevermerke: generateRandomNumber(10),
     };
   }

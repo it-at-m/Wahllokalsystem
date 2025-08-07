@@ -21,7 +21,7 @@ const configParameter = {
 } as InfomanagementConfigParameter;
 
 describe("BaseDialogConfigParameterDisplay.vue", () => {
-  let wrapper: VueWrapper<any>;
+  let wrapper: VueWrapper<typeof BaseDialogConfigParameterDisplay>;
 
   vi.stubGlobal("visualViewport", new EventTarget());
 

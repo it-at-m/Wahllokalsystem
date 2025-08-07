@@ -8,6 +8,7 @@
         density="comfortable"
         size="x-large"
         :color="activatorButtonColor"
+        data-test="button-activator-menu-online-offline"
       />
     </template>
     <v-card

@@ -26,7 +26,7 @@
             Check online status
           </v-btn>
         </v-list-item>
-        <v-list-item class="list-header">
+        <v-list-item active>
           <v-row
             class="ma-1"
             align="center"
@@ -94,9 +94,3 @@ function onCheckStatusClicked() {
   checkConnectionStatus();
 }
 </script>
-
-<style>
-.list-header {
-  background: #f0f0f0;
-}
-</style>

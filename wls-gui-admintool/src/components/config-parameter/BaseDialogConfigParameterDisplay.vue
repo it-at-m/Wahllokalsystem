@@ -78,7 +78,7 @@ const isChanged = computed(() => model.value !== props.configParameter.wert);
 
 const emit = defineEmits<{
   cancelEdit: [];
-  commitEdit: [wert: string];
+  commitEdit: [configParameter: InfomanagementConfigParameter];
 }>();
 
 defineExpose({
@@ -98,7 +98,7 @@ function onConfigParameterEditCanceled() {
 }
 
 function onConfigParameterEditCommited() {
-  emit("commitEdit", `${model.value}`);
+  emit("commitEdit", { ...props.configParameter, wert: model.value });
   hideDialog();
 }
 

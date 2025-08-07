@@ -9,7 +9,7 @@ import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheine
 const { registerStoreHMR } = useHmrUpdate();
 const { getWahlscheine } = useWahlscheineService();
 
-export const useWahlscheineStore = defineStore("ergebnismeldung", () => {
+export const useWahlscheineStore = defineStore("wahlscheine", () => {
   const wahlscheine = ref<Wahlscheine[]>([]);
 
   async function loadWahlscheine(wahlID: string, wahlbezirkID: string) {

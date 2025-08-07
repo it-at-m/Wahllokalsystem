@@ -39,7 +39,7 @@ describe("ergebnismeldungService.ts", () => {
     vi.clearAllMocks();
   });
 
-  describe("getWahschleine", () => {
+  describe("getWahlscheine", () => {
     it("should_returnWahlscheine_when_calledWithValidParameters", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
@@ -77,7 +77,7 @@ describe("ergebnismeldungService.ts", () => {
       ]);
     });
 
-    it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+    it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCallAndNotificationIsDisabled", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 

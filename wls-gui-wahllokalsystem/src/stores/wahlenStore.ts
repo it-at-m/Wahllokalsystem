@@ -86,16 +86,8 @@ export const useWahlenStore = defineStore(storeID, () => {
       sendNotification
     );
 
-    _mapWahlMetaDataToWahlnummer();
-    if (wahlen.value) {
-      wahlen.value.sort((a: Wahl, b: Wahl) => {
-        if (a.nummer && b.nummer) {
-          return a.nummer.localeCompare(b.nummer);
-        } else {
-          return 0;
-        }
-      });
-    }
+    _mapWahlMetaDataToWahlNummer();
+    _sortWahlenByWahlNummer();
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
@@ -176,7 +168,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
-  function _mapWahlMetaDataToWahlnummer() {
+  function _mapWahlMetaDataToWahlNummer() {
     if (wahlen.value) {
       const wahlnummerMap = new Map(
         user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
@@ -185,6 +177,18 @@ export const useWahlenStore = defineStore(storeID, () => {
         const wahlnummer = wahlnummerMap.get(wahl.wahlID);
         if (wahlnummer !== undefined) {
           wahl.nummer = wahlnummer;
+        }
+      });
+    }
+  }
+
+  function _sortWahlenByWahlNummer() {
+    if (wahlen.value) {
+      wahlen.value.sort((a: Wahl, b: Wahl) => {
+        if (a.nummer && b.nummer) {
+          return a.nummer.localeCompare(b.nummer);
+        } else {
+          return 0;
         }
       });
     }

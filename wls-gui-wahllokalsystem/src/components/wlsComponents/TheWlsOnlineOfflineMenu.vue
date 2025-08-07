@@ -68,7 +68,7 @@ const INTERVAL_OF_30_SECONDS_AS_MILLISECONDS = 1000 * 60 * 30;
 
 useInterval(() => {
   checkConnectionStatus();
-}, INTERVAL_OF_30_SECONDS_AS_MILLISECONDS); // updates every 30 seconds
+}, INTERVAL_OF_30_SECONDS_AS_MILLISECONDS);
 
 const onlineOfflineStore = useOnlineOfflineStore();
 const { isCheckingStatus, isOnline } = storeToRefs(onlineOfflineStore);

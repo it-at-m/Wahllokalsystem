@@ -20,7 +20,7 @@ describe("wahlscheineTaskFactory.ts", () => {
   const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
     useTasksTestDataFactory();
   const { createTasks } = useWahlscheineTaskFactory();
-  const kopfdatenNamePrefix = "Wahlscheine - ";
+  const wahlscheineNamePrefix = "Wahlscheine - ";
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -46,10 +46,10 @@ describe("wahlscheineTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(4);
       const expectedNames = [
-        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName,
-        kopfdatenNamePrefix + extendedWahlMetaDataTwo.wahlName,
-        kopfdatenNamePrefix + extendedWahlMetaDataThree.wahlName,
-        kopfdatenNamePrefix + extendedWahlMetaDataFour.wahlName,
+        wahlscheineNamePrefix + extendedWahlMetaDataOne.wahlName,
+        wahlscheineNamePrefix + extendedWahlMetaDataTwo.wahlName,
+        wahlscheineNamePrefix + extendedWahlMetaDataThree.wahlName,
+        wahlscheineNamePrefix + extendedWahlMetaDataFour.wahlName,
       ];
       const resultNames = result.map((task) => task.name);
       expectedNames.forEach((name) => {
@@ -68,7 +68,7 @@ describe("wahlscheineTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(1);
       expect(result[0].name).toStrictEqual(
-        kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName
+        wahlscheineNamePrefix + extendedWahlMetaDataOne.wahlName
       );
     });
 

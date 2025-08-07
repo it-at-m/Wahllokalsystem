@@ -3,7 +3,7 @@ import type { BezirkUndWahlID } from "@/api/wls-clients/generated-monitoring-api
 import type { BezirkUndWahlIDModel } from "@/types/ereignismeldung/BezirkUndWahlIDModel.ts";
 import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
 
-export function useErgebnismeldungMapper() {
+export function useWahlscheineMapper() {
   function toModel(dto: WahlscheineDTO): Wahlscheine {
     return {
       bezirkUndWahlID: _toBezirkUndWahlIDModel(dto.bezirkUndWahlID),

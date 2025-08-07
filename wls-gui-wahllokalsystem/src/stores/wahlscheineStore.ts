@@ -4,12 +4,12 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useErgebnismeldungService } from "@/composables/ergebnismeldung/ergebnismeldungService.ts";
+import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
-const { getWahlscheine } = useErgebnismeldungService();
+const { getWahlscheine } = useWahlscheineService();
 
-export const useErgebnismeldungStore = defineStore("ergebnismeldung", () => {
+export const useWahlscheineStore = defineStore("ergebnismeldung", () => {
   const wahlscheine = ref<Wahlscheine[]>([]);
 
   async function loadWahlscheine(wahlID: string, wahlbezirkID: string) {
@@ -26,4 +26,4 @@ export const useErgebnismeldungStore = defineStore("ergebnismeldung", () => {
   return { loadWahlscheine };
 });
 
-registerStoreHMR(useErgebnismeldungStore);
+registerStoreHMR(useWahlscheineStore);

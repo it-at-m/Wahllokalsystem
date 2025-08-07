@@ -13,9 +13,7 @@ export function useDateOfActionTimeout(
   watch(dateOfAction, () => setupTimer());
 
   function setupTimer() {
-    if (popupTimeout !== null) {
-      clearTimeout(popupTimeout);
-    }
+    clearTimer();
 
     if (dateOfAction.value) {
       const currentTime = new Date().getTime();
@@ -30,7 +28,11 @@ export function useDateOfActionTimeout(
     }
   }
 
-  setupTimer();
+  function clearTimer() {
+    if (popupTimeout !== null) {
+      clearTimeout(popupTimeout);
+    }
+  }
 
-  return {};
+  return { clearTimer, setupTimer };
 }

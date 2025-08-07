@@ -1,5 +1,13 @@
 import { createPinia, setActivePinia } from "pinia";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -25,8 +33,11 @@ describe("onlineOfflineStore.ts", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
-    vi.resetAllMocks();
     vi.useRealTimers();
+  });
+
+  afterAll(() => {
+    vi.resetAllMocks();
   });
 
   describe("checkConnectionState", () => {

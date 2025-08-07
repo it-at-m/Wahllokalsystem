@@ -100,7 +100,10 @@ function onConfigParameterEditCanceled() {
 }
 
 function onConfigParameterEditCommited() {
-  emit("commitEdit", `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`);
+  emit(
+    "commitEdit",
+    `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`
+  );
   hideDialog();
 }
 

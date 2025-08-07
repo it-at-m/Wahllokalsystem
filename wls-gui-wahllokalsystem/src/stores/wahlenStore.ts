@@ -15,7 +15,7 @@ const briefwahlService = useBriefwahlService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID, currentUserWahlbezirkID } =
+  const { currentUserWahltagID, currentUserWahlbezirkID, user } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
@@ -86,6 +86,7 @@ export const useWahlenStore = defineStore(storeID, () => {
       sendNotification
     );
 
+    _mapWahlMetaDataToWahlnummer();
     if (wahlen.value) {
       wahlen.value.sort((a: Wahl, b: Wahl) => {
         if (a.nummer && b.nummer) {
@@ -173,6 +174,20 @@ export const useWahlenStore = defineStore(storeID, () => {
   function getWahlTagOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
+  }
+
+  function _mapWahlMetaDataToWahlnummer() {
+    if (wahlen.value) {
+      const wahlnummerMap = new Map(
+        user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
+      );
+      wahlen.value.forEach((wahl) => {
+        const wahlnummer = wahlnummerMap.get(wahl.wahlID);
+        if (wahlnummer !== undefined) {
+          wahl.nummer = wahlnummer;
+        }
+      });
+    }
   }
 
   return {

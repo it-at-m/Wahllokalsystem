@@ -6,9 +6,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 const storeID = "onlineOffline";
 
-const { postLastSeen } = useMonitoringService();
-
 export const useOnlineOfflineStore = defineStore(storeID, () => {
+  const { postLastSeen } = useMonitoringService();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
   const isCheckingStatus = ref<boolean>(false);

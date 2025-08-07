@@ -23,7 +23,7 @@
             style="width: 100%"
             @click.stop="onCheckStatusClicked"
           >
-            Check online status
+            Verbindung überprüfen
           </v-btn>
         </v-list-item>
         <v-list-item active>

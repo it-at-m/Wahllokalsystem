@@ -78,7 +78,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
 
         const emitted = wrapper.emitted("cancelEdit");
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0]).toEqual(undefined);
+        expect(emitted).toEqual([[]]);
       });
     });
 

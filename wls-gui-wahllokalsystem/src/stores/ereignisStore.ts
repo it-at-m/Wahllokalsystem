@@ -19,6 +19,11 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
 
+interface EreignisCreateTemplate {
+  beschreibung?: string;
+  uhrzeit?: Date;
+}
+
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
@@ -68,20 +73,12 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
 
-  function addEreignis() {
-    const currentDate = new Date();
-    const currentEreignisart =
-      getEreignisArtForDateRelatedToSchliessungsuhrzeit(
-        currentDate,
-        schliessungsuhrzeitSent.value
-      );
-    wahlbezirkEreignisse.value.ereigniseintraege?.push({
-      uhrzeit: currentDate,
-      beschreibung: "",
-      ereignisart: currentEreignisart,
-    });
+  function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
+    const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
+
+    wahlbezirkEreignisse.value.ereigniseintraege?.push(ereignisToAdd);
     // uncheck checkbox if set before
-    switch (currentEreignisart) {
+    switch (ereignisToAdd.ereignisart) {
       case EreignisartEnum.Vorfall:
         wahlbezirkEreignisse.value.keineVorfaelle = false;
         break;
@@ -160,6 +157,23 @@ export const useEreignisStore = defineStore(storeID, () => {
     } finally {
       isSaving.value = false;
     }
+  }
+
+  function _createEreignis(
+    nonDefaultValues?: EreignisCreateTemplate
+  ): Ereignis {
+    const uhrzeit = nonDefaultValues?.uhrzeit ?? new Date();
+    const ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
+      uhrzeit,
+      schliessungsuhrzeitSent.value
+    );
+    const beschreibung = nonDefaultValues?.beschreibung;
+
+    return {
+      uhrzeit,
+      ereignisart,
+      beschreibung,
+    };
   }
 
   function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {

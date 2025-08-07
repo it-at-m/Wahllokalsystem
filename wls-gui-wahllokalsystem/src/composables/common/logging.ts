@@ -8,6 +8,18 @@ export function useLogging(loggerName: string) {
     }
   }
 
+  function logDebug(message: string) {
+    if (doLogging) {
+      console.debug(`${loggerName}: ${message}`);
+    }
+  }
+
+  function logWarn(message: string) {
+    if (doLogging) {
+      console.warn(`${loggerName}: ${message}`);
+    }
+  }
+
   function logError(message: string, error?: unknown) {
     if (doLogging) {
       console.error(`${loggerName}: ${message}`, error);
@@ -16,6 +28,8 @@ export function useLogging(loggerName: string) {
 
   return {
     log,
+    logDebug,
+    logWarn,
     logError,
   };
 }

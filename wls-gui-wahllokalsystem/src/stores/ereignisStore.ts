@@ -27,7 +27,7 @@ interface EreignisCreateTemplate {
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, isUWB, isBWB } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
 
   const isSaving = ref(false);
@@ -214,9 +214,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         EreignisartEnum.Vorkommnis
       );
     }
-    wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
-      EreignisartEnum.Vorfall
-    );
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      isBWB.value || !_hasEintragOfEreignisart(EreignisartEnum.Vorfall);
   }
 
   return {

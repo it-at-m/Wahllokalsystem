@@ -36,6 +36,7 @@ const { prepareUser } = useUserTestDataFactory();
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
+  let userStore: ReturnType<typeof useUserStore>;
 
   const BESCHREIBUNG = "Beschreibung";
   const BESCHREIBUNG_NEU = "Neue Beschreibung";
@@ -47,6 +48,7 @@ describe("ereignisStore.ts", () => {
     });
     unitUnderTest = useEreignisStore(testPinia);
     wahlbezirkStore = useWahlbezirkStore(testPinia);
+    userStore = useUserStore(testPinia);
 
     vi.useFakeTimers({
       now: mockedNow,
@@ -300,6 +302,20 @@ describe("ereignisStore.ts", () => {
       );
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
+
+    it("should_setKeineVorfaelleTrue_when_isBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      unitUnderTest.addEreignis();
+
+      await nextTick();
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
     });
 
     it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {

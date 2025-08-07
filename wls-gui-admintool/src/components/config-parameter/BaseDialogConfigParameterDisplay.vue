@@ -100,7 +100,7 @@ function onConfigParameterEditCanceled() {
 }
 
 function onConfigParameterEditCommited() {
-  emit("commitEdit", model.value);
+  emit("commitEdit", `${model.value}`);
   hideDialog();
 }
 

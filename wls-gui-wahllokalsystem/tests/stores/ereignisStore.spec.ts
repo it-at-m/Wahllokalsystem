@@ -1,3 +1,5 @@
+import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -34,6 +36,9 @@ const { prepareUser } = useUserTestDataFactory();
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
+
+  const BESCHREIBUNG = "Beschreibung";
+  const BESCHREIBUNG_NEU = "Neue Beschreibung";
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
@@ -244,7 +249,7 @@ describe("ereignisStore.ts", () => {
   });
 
   describe("addEreignis", () => {
-    it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
+    it("should_addEreignisToWahlbezirkEreignisseWithDefaultValues_when_ereignisToAddIsUndefined", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -317,6 +322,20 @@ describe("ereignisStore.ts", () => {
       ).toStrictEqual(false);
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
+
+    it("should_addEreignisWithData_when_ereignisToAddIsGiven", () => {
+      const ereignisToAdd: Ereignis = {
+        uhrzeit: new Date("2025-07-31T12:43:07.999"),
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: "dies ist die Ereignisbeschreibung",
+      };
+
+      unitUnderTest.addEreignis(ereignisToAdd);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toStrictEqual([ereignisToAdd]);
     });
   });
 
@@ -423,6 +442,50 @@ describe("ereignisStore.ts", () => {
         wahlbezirkID,
         unitUnderTest.wahlbezirkEreignisse
       );
+    });
+  });
+
+  describe("updateBeschreibungByIndex", () => {
+    it("should_doNoting_when_noEreignisEintrageAreGiven", () => {
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toBeUndefined();
+    });
+
+    it("should_doNothing_when_indexIsOutOfRange", () => {
+      const eintragNotToChange = {
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: BESCHREIBUNG,
+      };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragNotToChange],
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 1);
+
+      expect(eintragNotToChange.beschreibung).toEqual(BESCHREIBUNG);
+    });
+
+    it("should_updateBeschreibung_when_beschreibungGiven", () => {
+      const eintragToChange = {
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: BESCHREIBUNG,
+      };
+      unitUnderTest.wahlbezirkEreignisse = {
+        wahlbezirkID: "wahlbezirkID",
+        ereigniseintraege: [eintragToChange],
+      };
+
+      unitUnderTest.updateBeschreibungByIndex(BESCHREIBUNG_NEU, 0);
+
+      expect(eintragToChange.beschreibung).toEqual(BESCHREIBUNG_NEU);
     });
   });
 

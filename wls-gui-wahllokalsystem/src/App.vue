@@ -11,12 +11,16 @@
       </v-container>
     </v-main>
     <the-broadcast-read-confirmation-dialog />
-    <the-wahlvorstand-anwesenheits-check-popup-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog
+      v-if="isUWB"
+      data-test="wahlvorstand-anwesenheits-check-popup-dialog"
+    />
   </v-app>
 </template>
 
 <script setup lang="ts">
 import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
@@ -29,12 +33,16 @@ import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
+const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
+const { initWahlen } = useWahlenStore();
 const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
+const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -42,11 +50,13 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
 onMounted(async () => {
   try {
     await loadUser();
+    await initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    loadEreignisse();
-    loadWaehler();
-    loadPflegeWaehlerverzeichnis();
+    await loadEreignisse();
+    await loadWaehler();
+    await loadPflegeWaehlerverzeichnis();
+    await initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

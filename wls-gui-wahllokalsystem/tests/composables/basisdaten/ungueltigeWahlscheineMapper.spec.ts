@@ -10,26 +10,26 @@ describe("ungueltigerWahlscheinMapper.ts", () => {
   describe("toModel", () => {
     it("should_returnListOfUngueltigeWahlscheine_when_multipleLinesAreGiven", () => {
       const csvString =
-        "famname1;vorname1;1234\n" +
-        "famname2;vorname2;23\n" +
-        "famname3;vorname3;42";
+        "fam name1;vor name1;1234\n" +
+        "fam nam e2;vor nam e2;23\n" +
+        "fam name3;vor name3;42";
 
       const result = toModel(csvString);
 
       const expectedResult: UngueltigerWahlschein[] = [
         {
-          familienname: "famname1",
-          vorname: "vorname1",
+          familienname: "fam name1",
+          vorname: "vor name1",
           wahlscheinnummer: "1234",
         },
         {
-          familienname: "famname2",
-          vorname: "vorname2",
+          familienname: "fam nam e2",
+          vorname: "vor nam e2",
           wahlscheinnummer: "23",
         },
         {
-          familienname: "famname3",
-          vorname: "vorname3",
+          familienname: "fam name3",
+          vorname: "vor name3",
           wahlscheinnummer: "42",
         },
       ];
@@ -38,9 +38,9 @@ describe("ungueltigerWahlscheinMapper.ts", () => {
 
     it("should_removeSpacesAndQuotations_when_linesAreGiven", () => {
       const csvString =
-        '"famname1";vorname1;1234\n' +
-        "famname2;     vorname2;23\n" +
-        "famname3;vorname3;    42";
+        '"famname1";"vorname1";"1234"\n' +
+        "     famname2;     vorname2;     23\n" +
+        "    famname3;    vorname3;    42";
 
       const result = toModel(csvString);
 

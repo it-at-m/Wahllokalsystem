@@ -2,6 +2,7 @@ import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/Wahlbezirk
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -64,6 +65,29 @@ describe("ungueltigeWahlscheineService.ts", () => {
       expect(mockDefinitions.getUngueltigeWahlscheine.mock.calls).toStrictEqual(
         [[wahltagID, wahlbezirksArt]]
       );
+      expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
+
+    it("should_notAddSuccessNotification_when_sendNotificationIsFalse", async () => {
+      const wahltagID = "wahltagID";
+      const wahlbezirksArt = WahlbezirksArtEnum.BWB;
+
+      const mockedUngueltigeWahlscheineApiResponseData = "c;s;v";
+      mockDefinitions.getUngueltigeWahlscheine.mockReturnValue({
+        status: 200,
+        data: mockedUngueltigeWahlscheineApiResponseData,
+      });
+
+      const mockedMapperResponse = [
+        createUngueltigerWahlschein(),
+        createUngueltigerWahlschein(),
+      ];
+      mockDefinitions.mapToModel.mockReturnValue(mockedMapperResponse);
+
+      await getUngueltigeWahlscheine(wahltagID, wahlbezirksArt, false);
+
       expect(mockDefinitions.addNotification.mock.calls).toHaveLength(0);
     });
 

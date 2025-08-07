@@ -1,15 +1,18 @@
+import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten";
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
-import type { Urnenwahlvorbereitung } from "@/types/wahlvorbereitung/Urnenwahlvorbereitung.ts";
+import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
+import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
+import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useWaehlerverzeichnisService } from "@/composables/wahlvorbereitung/waehlerverzeichnisService.ts";
-import { useWahlvorbereitungService } from "@/composables/wahlvorbereitung/wahlvorbereitungService.ts";
+import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
+import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -21,8 +24,10 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit,
     postUrnenwahlvorbereitung,
+    postBriefwahlvorbereitung,
   } = useWahlvorbereitungService();
   const { getUngueltigeWahlscheine } = useUngueltigeWahlscheineService();
+  const { getWahlbriefdaten, postWahlbriefdaten } = useBriefwahlService();
   const {
     currentUserWahlbezirkID,
     currentUserWahltagID,
@@ -35,7 +40,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     postWaehlerverzeichnis,
   } = useWaehlerverzeichnisService();
 
-  const { getWaehlerverzeichnisOrUndefinedById } = useWahlenStore();
+  const { getWaehlerverzeichnisNummerOrUndefinedById } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
   const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
@@ -51,14 +56,35 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
   const schliessungsuhrzeitIsSaving = ref(false);
   const urnenWahlVorbereitungIsSaving = ref(false);
+  const briefWahlVorbereitungIsSaving = ref(false);
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
+  const ungueltigeWahlscheineIsLoading = ref(false);
+  const ungueltigeWahlscheineLoadingFailed = ref(false);
+  const ungueltigeWahlscheineIsEmpty = computed(
+    () => ungueltigeWahlscheine.value.length === 0
+  );
+
+  const wahlbriefDatenIsSaving = ref(false);
+  const wahlbriefDaten = ref<Wahlbriefdaten>({
+    wahlbriefe: undefined,
+    verzeichnisseUngueltige: undefined,
+    nachtraege: undefined,
+    nachtraeglichUeberbrachte: undefined,
+    zeitNachtraeglichUeberbrachte: undefined,
+  });
 
   const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
     anzahlNebenraeume: null,
     anzahlWahlkabinen: null,
     anzahlWahltische: null,
     urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirksArt.value,
+    wahlbezirkID: currentUserWahlbezirkID.value,
+    urnenAnzahl: [],
+  });
+
+  const briefwahlVorbereitung = ref<Wahlvorbereitung>({
+    urneVersiegelt: false,
+    wahlbezirkID: currentUserWahlbezirkID.value,
     urnenAnzahl: [],
   });
 
@@ -68,7 +94,23 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         wahlID: wahl.wahlID,
         anzahl: null,
       })) || [];
+    briefwahlVorbereitung.value.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
   });
+
+  function getUngueltigerWahlscheinByWahlscheinnummer(
+    wahlscheinNummer: string
+  ) {
+    return (
+      ungueltigeWahlscheine.value.find(
+        (ungueltigerWahlschein) =>
+          ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
+      ) ?? null
+    );
+  }
 
   async function initUngueltigeWahlscheine(sendNotification = true) {
     ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
@@ -78,8 +120,14 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     );
   }
 
+  async function initWahlbriefdaten() {
+    wahlbriefDaten.value = await getWahlbriefdaten(
+      currentUserWahlbezirkID.value
+    );
+  }
+
   async function loadPflegeWaehlerverzeichnis(sendNotification = true) {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
       currentUserHauptWahlID.value
     );
     if (waehlerverzeichnisNummer !== undefined) {
@@ -88,6 +136,23 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         waehlerverzeichnisNummer,
         sendNotification
       );
+    }
+  }
+
+  async function loadUngueltigeWahlscheine() {
+    ungueltigeWahlscheineIsLoading.value = true;
+    ungueltigeWahlscheineLoadingFailed.value = false;
+    ungueltigeWahlscheine.value = [];
+    try {
+      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
+        currentUserWahltagID.value,
+        currentUserWahlbezirksArt.value,
+        true
+      );
+    } catch {
+      ungueltigeWahlscheineLoadingFailed.value = true;
+    } finally {
+      ungueltigeWahlscheineIsLoading.value = false;
     }
   }
 
@@ -108,7 +173,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   async function sendPflegeWaehlerverzeichnis() {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisOrUndefinedById(
+    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
       currentUserHauptWahlID.value
     );
     if (waehlerverzeichnisNummer !== undefined) {
@@ -143,18 +208,43 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendUrnenwahlvorbereitung(
-    urnenwahlvorbereitung: Urnenwahlvorbereitung
-  ) {
+  async function sendUrnenwahlvorbereitung() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     urnenWahlVorbereitungIsSaving.value = true;
     try {
       if (wahlbezirkID) {
-        await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
-        urnenwahlVorbereitung.value = urnenwahlvorbereitung;
+        await postUrnenwahlvorbereitung(
+          wahlbezirkID,
+          urnenwahlVorbereitung.value
+        );
       }
     } finally {
       urnenWahlVorbereitungIsSaving.value = false;
+    }
+  }
+
+  async function sendWahlbriefdaten() {
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+    wahlbriefDatenIsSaving.value = true;
+    try {
+      await postWahlbriefdaten(wahlbezirkID, wahlbriefDaten.value);
+    } finally {
+      wahlbriefDatenIsSaving.value = false;
+    }
+  }
+
+  async function sendBriefwahlvorbereitung() {
+    const wahlbezirkID = currentUserWahlbezirkID.value;
+    briefWahlVorbereitungIsSaving.value = true;
+    try {
+      if (wahlbezirkID) {
+        await postBriefwahlvorbereitung(
+          wahlbezirkID,
+          briefwahlVorbereitung.value
+        );
+      }
+    } finally {
+      briefWahlVorbereitungIsSaving.value = false;
     }
   }
 
@@ -168,14 +258,26 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitIsSaving,
     schliessungsuhrzeitSent,
     ungueltigeWahlscheine,
+    ungueltigeWahlscheineIsLoading,
+    ungueltigeWahlscheineIsEmpty,
+    ungueltigeWahlscheineLoadingFailed,
+    getUngueltigerWahlscheinByWahlscheinnummer,
     initUngueltigeWahlscheine,
     loadPflegeWaehlerverzeichnis,
+    loadUngueltigeWahlscheine,
     sendEroeffnungsuhrzeit,
     sendPflegeWaehlerverzeichnis,
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,
     urnenwahlVorbereitung,
     urnenWahlVorbereitungIsSaving,
+    initWahlbriefdaten,
+    sendWahlbriefdaten,
+    wahlbriefDaten,
+    wahlbriefDatenIsSaving,
+    sendBriefwahlvorbereitung,
+    briefwahlVorbereitung,
+    briefWahlVorbereitungIsSaving,
   };
 });
 

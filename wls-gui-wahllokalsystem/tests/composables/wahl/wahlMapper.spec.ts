@@ -32,6 +32,7 @@ describe("wahlMapper", () => {
         wahlart: WahlWahlartEnum.Baw,
         farbe: expectedFarbe,
         nummer: dto.nummer,
+        beanstandeteWahlbriefe: [],
       };
 
       const model: Wahl = toModel(dto);
@@ -58,6 +59,7 @@ describe("wahlMapper", () => {
           b: dto.farbe.b,
         },
         nummer: undefined,
+        beanstandeteWahlbriefe: [],
       };
 
       const model: Wahl = toModel(dto);

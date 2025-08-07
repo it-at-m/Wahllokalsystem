@@ -1,15 +1,24 @@
 import { createTestingPinia } from "@pinia/testing";
-import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+import { storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
+import { ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import HomeView from "@/views/HomeView.vue";
 
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
@@ -33,7 +42,15 @@ describe("App", () => {
 
   vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
   vi.mock(
-    "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue"
+    "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
+    () => {
+      return {
+        default: {
+          name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
+          template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
+        },
+      };
+    }
   );
   vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
 
@@ -41,7 +58,14 @@ describe("App", () => {
 
   const router = createRouter({
     history: createWebHistory(),
-    routes: [],
+    routes: [
+      {
+        path: "/",
+        name: ROUTES_HOME,
+        component: HomeView,
+        meta: {},
+      },
+    ],
   });
 
   beforeEach(() => {
@@ -61,6 +85,45 @@ describe("App", () => {
   afterEach(() => {
     vi.clearAllMocks();
     if (wrapper) wrapper.unmount();
+  });
+
+  describe(COMPONENT_RENDER_TESTS, () => {
+    it("should_renderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtUWB", async (context) => {
+      const store = useUserStore();
+      store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+
+      await flushPromises();
+
+      expect(
+        wrapper
+          .findComponent(
+            '[data-test="wahlvorstand-anwesenheits-check-popup-dialog"]'
+          )
+          .exists()
+      ).toBe(true);
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_notRenderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtBWB", async (context) => {
+      const store = useUserStore();
+      store.user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+
+      await flushPromises();
+      expect(
+        wrapper
+          .findComponent(
+            '[data-test="wahlvorstand-anwesenheits-check-popup-dialog"]'
+          )
+          .exists()
+      ).toBe(false);
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
@@ -98,6 +161,18 @@ describe("App", () => {
       await flushPromises();
 
       expect(loadWaehler).toHaveBeenCalled();
+    });
+
+    it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
+      const { initBeanstandeteWahlbriefe } = useWahlenStore();
+      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+
+      // @ts-expect-error: cannot set readonly
+      waehlerverzeichnisNummern.value = [1];
+
+      await flushPromises();
+
+      expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

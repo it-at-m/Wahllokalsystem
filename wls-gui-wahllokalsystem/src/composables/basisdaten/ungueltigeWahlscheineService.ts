@@ -34,6 +34,13 @@ export function useUngueltigeWahlscheineService() {
         )
       ).data;
 
+      if (sendNotification) {
+        addNotification(
+          "Liste ungültiger Wahlscheine erfolgreich geladen",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+
       return toModel(ungueltigeWahlscheineCSVString);
     } catch (error) {
       if (sendNotification) {

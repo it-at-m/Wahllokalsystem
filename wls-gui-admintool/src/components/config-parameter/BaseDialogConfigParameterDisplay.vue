@@ -26,12 +26,10 @@
           </template>
           <template v-slot:actions>
             <base-button-cancel
-              color="red"
               @click="onConfigParameterEditCanceled"
               data-test="cancel-edit-button"
             />
             <base-button-confirm
-              color="success"
               :disabled="!isChanged"
               @click="onConfigParameterEditCommited"
               data-test="commit-edit-button"

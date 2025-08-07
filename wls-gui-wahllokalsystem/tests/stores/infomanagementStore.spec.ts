@@ -129,6 +129,9 @@ describe("infomanagementStore.ts", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
 
+    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
+    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
+
     beforeEach(() => {
       userStore = useUserStore();
       infomanagementStore = useInfomanagementStore();
@@ -167,7 +170,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW
       );
     });
 
@@ -185,7 +188,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW
       );
     });
 
@@ -222,7 +225,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW
       );
     });
 
@@ -240,7 +243,130 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteEroeffnungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW
+      );
+    });
+  });
+
+  describe("spaetesteEroeffnungsuhrzeit", () => {
+    let userStore: ReturnType<typeof useUserStore>;
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59:00";
+    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW = "17:59:00";
+
+    beforeEach(() => {
+      userStore = useUserStore();
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnSpaetesteEroeffnungszeitUWValue_when_wahlbezirkArtIsUWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      const konfigKeyValueUW = generateRandomString(8);
+      const konfigKeyValueBW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueUW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsUWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW
+      );
+    });
+
+    it("should_returnSpaetesteEroeffnungszeitBWValue_when_wahlbezirkArtIsBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      const konfigKeyValueBW = generateRandomString(8);
+      const konfigKeyValueUW = generateRandomString(8);
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert(konfigKeyValueBW)
+          .build(),
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_UW")
+          .wert(konfigKeyValueUW)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        konfigKeyValueBW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyDoesNotExists", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW
+      );
+    });
+
+    it("should_returnDefaultValue_when_wahlbezirkArtIsBWBButKonfigKeyHasEmptyValue", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("SPAETESTE_EROEFFNUNGSZEIT_BW")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.spaetesteEroeffnungsuhrzeit).toStrictEqual(
+        DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW
       );
     });
   });
@@ -248,6 +374,9 @@ describe("infomanagementStore.ts", () => {
   describe("fruehesteSchliessungsuhrzeit", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW = "18:00:00";
+    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW = "18:00:00";
 
     beforeEach(() => {
       userStore = useUserStore();
@@ -287,7 +416,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW
       );
     });
 
@@ -305,7 +434,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW
       );
     });
 
@@ -342,7 +471,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
       );
     });
 
@@ -360,7 +489,7 @@ describe("infomanagementStore.ts", () => {
       await nextTick();
 
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
-        "00:00:00"
+        DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
       );
     });
   });

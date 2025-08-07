@@ -32,16 +32,6 @@ const meta: Meta<typeof BaseDialogConfigParameterDisplay> = {
         category: "Events",
       },
     },
-    cancelEdit: {
-      table: {
-        disable: true,
-      },
-    },
-    commitEdit: {
-      table: {
-        disable: true,
-      },
-    },
   },
   args: {
     configParameter: {

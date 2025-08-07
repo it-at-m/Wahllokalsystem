@@ -48,8 +48,6 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
       wrapper.vm.showDialog();
       await nextTick();
 
-      wrapper.vm.showDialog();
-      await wrapper.vm.$nextTick();
       wrapper.vm.hideDialog();
       await wrapper.vm.$nextTick();
 
@@ -80,7 +78,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
 
         const emitted = wrapper.emitted("cancelEdit");
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0]).toEqual("Kein Payload, Keine Änderung");
+        expect(emitted?.[0][0]).toEqual(undefined);
       });
     });
 
@@ -107,7 +105,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
 
         const emitted = wrapper.emitted("commitEdit");
         expect(emitted).toBeTruthy();
-        expect(emitted[0][0]).toContain("Mock Wert");
+        expect(emitted?.[0][0]).toContain("Mock Wert");
       });
 
       it("should_showDefaultValue_when_resetButtonIsClicked_And_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
@@ -121,9 +119,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
           name: "VConfirmEdit",
         });
 
-        const resetBtn = confirmEditWrapper.find(
-          '[data-test = "reset-button"]'
-        );
+        const resetBtn = confirmEditWrapper.find('[data-test="reset-button"]');
         expect(resetBtn.exists()).toBe(true);
 
         await resetBtn.trigger("click");
@@ -148,12 +144,12 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
 
 function setupWrapper(
   overrides?: Partial<{ configParameter: InfomanagementConfigParameter }>
-) {
+): VueWrapper<typeof BaseDialogConfigParameterDisplay> {
   return mount(BaseDialogConfigParameterDisplay, {
     props: { configParameter: overrides?.configParameter ?? configParameter },
     global: { plugins: [vuetify] },
     attachTo: document.body,
-  });
+  }) as unknown as VueWrapper<typeof BaseDialogConfigParameterDisplay>; // Type Assertion
 }
 
 function cleanUpWrapper(wrapper: VueWrapper) {

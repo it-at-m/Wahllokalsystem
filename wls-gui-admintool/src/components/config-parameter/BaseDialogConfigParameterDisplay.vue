@@ -79,7 +79,7 @@ const visible = ref(false);
 const isChanged = computed(() => model.value !== props.configParameter.wert);
 
 const emit = defineEmits<{
-  cancelEdit: [wert: string];
+  cancelEdit: [];
   commitEdit: [wert: string];
 }>();
 
@@ -88,22 +88,19 @@ defineExpose({
     visible.value = true;
   },
   hideDialog() {
-    visible.value = true;
+    visible.value = false;
   },
   resetToDefaultValue,
 });
 
 function onConfigParameterEditCanceled() {
-  emit("cancelEdit", "Kein Payload, Keine Änderung");
+  emit("cancelEdit");
   resetModel();
   hideDialog();
 }
 
 function onConfigParameterEditCommited() {
-  emit(
-    "commitEdit",
-    `Neue Daten für den Konfigurationsparameter ${props.configParameter.name} => '${model.value}'`
-  );
+  emit("commitEdit", model.value);
   hideDialog();
 }
 

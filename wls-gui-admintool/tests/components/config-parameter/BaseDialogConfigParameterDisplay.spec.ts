@@ -6,66 +6,158 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
+import { VTextField } from "vuetify/components";
 
 import BaseDialogConfigParameterDisplay from "@/components/config-parameter/BaseDialogConfigParameterDisplay.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-// Testdaten für Event und Mounted
-const configParameter: InfomanagementConfigParameter[] = [
-  {
-    name: "Willkommenstext",
-    beschreibung: "Begrüßungstext auf der Anmeldemaske",
-    wert: "Herzlich willkommen zur Wahl!",
-    defaultValue: "Herzlich willkommen zur Testwahl!",
-  },
-];
+const configParameter = {
+  name: "Willkommenstext",
+  beschreibung: "Begrüßungstext auf der Anmeldemaske",
+  wert: "Herzlich willkommen zur Wahl!",
+  defaultValue: "Herzlich willkommen zur Testwahl!",
+} as InfomanagementConfigParameter;
 
 describe("BaseDialogConfigParameterDisplay.vue", () => {
-  let wrapper: VueWrapper;
-  const mountComponent = (config: InfomanagementConfigParameter[]) => {
-    wrapper = mount(BaseDialogConfigParameterDisplay, {
-      props: { configParameter: config[0] },
-      global: { plugins: [vuetify] },
-    });
-  };
+  let wrapper: VueWrapper<any>;
 
-  //ToDo Rendertest
+  vi.stubGlobal("visualViewport", new EventTarget());
+
+  beforeEach(() => {
+    wrapper = setupWrapper();
+  });
+
+  afterEach(() => {
+    cleanUpWrapper(wrapper);
+  });
+
   describe(COMPONENT_RENDER_TESTS, () => {
-    beforeEach(() => {
-      mountComponent(configParameter);
+    it("should_renderDialog_when_showWasCalled", async (context) => {
+      wrapper.vm.showDialog();
+
+      await wrapper.vm.$nextTick();
+
+      await expect(document.body.innerHTML).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
     });
 
-    it("should_renderCorrectly_when_componentIsMounted", async (context) => {
-      await expect(wrapper.html()).toMatchFileSnapshot(
+    it("should_hideDialog_when_hideWasCalledAfterShow", async (context) => {
+      wrapper.vm.showDialog();
+      await nextTick();
+
+      wrapper.vm.showDialog();
+      await wrapper.vm.$nextTick();
+      wrapper.vm.hideDialog();
+      await wrapper.vm.$nextTick();
+
+      await expect(document.body.innerHTML).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
     });
   });
 
-  //ToDo Event Test cancelEdit, commitEdit und resetValue
   describe(COMPONENT_EVENT_TESTS, () => {
-    beforeEach(() => {
-      mountComponent(configParameter);
-    });
     describe("cancelEdit", () => {
       it("should_emitCancelEditConfigParameterName_when_CancelButtonIsClicked", async () => {
-        // Button per data-test selektieren
-        const button = wrapper.find('[data-test="cancel-edit-button"]');
-        await cancelButton.trigger("click");
+        wrapper.vm.showDialog();
+        await wrapper.vm.$nextTick();
+
+        const input = wrapper.findComponent(VTextField);
+        await input.setValue("Mock Wert");
+
+        const confirmEditWrapper = wrapper.findComponent({
+          name: "VConfirmEdit",
+        });
+
+        const cancelBtn = confirmEditWrapper.find(
+          '[data-test="cancel-edit-button"]'
+        );
+        await cancelBtn.trigger("click");
+        await nextTick();
+
         const emitted = wrapper.emitted("cancelEdit");
-        expect(emitted).toBeDefined();
-        expect(wrapper.emitted("cancelDelete")).toEqual([[]]);
+        expect(emitted).toBeTruthy();
+        expect(emitted?.[0][0]).toEqual("Kein Payload, Keine Änderung");
       });
     });
 
-    it("should_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
-      // Button per data-test selektieren
-      const button = wrapper.find('[data-test="commit-edit-button"]');
-      await button.trigger("click");
-      const emitted = wrapper.emitted("commitEdit");
-      expect(emitted).toBeDefined();
-      expect(emitted?.[0]?.[0]).toBe(configParameter[0].name);
+    describe("commitEdit", () => {
+      it("should_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
+        wrapper.vm.showDialog();
+        await wrapper.vm.$nextTick();
+
+        const input = wrapper.findComponent(VTextField);
+        await input.setValue("Mock Wert");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.isChanged).toBe(true);
+
+        const confirmEditWrapper = wrapper.findComponent({
+          name: "VConfirmEdit",
+        });
+
+        const confirmBtn = confirmEditWrapper.find(
+          '[data-test="commit-edit-button"]'
+        );
+        await confirmBtn.trigger("click");
+        await nextTick();
+
+        const emitted = wrapper.emitted("commitEdit");
+        expect(emitted).toBeTruthy();
+        expect(emitted[0][0]).toContain("Mock Wert");
+      });
+
+      it("should_showDefaultValue_when_resetButtonIsClicked_And_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
+        wrapper.vm.showDialog();
+        await wrapper.vm.$nextTick();
+
+        const input = wrapper.findComponent(VTextField);
+        await input.setValue("Mock Wert");
+
+        const confirmEditWrapper = wrapper.findComponent({
+          name: "VConfirmEdit",
+        });
+
+        const resetBtn = confirmEditWrapper.find(
+          '[data-test = "reset-button"]'
+        );
+        expect(resetBtn.exists()).toBe(true);
+
+        await resetBtn.trigger("click");
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.isChanged).toBe(true);
+        expect(wrapper.vm.model).toBe(configParameter.defaultValue);
+
+        const confirmBtn = confirmEditWrapper.find(
+          '[data-test="commit-edit-button"]'
+        );
+        await confirmBtn.trigger("click");
+        await nextTick();
+
+        const emitted = wrapper.emitted("commitEdit");
+        expect(emitted).toBeTruthy();
+        expect(emitted?.[0][0]).toContain(configParameter.defaultValue);
+      });
     });
   });
 });
+
+function setupWrapper(
+  overrides?: Partial<{ configParameter: InfomanagementConfigParameter }>
+) {
+  return mount(BaseDialogConfigParameterDisplay, {
+    props: { configParameter: overrides?.configParameter ?? configParameter },
+    global: { plugins: [vuetify] },
+    attachTo: document.body,
+  });
+}
+
+function cleanUpWrapper(wrapper: VueWrapper) {
+  wrapper.unmount();
+  document.body.innerHTML = "";
+  document.head.innerHTML = "";
+}

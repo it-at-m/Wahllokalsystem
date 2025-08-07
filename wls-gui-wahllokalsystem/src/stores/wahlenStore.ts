@@ -169,7 +169,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function _mapWahlMetaDataToWahlNummer() {
-    if (wahlen.value) {
+    if (wahlen.value && user.value?.wahlMetaData) {
       const wahlnummerMap = new Map(
         user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
       );

@@ -86,7 +86,7 @@ export const useWahlenStore = defineStore(storeID, () => {
       sendNotification
     );
 
-    _sortWahlenByWahlnummer();
+    _sortWahlenByWahlNummer();
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
@@ -167,7 +167,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
-  function _sortWahlenByWahlnummer() {
+  function _sortWahlenByWahlNummer() {
     if (wahlen.value) {
       wahlen.value.sort((a: Wahl, b: Wahl) => {
         if (a.nummer && b.nummer) {

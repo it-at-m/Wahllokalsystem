@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const doLogging = true; //TODO Switch based on mode: dev or production
+const doLogging = import.meta.env.DEV;
 
 export function useLogging(loggerName: string) {
   function log(message: string) {

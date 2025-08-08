@@ -1,10 +1,22 @@
 /* eslint-disable no-console */
-const doLogging = true; //TODO Switch based on mode: dev or production
 
 export function useLogging(loggerName: string) {
+  const doLogging = import.meta.env.DEV;
   function log(message: string) {
     if (doLogging) {
       console.log(`${loggerName}: ${message}`);
+    }
+  }
+
+  function logDebug(message: string) {
+    if (doLogging) {
+      console.debug(`${loggerName}: ${message}`);
+    }
+  }
+
+  function logWarn(message: string) {
+    if (doLogging) {
+      console.warn(`${loggerName}: ${message}`);
     }
   }
 
@@ -16,6 +28,8 @@ export function useLogging(loggerName: string) {
 
   return {
     log,
+    logDebug,
+    logWarn,
     logError,
   };
 }

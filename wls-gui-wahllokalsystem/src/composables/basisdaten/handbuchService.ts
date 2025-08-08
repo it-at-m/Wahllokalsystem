@@ -6,10 +6,13 @@ import {
   Configuration,
   HandbuchControllerApi,
 } from "@/api/wls-clients/generated-basisdaten-api";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const { logDebug } = useLogging(useHandbuchService.name);
 
 export function useHandbuchService() {
   const handbuchControllerApi = new HandbuchControllerApi(
@@ -38,7 +41,7 @@ export function useHandbuchService() {
           UserNotificationCategoryEnum.ERROR
         );
       }
-      console.debug(e);
+      logDebug("Fehler beim laden des Handbuchs", e);
       throw new Error("GetHandbuch Failed");
     }
   }

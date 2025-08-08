@@ -10,6 +10,7 @@ import {
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useBriefwahlMapper } from "@/composables/briefwahl/briefwahlMapper.ts";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -20,6 +21,7 @@ const { addNotification } = useUserNotificationService();
 
 const { toWahlbriefdatenModel, toWahlbriefdatenWriteDTO } =
   useBriefwahlMapper();
+const { logDebug } = useLogging(useBriefwahlService.name);
 
 export function useBriefwahlService() {
   const briefwahlServiceConfiguration = new Configuration({
@@ -45,7 +47,7 @@ export function useBriefwahlService() {
 
       return responseData ? toModel(responseData) : null;
     } catch (e) {
-      console.debug(e);
+      logDebug("Die beanstandeten Wahlbriefe konnten nicht geladen werden.", e);
       addNotification(
         "Die beanstandeten Wahlbriefe konnten nicht geladen werden.",
         UserNotificationCategoryEnum.ERROR
@@ -88,7 +90,10 @@ export function useBriefwahlService() {
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (e) {
-      console.debug(e);
+      logDebug(
+        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
+        e
+      );
       addNotification(
         "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
         UserNotificationCategoryEnum.ERROR

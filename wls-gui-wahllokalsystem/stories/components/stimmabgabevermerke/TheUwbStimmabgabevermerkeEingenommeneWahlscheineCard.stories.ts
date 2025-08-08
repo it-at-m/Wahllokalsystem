@@ -37,10 +37,8 @@ export const Default: Story = {
     stimmabgabevermerke.value = {
       anzahlBlaetter: 0,
       waehlerverzeichnisNummer: 0,
-      wahlbezirkID: "wahlbezirkID",
       wahldaten: new Set([
         {
-          wahlbezirkID: "wahlbezirkID",
           wahlID: "wahlID",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
@@ -48,7 +46,6 @@ export const Default: Story = {
           ]),
         },
         {
-          wahlbezirkID: "wahlbezirkID2",
           wahlID: "wahlID2",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
@@ -69,6 +66,9 @@ export const Default: Story = {
         wahlID: "wahlID",
         wahlart: WahlWahlartEnum.Beb,
         wahltag: "",
+        stimmzettelumschlaege: {
+          anzahlWaehler: 0,
+        },
       },
       {
         beanstandeteWahlbriefe: [],
@@ -80,6 +80,9 @@ export const Default: Story = {
         wahlID: "wahlID2",
         wahlart: WahlWahlartEnum.Beb,
         wahltag: "",
+        stimmzettelumschlaege: {
+          anzahlWaehler: 0,
+        },
       },
     ];
   },

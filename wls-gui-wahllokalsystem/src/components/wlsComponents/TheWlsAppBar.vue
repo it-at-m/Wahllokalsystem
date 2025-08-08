@@ -64,15 +64,6 @@
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import {
-  VAppBar,
-  VAppBarNavIcon,
-  VCol,
-  VList,
-  VListItem,
-  VNavigationDrawer,
-  VRow,
-} from "vuetify/components";
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";

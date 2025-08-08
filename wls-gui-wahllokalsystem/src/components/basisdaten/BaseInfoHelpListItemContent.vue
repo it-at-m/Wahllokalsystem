@@ -18,8 +18,6 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import { VCol, VIcon, VRow } from "vuetify/components";
-
 defineProps({
   title: { type: String, required: true },
   text: { type: String, required: false, default: null },

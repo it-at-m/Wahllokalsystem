@@ -101,6 +101,17 @@ Eine Übersicht über die Profile gibt es [hier](#profile).
 > [!TIP]
 > Wenn es Updates an den Runconfigurations gab, die gefetcht wurden, ist es notwendig IntelliJ neu zu starten.
 
+## Docker/Podman
+
+Für die Nutzung von Docker oder Podman ist im `docker-compose.yml` File `host.docker.internal` als DNS-Name konfiguriert,
+damit die Kommunikation zwischen Containern und dem Host-Computer vereinfacht wird. Dabei ist darauf zu achten,
+dass im `hosts` File unter `C:\Windows\System32\drivers\etc` der folgende Eintrag existiert,
+sodass `host.docker.internal` auf `localhost` verweist:
+
+```text
+127.0.0.1 host.docker.internal
+```
+
 ## Starten des Frontends
 
 Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet.

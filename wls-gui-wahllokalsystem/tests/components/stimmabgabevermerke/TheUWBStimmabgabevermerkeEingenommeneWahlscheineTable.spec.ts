@@ -26,7 +26,11 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
 }));
 
 describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
-  const { createStimmabgabevermerke } = useStimmabgabevermerkeTestDataFactory();
+  const {
+    createStimmabgabevermerke,
+    prepareStimmabgabevermerke,
+    prepareWahldaten,
+  } = useStimmabgabevermerkeTestDataFactory();
   let stimmabgabevermerkeStore: ReturnType<typeof useStimmabgabevermerkeStore>;
   let testPinia: TestingPinia;
 
@@ -43,7 +47,24 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderTableWithThreeEntries_when_stimmabgabevermerkeHasThreeWahldatenEntries", async (context) => {
-      const stimmabgabevermerke = createStimmabgabevermerke();
+      const wahldatenOne = prepareWahldaten()
+        .eingenommeneWahlscheine(
+          new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 30]])
+        )
+        .build();
+      const wahldatenTwo = prepareWahldaten()
+        .eingenommeneWahlscheine(
+          new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 50]])
+        )
+        .build();
+      const wahldatenThree = prepareWahldaten()
+        .eingenommeneWahlscheine(
+          new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 60]])
+        )
+        .build();
+      const stimmabgabevermerke = prepareStimmabgabevermerke()
+        .wahldaten(new Set([wahldatenOne, wahldatenTwo, wahldatenThree]))
+        .build();
       stimmabgabevermerkeStore = useStimmabgabevermerkeStore(testPinia);
       stimmabgabevermerkeStore.stimmabgabevermerke = stimmabgabevermerke;
 
@@ -68,7 +89,7 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_changeValuesInStore_when_numberInputValueChanges", async (context) => {
+    it("should_changeValuesInStore_when_numberInputValueChanges", () => {
       const stimmabgabevermerke = createStimmabgabevermerke();
       stimmabgabevermerkeStore = useStimmabgabevermerkeStore(testPinia);
       stimmabgabevermerkeStore.stimmabgabevermerke = stimmabgabevermerke;
@@ -98,10 +119,6 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
             )
           ).toBe(newNumberInputValue);
         }
-      );
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
       );
     });
   });

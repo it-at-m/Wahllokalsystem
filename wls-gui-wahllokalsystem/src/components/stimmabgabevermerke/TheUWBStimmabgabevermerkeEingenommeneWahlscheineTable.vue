@@ -56,20 +56,20 @@ import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabeve
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { getWahlNameOrBlankStringById } = useWahlenStore();
 
-const getMapValue = (
+function getMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
   wahldaten: Wahldaten
-) => {
+) {
   return wahldaten.eingenommeneWahlscheine.get(key);
-};
+}
 
-const setMapValue = (
+function setMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
   wahldaten: Wahldaten,
   value: number
-) => {
+) {
   wahldaten.eingenommeneWahlscheine.set(key, value);
-};
+}
 </script>
 
 <style scoped></style>

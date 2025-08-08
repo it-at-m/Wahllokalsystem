@@ -9,8 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import { VIcon } from "vuetify/components";
-
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 

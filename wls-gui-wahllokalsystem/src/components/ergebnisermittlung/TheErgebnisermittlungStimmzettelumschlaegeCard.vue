@@ -29,15 +29,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VContainer,
-  VForm,
-  VNumberInput,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

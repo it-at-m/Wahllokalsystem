@@ -40,16 +40,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VCheckbox,
-  VDialog,
-  VIcon,
-} from "vuetify/components";
 
 import { useBroadcastStore } from "@/stores/broadcastStore.ts";
 

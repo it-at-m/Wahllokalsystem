@@ -53,7 +53,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { VCard, VCardText, VCardTitle, VTable } from "vuetify/components";
 
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

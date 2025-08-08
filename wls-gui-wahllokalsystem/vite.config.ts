@@ -21,7 +21,6 @@ export default defineConfig({
       styles: {
         configFile: "src/styles/settings.scss",
       },
-      autoImport: false,
     }),
     UnpluginFonts({
       fontsource: {

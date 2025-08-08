@@ -48,16 +48,6 @@
 <script setup lang="ts">
 import axios from "axios";
 import { ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VDivider,
-  VList,
-  VListItem,
-  VMenu,
-  VRow,
-  VSpacer,
-} from "vuetify/components";
 
 import { basicPostConfig } from "@/api/axios-utils";
 import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";

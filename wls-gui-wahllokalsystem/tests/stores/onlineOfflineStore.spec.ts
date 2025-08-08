@@ -41,7 +41,7 @@ describe("onlineOfflineStore.ts", () => {
   });
 
   describe("checkConnectionState", () => {
-    it.each([true, false, null])(
+    it.each([true, false])(
       "should_setIsOnlineTrue_when_callOfLastSeenSucceededAndInitialStateWas'%s'",
       async (initialStateOfIsOnline) => {
         const wahlbezirkID = "wahlbezirkID";
@@ -59,7 +59,7 @@ describe("onlineOfflineStore.ts", () => {
       }
     );
 
-    it.each([true, false, null])(
+    it.each([true, false])(
       "should_setIsOnlineFalse_when_callOfLastSeenFailedAndInitialStateWas'%s'",
       async (initialStateOfIsOnline) => {
         const wahlbezirkID = "wahlbezirkID";

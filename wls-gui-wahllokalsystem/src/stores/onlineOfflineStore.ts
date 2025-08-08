@@ -11,7 +11,7 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
   const isCheckingStatus = ref<boolean>(false);
-  const isOnline = ref<boolean | null>(null);
+  const isOnline = ref<boolean>(true); //because when u can load the application you are online
 
   async function checkConnectionState() {
     isCheckingStatus.value = true;

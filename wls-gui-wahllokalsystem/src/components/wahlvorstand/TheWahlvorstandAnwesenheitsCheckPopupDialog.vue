@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
@@ -34,7 +34,10 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
 
-useDateOfActionTimeout(dateTimeToCheckAnwesenheit, showDialog);
+const { setupTimer, clearTimer } = useDateOfActionTimeout(
+  dateTimeToCheckAnwesenheit,
+  showDialog
+);
 
 const BUTTON_TITLE_CONFIRM = "Anwesenheit erfassen";
 const BUTTON_TITLE_CANCEL = "Bleiben";
@@ -45,6 +48,14 @@ const hourOfTimeToCheck = computed(() => {
   return dateTimeToCheckAnwesenheit.value
     ? new Date(dateTimeToCheckAnwesenheit.value).getHours()
     : 0;
+});
+
+onMounted(() => {
+  setupTimer();
+});
+
+onUnmounted(() => {
+  clearTimer();
 });
 
 function closeDialog() {

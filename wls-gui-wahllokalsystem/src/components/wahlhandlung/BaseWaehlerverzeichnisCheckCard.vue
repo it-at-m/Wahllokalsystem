@@ -80,15 +80,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VCheckbox,
-  VRadio,
-  VRadioGroup,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";

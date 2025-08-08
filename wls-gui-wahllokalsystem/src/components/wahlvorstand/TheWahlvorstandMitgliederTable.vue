@@ -34,7 +34,6 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { computed } from "vue";
-import { VCheckbox, VTable } from "vuetify/components";
 
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 

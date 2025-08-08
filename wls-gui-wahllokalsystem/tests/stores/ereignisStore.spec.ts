@@ -1,3 +1,5 @@
+import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -247,7 +249,7 @@ describe("ereignisStore.ts", () => {
   });
 
   describe("addEreignis", () => {
-    it("should_addEreignisToWahlbezirkEreignisse_when_ereignisIsAdded", async () => {
+    it("should_addEreignisToWahlbezirkEreignisseWithDefaultValues_when_ereignisToAddIsUndefined", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -320,6 +322,20 @@ describe("ereignisStore.ts", () => {
       ).toStrictEqual(false);
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
+
+    it("should_addEreignisWithData_when_ereignisToAddIsGiven", () => {
+      const ereignisToAdd: Ereignis = {
+        uhrzeit: new Date("2025-07-31T12:43:07.999"),
+        ereignisart: EreignisartEnum.Vorfall,
+        beschreibung: "dies ist die Ereignisbeschreibung",
+      };
+
+      unitUnderTest.addEreignis(ereignisToAdd);
+
+      expect(
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege
+      ).toStrictEqual([ereignisToAdd]);
     });
   });
 

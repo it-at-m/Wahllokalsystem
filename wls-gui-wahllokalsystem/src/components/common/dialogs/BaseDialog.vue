@@ -37,17 +37,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VDialog,
-  VIcon,
-  VSpacer,
-} from "vuetify/components";
-
 defineProps<{
   visible: boolean;
   dialogtitle: string;

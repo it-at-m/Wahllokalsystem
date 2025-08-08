@@ -56,17 +56,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VDialog,
-  VIcon,
-  VSpacer,
-  VTextarea,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";

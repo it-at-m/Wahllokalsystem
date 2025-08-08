@@ -13,8 +13,6 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
 
-import { VTextField } from "vuetify/components";
-
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { REQUIRED } from "@/util/rules.ts";
 

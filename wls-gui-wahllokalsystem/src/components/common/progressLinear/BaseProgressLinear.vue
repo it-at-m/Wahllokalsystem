@@ -21,14 +21,6 @@
 <script setup lang="ts">
 import type { Task } from "@/types/tasks/Task.ts";
 
-import {
-  VExpansionPanel,
-  VExpansionPanels,
-  VExpansionPanelText,
-  VExpansionPanelTitle,
-  VProgressLinear,
-} from "vuetify/components";
-
 defineProps<{
   titel: string;
   isLoading: boolean;

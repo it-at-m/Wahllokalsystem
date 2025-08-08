@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { VCard } from "vuetify/components";
-
 import BaseWahlschliessungCard from "@/components/wahlhandlung/BaseWahlschliessungCard.vue";
 import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
 </script>

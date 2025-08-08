@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { VIcon } from "vuetify/components";
 
 import { useUserStore } from "@/stores/userStore.ts";
 

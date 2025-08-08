@@ -72,14 +72,6 @@
 <script setup lang="ts">
 import { mdiClose } from "@mdi/js";
 import { computed, onMounted, ref, watch } from "vue";
-import {
-  VBtn,
-  VCol,
-  VIcon,
-  VInput,
-  VRow,
-  VTextField,
-} from "vuetify/components";
 
 /**
  * The Date-Time-Input` field offers the possibility to enter date-times without additional

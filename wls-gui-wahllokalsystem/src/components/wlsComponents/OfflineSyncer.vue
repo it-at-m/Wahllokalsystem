@@ -34,11 +34,10 @@ import type { IdbObject } from "@/types/wlsTypes/IdbObject";
 import axios from "axios";
 import localforage from "localforage";
 import { mergeProps, ref } from "vue";
-import { VBtn, VCard, VDialog, VTooltip } from "vuetify/components";
 
 import { basicPostConfig } from "@/api/axios-utils";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useInterval } from "@/composables/useInterval";
 
 const dialog = ref(false);
 const statusText = ref("");

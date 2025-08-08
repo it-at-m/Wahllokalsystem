@@ -22,7 +22,6 @@
 import localforage from "localforage";
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
-import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";

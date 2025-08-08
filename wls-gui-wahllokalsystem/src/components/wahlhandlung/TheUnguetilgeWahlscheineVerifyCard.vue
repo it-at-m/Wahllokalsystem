@@ -103,15 +103,6 @@ import type { ShallowRef } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed, ref, useTemplateRef } from "vue";
-import {
-  VBtn,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-  VImg,
-  VNumberInput,
-} from "vuetify/components";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";

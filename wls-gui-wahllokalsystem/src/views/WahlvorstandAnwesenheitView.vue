@@ -37,7 +37,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { VCard, VCardActions, VCardText, VCardTitle } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";

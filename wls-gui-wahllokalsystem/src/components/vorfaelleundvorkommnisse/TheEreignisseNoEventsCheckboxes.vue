@@ -21,7 +21,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { VCheckbox } from "vuetify/components";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";

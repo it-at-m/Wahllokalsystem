@@ -90,15 +90,7 @@ export const useWahlenStore = defineStore(storeID, () => {
       sendNotification
     );
 
-    if (wahlen.value) {
-      wahlen.value.sort((a: Wahl, b: Wahl) => {
-        if (a.nummer && b.nummer) {
-          return a.nummer.localeCompare(b.nummer);
-        } else {
-          return 0;
-        }
-      });
-    }
+    _sortWahlenByWahlNummer();
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
@@ -193,6 +185,18 @@ export const useWahlenStore = defineStore(storeID, () => {
   function getWahlTagOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
+  }
+
+  function _sortWahlenByWahlNummer() {
+    if (wahlen.value) {
+      wahlen.value.sort((a: Wahl, b: Wahl) => {
+        if (a.nummer && b.nummer) {
+          return a.nummer.localeCompare(b.nummer);
+        } else {
+          return 0;
+        }
+      });
+    }
   }
 
   return {

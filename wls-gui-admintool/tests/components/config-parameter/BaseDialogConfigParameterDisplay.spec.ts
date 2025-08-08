@@ -87,12 +87,6 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
         wrapper.vm.showDialog();
         await wrapper.vm.$nextTick();
 
-        const input = wrapper.findComponent(VTextField);
-        await input.setValue("Mock Wert");
-        await wrapper.vm.$nextTick();
-
-        expect(wrapper.vm.isChanged).toBe(true);
-
         const confirmEditWrapper = wrapper.findComponent({
           name: "VConfirmEdit",
         });
@@ -100,24 +94,31 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
         const confirmBtn = confirmEditWrapper.find(
           '[data-test="commit-edit-button"]'
         );
+
+        const input = confirmEditWrapper.findComponent(VTextField);
+        await input.setValue("Mock Wert");
+        await wrapper.vm.$nextTick();
+
         await confirmBtn.trigger("click");
         await nextTick();
 
-        const emitted = wrapper.emitted("commitEdit");
+        const emitted = wrapper.emitted("commitEdit") as
+          | [InfomanagementConfigParameter][]
+          | undefined;
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0]).toContain("Mock Wert");
+        expect(emitted?.[0][0].wert).toBe("Mock Wert");
       });
 
       it("should_showDefaultValue_when_resetButtonIsClicked_And_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
         wrapper.vm.showDialog();
         await wrapper.vm.$nextTick();
 
-        const input = wrapper.findComponent(VTextField);
-        await input.setValue("Mock Wert");
-
         const confirmEditWrapper = wrapper.findComponent({
           name: "VConfirmEdit",
         });
+
+        const input = confirmEditWrapper.findComponent(VTextField);
+        await input.setValue("Mock Wert");
 
         const resetBtn = confirmEditWrapper.find('[data-test="reset-button"]');
         expect(resetBtn.exists()).toBe(true);
@@ -125,18 +126,18 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
         await resetBtn.trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.isChanged).toBe(true);
-        expect(wrapper.vm.model).toBe(configParameter.defaultValue);
-
         const confirmBtn = confirmEditWrapper.find(
           '[data-test="commit-edit-button"]'
         );
+
         await confirmBtn.trigger("click");
         await nextTick();
 
-        const emitted = wrapper.emitted("commitEdit");
+        const emitted = wrapper.emitted("commitEdit") as
+          | [InfomanagementConfigParameter][]
+          | undefined;
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0]).toContain(configParameter.defaultValue);
+        expect(emitted?.[0][0].wert).toBe(configParameter.defaultValue);
       });
     });
   });

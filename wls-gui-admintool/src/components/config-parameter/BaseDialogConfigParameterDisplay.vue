@@ -4,10 +4,10 @@
     data-test="dialog-configparameter-override-wert"
   >
     <v-confirm-edit
-      :model-value="visible"
+      :model-value="model"
       hide-actions
     >
-      <template v-slot:default>
+      <template v-slot:default="{ model: proxyModel, isPristine }">
         <v-card
           :title="`Konfigurationsparameter '${configParameter.name}' Bearbeiten`"
         >
@@ -17,7 +17,7 @@
               <v-col cols="6">{{ configParameter?.defaultValue }}</v-col>
             </v-row>
             <v-text-field
-              v-model="model"
+              v-model="proxyModel.value"
               data-test="config-value-input"
               variant="underlined"
               label="Konfigurationsparameterwert"
@@ -26,16 +26,16 @@
           </template>
           <template v-slot:actions>
             <base-button-cancel
-              @click="onConfigParameterEditCanceled"
+              @click="onConfigParameterEditCanceled(proxyModel)"
               data-test="cancel-edit-button"
             />
             <base-button-confirm
-              :disabled="!isChanged"
-              @click="onConfigParameterEditCommited"
+              :disabled="isPristine"
+              @click="onConfigParameterEditCommited(proxyModel)"
               data-test="commit-edit-button"
             />
             <v-btn
-              @click="resetToDefaultValue"
+              @click="resetToDefaultValue(proxyModel)"
               class="ml-auto"
               data-test="reset-button"
               >Auf Standardwert Zurücksetzen
@@ -51,7 +51,7 @@
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 import type { PropType } from "vue";
 
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import {
   VBtn,
   VCard,
@@ -74,7 +74,6 @@ const props = defineProps({
 
 const model = ref(props.configParameter.wert);
 const visible = ref(false);
-const isChanged = computed(() => model.value !== props.configParameter.wert);
 
 const emit = defineEmits<{
   cancelEdit: [];
@@ -91,26 +90,26 @@ defineExpose({
   resetToDefaultValue,
 });
 
-function onConfigParameterEditCanceled() {
+function onConfigParameterEditCanceled(proxyModel: { value: string }) {
   emit("cancelEdit");
-  resetModel();
+  resetModel(proxyModel);
   hideDialog();
 }
 
-function onConfigParameterEditCommited() {
-  emit("commitEdit", { ...props.configParameter, wert: model.value });
+function onConfigParameterEditCommited(proxyModel: { value: string }) {
+  emit("commitEdit", { ...props.configParameter, wert: proxyModel.value });
   hideDialog();
 }
 
-function resetToDefaultValue() {
-  model.value = props.configParameter.defaultValue;
+function resetToDefaultValue(proxyModel: { value: string }) {
+  proxyModel.value = props.configParameter.defaultValue ?? "";
 }
 
 function hideDialog() {
   visible.value = false;
 }
 
-function resetModel() {
-  model.value = props.configParameter.wert;
+function resetModel(proxyModel: { value: string }) {
+  proxyModel.value = props.configParameter.wert ?? "";
 }
 </script>

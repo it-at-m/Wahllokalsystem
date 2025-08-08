@@ -25,8 +25,7 @@ describe("logging.ts", () => {
       unitUnderTest.log(logMessage);
 
       expect(consoleLogMock).toHaveBeenCalledWith(
-        `${loggerName}: ${logMessage}`,
-        []
+        `${loggerName}: ${logMessage}`
       );
 
       consoleLogMock.mockReset();
@@ -47,7 +46,7 @@ describe("logging.ts", () => {
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          [additionalData]
+          additionalData
         );
 
         consoleLogMock.mockReset();
@@ -84,8 +83,7 @@ describe("logging.ts", () => {
       unitUnderTest.logDebug(logMessage);
 
       expect(consoleLogMock).toHaveBeenCalledWith(
-        `${loggerName}: ${logMessage}`,
-        []
+        `${loggerName}: ${logMessage}`
       );
 
       consoleLogMock.mockReset();
@@ -106,7 +104,7 @@ describe("logging.ts", () => {
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          [additionalData]
+          additionalData
         );
 
         consoleLogMock.mockReset();
@@ -146,7 +144,7 @@ describe("logging.ts", () => {
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          [additionalData]
+          additionalData
         );
 
         consoleLogMock.mockReset();
@@ -186,7 +184,7 @@ describe("logging.ts", () => {
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          [additionalData]
+          additionalData
         );
 
         consoleLogMock.mockReset();

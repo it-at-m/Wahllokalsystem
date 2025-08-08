@@ -25,11 +25,34 @@ describe("logging.ts", () => {
       unitUnderTest.log(logMessage);
 
       expect(consoleLogMock).toHaveBeenCalledWith(
-        `${loggerName}: ${logMessage}`
+        `${loggerName}: ${logMessage}`,
+        []
       );
 
       consoleLogMock.mockReset();
     });
+
+    it.each([undefined, new Error("dummy error"), "a string"])(
+      "should_log_when_loggingIsActiveWithAdditionalData'%s'",
+      (additionalData) => {
+        allowLogging(true);
+        unitUnderTest = useLogging(loggerName);
+
+        const consoleLogMock = vi
+          .spyOn(console, "log")
+          .mockImplementation(() => undefined);
+
+        const logMessage = "logMessage";
+        unitUnderTest.log(logMessage, additionalData);
+
+        expect(consoleLogMock).toHaveBeenCalledWith(
+          `${loggerName}: ${logMessage}`,
+          [additionalData]
+        );
+
+        consoleLogMock.mockReset();
+      }
+    );
 
     it("should_notLog_when_loggingIsActive", () => {
       allowLogging(false);
@@ -62,15 +85,15 @@ describe("logging.ts", () => {
 
       expect(consoleLogMock).toHaveBeenCalledWith(
         `${loggerName}: ${logMessage}`,
-        undefined
+        []
       );
 
       consoleLogMock.mockReset();
     });
 
-    it.each([undefined, new Error("dummy error")])(
-      "should_log_when_loggingIsActiveWithError'%s'",
-      (error) => {
+    it.each([undefined, new Error("dummy error"), "a string"])(
+      "should_log_when_loggingIsActiveWithAdditionalData'%s'",
+      (additionalData) => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
@@ -79,11 +102,11 @@ describe("logging.ts", () => {
           .mockImplementation(() => undefined);
 
         const logMessage = "logMessage";
-        unitUnderTest.logDebug(logMessage, error);
+        unitUnderTest.logDebug(logMessage, additionalData);
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          error
+          [additionalData]
         );
 
         consoleLogMock.mockReset();
@@ -108,9 +131,9 @@ describe("logging.ts", () => {
   });
 
   describe("logWarn", () => {
-    it.each([undefined, new Error("dummy error")])(
-      "should_log_when_loggingIsActiveWithError'%s'",
-      (error) => {
+    it.each([undefined, new Error("dummy error"), "a string"])(
+      "should_log_when_loggingIsActiveWithAdditionalData'%s'",
+      (additionalData) => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
@@ -119,11 +142,11 @@ describe("logging.ts", () => {
           .mockImplementation(() => undefined);
 
         const logMessage = "logMessage";
-        unitUnderTest.logWarn(logMessage, error);
+        unitUnderTest.logWarn(logMessage, additionalData);
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          error
+          [additionalData]
         );
 
         consoleLogMock.mockReset();
@@ -148,9 +171,9 @@ describe("logging.ts", () => {
   });
 
   describe("logError", () => {
-    it.each([undefined, new Error("dummy error")])(
-      "should_log_when_loggingIsActiveWithError'%s'",
-      (error) => {
+    it.each([undefined, new Error("dummy error"), "a string"])(
+      "should_log_when_loggingIsActiveWithAdditionalData'%s'",
+      (additionalData) => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
@@ -159,36 +182,16 @@ describe("logging.ts", () => {
           .mockImplementation(() => undefined);
 
         const logMessage = "logMessage";
-        unitUnderTest.logError(logMessage, error);
+        unitUnderTest.logError(logMessage, additionalData);
 
         expect(consoleLogMock).toHaveBeenCalledWith(
           `${loggerName}: ${logMessage}`,
-          error
+          [additionalData]
         );
 
         consoleLogMock.mockReset();
       }
     );
-
-    it("should_logWithError_when_loggingIsActive", () => {
-      allowLogging(true);
-      unitUnderTest = useLogging(loggerName);
-
-      const consoleLogMock = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => undefined);
-
-      const logMessage = "logMessage";
-      const logError = new Error("error to log");
-      unitUnderTest.logError(logMessage, logError);
-
-      expect(consoleLogMock).toHaveBeenCalledWith(
-        `${loggerName}: ${logMessage}`,
-        logError
-      );
-
-      consoleLogMock.mockReset();
-    });
 
     it("should_notLog_when_loggingIsActive", () => {
       allowLogging(false);

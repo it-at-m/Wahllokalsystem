@@ -8,19 +8,19 @@ export function useLogging(loggerName: string) {
     }
   }
 
-  function logDebug(message: string) {
+  function logDebug(message: string, error?: Error) {
     if (doLogging) {
-      console.debug(`${loggerName}: ${message}`);
+      console.debug(`${loggerName}: ${message}`, error);
     }
   }
 
-  function logWarn(message: string) {
+  function logWarn(message: string, error?: Error) {
     if (doLogging) {
-      console.warn(`${loggerName}: ${message}`);
+      console.warn(`${loggerName}: ${message}`, error);
     }
   }
 
-  function logError(message: string, error?: unknown) {
+  function logError(message: string, error?: Error) {
     if (doLogging) {
       console.error(`${loggerName}: ${message}`, error);
     }

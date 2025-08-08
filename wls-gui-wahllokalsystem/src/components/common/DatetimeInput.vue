@@ -70,6 +70,8 @@
 </template>
 
 <script setup lang="ts">
+import type { VInput } from "vuetify/components";
+
 import { mdiClose } from "@mdi/js";
 import { computed, onMounted, ref, watch } from "vue";
 

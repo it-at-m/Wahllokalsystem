@@ -100,6 +100,7 @@
 <script setup lang="ts">
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { ShallowRef } from "vue";
+import type { VForm } from "vuetify/components";
 
 import { storeToRefs } from "pinia";
 import { computed, ref, useTemplateRef } from "vue";

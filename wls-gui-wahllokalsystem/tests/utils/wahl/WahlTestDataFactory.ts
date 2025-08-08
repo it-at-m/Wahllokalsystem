@@ -9,6 +9,7 @@ import type { Builder } from "@tests/utils/Builder.ts";
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -20,6 +21,9 @@ const {
 } = useCommonTestDataFactory();
 const { createRandomBeanstandeteWahlbriefeValues } =
   useBeanstandeteWahlbriefeTestDataFactory();
+
+const { createStimmzettelumschlaege } =
+  useStimmzettelumschlaegeTestDataFactory();
 
 const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
 const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
@@ -55,6 +59,7 @@ export function useWahlTestDataFactory() {
       farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
       beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
+      stimmzettelumschlaege: createStimmzettelumschlaege(),
     };
   }
 

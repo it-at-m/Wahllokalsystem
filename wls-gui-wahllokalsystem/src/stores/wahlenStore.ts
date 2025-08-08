@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
@@ -12,13 +13,16 @@ import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/Zurueckweisungsgrund
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
+const ergebnisermittlungService = useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID, currentUserWahlbezirkID } =
+  const { currentUserWahltagID, currentUserWahlbezirkID, user } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
+
+  const isStimmzettelumschlaegeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
     if (!wahlen.value) return [];
@@ -86,6 +90,7 @@ export const useWahlenStore = defineStore(storeID, () => {
       sendNotification
     );
 
+    _mapWahlMetaDataToWahlNummer();
     _sortWahlenByWahlNummer();
   }
 
@@ -157,6 +162,22 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveStimmzettelumschlaege(wahlID: string) {
+    const wahl = getWahlOrUndefinedById(wahlID);
+    if (wahl) {
+      isStimmzettelumschlaegeSaving.value = true;
+      try {
+        await ergebnisermittlungService.saveStimmzettelumschlaege(
+          wahl.wahlID,
+          currentUserWahlbezirkID.value,
+          wahl.stimmzettelumschlaege
+        );
+      } finally {
+        isStimmzettelumschlaegeSaving.value = false;
+      }
+    }
+  }
+
   function getWahlNameOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
@@ -165,6 +186,20 @@ export const useWahlenStore = defineStore(storeID, () => {
   function getWahlTagOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.wahltag : "";
+  }
+
+  function _mapWahlMetaDataToWahlNummer() {
+    if (wahlen.value && user.value?.wahlMetaData) {
+      const wahlnummerMap = new Map(
+        user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
+      );
+      wahlen.value.forEach((wahl) => {
+        const wahlnummer = wahlnummerMap.get(wahl.wahlID);
+        if (wahlnummer !== undefined) {
+          wahl.nummer = wahlnummer;
+        }
+      });
+    }
   }
 
   function _sortWahlenByWahlNummer() {
@@ -192,6 +227,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
+    saveStimmzettelumschlaege,
+    isStimmzettelumschlaegeSaving,
     summeGueltigerWahlbriefe,
     summeUngueltigerWahlbriefe,
     summenZurueckweisungsgruende,

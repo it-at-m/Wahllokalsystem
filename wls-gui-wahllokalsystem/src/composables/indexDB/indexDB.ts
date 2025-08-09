@@ -1,11 +1,15 @@
 import localforage from "localforage";
 
+import { useLogging } from "@/composables/common/logging.ts";
+
+const { logError, log } = useLogging(useIndexDB.name);
+
 export function useIndexDB() {
   async function getItemFromIDB<T>(key: string): Promise<T | null> {
     try {
       return await localforage.getItem<T>(key);
     } catch (error) {
-      console.error("Fehler beim Laden aus IDB:", error);
+      logError("Fehler beim Laden aus IDB:", error);
       return null;
     }
   }
@@ -16,9 +20,7 @@ export function useIndexDB() {
     url: string,
     dirty: boolean
   ) {
-    console.log(
-      "saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty
-    );
+    log("saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty);
     const value = { data: data, url: url, dirty: dirty };
     return localforage.setItem(key, value);
   }

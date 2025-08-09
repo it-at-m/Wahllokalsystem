@@ -2,27 +2,27 @@
 
 export function useLogging(loggerName: string) {
   const doLogging = import.meta.env.DEV;
-  function log(message: string) {
+  function log(message: string, ...additionalData: unknown[]) {
     if (doLogging) {
-      console.log(`${loggerName}: ${message}`);
+      console.log(`${loggerName}: ${message}`, ...additionalData);
     }
   }
 
-  function logDebug(message: string) {
+  function logDebug(message: string, ...additionalData: unknown[]) {
     if (doLogging) {
-      console.debug(`${loggerName}: ${message}`);
+      console.debug(`${loggerName}: ${message}`, ...additionalData);
     }
   }
 
-  function logWarn(message: string) {
+  function logWarn(message: string, ...additionalData: unknown[]) {
     if (doLogging) {
-      console.warn(`${loggerName}: ${message}`);
+      console.warn(`${loggerName}: ${message}`, ...additionalData);
     }
   }
 
-  function logError(message: string, error?: unknown) {
+  function logError(message: string, ...additionalData: unknown[]) {
     if (doLogging) {
-      console.error(`${loggerName}: ${message}`, error);
+      console.error(`${loggerName}: ${message}`, ...additionalData);
     }
   }
 

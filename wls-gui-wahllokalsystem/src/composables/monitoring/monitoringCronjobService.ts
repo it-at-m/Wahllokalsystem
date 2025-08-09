@@ -1,4 +1,7 @@
+import { useLogging } from "@/composables/common/logging.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
+
+const { logDebug } = useLogging(useMonitoringCronjobService.name);
 
 export function useMonitoringCronjobService() {
   const { sendWaehler } = useMonitoringStore();
@@ -17,7 +20,7 @@ export function useMonitoringCronjobService() {
       try {
         await sendWaehler();
       } catch (error) {
-        console.debug("Failed to send wahlbeteiligung:", error);
+        logDebug("Failed to send wahlbeteiligung:", error);
       }
     }, wahlbeteiligungUpdateInterval);
   }

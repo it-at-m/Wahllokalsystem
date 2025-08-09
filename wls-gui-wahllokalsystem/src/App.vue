@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import localforage from "localforage";
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 

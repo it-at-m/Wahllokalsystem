@@ -9,14 +9,18 @@ import { useRegisterSW } from "virtual:pwa-register/vue";
 import { VContainer } from "vuetify/components";
 
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
+import { useLogging } from "@/composables/common/logging.ts";
+import HomeView from "@/views/HomeView.vue";
+
+const { log } = useLogging(HomeView.__name ?? "");
 
 useRegisterSW({
   immediate: true,
-  onNeedRefresh: () => console.log("onNeedRefresh"),
-  onOfflineReady: () => console.log("onOfflineReady"),
-  onRegisteredSW: (_, registration) => {
-    console.log("onRegisteredSW");
+  onNeedRefresh: () => log("onNeedRefresh"),
+  onOfflineReady: () => log("onOfflineReady"),
+  onRegisteredSW: () => {
+    log("onRegisteredSW");
   },
-  onRegisterError: () => console.log("onRegisterError"),
+  onRegisterError: () => log("onRegisterError"),
 });
 </script>

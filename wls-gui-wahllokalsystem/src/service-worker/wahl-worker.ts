@@ -14,7 +14,7 @@ declare let self: ServiceWorkerGlobalScope;
 
 const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
 const offlineStrategies = useOfflineStrategies();
-const { log, logError } = useLogging("wahl-worker");
+const { log } = useLogging("wahl-worker");
 
 /**
  * delete old assets from previous sw versions

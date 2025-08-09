@@ -12,7 +12,10 @@ import { VHover, VListItem } from "vuetify/components";
 
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
+import { useLogging } from "@/composables/common/logging.ts";
 import vuetify from "@/plugins/vuetify.ts";
+
+const { logDebug } = useLogging("BaseInfoHelpItemList.spec.ts");
 
 describe("BaseInfoHelpListItem.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseInfoHelpListItem>>;
@@ -68,7 +71,7 @@ describe("BaseInfoHelpListItem.vue", () => {
         title: "Neuer Titel",
         icon: "icon",
         callback: () => {
-          console.debug("callback executed");
+          logDebug("callback executed");
         },
       });
 

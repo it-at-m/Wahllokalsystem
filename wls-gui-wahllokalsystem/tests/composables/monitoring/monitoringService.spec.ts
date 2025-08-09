@@ -12,12 +12,16 @@ const mockDefinitions = vi.hoisted(() => ({
   toModel: vi.fn(),
   postWahlbeteiligung: vi.fn(),
   getWahlbeteiligung: vi.fn(),
+  postLastSeen: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-monitoring-api", () => ({
   WaehleranzahlControllerApi: vi.fn().mockImplementation(() => ({
     postWahlbeteiligung: mockDefinitions.postWahlbeteiligung,
     getWahlbeteiligung: mockDefinitions.getWahlbeteiligung,
+  })),
+  WahllokalZustandControllerApi: vi.fn().mockImplementation(() => ({
+    postLastSeen: mockDefinitions.postLastSeen,
   })),
   Configuration: vi.fn(),
 }));
@@ -34,7 +38,8 @@ vi.mock("@/composables/monitoring/wahlbeteiligungMapper.ts", () => ({
 }));
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { postWahlbeteiligung, getWahlbeteiligung } = useMonitoringService();
+const { postWahlbeteiligung, getWahlbeteiligung, postLastSeen } =
+  useMonitoringService();
 const mockedNow = new Date();
 
 describe("monitoringService.ts", () => {
@@ -198,6 +203,34 @@ describe("monitoringService.ts", () => {
         wahlID,
         mockedWaehleranzahlDTO
       );
+    });
+  });
+
+  describe("postLastSeen", () => {
+    it("should_throwNoError_when_requestSucceeded", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      mockDefinitions.postLastSeen.mockResolvedValue(null);
+
+      await postLastSeen(wahlbezirkID);
+
+      expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
+        [wahlbezirkID],
+      ]);
+    });
+
+    it("should_throwNewError_when_requestFailed", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      const mockedApiError = new Error("mocked api call failed");
+      mockDefinitions.postLastSeen.mockRejectedValue(mockedApiError);
+
+      await expect(postLastSeen(wahlbezirkID)).rejects.toThrow(
+        "postLastSeen failed"
+      );
+      expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
+        [wahlbezirkID],
+      ]);
     });
   });
 });

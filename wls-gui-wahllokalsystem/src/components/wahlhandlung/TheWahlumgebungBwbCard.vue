@@ -32,15 +32,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VCheckbox,
-  VContainer,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";

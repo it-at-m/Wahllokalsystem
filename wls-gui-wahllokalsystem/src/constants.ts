@@ -5,12 +5,13 @@ export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
 export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
-export const ROUTE_WAHLSCHLIESSUNG = "wahlschliessung";
+export const ROUTE_STIMMABGABE = "stimmabgabe";
 export const ROUTE_WAHLUMGEBUNG = "wahlumgebung";
 export const ROUTE_BEGINN_STIMMABGABE = "beginnStimmabgabe";
 export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
 export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
+export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
@@ -43,3 +44,5 @@ export const INFOMANAGEMENT_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "infomanagement-service";
 export const BRIEFWAHL_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "briefwahl-service";
+export const ERGEBNISMELDUNG_SERVICE_API_URL =
+  WLS_SERVICE_API_URL + "ergebnismeldung-service";

@@ -6,6 +6,7 @@ import type { Farbe } from "@/types/wahl/Farbe.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
+import { StimmzettelumschlaegeBuilder } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useWahlMapper() {
@@ -20,6 +21,7 @@ export function useWahlMapper() {
       farbe: dto.farbe ? _mapFarbeDtoToModel(dto.farbe) : undefined,
       nummer: dto.nummer,
       beanstandeteWahlbriefe: [],
+      stimmzettelumschlaege: StimmzettelumschlaegeBuilder.create(),
     };
   }
 

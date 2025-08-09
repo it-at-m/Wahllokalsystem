@@ -20,17 +20,15 @@
     />
     <v-list-item
       title="Stimmabgabe"
-      :to="ROUTE_WAHLSCHLIESSUNG"
+      :to="ROUTE_STIMMABGABE"
     />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
-import { VListGroup, VListItem } from "vuetify/components";
-
 import {
   ROUTE_BEGINN_STIMMABGABE,
-  ROUTE_WAHLSCHLIESSUNG,
+  ROUTE_STIMMABGABE,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
 } from "@/constants.ts";

@@ -5,19 +5,24 @@ import { computed, ref } from "vue";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
+const ergebnisermittlungService = useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID, currentUserWahlbezirkID } =
+  const { currentUserWahltagID, currentUserWahlbezirkID, user } =
     storeToRefs(useUserStore());
   const wahlen = ref<Wahl[] | null>();
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
+
+  const isStimmzettelumschlaegeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
     if (!wahlen.value) return [];
@@ -30,28 +35,70 @@ export const useWahlenStore = defineStore(storeID, () => {
     return Array.from(nummern);
   });
 
+  const summeGueltigerWahlbriefe = computed(() => {
+    if (!wahlen.value) return [];
+    return wahlen.value.map(
+      (wahl) =>
+        wahl.beanstandeteWahlbriefe.filter(
+          (brief) => brief === ZurueckweisungsgrundEnum.Zugelassen
+        ).length
+    );
+  });
+
+  const summeUngueltigerWahlbriefe = computed(() => {
+    if (!wahlen.value) return [];
+    return wahlen.value.map(
+      (wahl) =>
+        wahl.beanstandeteWahlbriefe.filter(
+          (brief) =>
+            brief !== ZurueckweisungsgrundEnum.Zugelassen && brief !== null
+        ).length
+    );
+  });
+
+  const summenZurueckweisungsgruende = computed(() => {
+    if (!wahlen.value) return [];
+    const anzahlWahlen = wahlen.value.length;
+    const summenZurueckweisungsgruende = Object.values(ZurueckweisungsgrundEnum)
+      .filter((grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen)
+      .map((grund) => ({
+        summen: new Array(anzahlWahlen).fill(0),
+        grund: grund,
+      }));
+
+    wahlen.value.forEach((wahl, wahlIndex) => {
+      if (
+        wahl.beanstandeteWahlbriefe &&
+        wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
+      ) {
+        wahl.beanstandeteWahlbriefe.forEach((beanstandeterWahlbrief) => {
+          if (beanstandeterWahlbrief !== ZurueckweisungsgrundEnum.Zugelassen) {
+            const index = summenZurueckweisungsgruende.findIndex(
+              (item) => item.grund === beanstandeterWahlbrief
+            );
+            summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
+          }
+        });
+      }
+    });
+    return summenZurueckweisungsgruende;
+  });
+
   async function initWahlen(sendNotification = true) {
     wahlen.value = await wahlenService.getWahlen(
       currentUserWahltagID.value,
       sendNotification
     );
 
-    if (wahlen.value) {
-      wahlen.value.sort((a: Wahl, b: Wahl) => {
-        if (a.nummer && b.nummer) {
-          return a.nummer.localeCompare(b.nummer);
-        } else {
-          return 0;
-        }
-      });
-    }
+    _mapWahlMetaDataToWahlNummer();
+    _sortWahlenByWahlNummer();
   }
 
   function getWahlOrUndefinedById(wahlID: string) {
     return wahlen.value?.find((wahl) => wahl.wahlID === wahlID);
   }
 
-  function getWaehlerverzeichnisOrUndefinedById(wahlID: string) {
+  function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
   }
@@ -115,6 +162,22 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveStimmzettelumschlaege(wahlID: string) {
+    const wahl = getWahlOrUndefinedById(wahlID);
+    if (wahl) {
+      isStimmzettelumschlaegeSaving.value = true;
+      try {
+        await ergebnisermittlungService.saveStimmzettelumschlaege(
+          wahl.wahlID,
+          currentUserWahlbezirkID.value,
+          wahl.stimmzettelumschlaege
+        );
+      } finally {
+        isStimmzettelumschlaegeSaving.value = false;
+      }
+    }
+  }
+
   function getWahlNameOrBlankStringById(wahlID: string) {
     const wahl = getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.name : "";
@@ -125,9 +188,35 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
+  function _mapWahlMetaDataToWahlNummer() {
+    if (wahlen.value && user.value?.wahlMetaData) {
+      const wahlnummerMap = new Map(
+        user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
+      );
+      wahlen.value.forEach((wahl) => {
+        const wahlnummer = wahlnummerMap.get(wahl.wahlID);
+        if (wahlnummer !== undefined) {
+          wahl.nummer = wahlnummer;
+        }
+      });
+    }
+  }
+
+  function _sortWahlenByWahlNummer() {
+    if (wahlen.value) {
+      wahlen.value.sort((a: Wahl, b: Wahl) => {
+        if (a.nummer && b.nummer) {
+          return a.nummer.localeCompare(b.nummer);
+        } else {
+          return 0;
+        }
+      });
+    }
+  }
+
   return {
     wahlen,
-    getWaehlerverzeichnisOrUndefinedById,
+    getWaehlerverzeichnisNummerOrUndefinedById,
     waehlerverzeichnisNummern,
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
@@ -138,6 +227,11 @@ export const useWahlenStore = defineStore(storeID, () => {
     deleteBeanstandeterWahlbriefEntry,
     saveBeanstandeteWahlbriefe,
     isBeanstandeteWahlbriefeSaving,
+    saveStimmzettelumschlaege,
+    isStimmzettelumschlaegeSaving,
+    summeGueltigerWahlbriefe,
+    summeUngueltigerWahlbriefe,
+    summenZurueckweisungsgruende,
   };
 });
 

@@ -33,7 +33,7 @@ export function useOfflineStrategies() {
     STRATEGY_OFFLINE_FIRST: new Map([["GET", _offlineFirstGetRequestHandler]]),
     STRATEGY_ONLINE_FIRST: new Map([
       ["GET", _onlineFirstGetRequestHandler],
-      ["POST", _onlinePostFirstRequestHandler],
+      ["POST", _onlineFirstPostRequestHandler],
     ]),
     STRATEGY_ONLINE_ONLY: new Map([]),
   };
@@ -121,7 +121,7 @@ export function useOfflineStrategies() {
     }
   }
 
-  async function _onlinePostFirstRequestHandler(
+  async function _onlineFirstPostRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(`POST request identified - uri: ${options.url}`);

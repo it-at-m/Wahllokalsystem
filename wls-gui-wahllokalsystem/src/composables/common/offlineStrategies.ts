@@ -14,7 +14,7 @@ import {
 } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-const { getItemFromIDB, storeItem } = useIndexDB();
+const { getItemFromIDB, markAsClean, storeItem } = useIndexDB();
 const { log, logDebug, logError } = useLogging("offlineStrategies");
 
 export function useOfflineStrategies() {
@@ -142,7 +142,7 @@ export function useOfflineStrategies() {
       //TODO handling 302 -> ReLogin
       if (response.ok) {
         //Store successful response in case we got trouble (offline or failure)
-        await _storeResponse(response, dbKey);
+        await markAsClean(dbKey);
         return response;
       } else {
         try {

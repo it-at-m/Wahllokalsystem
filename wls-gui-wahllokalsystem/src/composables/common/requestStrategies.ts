@@ -1,84 +1,28 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
-import type { RouteHandlerCallback } from "workbox-core/src/types.ts";
-import type { HTTPMethod } from "workbox-routing/utils/constants";
 
 import { HttpStatusCode } from "axios";
-import { defaultMethod, validMethods } from "workbox-routing/utils/constants";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
-import {
-  HTTP_HEADER_CONTENT_TYPE,
-  REQUEST_HEADER_OFFLINE_STRATEGY,
-} from "@/constants.ts";
-import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
+import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
 const { getItemFromIDB, markAsClean, storeItem } = useIndexDB();
-const { log, logDebug, logError } = useLogging("offlineStrategies");
+const { log, logDebug, logError } = useLogging("requestStrategies");
 
-export function useOfflineStrategies() {
-  const DEFAULT_OFFLINE_STRATEGY = FetchStrategiesEnum.STRATEGY_ONLINE_ONLY;
-
-  const offlineStrategiesHandlers: Record<
-    FetchStrategiesEnum,
-    Map<HTTPMethod, RouteHandlerCallback>
-  > = {
-    STRATEGY_OFFLINE_FIRST: new Map([["GET", _offlineFirstGetRequestHandler]]),
-    STRATEGY_ONLINE_FIRST: new Map([
-      ["GET", _onlineFirstGetRequestHandler],
-      ["POST", _onlineFirstPostRequestHandler],
-    ]),
-    STRATEGY_ONLINE_ONLY: new Map([]),
-  };
-
-  function findStrategy(request: Request): FetchStrategiesEnum {
-    const offlineStrategyAsString = request.headers.get(
-      REQUEST_HEADER_OFFLINE_STRATEGY
-    );
-    if (!offlineStrategyAsString) {
-      return DEFAULT_OFFLINE_STRATEGY;
-    }
-
-    const fetchStrategy = Object.values(FetchStrategiesEnum).find(
-      (value) => value == offlineStrategyAsString
-    );
-
-    logDebug(
-      `strategy for request ${request.method} ${request.url} is ${fetchStrategy}`
-    );
-    return fetchStrategy ?? DEFAULT_OFFLINE_STRATEGY;
-  }
-
-  async function handleRouteWithStrategy(
-    options: RouteHandlerCallbackOptions,
-    fetchStrategy: FetchStrategiesEnum
-  ): Promise<Response> {
-    const httpMethod =
-      validMethods.find((method) => options.request.method === method) ??
-      defaultMethod;
-    let handler = offlineStrategiesHandlers[fetchStrategy].get(httpMethod);
-    if (!handler) {
-      logDebug(
-        `no defined handler found for ${httpMethod} - using default handler`
-      );
-      handler = _unhandledFetch;
-    }
-    return handler(options);
-  }
-
-  async function _unhandledFetch(
+export function useRequestStrategies() {
+  async function unhandledFetch(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     logDebug(`using unhandledFetch`);
     return await fetch(options.request);
   }
 
-  async function _offlineFirstGetRequestHandler(
+  async function offlineFirstGetRequestHandler(
     options: RouteHandlerCallbackOptions
   ) {
     log(
-      `_offlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+      `offlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -97,11 +41,11 @@ export function useOfflineStrategies() {
     }
   }
 
-  async function _onlineFirstGetRequestHandler(
+  async function onlineFirstGetRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
-      `_onlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+      `onlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -127,11 +71,11 @@ export function useOfflineStrategies() {
     }
   }
 
-  async function _onlineFirstPostRequestHandler(
+  async function onlineFirstPostRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
-      `_onlineFirstPostRequestHandler - POST request identified - uri: ${options.url}`
+      `onlineFirstPostRequestHandler - POST request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -238,7 +182,9 @@ export function useOfflineStrategies() {
   }
 
   return {
-    findStrategy,
-    handleRouteWithStrategy,
+    unhandledFetch,
+    offlineFirstGetRequestHandler,
+    onlineFirstGetRequestHandler,
+    onlineFirstPostRequestHandler,
   };
 }

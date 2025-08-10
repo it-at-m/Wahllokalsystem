@@ -6,14 +6,14 @@ import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useOfflineStrategies } from "@/composables/common/offlineStrategies.ts";
+import { useRequestStrategyManager } from "@/composables/common/RequestStrategyManager.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
 const { setItemInIDB: _setItemInIDB, setupIndexDB } = useIndexDB();
-const offlineStrategies = useOfflineStrategies();
+const { handleRequestWithStrategy } = useRequestStrategyManager();
 const { log } = useLogging("wahl-worker");
 
 /**
@@ -81,16 +81,12 @@ registerRoute(new RegExp("/api/.+"), postRequestHandler, "POST");
  ****************************************************************************************************************/
 async function postRequestHandler(options: RouteHandlerCallbackOptions) {
   log(`POST request identified - uri: ${options.url}`);
-
-  const strategy = offlineStrategies.findStrategy(options.request);
-  return await offlineStrategies.handleRouteWithStrategy(options, strategy);
+  return await handleRequestWithStrategy(options);
 }
 
 async function getRequestHandler(options: RouteHandlerCallbackOptions) {
   log(`GET request identified - uri: ${options.url}`);
-
-  const strategy = offlineStrategies.findStrategy(options.request);
-  return await offlineStrategies.handleRouteWithStrategy(options, strategy);
+  return await handleRequestWithStrategy(options);
 }
 
 log("installed and took control");

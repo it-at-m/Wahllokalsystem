@@ -21,7 +21,7 @@ interface StoredResponse {
 }
 
 const { getItemFromIDB, storeItem } = useIndexDB();
-const { log, logError } = useLogging("offlineStrategies");
+const { log, logDebug, logError } = useLogging("offlineStrategies");
 
 export function useOfflineStrategies() {
   const DEFAULT_OFFLINE_STRATEGY = FetchStrategiesEnum.STRATEGY_ONLINE_ONLY;
@@ -50,6 +50,9 @@ export function useOfflineStrategies() {
       (value) => value == offlineStrategyAsString
     );
 
+    logDebug(
+      `strategy for request ${request.method} ${request.url} is ${fetchStrategy}`
+    );
     return fetchStrategy ?? DEFAULT_OFFLINE_STRATEGY;
   }
 
@@ -60,22 +63,29 @@ export function useOfflineStrategies() {
     const httpMethod =
       validMethods.find((method) => options.request.method === method) ??
       defaultMethod;
-    const handler =
-      offlineStrategiesHandlers[fetchStrategy].get(httpMethod) ??
-      _unhandledFetch;
+    let handler = offlineStrategiesHandlers[fetchStrategy].get(httpMethod);
+    if (!handler) {
+      logDebug(
+        `no defined handler found for ${httpMethod} - using default handler`
+      );
+      handler = _unhandledFetch;
+    }
     return handler(options);
   }
 
   async function _unhandledFetch(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
+    logDebug(`using unhandledFetch`);
     return await fetch(options.request);
   }
 
   async function _offlineFirstGetRequestHandler(
     options: RouteHandlerCallbackOptions
   ) {
-    log(`GET request identified - uri: ${options.url}`);
+    log(
+      `_offlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+    );
 
     const dbKey = options.request.url;
     const storedData = await getItemFromIDB<StoredResponse | null>(dbKey);
@@ -96,7 +106,9 @@ export function useOfflineStrategies() {
   async function _onlineFirstGetRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
-    log(`GET request identified - uri: ${options.url}`);
+    log(
+      `_onlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+    );
 
     const dbKey = options.request.url;
     try {
@@ -124,11 +136,14 @@ export function useOfflineStrategies() {
   async function _onlineFirstPostRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
-    log(`POST request identified - uri: ${options.url}`);
+    log(
+      `_onlineFirstPostRequestHandler - POST request identified - uri: ${options.url}`
+    );
 
     const dbKey = options.request.url;
     try {
-      const response = await fetch(options.request);
+      const response = await fetch(options.request.clone());
+      logDebug(`response has status ${response.status}`);
 
       //TODO handling 302 -> ReLogin
       if (response.ok) {
@@ -177,6 +192,7 @@ export function useOfflineStrategies() {
   async function _getStoredResponseOrNotFound(
     dbKey: string
   ): Promise<Response> {
+    logDebug(`looking up stored response for ${dbKey}`);
     const storedData = await getItemFromIDB<StoredResponse | null>(dbKey);
     if (storedData) {
       log("fetched from idb: " + JSON.stringify(storedData));
@@ -220,6 +236,7 @@ export function useOfflineStrategies() {
       httpStatus: clonedResponse.status,
     };
     try {
+      logDebug(`storing response with key ${dbKey}`, responseToStore);
       await storeItem(dbKey, responseToStore);
     } catch (error) {
       logError("error stsoring idb data", error);

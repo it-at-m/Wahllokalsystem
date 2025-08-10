@@ -16,6 +16,24 @@ export function useIndexDB() {
     }
   }
 
+  async function getDirtyItems() {
+    const matchingItems: {
+      key: string;
+      item: IndexDBValue;
+    }[] = [];
+
+    await localforage.iterate((value: IndexDBValue, key) => {
+      if (value.dirty === true) {
+        matchingItems.push({
+          key,
+          item: value,
+        });
+      }
+    });
+
+    return matchingItems;
+  }
+
   function setItemInIDB(
     key: string,
     data: unknown,
@@ -42,6 +60,7 @@ export function useIndexDB() {
   }
 
   return {
+    getDirtyItems,
     getItemFromIDB,
     setItemInIDB,
     setupIndexDB,

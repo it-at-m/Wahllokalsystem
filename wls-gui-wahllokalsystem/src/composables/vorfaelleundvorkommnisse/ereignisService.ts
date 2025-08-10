@@ -41,7 +41,7 @@ export function useEreignisService() {
       await ereignisControllerApi.postEreignisse(
         wahlbezirkID,
         ereignisseWriteDto,
-        axiosConfigWrapper.requestAsOfflineFirst()
+        axiosConfigWrapper.requestAsOnlineFirst()
       );
       if (sendNotification) {
         userNotificationService.addNotification(

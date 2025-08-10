@@ -1,3 +1,4 @@
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 import type { RouteHandlerCallback } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
@@ -12,13 +13,6 @@ import {
   REQUEST_HEADER_OFFLINE_STRATEGY,
 } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
-
-interface StoredResponse {
-  data: string;
-  contentType: string;
-  httpStatus?: number;
-  dirty?: boolean;
-}
 
 const { getItemFromIDB, storeItem } = useIndexDB();
 const { log, logDebug, logError } = useLogging("offlineStrategies");
@@ -88,7 +82,7 @@ export function useOfflineStrategies() {
     );
 
     const dbKey = options.request.url;
-    const storedData = await getItemFromIDB<StoredResponse | null>(dbKey);
+    const storedData = await getItemFromIDB(dbKey);
     if (storedData) {
       return _createResponse(storedData);
     } else {
@@ -166,7 +160,7 @@ export function useOfflineStrategies() {
     }
   }
 
-  function _createResponse(storedData: StoredResponse) {
+  function _createResponse(storedData: IndexDBValue) {
     const response = new Response(storedData.data, {
       status: storedData.httpStatus,
       statusText: "fetched from idb",
@@ -193,7 +187,7 @@ export function useOfflineStrategies() {
     dbKey: string
   ): Promise<Response> {
     logDebug(`looking up stored response for ${dbKey}`);
-    const storedData = await getItemFromIDB<StoredResponse | null>(dbKey);
+    const storedData = await getItemFromIDB(dbKey);
     if (storedData) {
       log("fetched from idb: " + JSON.stringify(storedData));
       return _createResponse(storedData);
@@ -205,7 +199,7 @@ export function useOfflineStrategies() {
   async function _getStoredResponseOrInternalServerError(
     dbKey: string
   ): Promise<Response> {
-    const storedData = await getItemFromIDB<StoredResponse>(dbKey);
+    const storedData = await getItemFromIDB(dbKey);
     if (storedData) {
       log("fetched from idb: " + JSON.stringify(storedData));
       return _createResponse(storedData);
@@ -220,7 +214,7 @@ export function useOfflineStrategies() {
     dirty: boolean | undefined = undefined
   ) {
     const clonedRequest = request.clone();
-    const requestToStore: StoredResponse = {
+    const requestToStore: IndexDBValue = {
       data: await clonedRequest.text(),
       contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE) ?? "",
       dirty: dirty,
@@ -230,7 +224,7 @@ export function useOfflineStrategies() {
 
   async function _storeResponse(response: Response, dbKey: string) {
     const clonedResponse = response.clone();
-    const responseToStore: StoredResponse = {
+    const responseToStore: IndexDBValue = {
       data: await clonedResponse.text(),
       contentType: clonedResponse.headers.get(HTTP_HEADER_CONTENT_TYPE) ?? "",
       httpStatus: clonedResponse.status,

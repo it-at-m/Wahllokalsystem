@@ -1,3 +1,5 @@
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+
 import localforage from "localforage";
 
 import { useLogging } from "@/composables/common/logging.ts";
@@ -5,9 +7,9 @@ import { useLogging } from "@/composables/common/logging.ts";
 const { logError, log } = useLogging(useIndexDB.name);
 
 export function useIndexDB() {
-  async function getItemFromIDB<T>(key: string): Promise<T | null> {
+  async function getItemFromIDB(key: string): Promise<IndexDBValue | null> {
     try {
-      return await localforage.getItem<T>(key);
+      return await localforage.getItem<IndexDBValue>(key);
     } catch (error) {
       logError("Fehler beim Laden aus IDB:", error);
       return null;
@@ -25,7 +27,7 @@ export function useIndexDB() {
     return localforage.setItem(key, value);
   }
 
-  async function storeItem(key: string, data: unknown) {
+  async function storeItem(key: string, data: IndexDBValue) {
     await localforage.setItem(key, data);
   }
 

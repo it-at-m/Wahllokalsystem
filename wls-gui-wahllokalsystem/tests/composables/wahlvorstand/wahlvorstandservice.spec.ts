@@ -175,6 +175,6 @@ describe("WahlvorstandService.ts", () => {
   });
 
   function createExpectedApiParameters(...parameters: unknown[]) {
-    return [...parameters, axiosConfigWrapper.requestAsOnlineFirst()];
+    return [...parameters, axiosConfigWrapper().requestAsOnlineFirst()];
   }
 });

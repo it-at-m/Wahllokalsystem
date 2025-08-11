@@ -43,3 +43,5 @@ export const BRIEFWAHL_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "briefwahl-service";
 export const ERGEBNISMELDUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "ergebnismeldung-service";
+
+export const MAX_LENGTH_FOR_TEXT_INPUT = 500;

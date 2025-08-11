@@ -231,6 +231,8 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
     it("should_createEreignis_when_confirmButtonClickedWithBegruendung", async () => {
       const begruendung = "Begründung, weil zu spät eröffnet";
+      const expectedBegruendung =
+        "Verspätete Eröffnung: Begründung, weil zu spät eröffnet";
 
       const ereignisStore = useEreignisStore();
       const infomanagementStore = useInfomanagementStore();
@@ -270,7 +272,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       if (ereignisStore.wahlbezirkEreignisse.ereigniseintraege) {
         expect(
           ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0].beschreibung
-        ).toBe(begruendung);
+        ).toBe(expectedBegruendung);
       }
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();
     });

@@ -51,7 +51,7 @@ describe("logging.ts", () => {
       }
     );
 
-    it("should_notLog_when_loggingIsActive", () => {
+    it("should_notLog_when_loggingIsNotActive", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
@@ -96,7 +96,7 @@ describe("logging.ts", () => {
       }
     );
 
-    it("should_notLog_when_loggingIsActive", () => {
+    it("should_notLog_when_loggingIsNotActive", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
@@ -132,7 +132,7 @@ describe("logging.ts", () => {
       }
     );
 
-    it("should_notLog_when_loggingIsActive", () => {
+    it("should_notLog_when_loggingIsNotActive", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
@@ -168,7 +168,7 @@ describe("logging.ts", () => {
       }
     );
 
-    it("should_notLog_when_loggingIsActive", () => {
+    it("should_notLog_when_loggingIsNotActive", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 

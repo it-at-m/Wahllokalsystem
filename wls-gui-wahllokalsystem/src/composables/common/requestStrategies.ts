@@ -7,7 +7,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
-const { getItemFromIDB, markAsClean, storeItem } = useIndexDB();
+const { getItemFromIDB, storeItem } = useIndexDB();
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
 export function useRequestStrategies() {
@@ -89,16 +89,6 @@ export function useRequestStrategies() {
     return new Response(null, { status: HttpStatusCode.NotFound });
   }
 
-  function _createResponseResponseInternalServerError(errorText: string) {
-    return new Response(
-      JSON.stringify({
-        error: errorText,
-        status: 500,
-      }),
-      { status: 500 }
-    );
-  }
-
   async function _fetchAndStoreResponse(
     options: RouteHandlerCallbackOptions,
     dbKey: string
@@ -115,31 +105,6 @@ export function useRequestStrategies() {
     } catch (error) {
       logError("Fehler beim fetch", error);
       return _createResponseNotFound();
-    }
-  }
-
-  async function _getStoredResponseOrNotFound(
-    dbKey: string
-  ): Promise<Response> {
-    logDebug(`looking up stored response for ${dbKey}`);
-    const storedData = await getItemFromIDB(dbKey);
-    if (storedData) {
-      log("fetched from idb: " + JSON.stringify(storedData));
-      return _createResponse(storedData);
-    } else {
-      return _createResponseNotFound();
-    }
-  }
-
-  async function _getStoredResponseOrInternalServerError(
-    dbKey: string
-  ): Promise<Response> {
-    const storedData = await getItemFromIDB(dbKey);
-    if (storedData) {
-      log("fetched from idb: " + JSON.stringify(storedData));
-      return _createResponse(storedData);
-    } else {
-      return _createResponseResponseInternalServerError("no data found in idb");
     }
   }
 

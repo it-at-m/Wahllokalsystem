@@ -3,6 +3,7 @@ import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 import {
   Configuration,
   WaehleranzahlControllerApi,
+  WahllokalZustandControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -17,6 +18,9 @@ const { logDebug } = useLogging("monitoringService");
 
 export function useMonitoringService() {
   const waehlerAnzahlControllerApi = new WaehleranzahlControllerApi(
+    new Configuration({ basePath: MONITORING_SERVICE_API_URL })
+  );
+  const wahllokalZustandControllerApi = new WahllokalZustandControllerApi(
     new Configuration({ basePath: MONITORING_SERVICE_API_URL })
   );
 
@@ -55,5 +59,13 @@ export function useMonitoringService() {
     }
   }
 
-  return { getWahlbeteiligung, postWahlbeteiligung };
+  async function postLastSeen(wahlbezirkID: string) {
+    try {
+      await wahllokalZustandControllerApi.postLastSeen(wahlbezirkID);
+    } catch {
+      throw new Error("postLastSeen failed");
+    }
+  }
+
+  return { getWahlbeteiligung, postLastSeen, postWahlbeteiligung };
 }

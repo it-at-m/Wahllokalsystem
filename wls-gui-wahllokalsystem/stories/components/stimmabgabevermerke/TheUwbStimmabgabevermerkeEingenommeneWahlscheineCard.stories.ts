@@ -1,0 +1,90 @@
+import type { Meta, StoryObj } from "@storybook/vue3";
+
+import { createPinia, setActivePinia, storeToRefs } from "pinia";
+
+import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard.vue";
+import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
+import pinia from "@/plugins/pinia.ts";
+import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+
+const meta = {
+  component: TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard,
+  args: {},
+  decorators: [
+    (story) => {
+      const pinia = createPinia();
+      setActivePinia(pinia);
+      return {
+        component: { story },
+        template: "<story />",
+      };
+    },
+  ],
+} satisfies Meta<typeof TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  async beforeEach() {
+    const { stimmabgabevermerke } = storeToRefs(
+      useStimmabgabevermerkeStore(pinia)
+    );
+
+    stimmabgabevermerke.value = {
+      anzahlBlaetter: 0,
+      waehlerverzeichnisNummer: 0,
+      wahldaten: new Set([
+        {
+          wahlID: "wahlID",
+          waehlerverzeichnisNummer: 0,
+          eingenommeneWahlscheine: new Map([
+            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
+          ]),
+        },
+        {
+          wahlID: "wahlID2",
+          waehlerverzeichnisNummer: 0,
+          eingenommeneWahlscheine: new Map([
+            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
+          ]),
+        },
+      ]),
+    };
+    const { wahlen } = storeToRefs(useWahlenStore(pinia));
+    wahlen.value = [
+      {
+        beanstandeteWahlbriefe: [],
+        farbe: undefined,
+        name: "NameWahlOne",
+        nummer: undefined,
+        reihenfolge: 0,
+        waehlerverzeichnisNummer: 0,
+        wahlID: "wahlID",
+        wahlart: WahlWahlartEnum.Beb,
+        wahltag: "",
+        stimmzettelumschlaege: {
+          anzahlWaehler: 0,
+        },
+      },
+      {
+        beanstandeteWahlbriefe: [],
+        farbe: undefined,
+        name: "NameWahlTwo",
+        nummer: undefined,
+        reihenfolge: 0,
+        waehlerverzeichnisNummer: 0,
+        wahlID: "wahlID2",
+        wahlart: WahlWahlartEnum.Beb,
+        wahltag: "",
+        stimmzettelumschlaege: {
+          anzahlWaehler: 0,
+        },
+      },
+    ];
+  },
+  args: {},
+};

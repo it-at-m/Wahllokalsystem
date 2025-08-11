@@ -31,14 +31,6 @@ import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";

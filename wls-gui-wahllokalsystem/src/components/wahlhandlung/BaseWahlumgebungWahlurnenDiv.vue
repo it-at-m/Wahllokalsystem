@@ -20,8 +20,6 @@
 <script setup lang="ts">
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
-import { VNumberInput } from "vuetify/components";
-
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 

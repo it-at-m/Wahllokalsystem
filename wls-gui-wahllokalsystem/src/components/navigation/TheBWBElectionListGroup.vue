@@ -26,8 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { VListGroup, VListItem } from "vuetify/components";
-
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,

@@ -12,7 +12,6 @@
 import type { NachbesetzungsDruckInput } from "@/types/wahlvorstand/NachbesetzungsDruckInput.ts";
 
 import { storeToRefs } from "pinia";
-import { VBtn } from "vuetify/components";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";

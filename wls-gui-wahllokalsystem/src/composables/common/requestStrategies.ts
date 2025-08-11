@@ -1,8 +1,6 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
-import { HttpStatusCode } from "axios";
-
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";

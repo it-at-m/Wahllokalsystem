@@ -1,15 +1,26 @@
 <template>
   <v-card>
-    <v-card-title> Beschlussergebnis </v-card-title>
     <v-card-text class="pb-0">
       <v-table>
+        <thead>
+          <tr>
+            <th />
+            <th
+              v-for="wahl in wahlen"
+              :key="wahl.wahlID"
+              class="font-weight-bold text-center"
+            >
+              {{ wahl.name }}
+            </th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
             <td class="font-weight-bold">Zugelassen</td>
             <td
               v-for="(value, index) in summeGueltigerWahlbriefe"
               :key="index"
-              class="font-weight-bold"
+              class="font-weight-bold text-center"
             >
               {{ value }}
             </td>
@@ -19,7 +30,7 @@
             <td
               v-for="(value, index) in summeUngueltigerWahlbriefe"
               :key="index"
-              class="font-weight-bold"
+              class="font-weight-bold text-center"
             >
               {{ value }}
             </td>
@@ -41,6 +52,7 @@
             <td
               v-for="(value, idx) in beanstandung.summen"
               :key="idx"
+              class="text-center"
             >
               {{ value }}
             </td>
@@ -58,6 +70,7 @@ import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beansta
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const {
+  wahlen,
   summeGueltigerWahlbriefe,
   summeUngueltigerWahlbriefe,
   summenZurueckweisungsgruende,

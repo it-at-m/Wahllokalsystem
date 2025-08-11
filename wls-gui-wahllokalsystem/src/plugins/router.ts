@@ -19,9 +19,9 @@ import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
 import BWBWahlbriefErfassungView from "@/views/wahlhandlung/BWBWahlbriefErfassungView.vue";
+import BwbWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
 import UWBStimmabgabeView from "@/views/wahlhandlung/UWBStimmabgabeView.vue";
 import UWBWaehlerverzeichnisView from "@/views/wahlhandlung/UWBWaehlerverzeichnisView.vue";
-import WahlbriefZulassungView from "@/views/wahlhandlung/WahlbriefZulassungView.vue";
 import WahleroeffnungView from "@/views/wahlhandlung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
@@ -80,7 +80,7 @@ const routes = [
   {
     path: "/wahlbriefzulassung",
     name: ROUTE_WAHLBRIEFE_ZULASSEN,
-    component: WahlbriefZulassungView,
+    component: BwbWahlbriefZulassungView,
     beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {

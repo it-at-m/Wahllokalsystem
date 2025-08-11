@@ -23,6 +23,7 @@ import {
   mdiSignalCellular3,
   mdiSignalOff,
   mdiTextBoxCheck,
+  mdiTextBoxOutline,
   mdiToaster,
   mdiUpdate,
   mdiVote,
@@ -60,6 +61,7 @@ export default createVuetify({
       remoteDesktop: mdiRemoteDesktop,
       edit: mdiPencil,
       valid: mdiCheckCircle,
+      summary: mdiTextBoxOutline,
     },
     sets: {
       mdi,

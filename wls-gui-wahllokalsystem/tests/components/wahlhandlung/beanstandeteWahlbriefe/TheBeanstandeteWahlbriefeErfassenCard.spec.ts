@@ -63,7 +63,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithDisabledSaveButton_when_noRowsGiven", async (context) => {
+    it("should_renderWithEnabledSaveButton_when_noRowsGiven", async (context) => {
       wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
         global: {
           plugins: [pinia, vuetify],
@@ -72,7 +72,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
 
-      expect(saveButton.props("disabled")).toBe(true);
+      expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

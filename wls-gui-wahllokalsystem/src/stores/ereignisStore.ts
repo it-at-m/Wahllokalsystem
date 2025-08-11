@@ -63,7 +63,8 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   const hasMissingEreignisFlagsForBWB = computed(
     () =>
-      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
+      hasVorfaelle.value !==
+        (isBWB.value || wahlbezirkEreignisse.value.keineVorfaelle) &&
       hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
@@ -88,6 +89,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         wahlbezirkEreignisse.value.keineVorkommnisse = false;
         break;
     }
+
+    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function deleteEreignisByIndex(index: number) {

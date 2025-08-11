@@ -961,17 +961,6 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkArt: WahlbezirksArtEnum.BWB,
         schliessungsuhrzeitSent: undefined,
         wahlbezirkKeineVorfaelle: false,
-        wahlbezirkKeineVorkommnisse: false,
-      },
-      expected: true,
-    },
-    {
-      data: {
-        vorfaelle: true,
-        vorkommnisse: true,
-        wahlbezirkArt: WahlbezirksArtEnum.BWB,
-        schliessungsuhrzeitSent: undefined,
-        wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: true,
       },
       expected: false,
@@ -997,17 +986,6 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorkommnisse: true,
       },
       expected: false,
-    },
-    {
-      data: {
-        vorfaelle: true,
-        vorkommnisse: true,
-        wahlbezirkArt: WahlbezirksArtEnum.BWB,
-        schliessungsuhrzeitSent: new Date(),
-        wahlbezirkKeineVorfaelle: false,
-        wahlbezirkKeineVorkommnisse: false,
-      },
-      expected: true,
     },
     {
       data: {
@@ -1059,17 +1037,6 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         vorkommnisse: false,
         wahlbezirkArt: WahlbezirksArtEnum.BWB,
         schliessungsuhrzeitSent: undefined,
-        wahlbezirkKeineVorfaelle: false,
-        wahlbezirkKeineVorkommnisse: true,
-      },
-      expected: true,
-    },
-    {
-      data: {
-        vorfaelle: true,
-        vorkommnisse: false,
-        wahlbezirkArt: WahlbezirksArtEnum.BWB,
-        schliessungsuhrzeitSent: undefined,
         wahlbezirkKeineVorfaelle: true,
         wahlbezirkKeineVorkommnisse: false,
       },
@@ -1096,17 +1063,6 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorkommnisse: false,
       },
       expected: false,
-    },
-    {
-      data: {
-        vorfaelle: true,
-        vorkommnisse: false,
-        wahlbezirkArt: WahlbezirksArtEnum.BWB,
-        schliessungsuhrzeitSent: new Date(),
-        wahlbezirkKeineVorfaelle: false,
-        wahlbezirkKeineVorkommnisse: true,
-      },
-      expected: true,
     },
     {
       data: {
@@ -1139,7 +1095,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1183,7 +1139,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1238,7 +1194,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1282,7 +1238,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {

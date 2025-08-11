@@ -12,7 +12,7 @@ import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { logDebug } = useLogging(useHandbuchService.name);
+const { logDebug } = useLogging("handbuchService");
 
 export function useHandbuchService() {
   const handbuchControllerApi = new HandbuchControllerApi(
@@ -35,13 +35,11 @@ export function useHandbuchService() {
 
       _downloadPdf(response);
     } catch (e) {
+      const errorMessage = "Fehler beim Laden des Handbuchs";
       if (sendNotification) {
-        addNotification(
-          "Fehler beim laden des Handbuchs",
-          UserNotificationCategoryEnum.ERROR
-        );
+        addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       }
-      logDebug("Fehler beim laden des Handbuchs", e);
+      logDebug(errorMessage, e);
       throw new Error("GetHandbuch Failed");
     }
   }

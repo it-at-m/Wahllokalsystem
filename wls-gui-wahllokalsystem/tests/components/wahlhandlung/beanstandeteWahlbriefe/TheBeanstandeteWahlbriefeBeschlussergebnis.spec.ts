@@ -11,7 +11,7 @@ import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlvorbereitung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
+import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
@@ -37,9 +37,13 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
 
   const wahlen: Wahl[] = [
     prepareWahl()
+      .name("wahl1")
       .beanstandeteWahlbriefe(["KEIN_ORIGINAL_SCHEIN", "ZUGELASSEN"])
       .build(),
-    prepareWahl().beanstandeteWahlbriefe(["ZUGELASSEN", "ZUGELASSEN"]).build(),
+    prepareWahl()
+      .name("wahl2")
+      .beanstandeteWahlbriefe(["ZUGELASSEN", "ZUGELASSEN"])
+      .build(),
   ];
 
   beforeEach(() => {
@@ -61,7 +65,9 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlbriefZulassungBeschlussergebnis_when_componentIsMountedWithoutBeanstandeteWahlbriefe", async (context) => {
       const wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = [prepareWahl().beanstandeteWahlbriefe([]).build()];
+      wahlenStore.wahlen = [
+        prepareWahl().name("wahl").beanstandeteWahlbriefe([]).build(),
+      ];
 
       await flushPromises();
 

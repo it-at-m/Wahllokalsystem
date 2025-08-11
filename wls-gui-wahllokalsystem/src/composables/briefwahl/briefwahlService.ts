@@ -47,11 +47,10 @@ export function useBriefwahlService() {
 
       return responseData ? toModel(responseData) : null;
     } catch (e) {
-      logDebug("Die beanstandeten Wahlbriefe konnten nicht geladen werden.", e);
-      addNotification(
-        "Die beanstandeten Wahlbriefe konnten nicht geladen werden.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      const errorMessage =
+        "Die beanstandeten Wahlbriefe konnten nicht geladen werden.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Get beanstandete Wahlbriefe Failed");
     }
   }
@@ -90,14 +89,10 @@ export function useBriefwahlService() {
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (e) {
-      logDebug(
-        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
-        e
-      );
-      addNotification(
-        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      const errorMessage =
+        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Post beanstandete Wahlbriefe Failed");
     }
   }

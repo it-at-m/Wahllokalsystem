@@ -35,13 +35,11 @@ export function useHandbuchService() {
 
       _downloadPdf(response);
     } catch (e) {
+      const errorMessage = "Fehler beim Laden des Handbuchs";
       if (sendNotification) {
-        addNotification(
-          "Fehler beim laden des Handbuchs",
-          UserNotificationCategoryEnum.ERROR
-        );
+        addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       }
-      logDebug("Fehler beim laden des Handbuchs", e);
+      logDebug(errorMessage, e);
       throw new Error("GetHandbuch Failed");
     }
   }

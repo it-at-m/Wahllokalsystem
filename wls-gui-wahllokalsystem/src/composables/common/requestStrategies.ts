@@ -3,11 +3,17 @@ import type { RouteHandlerCallbackOptions } from "workbox-core";
 
 import { HttpStatusCode } from "axios";
 
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
 const { getItemFromIDB, storeItem } = useIndexDB();
+const {
+  createResponseOkWithoutResponseBody,
+  createResponseNotFound,
+  createResponseOfIndexDBValue,
+} = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
 export function useRequestStrategies() {
@@ -28,7 +34,7 @@ export function useRequestStrategies() {
     const dbKey = options.request.url;
     const storedData = await getItemFromIDB(dbKey);
     if (storedData) {
-      return _createResponse(storedData);
+      return createResponseOfIndexDBValue(storedData);
     } else {
       return await _fetchAndStoreResponse(options, dbKey);
     }
@@ -63,30 +69,13 @@ export function useRequestStrategies() {
         return response;
       } else {
         await _storeRequest(dbKey, options.request, true);
-        return _createResponseOkWithoutResponseBody();
+        return createResponseOkWithoutResponseBody();
       }
     } catch (error) {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
-      return _createResponseNotFound();
+      return createResponseNotFound();
     }
-  }
-
-  function _createResponse(storedData: IndexDBValue) {
-    const response = new Response(storedData.data, {
-      status: storedData.httpStatus ?? HttpStatusCode.Ok,
-      statusText: "fetched from idb",
-    });
-    response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);
-    return response;
-  }
-
-  function _createResponseOkWithoutResponseBody() {
-    return new Response(null, { status: HttpStatusCode.Ok });
-  }
-
-  function _createResponseNotFound() {
-    return new Response(null, { status: HttpStatusCode.NotFound });
   }
 
   async function _fetchAndStoreResponse(
@@ -100,11 +89,11 @@ export function useRequestStrategies() {
         await _storeResponse(fetchedResponse, dbKey);
         return fetchedResponse;
       } else {
-        return _createResponseNotFound();
+        return createResponseNotFound();
       }
     } catch (error) {
       logError("Fehler beim fetch", error);
-      return _createResponseNotFound();
+      return createResponseNotFound();
     }
   }
 

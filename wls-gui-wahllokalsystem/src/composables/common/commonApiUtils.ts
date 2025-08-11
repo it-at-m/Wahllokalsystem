@@ -11,6 +11,6 @@ export function useCommonApiUtils() {
 
   return {
     getNullOn204OrElseResponseData,
-    axiosConfigWrapper: new AxiosConfigWrapper(),
+    axiosConfigWrapper: () => new AxiosConfigWrapper(),
   };
 }

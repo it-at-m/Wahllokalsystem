@@ -38,7 +38,7 @@ export function useWahlvorstandService() {
       const response = await wahlvorstandControllerApi.getWahlvorstand(
         wahlbezirkID,
         forceUpdate,
-        axiosConfigWrapper.requestAsOnlineFirst()
+        axiosConfigWrapper().requestAsOnlineFirst()
       );
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -77,7 +77,7 @@ export function useWahlvorstandService() {
       await wahlvorstandControllerApi.postWahlvorstand(
         wahlbezirkID,
         wahlvorstandDto,
-        axiosConfigWrapper.requestAsOnlineFirst()
+        axiosConfigWrapper().requestAsOnlineFirst()
       );
       userNotificationService.addNotification(
         "Der Anwesenheit wurde erfolgreich gespeichert.",

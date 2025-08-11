@@ -26,7 +26,7 @@ export function useEreignisService() {
 
   function getEreignisse(wahlbezirkID: string): Promise<WahlbezirkEreignisse> {
     return ereignisControllerApi
-      .getEreignisse(wahlbezirkID, axiosConfigWrapper.requestAsOfflineFirst())
+      .getEreignisse(wahlbezirkID, axiosConfigWrapper().requestAsOfflineFirst())
       .then((response) => toModel(response.data));
   }
 
@@ -41,7 +41,7 @@ export function useEreignisService() {
       await ereignisControllerApi.postEreignisse(
         wahlbezirkID,
         ereignisseWriteDto,
-        axiosConfigWrapper.requestAsOnlineFirst()
+        axiosConfigWrapper().requestAsOnlineFirst()
       );
       if (sendNotification) {
         userNotificationService.addNotification(

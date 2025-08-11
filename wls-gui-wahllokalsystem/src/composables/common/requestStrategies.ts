@@ -49,7 +49,30 @@ export function useRequestStrategies() {
     return await _fetchAndStoreResponse(options, dbKey);
   }
 
-  async function onlineFirstPostRequestHandler(
+  function postRequestHandler(options: RouteHandlerCallbackOptions) {
+    return _onlineFirstPostRequestHandler(options);
+  }
+
+  async function _fetchAndStoreResponse(
+    options: RouteHandlerCallbackOptions,
+    dbKey: string
+  ) {
+    try {
+      const fetchedResponse = await fetch(options.request);
+      //TODO handling 302 -> ReLogin
+      if (fetchedResponse.ok) {
+        await _storeResponse(fetchedResponse, dbKey);
+        return fetchedResponse;
+      } else {
+        return createResponseNotFound();
+      }
+    } catch (error) {
+      logError("error while fetching", error);
+      return createResponseNotFound();
+    }
+  }
+
+  async function _onlineFirstPostRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
@@ -72,25 +95,6 @@ export function useRequestStrategies() {
     } catch (error) {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
-      return createResponseNotFound();
-    }
-  }
-
-  async function _fetchAndStoreResponse(
-    options: RouteHandlerCallbackOptions,
-    dbKey: string
-  ) {
-    try {
-      const fetchedResponse = await fetch(options.request);
-      //TODO handling 302 -> ReLogin
-      if (fetchedResponse.ok) {
-        await _storeResponse(fetchedResponse, dbKey);
-        return fetchedResponse;
-      } else {
-        return createResponseNotFound();
-      }
-    } catch (error) {
-      logError("error while fetching", error);
       return createResponseNotFound();
     }
   }
@@ -128,6 +132,6 @@ export function useRequestStrategies() {
     unhandledFetch,
     offlineFirstGetRequestHandler,
     onlineFirstGetRequestHandler,
-    onlineFirstPostRequestHandler,
+    postRequestHandler,
   };
 }

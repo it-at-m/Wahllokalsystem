@@ -22,9 +22,7 @@ const mockDefinitions = vi.hoisted(() => ({
   onlineFirstGetRequestHandler: vi
     .fn()
     .mockName("onlineFirstGetRequestHandler"),
-  onlineFirstPostRequestHandler: vi
-    .fn()
-    .mockName("onlineFirstPostRequestHandler"),
+  postRequestHandler: vi.fn().mockName("onlineFirstPostRequestHandler"),
   offlineFirstGetRequestHandler: vi
     .fn()
     .mockName("offlineFirstGetRequestHandler"),
@@ -34,8 +32,7 @@ const mockDefinitions = vi.hoisted(() => ({
 vi.mock("@/composables/common/requestStrategies.ts", () => ({
   useRequestStrategies: vi.fn().mockImplementation(() => ({
     onlineFirstGetRequestHandler: mockDefinitions.onlineFirstGetRequestHandler,
-    onlineFirstPostRequestHandler:
-      mockDefinitions.onlineFirstPostRequestHandler,
+    postRequestHandler: mockDefinitions.postRequestHandler,
     offlineFirstGetRequestHandler:
       mockDefinitions.offlineFirstGetRequestHandler,
     unhandledFetch: mockDefinitions.unhandledFetch,
@@ -80,7 +77,7 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: undefined,
-          expectedCalledMock: mockDefinitions.onlineFirstGetRequestHandler,
+          expectedCalledMock: mockDefinitions.offlineFirstGetRequestHandler,
         },
       ];
 
@@ -107,11 +104,11 @@ describe("requestStrategyManager.ts", () => {
       const testcases = [
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
-          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
+          expectedCalledMock: mockDefinitions.postRequestHandler,
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST,
-          expectedCalledMock: mockDefinitions.unhandledFetch,
+          expectedCalledMock: mockDefinitions.postRequestHandler,
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
@@ -119,7 +116,7 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: undefined,
-          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
+          expectedCalledMock: mockDefinitions.postRequestHandler,
         },
       ];
 

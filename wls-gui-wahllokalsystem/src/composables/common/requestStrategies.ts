@@ -26,7 +26,7 @@ export function useRequestStrategies() {
     options: RouteHandlerCallbackOptions
   ) {
     log(
-      `offlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+      `offlineFirstGetRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -42,7 +42,7 @@ export function useRequestStrategies() {
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
-      `onlineFirstGetRequestHandler - GET request identified - uri: ${options.url}`
+      `onlineFirstGetRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -53,7 +53,7 @@ export function useRequestStrategies() {
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
-      `onlineFirstPostRequestHandler - POST request identified - uri: ${options.url}`
+      `onlineFirstPostRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
     );
 
     const dbKey = options.request.url;
@@ -90,7 +90,7 @@ export function useRequestStrategies() {
         return createResponseNotFound();
       }
     } catch (error) {
-      logError("Fehler beim fetch", error);
+      logError("error while fetching", error);
       return createResponseNotFound();
     }
   }
@@ -120,7 +120,7 @@ export function useRequestStrategies() {
       logDebug(`storing response with key ${dbKey}`, responseToStore);
       await storeItem(dbKey, responseToStore);
     } catch (error) {
-      logError("error stsoring idb data", error);
+      logError("error storing idb data", error);
     }
   }
 

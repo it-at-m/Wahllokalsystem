@@ -42,7 +42,7 @@ export function useTaskManager(tasksToManage: Task[] = []) {
         await task.callback();
         successfullyTasks.value.push(task);
       } catch {
-        logError(`Failed to run task "${task.name}"`);
+        logError(`failed to run task "${task.name}"`);
         failedTasks.value.push(task);
       }
     }

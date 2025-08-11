@@ -147,6 +147,18 @@ sequenceDiagram
 
 Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel [Beispieldaten pro Offline-Strategie](#beispieldaten-pro-offline-strategie).
 
+#### Definieren der Strategy
+
+Soll eine andere als die Default-Strategy bei einem Request zum Einsatz kommen, muss dies explizit definiert werden:
+
+```typescript{4}
+await wahlvorstandControllerApi.getWahlvorstand(
+        wahlbezirkID,
+        forceUpdate,
+        axiosConfigWrapper().requestAsOnlineFirst()
+      )
+```
+
 ### Initialisierung
 
 Bei Login am Wahllokalsystem prüft der Client zunächst, welcher Benutzer als letztes an diesem Browser angemeldet war. Ist der aktuelle Benutzer ungleich dem letzten Benutzer, wird die lokale Datenbank gelöscht. Handelt es sich aber um den gleichen Benutzer, bleiben seine Offline erfassten Daten bestehen und er kann weiter arbeiten.

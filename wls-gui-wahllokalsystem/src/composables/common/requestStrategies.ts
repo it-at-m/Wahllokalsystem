@@ -62,13 +62,8 @@ export function useRequestStrategies() {
         await _storeRequest(dbKey, options.request, false);
         return response;
       } else {
-        try {
-          await _storeRequest(dbKey, options.request, true);
-          return await _getStoredResponseOrNotFound(dbKey);
-        } catch (error) {
-          logError("Error fetching idb data:", error);
-          return response; //TODO Maybe the internal server error response?
-        }
+        await _storeRequest(dbKey, options.request, true);
+        return _createResponseOkWithoutResponseBody();
       }
     } catch (error) {
       logError("Error fetching remote data:", error);
@@ -84,6 +79,10 @@ export function useRequestStrategies() {
     });
     response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);
     return response;
+  }
+
+  function _createResponseOkWithoutResponseBody() {
+    return new Response(null, { status: HttpStatusCode.Ok });
   }
 
   function _createResponseNotFound() {

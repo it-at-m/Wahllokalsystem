@@ -8,6 +8,7 @@ describe("logging.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogging>;
 
   const loggerName = "loggerName";
+  const logMessage = "logMessage";
   let consoleMock: MockInstance;
 
   afterEach(() => {
@@ -30,7 +31,6 @@ describe("logging.ts", () => {
       allowLogging(true);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.log(logMessage);
 
       expect(consoleMock).toHaveBeenCalledWith(`${loggerName}: ${logMessage}`);
@@ -42,7 +42,6 @@ describe("logging.ts", () => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
-        const logMessage = "logMessage";
         unitUnderTest.log(logMessage, additionalData);
 
         expect(consoleMock).toHaveBeenCalledWith(
@@ -56,7 +55,6 @@ describe("logging.ts", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.log(logMessage);
 
       expect(consoleMock).toHaveBeenCalledTimes(0);
@@ -78,7 +76,6 @@ describe("logging.ts", () => {
       allowLogging(true);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.logDebug(logMessage);
 
       expect(consoleMock).toHaveBeenCalledWith(`${loggerName}: ${logMessage}`);
@@ -90,7 +87,6 @@ describe("logging.ts", () => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
-        const logMessage = "logMessage";
         unitUnderTest.logDebug(logMessage, additionalData);
 
         expect(consoleMock).toHaveBeenCalledWith(
@@ -104,7 +100,6 @@ describe("logging.ts", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.logDebug(logMessage);
 
       expect(consoleMock).toHaveBeenCalledTimes(0);
@@ -128,7 +123,6 @@ describe("logging.ts", () => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
-        const logMessage = "logMessage";
         unitUnderTest.logWarn(logMessage, additionalData);
 
         expect(consoleMock).toHaveBeenCalledWith(
@@ -142,7 +136,6 @@ describe("logging.ts", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.logWarn(logMessage);
 
       expect(consoleMock).toHaveBeenCalledTimes(0);
@@ -166,7 +159,6 @@ describe("logging.ts", () => {
         allowLogging(true);
         unitUnderTest = useLogging(loggerName);
 
-        const logMessage = "logMessage";
         unitUnderTest.logError(logMessage, additionalData);
 
         expect(consoleMock).toHaveBeenCalledWith(
@@ -180,7 +172,6 @@ describe("logging.ts", () => {
       allowLogging(false);
       unitUnderTest = useLogging(loggerName);
 
-      const logMessage = "logMessage";
       unitUnderTest.logError(logMessage);
 
       expect(consoleMock).toHaveBeenCalledTimes(0);

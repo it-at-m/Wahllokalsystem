@@ -117,6 +117,15 @@ describe("logging.ts", () => {
       consoleMock.mockRestore();
     });
 
+    it("should_log_when_loggingIsActive", () => {
+      allowLogging(true);
+      unitUnderTest = useLogging(loggerName);
+
+      unitUnderTest.logWarn(logMessage);
+
+      expect(consoleMock).toHaveBeenCalledWith(`${loggerName}: ${logMessage}`);
+    });
+
     it.each([undefined, new Error("dummy error"), "a string"])(
       "should_log_when_loggingIsActiveWithAdditionalData'%s'",
       (additionalData) => {
@@ -151,6 +160,15 @@ describe("logging.ts", () => {
 
     afterEach(() => {
       consoleMock.mockRestore();
+    });
+
+    it("should_log_when_loggingIsActive", () => {
+      allowLogging(true);
+      unitUnderTest = useLogging(loggerName);
+
+      unitUnderTest.logError(logMessage);
+
+      expect(consoleMock).toHaveBeenCalledWith(`${loggerName}: ${logMessage}`);
     });
 
     it.each([undefined, new Error("dummy error"), "a string"])(

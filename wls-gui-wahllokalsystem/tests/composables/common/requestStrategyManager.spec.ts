@@ -78,6 +78,10 @@ describe("requestStrategyManager.ts", () => {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
+        {
+          strategy: undefined,
+          expectedCalledMock: mockDefinitions.onlineFirstGetRequestHandler,
+        },
       ];
 
       it.each(testcases)(
@@ -113,6 +117,10 @@ describe("requestStrategyManager.ts", () => {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
+        {
+          strategy: undefined,
+          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
+        },
       ];
 
       it.each(testcases)(
@@ -146,6 +154,10 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: undefined,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
       ];
@@ -183,6 +195,14 @@ describe("requestStrategyManager.ts", () => {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
+        {
+          strategy: undefined,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: undefined,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
       ];
 
       it.each(testcases)(
@@ -216,6 +236,10 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy: undefined,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
       ];
@@ -253,6 +277,10 @@ describe("requestStrategyManager.ts", () => {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
+        {
+          strategy: undefined,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
       ];
 
       it.each(testcases)(
@@ -272,16 +300,18 @@ describe("requestStrategyManager.ts", () => {
   });
 
   interface TestcaseArgument {
-    strategy: FetchStrategiesEnum;
+    strategy: FetchStrategiesEnum | undefined;
     expectedCalledMock: MockInstance;
   }
 
   function createRouteHandlerCallbackOptions(
     httpMethod: HTTPMethod,
-    fetchStrategy: FetchStrategiesEnum
+    fetchStrategy?: FetchStrategiesEnum
   ) {
     const headers = new Headers();
-    headers.set(REQUEST_HEADER_OFFLINE_STRATEGY, fetchStrategy);
+    if (fetchStrategy) {
+      headers.set(REQUEST_HEADER_OFFLINE_STRATEGY, fetchStrategy);
+    }
     return {
       request: {
         method: httpMethod,
@@ -314,5 +344,9 @@ describe("requestStrategyManager.ts", () => {
         `${fetchStrategy} not covered by testcases`
       ).toStrictEqual(true)
     );
+    expect(
+      testcases.some((testcase) => testcase.strategy === undefined),
+      "undefined strategy is not covered by testcases"
+    ).toStrictEqual(true);
   }
 });

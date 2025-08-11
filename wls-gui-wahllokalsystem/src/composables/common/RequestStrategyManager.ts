@@ -18,7 +18,7 @@ const {
 } = useRequestStrategies();
 
 export function useRequestStrategyManager() {
-  const DEFAULT_OFFLINE_STRATEGY = FetchStrategiesEnum.STRATEGY_ONLINE_ONLY;
+  const DEFAULT_OFFLINE_STRATEGY = FetchStrategiesEnum.STRATEGY_ONLINE_FIRST;
 
   const offlineStrategiesHandlers: Record<
     FetchStrategiesEnum,

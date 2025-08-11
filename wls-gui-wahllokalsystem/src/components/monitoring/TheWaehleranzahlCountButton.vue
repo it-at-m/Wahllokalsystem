@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
-import { VBtn } from "vuetify/components";
 
 import { useMonitoringCronjobService } from "@/composables/monitoring/monitoringCronjobService.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";

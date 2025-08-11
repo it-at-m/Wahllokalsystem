@@ -2,9 +2,12 @@ import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
 
 const mockedNow = new Date();
+
+const { logDebug } = useLogging("dateOfActionTimeout.spec.ts");
 
 describe("dateOfActionTimeout", () => {
   beforeEach(() => {
@@ -18,7 +21,7 @@ describe("dateOfActionTimeout", () => {
   });
 
   const defaultCallback = function () {
-    console.debug("defaultCallback was called during test");
+    logDebug("defaultCallback was called during test");
   };
 
   it("should_notSetTimeout_when_dateOfActionIsUndefined", () => {

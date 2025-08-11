@@ -14,7 +14,6 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
 import { CurrencyDisplay, useCurrencyInput } from "vue-currency-input";
-import { VTextField } from "vuetify/components";
 
 const props = defineProps({
   label: {

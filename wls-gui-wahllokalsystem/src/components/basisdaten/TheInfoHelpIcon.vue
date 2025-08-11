@@ -35,15 +35,6 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import {
-  VBtn,
-  VCard,
-  VDivider,
-  VList,
-  VListItem,
-  VMenu,
-} from "vuetify/components";
-
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";

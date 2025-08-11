@@ -5,6 +5,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -18,6 +19,7 @@ const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
+const { logDebug } = useLogging(`store-${storeID}`);
 
 interface EreignisCreateTemplate {
   beschreibung?: string;
@@ -138,7 +140,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Laden der Ereignisse", e);
     }
   }
 
@@ -153,7 +155,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       );
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Speichern der Ereignisse", e);
     } finally {
       isSaving.value = false;
     }

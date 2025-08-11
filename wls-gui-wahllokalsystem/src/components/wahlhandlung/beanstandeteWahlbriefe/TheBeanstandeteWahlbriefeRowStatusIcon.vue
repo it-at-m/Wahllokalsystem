@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { VIcon } from "vuetify/components";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

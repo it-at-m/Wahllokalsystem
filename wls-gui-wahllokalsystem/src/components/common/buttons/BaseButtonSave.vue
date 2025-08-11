@@ -8,8 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { VBtn } from "vuetify/components";
-
 const props = defineProps({
   /**
    * Is the Button interactable

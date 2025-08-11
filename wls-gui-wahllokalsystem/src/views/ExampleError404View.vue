@@ -14,7 +14,5 @@
 </template>
 
 <script setup lang="ts">
-import { VCol, VContainer } from "vuetify/components";
-
 import { ROUTES_HOME } from "@/constants";
 </script>

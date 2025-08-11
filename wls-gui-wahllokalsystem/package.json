@@ -10,7 +10,7 @@
     "dev": "vite",
     "test": "vitest run",
     "build": "vue-tsc --build --force && vite build",
-    "build-in-dev-mode": "vue-tsc --build --force && vite build --mode preview",
+    "build-in-dev-mode": "vue-tsc --build --force && vite build --mode dev",
     "preview": "vite preview",
     "build-preview": "npm run build-in-dev-mode && npm run preview",
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",

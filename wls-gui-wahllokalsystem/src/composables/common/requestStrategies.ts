@@ -30,14 +30,7 @@ export function useRequestStrategies() {
     if (storedData) {
       return _createResponse(storedData);
     } else {
-      const fetchedResponse = await fetch(options.request);
-      //TODO handling 302 -> ReLogin
-      if (fetchedResponse.ok) {
-        await _storeResponse(fetchedResponse, dbKey);
-        return fetchedResponse;
-      } else {
-        return _createResponseNotFound();
-      }
+      return await _fetchAndStoreResponse(options, dbKey);
     }
   }
 
@@ -49,26 +42,7 @@ export function useRequestStrategies() {
     );
 
     const dbKey = options.request.url;
-    try {
-      const response = await fetch(options.request);
-
-      //TODO handling 302 -> ReLogin
-      if (response.ok) {
-        //Store successful response in case we got trouble (offline or failure)
-        await _storeResponse(response, dbKey);
-        return response;
-      } else {
-        try {
-          return await _getStoredResponseOrNotFound(dbKey);
-        } catch (error) {
-          logError("Error fetching idb data:", error);
-          return response; //TODO Maybe the internal server error response?
-        }
-      }
-    } catch (error) {
-      logError("Error fetching remote data:", error);
-      return _getStoredResponseOrInternalServerError(dbKey);
-    }
+    return await _fetchAndStoreResponse(options, dbKey);
   }
 
   async function onlineFirstPostRequestHandler(
@@ -125,6 +99,25 @@ export function useRequestStrategies() {
       }),
       { status: 500 }
     );
+  }
+
+  async function _fetchAndStoreResponse(
+    options: RouteHandlerCallbackOptions,
+    dbKey: string
+  ) {
+    try {
+      const fetchedResponse = await fetch(options.request);
+      //TODO handling 302 -> ReLogin
+      if (fetchedResponse.ok) {
+        await _storeResponse(fetchedResponse, dbKey);
+        return fetchedResponse;
+      } else {
+        return _createResponseNotFound();
+      }
+    } catch (error) {
+      logError("Fehler beim fetch", error);
+      return _createResponseNotFound();
+    }
   }
 
   async function _getStoredResponseOrNotFound(

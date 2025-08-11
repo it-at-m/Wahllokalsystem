@@ -1,7 +1,7 @@
 import { useLogging } from "@/composables/common/logging.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 
-const { logDebug } = useLogging(useMonitoringCronjobService.name);
+const { logDebug } = useLogging("monitoringCronjobService");
 
 export function useMonitoringCronjobService() {
   const { sendWaehler } = useMonitoringStore();

@@ -10,7 +10,7 @@ import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereign
 import { VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL } from "@/constants";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { logDebug } = useLogging(useEreignisService.name);
+const { logDebug } = useLogging("ereignisService");
 
 const userNotificationService = useUserNotificationService();
 const { toModel, toDto } = useEreignisMapper();

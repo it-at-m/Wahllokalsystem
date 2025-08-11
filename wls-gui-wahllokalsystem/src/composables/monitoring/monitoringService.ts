@@ -13,7 +13,7 @@ import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 const { toDto, toModel } = useWahlbeteiligungMapper();
 const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
-const { logDebug } = useLogging(useMonitoringService.name);
+const { logDebug } = useLogging("monitoringService");
 
 export function useMonitoringService() {
   const waehlerAnzahlControllerApi = new WaehleranzahlControllerApi(

@@ -12,7 +12,7 @@ import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { logDebug } = useLogging(useHandbuchService.name);
+const { logDebug } = useLogging("handbuchService");
 
 export function useHandbuchService() {
   const handbuchControllerApi = new HandbuchControllerApi(

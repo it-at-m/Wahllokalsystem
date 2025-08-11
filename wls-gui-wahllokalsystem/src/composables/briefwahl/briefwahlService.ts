@@ -21,7 +21,7 @@ const { addNotification } = useUserNotificationService();
 
 const { toWahlbriefdatenModel, toWahlbriefdatenWriteDTO } =
   useBriefwahlMapper();
-const { logDebug } = useLogging(useBriefwahlService.name);
+const { logDebug } = useLogging("briefwahlService");
 
 export function useBriefwahlService() {
   const briefwahlServiceConfiguration = new Configuration({

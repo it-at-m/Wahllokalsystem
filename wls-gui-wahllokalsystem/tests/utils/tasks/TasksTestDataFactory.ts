@@ -38,6 +38,10 @@ export function useTasksTestDataFactory() {
     };
   }
 
+  function prepareTask() {
+    return proxyBuilder<Task>(createTask(generateRandomString(10)));
+  }
+
   function prepareTaskFactoryContext(): Builder<TaskFactoryContext> {
     return proxyBuilder<TaskFactoryContext>(createTaskFactoryContext());
   }
@@ -51,6 +55,7 @@ export function useTasksTestDataFactory() {
     createTaskFactoryContext,
     prepareTaskFactoryContext,
     createExtendedWahlMetaData,
+    prepareTask,
     prepareExtendedWahlMetaData,
   };
 }

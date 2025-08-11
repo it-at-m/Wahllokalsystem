@@ -34,14 +34,6 @@ export function useIndexDB() {
     return matchingItems;
   }
 
-  async function markAsClean(key: string) {
-    const item = await getItemFromIDB(key);
-    if (item) {
-      item.dirty = false;
-      await storeItem(key, item);
-    }
-  }
-
   function setItemInIDB(
     key: string,
     data: unknown,
@@ -70,7 +62,6 @@ export function useIndexDB() {
   return {
     getDirtyItems,
     getItemFromIDB,
-    markAsClean,
     setItemInIDB,
     setupIndexDB,
     storeItem,

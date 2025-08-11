@@ -19,7 +19,6 @@ import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getItemFromIDB: vi.fn(),
-  markAsClean: vi.fn(),
   storeItem: vi.fn(),
   fetch: vi.fn(),
 }));
@@ -27,7 +26,6 @@ const mockDefinitions = vi.hoisted(() => ({
 vi.mock("@/composables/indexDB/indexDB.ts", () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getItemFromIDB: mockDefinitions.getItemFromIDB,
-    markAsClean: mockDefinitions.markAsClean,
     storeItem: mockDefinitions.storeItem,
   })),
 }));

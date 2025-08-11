@@ -59,8 +59,7 @@ export function useRequestStrategies() {
 
       //TODO handling 302 -> ReLogin
       if (response.ok) {
-        //Store successful response in case we got trouble (offline or failure)
-        await markAsClean(dbKey);
+        await _storeRequest(dbKey, options.request, false);
         return response;
       } else {
         try {
@@ -80,7 +79,7 @@ export function useRequestStrategies() {
 
   function _createResponse(storedData: IndexDBValue) {
     const response = new Response(storedData.data, {
-      status: storedData.httpStatus,
+      status: storedData.httpStatus ?? HttpStatusCode.Ok,
       statusText: "fetched from idb",
     });
     response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);

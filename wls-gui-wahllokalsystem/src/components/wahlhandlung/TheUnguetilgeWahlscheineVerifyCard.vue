@@ -100,18 +100,10 @@
 <script setup lang="ts">
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { ShallowRef } from "vue";
+import type { VForm } from "vuetify/components";
 
 import { storeToRefs } from "pinia";
 import { computed, ref, useTemplateRef } from "vue";
-import {
-  VBtn,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-  VImg,
-  VNumberInput,
-} from "vuetify/components";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";

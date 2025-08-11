@@ -25,13 +25,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";

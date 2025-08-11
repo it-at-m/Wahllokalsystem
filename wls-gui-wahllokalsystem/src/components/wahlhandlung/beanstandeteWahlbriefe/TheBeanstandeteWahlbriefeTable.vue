@@ -92,7 +92,6 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
-import { VAutocomplete, VBtn, VRow, VTable } from "vuetify/components";
 
 import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";

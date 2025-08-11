@@ -37,7 +37,8 @@ Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisier
 
 ### Strategien
 
-Es gibt drei unterschiedliche Strategien, mit denen der SW umgehen kann:
+Es gibt drei unterschiedliche Strategien zum Lesen von Daten, mit denen der SW umgehen kann. Bei `POST`-Requests gibt es nur
+`ONLINE_FIRST`
 
 #### OFFLINE_FIRST (default)
 

@@ -2,7 +2,6 @@ import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
 
-import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
 import {

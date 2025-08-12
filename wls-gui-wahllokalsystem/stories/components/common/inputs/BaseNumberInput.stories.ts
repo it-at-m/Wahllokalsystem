@@ -58,8 +58,8 @@ export const Default: Story = {
 
 /**
  * ```
- * const REQUIRED = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
- * const rules = [REQUIRED]
+ * const required = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
+ * const rules = [required]
  * ```
  */
 export const Required: Story = {
@@ -71,9 +71,9 @@ export const Required: Story = {
 
 /**
  * ```
- * const MIN_NUMBER = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
- * const MAX_NUMBER = (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
- * const rules = [MIN_NUMBER(5), MAX_NUMBER(10)]
+ * const minNumber = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
+ * const maxNumber = (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
+ * const rules = [minNumber(5), maxNumber(10)]
  * ```
  */
 export const InputRange: Story = {

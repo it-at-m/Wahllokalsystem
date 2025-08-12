@@ -14,7 +14,7 @@ const {
 } = useRules();
 
 describe("Validation rules", () => {
-  describe("RULE_MAX_LENGTH", () => {
+  describe("maxLength", () => {
     const rule = maxLength(10);
 
     it("should_returnErrorMessage_when_inputTooLong", () => {
@@ -25,7 +25,7 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_MIN_LENGTH", () => {
+  describe("minLength", () => {
     const rule = minLength(5);
 
     it("should_returnErrorMessage_when_inputTooShort", () => {
@@ -36,7 +36,7 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_MIN_NUMBER", () => {
+  describe("minNumber", () => {
     const rule = minNumber(5);
 
     it("should_returnErrorMessage_when_inputTooSmall", () => {
@@ -47,7 +47,7 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_MAX_NUMBER", () => {
+  describe("maxNumber", () => {
     const rule = maxNumber(5);
 
     it("should_returnErrorMessage_when_inputTooBig", () => {
@@ -58,7 +58,7 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_REQUIRED", () => {
+  describe("required", () => {
     const rule = required;
 
     it("should_returnTrue_when_inputStringExists", () => {
@@ -78,7 +78,7 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_TIME_NOT_IN_FUTURE", () => {
+  describe("timeNotInFuture", () => {
     beforeEach(() => {
       const mockedNow = new Date();
       mockedNow.setHours(15, 0);
@@ -115,7 +115,7 @@ describe("Validation rules", () => {
     );
   });
 
-  describe("RULE_TIME_GREATER_OR_EQUAL", () => {
+  describe("timeGreaterOrEqual", () => {
     const rule = timeGreaterOrEqual("08:00");
 
     it.each(["08:00", "23:59:59", "15:00:00"])(
@@ -140,7 +140,7 @@ describe("Validation rules", () => {
     );
   });
 
-  describe("RULE_TIME_LESS_OR_EQUAL", () => {
+  describe("timeLessOrEqual", () => {
     const rule = timeLessOrEqual("16:00");
 
     it.each(["08:00", "12:36", "16:00:00"])(

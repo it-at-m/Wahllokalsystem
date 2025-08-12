@@ -59,18 +59,23 @@ import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 
 const { maxLength, minLength } = useRules();
 
-defineProps<{
+interface Props {
   visible: boolean;
   dialogtitle: string;
   label: string;
-}>();
+  maxLengthForBegruendung?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxLengthForBegruendung: MAX_LENGTH_FOR_TEXT_INPUT,
+});
 
 const begruendung = ref("");
 const minLengthForBegruendung = 3;
-const maxLengthForBegruendung = 500;
 const isBegruendungValid = ref(false);
 
 const emit = defineEmits<{
@@ -82,7 +87,7 @@ function updateValidationState(): void {
   const value = begruendung.value;
   isBegruendungValid.value =
     value.length >= minLengthForBegruendung &&
-    value.length <= maxLengthForBegruendung;
+    value.length <= props.maxLengthForBegruendung;
 }
 
 function onCancelClicked(): void {

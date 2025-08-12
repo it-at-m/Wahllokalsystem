@@ -43,7 +43,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithNoChangesInWaehlerverzeichnisAndAllCheckboxesSelected_when_mounted", async (context) => {
-      useWahlbezirkStore().pflegeWaehlerverzeichnis =
+      useWahlbezirkStore().pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(true)
           .nachtraeglicheBerichtigung(true)
@@ -58,7 +58,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
     });
 
     it("should_renderWithChangesInWaehlerverzeichnisAndAllCheckboxesSelected_when_mounted", async (context) => {
-      useWahlbezirkStore().pflegeWaehlerverzeichnis =
+      useWahlbezirkStore().pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(true)
           .nachtraeglicheBerichtigung(true)
@@ -73,7 +73,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
     });
 
     it("should_renderWithNoChangesInWaehlerverzeichnisAndNoCheckboxesSelected_when_mounted", async (context) => {
-      useWahlbezirkStore().pflegeWaehlerverzeichnis =
+      useWahlbezirkStore().pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(false)
           .nachtraeglicheBerichtigung(false)
@@ -88,7 +88,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
     });
 
     it("should_renderSaveButtonDisabled_when_mitteilungUeberUngueltigeWahlscheineErhaltenIsFalse", async (context) => {
-      useWahlbezirkStore().pflegeWaehlerverzeichnis =
+      useWahlbezirkStore().pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(false)
           .nachtraeglicheBerichtigung(false)
@@ -104,13 +104,13 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
 
     it("should_renderSaveInLoadingState_when_pflegeWaehlerverzeichnisIsSavingIsTrue", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.pflegeWaehlerverzeichnis =
+      wahlbezirkStore.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(true)
           .nachtraeglicheBerichtigung(true)
           .waehlerverzeichnisUnchanged(true)
           .build();
-      wahlbezirkStore.pflegeWaehlerverzeichnisIsSaving = true;
+      wahlbezirkStore.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnisIsSaving = true;
 
       await flushPromises();
 
@@ -123,7 +123,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_triggerSendPflegeWaehlerverzeichnis_when_saveButtonIsClicked", async () => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.pflegeWaehlerverzeichnis =
+      wahlbezirkStore.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
         preparePflegeWaehlerverzeichnis()
           .mitteilungUeberUngueltigeWahlscheineErhalten(true)
           .nachtraeglicheBerichtigung(true)
@@ -132,15 +132,16 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
 
       await flushPromises();
 
+      const sendPflegeWaehlerverzeichnisSpy = vi.spyOn(
+        wahlbezirkStore.pflegeWaehlerverzeichnisActions,
+        "sendPflegeWaehlerverzeichnis"
+      );
+
       const saveButton = wrapper.findComponent('[data-test="buttonSave"]');
 
-      expect(
-        wahlbezirkStore.sendPflegeWaehlerverzeichnis
-      ).toHaveBeenCalledTimes(0);
+      expect(sendPflegeWaehlerverzeichnisSpy).toHaveBeenCalledTimes(0);
       await saveButton.trigger("click");
-      expect(
-        wahlbezirkStore.sendPflegeWaehlerverzeichnis
-      ).toHaveBeenCalledTimes(1);
+      expect(sendPflegeWaehlerverzeichnisSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

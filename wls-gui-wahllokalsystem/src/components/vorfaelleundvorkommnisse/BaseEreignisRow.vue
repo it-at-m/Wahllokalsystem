@@ -44,10 +44,11 @@ import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 
 const { maxLength, minLength } = useRules();
 
-const maxLengthForEreignisBeschreibung = 500;
+const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;
 
 defineProps({
   lineNumber: {

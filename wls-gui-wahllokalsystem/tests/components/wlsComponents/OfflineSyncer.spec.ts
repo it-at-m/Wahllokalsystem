@@ -24,7 +24,7 @@ import vuetify from "@/plugins/vuetify.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   taskManager: {
-    numberOfTasksFinished: undefined as Ref<number> | undefined,
+    numberOfTasksFinished: undefined as Ref<number> | undefined, //i cant use ref because its hoisted
     numberOfTasksToRun: undefined as Ref<number> | undefined,
     setTasks: vi.fn(),
     runAllTasks: vi.fn(),
@@ -66,7 +66,8 @@ describe("OfflineSyncer", () => {
   });
 
   afterEach(() => {
-    (vi.clearAllMocks(), (document.body.innerHTML = ""));
+    vi.clearAllMocks();
+    document.body.innerHTML = "";
     document.head.innerHTML = "";
   });
 
@@ -85,7 +86,9 @@ describe("OfflineSyncer", () => {
       const syncButton = wrapper.findComponent(
         '[data-test="button-sync-offline-data"]'
       );
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       mockDefinitions.taskManager.numberOfTasksToRun!.value = 10;
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       mockDefinitions.taskManager.numberOfTasksFinished!.value = 2;
       await syncButton.trigger("click");
 
@@ -96,7 +99,7 @@ describe("OfflineSyncer", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_triggerRunAllTasks_when_syncButtonIsClicked", async (context) => {
+    it("should_triggerRunAllTasks_when_syncButtonIsClicked", async () => {
       const syncButton = wrapper.findComponent(
         '[data-test="button-sync-offline-data"]'
       );

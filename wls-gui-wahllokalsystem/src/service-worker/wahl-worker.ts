@@ -39,7 +39,7 @@ setupIndexDB();
  * event listeners
  ****************************************************************************************************************/
 self.addEventListener("message", function (event) {
-  log("pin erhalten: " + event.data);
+  log("message erhalten: " + event.data);
 });
 
 /**

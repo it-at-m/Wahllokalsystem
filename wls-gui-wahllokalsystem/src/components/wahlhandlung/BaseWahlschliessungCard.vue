@@ -6,7 +6,7 @@
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
         <base-time-input
-          v-model="schliessungsuhrzeit"
+          v-model="schliessungsuhrzeitState.schliessungsuhrzeit"
           class="mt-5"
           max-width="300"
           :rules="[
@@ -20,7 +20,7 @@
     <v-card-actions>
       <base-button-save
         active
-        :loading="schliessungsuhrzeitIsSaving"
+        :loading="schliessungsuhrzeitState.schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
@@ -42,9 +42,8 @@ import {
   TIME_NOT_IN_FUTURE,
 } from "@/util/rules.ts";
 
-const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
-const { schliessungsuhrzeit, schliessungsuhrzeitIsSaving } =
-  storeToRefs(useWahlbezirkStore());
+const { schliessungsuhrzeitActions } = useWahlbezirkStore();
+const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
@@ -54,6 +53,6 @@ const isSaveButtonDisabled = computed(
 );
 
 function onSaveSchliessungsuhrzeitClicked() {
-  sendSchliessungsuhrzeit();
+  schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
 }
 </script>

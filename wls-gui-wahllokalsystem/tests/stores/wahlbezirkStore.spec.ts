@@ -152,7 +152,7 @@ describe("wahlbezirkStore.ts", () => {
         waehlerverzeichnisNummer
       );
 
-      unitUnderTest.loadPflegeWaehlerverzeichnis();
+      unitUnderTest.pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
 
       expect(mockDefinitions.getWaehlerverzeichnis.mock.calls).toStrictEqual([
         [wahlbezirkID, waehlerverzeichnisNummer, true],
@@ -167,7 +167,7 @@ describe("wahlbezirkStore.ts", () => {
         undefined
       );
 
-      unitUnderTest.loadPflegeWaehlerverzeichnis();
+      unitUnderTest.pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
 
       expect(
         mockDefinitions.getWaehlerverzeichnis.mock.calls.length
@@ -398,7 +398,8 @@ describe("wahlbezirkStore.ts", () => {
       );
 
       const pflegeWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
-      unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
+      unitUnderTest.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
+        pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
@@ -414,21 +415,24 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       const sendPflegeWaehlerverzeichnisPromise =
-        unitUnderTest.sendPflegeWaehlerverzeichnis();
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        true
-      );
+        unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendPflegeWaehlerverzeichnisPromise;
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       expect(mockDefinitions.postWaehlerverzeichnis.mock.calls).toStrictEqual([
         [
           userWahlbezirkID,
@@ -445,7 +449,8 @@ describe("wahlbezirkStore.ts", () => {
       );
 
       const pflegeWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
-      unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
+      unitUnderTest.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
+        pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
@@ -461,21 +466,24 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       const sendPflegeWaehlerverzeichnisPromise =
-        unitUnderTest.sendPflegeWaehlerverzeichnis();
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        true
-      );
+        unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await expect(sendPflegeWaehlerverzeichnisPromise).rejects.toThrow();
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       expect(mockDefinitions.postWaehlerverzeichnis.mock.calls).toStrictEqual([
         [
           userWahlbezirkID,
@@ -490,7 +498,7 @@ describe("wahlbezirkStore.ts", () => {
         undefined
       );
 
-      await unitUnderTest.sendPflegeWaehlerverzeichnis();
+      await unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
 
       expect(
         mockDefinitions.postWaehlerverzeichnis.mock.calls.length

@@ -40,7 +40,7 @@ const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { initWahlen } = useWahlenStore();
-const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
+const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -56,7 +56,7 @@ onMounted(async () => {
     await initTasks();
     await loadEreignisse();
     await loadWaehler();
-    await loadPflegeWaehlerverzeichnis();
+    await pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
     await initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);

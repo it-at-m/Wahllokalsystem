@@ -10,7 +10,10 @@
         vornehmen müssen.
       </base-input-feedback-card>
       <v-radio-group
-        v-model="pflegeWaehlerverzeichnis.waehlerverzeichnisUnchanged"
+        v-model="
+          pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
+            .waehlerverzeichnisUnchanged
+        "
         class="mb-4"
         hide-details
       >
@@ -33,7 +36,10 @@
         </v-radio>
       </v-radio-group>
       <v-checkbox
-        v-model="pflegeWaehlerverzeichnis.nachtraeglicheBerichtigung"
+        v-model="
+          pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
+            .nachtraeglicheBerichtigung
+        "
         hide-details
       >
         <template #label>
@@ -45,7 +51,8 @@
       </v-checkbox>
       <v-checkbox
         v-model="
-          pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+          pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
+            .mitteilungUeberUngueltigeWahlscheineErhalten
         "
         hide-details
       >
@@ -55,7 +62,8 @@
       </v-checkbox>
       <base-input-feedback-card
         v-if="
-          !pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+          !pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
+            .mitteilungUeberUngueltigeWahlscheineErhalten
         "
         title="Ungültige Eingabe"
         type="error"
@@ -69,9 +77,12 @@
       <base-button-save
         active
         :disabled="
-          !pflegeWaehlerverzeichnis.mitteilungUeberUngueltigeWahlscheineErhalten
+          !pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
+            .mitteilungUeberUngueltigeWahlscheineErhalten
         "
-        :loading="pflegeWaehlerverzeichnisIsSaving"
+        :loading="
+          pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnisIsSaving
+        "
         @click="onSavePflegeWaehlerverzeichnisClicked"
       />
     </v-card-actions>
@@ -88,11 +99,10 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE =
   "Der Wahlvorstand wurde unterrichtet, dass folgende Wahlscheine für ungültig erklärt worden sind (gemäß Anlage).";
 
-const wahlbezirkStore = useWahlbezirkStore();
-const { pflegeWaehlerverzeichnis, pflegeWaehlerverzeichnisIsSaving } =
-  storeToRefs(wahlbezirkStore);
+const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
+const { pflegeWaehlerverzeichnisState } = storeToRefs(useWahlbezirkStore());
 
 function onSavePflegeWaehlerverzeichnisClicked() {
-  wahlbezirkStore.sendPflegeWaehlerverzeichnis();
+  pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
 }
 </script>

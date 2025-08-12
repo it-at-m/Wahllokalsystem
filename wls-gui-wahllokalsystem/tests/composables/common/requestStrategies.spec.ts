@@ -131,7 +131,7 @@ describe("requestStrategies.ts", () => {
       );
 
       const result =
-        await unitUnderTest.offlineFirstGetRequestHandler(callbackOptions);
+        await unitUnderTest.onlineFirstGetRequestHandler(callbackOptions);
 
       await verifyThatResponseMatchesIndexDBValue(result, mockedIndexDBItem);
 
@@ -151,7 +151,7 @@ describe("requestStrategies.ts", () => {
       );
 
       const result =
-        await unitUnderTest.offlineFirstGetRequestHandler(callbackOptions);
+        await unitUnderTest.onlineFirstGetRequestHandler(callbackOptions);
 
       await verifyThatResponseMatchesIndexDBValue(result, mockedIndexDBItem);
 
@@ -170,7 +170,7 @@ describe("requestStrategies.ts", () => {
       );
 
       const result =
-        await unitUnderTest.offlineFirstGetRequestHandler(callbackOptions);
+        await unitUnderTest.onlineFirstGetRequestHandler(callbackOptions);
 
       const expectedNotFoundResponse = new Response(null, {
         status: 404,

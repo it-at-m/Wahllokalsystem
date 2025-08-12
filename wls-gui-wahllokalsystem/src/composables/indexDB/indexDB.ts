@@ -4,7 +4,7 @@ import localforage from "localforage";
 
 import { useLogging } from "@/composables/common/logging.ts";
 
-const { logError, log } = useLogging(useIndexDB.name);
+const { logError } = useLogging(useIndexDB.name);
 
 export function useIndexDB() {
   async function getItemFromIDB(key: string): Promise<IndexDBValue | null> {
@@ -34,17 +34,6 @@ export function useIndexDB() {
     return matchingItems;
   }
 
-  function setItemInIDB(
-    key: string,
-    data: unknown,
-    url: string,
-    dirty: boolean
-  ) {
-    log("saving data - value: " + JSON.stringify(data) + ", dirty: " + dirty);
-    const value = { data: data, url: url, dirty: dirty };
-    return localforage.setItem(key, value);
-  }
-
   async function storeItem(key: string, data: IndexDBValue) {
     await localforage.setItem(key, data);
   }
@@ -62,7 +51,6 @@ export function useIndexDB() {
   return {
     getDirtyItems,
     getItemFromIDB,
-    setItemInIDB,
     setupIndexDB,
     storeItem,
   };

@@ -88,7 +88,7 @@ describe("requestStrategies.ts", () => {
     });
 
     it("should_returnResponseWithNotFound_when_fetchResponseWasNotOk", async () => {
-      await verifyThatNotOkResponseDoesNotStoryAnythingAndReturnNotFoundResponse(
+      await verifyThatNotOkResponseDoesNotStoreAnythingAndReturnNotFoundResponse(
         unitUnderTest.offlineFirstGetRequestHandler
       );
     });
@@ -335,7 +335,7 @@ describe("requestStrategies.ts", () => {
     ]);
   }
 
-  async function verifyThatNotOkResponseDoesNotStoryAnythingAndReturnNotFoundResponse(
+  async function verifyThatNotOkResponseDoesNotStoreAnythingAndReturnNotFoundResponse(
     functionUnderTest: (
       options: RouteHandlerCallbackOptions
     ) => Promise<Response>

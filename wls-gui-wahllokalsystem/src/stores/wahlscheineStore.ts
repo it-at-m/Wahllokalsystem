@@ -9,17 +9,19 @@ import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheine
 const { registerStoreHMR } = useHmrUpdate();
 const { getWahlscheine } = useWahlscheineService();
 
-export const useWahlscheineStore = defineStore("wahlscheine", () => {
+export const storeID = "wahlscheine";
+
+export const useWahlscheineStore = defineStore(storeID, () => {
   const wahlscheine = ref<Wahlscheine[]>([]);
 
   async function loadWahlscheine(wahlID: string, wahlbezirkID: string) {
     try {
-      const wahlschein = await getWahlscheine(wahlID, wahlbezirkID);
-      if (wahlschein) {
-        wahlscheine.value.push(wahlschein);
+      const wahlscheineForWahl = await getWahlscheine(wahlID, wahlbezirkID);
+      if (wahlscheineForWahl) {
+        wahlscheine.value.push(wahlscheineForWahl);
       }
     } catch {
-      throw Error("Fehler beim Resolven des Promises");
+      throw Error(`Fehler beim Laden der Wahlscheine für WahlID: ${wahlID}`);
     }
   }
 

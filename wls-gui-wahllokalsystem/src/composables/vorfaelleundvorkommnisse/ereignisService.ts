@@ -4,7 +4,6 @@ import {
   Configuration,
   EreignisControllerApi,
 } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts";

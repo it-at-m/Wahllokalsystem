@@ -31,6 +31,7 @@ describe("logging.ts", () => {
       allowLogging(true);
       unitUnderTest = useLogging(loggerName);
 
+      const logMessage = "logMessage";
       unitUnderTest.log(logMessage);
 
       expect(consoleMock).toHaveBeenCalledWith(`${loggerName}: ${logMessage}`);

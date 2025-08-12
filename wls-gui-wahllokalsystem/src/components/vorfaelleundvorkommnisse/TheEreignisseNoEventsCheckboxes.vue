@@ -26,7 +26,7 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
+const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { wahlbezirkEreignisse, hasVorkommnisse, hasVorfaelle } =
   storeToRefs(useEreignisStore());
 const { isBWB } = storeToRefs(useUserStore());
@@ -39,7 +39,7 @@ const isCheckboxNoVorkommnisseDisabled = computed(() => {
   if (isBWB.value) {
     return false;
   }
-  return schliessungsuhrzeitSent.value === undefined;
+  return schliessungsuhrzeitState.value.schliessungsuhrzeitSent === undefined;
 });
 const showCheckboxNoVorfaelle = computed(() => !isBWB.value);
 </script>

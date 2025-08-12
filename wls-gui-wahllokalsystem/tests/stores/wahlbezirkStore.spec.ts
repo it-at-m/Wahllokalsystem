@@ -339,7 +339,8 @@ describe("wahlbezirkStore.ts", () => {
   describe("sendEroeffnungsuhrzeit", () => {
     it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
       const eroeffnungsuhrzeit = mockedNow;
-      unitUnderTest.eroeffnungsuhrzeit = eroeffnungsuhrzeit;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit =
+        eroeffnungsuhrzeit;
 
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -353,10 +354,14 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
       const sendEroeffnungsuhrzeitPromise =
-        unitUnderTest.sendEroeffnungsuhrzeit();
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(true);
+        unitUnderTest.eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendEroeffnungsuhrzeitPromise;
@@ -364,21 +369,25 @@ describe("wahlbezirkStore.ts", () => {
       expect(mockDefinitions.postEroeffnungsuhrzeit.mock.calls).toStrictEqual([
         [wahlbezirkID, eroeffnungsuhrzeit],
       ]);
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.eroeffnungsuhrzeit?.getTime()).toStrictEqual(
-        eroeffnungsuhrzeit.getTime()
-      );
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit?.getTime()
+      ).toStrictEqual(eroeffnungsuhrzeit.getTime());
     });
 
     it("should_notCallService_when_noEroeffnungsuhrzeitIsGiven", async () => {
-      unitUnderTest.eroeffnungsuhrzeit = undefined;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
       useUserStore().setUser(
         prepareUser().wahlbezirkID("wahlbezirkID").build()
       );
 
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
       const sendEroeffnungsuhrzeitPromise =
-        unitUnderTest.sendEroeffnungsuhrzeit();
+        unitUnderTest.eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
 
       vi.advanceTimersByTime(100);
       await sendEroeffnungsuhrzeitPromise;
@@ -386,7 +395,9 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         mockDefinitions.postEroeffnungsuhrzeit.mock.calls.length
       ).toStrictEqual(0);
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
     });
   });
 
@@ -501,7 +512,8 @@ describe("wahlbezirkStore.ts", () => {
   describe("sendSchliessungsuhrzeit", () => {
     it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
       const schliessungsuhrzeit = mockedNow;
-      unitUnderTest.schliessungsuhrzeit = schliessungsuhrzeit;
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit =
+        schliessungsuhrzeit;
 
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -515,10 +527,14 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.schliessungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitIsSaving
+      ).toStrictEqual(false);
       const sendSchliessungsuhrzeitPromise =
-        unitUnderTest.sendSchliessungsuhrzeit();
-      expect(unitUnderTest.schliessungsuhrzeitIsSaving).toStrictEqual(true);
+        unitUnderTest.schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendSchliessungsuhrzeitPromise;
@@ -526,10 +542,12 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mock.calls
       ).toStrictEqual([[wahlbezirkID, schliessungsuhrzeit]]);
-      expect(unitUnderTest.schliessungsuhrzeitIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.schliessungsuhrzeit?.getTime()).toStrictEqual(
-        schliessungsuhrzeit.getTime()
-      );
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitIsSaving
+      ).toStrictEqual(false);
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
+      ).toStrictEqual(schliessungsuhrzeit.getTime());
     });
 
     it("should_notUpdateSchliessungsUhrzeitSent_when_postUrnenwahlSchliessungsuhrzeitFails", async () => {
@@ -537,7 +555,7 @@ describe("wahlbezirkStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
-      unitUnderTest.schliessungsuhrzeit = mockedNow;
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit = mockedNow;
 
       const mockedError = new Error("Speicherfehler!");
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockImplementationOnce(
@@ -547,10 +565,12 @@ describe("wahlbezirkStore.ts", () => {
       );
 
       try {
-        await unitUnderTest.sendSchliessungsuhrzeit();
+        await unitUnderTest.schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
       } catch (error) {
         expect(error).equals(mockedError);
-        expect(unitUnderTest.schliessungsuhrzeitSent).toBe(undefined);
+        expect(
+          unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent
+        ).toBe(undefined);
         expect(
           mockDefinitions.postUrnenwahlSchliessungsuhrzeit
         ).toHaveBeenCalledWith(wahlbezirkID, mockedNow);

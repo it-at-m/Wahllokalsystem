@@ -30,7 +30,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
   const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
-  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 
   const isSaving = ref(false);
 
@@ -58,7 +58,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
-        !schliessungsuhrzeitSent.value)
+        !schliessungsuhrzeitState.value.schliessungsuhrzeitSent)
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
@@ -73,7 +73,10 @@ export const useEreignisStore = defineStore(storeID, () => {
       : hasMissingEreignisFlagsForBWB.value;
   });
 
-  watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
+  watch(
+    () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent,
+    _onSchliessunguhrzeitSentChanged
+  );
 
   function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
     const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
@@ -110,7 +113,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         ereignisToChange.ereignisart =
           getEreignisArtForDateRelatedToSchliessungsuhrzeit(
             uhrzeit,
-            schliessungsuhrzeitSent.value
+            schliessungsuhrzeitState.value.schliessungsuhrzeitSent
           );
         _updateKeineFlagsOfEreignisseBasedOnCurrentState();
       } else {
@@ -167,7 +170,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     const uhrzeit = nonDefaultValues?.uhrzeit ?? new Date();
     const ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
       uhrzeit,
-      schliessungsuhrzeitSent.value
+      schliessungsuhrzeitState.value.schliessungsuhrzeitSent
     );
     const beschreibung = nonDefaultValues?.beschreibung;
 
@@ -187,7 +190,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _hasToUpdateKeineVorkommnisse(): boolean {
-    return schliessungsuhrzeitSent.value !== undefined;
+    return schliessungsuhrzeitState.value.schliessungsuhrzeitSent !== undefined;
   }
 
   function _onSchliessunguhrzeitSentChanged(

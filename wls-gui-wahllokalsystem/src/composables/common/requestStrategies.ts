@@ -64,11 +64,11 @@ export function useRequestStrategies() {
         await _storeResponse(fetchedResponse, dbKey);
         return fetchedResponse;
       } else {
-        return createResponseNotFoundWithoutResponseBody();
+        return _storedResponseOrNotFound(dbKey);
       }
     } catch (error) {
       logError("error while fetching", error);
-      return createResponseNotFoundWithoutResponseBody();
+      return _storedResponseOrNotFound(dbKey);
     }
   }
 
@@ -125,6 +125,15 @@ export function useRequestStrategies() {
       await storeItem(dbKey, responseToStore);
     } catch (error) {
       logError("error storing idb data", error);
+    }
+  }
+
+  async function _storedResponseOrNotFound(dbKey: string) {
+    const storedItem = await getItemFromIDB(dbKey);
+    if (storedItem) {
+      return createResponseOfIndexDBValue(storedItem);
+    } else {
+      return createResponseNotFoundWithoutResponseBody();
     }
   }
 

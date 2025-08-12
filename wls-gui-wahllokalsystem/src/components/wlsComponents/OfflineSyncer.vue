@@ -14,6 +14,7 @@
             size="x-small"
             color="primary"
             :loading="isSyncInProgress"
+            data-test="button-sync-offline-data"
             @click="synchronizeOfflineData"
           />
         </template>

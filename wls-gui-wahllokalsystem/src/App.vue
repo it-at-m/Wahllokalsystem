@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import localforage from "localforage";
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
 
@@ -27,6 +26,7 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
@@ -46,6 +46,8 @@ const { initBeanstandeteWahlbriefe } = useWahlenStore();
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
+const { setupIndexDB } = useIndexDB();
+
 onMounted(async () => {
   try {
     await loadUser();
@@ -61,13 +63,7 @@ onMounted(async () => {
   }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
-  localforage.config({
-    driver: localforage.INDEXEDDB,
-    name: "wahldb",
-    version: 1.0,
-    storeName: "wahlstore",
-    description: "store for wahlnumber",
-  });
+  setupIndexDB();
 });
 
 onUnmounted(() => {

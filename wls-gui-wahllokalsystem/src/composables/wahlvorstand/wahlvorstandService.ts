@@ -4,6 +4,7 @@ import {
   Configuration,
   WahlvorstandControllerApi,
 } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
 import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";
@@ -14,6 +15,7 @@ const { toModel, toDto } = useWahlvorstandMapper();
 
 const userNotificationService = useUserNotificationService();
 const { compareWahlvorstandsMitglieder } = useWahlvorstandComparators();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useWahlvorstandService() {
   const wahlvorstandControllerApi = new WahlvorstandControllerApi(
@@ -35,7 +37,8 @@ export function useWahlvorstandService() {
     try {
       const response = await wahlvorstandControllerApi.getWahlvorstand(
         wahlbezirkID,
-        forceUpdate
+        forceUpdate,
+        axiosConfigWrapper().requestAsOnlineFirst()
       );
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -73,7 +76,8 @@ export function useWahlvorstandService() {
     try {
       await wahlvorstandControllerApi.postWahlvorstand(
         wahlbezirkID,
-        wahlvorstandDto
+        wahlvorstandDto,
+        axiosConfigWrapper().requestAsOnlineFirst()
       );
       userNotificationService.addNotification(
         "Der Anwesenheit wurde erfolgreich gespeichert.",

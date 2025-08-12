@@ -1,20 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  MAX_LENGTH,
-  MAX_NUMBER,
-  MIN_LENGTH,
-  MIN_NUMBER,
-  NO_NEGATIVE_INPUT,
-  REQUIRED,
-  TIME_GREATER_OR_EQUAL,
-  TIME_LESS_OR_EQUAL,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules";
+import { useRules } from "@/composables/common/rules.ts";
+
+const {
+  maxLength,
+  maxNumber,
+  minLength,
+  minNumber,
+  required,
+  timeGreaterOrEqual,
+  timeLessOrEqual,
+  timeNotInFuture,
+} = useRules();
 
 describe("Validation rules", () => {
   describe("RULE_MAX_LENGTH", () => {
-    const rule = MAX_LENGTH(10);
+    const rule = maxLength(10);
 
     it("should_returnErrorMessage_when_inputTooLong", () => {
       expect(rule("tooLongString")).toBeTypeOf("string");
@@ -25,7 +26,7 @@ describe("Validation rules", () => {
   });
 
   describe("RULE_MIN_LENGTH", () => {
-    const rule = MIN_LENGTH(5);
+    const rule = minLength(5);
 
     it("should_returnErrorMessage_when_inputTooShort", () => {
       expect(rule("t")).toBeTypeOf("string");
@@ -36,7 +37,7 @@ describe("Validation rules", () => {
   });
 
   describe("RULE_MIN_NUMBER", () => {
-    const rule = MIN_NUMBER(5);
+    const rule = minNumber(5);
 
     it("should_returnErrorMessage_when_inputTooSmall", () => {
       expect(rule(2)).toBeTypeOf("string");
@@ -47,7 +48,7 @@ describe("Validation rules", () => {
   });
 
   describe("RULE_MAX_NUMBER", () => {
-    const rule = MAX_NUMBER(5);
+    const rule = maxNumber(5);
 
     it("should_returnErrorMessage_when_inputTooBig", () => {
       expect(rule(7)).toBeTypeOf("string");
@@ -57,19 +58,8 @@ describe("Validation rules", () => {
     });
   });
 
-  describe("RULE_NO_NEGATIVE_INPUT", () => {
-    const rule = NO_NEGATIVE_INPUT;
-
-    it("should_returnErrorMessage_when_inputNegative", () => {
-      expect(rule(-2)).toBeTypeOf("string");
-    });
-    it("should_returnTrue_when_inputPositive", () => {
-      expect(rule(2)).toStrictEqual(true);
-    });
-  });
-
   describe("RULE_REQUIRED", () => {
-    const rule = REQUIRED;
+    const rule = required;
 
     it("should_returnTrue_when_inputStringExists", () => {
       expect(rule("input")).toStrictEqual(true);
@@ -101,7 +91,7 @@ describe("Validation rules", () => {
       vi.useRealTimers();
     });
 
-    const rule = TIME_NOT_IN_FUTURE;
+    const rule = timeNotInFuture;
 
     it.each(["12:23", "14:58", "15:00:00"])(
       "should_returnTrue_when_inputTime'%s'IsLessOrEqualToNow",
@@ -126,7 +116,7 @@ describe("Validation rules", () => {
   });
 
   describe("RULE_TIME_GREATER_OR_EQUAL", () => {
-    const rule = TIME_GREATER_OR_EQUAL("08:00");
+    const rule = timeGreaterOrEqual("08:00");
 
     it.each(["08:00", "23:59:59", "15:00:00"])(
       "should_returnTrue_when_inputTime'%s'IsGreaterOrEqualToComparedValue",
@@ -151,7 +141,7 @@ describe("Validation rules", () => {
   });
 
   describe("RULE_TIME_LESS_OR_EQUAL", () => {
-    const rule = TIME_LESS_OR_EQUAL("16:00");
+    const rule = timeLessOrEqual("16:00");
 
     it.each(["08:00", "12:36", "16:00:00"])(
       "should_returnTrue_when_inputTime'%s'IsLessOrEqualToComparedValue",

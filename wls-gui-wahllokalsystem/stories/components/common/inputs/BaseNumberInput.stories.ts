@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const meta: Meta<typeof BaseNumberInput> = {
   component: BaseNumberInput,
@@ -63,7 +65,7 @@ export const Default: Story = {
 export const Required: Story = {
   args: {
     ...Default.args,
-    rules: [REQUIRED],
+    rules: [required],
   },
 };
 
@@ -77,7 +79,7 @@ export const Required: Story = {
 export const InputRange: Story = {
   args: {
     ...Default.args,
-    rules: [MAX_NUMBER(10), MIN_NUMBER(5)],
+    rules: [maxNumber(10), minNumber(5)],
   },
 };
 

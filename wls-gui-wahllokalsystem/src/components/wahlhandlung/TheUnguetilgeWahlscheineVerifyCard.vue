@@ -8,7 +8,7 @@
       >
         <v-number-input
           :model-value="wahlscheinnummer"
-          :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999999)]"
+          :rules="[required, minNumber(1), maxNumber(9999999)]"
           label="Wahlscheinnummer"
           max-width="300"
           data-test="number-input-wahlscheinnummer"
@@ -108,9 +108,11 @@ import { computed, ref, useTemplateRef } from "vue";
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const isFormValid = ref<boolean | null>(null);
 const isSearchButtonDisabled = computed(() => !isFormValid.value);

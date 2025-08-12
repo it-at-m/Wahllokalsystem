@@ -7,7 +7,7 @@
           <v-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
             class="mr-4"
-            :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+            :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
             label="Anzahl der Stimmzettel"
             clearable
@@ -31,8 +31,10 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const props = defineProps<{
   wahlId: string;

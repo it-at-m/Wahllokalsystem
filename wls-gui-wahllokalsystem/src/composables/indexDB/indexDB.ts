@@ -44,7 +44,7 @@ export function useIndexDB() {
       name: "wahldb",
       version: 1.0,
       storeName: "wahlstore",
-      description: "store for wahlnumber",
+      description: "store for data of electoral district",
     });
   }
 

@@ -5,6 +5,7 @@ import { storeToRefs } from "pinia";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -20,6 +21,7 @@ export function useTaskListService() {
     useKonfigurationsparameterTaskFactory();
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
+  const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -28,6 +30,7 @@ export function useTaskListService() {
     tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
     tasks.push(...createWahlvorstandTasks(taskFactoryData));
     tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
+    tasks.push(...createWahlscheineTasks(taskFactoryData));
     return tasks;
   }
 

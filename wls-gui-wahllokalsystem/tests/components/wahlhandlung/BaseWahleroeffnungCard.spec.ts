@@ -81,7 +81,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithDisabledSaveButton_when_noUhrzeitIsEntered", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = undefined;
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -98,7 +98,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date(
+        "2025-05-23T06:30:00"
+      );
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -116,7 +118,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
       const date = new Date("2025-05-23T07:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = date;
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = date;
 
       await flushPromises(); // update data binding and enable button
 
@@ -132,7 +134,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeitIsSaving = true;
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving = true;
 
       await nextTick();
 
@@ -146,15 +148,17 @@ describe("BaseWahleroeffnungCard.vue", () => {
     it("should_updateEroeffnungsuhrzeitInStore_when_validDateIsEntered", async () => {
       const wahlbezirkStore = useWahlbezirkStore();
 
-      expect(wahlbezirkStore.eroeffnungsuhrzeit).toBeUndefined();
+      expect(
+        wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit
+      ).toBeUndefined();
 
       const eroeffnungsuhrzeitTimeInput = wrapper.findComponent(BaseTimeInput);
       const enteredTime = new Date();
       await eroeffnungsuhrzeitTimeInput.setValue(enteredTime);
 
-      expect(wahlbezirkStore.eroeffnungsuhrzeit?.getTime()).toStrictEqual(
-        enteredTime.getTime()
-      );
+      expect(
+        wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit?.getTime()
+      ).toStrictEqual(enteredTime.getTime());
     });
 
     it("should_callSendEroeffnungsuhrzeit_when_saveButtonIsClicked", async () => {
@@ -165,9 +169,16 @@ describe("BaseWahleroeffnungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = new Date("2025-05-23T07:30:00");
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date(
+        "2025-05-23T07:30:00"
+      );
 
       await flushPromises();
+
+      const sendUhrzeitSpy = vi.spyOn(
+        wahlbezirkStore.eroeffnungsuhrzeitActions,
+        "sendEroeffnungsuhrzeit"
+      );
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
@@ -176,7 +187,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         Promise.resolve()
       );
 
-      expect(wahlbezirkStore.sendEroeffnungsuhrzeit).toHaveBeenCalled();
+      expect(sendUhrzeitSpy).toHaveBeenCalled();
     });
 
     it("should_setIsZuSpaet_when_eroeffnungsuhrzeitIsToLate", async () => {
@@ -187,8 +198,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit.setHours(
+        7,
+        30,
+        0
+      );
 
       await flushPromises();
 
@@ -209,8 +224,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit.setHours(
+        7,
+        30,
+        0
+      );
 
       await flushPromises();
 
@@ -226,7 +245,9 @@ describe("BaseWahleroeffnungCard.vue", () => {
       await cancelButton.trigger("click");
 
       expect(wrapper.vm.isZuSpaet).toBe(false);
-      expect(wahlbezirkStore.eroeffnungsuhrzeit).toBeUndefined();
+      expect(
+        wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit
+      ).toBeUndefined();
     });
 
     it("should_createEreignis_when_confirmButtonClickedWithBegruendung", async () => {
@@ -242,8 +263,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.eroeffnungsuhrzeit = new Date();
-      wahlbezirkStore.eroeffnungsuhrzeit.setHours(7, 30, 0);
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date();
+      wahlbezirkStore.eroeffnungsuhrzeitState.eroeffnungsuhrzeit.setHours(
+        7,
+        30,
+        0
+      );
 
       await flushPromises();
 

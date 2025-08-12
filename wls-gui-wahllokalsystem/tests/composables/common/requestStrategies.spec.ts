@@ -180,7 +180,7 @@ describe("requestStrategies.ts", () => {
     });
   });
 
-  describe("onlineFirstPostRequestHandler", () => {
+  describe("postRequestHandler", () => {
     it("should_fetchRequestAndStoreRequestInIndexDB_when_fetchWasSuccessful", async () => {
       const requestBody = generateRandomString(50);
       const requestContentType = generateRandomString(10);
@@ -200,8 +200,7 @@ describe("requestStrategies.ts", () => {
       });
       mockDefinitions.fetch.mockReturnValue(mockedResponse);
 
-      const result =
-        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
+      const result = await unitUnderTest.postRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual(mockedResponseBody);
@@ -235,8 +234,7 @@ describe("requestStrategies.ts", () => {
         new Error("mocked api call failed")
       );
 
-      const result =
-        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
+      const result = await unitUnderTest.postRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(404);
       expect(await result.text()).toStrictEqual("");
@@ -267,8 +265,7 @@ describe("requestStrategies.ts", () => {
         new Response(null, { status: 500 })
       );
 
-      const result =
-        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
+      const result = await unitUnderTest.postRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual("");

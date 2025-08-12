@@ -37,7 +37,7 @@ Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisier
 
 ### Strategien
 
-Es gibt drei unterschiedliche Strategien zum Lesen von Daten, mit denen der SW umgehen kann. Bei `POST`-Requests gibt es nur
+Es gibt drei unterschiedliche Strategien zum Lesen von Daten, mit denen der Service-Worker umgehen kann. Bei `POST`-Requests gibt es nur
 `ONLINE_FIRST`
 
 #### OFFLINE_FIRST (default)
@@ -150,7 +150,7 @@ Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel
 
 #### Definieren der Strategy
 
-Soll eine andere als die Default-Strategy bei einem Request zum Einsatz kommen, muss dies explizit definiert werden:
+Soll eine andere Strategie als die Standardstrategie bei einem Request zum Einsatz kommen, muss dies explizit definiert werden:
 
 ```typescript{4}
 await wahlvorstandControllerApi.getWahlvorstand(

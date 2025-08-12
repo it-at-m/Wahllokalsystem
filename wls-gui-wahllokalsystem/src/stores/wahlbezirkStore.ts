@@ -3,6 +3,7 @@ import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerv
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
+import type { Ref } from "vue";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -47,14 +48,45 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
   const eroeffnungsuhrzeitIsSaving = ref(false);
 
+  /* --- schliessungsuhrzeit --- */
+  const schliessungsuhrzeitState: Ref<{
+    schliessungsuhrzeit: Date | undefined;
+    schliessungsuhrzeitSent: Date | undefined;
+    schliessungsuhrzeitIsSaving: boolean;
+  }> = ref({
+    schliessungsuhrzeit: undefined,
+    schliessungsuhrzeitSent: undefined,
+    schliessungsuhrzeitIsSaving: false,
+  });
+
+  const schliessungsuhrzeitActions = {
+    sendSchliessungsuhrzeit: async function sendSchliessungsuhrzeit() {
+      if (schliessungsuhrzeitState.value.schliessungsuhrzeit) {
+        const schliessungszeitToSave = new Date(
+          schliessungsuhrzeitState.value.schliessungsuhrzeit
+        );
+        if (isValidDate(schliessungszeitToSave)) {
+          schliessungsuhrzeitState.value.schliessungsuhrzeitIsSaving = true;
+          try {
+            await postUrnenwahlSchliessungsuhrzeit(
+              currentUserWahlbezirkID.value,
+              schliessungszeitToSave
+            );
+            schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
+              schliessungszeitToSave;
+          } finally {
+            schliessungsuhrzeitState.value.schliessungsuhrzeitIsSaving = false;
+          }
+        }
+      }
+    },
+  };
+
   const pflegeWaehlerverzeichnis = ref<PflegeWaehlerverzeichnis>(
     createDefaultPflegeWaehlerverzeichnis()
   );
   const pflegeWaehlerverzeichnisIsSaving = ref(false);
 
-  const schliessungsuhrzeit = ref<Date | undefined>(undefined);
-  const schliessungsuhrzeitSent = ref<Date | undefined>(undefined);
-  const schliessungsuhrzeitIsSaving = ref(false);
   const urnenWahlVorbereitungIsSaving = ref(false);
   const briefWahlVorbereitungIsSaving = ref(false);
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
@@ -190,24 +222,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendSchliessungsuhrzeit() {
-    if (schliessungsuhrzeit.value) {
-      const schliessungszeitToSave = new Date(schliessungsuhrzeit.value);
-      if (isValidDate(schliessungszeitToSave)) {
-        schliessungsuhrzeitIsSaving.value = true;
-        try {
-          await postUrnenwahlSchliessungsuhrzeit(
-            currentUserWahlbezirkID.value,
-            schliessungszeitToSave
-          );
-          schliessungsuhrzeitSent.value = schliessungszeitToSave;
-        } finally {
-          schliessungsuhrzeitIsSaving.value = false;
-        }
-      }
-    }
-  }
-
   async function sendUrnenwahlvorbereitung() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     urnenWahlVorbereitungIsSaving.value = true;
@@ -252,11 +266,10 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeit,
     eroeffnungsuhrzeitIsSaving,
     eroeffnungsuhrzeitSent,
+    schliessungsuhrzeitState,
+    schliessungsuhrzeitActions,
     pflegeWaehlerverzeichnis,
     pflegeWaehlerverzeichnisIsSaving,
-    schliessungsuhrzeit,
-    schliessungsuhrzeitIsSaving,
-    schliessungsuhrzeitSent,
     ungueltigeWahlscheine,
     ungueltigeWahlscheineIsLoading,
     ungueltigeWahlscheineIsEmpty,
@@ -267,7 +280,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     loadUngueltigeWahlscheine,
     sendEroeffnungsuhrzeit,
     sendPflegeWaehlerverzeichnis,
-    sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,
     urnenwahlVorbereitung,
     urnenWahlVorbereitungIsSaving,

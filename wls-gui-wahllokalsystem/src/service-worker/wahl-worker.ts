@@ -53,15 +53,6 @@ self.oninstall = () => {
   self.skipWaiting();
 
   log("installed and took control");
-
-  // to test idb
-  _setItemInIDB("testkey", "testvalue", "", false)
-    .then(() => {
-      log("SUCCESS - saved data to idb");
-    })
-    .catch(() => {
-      log("FAILED - couldn't save data to idb");
-    });
 };
 
 /*****************************************************************************************************************

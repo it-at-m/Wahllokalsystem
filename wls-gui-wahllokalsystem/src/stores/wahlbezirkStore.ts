@@ -3,6 +3,7 @@ import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerv
 import type { UngueltigerWahlschein } from "@/types/wahlbezirk/UngueltigerWahlschein.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
+import type { Ref } from "vue";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -43,9 +44,38 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   const { getWaehlerverzeichnisNummerOrUndefinedById } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
   const { wahlen } = storeToRefs(useWahlenStore());
-  const eroeffnungsuhrzeit = ref<Date | undefined>(undefined);
-  const eroeffnungsuhrzeitSent = ref<Date | undefined>(undefined);
-  const eroeffnungsuhrzeitIsSaving = ref(false);
+
+  /* --- eroeffnungsuhrzeit --- */
+  const eroeffnungsuhrzeitState: Ref<{
+    eroeffnungsuhrzeit: Date | undefined;
+    eroeffnungsuhrzeitSent: Date | undefined;
+    eroeffnungsuhrzeitIsSaving: boolean;
+  }> = ref({
+    eroeffnungsuhrzeit: undefined,
+    eroeffnungsuhrzeitSent: undefined,
+    eroeffnungsuhrzeitIsSaving: false,
+  });
+
+  const eroeffnungsuhrzeitActions = {
+    sendEroeffnungsuhrzeit: async function sendEroeffnungsuhrzeit() {
+      if (eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit) {
+        const eroeffnungsuhrzeitToSave = new Date(
+          eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit
+        );
+        eroeffnungsuhrzeitState.value.eroeffnungsuhrzeitIsSaving = true;
+        try {
+          await postEroeffnungsuhrzeit(
+            currentUserWahlbezirkID.value,
+            eroeffnungsuhrzeitToSave
+          );
+          eroeffnungsuhrzeitState.value.eroeffnungsuhrzeitSent =
+            eroeffnungsuhrzeitToSave;
+        } finally {
+          eroeffnungsuhrzeitState.value.eroeffnungsuhrzeitIsSaving = false;
+        }
+      }
+    },
+  };
 
   const pflegeWaehlerverzeichnis = ref<PflegeWaehlerverzeichnis>(
     createDefaultPflegeWaehlerverzeichnis()
@@ -156,22 +186,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendEroeffnungsuhrzeit() {
-    if (eroeffnungsuhrzeit.value) {
-      const eroeffnungsuhrzeitToSave = new Date(eroeffnungsuhrzeit.value);
-      eroeffnungsuhrzeitIsSaving.value = true;
-      try {
-        await postEroeffnungsuhrzeit(
-          currentUserWahlbezirkID.value,
-          eroeffnungsuhrzeitToSave
-        );
-        eroeffnungsuhrzeitSent.value = eroeffnungsuhrzeitToSave;
-      } finally {
-        eroeffnungsuhrzeitIsSaving.value = false;
-      }
-    }
-  }
-
   async function sendPflegeWaehlerverzeichnis() {
     const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
       currentUserHauptWahlID.value
@@ -249,9 +263,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   }
 
   return {
-    eroeffnungsuhrzeit,
-    eroeffnungsuhrzeitIsSaving,
-    eroeffnungsuhrzeitSent,
+    eroeffnungsuhrzeitState,
+    eroeffnungsuhrzeitActions,
     pflegeWaehlerverzeichnis,
     pflegeWaehlerverzeichnisIsSaving,
     schliessungsuhrzeit,
@@ -265,7 +278,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     initUngueltigeWahlscheine,
     loadPflegeWaehlerverzeichnis,
     loadUngueltigeWahlscheine,
-    sendEroeffnungsuhrzeit,
     sendPflegeWaehlerverzeichnis,
     sendSchliessungsuhrzeit,
     sendUrnenwahlvorbereitung,

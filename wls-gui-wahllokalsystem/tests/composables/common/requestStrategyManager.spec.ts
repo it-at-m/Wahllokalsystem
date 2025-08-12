@@ -196,10 +196,6 @@ describe("requestStrategyManager.ts", () => {
           strategy: undefined,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
-        {
-          strategy: undefined,
-          expectedCalledMock: mockDefinitions.unhandledFetch,
-        },
       ];
 
       it.each(testcases)(

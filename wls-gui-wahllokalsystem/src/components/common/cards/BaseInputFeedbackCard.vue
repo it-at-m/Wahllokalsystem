@@ -29,7 +29,6 @@
 import type { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 import { computed, useSlots } from "vue";
-import { VCard, VCardText, VCardTitle, VIcon } from "vuetify/components";
 
 import { useInputFeedbackUtils } from "@/composables/common/inputFeedbackUtils.ts";
 

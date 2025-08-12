@@ -1,8 +1,7 @@
 <template>
   <v-card>
-    <v-card-title>Wahlbriefe zulassen oder zurückweisen</v-card-title>
     <v-card-text>
-      <v-form v-model="bedenklicheWahlbriefeFormValid">
+      <v-form v-model="isBeanstandeteWahlbriefeTableValid">
         <the-beanstandete-wahlbriefe-table />
       </v-form>
     </v-card-text>
@@ -25,28 +24,19 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-} from "vuetify/components";
+import { computed } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { isBeanstandeteWahlbriefeSaving } = storeToRefs(useWahlenStore());
+const { isBeanstandeteWahlbriefeSaving, isBeanstandeteWahlbriefeTableValid } =
+  storeToRefs(useWahlenStore());
 const { addBeanstandeterWahlbriefEntry, saveBeanstandeteWahlbriefe } =
   useWahlenStore();
 
-const bedenklicheWahlbriefeFormValid = ref<null | boolean>(null);
-
 const isSaveButtonDisabled = computed(
-  () => !bedenklicheWahlbriefeFormValid.value
+  () => !isBeanstandeteWahlbriefeTableValid.value
 );
 const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
 

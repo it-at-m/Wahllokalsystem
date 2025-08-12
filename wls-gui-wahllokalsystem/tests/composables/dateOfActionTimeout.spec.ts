@@ -2,9 +2,12 @@ import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
 
 const mockedNow = new Date();
+
+const { logDebug } = useLogging("dateOfActionTimeout.spec.ts");
 
 describe("dateOfActionTimeout", () => {
   beforeEach(() => {
@@ -18,7 +21,7 @@ describe("dateOfActionTimeout", () => {
   });
 
   const defaultCallback = function () {
-    console.debug("defaultCallback was called during test");
+    logDebug("defaultCallback was called during test");
   };
 
   it("should_notSetTimeout_when_dateOfActionIsUndefined", () => {
@@ -48,7 +51,11 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     const callback = defaultCallback;
-    useDateOfActionTimeout(ref(new Date(mockedNow.getTime() + 1)), callback);
+    const { setupTimer } = useDateOfActionTimeout(
+      ref(new Date(mockedNow.getTime() + 1)),
+      callback
+    );
+    setupTimer();
 
     expect(setTimeoutSpy).toHaveBeenCalledWith(callback, 1);
 
@@ -59,7 +66,11 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     const callback = defaultCallback;
-    useDateOfActionTimeout(ref(new Date(mockedNow.getTime())), callback);
+    const { setupTimer } = useDateOfActionTimeout(
+      ref(new Date(mockedNow.getTime())),
+      callback
+    );
+    setupTimer();
 
     expect(setTimeoutSpy).toHaveBeenCalledWith(callback, 0);
 
@@ -70,7 +81,11 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     const callback = vi.fn();
-    useDateOfActionTimeout(ref(new Date(mockedNow.getTime() + 1)), callback);
+    const { setupTimer } = useDateOfActionTimeout(
+      ref(new Date(mockedNow.getTime() + 1)),
+      callback
+    );
+    setupTimer();
 
     vi.advanceTimersByTime(1);
 
@@ -96,10 +111,11 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     const callback = defaultCallback;
-    useDateOfActionTimeout(
+    const { setupTimer } = useDateOfActionTimeout(
       ref(new Date(mockedNow.getTime() + 0x7fffffff)),
       callback
     );
+    setupTimer();
 
     expect(setTimeoutSpy).toHaveBeenCalledWith(callback, 0x7fffffff);
 
@@ -117,7 +133,8 @@ describe("dateOfActionTimeout", () => {
     // @ts-expect-error: error TS2322: Type 'number' is not assignable to type 'Timeout'
     setTimeoutSpy.mockImplementation(() => mockedTimeoutNumber);
 
-    useDateOfActionTimeout(dateOfAction, callback);
+    const { setupTimer } = useDateOfActionTimeout(dateOfAction, callback);
+    setupTimer();
 
     dateOfAction.value = new Date(mockedNow.getTime() + 2);
     await flushPromises();
@@ -127,6 +144,28 @@ describe("dateOfActionTimeout", () => {
       [callback, 2],
     ]);
     expect(clearTimeoutSpy).toHaveBeenCalledWith(mockedTimeoutNumber);
+
+    setTimeoutSpy.mockRestore();
+    clearTimeoutSpy.mockRestore();
+  });
+
+  it("should_clearOldTimeOut_when_clearFunctionIsCalled", async () => {
+    const setTimeoutSpy = vi.spyOn(window, "setTimeout");
+    const clearTimeoutSpy = vi.spyOn(window, "clearTimeout");
+
+    const dateOfAction = ref(new Date(mockedNow.getTime() + 1));
+
+    const callback = defaultCallback;
+    const { setupTimer, clearTimer } = useDateOfActionTimeout(
+      ref(dateOfAction),
+      callback
+    );
+    setupTimer();
+
+    await flushPromises();
+    clearTimer();
+
+    expect(clearTimeoutSpy).toHaveBeenCalledOnce();
 
     setTimeoutSpy.mockRestore();
     clearTimeoutSpy.mockRestore();

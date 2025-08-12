@@ -45,7 +45,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { VContainer, VProgressLinear } from "vuetify/components";
 
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";

@@ -48,13 +48,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
@@ -81,13 +74,7 @@ const {
   spaetesteEroeffnungsuhrzeit,
 } = storeToRefs(useInfomanagementStore());
 const ereignisStore = useEreignisStore();
-const {
-  addEreignis,
-  updateUhrzeitByIndex,
-  updateBeschreibungByIndex,
-  sendEreignisse,
-  wahlbezirkEreignisse,
-} = ereignisStore;
+const { addEreignis, sendEreignisse } = ereignisStore;
 
 const isEroeffnungsuhrzeitFormValid = ref<boolean | null>(null);
 const isZuSpaet = ref(false);
@@ -116,12 +103,7 @@ function onCancelBegruendung() {
 function onConfirmBegruendung(begruendung: string): void {
   isZuSpaet.value = false;
 
-  addEreignis();
-  const index = wahlbezirkEreignisse.ereigniseintraege?.length
-    ? wahlbezirkEreignisse.ereigniseintraege?.length - 1
-    : 0;
-  updateUhrzeitByIndex(eroeffnungsuhrzeit.value, index);
-  updateBeschreibungByIndex(begruendung, index);
+  addEreignis({ uhrzeit: eroeffnungsuhrzeit.value, beschreibung: begruendung });
   sendEreignisse();
 
   wahlbezirkStore.sendEroeffnungsuhrzeit();

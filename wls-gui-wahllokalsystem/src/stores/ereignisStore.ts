@@ -5,6 +5,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -18,6 +19,12 @@ const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
+const { logDebug } = useLogging(`store-${storeID}`);
+
+interface EreignisCreateTemplate {
+  beschreibung?: string;
+  uhrzeit?: Date;
+}
 
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
@@ -68,20 +75,12 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
 
-  function addEreignis() {
-    const currentDate = new Date();
-    const currentEreignisart =
-      getEreignisArtForDateRelatedToSchliessungsuhrzeit(
-        currentDate,
-        schliessungsuhrzeitSent.value
-      );
-    wahlbezirkEreignisse.value.ereigniseintraege?.push({
-      uhrzeit: currentDate,
-      beschreibung: "",
-      ereignisart: currentEreignisart,
-    });
+  function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
+    const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
+
+    wahlbezirkEreignisse.value.ereigniseintraege?.push(ereignisToAdd);
     // uncheck checkbox if set before
-    switch (currentEreignisart) {
+    switch (ereignisToAdd.ereignisart) {
       case EreignisartEnum.Vorfall:
         wahlbezirkEreignisse.value.keineVorfaelle = false;
         break;
@@ -141,7 +140,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Laden der Ereignisse", e);
     }
   }
 
@@ -156,10 +155,27 @@ export const useEreignisStore = defineStore(storeID, () => {
       );
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Speichern der Ereignisse", e);
     } finally {
       isSaving.value = false;
     }
+  }
+
+  function _createEreignis(
+    nonDefaultValues?: EreignisCreateTemplate
+  ): Ereignis {
+    const uhrzeit = nonDefaultValues?.uhrzeit ?? new Date();
+    const ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
+      uhrzeit,
+      schliessungsuhrzeitSent.value
+    );
+    const beschreibung = nonDefaultValues?.beschreibung;
+
+    return {
+      uhrzeit,
+      ereignisart,
+      beschreibung,
+    };
   }
 
   function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {

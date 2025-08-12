@@ -57,10 +57,26 @@ describe("wahlenStore.ts", () => {
     it("should_loadAndSortWahlen_when_calledWithCorrectWahltagID", async () => {
       const wahltagID = generateRandomString(10);
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahltagID(wahltagID).build());
 
-      const wahl1 = prepareWahl().nummer("dcba").build();
-      const wahl2 = prepareWahl().nummer("abcd").build();
+      const wahl1 = prepareWahl().nummer("0").build();
+      const wahl2 = prepareWahl().nummer("0").build();
+      userStore.setUser(
+        prepareUser()
+          .wahltagID(wahltagID)
+          .wahlMetaData([
+            {
+              wahlID: wahl1.wahlID,
+              wahlnummer: "1",
+              wahlbezirkID: generateRandomString(10),
+            },
+            {
+              wahlID: wahl2.wahlID,
+              wahlnummer: "0",
+              wahlbezirkID: generateRandomString(10),
+            },
+          ])
+          .build()
+      );
       const mockedWahlArrayFromService = [wahl1, wahl2];
       const expectedSortedWahlArray = [wahl2, wahl1];
 
@@ -71,6 +87,8 @@ describe("wahlenStore.ts", () => {
       await unitUnderTest.initWahlen();
 
       expect(unitUnderTest.wahlen).toStrictEqual(expectedSortedWahlArray);
+      expect(wahl1.nummer).toStrictEqual("1");
+      expect(wahl2.nummer).toStrictEqual("0");
     });
   });
 
@@ -89,7 +107,7 @@ describe("wahlenStore.ts", () => {
     });
   });
 
-  describe("getWaehlerverzeichnisOrUndefinedById", () => {
+  describe("getWaehlerverzeichnisNummerOrUndefinedById", () => {
     it("should_returnWaehlerverzeichnisNummer_when_calledWithId", () => {
       const wahlOne = createWahl();
       const wahlTwo = createWahl();
@@ -97,7 +115,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlTwo.wahlID
       );
 
@@ -111,7 +129,7 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWaehlerverzeichnisOrUndefinedById(
+      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlThree.wahlID
       );
 

@@ -4,10 +4,13 @@ import {
   Configuration,
   EreignisControllerApi,
 } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisMapper } from "@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts";
 import { VORFAELLEUNDVORKOMMNISSE_SERVICE_API_URL } from "@/constants";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const { logDebug } = useLogging("ereignisService");
 
 const userNotificationService = useUserNotificationService();
 const { toModel, toDto } = useEreignisMapper();
@@ -50,7 +53,7 @@ export function useEreignisService() {
           UserNotificationCategoryEnum.ERROR
         );
       }
-      console.debug(error);
+      logDebug("Das Speichern der Ereignisse schlug fehl.", error);
     }
   }
 

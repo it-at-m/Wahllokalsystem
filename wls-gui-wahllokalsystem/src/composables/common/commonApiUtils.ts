@@ -29,14 +29,14 @@ export function useCommonApiUtils() {
     return new Response(null, { status: HttpStatusCode.Ok });
   }
 
-  function createResponseNotFound() {
+  function createResponseNotFoundWithoutResponseBody() {
     return new Response(null, { status: HttpStatusCode.NotFound });
   }
 
   return {
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
-    createResponseNotFound,
+    createResponseNotFoundWithoutResponseBody,
     getNullOn204OrElseResponseData,
     axiosConfigWrapper: () => new AxiosConfigWrapper(),
   };

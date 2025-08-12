@@ -15,7 +15,7 @@ describe("commonApiUtils.ts", () => {
     getNullOn204OrElseResponseData,
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
-    createResponseNotFound,
+    createResponseNotFoundWithoutResponseBody,
   } = useCommonApiUtils();
 
   describe("getNullOn204OrElseResponseData", () => {
@@ -92,9 +92,9 @@ describe("commonApiUtils.ts", () => {
     });
   });
 
-  describe("createResponseNotFound", () => {
+  describe("createResponseNotFoundWithoutResponseBody", () => {
     it("should_createResponseWithoutBodyAndWithStatusNotFound_when_called", async () => {
-      const result = createResponseNotFound();
+      const result = createResponseNotFoundWithoutResponseBody();
       expect(result).toStrictEqual(
         new Response(null, { status: HttpStatusCode.NotFound })
       );

@@ -9,7 +9,7 @@ import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 const { getItemFromIDB, storeItem } = useIndexDB();
 const {
   createResponseOkWithoutResponseBody,
-  createResponseNotFound,
+  createResponseNotFoundWithoutResponseBody,
   createResponseOfIndexDBValue,
 } = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
@@ -64,11 +64,11 @@ export function useRequestStrategies() {
         await _storeResponse(fetchedResponse, dbKey);
         return fetchedResponse;
       } else {
-        return createResponseNotFound();
+        return createResponseNotFoundWithoutResponseBody();
       }
     } catch (error) {
       logError("error while fetching", error);
-      return createResponseNotFound();
+      return createResponseNotFoundWithoutResponseBody();
     }
   }
 
@@ -95,7 +95,7 @@ export function useRequestStrategies() {
     } catch (error) {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
-      return createResponseNotFound();
+      return createResponseNotFoundWithoutResponseBody();
     }
   }
 

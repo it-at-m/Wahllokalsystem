@@ -6,7 +6,7 @@
         <slot name="userHint" />
         <v-form v-model="isEroeffnungsuhrzeitFormValid">
           <base-time-input
-            v-model="eroeffnungsuhrzeit"
+            v-model="eroeffnungsuhrzeitState.eroeffnungsuhrzeit"
             class="mt-5"
             max-width="300"
             :rules="[
@@ -21,7 +21,7 @@
       <v-card-actions>
         <base-button-save
           active
-          :loading="eroeffnungsuhrzeitIsSaving"
+          :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveEroeffnungsuhrzeitClicked"
         />
@@ -65,9 +65,8 @@ import {
 
 const { getDateFromTimeString, toHhMm } = useDateTimeFormatter();
 
-const wahlbezirkStore = useWahlbezirkStore();
-const { eroeffnungsuhrzeit, eroeffnungsuhrzeitIsSaving } =
-  storeToRefs(wahlbezirkStore);
+const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
+const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const {
   fruehesteEroeffnungsuhrzeit,
   fruehesteSchliessungsuhrzeit,
@@ -85,11 +84,11 @@ const isSaveButtonDisabled = computed(
 
 function onSaveEroeffnungsuhrzeitClicked() {
   if (
-    eroeffnungsuhrzeit.value !== undefined &&
-    eroeffnungsuhrzeit.value <=
+    eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
+    eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
       getDateFromTimeString(spaetesteEroeffnungsuhrzeit.value)
   ) {
-    wahlbezirkStore.sendEroeffnungsuhrzeit();
+    eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
   } else {
     isZuSpaet.value = true;
   }
@@ -97,15 +96,18 @@ function onSaveEroeffnungsuhrzeitClicked() {
 
 function onCancelBegruendung() {
   isZuSpaet.value = false;
-  eroeffnungsuhrzeit.value = undefined;
+  eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit = undefined;
 }
 
 function onConfirmBegruendung(begruendung: string): void {
   isZuSpaet.value = false;
 
-  addEreignis({ uhrzeit: eroeffnungsuhrzeit.value, beschreibung: begruendung });
+  addEreignis({
+    uhrzeit: eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit,
+    beschreibung: begruendung,
+  });
   sendEreignisse();
 
-  wahlbezirkStore.sendEroeffnungsuhrzeit();
+  eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
 }
 </script>

@@ -15,7 +15,6 @@ const { logDebug } = useLogging("ereignisService");
 
 const userNotificationService = useUserNotificationService();
 const { toModel, toDto } = useEreignisMapper();
-const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useEreignisService() {
   const ereignisControllerApi = new EreignisControllerApi(
@@ -26,7 +25,7 @@ export function useEreignisService() {
 
   function getEreignisse(wahlbezirkID: string): Promise<WahlbezirkEreignisse> {
     return ereignisControllerApi
-      .getEreignisse(wahlbezirkID, axiosConfigWrapper().requestAsOfflineFirst())
+      .getEreignisse(wahlbezirkID)
       .then((response) => toModel(response.data));
   }
 
@@ -40,8 +39,7 @@ export function useEreignisService() {
     try {
       await ereignisControllerApi.postEreignisse(
         wahlbezirkID,
-        ereignisseWriteDto,
-        axiosConfigWrapper().requestAsOnlineFirst()
+        ereignisseWriteDto
       );
       if (sendNotification) {
         userNotificationService.addNotification(

@@ -40,7 +40,7 @@ export function useIndexDB() {
 
   function setupIndexDB() {
     localforage.config({
-      driver: localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
+      driver: localforage.INDEXEDDB,
       name: "wahldb",
       version: 1.0,
       storeName: "wahlstore",

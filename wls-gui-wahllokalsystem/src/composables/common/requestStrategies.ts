@@ -15,6 +15,8 @@ const {
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
 export function useRequestStrategies() {
+  const textDecoder = new TextDecoder("utf-8");
+
   async function unhandledFetch(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
@@ -105,8 +107,9 @@ export function useRequestStrategies() {
     dirty: boolean | undefined = undefined
   ) {
     const clonedRequest = request.clone();
+    const requestBody = _arrayBufferToString(await clonedRequest.arrayBuffer());
     const requestToStore: IndexDBValue = {
-      data: await clonedRequest.text(),
+      data: requestBody,
       contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE) ?? "",
       dirty: dirty,
     };
@@ -115,9 +118,10 @@ export function useRequestStrategies() {
 
   async function _storeResponse(response: Response, dbKey: string) {
     const clonedResponse = response.clone();
+    const responseBody = await clonedResponse.arrayBuffer();
     const responseToStore: IndexDBValue = {
-      data: await clonedResponse.text(),
-      contentType: clonedResponse.headers.get(HTTP_HEADER_CONTENT_TYPE) ?? "",
+      data: _arrayBufferToString(responseBody),
+      contentType: clonedResponse.headers.get(HTTP_HEADER_CONTENT_TYPE),
       httpStatus: clonedResponse.status,
     };
     try {
@@ -126,6 +130,10 @@ export function useRequestStrategies() {
     } catch (error) {
       logError("error storing idb data", error);
     }
+  }
+
+  function _arrayBufferToString(arrayBuffer: ArrayBuffer) {
+    return arrayBuffer.byteLength > 0 ? textDecoder.decode(arrayBuffer) : null;
   }
 
   async function _storedResponseOrNotFound(dbKey: string) {

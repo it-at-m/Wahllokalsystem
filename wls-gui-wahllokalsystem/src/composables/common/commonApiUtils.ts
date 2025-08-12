@@ -21,7 +21,9 @@ export function useCommonApiUtils() {
       status: storedData.httpStatus ?? httpStatusCodeWhenMissingInStoredValue,
       statusText: "fetched from idb",
     });
-    response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);
+    if (storedData.contentType) {
+      response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);
+    }
     return response;
   }
 

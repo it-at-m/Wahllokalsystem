@@ -1,6 +1,6 @@
 export interface IndexDBValue {
-  data: string;
-  contentType: string;
+  data: string | null;
+  contentType: string | null;
   httpStatus?: number;
   dirty?: boolean;
 }

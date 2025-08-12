@@ -139,10 +139,7 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
 
       const saveButton = wrapper.findComponent('[data-test="buttonSave"]');
 
-      expect(
-        wahlbezirkStore.pflegeWaehlerverzeichnisActions
-          .sendPflegeWaehlerverzeichnis
-      ).toHaveBeenCalledTimes(0);
+      expect(sendPflegeWaehlerverzeichnisSpy).toHaveBeenCalledTimes(0);
       await saveButton.trigger("click");
       expect(sendPflegeWaehlerverzeichnisSpy).toHaveBeenCalledTimes(1);
     });

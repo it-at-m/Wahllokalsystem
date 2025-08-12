@@ -339,7 +339,8 @@ describe("wahlbezirkStore.ts", () => {
   describe("sendEroeffnungsuhrzeit", () => {
     it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
       const eroeffnungsuhrzeit = mockedNow;
-      unitUnderTest.eroeffnungsuhrzeit = eroeffnungsuhrzeit;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit =
+        eroeffnungsuhrzeit;
 
       const wahlbezirkID = "wahlbezirkID";
       useUserStore().setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -353,10 +354,14 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
       const sendEroeffnungsuhrzeitPromise =
-        unitUnderTest.sendEroeffnungsuhrzeit();
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(true);
+        unitUnderTest.eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendEroeffnungsuhrzeitPromise;
@@ -364,21 +369,25 @@ describe("wahlbezirkStore.ts", () => {
       expect(mockDefinitions.postEroeffnungsuhrzeit.mock.calls).toStrictEqual([
         [wahlbezirkID, eroeffnungsuhrzeit],
       ]);
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.eroeffnungsuhrzeit?.getTime()).toStrictEqual(
-        eroeffnungsuhrzeit.getTime()
-      );
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit?.getTime()
+      ).toStrictEqual(eroeffnungsuhrzeit.getTime());
     });
 
     it("should_notCallService_when_noEroeffnungsuhrzeitIsGiven", async () => {
-      unitUnderTest.eroeffnungsuhrzeit = undefined;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
       useUserStore().setUser(
         prepareUser().wahlbezirkID("wahlbezirkID").build()
       );
 
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
       const sendEroeffnungsuhrzeitPromise =
-        unitUnderTest.sendEroeffnungsuhrzeit();
+        unitUnderTest.eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
 
       vi.advanceTimersByTime(100);
       await sendEroeffnungsuhrzeitPromise;
@@ -386,7 +395,9 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         mockDefinitions.postEroeffnungsuhrzeit.mock.calls.length
       ).toStrictEqual(0);
-      expect(unitUnderTest.eroeffnungsuhrzeitIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving
+      ).toStrictEqual(false);
     });
   });
 

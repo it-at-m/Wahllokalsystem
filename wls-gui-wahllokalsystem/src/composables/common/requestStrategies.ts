@@ -110,7 +110,7 @@ export function useRequestStrategies() {
     const requestBody = _arrayBufferToString(await clonedRequest.arrayBuffer());
     const requestToStore: IndexDBValue = {
       data: requestBody,
-      contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE) ?? "",
+      contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE),
       dirty: dirty,
     };
     await storeItem(dbKey, requestToStore);

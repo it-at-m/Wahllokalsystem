@@ -44,7 +44,7 @@ export function useRequestStrategyManager() {
     }
 
     const fetchStrategy = Object.values(FetchStrategiesEnum).find(
-      (value) => value == offlineStrategyAsString
+      (value) => value === offlineStrategyAsString
     );
 
     logDebug(

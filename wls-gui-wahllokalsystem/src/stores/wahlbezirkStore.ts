@@ -111,52 +111,52 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
   };
 
-    /* --- pflegeWaehlerverzeichnis --- */
-    const pflegeWaehlerverzeichnisState: Ref<{
-        pflegeWaehlerverzeichnis: PflegeWaehlerverzeichnis;
-        pflegeWaehlerverzeichnisIsSaving: boolean;
-    }> = ref({
-        pflegeWaehlerverzeichnis: createDefaultPflegeWaehlerverzeichnis(),
-        pflegeWaehlerverzeichnisIsSaving: false,
-    });
+  /* --- pflegeWaehlerverzeichnis --- */
+  const pflegeWaehlerverzeichnisState: Ref<{
+    pflegeWaehlerverzeichnis: PflegeWaehlerverzeichnis;
+    pflegeWaehlerverzeichnisIsSaving: boolean;
+  }> = ref({
+    pflegeWaehlerverzeichnis: createDefaultPflegeWaehlerverzeichnis(),
+    pflegeWaehlerverzeichnisIsSaving: false,
+  });
 
-    const pflegeWaehlerverzeichnisActions = {
-        loadPflegeWaehlerverzeichnis: async function loadPflegeWaehlerverzeichnis(
-            sendNotification = true
-        ) {
-            const waehlerverzeichnisNummer =
-                getWaehlerverzeichnisNummerOrUndefinedById(
-                    currentUserHauptWahlID.value
-                );
-            if (waehlerverzeichnisNummer !== undefined) {
-                pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis =
-                    await getWaehlerverzeichnis(
-                        currentUserWahlbezirkID.value,
-                        waehlerverzeichnisNummer,
-                        sendNotification
-                    );
-            }
-        },
-        sendPflegeWaehlerverzeichnis:
-            async function sendPflegeWaehlerverzeichnis() {
-                const waehlerverzeichnisNummer =
-                    getWaehlerverzeichnisNummerOrUndefinedById(
-                        currentUserHauptWahlID.value
-                    );
-                if (waehlerverzeichnisNummer !== undefined) {
-                    try {
-                        pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = true;
-                        await postWaehlerverzeichnis(
-                            currentUserWahlbezirkID.value,
-                            waehlerverzeichnisNummer,
-                            pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis
-                        );
-                    } finally {
-                        pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = false;
-                    }
-                }
-            },
-    };
+  const pflegeWaehlerverzeichnisActions = {
+    loadPflegeWaehlerverzeichnis: async function loadPflegeWaehlerverzeichnis(
+      sendNotification = true
+    ) {
+      const waehlerverzeichnisNummer =
+        getWaehlerverzeichnisNummerOrUndefinedById(
+          currentUserHauptWahlID.value
+        );
+      if (waehlerverzeichnisNummer !== undefined) {
+        pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis =
+          await getWaehlerverzeichnis(
+            currentUserWahlbezirkID.value,
+            waehlerverzeichnisNummer,
+            sendNotification
+          );
+      }
+    },
+    sendPflegeWaehlerverzeichnis:
+      async function sendPflegeWaehlerverzeichnis() {
+        const waehlerverzeichnisNummer =
+          getWaehlerverzeichnisNummerOrUndefinedById(
+            currentUserHauptWahlID.value
+          );
+        if (waehlerverzeichnisNummer !== undefined) {
+          try {
+            pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = true;
+            await postWaehlerverzeichnis(
+              currentUserWahlbezirkID.value,
+              waehlerverzeichnisNummer,
+              pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis
+            );
+          } finally {
+            pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = false;
+          }
+        }
+      },
+  };
 
   const urnenWahlVorbereitungIsSaving = ref(false);
   const briefWahlVorbereitungIsSaving = ref(false);

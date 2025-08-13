@@ -20,7 +20,7 @@ describe("wahlbeteiligungMapper.ts", () => {
 
   describe("toDto", () => {
     it("should_returnDTO_when_wahlbeteiligungitIsGiven", () => {
-      const date = new Date("2025-05-23T18:00:00+02:00");
+      const date = new Date("2025-05-23T18:00:00");
       const wahlbeteiligungToMap: Waehleranzahl = {
         anzahlWaehler: 17,
         uhrzeit: date,

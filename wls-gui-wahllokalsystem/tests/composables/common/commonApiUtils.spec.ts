@@ -81,6 +81,18 @@ describe("commonApiUtils.ts", () => {
       );
       expect(await result.text()).toEqual(indexDBValue.data);
     });
+
+    it.each(["", "    ", "more data"])(
+      "should_throwError_when_httpStatusCodeIs204AndDataIs'%s'",
+      async (testcaseArgument) => {
+        const indexDBValue = prepareIndexDBValue()
+          .httpStatus(204)
+          .data(testcaseArgument)
+          .build();
+
+        expect(() => createResponseOfIndexDBValue(indexDBValue)).toThrowError();
+      }
+    );
   });
 
   describe("createResponseOkWithoutResponseBody", () => {

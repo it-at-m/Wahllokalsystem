@@ -81,11 +81,15 @@ describe("requestStrategies.ts", () => {
       ]);
     });
 
-    it("should_fetchDataAndStoreInIndexDB_when_indexDBHasNoData", async () => {
-      await verifyThatFetchedResponseIsStored(
-        unitUnderTest.offlineFirstGetRequestHandler
-      );
-    });
+    it.each(["response body as string", null])(
+      "should_fetchDataAndStoreInIndexDB_when_indexDBHasNoDataAndResponseBodyIs'%s'",
+      async (responseBody) => {
+        await verifyThatFetchedResponseIsStored(
+          responseBody,
+          unitUnderTest.offlineFirstGetRequestHandler
+        );
+      }
+    );
 
     it("should_returnResponseWithNotFound_when_fetchResponseWasNotOk", async () => {
       await verifyThatNotOkResponseDoesNotStoreAnythingAndReturnNotFoundResponse(
@@ -114,11 +118,15 @@ describe("requestStrategies.ts", () => {
   });
 
   describe("onlineFirstGetRequestHandler", () => {
-    it("should_fetchAndStoreResponseIndexDB_when_fetchWasSuccessful", async () => {
-      await verifyThatFetchedResponseIsStored(
-        unitUnderTest.onlineFirstGetRequestHandler
-      );
-    });
+    it.each(["response body as string", null])(
+      "should_fetchAndStoreResponseIndexDB_when_fetchWasSuccessful",
+      async (responseBody) => {
+        await verifyThatFetchedResponseIsStored(
+          responseBody,
+          unitUnderTest.onlineFirstGetRequestHandler
+        );
+      }
+    );
 
     it("should_returnIndexDBData_when_fetchWasNotOkAndIndexDBHasData", async () => {
       const callbackOptions = createRouteHandlerCallbackOptions();
@@ -300,6 +308,7 @@ describe("requestStrategies.ts", () => {
   }
 
   async function verifyThatFetchedResponseIsStored(
+    responseBody: string | null,
     functionUnderTest: (
       options: RouteHandlerCallbackOptions
     ) => Promise<Response>
@@ -308,7 +317,7 @@ describe("requestStrategies.ts", () => {
 
     mockDefinitions.getItemFromIDB.mockResolvedValue(null);
 
-    const mockedResponseBody = "mocked response body";
+    const mockedResponseBody = responseBody;
     const mockedHttpStatus = 200;
     const mockedContentTypeHeader = "application/json";
     const mockedResponse = new Response(mockedResponseBody, {

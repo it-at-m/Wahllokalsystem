@@ -10,9 +10,9 @@
           class="mt-5"
           max-width="300"
           :rules="[
-            REQUIRED,
-            TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+            required,
+            timeNotInFuture,
+            timeGreaterOrEqual(fruehesteSchliessungsuhrzeit),
           ]"
         />
       </v-form>
@@ -34,13 +34,11 @@ import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  REQUIRED,
-  TIME_GREATER_OR_EQUAL,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
+
+const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
 
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());

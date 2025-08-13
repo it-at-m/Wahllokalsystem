@@ -21,8 +21,8 @@
         <v-textarea
           v-model="begruendung"
           :rules="[
-            MIN_LENGTH(minLengthForBegruendung),
-            MAX_LENGTH(maxLengthForBegruendung),
+            minLength(minLengthForBegruendung),
+            maxLength(maxLengthForBegruendung),
           ]"
           rows="1"
           :label="label"
@@ -58,8 +58,10 @@
 import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
-import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
+
+const { maxLength, minLength } = useRules();
 
 interface Props {
   visible: boolean;

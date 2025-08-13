@@ -9,7 +9,7 @@
         <v-number-input
           v-model="wahlbriefDaten.wahlbriefe"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(1), maxNumber(9999)]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
           :max-width="WIDTH"
@@ -26,7 +26,7 @@
         <v-number-input
           v-model="wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
           :max-width="WIDTH"
@@ -40,7 +40,7 @@
         <v-number-input
           v-model="wahlbriefDaten.nachtraege"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
           :max-width="WIDTH"
@@ -62,7 +62,7 @@
             <v-number-input
               v-model="wahlbriefDaten.nachtraeglichUeberbrachte"
               class="mr-4"
-              :rules="[MIN_NUMBER(0), MAX_NUMBER(9999)]"
+              :rules="[minNumber(0), maxNumber(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
               label="Anzahl Wahlbriefe"
               :min-width="WIDTH"
@@ -102,13 +102,10 @@ import { computed, ref, watch } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  MAX_NUMBER,
-  MIN_NUMBER,
-  REQUIRED,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
 
 const { sendWahlbriefdaten } = useWahlbezirkStore();
 const { wahlbriefDaten, wahlbriefDatenIsSaving } =
@@ -126,9 +123,9 @@ const WIDTH = 300;
 const getDateRules = () => {
   const rules = [];
   if (isZeitNachtragelichUeberbrachtRequired()) {
-    rules.push(REQUIRED);
+    rules.push(required);
   }
-  rules.push(TIME_NOT_IN_FUTURE);
+  rules.push(timeNotInFuture);
   return rules;
 };
 

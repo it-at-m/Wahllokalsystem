@@ -29,7 +29,7 @@ interface EreignisCreateTemplate {
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, isUWB, isBWB } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 
   const isSaving = ref(false);
@@ -62,9 +62,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
-    () =>
-      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+    () => hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
   const hasMissingEreignisFlags = computed(() => {
@@ -91,6 +89,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         wahlbezirkEreignisse.value.keineVorkommnisse = false;
         break;
     }
+
+    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function deleteEreignisByIndex(index: number) {
@@ -219,9 +219,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         EreignisartEnum.Vorkommnis
       );
     }
-    wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
-      EreignisartEnum.Vorfall
-    );
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      isBWB.value || !_hasEintragOfEreignisart(EreignisartEnum.Vorfall);
   }
 
   return {

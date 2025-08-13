@@ -158,8 +158,68 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       },
   };
 
-  const urnenWahlVorbereitungIsSaving = ref(false);
-  const briefWahlVorbereitungIsSaving = ref(false);
+  /* --- urnenWahlVorbereitung --- */
+  const urnenwahlVorbereitungState: Ref<{
+    urnenwahlVorbereitung: Urnenwahlvorbereitung;
+    urnenwahlVorbereitungIsSaving: boolean;
+  }> = ref({
+    urnenwahlVorbereitung: {
+      anzahlNebenraeume: null,
+      anzahlWahlkabinen: null,
+      anzahlWahltische: null,
+      urneVersiegelt: false,
+      wahlbezirkID: currentUserWahlbezirkID.value,
+      urnenAnzahl: [],
+    },
+    urnenwahlVorbereitungIsSaving: false,
+  });
+
+  const urnenwahlVorbereitungActions = {
+    sendUrnenwahlvorbereitung: async function sendUrnenwahlvorbereitung() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = true;
+      try {
+        if (wahlbezirkID) {
+          await postUrnenwahlvorbereitung(
+            wahlbezirkID,
+            urnenwahlVorbereitungState.value.urnenwahlVorbereitung
+          );
+        }
+      } finally {
+        urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = false;
+      }
+    },
+  };
+
+  /* --- briefwahlVorbereitung --- */
+  const briefwahlVorbereitungState: Ref<{
+    briefwahlVorbereitung: Wahlvorbereitung;
+    briefWahlVorbereitungIsSaving: boolean;
+  }> = ref({
+    briefwahlVorbereitung: {
+      urneVersiegelt: false,
+      wahlbezirkID: currentUserWahlbezirkID.value,
+      urnenAnzahl: [],
+    },
+    briefWahlVorbereitungIsSaving: false,
+  });
+
+  const briefwahlVorbereitungActions = {
+    sendBriefwahlvorbereitung: async function sendBriefwahlvorbereitung() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = true;
+      try {
+        if (wahlbezirkID) {
+          await postBriefwahlvorbereitung(
+            wahlbezirkID,
+            briefwahlVorbereitungState.value.briefwahlVorbereitung
+          );
+        }
+      } finally {
+        briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = false;
+      }
+    },
+  };
 
   /* --- ungueltigeWahlscheine --- */
   const ungueltigeWahlscheineState: Ref<{
@@ -228,53 +288,10 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     zeitNachtraeglichUeberbrachte: undefined,
   });
 
-  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
-    anzahlNebenraeume: null,
-    anzahlWahlkabinen: null,
-    anzahlWahltische: null,
-    urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirkID.value,
-    urnenAnzahl: [],
-  });
-
-  const briefwahlVorbereitung = ref<Wahlvorbereitung>({
-    urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirkID.value,
-    urnenAnzahl: [],
-  });
-
-  watch(wahlen, () => {
-    urnenwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-    briefwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-  });
-
   async function initWahlbriefdaten() {
     wahlbriefDaten.value = await getWahlbriefdaten(
       currentUserWahlbezirkID.value
     );
-  }
-
-  async function sendUrnenwahlvorbereitung() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    urnenWahlVorbereitungIsSaving.value = true;
-    try {
-      if (wahlbezirkID) {
-        await postUrnenwahlvorbereitung(
-          wahlbezirkID,
-          urnenwahlVorbereitung.value
-        );
-      }
-    } finally {
-      urnenWahlVorbereitungIsSaving.value = false;
-    }
   }
 
   async function sendWahlbriefdaten() {
@@ -287,20 +304,19 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendBriefwahlvorbereitung() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    briefWahlVorbereitungIsSaving.value = true;
-    try {
-      if (wahlbezirkID) {
-        await postBriefwahlvorbereitung(
-          wahlbezirkID,
-          briefwahlVorbereitung.value
-        );
-      }
-    } finally {
-      briefWahlVorbereitungIsSaving.value = false;
-    }
-  }
+  /* --- watcher --- */
+  watch(wahlen, () => {
+    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+    briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+  });
 
   return {
     eroeffnungsuhrzeitState,
@@ -309,19 +325,17 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitActions,
     pflegeWaehlerverzeichnisState,
     pflegeWaehlerverzeichnisActions,
+    urnenwahlVorbereitungState,
+    urnenwahlVorbereitungActions,
+    briefwahlVorbereitungState,
+    briefwahlVorbereitungActions,
     ungueltigeWahlscheineState,
     ungueltigeWahlscheineGetter,
     ungueltigeWahlscheineActions,
-    sendUrnenwahlvorbereitung,
-    urnenwahlVorbereitung,
-    urnenWahlVorbereitungIsSaving,
     initWahlbriefdaten,
     sendWahlbriefdaten,
     wahlbriefDaten,
     wahlbriefDatenIsSaving,
-    sendBriefwahlvorbereitung,
-    briefwahlVorbereitung,
-    briefWahlVorbereitungIsSaving,
   };
 });
 

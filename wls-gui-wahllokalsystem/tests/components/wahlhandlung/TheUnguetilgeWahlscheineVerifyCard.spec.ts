@@ -111,7 +111,8 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_renderWarning_when_noDataIsAvailable", async (context) => {
-      useWahlbezirkStore().ungueltigeWahlscheineGetter.ungueltigeWahlscheineIsEmpty = true;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine =
+        [];
       useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineLoadingFailed = false;
       useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading = false;
 

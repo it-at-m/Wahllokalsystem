@@ -152,7 +152,7 @@ describe("wahlbezirkStore.ts", () => {
         waehlerverzeichnisNummer
       );
 
-      unitUnderTest.loadPflegeWaehlerverzeichnis();
+      unitUnderTest.pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
 
       expect(mockDefinitions.getWaehlerverzeichnis.mock.calls).toStrictEqual([
         [wahlbezirkID, waehlerverzeichnisNummer, true],
@@ -167,7 +167,7 @@ describe("wahlbezirkStore.ts", () => {
         undefined
       );
 
-      unitUnderTest.loadPflegeWaehlerverzeichnis();
+      unitUnderTest.pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
 
       expect(
         mockDefinitions.getWaehlerverzeichnis.mock.calls.length
@@ -409,7 +409,8 @@ describe("wahlbezirkStore.ts", () => {
       );
 
       const pflegeWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
-      unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
+      unitUnderTest.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
+        pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
@@ -425,21 +426,24 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       const sendPflegeWaehlerverzeichnisPromise =
-        unitUnderTest.sendPflegeWaehlerverzeichnis();
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        true
-      );
+        unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendPflegeWaehlerverzeichnisPromise;
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       expect(mockDefinitions.postWaehlerverzeichnis.mock.calls).toStrictEqual([
         [
           userWahlbezirkID,
@@ -456,7 +460,8 @@ describe("wahlbezirkStore.ts", () => {
       );
 
       const pflegeWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
-      unitUnderTest.pflegeWaehlerverzeichnis = pflegeWaehlerverzeichnis;
+      unitUnderTest.pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis =
+        pflegeWaehlerverzeichnis;
 
       const mockedWaehlerverzeichnisNummer = "wvzNummer";
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
@@ -472,21 +477,24 @@ describe("wahlbezirkStore.ts", () => {
         })
       );
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       const sendPflegeWaehlerverzeichnisPromise =
-        unitUnderTest.sendPflegeWaehlerverzeichnis();
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        true
-      );
+        unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await expect(sendPflegeWaehlerverzeichnisPromise).rejects.toThrow();
 
-      expect(unitUnderTest.pflegeWaehlerverzeichnisIsSaving).toStrictEqual(
-        false
-      );
+      expect(
+        unitUnderTest.pflegeWaehlerverzeichnisState
+          .pflegeWaehlerverzeichnisIsSaving
+      ).toStrictEqual(false);
       expect(mockDefinitions.postWaehlerverzeichnis.mock.calls).toStrictEqual([
         [
           userWahlbezirkID,
@@ -501,7 +509,7 @@ describe("wahlbezirkStore.ts", () => {
         undefined
       );
 
-      await unitUnderTest.sendPflegeWaehlerverzeichnis();
+      await unitUnderTest.pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
 
       expect(
         mockDefinitions.postWaehlerverzeichnis.mock.calls.length
@@ -595,9 +603,10 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.urnenwahlVorbereitung = mockedUrnenwahlvorbereitung;
+      unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung =
+        mockedUrnenwahlvorbereitung;
 
-      await unitUnderTest.sendUrnenwahlvorbereitung();
+      await unitUnderTest.urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 
       expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
         wahlbezirkID,
@@ -621,7 +630,8 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.urnenwahlVorbereitung = mockedUrnenwahlvorbereitung;
+      unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung =
+        mockedUrnenwahlvorbereitung;
 
       const mockedError = new Error("Speicherfehler!");
       mockDefinitions.postUrnenwahlvorbereitung.mockImplementationOnce(() => {
@@ -629,7 +639,7 @@ describe("wahlbezirkStore.ts", () => {
       });
 
       try {
-        await unitUnderTest.sendUrnenwahlvorbereitung();
+        await unitUnderTest.urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
       } catch (error) {
         expect(error).equals(mockedError);
         expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
@@ -663,12 +673,17 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.briefwahlVorbereitung = mockedBriefwahlvorbereitung;
+      unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung =
+        mockedBriefwahlvorbereitung;
 
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(false);
       const sendBriefwahlvorbereitungPromise =
-        unitUnderTest.sendBriefwahlvorbereitung();
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(true);
+        unitUnderTest.briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendBriefwahlvorbereitungPromise;
@@ -677,10 +692,12 @@ describe("wahlbezirkStore.ts", () => {
         wahlbezirkID,
         mockedBriefwahlvorbereitung
       );
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.briefwahlVorbereitung).toEqual(
-        mockedBriefwahlvorbereitung
-      );
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(false);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+      ).toEqual(mockedBriefwahlvorbereitung);
     });
 
     it("should_notUpdateBriefwahlVorbereitung_when_postBriefwahlvorbereitungFails", async () => {
@@ -696,7 +713,8 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.briefwahlVorbereitung = mockedBriefwahlvorbereitung;
+      unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung =
+        mockedBriefwahlvorbereitung;
 
       const mockedError = new Error("Speicherfehler!");
       mockDefinitions.postBriefwahlvorbereitung.mockImplementationOnce(() => {
@@ -704,7 +722,7 @@ describe("wahlbezirkStore.ts", () => {
       });
 
       try {
-        await unitUnderTest.sendBriefwahlvorbereitung();
+        await unitUnderTest.briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
       } catch (error) {
         expect(error).equals(mockedError);
         expect(mockDefinitions.postBriefwahlvorbereitung).toHaveBeenCalledWith(

@@ -111,13 +111,115 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
   };
 
-  const pflegeWaehlerverzeichnis = ref<PflegeWaehlerverzeichnis>(
-    createDefaultPflegeWaehlerverzeichnis()
-  );
-  const pflegeWaehlerverzeichnisIsSaving = ref(false);
+  /* --- pflegeWaehlerverzeichnis --- */
+  const pflegeWaehlerverzeichnisState: Ref<{
+    pflegeWaehlerverzeichnis: PflegeWaehlerverzeichnis;
+    pflegeWaehlerverzeichnisIsSaving: boolean;
+  }> = ref({
+    pflegeWaehlerverzeichnis: createDefaultPflegeWaehlerverzeichnis(),
+    pflegeWaehlerverzeichnisIsSaving: false,
+  });
 
-  const urnenWahlVorbereitungIsSaving = ref(false);
-  const briefWahlVorbereitungIsSaving = ref(false);
+  const pflegeWaehlerverzeichnisActions = {
+    loadPflegeWaehlerverzeichnis: async function loadPflegeWaehlerverzeichnis(
+      sendNotification = true
+    ) {
+      const waehlerverzeichnisNummer =
+        getWaehlerverzeichnisNummerOrUndefinedById(
+          currentUserHauptWahlID.value
+        );
+      if (waehlerverzeichnisNummer !== undefined) {
+        pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis =
+          await getWaehlerverzeichnis(
+            currentUserWahlbezirkID.value,
+            waehlerverzeichnisNummer,
+            sendNotification
+          );
+      }
+    },
+    sendPflegeWaehlerverzeichnis:
+      async function sendPflegeWaehlerverzeichnis() {
+        const waehlerverzeichnisNummer =
+          getWaehlerverzeichnisNummerOrUndefinedById(
+            currentUserHauptWahlID.value
+          );
+        if (waehlerverzeichnisNummer !== undefined) {
+          try {
+            pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = true;
+            await postWaehlerverzeichnis(
+              currentUserWahlbezirkID.value,
+              waehlerverzeichnisNummer,
+              pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnis
+            );
+          } finally {
+            pflegeWaehlerverzeichnisState.value.pflegeWaehlerverzeichnisIsSaving = false;
+          }
+        }
+      },
+  };
+
+  /* --- urnenWahlVorbereitung --- */
+  const urnenwahlVorbereitungState: Ref<{
+    urnenwahlVorbereitung: Urnenwahlvorbereitung;
+    urnenwahlVorbereitungIsSaving: boolean;
+  }> = ref({
+    urnenwahlVorbereitung: {
+      anzahlNebenraeume: null,
+      anzahlWahlkabinen: null,
+      anzahlWahltische: null,
+      urneVersiegelt: false,
+      wahlbezirkID: currentUserWahlbezirkID.value,
+      urnenAnzahl: [],
+    },
+    urnenwahlVorbereitungIsSaving: false,
+  });
+
+  const urnenwahlVorbereitungActions = {
+    sendUrnenwahlvorbereitung: async function sendUrnenwahlvorbereitung() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = true;
+      try {
+        if (wahlbezirkID) {
+          await postUrnenwahlvorbereitung(
+            wahlbezirkID,
+            urnenwahlVorbereitungState.value.urnenwahlVorbereitung
+          );
+        }
+      } finally {
+        urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = false;
+      }
+    },
+  };
+
+  /* --- briefwahlVorbereitung --- */
+  const briefwahlVorbereitungState: Ref<{
+    briefwahlVorbereitung: Wahlvorbereitung;
+    briefWahlVorbereitungIsSaving: boolean;
+  }> = ref({
+    briefwahlVorbereitung: {
+      urneVersiegelt: false,
+      wahlbezirkID: currentUserWahlbezirkID.value,
+      urnenAnzahl: [],
+    },
+    briefWahlVorbereitungIsSaving: false,
+  });
+
+  const briefwahlVorbereitungActions = {
+    sendBriefwahlvorbereitung: async function sendBriefwahlvorbereitung() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = true;
+      try {
+        if (wahlbezirkID) {
+          await postBriefwahlvorbereitung(
+            wahlbezirkID,
+            briefwahlVorbereitungState.value.briefwahlVorbereitung
+          );
+        }
+      } finally {
+        briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = false;
+      }
+    },
+  };
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
   const ungueltigeWahlscheineIsLoading = ref(false);
   const ungueltigeWahlscheineLoadingFailed = ref(false);
@@ -132,34 +234,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     nachtraege: undefined,
     nachtraeglichUeberbrachte: undefined,
     zeitNachtraeglichUeberbrachte: undefined,
-  });
-
-  const urnenwahlVorbereitung = ref<Urnenwahlvorbereitung>({
-    anzahlNebenraeume: null,
-    anzahlWahlkabinen: null,
-    anzahlWahltische: null,
-    urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirkID.value,
-    urnenAnzahl: [],
-  });
-
-  const briefwahlVorbereitung = ref<Wahlvorbereitung>({
-    urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirkID.value,
-    urnenAnzahl: [],
-  });
-
-  watch(wahlen, () => {
-    urnenwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-    briefwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
   });
 
   function getUngueltigerWahlscheinByWahlscheinnummer(
@@ -187,19 +261,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     );
   }
 
-  async function loadPflegeWaehlerverzeichnis(sendNotification = true) {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
-      currentUserHauptWahlID.value
-    );
-    if (waehlerverzeichnisNummer !== undefined) {
-      pflegeWaehlerverzeichnis.value = await getWaehlerverzeichnis(
-        currentUserWahlbezirkID.value,
-        waehlerverzeichnisNummer,
-        sendNotification
-      );
-    }
-  }
-
   async function loadUngueltigeWahlscheine() {
     ungueltigeWahlscheineIsLoading.value = true;
     ungueltigeWahlscheineLoadingFailed.value = false;
@@ -217,39 +278,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendPflegeWaehlerverzeichnis() {
-    const waehlerverzeichnisNummer = getWaehlerverzeichnisNummerOrUndefinedById(
-      currentUserHauptWahlID.value
-    );
-    if (waehlerverzeichnisNummer !== undefined) {
-      try {
-        pflegeWaehlerverzeichnisIsSaving.value = true;
-        await postWaehlerverzeichnis(
-          currentUserWahlbezirkID.value,
-          waehlerverzeichnisNummer,
-          pflegeWaehlerverzeichnis.value
-        );
-      } finally {
-        pflegeWaehlerverzeichnisIsSaving.value = false;
-      }
-    }
-  }
-
-  async function sendUrnenwahlvorbereitung() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    urnenWahlVorbereitungIsSaving.value = true;
-    try {
-      if (wahlbezirkID) {
-        await postUrnenwahlvorbereitung(
-          wahlbezirkID,
-          urnenwahlVorbereitung.value
-        );
-      }
-    } finally {
-      urnenWahlVorbereitungIsSaving.value = false;
-    }
-  }
-
   async function sendWahlbriefdaten() {
     const wahlbezirkID = currentUserWahlbezirkID.value;
     wahlbriefDatenIsSaving.value = true;
@@ -260,47 +288,42 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendBriefwahlvorbereitung() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    briefWahlVorbereitungIsSaving.value = true;
-    try {
-      if (wahlbezirkID) {
-        await postBriefwahlvorbereitung(
-          wahlbezirkID,
-          briefwahlVorbereitung.value
-        );
-      }
-    } finally {
-      briefWahlVorbereitungIsSaving.value = false;
-    }
-  }
+  /* --- watcher --- */
+  watch(wahlen, () => {
+    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+    briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+  });
 
   return {
     eroeffnungsuhrzeitState,
     eroeffnungsuhrzeitActions,
     schliessungsuhrzeitState,
     schliessungsuhrzeitActions,
-    pflegeWaehlerverzeichnis,
-    pflegeWaehlerverzeichnisIsSaving,
+    pflegeWaehlerverzeichnisState,
+    pflegeWaehlerverzeichnisActions,
+    urnenwahlVorbereitungState,
+    urnenwahlVorbereitungActions,
+    briefwahlVorbereitungState,
+    briefwahlVorbereitungActions,
     ungueltigeWahlscheine,
     ungueltigeWahlscheineIsLoading,
     ungueltigeWahlscheineIsEmpty,
     ungueltigeWahlscheineLoadingFailed,
     getUngueltigerWahlscheinByWahlscheinnummer,
     initUngueltigeWahlscheine,
-    loadPflegeWaehlerverzeichnis,
     loadUngueltigeWahlscheine,
-    sendPflegeWaehlerverzeichnis,
-    sendUrnenwahlvorbereitung,
-    urnenwahlVorbereitung,
-    urnenWahlVorbereitungIsSaving,
     initWahlbriefdaten,
     sendWahlbriefdaten,
     wahlbriefDaten,
     wahlbriefDatenIsSaving,
-    sendBriefwahlvorbereitung,
-    briefwahlVorbereitung,
-    briefWahlVorbereitungIsSaving,
   };
 });
 

@@ -24,7 +24,7 @@
 ### Frontend
 - [ ] [Naming Conventions][naming-conventions-link] beachtet
 - [ ] Doku aktualisiert
-  - [Fachliche Beschreibung}[fachliche-beschreibung-link]
+  - [Fachliche Beschreibung][fachliche-beschreibung-link]
 - [ ] Unit-Tests gepflegt
 - [ ] Komponententests gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft

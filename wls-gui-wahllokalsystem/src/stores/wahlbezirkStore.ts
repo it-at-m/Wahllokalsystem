@@ -290,7 +290,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   /* --- watcher --- */
   watch(wahlen, () => {
-      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
       wahlen.value?.map((wahl) => ({
         wahlID: wahl.wahlID,
         anzahl: null,

@@ -17,17 +17,6 @@ import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUng
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-/*const mockDefinitions = vi.hoisted(() => ({
-  getUngueltigerWahlscheinByWahlscheinnummer: vi.fn(),
-}));
-
-vi.mock("@/stores/wahlbezirkStore.ts", () => ({
-  useWahlbezirkStore: vi.fn().mockImplementation(() => ({
-    getUngueltigerWahlscheinByWahlscheinnummer:
-      mockDefinitions.getUngueltigerWahlscheinByWahlscheinnummer,
-  })),
-}));*/
-
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
 
@@ -237,7 +226,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       wahlbezirkStore.ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
         vi.fn(() => {
-          return createUngueltigerWahlschein(); // Deine Mock-Implementierung
+          return createUngueltigerWahlschein();
         });
 
       expect(wahlscheinnummerInput.vm.value).toStrictEqual("123");

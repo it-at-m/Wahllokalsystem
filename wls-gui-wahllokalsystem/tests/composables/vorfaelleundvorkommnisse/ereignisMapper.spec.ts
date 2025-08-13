@@ -52,8 +52,8 @@ describe("ereignisMapper.ts", () => {
 
       const expectedResult: EreignisseWriteDTO = {
         ereigniseintraege: getEreignisseDTO(
-          "2025-04-28T08:15:00",
-          "2025-04-28T11:40:00"
+          "2025-04-28T08:15:00.000",
+          "2025-04-28T11:40:00.000"
         ),
         keineVorfaelle: false,
         keineVorkommnisse: false,
@@ -70,8 +70,8 @@ describe("ereignisMapper.ts", () => {
 
       const expectedResult: EreignisseWriteDTO = {
         ereigniseintraege: getEreignisseDTO(
-          "2025-04-28T08:15:00",
-          "2025-04-28T11:40:00"
+          "2025-04-28T08:15:00.000",
+          "2025-04-28T11:40:00.000"
         ),
         keineVorfaelle: true,
         keineVorkommnisse: true,
@@ -80,8 +80,8 @@ describe("ereignisMapper.ts", () => {
     });
   });
 
-  it("should_haveEqualUhrzeitStringWithPrecissionOfSeconds_when_readingDTOAndProducingDTOWithCreatedModel", () => {
-    const uhrzeit = "2025-08-13T16:01:23";
+  it("should_haveEqualUhrzeitString_when_readingDTOAndProducingDTOWithCreatedModel", () => {
+    const uhrzeit = "2025-08-13T16:01:23.123";
     const dtoToMap = prepareWahlbezirkEreignisseDTO()
       .ereigniseintraege([prepareEreignisDTO().uhrzeit(uhrzeit).build()])
       .build();

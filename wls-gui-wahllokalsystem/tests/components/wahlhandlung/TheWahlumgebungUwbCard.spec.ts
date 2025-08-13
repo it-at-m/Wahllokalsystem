@@ -101,7 +101,7 @@ describe("TheWahlumgebungUwbCard.vue", () => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
       wahlenStore.wahlen = validWahlen;
-      wahlbezirkStore.urnenWahlVorbereitungState.urnenwahlVorbereitung =
+      wahlbezirkStore.urnenwahlVorbereitungState.urnenwahlVorbereitung =
         validUrnenwahlVorbereitung;
 
       const wrapper = mount(TheWahlumgebungUwbCard, {

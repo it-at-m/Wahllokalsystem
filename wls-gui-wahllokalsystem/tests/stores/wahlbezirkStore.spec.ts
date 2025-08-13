@@ -603,10 +603,10 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.urnenWahlVorbereitungState.urnenwahlVorbereitung =
+      unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung =
         mockedUrnenwahlvorbereitung;
 
-      await unitUnderTest.urnenWahlVorbereitungActions.sendUrnenwahlvorbereitung();
+      await unitUnderTest.urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 
       expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(
         wahlbezirkID,
@@ -630,7 +630,7 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.urnenWahlVorbereitungState.urnenwahlVorbereitung =
+      unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung =
         mockedUrnenwahlvorbereitung;
 
       const mockedError = new Error("Speicherfehler!");
@@ -639,7 +639,7 @@ describe("wahlbezirkStore.ts", () => {
       });
 
       try {
-        await unitUnderTest.urnenWahlVorbereitungActions.sendUrnenwahlvorbereitung();
+        await unitUnderTest.urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
       } catch (error) {
         expect(error).equals(mockedError);
         expect(mockDefinitions.postUrnenwahlvorbereitung).toHaveBeenCalledWith(

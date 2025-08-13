@@ -9,12 +9,12 @@
         >
           <base-wahlumgebung-wahlurnen-div
             :wahl-vorbereitung="
-              urnenWahlVorbereitungState.urnenwahlVorbereitung
+              urnenwahlVorbereitungState.urnenwahlVorbereitung
             "
           />
           <v-checkbox
             v-model="
-              urnenWahlVorbereitungState.urnenwahlVorbereitung.urneVersiegelt
+              urnenwahlVorbereitungState.urnenwahlVorbereitung.urneVersiegelt
             "
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
@@ -31,7 +31,7 @@
             <div>
               <v-number-input
                 v-model="
-                  urnenWahlVorbereitungState.urnenwahlVorbereitung
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahltische
                 "
                 class="mr-4"
@@ -45,7 +45,7 @@
             <div>
               <v-number-input
                 v-model="
-                  urnenWahlVorbereitungState.urnenwahlVorbereitung
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlNebenraeume
                 "
                 class="mr-4"
@@ -59,7 +59,7 @@
             <div>
               <v-number-input
                 v-model="
-                  urnenWahlVorbereitungState.urnenwahlVorbereitung
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahlkabinen
                 "
                 class="mr-4"
@@ -86,7 +86,7 @@
         <base-button-save
           active
           :disabled="isSaveButtonDisabled"
-          :loading="urnenWahlVorbereitungState.urnenWahlVorbereitungIsSaving"
+          :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
@@ -111,14 +111,14 @@ const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { urnenWahlVorbereitungActions } = useWahlbezirkStore();
-const { urnenWahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
+const { urnenwahlVorbereitungActions } = useWahlbezirkStore();
+const { urnenwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
     abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !urnenWahlVorbereitungState.value.urnenwahlVorbereitung.urneVersiegelt ||
+    !urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urneVersiegelt ||
     isMinimumRequired.value
   );
 });
@@ -126,15 +126,15 @@ const isSaveButtonDisabled = computed(() => {
 const isMinimumRequired = computed(() => {
   const tischeSichtblenden =
     Number(
-      urnenWahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahltische
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahltische
     ) || 0;
   const nebenraeumeWahlraum =
     Number(
-      urnenWahlVorbereitungState.value.urnenwahlVorbereitung.anzahlNebenraeume
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlNebenraeume
     ) || 0;
   const wahlkabinen =
     Number(
-      urnenWahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahlkabinen
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahlkabinen
     ) || 0;
 
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
@@ -148,6 +148,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungUWBClicked() {
-  urnenWahlVorbereitungActions.sendUrnenwahlvorbereitung();
+  urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 }
 </script>

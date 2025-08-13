@@ -159,9 +159,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 
   /* --- urnenWahlVorbereitung --- */
-  const urnenWahlVorbereitungState: Ref<{
+  const urnenwahlVorbereitungState: Ref<{
     urnenwahlVorbereitung: Urnenwahlvorbereitung;
-    urnenWahlVorbereitungIsSaving: boolean;
+    urnenwahlVorbereitungIsSaving: boolean;
   }> = ref({
     urnenwahlVorbereitung: {
       anzahlNebenraeume: null,
@@ -171,22 +171,22 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       wahlbezirkID: currentUserWahlbezirkID.value,
       urnenAnzahl: [],
     },
-    urnenWahlVorbereitungIsSaving: false,
+    urnenwahlVorbereitungIsSaving: false,
   });
 
-  const urnenWahlVorbereitungActions = {
+  const urnenwahlVorbereitungActions = {
     sendUrnenwahlvorbereitung: async function sendUrnenwahlvorbereitung() {
       const wahlbezirkID = currentUserWahlbezirkID.value;
-      urnenWahlVorbereitungState.value.urnenWahlVorbereitungIsSaving = true;
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = true;
       try {
         if (wahlbezirkID) {
           await postUrnenwahlvorbereitung(
             wahlbezirkID,
-            urnenWahlVorbereitungState.value.urnenwahlVorbereitung
+            urnenwahlVorbereitungState.value.urnenwahlVorbereitung
           );
         }
       } finally {
-        urnenWahlVorbereitungState.value.urnenWahlVorbereitungIsSaving = false;
+        urnenwahlVorbereitungState.value.urnenwahlVorbereitungIsSaving = false;
       }
     },
   };
@@ -284,7 +284,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   /* --- watcher --- */
   watch(wahlen, () => {
-    urnenWahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
       wahlen.value?.map((wahl) => ({
         wahlID: wahl.wahlID,
         anzahl: null,
@@ -303,8 +303,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitActions,
     pflegeWaehlerverzeichnisState,
     pflegeWaehlerverzeichnisActions,
-    urnenWahlVorbereitungState,
-    urnenWahlVorbereitungActions,
+    urnenwahlVorbereitungState,
+    urnenwahlVorbereitungActions,
     ungueltigeWahlscheine,
     ungueltigeWahlscheineIsLoading,
     ungueltigeWahlscheineIsEmpty,

@@ -17,6 +17,16 @@ import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUng
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  getUngueltigeWahlscheine: vi.fn(),
+}));
+
+vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
+  useUngueltigeWahlscheineService: () => ({
+    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+  }),
+}));
+
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
 
@@ -73,7 +83,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await wahlscheinnummerInput.setValue(123);
       await wahlscheinnummerInput.vm.validate();
 
-      useWahlbezirkStore().ungueltigeWahlscheine = [
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
         prepareUngueltigerWahlschein().wahlscheinnummer("1").build(),
       ];
 
@@ -92,7 +102,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await wahlscheinnummerInput.setValue(123);
       await wahlscheinnummerInput.vm.validate();
 
-      useWahlbezirkStore().ungueltigeWahlscheine = [
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
         prepareUngueltigerWahlschein()
           .vorname("testerich")
           .familienname("testuser")
@@ -111,10 +121,10 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_renderWarning_when_noDataIsAvailable", async (context) => {
-      // @ts-expect-error: cannot set readonly
-      useWahlbezirkStore().ungueltigeWahlscheineIsEmpty = true;
-      useWahlbezirkStore().ungueltigeWahlscheineLoadingFailed = false;
-      useWahlbezirkStore().ungueltigeWahlscheineIsLoading = false;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine =
+        [];
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineLoadingFailed = false;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading = false;
 
       await flushPromises();
 
@@ -124,8 +134,8 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_renderWarning_when_noLoadingOfListeFailed", async (context) => {
-      useWahlbezirkStore().ungueltigeWahlscheineLoadingFailed = true;
-      useWahlbezirkStore().ungueltigeWahlscheineIsLoading = false;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineLoadingFailed = true;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading = false;
 
       await flushPromises();
 
@@ -135,7 +145,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_renderRefreshButtonInLoadingState_when_ungueltigeWahlscheineLoadingIsTrue", async (context) => {
-      useWahlbezirkStore().ungueltigeWahlscheineIsLoading = true;
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading = true;
 
       await flushPromises();
 
@@ -207,12 +217,15 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await wahlscheinnummerInput.setValue(123);
       await wahlscheinnummerInput.vm.validate();
 
+      const getWahlscheinSpy = vi.spyOn(
+        useWahlbezirkStore().ungueltigeWahlscheineActions,
+        "getUngueltigerWahlscheinByWahlscheinnummer"
+      );
+
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
 
-      expect(
-        useWahlbezirkStore().getUngueltigerWahlscheinByWahlscheinnummer
-      ).toHaveBeenCalledWith("123");
+      expect(getWahlscheinSpy).toHaveBeenCalledWith("123");
     });
 
     it("should_triggerResetWahlscheinnummerInput_when_searchButtonIsClickedAndASearchWasDoneBefore", async () => {
@@ -222,13 +235,11 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await wahlscheinnummerInput.setValue(123);
       await wahlscheinnummerInput.vm.validate();
 
-      (
-        wahlbezirkStore.getUngueltigerWahlscheinByWahlscheinnummer as ReturnType<
-          typeof vi.fn
-        >
-      ).mockImplementation(() => {
-        return createUngueltigerWahlschein();
-      });
+      wahlbezirkStore.ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
+        vi.fn(() => {
+          return createUngueltigerWahlschein();
+        });
+
       expect(wahlscheinnummerInput.vm.value).toStrictEqual("123");
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
@@ -241,10 +252,17 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     });
 
     it("should_triggerLoadUngueltigeWahlscheine_when_refreshWasClicked", async () => {
+      const loadWahlscheinSpy = vi.spyOn(
+        useWahlbezirkStore().ungueltigeWahlscheineActions,
+        "loadUngueltigeWahlscheine"
+      );
+
+      mockDefinitions.getUngueltigeWahlscheine.mockReturnValue([]);
+
       const refreshButton = getRefreshButton();
       await refreshButton.trigger("click");
 
-      expect(useWahlbezirkStore().loadUngueltigeWahlscheine).toHaveBeenCalled();
+      expect(loadWahlscheinSpy).toHaveBeenCalled();
     });
   });
 

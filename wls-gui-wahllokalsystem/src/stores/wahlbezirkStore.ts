@@ -279,30 +279,40 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
   };
 
-  const wahlbriefDatenIsSaving = ref(false);
-  const wahlbriefDaten = ref<Wahlbriefdaten>({
-    wahlbriefe: undefined,
-    verzeichnisseUngueltige: undefined,
-    nachtraege: undefined,
-    nachtraeglichUeberbrachte: undefined,
-    zeitNachtraeglichUeberbrachte: undefined,
+  /* --- wahlbriefDaten --- */
+  const wahlbriefDatenState: Ref<{
+    wahlbriefDaten: Wahlbriefdaten;
+    wahlbriefDatenIsSaving: boolean;
+  }> = ref({
+    wahlbriefDaten: {
+      wahlbriefe: undefined,
+      verzeichnisseUngueltige: undefined,
+      nachtraege: undefined,
+      nachtraeglichUeberbrachte: undefined,
+      zeitNachtraeglichUeberbrachte: undefined,
+    },
+    wahlbriefDatenIsSaving: false,
   });
 
-  async function initWahlbriefdaten() {
-    wahlbriefDaten.value = await getWahlbriefdaten(
-      currentUserWahlbezirkID.value
-    );
-  }
-
-  async function sendWahlbriefdaten() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    wahlbriefDatenIsSaving.value = true;
-    try {
-      await postWahlbriefdaten(wahlbezirkID, wahlbriefDaten.value);
-    } finally {
-      wahlbriefDatenIsSaving.value = false;
-    }
-  }
+  const wahlbriefDatenActions = {
+    initWahlbriefdaten: async function initWahlbriefdaten() {
+      wahlbriefDatenState.value.wahlbriefDaten = await getWahlbriefdaten(
+        currentUserWahlbezirkID.value
+      );
+    },
+    sendWahlbriefdaten: async function sendWahlbriefdaten() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      wahlbriefDatenState.value.wahlbriefDatenIsSaving = true;
+      try {
+        await postWahlbriefdaten(
+          wahlbezirkID,
+          wahlbriefDatenState.value.wahlbriefDaten
+        );
+      } finally {
+        wahlbriefDatenState.value.wahlbriefDatenIsSaving = false;
+      }
+    },
+  };
 
   /* --- watcher --- */
   watch(wahlen, () => {
@@ -332,10 +342,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     ungueltigeWahlscheineState,
     ungueltigeWahlscheineGetter,
     ungueltigeWahlscheineActions,
-    initWahlbriefdaten,
-    sendWahlbriefdaten,
-    wahlbriefDaten,
-    wahlbriefDatenIsSaving,
+    wahlbriefDatenState,
+    wahlbriefDatenActions,
   };
 });
 

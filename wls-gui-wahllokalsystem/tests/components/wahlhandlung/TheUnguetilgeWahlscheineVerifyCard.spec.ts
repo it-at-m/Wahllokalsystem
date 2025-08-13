@@ -17,6 +17,16 @@ import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUng
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  getUngueltigeWahlscheine: vi.fn(),
+}));
+
+vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
+  useUngueltigeWahlscheineService: () => ({
+    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+  }),
+}));
+
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
 
@@ -246,6 +256,8 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         useWahlbezirkStore().ungueltigeWahlscheineActions,
         "loadUngueltigeWahlscheine"
       );
+
+      mockDefinitions.getUngueltigeWahlscheine.mockReturnValue([]);
 
       const refreshButton = getRefreshButton();
       await refreshButton.trigger("click");

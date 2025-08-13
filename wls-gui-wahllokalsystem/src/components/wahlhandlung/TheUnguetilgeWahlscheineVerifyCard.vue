@@ -90,7 +90,7 @@
         >{{ searchButtonLabel }}</v-btn
       >
       <base-button-refresh
-        :loading="ungueltigeWahlscheineIsLoading"
+        :loading="ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading"
         @click="onRefreshClicked"
       />
     </v-card-actions>
@@ -118,15 +118,9 @@ const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
 ) as Readonly<ShallowRef<InstanceType<typeof VForm>>>;
 
-const {
-  getUngueltigerWahlscheinByWahlscheinnummer,
-  loadUngueltigeWahlscheine,
-} = useWahlbezirkStore();
-const {
-  ungueltigeWahlscheineIsLoading,
-  ungueltigeWahlscheineIsEmpty,
-  ungueltigeWahlscheineLoadingFailed,
-} = storeToRefs(useWahlbezirkStore());
+const { ungueltigeWahlscheineActions } = useWahlbezirkStore();
+const { ungueltigeWahlscheineState, ungueltigeWahlscheineGetter } =
+  storeToRefs(useWahlbezirkStore());
 
 const wahlscheinnummer = ref<null | number>(null);
 //null - no hit on search
@@ -138,14 +132,14 @@ const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>
-    ungueltigeWahlscheineIsEmpty.value &&
-    !ungueltigeWahlscheineLoadingFailed.value &&
-    !ungueltigeWahlscheineIsLoading.value
+    ungueltigeWahlscheineGetter.value.ungueltigeWahlscheineIsEmpty &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading
 );
 const feedbackLoadingFailedIsVisible = computed(
   () =>
-    ungueltigeWahlscheineLoadingFailed.value &&
-    !ungueltigeWahlscheineIsLoading.value
+    ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading
 );
 const feedbackWahlscheinIsGueltigIsVisible = computed(
   () => ungueltigerWahlschein.value === null
@@ -161,7 +155,7 @@ const titleFeedbackWahlscheinUngueltig = computed(() => {
 });
 
 function onRefreshClicked() {
-  loadUngueltigeWahlscheine();
+  ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
 }
 
 function onSearchClicked() {
@@ -169,9 +163,10 @@ function onSearchClicked() {
     resetUngueltigerWahlschein();
     wahlscheinValidationForm.value.reset();
   } else if (wahlscheinnummer.value !== null) {
-    ungueltigerWahlschein.value = getUngueltigerWahlscheinByWahlscheinnummer(
-      `${wahlscheinnummer.value}`
-    );
+    ungueltigerWahlschein.value =
+      ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer(
+        `${wahlscheinnummer.value}`
+      );
   }
 }
 

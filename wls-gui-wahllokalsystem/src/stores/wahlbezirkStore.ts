@@ -160,12 +160,64 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   const urnenWahlVorbereitungIsSaving = ref(false);
   const briefWahlVorbereitungIsSaving = ref(false);
-  const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
-  const ungueltigeWahlscheineIsLoading = ref(false);
-  const ungueltigeWahlscheineLoadingFailed = ref(false);
-  const ungueltigeWahlscheineIsEmpty = computed(
-    () => ungueltigeWahlscheine.value.length === 0
-  );
+
+  /* --- ungueltigeWahlscheine --- */
+  const ungueltigeWahlscheineState: Ref<{
+    ungueltigeWahlscheine: UngueltigerWahlschein[];
+    ungueltigeWahlscheineIsLoading: boolean;
+    ungueltigeWahlscheineLoadingFailed: boolean;
+  }> = ref({
+    ungueltigeWahlscheine: [],
+    ungueltigeWahlscheineIsLoading: false,
+    ungueltigeWahlscheineLoadingFailed: false,
+  });
+
+  const ungueltigeWahlscheineGetter = computed(() => ({
+    ungueltigeWahlscheineIsEmpty:
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine.length === 0,
+  }));
+
+  const ungueltigeWahlscheineActions = {
+    getUngueltigerWahlscheinByWahlscheinnummer:
+      function getUngueltigerWahlscheinByWahlscheinnummer(
+        wahlscheinNummer: string
+      ) {
+        return (
+          ungueltigeWahlscheineState.value.ungueltigeWahlscheine.find(
+            (ungueltigerWahlschein) =>
+              ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
+          ) ?? null
+        );
+      },
+    initUngueltigeWahlscheine: async function initUngueltigeWahlscheine(
+      sendNotification = true
+    ) {
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
+        await getUngueltigeWahlscheine(
+          currentUserWahltagID.value,
+          currentUserWahlbezirksArt.value,
+          sendNotification
+        );
+    },
+    loadUngueltigeWahlscheine: async function loadUngueltigeWahlscheine() {
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = true;
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = false;
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine = [];
+
+      try {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
+          await getUngueltigeWahlscheine(
+            currentUserWahltagID.value,
+            currentUserWahlbezirksArt.value,
+            true
+          );
+      } catch {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = true;
+      } finally {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = false;
+      }
+    },
+  };
 
   const wahlbriefDatenIsSaving = ref(false);
   const wahlbriefDaten = ref<Wahlbriefdaten>({
@@ -204,46 +256,10 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       })) || [];
   });
 
-  function getUngueltigerWahlscheinByWahlscheinnummer(
-    wahlscheinNummer: string
-  ) {
-    return (
-      ungueltigeWahlscheine.value.find(
-        (ungueltigerWahlschein) =>
-          ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
-      ) ?? null
-    );
-  }
-
-  async function initUngueltigeWahlscheine(sendNotification = true) {
-    ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-      currentUserWahltagID.value,
-      currentUserWahlbezirksArt.value,
-      sendNotification
-    );
-  }
-
   async function initWahlbriefdaten() {
     wahlbriefDaten.value = await getWahlbriefdaten(
       currentUserWahlbezirkID.value
     );
-  }
-
-  async function loadUngueltigeWahlscheine() {
-    ungueltigeWahlscheineIsLoading.value = true;
-    ungueltigeWahlscheineLoadingFailed.value = false;
-    ungueltigeWahlscheine.value = [];
-    try {
-      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-        currentUserWahltagID.value,
-        currentUserWahlbezirksArt.value,
-        true
-      );
-    } catch {
-      ungueltigeWahlscheineLoadingFailed.value = true;
-    } finally {
-      ungueltigeWahlscheineIsLoading.value = false;
-    }
   }
 
   async function sendUrnenwahlvorbereitung() {
@@ -293,13 +309,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitActions,
     pflegeWaehlerverzeichnisState,
     pflegeWaehlerverzeichnisActions,
-    ungueltigeWahlscheine,
-    ungueltigeWahlscheineIsLoading,
-    ungueltigeWahlscheineIsEmpty,
-    ungueltigeWahlscheineLoadingFailed,
-    getUngueltigerWahlscheinByWahlscheinnummer,
-    initUngueltigeWahlscheine,
-    loadUngueltigeWahlscheine,
+    ungueltigeWahlscheineState,
+    ungueltigeWahlscheineGetter,
+    ungueltigeWahlscheineActions,
     sendUrnenwahlvorbereitung,
     urnenwahlVorbereitung,
     urnenWahlVorbereitungIsSaving,

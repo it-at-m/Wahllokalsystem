@@ -26,9 +26,11 @@ describe("wahlbeteiligungMapper.ts", () => {
         uhrzeit: date,
       };
 
+      mockDefinitions.isValidDate.mockReturnValue(true);
+
       const expectedResult: WaehleranzahlDTO = {
         anzahlWaehler: 17,
-        uhrzeit: date.toJSON(),
+        uhrzeit: "2025-05-23T18:00:00.000",
       };
 
       const result = toDto(wahlbeteiligungToMap);

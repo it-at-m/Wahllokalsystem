@@ -7,7 +7,6 @@ const mockedNow = new Date();
 describe("dateTimeFormatter.ts", () => {
   const {
     time,
-    applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,
     toGermanDateWithLongMonth,
@@ -52,28 +51,6 @@ describe("dateTimeFormatter.ts", () => {
       const result = time(dateWithoutTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
-    });
-  });
-
-  describe("applyLocalTimezoneOffset", () => {
-    it.each([
-      { time: "2025-04-29T12:12:07.855Z", when: "DateString" },
-      { time: new Date("2025-04-29T12:12:07.855Z"), when: "Date" },
-    ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
-      const result = applyLocalTimezoneOffset(time);
-
-      const utcDate = new Date(time);
-      const localOffset = utcDate.getTimezoneOffset() * 60000;
-      const expectedDate = new Date(utcDate.getTime() - localOffset);
-
-      expect(result.toISOString()).toEqual(expectedDate.toISOString());
-    });
-
-    it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
-      const result = applyLocalTimezoneOffset("text");
-
-      expect(result).toBeInstanceOf(Date);
-      expect(isNaN(result.getTime())).toBe(true);
     });
   });
 

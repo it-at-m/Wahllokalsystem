@@ -673,12 +673,17 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.briefwahlVorbereitung = mockedBriefwahlvorbereitung;
+      unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung =
+        mockedBriefwahlvorbereitung;
 
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(false);
       const sendBriefwahlvorbereitungPromise =
-        unitUnderTest.sendBriefwahlvorbereitung();
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(true);
+        unitUnderTest.briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(true);
 
       vi.advanceTimersByTime(timeout);
       await sendBriefwahlvorbereitungPromise;
@@ -687,10 +692,12 @@ describe("wahlbezirkStore.ts", () => {
         wahlbezirkID,
         mockedBriefwahlvorbereitung
       );
-      expect(unitUnderTest.briefWahlVorbereitungIsSaving).toStrictEqual(false);
-      expect(unitUnderTest.briefwahlVorbereitung).toEqual(
-        mockedBriefwahlvorbereitung
-      );
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+      ).toStrictEqual(false);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+      ).toEqual(mockedBriefwahlvorbereitung);
     });
 
     it("should_notUpdateBriefwahlVorbereitung_when_postBriefwahlvorbereitungFails", async () => {
@@ -706,7 +713,8 @@ describe("wahlbezirkStore.ts", () => {
           { wahlID: "wahlID2", anzahl: 1 },
         ],
       };
-      unitUnderTest.briefwahlVorbereitung = mockedBriefwahlvorbereitung;
+      unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung =
+        mockedBriefwahlvorbereitung;
 
       const mockedError = new Error("Speicherfehler!");
       mockDefinitions.postBriefwahlvorbereitung.mockImplementationOnce(() => {
@@ -714,7 +722,7 @@ describe("wahlbezirkStore.ts", () => {
       });
 
       try {
-        await unitUnderTest.sendBriefwahlvorbereitung();
+        await unitUnderTest.briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
       } catch (error) {
         expect(error).equals(mockedError);
         expect(mockDefinitions.postBriefwahlvorbereitung).toHaveBeenCalledWith(

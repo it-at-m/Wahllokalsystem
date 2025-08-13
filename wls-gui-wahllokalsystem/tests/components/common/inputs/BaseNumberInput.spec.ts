@@ -13,8 +13,10 @@ import { VTextField } from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import pinia from "@/plugins/pinia";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 describe("BaseNumberInput.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -55,7 +57,7 @@ describe("BaseNumberInput.vue", () => {
     });
 
     it("should_renderErrorMessage_when_ruleRequiredIsViolated", async (context) => {
-      const rules = [REQUIRED];
+      const rules = [required];
       const errorMessage = "Feld darf nicht leer sein.";
 
       await wrapper.setProps({ rules: rules, modelValue: 10 });
@@ -69,7 +71,7 @@ describe("BaseNumberInput.vue", () => {
     });
 
     it("should_renderErrorMessage_when_ruleMinNumberIsViolated", async (context) => {
-      const rules = [MIN_NUMBER(5)];
+      const rules = [minNumber(5)];
       const errorMessage = "Eingabe darf nicht kleiner als 5 sein.";
 
       await wrapper.setProps({ rules: rules, modelValue: 2 });
@@ -82,7 +84,7 @@ describe("BaseNumberInput.vue", () => {
     });
 
     it("should_renderErrorMessage_when_ruleMaxNumberIsViolated", async (context) => {
-      const rules = [MAX_NUMBER(5)];
+      const rules = [maxNumber(5)];
       const errorMessage = "Eingabe darf nicht größer als 5 sein.";
 
       await wrapper.setProps({ rules: rules, modelValue: 7 });

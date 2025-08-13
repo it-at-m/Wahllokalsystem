@@ -10,10 +10,10 @@
             class="mt-5"
             max-width="300"
             :rules="[
-              REQUIRED,
-              TIME_NOT_IN_FUTURE,
-              TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeit),
-              TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+              required,
+              timeNotInFuture,
+              timeGreaterOrEqual(fruehesteEroeffnungsuhrzeit),
+              timeLessOrEqual(fruehesteSchliessungsuhrzeit),
             ]"
           />
         </v-form>
@@ -56,16 +56,14 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  REQUIRED,
-  TIME_GREATER_OR_EQUAL,
-  TIME_LESS_OR_EQUAL,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
+
+const { required, timeGreaterOrEqual, timeLessOrEqual, timeNotInFuture } =
+  useRules();
 
 const { getDateFromTimeString, toHhMm } = useDateTimeFormatter();
 

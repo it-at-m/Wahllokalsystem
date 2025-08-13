@@ -71,7 +71,7 @@ describe("ereignisStore.ts", () => {
           );
 
           const wahlbezirkStore = useWahlbezirkStore();
-          wahlbezirkStore.schliessungsuhrzeitSent =
+          wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
             data.schliessungsuhrzeitSent;
 
           // @ts-expect-error: cannot set readonly
@@ -581,7 +581,8 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
           ereignisEintraege;
 
-        wahlbezirkStore.schliessungsuhrzeitSent = schliessungsuhrzeitSend;
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+          schliessungsuhrzeitSend;
 
         const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
           ImportAllFromEreignisArt,

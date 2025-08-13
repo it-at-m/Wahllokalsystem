@@ -28,7 +28,7 @@
               <v-number-input
                 v-model="urnenwahlVorbereitung.anzahlWahltische"
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
@@ -39,7 +39,7 @@
               <v-number-input
                 v-model="urnenwahlVorbereitung.anzahlNebenraeume"
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
@@ -50,7 +50,7 @@
               <v-number-input
                 v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
@@ -88,10 +88,12 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);

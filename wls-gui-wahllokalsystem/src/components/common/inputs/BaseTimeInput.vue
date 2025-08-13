@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     :model-value="toHhMm(modelValue)"
-    :rules="[REQUIRED]"
+    :rules="[required]"
     label="Uhrzeit"
     type="time"
     clearable
@@ -14,7 +14,9 @@
 import type { PropType } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { REQUIRED } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+
+const { required } = useRules();
 
 const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
 

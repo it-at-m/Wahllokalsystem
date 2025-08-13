@@ -29,8 +29,8 @@
         >
           <the-waehleranzahl-count-button
             v-if="
-              eroeffnungsuhrzeitSent !== undefined &&
-              schliessungsuhrzeitSent === undefined &&
+              eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent !== undefined &&
+              schliessungsuhrzeitState.schliessungsuhrzeitSent === undefined &&
               isUWB
             "
           />
@@ -78,7 +78,7 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
+const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDateFormat } = useDateTimeFormatter();

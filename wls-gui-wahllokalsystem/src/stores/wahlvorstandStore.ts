@@ -24,7 +24,7 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -46,7 +46,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
       (mitglied) => mitglied.anwesend
     ).length;
-    if (!schliessungsuhrzeitSent.value) {
+    if (!schliessungsuhrzeitState.value.schliessungsuhrzeitSent) {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
     } else {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;

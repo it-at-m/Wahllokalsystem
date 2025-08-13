@@ -279,40 +279,40 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
   };
 
-    /* --- wahlbriefDaten --- */
-    const wahlbriefDatenState: Ref<{
-        wahlbriefDaten: Wahlbriefdaten;
-        wahlbriefDatenIsSaving: boolean;
-    }> = ref({
-        wahlbriefDaten: {
-            wahlbriefe: undefined,
-            verzeichnisseUngueltige: undefined,
-            nachtraege: undefined,
-            nachtraeglichUeberbrachte: undefined,
-            zeitNachtraeglichUeberbrachte: undefined,
-        },
-        wahlbriefDatenIsSaving: false,
-    });
+  /* --- wahlbriefDaten --- */
+  const wahlbriefDatenState: Ref<{
+    wahlbriefDaten: Wahlbriefdaten;
+    wahlbriefDatenIsSaving: boolean;
+  }> = ref({
+    wahlbriefDaten: {
+      wahlbriefe: undefined,
+      verzeichnisseUngueltige: undefined,
+      nachtraege: undefined,
+      nachtraeglichUeberbrachte: undefined,
+      zeitNachtraeglichUeberbrachte: undefined,
+    },
+    wahlbriefDatenIsSaving: false,
+  });
 
-    const wahlbriefDatenActions = {
-        initWahlbriefdaten: async function initWahlbriefdaten() {
-            wahlbriefDatenState.value.wahlbriefDaten = await getWahlbriefdaten(
-                currentUserWahlbezirkID.value
-            );
-        },
-        sendWahlbriefdaten: async function sendWahlbriefdaten() {
-            const wahlbezirkID = currentUserWahlbezirkID.value;
-            wahlbriefDatenState.value.wahlbriefDatenIsSaving = true;
-            try {
-                await postWahlbriefdaten(
-                    wahlbezirkID,
-                    wahlbriefDatenState.value.wahlbriefDaten
-                );
-            } finally {
-                wahlbriefDatenState.value.wahlbriefDatenIsSaving = false;
-            }
-        },
-    };
+  const wahlbriefDatenActions = {
+    initWahlbriefdaten: async function initWahlbriefdaten() {
+      wahlbriefDatenState.value.wahlbriefDaten = await getWahlbriefdaten(
+        currentUserWahlbezirkID.value
+      );
+    },
+    sendWahlbriefdaten: async function sendWahlbriefdaten() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      wahlbriefDatenState.value.wahlbriefDatenIsSaving = true;
+      try {
+        await postWahlbriefdaten(
+          wahlbezirkID,
+          wahlbriefDatenState.value.wahlbriefDaten
+        );
+      } finally {
+        wahlbriefDatenState.value.wahlbriefDatenIsSaving = false;
+      }
+    },
+  };
 
   /* --- watcher --- */
   watch(wahlen, () => {

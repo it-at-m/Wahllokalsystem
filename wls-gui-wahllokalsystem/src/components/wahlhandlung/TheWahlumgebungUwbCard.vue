@@ -8,10 +8,14 @@
           v-model="anzahlWahlurnenValidForm"
         >
           <base-wahlumgebung-wahlurnen-div
-            :wahl-vorbereitung="urnenwahlVorbereitung"
+            :wahl-vorbereitung="
+              urnenwahlVorbereitungState.urnenwahlVorbereitung
+            "
           />
           <v-checkbox
-            v-model="urnenwahlVorbereitung.urneVersiegelt"
+            v-model="
+              urnenwahlVorbereitungState.urnenwahlVorbereitung.urneVersiegelt
+            "
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
@@ -26,7 +30,10 @@
           <div class="d-flex flex-wrap justify-start">
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlWahltische"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlWahltische
+                "
                 class="mr-4"
                 :rules="[required, minNumber(0), maxNumber(99)]"
                 min-width="30rem"
@@ -37,7 +44,10 @@
             </div>
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlNebenraeume"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlNebenraeume
+                "
                 class="mr-4"
                 :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlNebenraeume"
@@ -48,7 +58,10 @@
             </div>
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlWahlkabinen
+                "
                 class="mr-4"
                 :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
@@ -73,7 +86,7 @@
         <base-button-save
           active
           :disabled="isSaveButtonDisabled"
-          :loading="urnenWahlVorbereitungIsSaving"
+          :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
@@ -100,26 +113,31 @@ const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
-const { urnenWahlVorbereitungIsSaving, urnenwahlVorbereitung } =
-  storeToRefs(useWahlbezirkStore());
+const { urnenwahlVorbereitungActions } = useWahlbezirkStore();
+const { urnenwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
     abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !urnenwahlVorbereitung.value.urneVersiegelt ||
+    !urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urneVersiegelt ||
     isMinimumRequired.value
   );
 });
 
 const isMinimumRequired = computed(() => {
   const tischeSichtblenden =
-    Number(urnenwahlVorbereitung.value.anzahlWahltische) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahltische
+    ) || 0;
   const nebenraeumeWahlraum =
-    Number(urnenwahlVorbereitung.value.anzahlNebenraeume) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlNebenraeume
+    ) || 0;
   const wahlkabinen =
-    Number(urnenwahlVorbereitung.value.anzahlWahlkabinen) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahlkabinen
+    ) || 0;
 
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
 });
@@ -132,6 +150,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungUWBClicked() {
-  sendUrnenwahlvorbereitung();
+  urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 }
 </script>

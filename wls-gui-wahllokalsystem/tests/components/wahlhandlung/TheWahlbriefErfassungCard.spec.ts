@@ -128,18 +128,23 @@ describe("TheWahlbriefErfassungCard.vue", () => {
 
       await nextTick();
 
+      const sendWahlbriefdatenSpy = vi.spyOn(
+        wahlbezirkStore.wahlbriefDatenActions,
+        "sendWahlbriefdaten"
+      );
+
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postWahlbriefdaten.mockResolvedValue(Promise.resolve());
 
-      expect(wahlbezirkStore.sendWahlbriefdaten).toHaveBeenCalled();
+      expect(sendWahlbriefdatenSpy).toHaveBeenCalled();
     });
   });
 
   function _initValidData() {
     wahlbezirkStore = useWahlbezirkStore(testPinia);
-    wahlbezirkStore.wahlbriefDaten = validWahlbriefDaten;
+    wahlbezirkStore.wahlbriefDatenState.wahlbriefDaten = validWahlbriefDaten;
 
     wrapper.vm.anzahlWahlbriefeValid = true;
     wrapper.vm.anzahlVerzeichnisseValid = true;
@@ -149,7 +154,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
 
   function _initInvalidData() {
     wahlbezirkStore = useWahlbezirkStore(testPinia);
-    wahlbezirkStore.wahlbriefDaten = invalidWahlbriefDaten;
+    wahlbezirkStore.wahlbriefDatenState.wahlbriefDaten = invalidWahlbriefDaten;
 
     wrapper.vm.anzahlWahlbriefeValid = true;
     wrapper.vm.anzahlVerzeichnisseValid = true;

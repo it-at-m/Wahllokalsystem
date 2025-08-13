@@ -220,73 +220,99 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       }
     },
   };
-  const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
-  const ungueltigeWahlscheineIsLoading = ref(false);
-  const ungueltigeWahlscheineLoadingFailed = ref(false);
-  const ungueltigeWahlscheineIsEmpty = computed(
-    () => ungueltigeWahlscheine.value.length === 0
-  );
 
-  const wahlbriefDatenIsSaving = ref(false);
-  const wahlbriefDaten = ref<Wahlbriefdaten>({
-    wahlbriefe: undefined,
-    verzeichnisseUngueltige: undefined,
-    nachtraege: undefined,
-    nachtraeglichUeberbrachte: undefined,
-    zeitNachtraeglichUeberbrachte: undefined,
+  /* --- ungueltigeWahlscheine --- */
+  const ungueltigeWahlscheineState: Ref<{
+    ungueltigeWahlscheine: UngueltigerWahlschein[];
+    ungueltigeWahlscheineIsLoading: boolean;
+    ungueltigeWahlscheineLoadingFailed: boolean;
+  }> = ref({
+    ungueltigeWahlscheine: [],
+    ungueltigeWahlscheineIsLoading: false,
+    ungueltigeWahlscheineLoadingFailed: false,
   });
 
-  function getUngueltigerWahlscheinByWahlscheinnummer(
-    wahlscheinNummer: string
-  ) {
-    return (
-      ungueltigeWahlscheine.value.find(
-        (ungueltigerWahlschein) =>
-          ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
-      ) ?? null
-    );
-  }
+  const ungueltigeWahlscheineGetter = computed(() => ({
+    ungueltigeWahlscheineIsEmpty:
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine.length === 0,
+  }));
 
-  async function initUngueltigeWahlscheine(sendNotification = true) {
-    ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-      currentUserWahltagID.value,
-      currentUserWahlbezirksArt.value,
-      sendNotification
-    );
-  }
+  const ungueltigeWahlscheineActions = {
+    getUngueltigerWahlscheinByWahlscheinnummer:
+      function getUngueltigerWahlscheinByWahlscheinnummer(
+        wahlscheinNummer: string
+      ) {
+        return (
+          ungueltigeWahlscheineState.value.ungueltigeWahlscheine.find(
+            (ungueltigerWahlschein) =>
+              ungueltigerWahlschein.wahlscheinnummer === wahlscheinNummer
+          ) ?? null
+        );
+      },
+    initUngueltigeWahlscheine: async function initUngueltigeWahlscheine(
+      sendNotification = true
+    ) {
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
+        await getUngueltigeWahlscheine(
+          currentUserWahltagID.value,
+          currentUserWahlbezirksArt.value,
+          sendNotification
+        );
+    },
+    loadUngueltigeWahlscheine: async function loadUngueltigeWahlscheine() {
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = true;
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = false;
+      ungueltigeWahlscheineState.value.ungueltigeWahlscheine = [];
 
-  async function initWahlbriefdaten() {
-    wahlbriefDaten.value = await getWahlbriefdaten(
-      currentUserWahlbezirkID.value
-    );
-  }
+      try {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheine =
+          await getUngueltigeWahlscheine(
+            currentUserWahltagID.value,
+            currentUserWahlbezirksArt.value,
+            true
+          );
+      } catch {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed = true;
+      } finally {
+        ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading = false;
+      }
+    },
+  };
 
-  async function loadUngueltigeWahlscheine() {
-    ungueltigeWahlscheineIsLoading.value = true;
-    ungueltigeWahlscheineLoadingFailed.value = false;
-    ungueltigeWahlscheine.value = [];
-    try {
-      ungueltigeWahlscheine.value = await getUngueltigeWahlscheine(
-        currentUserWahltagID.value,
-        currentUserWahlbezirksArt.value,
-        true
+  /* --- wahlbriefDaten --- */
+  const wahlbriefDatenState: Ref<{
+    wahlbriefDaten: Wahlbriefdaten;
+    wahlbriefDatenIsSaving: boolean;
+  }> = ref({
+    wahlbriefDaten: {
+      wahlbriefe: undefined,
+      verzeichnisseUngueltige: undefined,
+      nachtraege: undefined,
+      nachtraeglichUeberbrachte: undefined,
+      zeitNachtraeglichUeberbrachte: undefined,
+    },
+    wahlbriefDatenIsSaving: false,
+  });
+
+  const wahlbriefDatenActions = {
+    initWahlbriefdaten: async function initWahlbriefdaten() {
+      wahlbriefDatenState.value.wahlbriefDaten = await getWahlbriefdaten(
+        currentUserWahlbezirkID.value
       );
-    } catch {
-      ungueltigeWahlscheineLoadingFailed.value = true;
-    } finally {
-      ungueltigeWahlscheineIsLoading.value = false;
-    }
-  }
-
-  async function sendWahlbriefdaten() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    wahlbriefDatenIsSaving.value = true;
-    try {
-      await postWahlbriefdaten(wahlbezirkID, wahlbriefDaten.value);
-    } finally {
-      wahlbriefDatenIsSaving.value = false;
-    }
-  }
+    },
+    sendWahlbriefdaten: async function sendWahlbriefdaten() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      wahlbriefDatenState.value.wahlbriefDatenIsSaving = true;
+      try {
+        await postWahlbriefdaten(
+          wahlbezirkID,
+          wahlbriefDatenState.value.wahlbriefDaten
+        );
+      } finally {
+        wahlbriefDatenState.value.wahlbriefDatenIsSaving = false;
+      }
+    },
+  };
 
   /* --- watcher --- */
   watch(wahlen, () => {
@@ -313,17 +339,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urnenwahlVorbereitungActions,
     briefwahlVorbereitungState,
     briefwahlVorbereitungActions,
-    ungueltigeWahlscheine,
-    ungueltigeWahlscheineIsLoading,
-    ungueltigeWahlscheineIsEmpty,
-    ungueltigeWahlscheineLoadingFailed,
-    getUngueltigerWahlscheinByWahlscheinnummer,
-    initUngueltigeWahlscheine,
-    loadUngueltigeWahlscheine,
-    initWahlbriefdaten,
-    sendWahlbriefdaten,
-    wahlbriefDaten,
-    wahlbriefDatenIsSaving,
+    ungueltigeWahlscheineState,
+    ungueltigeWahlscheineGetter,
+    ungueltigeWahlscheineActions,
+    wahlbriefDatenState,
+    wahlbriefDatenActions,
   };
 });
 

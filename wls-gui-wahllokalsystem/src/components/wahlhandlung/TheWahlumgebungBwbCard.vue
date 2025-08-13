@@ -8,10 +8,14 @@
           v-model="anzahlWahlurnenValidForm"
         >
           <base-wahlumgebung-wahlurnen-div
-            :wahl-vorbereitung="briefwahlVorbereitung"
+            :wahl-vorbereitung="
+              briefwahlVorbereitungState.briefwahlVorbereitung
+            "
           />
           <v-checkbox
-            v-model="briefwahlVorbereitung.urneVersiegelt"
+            v-model="
+              briefwahlVorbereitungState.briefwahlVorbereitung.urneVersiegelt
+            "
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
@@ -19,7 +23,9 @@
             <base-button-save
               active
               :disabled="isSaveButtonDisabled"
-              :loading="briefWahlVorbereitungIsSaving"
+              :loading="
+                briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+              "
               @click="onSaveWahlumgebungBWBClicked"
             />
           </v-card-actions>
@@ -41,14 +47,13 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { sendBriefwahlvorbereitung } = useWahlbezirkStore();
-const { briefWahlVorbereitungIsSaving, briefwahlVorbereitung } =
-  storeToRefs(useWahlbezirkStore());
+const { briefwahlVorbereitungActions } = useWahlbezirkStore();
+const { briefwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
-    !briefwahlVorbereitung.value.urneVersiegelt
+    !briefwahlVorbereitungState.value.briefwahlVorbereitung.urneVersiegelt
   );
 });
 
@@ -60,6 +65,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungBWBClicked() {
-  sendBriefwahlvorbereitung();
+  briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
 }
 </script>

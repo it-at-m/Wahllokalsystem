@@ -159,15 +159,45 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 
   const urnenWahlVorbereitungIsSaving = ref(false);
-  const briefWahlVorbereitungIsSaving = ref(false);
+
+  /* --- briefwahlVorbereitung --- */
+  const briefwahlVorbereitungState: Ref<{
+    briefwahlVorbereitung: Wahlvorbereitung;
+    briefWahlVorbereitungIsSaving: boolean;
+  }> = ref({
+    briefwahlVorbereitung: {
+      urneVersiegelt: false,
+      wahlbezirkID: currentUserWahlbezirkID.value,
+      urnenAnzahl: [],
+    },
+    briefWahlVorbereitungIsSaving: false,
+  });
+
+  const briefwahlVorbereitungActions = {
+    sendBriefwahlvorbereitung: async function sendBriefwahlvorbereitung() {
+      const wahlbezirkID = currentUserWahlbezirkID.value;
+      briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = true;
+      try {
+        if (wahlbezirkID) {
+          await postBriefwahlvorbereitung(
+            wahlbezirkID,
+            briefwahlVorbereitungState.value.briefwahlVorbereitung
+          );
+        }
+      } finally {
+        briefwahlVorbereitungState.value.briefWahlVorbereitungIsSaving = false;
+      }
+    },
+  };
   const ungueltigeWahlscheine = ref<UngueltigerWahlschein[]>([]);
   const ungueltigeWahlscheineIsLoading = ref(false);
   const ungueltigeWahlscheineLoadingFailed = ref(false);
+
   const ungueltigeWahlscheineIsEmpty = computed(
     () => ungueltigeWahlscheine.value.length === 0
   );
-
   const wahlbriefDatenIsSaving = ref(false);
+
   const wahlbriefDaten = ref<Wahlbriefdaten>({
     wahlbriefe: undefined,
     verzeichnisseUngueltige: undefined,
@@ -183,25 +213,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     urneVersiegelt: false,
     wahlbezirkID: currentUserWahlbezirkID.value,
     urnenAnzahl: [],
-  });
-
-  const briefwahlVorbereitung = ref<Wahlvorbereitung>({
-    urneVersiegelt: false,
-    wahlbezirkID: currentUserWahlbezirkID.value,
-    urnenAnzahl: [],
-  });
-
-  watch(wahlen, () => {
-    urnenwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-    briefwahlVorbereitung.value.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
   });
 
   function getUngueltigerWahlscheinByWahlscheinnummer(
@@ -271,20 +282,19 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendBriefwahlvorbereitung() {
-    const wahlbezirkID = currentUserWahlbezirkID.value;
-    briefWahlVorbereitungIsSaving.value = true;
-    try {
-      if (wahlbezirkID) {
-        await postBriefwahlvorbereitung(
-          wahlbezirkID,
-          briefwahlVorbereitung.value
-        );
-      }
-    } finally {
-      briefWahlVorbereitungIsSaving.value = false;
-    }
-  }
+  /* --- watcher --- */
+  watch(wahlen, () => {
+    urnenwahlVorbereitung.value.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+    briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
+      wahlen.value?.map((wahl) => ({
+        wahlID: wahl.wahlID,
+        anzahl: null,
+      })) || [];
+  });
 
   return {
     eroeffnungsuhrzeitState,
@@ -293,6 +303,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitActions,
     pflegeWaehlerverzeichnisState,
     pflegeWaehlerverzeichnisActions,
+    briefwahlVorbereitungState,
+    briefwahlVorbereitungActions,
     ungueltigeWahlscheine,
     ungueltigeWahlscheineIsLoading,
     ungueltigeWahlscheineIsEmpty,
@@ -307,9 +319,6 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     sendWahlbriefdaten,
     wahlbriefDaten,
     wahlbriefDatenIsSaving,
-    sendBriefwahlvorbereitung,
-    briefwahlVorbereitung,
-    briefWahlVorbereitungIsSaving,
   };
 });
 

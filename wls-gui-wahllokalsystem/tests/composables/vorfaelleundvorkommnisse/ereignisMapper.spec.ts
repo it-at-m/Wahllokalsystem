@@ -52,8 +52,8 @@ describe("ereignisMapper.ts", () => {
 
       const expectedResult: EreignisseWriteDTO = {
         ereigniseintraege: getEreignisseDTO(
-          "2025-04-28T08:15:00.000Z",
-          "2025-04-28T11:40:00.000Z"
+          "2025-04-28T08:15:00",
+          "2025-04-28T11:40:00"
         ),
         keineVorfaelle: false,
         keineVorkommnisse: false,
@@ -70,14 +70,27 @@ describe("ereignisMapper.ts", () => {
 
       const expectedResult: EreignisseWriteDTO = {
         ereigniseintraege: getEreignisseDTO(
-          "2025-04-28T08:15:00.000Z",
-          "2025-04-28T11:40:00.000Z"
+          "2025-04-28T08:15:00",
+          "2025-04-28T11:40:00"
         ),
         keineVorfaelle: true,
         keineVorkommnisse: true,
       };
       expect(result).toStrictEqual(expectedResult);
     });
+  });
+
+  it("should_haveEqualUhrzeitStringWithPrecissionOfSeconds_when_readingDTOAndProducingDTOWithCreatedModel", () => {
+    const uhrzeit = "2025-08-13T16:01:23";
+    const dtoToMap = prepareWahlbezirkEreignisseDTO()
+      .ereigniseintraege([prepareEreignisDTO().uhrzeit(uhrzeit).build()])
+      .build();
+
+    const model = toModel(dtoToMap);
+    const dto = toDto(model);
+
+    // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+    expect(dto.ereigniseintraege![0].uhrzeit).toStrictEqual(uhrzeit);
   });
 });
 

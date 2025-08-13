@@ -99,6 +99,23 @@ export function useDateTimeFormatter() {
     return `${_leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${_leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${_leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
   }
 
+  function toYyyyMmDdWithTimeWithoutTimezoneOffset(dateToFormat: Date) {
+    if (!isValidDate(dateToFormat)) {
+      return NO_VALUE_DEFAULT;
+    }
+
+    const fullYear = _leftPadFourDigitsWithZero(dateToFormat.getFullYear());
+    const month = _leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1);
+    const day = _leftPadTwoDigitsWithZero(dateToFormat.getDate());
+
+    const hour = _leftPadTwoDigitsWithZero(dateToFormat.getHours());
+    const minute = _leftPadTwoDigitsWithZero(dateToFormat.getMinutes());
+    const second = _leftPadTwoDigitsWithZero(dateToFormat.getSeconds());
+    const milliseconds = _leftPadWithZero(dateToFormat.getMilliseconds(), 3);
+
+    return `${fullYear}-${month}-${day}T${hour}:${minute}:${second}.${milliseconds}`;
+  }
+
   function _leftPadTwoDigitsWithZero(number: number): string {
     return _leftPadWithZero(number, 2);
   }
@@ -115,6 +132,7 @@ export function useDateTimeFormatter() {
     time,
     toHhMm,
     toYyyyMmDd,
+    toYyyyMmDdWithTimeWithoutTimezoneOffset,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,

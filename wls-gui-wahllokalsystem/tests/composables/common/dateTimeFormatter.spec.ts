@@ -12,6 +12,7 @@ describe("dateTimeFormatter.ts", () => {
     toGermanDateFormat,
     toGermanDateWithLongMonth,
     toYyyyMmDd,
+    toYyyyMmDdWithTimeWithoutTimezoneOffset,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -189,6 +190,62 @@ describe("dateTimeFormatter.ts", () => {
 
     it("should_returnEmptyString_when_dateIsInvalid", () => {
       const result = toYyyyMmDd(new Date("2025-29-45"));
+      expect(result).toStrictEqual("");
+    });
+  });
+
+  describe("toYyyyMmDdWithTimeWithoutTimezoneOffset", () => {
+    it.each([
+      {
+        dateStringToParse: "2025-07-30T01:01:01.001",
+        expectedDateString: "2025-07-30T01:01:01.001",
+      },
+      {
+        dateStringToParse: "2025-07-30T01:01:01",
+        expectedDateString: "2025-07-30T01:01:01.000",
+      },
+      {
+        dateStringToParse: "2025-07-30T01:01",
+        expectedDateString: "2025-07-30T01:01:00.000",
+      },
+      {
+        dateStringToParse: "2025-12-30T11:12:13.654",
+        expectedDateString: "2025-12-30T11:12:13.654",
+      },
+      {
+        dateStringToParse: "2025-07-30T00:00:00.000",
+        expectedDateString: "2025-07-30T00:00:00.000",
+      },
+      {
+        dateStringToParse: "2025-07-30T23:59:59.999",
+        expectedDateString: "2025-07-30T23:59:59.999",
+      },
+      {
+        dateStringToParse: "0100-01-01T00:00:00.000",
+        expectedDateString: "0100-01-01T00:00:00.000",
+      },
+      {
+        dateStringToParse: "0010-01-01T00:00:00.000",
+        expectedDateString: "0010-01-01T00:00:00.000",
+      },
+      {
+        dateStringToParse: "0001-01-01T00:00:00.000",
+        expectedDateString: "0001-01-01T00:00:00.000",
+      },
+    ])(
+      "should_returnDateOnlyAsIsoDate_when_dateIsGivenAsString'$dateStringToParse'",
+      ({ dateStringToParse, expectedDateString }) => {
+        const result = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+          new Date(dateStringToParse)
+        );
+        expect(result).toStrictEqual(expectedDateString);
+      }
+    );
+
+    it("should_returnEmptyString_when_dateIsInvalid", () => {
+      const result = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+        new Date("2025-29-45")
+      );
       expect(result).toStrictEqual("");
     });
   });

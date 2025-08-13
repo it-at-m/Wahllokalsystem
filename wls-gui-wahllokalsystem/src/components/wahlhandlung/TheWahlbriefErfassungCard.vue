@@ -7,7 +7,7 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlWahlbriefeValid">
         <v-number-input
-          v-model="wahlbriefDaten.wahlbriefe"
+          v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
           :rules="[required, minNumber(1), maxNumber(9999)]"
           data-test="textFieldWahlbriefeAnzahl"
@@ -24,7 +24,7 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlVerzeichnisseValid">
         <v-number-input
-          v-model="wahlbriefDaten.verzeichnisseUngueltige"
+          v-model="wahlbriefDatenState.wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
           :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldVerzeichnisseAnzahl"
@@ -38,7 +38,7 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlNachtraegeValid">
         <v-number-input
-          v-model="wahlbriefDaten.nachtraege"
+          v-model="wahlbriefDatenState.wahlbriefDaten.nachtraege"
           class="mr-4"
           :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldNachtraegeAnzahl"
@@ -60,7 +60,9 @@
         <div class="d-flex flex-wrap justify-start">
           <div>
             <v-number-input
-              v-model="wahlbriefDaten.nachtraeglichUeberbrachte"
+              v-model="
+                wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
+              "
               class="mr-4"
               :rules="[minNumber(0), maxNumber(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
@@ -72,7 +74,9 @@
           </div>
           <div>
             <base-time-input
-              v-model="wahlbriefDaten.zeitNachtraeglichUeberbrachte"
+              v-model="
+                wahlbriefDatenState.wahlbriefDaten.zeitNachtraeglichUeberbrachte
+              "
               class="mr-4"
               :min-width="WIDTH"
               :max-width="WIDTH"
@@ -89,7 +93,7 @@
         active
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
-        :loading="wahlbriefDatenIsSaving"
+        :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -107,9 +111,8 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
 
-const { sendWahlbriefdaten } = useWahlbezirkStore();
-const { wahlbriefDaten, wahlbriefDatenIsSaving } =
-  storeToRefs(useWahlbezirkStore());
+const { wahlbriefDatenActions } = useWahlbezirkStore();
+const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
@@ -130,11 +133,12 @@ const getDateRules = () => {
 };
 
 watch(
-  () => wahlbriefDaten.value.nachtraeglichUeberbrachte,
+  () => wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte,
   (newValue) => {
     if (newValue === undefined || newValue < 1) {
       nachtraeglichUeberbrachteForm.value?.resetValidation();
-      wahlbriefDaten.value.zeitNachtraeglichUeberbrachte = undefined;
+      wahlbriefDatenState.value.wahlbriefDaten.zeitNachtraeglichUeberbrachte =
+        undefined;
     } else {
       nachtraeglichUeberbrachteForm.value?.validate();
     }
@@ -153,12 +157,13 @@ const isSaveButtonDisabled = computed(() => {
 
 function isZeitNachtragelichUeberbrachtRequired() {
   return (
-    wahlbriefDaten.value.nachtraeglichUeberbrachte !== undefined &&
-    wahlbriefDaten.value.nachtraeglichUeberbrachte > 0
+    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte !==
+      undefined &&
+    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte > 0
   );
 }
 
 function onSaveBriefwahldatenClicked() {
-  sendWahlbriefdaten();
+  wahlbriefDatenActions.sendWahlbriefdaten();
 }
 </script>

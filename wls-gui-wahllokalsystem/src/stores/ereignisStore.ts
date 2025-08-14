@@ -68,8 +68,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     return isUWB.value
       ? isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent.value ||
           (isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value &&
-            schliessungsuhrzeitState.value.schliessungsuhrzeitSent !==
-              undefined)
+            isAuszaehlungStarted.value)
       : isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
   });
 
@@ -205,7 +204,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState() {
-    if (isAuszaehlungStarted) {
+    if (isAuszaehlungStarted.value) {
       wahlbezirkEreignisse.value.keineVorkommnisse =
         !ereigniseintraegeContainsVorkommnisse.value;
     }

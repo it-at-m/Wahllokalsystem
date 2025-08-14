@@ -43,7 +43,7 @@ describe("TheEreignisseView", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndEreignisFlagsAndEreigniseintrageConsistent", async () => {
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
       const ereignisStore = useEreignisStore();
 
       // @ts-expect-error: cannot set readonly
@@ -57,7 +57,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
-    it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintrageConsistent", async () => {
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
       const ereignisStore = useEreignisStore();
 
       const validEreignis: Ereignis = {
@@ -78,7 +78,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
-    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithInvalidDataAndEreignisFlagsAndEreigniseintrageConsistent", async () => {
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithInvalidDataAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
       const ereignisStore = useEreignisStore();
 
       const invalidEreignis: Ereignis = {
@@ -99,7 +99,7 @@ describe("TheEreignisseView", () => {
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
-    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintrageInconsistent", async () => {
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintraegeInconsistent", async () => {
       const ereignisStore = useEreignisStore();
 
       const validEreignis: Ereignis = {

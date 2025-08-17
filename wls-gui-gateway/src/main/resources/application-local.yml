@@ -1,0 +1,52 @@
+server:
+  port: 8083
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: sso
+              uri: http://keycloak:8100/
+              predicates:
+                - "Path=/api/sso/userinfo"
+              filters:
+                - RewritePath=/api/sso/userinfo, /auth/realms/local_realm/protocol/openid-connect/userinfo
+            - id: backend
+              uri: http://localhost:39146/
+              predicates:
+                - "Path=/api/backend-service/**"
+              filters:
+                - RewritePath=/api/backend-service/(?<urlsegments>.*), /$\{urlsegments}
+                - "RemoveResponseHeader=WWW-Authenticate"
+            - id: frontend
+              uri: http://localhost:8081/
+              predicates:
+                - "Path=/**"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8100/auth/realms/local_realm
+      client:
+        provider:
+          sso:
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+        registration:
+          sso:
+            provider: sso
+            client-id: local
+            client-secret: client_secret
+            scope: profile, openid
+
+logging:
+  include-application-group: false # disabled because application group is only relevant when deployed
+  structured:
+    format:
+      console: # set to empty to disable structured logging locally
+  level:
+    root: INFO
+    de.muenchen.refarch: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.security: DEBUG

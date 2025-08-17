@@ -9,12 +9,12 @@
         <relativePath />
     </parent>
 
-    <groupId>de.muenchen.refarch</groupId>
-    <artifactId>refarch-gateway</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <groupId>de.muenchen.oss.wahllokalsystem</groupId>
+    <artifactId>wls-gateway-gui-wahllokalsystem</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
 
-    <name>refarch-gateway</name>
-    <description>Ready to use RefArch gateway based on Spring Cloud Gateway</description>
+    <name>wls_gateway_gui-wahllokalsystem</name>
+    <description>api gateway for wls-gui-wahllokalsystem</description>
     <url>https://github.com/it-at-m/refarch</url>
     <licenses>
         <license>
@@ -24,18 +24,11 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/it-at-m/refarch.git</url>
-        <connection>scm:git:https://github.com/it-at-m/refarch.git</connection>
-        <developerConnection>scm:git:https://github.com/it-at-m/refarch.git</developerConnection>
+        <url>https://github.com/it-at-m/Wahllokalsystem</url>
+        <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
+        <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-    <developers>
-        <developer>
-            <organization>it@M</organization>
-            <email>opensource@muenchen.de</email>
-            <url>https://github.com/it-at-m</url>
-        </developer>
-    </developers>
 
     <properties>
         <!-- Compilation -->

@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GatewayWlsGui - local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
+    <option name="ACTIVE_PROFILES" value="local" />
+    <module name="wls-gui-gateway" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.refarch.gateway.ApiGatewayApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

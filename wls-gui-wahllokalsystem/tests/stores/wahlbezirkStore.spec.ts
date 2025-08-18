@@ -255,7 +255,7 @@ describe("wahlbezirkStore.ts", () => {
       mockDefinitions.getUngueltigeWahlscheine.mockReturnValue(
         new Promise((resolve) => {
           setTimeout(() => {
-            resolve(createUngueltigerWahlschein());
+            resolve([createUngueltigerWahlschein()]);
           }, timeout);
         })
       );

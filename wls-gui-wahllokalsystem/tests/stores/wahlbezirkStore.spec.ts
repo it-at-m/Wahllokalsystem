@@ -352,7 +352,7 @@ describe("wahlbezirkStore.ts", () => {
         unitUnderTest.ungueltigeWahlscheineState.ungueltigeWahlscheineLoadingFailed =
           initValueForUngueltigeWahlscheineLoadingFailed;
 
-        mockDefinitions.getUngueltigeWahlscheine.mockReturnValue([
+        mockDefinitions.getUngueltigeWahlscheine.mockResolvedValueOnce([
           createUngueltigerWahlschein(),
         ]);
 

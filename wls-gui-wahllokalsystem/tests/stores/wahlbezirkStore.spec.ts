@@ -290,7 +290,7 @@ describe("wahlbezirkStore.ts", () => {
       mockDefinitions.getUngueltigeWahlscheine.mockReturnValue(
         new Promise((resolve, reject) => {
           setTimeout(() => {
-            reject(createUngueltigerWahlschein());
+            reject([createUngueltigerWahlschein()]);
           }, timeout);
         })
       );
@@ -352,9 +352,9 @@ describe("wahlbezirkStore.ts", () => {
         unitUnderTest.ungueltigeWahlscheineState.ungueltigeWahlscheineLoadingFailed =
           initValueForUngueltigeWahlscheineLoadingFailed;
 
-        mockDefinitions.getUngueltigeWahlscheine.mockReturnValue(
-          createUngueltigerWahlschein()
-        );
+        mockDefinitions.getUngueltigeWahlscheine.mockReturnValue([
+          createUngueltigerWahlschein(),
+        ]);
 
         await unitUnderTest.ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
 

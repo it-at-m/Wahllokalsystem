@@ -16,12 +16,10 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
-    required: false,
   },
   saveText: {
     type: String,
     default: "Speichern",
-    required: false,
   },
 });
 </script>

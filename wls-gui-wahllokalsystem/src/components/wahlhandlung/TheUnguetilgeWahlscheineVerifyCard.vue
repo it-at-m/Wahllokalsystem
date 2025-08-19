@@ -217,5 +217,6 @@ function onWahlscheinnummerChanged(newValue: number) {
 
 function resetUngueltigerWahlschein() {
   ungueltigerWahlschein.value = undefined;
+  stimmenZurueckweisung.value = null;
 }
 </script>

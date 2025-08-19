@@ -2,8 +2,8 @@
 name: feedback issue
 about: A "feedback"-Issue is used to track the feedback from Demos.
 title: ''
-labels: feedback
-assignees: ''
+labels: ["feedback"]
+assignees: []
 ---
 
 # Beschreibung und Kontext

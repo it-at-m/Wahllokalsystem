@@ -1,7 +1,7 @@
 <template>
   <v-btn
     prepend-icon="$save"
-    :disabled="props.disabled"
+    :disabled="disabled"
     data-test="buttonSave"
   >
     {{ saveText }}
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   /**
    * Is the Button interactable
    */

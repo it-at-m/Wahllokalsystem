@@ -59,6 +59,7 @@
                     label="Stimmen für die Zurückwesiung"
                     width="350"
                     :rules="[required]"
+                    data-test="number-input-stimmen-zurueckweisung"
                   />
                 </v-form>
               </v-col>
@@ -67,6 +68,7 @@
                   active
                   class="mt-2 ml-5"
                   save-text="Beschluss speichern"
+                  data-test="save-abstimmungsergebnis-btn"
                   :disabled="!isAbstimmungsergebnisFormValid"
                   @click="onSaveAbstimmungsergebnisClicked"
                 />

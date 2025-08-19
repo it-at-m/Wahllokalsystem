@@ -18,3 +18,9 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+export const CustomText: Story = {
+  args: {
+    saveText: "Beliebiger Speichertext",
+  },
+};

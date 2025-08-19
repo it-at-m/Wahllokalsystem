@@ -6,17 +6,17 @@ labels: ["feedback"]
 assignees: []
 ---
 
-# Beschreibung und Kontext
+## Beschreibung und Kontext
 <!-- Um welche Komponente/View geht es? -->
 
 ## Rückmeldung aus der Demo
 <!-- Feedback aus der Demo, was mit diesem Issue angepasst oder hinzugefügt werden soll -->
 
-# Umsetzungshinweise
+## Umsetzungshinweise
 
 - <!-- welche Wechselwirkungen sind zu beachten? -->
 
-# Akzeptanzkriterien
+## Akzeptanzkriterien
 
 - [ ]
 

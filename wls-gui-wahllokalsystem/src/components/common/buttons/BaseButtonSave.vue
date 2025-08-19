@@ -17,6 +17,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Custom Save Text
+   */
   saveText: {
     type: String,
     default: "Speichern",

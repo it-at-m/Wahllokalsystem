@@ -206,6 +206,7 @@ function onSaveAbstimmungsergebnisClicked() {
   sendEreignisse();
 
   stimmenZurueckweisung.value = null;
+  isAbstimmungsergebnisFormValid.value = false;
 }
 
 function onWahlscheinnummerChanged(newValue: number) {

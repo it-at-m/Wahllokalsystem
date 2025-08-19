@@ -56,9 +56,9 @@
                 <v-form v-model="isAbstimmungsergebnisFormValid">
                   <v-number-input
                     v-model="stimmenZurueckweisung"
-                    label="Stimmen für die Zurückwesiung"
+                    label="Stimmen für die Zurückweisung"
                     width="350"
-                    :rules="[required]"
+                    :rules="[required, minNumber(0)]"
                     data-test="number-input-stimmen-zurueckweisung"
                   />
                 </v-form>

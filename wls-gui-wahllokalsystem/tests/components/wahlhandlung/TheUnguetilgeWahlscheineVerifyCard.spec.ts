@@ -16,15 +16,22 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUngueltigeWahlscheine: vi.fn(),
+  saveEreignisse: vi.fn(),
 }));
 
 vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
   useUngueltigeWahlscheineService: () => ({
     getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+  }),
+}));
+vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
+  useEreignisService: () => ({
+    saveEreignisse: mockDefinitions.saveEreignisse,
   }),
 }));
 
@@ -232,12 +239,14 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     beforeEach(() => {
       testPinia = createTestingPinia({
         createSpy: vi.fn,
+        stubActions: false,
       });
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],
         },
       });
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
@@ -301,6 +310,50 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await refreshButton.trigger("click");
 
       expect(loadWahlscheinSpy).toHaveBeenCalled();
+    });
+
+    it("should_addAndSaveEreignisAndReset_when_saveBeschlussIsClickedWithValidAbstimmung", async () => {
+      const ereignisStore = useEreignisStore();
+      const ungueltigerWs = createUngueltigerWahlschein();
+
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(123);
+      await wahlscheinnummerInput.vm.validate();
+
+      useWahlbezirkStore().ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
+        vi.fn(() => {
+          return ungueltigerWs;
+        });
+
+      const searchButton = getSearchButton();
+      await searchButton.trigger("click");
+
+      const inputAbstimmung = getInputStimmenZurueckweisung();
+      await inputAbstimmung.setValue(3);
+      await flushPromises();
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        0
+      );
+
+      const expectedEreignisBeschreibung =
+        `Wahlschein ${ungueltigerWs.wahlscheinnummer} für ${ungueltigerWs.vorname} ${ungueltigerWs.familienname} ist` +
+        ` ungültig. Die Person wurde zurückgewiesen. Abstimmungsergebnis:  3`;
+
+      const saveBeschlussBtn = getSaveBeschlussButton();
+      await saveBeschlussBtn.trigger("click");
+      await flushPromises();
+
+      expect(ereignisStore.addEreignis).toHaveBeenCalledWith({
+        uhrzeit: expect.any(Date),
+        beschreibung: expectedEreignisBeschreibung,
+      });
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        1
+      );
+      expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();
+      expect(inputAbstimmung.vm.value).toStrictEqual("");
+      expect(saveBeschlussBtn.props("disabled")).toStrictEqual(true);
     });
   });
 

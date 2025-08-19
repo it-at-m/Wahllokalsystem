@@ -47,10 +47,7 @@
                 Die Person darf mit diesem Wahlschein keine Stimme abgeben!
               </li>
               <li>Behalten Sie den Wahlschein ein.</li>
-              <li>
-                Fassen Sie einen Beschluss über die Zurückweisung der wählenden
-                Person.
-              </li>
+              <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
               <li>
                 Erfassen Sie dies als besonderes Vorkommnis unter dem Punkt
                 "Ereignisse".

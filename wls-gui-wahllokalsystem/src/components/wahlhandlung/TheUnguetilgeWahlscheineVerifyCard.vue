@@ -199,12 +199,12 @@ function onSearchClicked() {
   }
 }
 
-function onSaveAbstimmungsergebnisClicked() {
+async function onSaveAbstimmungsergebnisClicked() {
   addEreignis({
     uhrzeit: new Date(),
     beschreibung: `${ereignisBeschreibungWahlscheinUnguelttig.value} ${stimmenZurueckweisung.value}`,
   });
-  sendEreignisse();
+  await sendEreignisse();
 
   stimmenZurueckweisung.value = null;
   isAbstimmungsergebnisFormValid.value = false;

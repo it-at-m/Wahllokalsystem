@@ -68,7 +68,6 @@
                   active
                   class="mt-2 ml-5"
                   save-text="Beschluss speichern"
-                  data-test="save-abstimmungsergebnis-btn"
                   :disabled="!isAbstimmungsergebnisFormValid"
                   @click="onSaveAbstimmungsergebnisClicked"
                 />

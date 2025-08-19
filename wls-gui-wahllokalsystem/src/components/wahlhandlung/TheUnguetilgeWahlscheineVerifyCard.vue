@@ -154,7 +154,7 @@ const wahlscheinnummer = ref<null | number>(null);
 const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
 );
-const stimmenZurueckweisung = ref<number | null>(null);
+const stimmenZurueckweisung = ref<number | undefined>(undefined);
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>
@@ -206,7 +206,7 @@ async function onSaveAbstimmungsergebnisClicked() {
   });
   await sendEreignisse();
 
-  stimmenZurueckweisung.value = null;
+  stimmenZurueckweisung.value = undefined;
   isAbstimmungsergebnisFormValid.value = false;
 }
 
@@ -217,6 +217,6 @@ function onWahlscheinnummerChanged(newValue: number) {
 
 function resetUngueltigerWahlschein() {
   ungueltigerWahlschein.value = undefined;
-  stimmenZurueckweisung.value = null;
+  stimmenZurueckweisung.value = undefined;
 }
 </script>

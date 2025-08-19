@@ -277,11 +277,16 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
 
+      const inputAbstimmung = getInputStimmenZurueckweisung();
+      await inputAbstimmung.setValue(3);
       await flushPromises();
 
+      expect(inputAbstimmung.vm.value).toStrictEqual("3");
       await searchButton.trigger("click");
       await flushPromises();
+
       expect(wahlscheinnummerInput.vm.value).toStrictEqual("");
+      expect(inputAbstimmung.vm.value).toBeUndefined();
     });
 
     it("should_triggerLoadUngueltigeWahlscheine_when_refreshWasClicked", async () => {

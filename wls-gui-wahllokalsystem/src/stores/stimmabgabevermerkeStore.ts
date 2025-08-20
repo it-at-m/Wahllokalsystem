@@ -29,7 +29,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       return minVermerkeLength === Infinity ? 0 : minVermerkeLength;
     });
 
-    function increaseRows(newRowSize: number) {
+    function _increaseRows(newRowSize: number) {
       const currentLowestRows = lowestNumberOfRowsOverAllWahldaten.value;
 
       if (currentLowestRows !== null && currentLowestRows !== undefined) {
@@ -73,7 +73,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       );
     }
 
-    function decreaseRows(newRowSize: number) {
+    function _decreaseRows(newRowSize: number) {
       const currentLowestNumberOfRowsOverAllWahldaten =
         lowestNumberOfRowsOverAllWahldaten.value;
       stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
@@ -102,9 +102,9 @@ export const useStimmabgabevermerkeStore = defineStore(
     function changeRowCount(newRowSize: number) {
       if (lowestNumberOfRowsOverAllWahldaten.value != null) {
         if (newRowSize - 1 > lowestNumberOfRowsOverAllWahldaten.value) {
-          increaseRows(newRowSize);
+          _increaseRows(newRowSize);
         } else if (newRowSize - 1 < lowestNumberOfRowsOverAllWahldaten.value) {
-          decreaseRows(newRowSize);
+          _decreaseRows(newRowSize);
         }
       }
     }

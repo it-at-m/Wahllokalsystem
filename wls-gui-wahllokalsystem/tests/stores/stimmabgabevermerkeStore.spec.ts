@@ -1,0 +1,276 @@
+import { createTestingPinia } from "@pinia/testing";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
+
+describe("taskManagerStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useStimmabgabevermerkeStore>;
+
+  const {
+    createStimmabgabevermerke,
+    prepareWahldaten,
+    prepareStimmabgabevermerke,
+  } = useStimmabgabevermerkeTestDataFactory();
+
+  beforeEach(() => {
+    const testPinia = createTestingPinia({
+      stubActions: false,
+      createSpy: vi.fn,
+    });
+    unitUnderTest = useStimmabgabevermerkeStore(testPinia);
+  });
+
+  describe("isAnyRowThatShouldBeDeletedFilled", () => {
+    it("should_returnTrue_when_rowsToRemoveContainLegitValues", () => {
+      const { isAnyRowThatShouldBeDeletedFilled } =
+        useStimmabgabevermerkeStore();
+      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+
+      const result = isAnyRowThatShouldBeDeletedFilled(2);
+      expect(result).toBe(true);
+    });
+
+    it("should_returnFalse_when_rowsToRemoveContainOnlyNullOrZero", () => {
+      const { isAnyRowThatShouldBeDeletedFilled } =
+        useStimmabgabevermerkeStore();
+      const wahldaten = prepareWahldaten()
+        .vermerke([
+          {
+            blattnummer: 2,
+            stimmzettel: [
+              {
+                anzahl: 30,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 3,
+            stimmzettel: [
+              {
+                anzahl: 0,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 4,
+            stimmzettel: [
+              {
+                anzahl: null,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+        ])
+        .build();
+      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
+        .wahldaten(new Set([wahldaten, wahldaten]))
+        .build();
+      const result = isAnyRowThatShouldBeDeletedFilled(2);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe("changeRowCount", () => {
+    it("should_decreaseRowCount_when_enteredNumberIsLowerThanActual", () => {
+      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+
+      unitUnderTest.changeRowCount(2);
+
+      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
+        expect(wahldaten.vermerke.length).toBe(1);
+      });
+    });
+
+    it("should_increaseRowCount_when_enteredNumberIsHigherThanActual", () => {
+      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+
+      unitUnderTest.changeRowCount(5);
+
+      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
+        expect(wahldaten.vermerke.length).toBe(4);
+      });
+    });
+
+    it("should_notIncreaseOrDecrease_when_enteredNumberIsSameThanActual", () => {
+      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+
+      unitUnderTest.changeRowCount(3);
+
+      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
+        expect(wahldaten.vermerke.length).toBe(2);
+      });
+    });
+  });
+
+  describe("lowestNumberOfRowsOverAllWahldaten", () => {
+    it("should_calculateTheCorrectNumber_when_allWahldatenHaveSameNumberOfVermerke", () => {
+      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+
+      const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
+
+      expect(result).toBe(2);
+    });
+
+    it("should_calculateTheLowest_when_allWahldatenHaveDifferentNumberOfVermerke", () => {
+      const wahldatenOne = prepareWahldaten()
+        .vermerke([
+          {
+            blattnummer: 2,
+            stimmzettel: [
+              {
+                anzahl: 30,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 3,
+            stimmzettel: [
+              {
+                anzahl: 0,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 4,
+            stimmzettel: [
+              {
+                anzahl: null,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+        ])
+        .build();
+
+      const wahldatenTwo = prepareWahldaten()
+        .vermerke([
+          {
+            blattnummer: 2,
+            stimmzettel: [
+              {
+                anzahl: 30,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 3,
+            stimmzettel: [
+              {
+                anzahl: 0,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 4,
+            stimmzettel: [
+              {
+                anzahl: null,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 5,
+            stimmzettel: [
+              {
+                anzahl: null,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+        ])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
+        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+        .build();
+
+      const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
+
+      expect(result).toBe(3);
+    });
+  });
+  describe("stimmvermerkeTableTotalEachWahldaten", () => {
+    it("should_calculateCorrectArrayOfTotalVermerkeForWahldaten_when_givenStimmabgabevermerke", () => {
+      const wahldatenOne = prepareWahldaten()
+        .vermerke([
+          {
+            blattnummer: 2,
+            stimmzettel: [
+              {
+                anzahl: 1,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 3,
+            stimmzettel: [
+              {
+                anzahl: 2,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 4,
+            stimmzettel: [
+              {
+                anzahl: 3,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+        ])
+        .build();
+
+      const wahldatenTwo = prepareWahldaten()
+        .vermerke([
+          {
+            blattnummer: 2,
+            stimmzettel: [
+              {
+                anzahl: 5,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 3,
+            stimmzettel: [
+              {
+                anzahl: 7,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+          {
+            blattnummer: 4,
+            stimmzettel: [
+              {
+                anzahl: 13,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+              },
+            ],
+          },
+        ])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
+        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+        .build();
+
+      const result = unitUnderTest.stimmvermerkeTableTotalEachWahldaten;
+
+      expect(result).toStrictEqual([6, 25]);
+    });
+  });
+});

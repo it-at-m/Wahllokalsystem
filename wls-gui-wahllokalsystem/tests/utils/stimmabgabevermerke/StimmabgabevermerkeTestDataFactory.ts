@@ -6,6 +6,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { StimmzettelDTOStimmzettelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();
@@ -16,6 +17,27 @@ export function useStimmabgabevermerkeTestDataFactory() {
       eingenommeneWahlscheine: new Map([
         [_getRandomEnumValue(), generateRandomNumber(4)],
       ]),
+      vermerke: [
+        {
+          blattnummer: 2,
+          stimmzettel: [
+            {
+              anzahl: generateRandomNumber(2),
+              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+            },
+          ],
+        },
+        {
+          blattnummer: 3,
+          stimmzettel: [
+            {
+              anzahl: generateRandomNumber(2),
+              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+            },
+          ],
+        },
+      ],
+
       waehlerverzeichnisNummer: generateRandomNumber(1),
       wahlID: generateRandomString(10),
     };

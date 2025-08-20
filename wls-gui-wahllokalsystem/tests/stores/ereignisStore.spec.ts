@@ -36,6 +36,7 @@ const { prepareUser } = useUserTestDataFactory();
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
+  let userStore: ReturnType<typeof useUserStore>;
 
   const BESCHREIBUNG = "Beschreibung";
   const BESCHREIBUNG_NEU = "Neue Beschreibung";
@@ -47,6 +48,7 @@ describe("ereignisStore.ts", () => {
     });
     unitUnderTest = useEreignisStore(testPinia);
     wahlbezirkStore = useWahlbezirkStore(testPinia);
+    userStore = useUserStore(testPinia);
 
     vi.useFakeTimers({
       now: mockedNow,
@@ -69,7 +71,7 @@ describe("ereignisStore.ts", () => {
           );
 
           const wahlbezirkStore = useWahlbezirkStore();
-          wahlbezirkStore.schliessungsuhrzeitSent =
+          wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
             data.schliessungsuhrzeitSent;
 
           // @ts-expect-error: cannot set readonly
@@ -300,6 +302,20 @@ describe("ereignisStore.ts", () => {
       );
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
+
+    it("should_setKeineVorfaelleTrue_when_isBWB", async () => {
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      unitUnderTest.addEreignis();
+
+      await nextTick();
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
     });
 
     it("should_setKeineVorkommnisseFalse_when_vorkommnissWasAdded", async () => {
@@ -565,7 +581,8 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
           ereignisEintraege;
 
-        wahlbezirkStore.schliessungsuhrzeitSent = schliessungsuhrzeitSend;
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+          schliessungsuhrzeitSend;
 
         const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
           ImportAllFromEreignisArt,
@@ -969,7 +986,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: true,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1013,7 +1030,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: true,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1068,7 +1085,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: true,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1112,7 +1129,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: true,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1123,7 +1140,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1167,7 +1184,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: false,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1222,7 +1239,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {
@@ -1266,7 +1283,7 @@ function _generateTestdataForAreKeineEreignisseFlagsValid() {
         wahlbezirkKeineVorfaelle: false,
         wahlbezirkKeineVorkommnisse: true,
       },
-      expected: false,
+      expected: true,
     },
     {
       data: {

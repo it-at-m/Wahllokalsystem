@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { fn } from "@storybook/test";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const meta: Meta<typeof BaseNumberInput> = {
   component: BaseNumberInput,
@@ -56,28 +58,28 @@ export const Default: Story = {
 
 /**
  * ```
- * const REQUIRED = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
- * const rules = [REQUIRED]
+ * const required = (value: any) => (!!value && value.trim().length > 0) || "Feld darf nicht leer sein."
+ * const rules = [required]
  * ```
  */
 export const Required: Story = {
   args: {
     ...Default.args,
-    rules: [REQUIRED],
+    rules: [required],
   },
 };
 
 /**
  * ```
- * const MIN_NUMBER = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
- * const MAX_NUMBER = (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
- * const rules = [MIN_NUMBER(5), MAX_NUMBER(10)]
+ * const minNumber = (min: number) => (value: number) => value >= min || "Eingabe darf nicht kleiner als ${min} sein."
+ * const maxNumber = (max: number) => (value: number) => value <= max || "Eingabe darf nicht größer als ${max} sein."
+ * const rules = [minNumber(5), maxNumber(10)]
  * ```
  */
 export const InputRange: Story = {
   args: {
     ...Default.args,
-    rules: [MAX_NUMBER(10), MIN_NUMBER(5)],
+    rules: [maxNumber(10), minNumber(5)],
   },
 };
 

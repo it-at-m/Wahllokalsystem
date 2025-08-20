@@ -3,18 +3,24 @@ import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 import {
   Configuration,
   WaehleranzahlControllerApi,
+  WahllokalZustandControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 
 const { toDto, toModel } = useWahlbeteiligungMapper();
 const { applyLocalTimezoneOffset } = useDateTimeFormatter();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { logDebug } = useLogging("monitoringService");
 
 export function useMonitoringService() {
   const waehlerAnzahlControllerApi = new WaehleranzahlControllerApi(
+    new Configuration({ basePath: MONITORING_SERVICE_API_URL })
+  );
+  const wahllokalZustandControllerApi = new WahllokalZustandControllerApi(
     new Configuration({ basePath: MONITORING_SERVICE_API_URL })
   );
 
@@ -27,7 +33,7 @@ export function useMonitoringService() {
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? toModel(responseData) : undefined;
     } catch (e) {
-      console.debug(e);
+      logDebug("get wahlbeteiligung failed", e);
     }
   }
 
@@ -48,10 +54,18 @@ export function useMonitoringService() {
         toDto(wahlbeteiligung)
       );
     } catch (e) {
-      console.debug(e);
+      logDebug("postWahlbeteiligung failed", e);
       throw new Error("postWahlbeteiligung failed");
     }
   }
 
-  return { getWahlbeteiligung, postWahlbeteiligung };
+  async function postLastSeen(wahlbezirkID: string) {
+    try {
+      await wahllokalZustandControllerApi.postLastSeen(wahlbezirkID);
+    } catch {
+      throw new Error("postLastSeen failed");
+    }
+  }
+
+  return { getWahlbeteiligung, postLastSeen, postWahlbeteiligung };
 }

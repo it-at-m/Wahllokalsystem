@@ -5,6 +5,7 @@ import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -18,6 +19,7 @@ const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
+const { logDebug } = useLogging(`store-${storeID}`);
 
 interface EreignisCreateTemplate {
   beschreibung?: string;
@@ -27,8 +29,8 @@ interface EreignisCreateTemplate {
 export const useEreignisStore = defineStore(storeID, () => {
   const error = ref<string | null>(null);
 
-  const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
-  const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
+  const { currentUserWahlbezirkID, isUWB, isBWB } = storeToRefs(useUserStore());
+  const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 
   const isSaving = ref(false);
 
@@ -56,13 +58,11 @@ export const useEreignisStore = defineStore(storeID, () => {
     () =>
       hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
       (hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse ||
-        !schliessungsuhrzeitSent.value)
+        !schliessungsuhrzeitState.value.schliessungsuhrzeitSent)
   );
 
   const hasMissingEreignisFlagsForBWB = computed(
-    () =>
-      hasVorfaelle.value !== wahlbezirkEreignisse.value.keineVorfaelle &&
-      hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
+    () => hasVorkommnisse.value !== wahlbezirkEreignisse.value.keineVorkommnisse
   );
 
   const hasMissingEreignisFlags = computed(() => {
@@ -71,7 +71,10 @@ export const useEreignisStore = defineStore(storeID, () => {
       : hasMissingEreignisFlagsForBWB.value;
   });
 
-  watch(schliessungsuhrzeitSent, _onSchliessunguhrzeitSentChanged);
+  watch(
+    () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent,
+    _onSchliessunguhrzeitSentChanged
+  );
 
   function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
     const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
@@ -86,6 +89,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         wahlbezirkEreignisse.value.keineVorkommnisse = false;
         break;
     }
+
+    _updateKeineFlagsOfEreignisseBasedOnCurrentState();
   }
 
   function deleteEreignisByIndex(index: number) {
@@ -108,7 +113,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         ereignisToChange.ereignisart =
           getEreignisArtForDateRelatedToSchliessungsuhrzeit(
             uhrzeit,
-            schliessungsuhrzeitSent.value
+            schliessungsuhrzeitState.value.schliessungsuhrzeitSent
           );
         _updateKeineFlagsOfEreignisseBasedOnCurrentState();
       } else {
@@ -138,7 +143,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Laden der Ereignisse", e);
     }
   }
 
@@ -153,7 +158,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       );
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
-      console.debug(e);
+      logDebug("Fehler beim Speichern der Ereignisse", e);
     } finally {
       isSaving.value = false;
     }
@@ -165,7 +170,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     const uhrzeit = nonDefaultValues?.uhrzeit ?? new Date();
     const ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
       uhrzeit,
-      schliessungsuhrzeitSent.value
+      schliessungsuhrzeitState.value.schliessungsuhrzeitSent
     );
     const beschreibung = nonDefaultValues?.beschreibung;
 
@@ -185,7 +190,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _hasToUpdateKeineVorkommnisse(): boolean {
-    return schliessungsuhrzeitSent.value !== undefined;
+    return schliessungsuhrzeitState.value.schliessungsuhrzeitSent !== undefined;
   }
 
   function _onSchliessunguhrzeitSentChanged(
@@ -214,9 +219,8 @@ export const useEreignisStore = defineStore(storeID, () => {
         EreignisartEnum.Vorkommnis
       );
     }
-    wahlbezirkEreignisse.value.keineVorfaelle = !_hasEintragOfEreignisart(
-      EreignisartEnum.Vorfall
-    );
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      isBWB.value || !_hasEintragOfEreignisart(EreignisartEnum.Vorfall);
   }
 
   return {

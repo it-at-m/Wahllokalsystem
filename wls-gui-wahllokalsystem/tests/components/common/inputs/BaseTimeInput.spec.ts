@@ -19,9 +19,11 @@ import { VTextField } from "vuetify/components";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useRules } from "@/composables/common/rules.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
-import { REQUIRED } from "@/util/rules.ts";
+
+const { required } = useRules();
 
 const { getDateFromTimeString } = useDateTimeFormatter();
 const mockedNow = new Date();
@@ -67,7 +69,7 @@ describe("BaseTimeInput.vue", () => {
     });
 
     it("should_renderErrorMessage_when_ruleRequiredIsViolated", async (context) => {
-      const rules = [REQUIRED];
+      const rules = [required];
       const errorMessage = "Feld darf nicht leer sein.";
 
       await wrapper.setProps({ rules: rules, modelValue: new Date() });

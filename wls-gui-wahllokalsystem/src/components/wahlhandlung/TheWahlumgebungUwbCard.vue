@@ -8,10 +8,14 @@
           v-model="anzahlWahlurnenValidForm"
         >
           <base-wahlumgebung-wahlurnen-div
-            :wahl-vorbereitung="urnenwahlVorbereitung"
+            :wahl-vorbereitung="
+              urnenwahlVorbereitungState.urnenwahlVorbereitung
+            "
           />
           <v-checkbox
-            v-model="urnenwahlVorbereitung.urneVersiegelt"
+            v-model="
+              urnenwahlVorbereitungState.urnenwahlVorbereitung.urneVersiegelt
+            "
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
@@ -26,9 +30,12 @@
           <div class="d-flex flex-wrap justify-start">
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlWahltische"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlWahltische
+                "
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
@@ -37,9 +44,12 @@
             </div>
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlNebenraeume"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlNebenraeume
+                "
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
@@ -48,9 +58,12 @@
             </div>
             <div>
               <v-number-input
-                v-model="urnenwahlVorbereitung.anzahlWahlkabinen"
+                v-model="
+                  urnenwahlVorbereitungState.urnenwahlVorbereitung
+                    .anzahlWahlkabinen
+                "
                 class="mr-4"
-                :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(99)]"
+                :rules="[required, minNumber(0), maxNumber(99)]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
@@ -73,7 +86,7 @@
         <base-button-save
           active
           :disabled="isSaveButtonDisabled"
-          :loading="urnenWahlVorbereitungIsSaving"
+          :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
@@ -88,36 +101,43 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
 const { wahlen } = storeToRefs(useWahlenStore());
-const { sendUrnenwahlvorbereitung } = useWahlbezirkStore();
-const { urnenWahlVorbereitungIsSaving, urnenwahlVorbereitung } =
-  storeToRefs(useWahlbezirkStore());
+const { urnenwahlVorbereitungActions } = useWahlbezirkStore();
+const { urnenwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
     abstimmungsschutzvorrichtungenValidForm.value !== true ||
-    !urnenwahlVorbereitung.value.urneVersiegelt ||
+    !urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urneVersiegelt ||
     isMinimumRequired.value
   );
 });
 
 const isMinimumRequired = computed(() => {
   const tischeSichtblenden =
-    Number(urnenwahlVorbereitung.value.anzahlWahltische) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahltische
+    ) || 0;
   const nebenraeumeWahlraum =
-    Number(urnenwahlVorbereitung.value.anzahlNebenraeume) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlNebenraeume
+    ) || 0;
   const wahlkabinen =
-    Number(urnenwahlVorbereitung.value.anzahlWahlkabinen) || 0;
+    Number(
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.anzahlWahlkabinen
+    ) || 0;
 
   return tischeSichtblenden + nebenraeumeWahlraum + wahlkabinen < 1;
 });
@@ -130,6 +150,6 @@ const checkboxLabelText = computed(() => {
 });
 
 function onSaveWahlumgebungUWBClicked() {
-  sendUrnenwahlvorbereitung();
+  urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 }
 </script>

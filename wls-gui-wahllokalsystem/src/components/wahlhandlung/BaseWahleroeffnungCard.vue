@@ -6,14 +6,14 @@
         <slot name="userHint" />
         <v-form v-model="isEroeffnungsuhrzeitFormValid">
           <base-time-input
-            v-model="eroeffnungsuhrzeit"
+            v-model="eroeffnungsuhrzeitState.eroeffnungsuhrzeit"
             class="mt-5"
             max-width="300"
             :rules="[
-              REQUIRED,
-              TIME_NOT_IN_FUTURE,
-              TIME_GREATER_OR_EQUAL(fruehesteEroeffnungsuhrzeit),
-              TIME_LESS_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+              required,
+              timeNotInFuture,
+              timeGreaterOrEqual(fruehesteEroeffnungsuhrzeit),
+              timeLessOrEqual(fruehesteSchliessungsuhrzeit),
             ]"
           />
         </v-form>
@@ -21,7 +21,7 @@
       <v-card-actions>
         <base-button-save
           active
-          :loading="eroeffnungsuhrzeitIsSaving"
+          :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveEroeffnungsuhrzeitClicked"
         />
@@ -29,8 +29,11 @@
     </v-card>
     <base-dialog-begruendung
       :visible="isZuSpaet"
-      dialogtitle=""
+      dialogtitle="Verspäteter Beginn der Wahlhandlung"
       label="Begründung"
+      :max-length-for-begruendung="
+        MAX_LENGTH_FOR_TEXT_INPUT - BEGRUENDUNG_PREFIX.length
+      "
       data-test="zuSpaetDialog"
       @cancel="onCancelBegruendung"
       @confirm="onConfirmBegruendung"
@@ -53,21 +56,19 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  REQUIRED,
-  TIME_GREATER_OR_EQUAL,
-  TIME_LESS_OR_EQUAL,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
+
+const { required, timeGreaterOrEqual, timeLessOrEqual, timeNotInFuture } =
+  useRules();
 
 const { getDateFromTimeString, toHhMm } = useDateTimeFormatter();
 
-const wahlbezirkStore = useWahlbezirkStore();
-const { eroeffnungsuhrzeit, eroeffnungsuhrzeitIsSaving } =
-  storeToRefs(wahlbezirkStore);
+const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
+const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const {
   fruehesteEroeffnungsuhrzeit,
   fruehesteSchliessungsuhrzeit,
@@ -79,17 +80,19 @@ const { addEreignis, sendEreignisse } = ereignisStore;
 const isEroeffnungsuhrzeitFormValid = ref<boolean | null>(null);
 const isZuSpaet = ref(false);
 
+const BEGRUENDUNG_PREFIX = "Verspätete Eröffnung: ";
+
 const isSaveButtonDisabled = computed(
   () => isEroeffnungsuhrzeitFormValid.value !== true
 );
 
 function onSaveEroeffnungsuhrzeitClicked() {
   if (
-    eroeffnungsuhrzeit.value !== undefined &&
-    eroeffnungsuhrzeit.value <=
+    eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
+    eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
       getDateFromTimeString(spaetesteEroeffnungsuhrzeit.value)
   ) {
-    wahlbezirkStore.sendEroeffnungsuhrzeit();
+    eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
   } else {
     isZuSpaet.value = true;
   }
@@ -97,15 +100,18 @@ function onSaveEroeffnungsuhrzeitClicked() {
 
 function onCancelBegruendung() {
   isZuSpaet.value = false;
-  eroeffnungsuhrzeit.value = undefined;
+  eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit = undefined;
 }
 
 function onConfirmBegruendung(begruendung: string): void {
   isZuSpaet.value = false;
 
-  addEreignis({ uhrzeit: eroeffnungsuhrzeit.value, beschreibung: begruendung });
+  addEreignis({
+    uhrzeit: eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit,
+    beschreibung: BEGRUENDUNG_PREFIX + begruendung,
+  });
   sendEreignisse();
 
-  wahlbezirkStore.sendEroeffnungsuhrzeit();
+  eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
 }
 </script>

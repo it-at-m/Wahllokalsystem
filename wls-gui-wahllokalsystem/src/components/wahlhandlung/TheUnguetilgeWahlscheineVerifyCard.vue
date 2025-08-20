@@ -8,7 +8,7 @@
       >
         <v-number-input
           :model-value="wahlscheinnummer"
-          :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999999)]"
+          :rules="[required, minNumber(1), maxNumber(9999999)]"
           label="Wahlscheinnummer"
           max-width="300"
           data-test="number-input-wahlscheinnummer"
@@ -90,7 +90,7 @@
         >{{ searchButtonLabel }}</v-btn
       >
       <base-button-refresh
-        :loading="ungueltigeWahlscheineIsLoading"
+        :loading="ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading"
         @click="onRefreshClicked"
       />
     </v-card-actions>
@@ -108,9 +108,11 @@ import { computed, ref, useTemplateRef } from "vue";
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 const isFormValid = ref<boolean | null>(null);
 const isSearchButtonDisabled = computed(() => !isFormValid.value);
@@ -118,15 +120,9 @@ const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
 ) as Readonly<ShallowRef<InstanceType<typeof VForm>>>;
 
-const {
-  getUngueltigerWahlscheinByWahlscheinnummer,
-  loadUngueltigeWahlscheine,
-} = useWahlbezirkStore();
-const {
-  ungueltigeWahlscheineIsLoading,
-  ungueltigeWahlscheineIsEmpty,
-  ungueltigeWahlscheineLoadingFailed,
-} = storeToRefs(useWahlbezirkStore());
+const { ungueltigeWahlscheineActions } = useWahlbezirkStore();
+const { ungueltigeWahlscheineState, ungueltigeWahlscheineGetter } =
+  storeToRefs(useWahlbezirkStore());
 
 const wahlscheinnummer = ref<null | number>(null);
 //null - no hit on search
@@ -138,14 +134,14 @@ const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>
-    ungueltigeWahlscheineIsEmpty.value &&
-    !ungueltigeWahlscheineLoadingFailed.value &&
-    !ungueltigeWahlscheineIsLoading.value
+    ungueltigeWahlscheineGetter.value.ungueltigeWahlscheineIsEmpty &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading
 );
 const feedbackLoadingFailedIsVisible = computed(
   () =>
-    ungueltigeWahlscheineLoadingFailed.value &&
-    !ungueltigeWahlscheineIsLoading.value
+    ungueltigeWahlscheineState.value.ungueltigeWahlscheineLoadingFailed &&
+    !ungueltigeWahlscheineState.value.ungueltigeWahlscheineIsLoading
 );
 const feedbackWahlscheinIsGueltigIsVisible = computed(
   () => ungueltigerWahlschein.value === null
@@ -161,7 +157,7 @@ const titleFeedbackWahlscheinUngueltig = computed(() => {
 });
 
 function onRefreshClicked() {
-  loadUngueltigeWahlscheine();
+  ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
 }
 
 function onSearchClicked() {
@@ -169,9 +165,10 @@ function onSearchClicked() {
     resetUngueltigerWahlschein();
     wahlscheinValidationForm.value.reset();
   } else if (wahlscheinnummer.value !== null) {
-    ungueltigerWahlschein.value = getUngueltigerWahlscheinByWahlscheinnummer(
-      `${wahlscheinnummer.value}`
-    );
+    ungueltigerWahlschein.value =
+      ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer(
+        `${wahlscheinnummer.value}`
+      );
   }
 }
 

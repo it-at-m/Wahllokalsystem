@@ -7,9 +7,9 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlWahlbriefeValid">
         <v-number-input
-          v-model="wahlbriefDaten.wahlbriefe"
+          v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(1), maxNumber(9999)]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
           :max-width="WIDTH"
@@ -24,9 +24,9 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlVerzeichnisseValid">
         <v-number-input
-          v-model="wahlbriefDaten.verzeichnisseUngueltige"
+          v-model="wahlbriefDatenState.wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
           :max-width="WIDTH"
@@ -38,9 +38,9 @@
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlNachtraegeValid">
         <v-number-input
-          v-model="wahlbriefDaten.nachtraege"
+          v-model="wahlbriefDatenState.wahlbriefDaten.nachtraege"
           class="mr-4"
-          :rules="[REQUIRED, MIN_NUMBER(0), MAX_NUMBER(9999)]"
+          :rules="[required, minNumber(0), maxNumber(9999)]"
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
           :max-width="WIDTH"
@@ -60,9 +60,11 @@
         <div class="d-flex flex-wrap justify-start">
           <div>
             <v-number-input
-              v-model="wahlbriefDaten.nachtraeglichUeberbrachte"
+              v-model="
+                wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
+              "
               class="mr-4"
-              :rules="[MIN_NUMBER(0), MAX_NUMBER(9999)]"
+              :rules="[minNumber(0), maxNumber(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
               label="Anzahl Wahlbriefe"
               :min-width="WIDTH"
@@ -72,7 +74,9 @@
           </div>
           <div>
             <base-time-input
-              v-model="wahlbriefDaten.zeitNachtraeglichUeberbrachte"
+              v-model="
+                wahlbriefDatenState.wahlbriefDaten.zeitNachtraeglichUeberbrachte
+              "
               class="mr-4"
               :min-width="WIDTH"
               :max-width="WIDTH"
@@ -89,7 +93,7 @@
         active
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
-        :loading="wahlbriefDatenIsSaving"
+        :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -102,17 +106,13 @@ import { computed, ref, watch } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  MAX_NUMBER,
-  MIN_NUMBER,
-  REQUIRED,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
 
-const { sendWahlbriefdaten } = useWahlbezirkStore();
-const { wahlbriefDaten, wahlbriefDatenIsSaving } =
-  storeToRefs(useWahlbezirkStore());
+const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
+
+const { wahlbriefDatenActions } = useWahlbezirkStore();
+const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
@@ -126,18 +126,19 @@ const WIDTH = 300;
 const getDateRules = () => {
   const rules = [];
   if (isZeitNachtragelichUeberbrachtRequired()) {
-    rules.push(REQUIRED);
+    rules.push(required);
   }
-  rules.push(TIME_NOT_IN_FUTURE);
+  rules.push(timeNotInFuture);
   return rules;
 };
 
 watch(
-  () => wahlbriefDaten.value.nachtraeglichUeberbrachte,
+  () => wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte,
   (newValue) => {
     if (newValue === undefined || newValue < 1) {
       nachtraeglichUeberbrachteForm.value?.resetValidation();
-      wahlbriefDaten.value.zeitNachtraeglichUeberbrachte = undefined;
+      wahlbriefDatenState.value.wahlbriefDaten.zeitNachtraeglichUeberbrachte =
+        undefined;
     } else {
       nachtraeglichUeberbrachteForm.value?.validate();
     }
@@ -156,12 +157,13 @@ const isSaveButtonDisabled = computed(() => {
 
 function isZeitNachtragelichUeberbrachtRequired() {
   return (
-    wahlbriefDaten.value.nachtraeglichUeberbrachte !== undefined &&
-    wahlbriefDaten.value.nachtraeglichUeberbrachte > 0
+    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte !==
+      undefined &&
+    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte > 0
   );
 }
 
 function onSaveBriefwahldatenClicked() {
-  sendWahlbriefdaten();
+  wahlbriefDatenActions.sendWahlbriefdaten();
 }
 </script>

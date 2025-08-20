@@ -22,6 +22,9 @@ export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 export const WAHLHOTLINE = "089 233 96233";
 export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
 
+export const REQUEST_HEADER_OFFLINE_STRATEGY = "X-WLS-SW-STRATEGY";
+export const HTTP_HEADER_CONTENT_TYPE = "content-type";
+
 const WLS_SERVICE_API_URL = "/api/";
 
 export const BROADCAST_SERVICE_API_URL =
@@ -43,3 +46,5 @@ export const BRIEFWAHL_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "briefwahl-service";
 export const ERGEBNISMELDUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "ergebnismeldung-service";
+
+export const MAX_LENGTH_FOR_TEXT_INPUT = 500;

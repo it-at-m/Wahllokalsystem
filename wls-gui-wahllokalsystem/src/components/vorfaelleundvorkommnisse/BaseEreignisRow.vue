@@ -13,7 +13,7 @@
     <v-col>
       <v-textarea
         v-model="ereignisModel.beschreibung"
-        :rules="[MIN_LENGTH(4), MAX_LENGTH(maxLengthForEreignisBeschreibung)]"
+        :rules="[minLength(4), maxLength(maxLengthForEreignisBeschreibung)]"
         rows="1"
         label="Beschreibung"
         auto-grow
@@ -43,9 +43,12 @@ import { computed, watch } from "vue";
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
-import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 
-const maxLengthForEreignisBeschreibung = 500;
+const { maxLength, minLength } = useRules();
+
+const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;
 
 defineProps({
   lineNumber: {

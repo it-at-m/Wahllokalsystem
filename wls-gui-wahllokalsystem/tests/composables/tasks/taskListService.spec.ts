@@ -13,6 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
+  createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
 }));
 
@@ -43,6 +44,12 @@ vi.mock(
 vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
   useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
+  useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlscheine,
   })),
 }));
 
@@ -107,6 +114,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksWahlscheine.mockReturnValue([
+        {
+          name: "Wahlscheine - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -117,6 +130,7 @@ describe("taskListService.ts", () => {
         "Wahlvorstand",
         "UngültigeWahlscheine",
         "Kopfdaten - " + mockedWahl.name,
+        "Wahlscheine - " + mockedWahl.name,
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -129,6 +143,7 @@ describe("taskListService.ts", () => {
         mockDefinitions.createTasksUngueltigeWahlscheine
       ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
     });
   });
 });

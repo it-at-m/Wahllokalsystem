@@ -157,7 +157,7 @@ watch(
 
 const isAnzahlWahlbriefeInputDisabled = computed(() => {
   return (
-    currentTime.value <= getDateFromTimeString(fruehesteSchliessungsuhrzeit)
+    currentTime.value < getDateFromTimeString(fruehesteSchliessungsuhrzeit)
   );
 });
 

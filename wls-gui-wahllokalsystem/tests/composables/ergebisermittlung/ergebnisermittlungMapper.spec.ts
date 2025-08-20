@@ -31,9 +31,10 @@ describe("ergebnisermittlungMapper.ts", () => {
     });
 
     it("should_returnDto_when_givenModelWithUhrzeit", () => {
-      const eroeffnungszeit = new Date();
-      const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
-      model.urneneroeffnungsUhrzeit = eroeffnungszeit;
+      const eroeffnungszeit = new Date("2025-08-20T15:00:00.000Z");
+      const model: Stimmzettelumschlaege = createStimmzettelumschlaege({
+        urneneroeffnungsUhrzeit: eroeffnungszeit,
+      });
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 

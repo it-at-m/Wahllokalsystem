@@ -20,7 +20,6 @@ export function useStimmzettelumschlaegeTestDataFactory() {
     };
   }
 
-  // todo: ein zweites mit uhrzeit oder so lassen?
   function createStimmzettelumschlaege(
     overrides: Partial<Stimmzettelumschlaege> = {}
   ): Stimmzettelumschlaege {

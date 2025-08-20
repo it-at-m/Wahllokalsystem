@@ -68,6 +68,7 @@ export const Default: Story = {
         wahltag: "",
         stimmzettelumschlaege: {
           anzahlWaehler: 0,
+          urneneroeffnungsUhrzeit: undefined,
         },
       },
       {
@@ -82,6 +83,7 @@ export const Default: Story = {
         wahltag: "",
         stimmzettelumschlaege: {
           anzahlWaehler: 0,
+          urneneroeffnungsUhrzeit: undefined,
         },
       },
     ];

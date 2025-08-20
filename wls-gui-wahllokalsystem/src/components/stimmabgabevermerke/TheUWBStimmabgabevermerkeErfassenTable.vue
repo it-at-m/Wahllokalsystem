@@ -10,8 +10,8 @@
       <v-btn
         class="ml-4 mt-3"
         primary
-        @click="changeRowCount"
         :disabled="disableChangeRowSizeButton"
+        @click="changeRowCountOrOpenDialog"
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
@@ -54,47 +54,57 @@
             />
           </td>
         </tr>
+        <tr>
+          <td><b>Gesammt</b></td>
+          <td
+            v-for="totalCount in stimmvermerkeTableTotalEachWahldaten"
+            :key="totalCount"
+          >
+            <b>{{ totalCount }}</b>
+          </td>
+        </tr>
       </tbody>
     </v-table>
+    <base-dialog
+      :visible="deleteDialog"
+      dialogtitle="Reduzierung der Blätteranzahl des Wählerverzeichnisses"
+      confirmtext="Trotzdem Löschen"
+      canceltext="Abbrechen"
+      icon="$information"
+      @cancel="deleteDialog = false"
+      @confirm="onDialogConfirmDeletingRows"
+      ><div>
+        Sie wollen Blätter löschen, für die Sie Stimmabgabevermerke eingetragen
+        haben. Wenn Sie diese löschen, werden dadurch auch die Werte für die
+        Stimmabgabevermerke gelöscht.
+      </div></base-dialog
+    >
   </v-container>
 </template>
 
 <script setup lang="ts">
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
-
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
 
-const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
+const {
+  stimmabgabevermerke,
+  stimmvermerkeTableTotalEachWahldaten,
+  lowestNumberOfRowsOverAllWahldaten,
+} = storeToRefs(useStimmabgabevermerkeStore());
+const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =
+  useStimmabgabevermerkeStore();
 const { getWahlNameOrBlankStringById } = useWahlenStore();
 
 onMounted(() => {
-  console.log(stimmabgabevermerke.value.wahldaten.values().next().value);
-  rowSize.value =
-    stimmabgabevermerke.value.wahldaten.values().next().value.vermerke.length +
-    1;
+  rowSize.value = lowestNumberOfRowsOverAllWahldaten.value + 1;
 });
 
-const lowestNumberOfRowsOverAllWahldaten = computed(() => {
-  const wahldatenIterator = stimmabgabevermerke.value?.wahldaten.values();
-  if (!wahldatenIterator) {
-    return 0;
-  }
-  let lowestVermerkeLength = Infinity;
-  for (const wahldaten of wahldatenIterator) {
-    const vermerkeLength = wahldaten.vermerke.length;
-    if (vermerkeLength < lowestVermerkeLength) {
-      lowestVermerkeLength = vermerkeLength;
-    }
-  }
-  return lowestVermerkeLength === Infinity ? 0 : lowestVermerkeLength;
-});
-
+const deleteDialog = ref(false);
 const rowSize = ref<number | null>(null);
 
 const changeRowSizeButtonText = computed(() => {
@@ -117,57 +127,24 @@ const disableChangeRowSizeButton = computed(() => {
   return rowSize.value == null || rowSize.value <= 0;
 });
 
-function changeRowCount() {
+function changeRowCountOrOpenDialog() {
   if (
     lowestNumberOfRowsOverAllWahldaten.value != null &&
-    rowSize.value != null &&
-    rowSize.value - 1 > lowestNumberOfRowsOverAllWahldaten.value
+    rowSize.value != null
   ) {
-    increaseRows();
-  } else {
-    decreaseRows();
+    if (isAnyRowThatShouldBeDeletedFilled(rowSize.value)) {
+      deleteDialog.value = true;
+    } else {
+      changeRowCount(rowSize.value);
+    }
   }
 }
 
-function increaseRows() {
-  stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
-    if (
-      rowSize.value != null &&
-      lowestNumberOfRowsOverAllWahldaten.value != null
-    ) {
-      for (
-        let rowNumber = lowestNumberOfRowsOverAllWahldaten.value;
-        rowNumber < rowSize.value - 1;
-        rowNumber++
-      ) {
-        wahldaten.vermerke.push({
-          blattnummer: rowNumber + 1,
-          stimmzettel: [
-            {
-              anzahl: 1,
-              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-            },
-          ],
-        });
-      }
-    }
-  });
-}
-
-function decreaseRows() {
-  const currentLowestNumberOfrowsOverAllWahldaten =
-    lowestNumberOfRowsOverAllWahldaten.value;
-  stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
-    if (
-      rowSize.value != null &&
-      rowSize.value > 0 &&
-      currentLowestNumberOfrowsOverAllWahldaten
-    ) {
-      const removeRows =
-        rowSize.value - currentLowestNumberOfrowsOverAllWahldaten - 1;
-      wahldaten.vermerke.splice(removeRows, removeRows * -1);
-    }
-  });
+function onDialogConfirmDeletingRows() {
+  if (rowSize.value != null) {
+    changeRowCount(rowSize.value);
+    deleteDialog.value = false;
+  }
 }
 </script>
 

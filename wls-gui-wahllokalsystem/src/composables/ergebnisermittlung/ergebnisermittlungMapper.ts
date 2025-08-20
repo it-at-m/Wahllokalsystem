@@ -16,6 +16,10 @@ export function useErgebnisermittlungMapper() {
         wahlbezirkID
       ),
       anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+      urneneroeffnungsUhrzeit:
+        model.urneneroeffnungsUhrzeit != null
+          ? model.urneneroeffnungsUhrzeit.toISOString()
+          : undefined,
     };
   }
 

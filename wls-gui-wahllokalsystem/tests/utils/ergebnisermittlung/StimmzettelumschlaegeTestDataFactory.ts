@@ -23,6 +23,7 @@ export function useStimmzettelumschlaegeTestDataFactory() {
   function createStimmzettelumschlaege(): Stimmzettelumschlaege {
     return {
       anzahlWaehler: generateRandomNumber(3),
+      urneneroeffnungsUhrzeit: undefined,
     };
   }
 

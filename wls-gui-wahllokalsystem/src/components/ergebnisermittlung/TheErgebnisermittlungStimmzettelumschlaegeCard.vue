@@ -2,16 +2,16 @@
   <v-container>
     <v-card v-if="wahl">
       <v-card-title>{{ title }}</v-card-title>
-      <v-card-text class="pb-0 pt-2">
+      <v-card-text class="pb-0 pt-2 mr-4">
         <v-form v-model="anzahlStimmzettelValidForm">
           <base-time-input
             v-if="useTime"
+            v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
             label="Uhrzeit der Öffnung der Wahlurne"
             min-width="20rem"
           />
           <v-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-            class="mr-4"
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
             label="Anzahl der Stimmzettel"

@@ -64,12 +64,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithEnabledSaveButton_when_anzahlIsZero", async (context) => {
+    it("should_renderWithEnabledSaveButton_when_anzahlIsZeroAndUseTimeisFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 0 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 0,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 
@@ -90,12 +93,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
-    it("should_renderWithDisabledSaveButton_when_invalidAnzahlIsEntered", async (context) => {
+    it("should_renderWithDisabledSaveButton_when_invalidAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: -1 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: -1,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 
@@ -116,12 +122,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
-    it("should_renderWithDisabledSaveButton_when_anzahlExceedsMaximum", async (context) => {
+    it("should_renderWithDisabledSaveButton_when_anzahlExceedsMaximumAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 10000 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 10000,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 
@@ -142,12 +151,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
-    it("should_renderWithEnabledSaveButton_when_validAnzahlIsEntered", async (context) => {
+    it("should_renderWithEnabledSaveButton_when_validAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 33 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 33,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 
@@ -168,12 +180,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
-    it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
+    it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrueAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 33 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 33,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
       wahlenStore.isStimmzettelumschlaegeSaving = true;
@@ -195,12 +210,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_updateWahlenInStore_when_validAnzahlIsEntered", async () => {
+    it("should_updateWahlenInStore_when_validAnzahlIsEnteredAndUseTimeIsFalse", async () => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 0 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 0,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 
@@ -223,12 +241,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       );
     });
 
-    it("should_callSaveStimmzettelumschlaege_when_saveButtonIsClicked", async () => {
+    it("should_callSaveStimmzettelumschlaege_when_saveButtonIsClickedAndUseTimeIsFalse", async () => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 33 })
+          .stimmzettelumschlaege({
+            anzahlWaehler: 33,
+            urneneroeffnungsUhrzeit: undefined,
+          })
           .build(),
       ];
 

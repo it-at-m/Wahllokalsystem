@@ -15,7 +15,7 @@ describe("ergebnisermittlungMapper.ts", () => {
     useStimmzettelumschlaegeTestDataFactory();
 
   describe("toDto", () => {
-    it("should_returnDto_when_givenModel", () => {
+    it("should_returnDto_when_givenModelWithoutUhrzeit", () => {
       const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
@@ -23,6 +23,25 @@ describe("ergebnisermittlungMapper.ts", () => {
       const expectedDto: StimmzettelumschlaegeDTO = {
         bezirkUndWahlID: createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
         anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+        urneneroeffnungsUhrzeit: undefined,
+      };
+
+      const result = toDto(model, wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(expectedDto);
+    });
+
+    it("should_returnDto_when_givenModelWithUhrzeit", () => {
+      const eroeffnungszeit = new Date();
+      const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
+      model.urneneroeffnungsUhrzeit = eroeffnungszeit;
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const expectedDto: StimmzettelumschlaegeDTO = {
+        bezirkUndWahlID: createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
+        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+        urneneroeffnungsUhrzeit: eroeffnungszeit.toISOString(),
       };
 
       const result = toDto(model, wahlID, wahlbezirkID);

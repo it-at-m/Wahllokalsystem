@@ -8,7 +8,7 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -80,10 +80,6 @@ describe("TheWahlbriefErfassungCard.vue", () => {
     });
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlbriefErfassungCardWithDisabledSave_when_mounted", async (context) => {
       const saveButton = wrapper.findComponent(BaseButtonSave);
@@ -133,6 +129,13 @@ describe("TheWahlbriefErfassungCard.vue", () => {
     it("should_renderWithDisabledInputForNachgelieferteWahlbriefe_when_currentTimeIsBeforeFruehesteSchliessungsuhrzeit", async (context) => {
       // @ts-expect-error: cannot set readonly
       useInfomanagementStore().fruehesteSchliessungsuhrzeit = "10:15:00";
+      await nextTick();
+
+      wrapper = mount(TheWahlbriefErfassungCard, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+      });
 
       const input = wrapper.findComponent<typeof VNumberInput>(
         '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'

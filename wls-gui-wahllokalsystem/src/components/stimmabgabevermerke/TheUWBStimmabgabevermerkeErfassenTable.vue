@@ -3,7 +3,7 @@
     <div class="d-flex">
       <v-number-input
         v-model="rowSize"
-        :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(250)]"
+        :rules="[required, minNumber(1), maxNumber(250)]"
         max-width="15rem"
         label="Anzahl der Blätter"
       />
@@ -87,9 +87,11 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { minNumber, maxNumber, required } = useRules();
 
 const {
   stimmabgabevermerke,

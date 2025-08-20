@@ -69,9 +69,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 0,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 0 })
           .build(),
       ];
 
@@ -97,9 +95,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: -1,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: -1 })
           .build(),
       ];
 
@@ -125,9 +121,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 10000,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 10000 })
           .build(),
       ];
 
@@ -153,9 +147,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 33,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 33 })
           .build(),
       ];
 
@@ -181,9 +173,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 33,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 33 })
           .build(),
       ];
       wahlenStore.isStimmzettelumschlaegeSaving = true;
@@ -210,9 +200,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 0,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 0 })
           .build(),
       ];
 
@@ -240,9 +228,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       wahlenStore.wahlen = [
         prepareWahl()
           .wahlID("123")
-          .stimmzettelumschlaege({
-            anzahlWaehler: 33,
-          })
+          .stimmzettelumschlaege({ anzahlWaehler: 33 })
           .build(),
       ];
 

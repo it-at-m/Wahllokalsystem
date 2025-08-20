@@ -73,7 +73,7 @@
               :min-width="WIDTH"
               :max-width="WIDTH"
               clearable
-              :disabled="isAnzahlWahlbriefeInputDisabled"
+              :disabled="isAnzahlNachtraeglichUeberbrachteInputDisabled"
             />
           </div>
           <div>
@@ -155,7 +155,7 @@ watch(
   }
 );
 
-const isAnzahlWahlbriefeInputDisabled = computed(() => {
+const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
   return (
     currentTime.value < getDateFromTimeString(fruehesteSchliessungsuhrzeit)
   );

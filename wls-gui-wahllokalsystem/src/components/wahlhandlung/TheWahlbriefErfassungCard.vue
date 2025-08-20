@@ -73,6 +73,7 @@
               :min-width="WIDTH"
               :max-width="WIDTH"
               clearable
+              :disabled="isAnzahlWahlbriefeInputDisabled"
             />
           </div>
           <div>
@@ -111,10 +112,12 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useRules } from "@/composables/common/rules.ts";
+import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
+const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
@@ -151,6 +154,12 @@ watch(
     }
   }
 );
+
+const isAnzahlWahlbriefeInputDisabled = computed(() => {
+  return (
+    currentTime.value <= getDateFromTimeString(fruehesteSchliessungsuhrzeit)
+  );
+});
 
 const isSaveButtonDisabled = computed(() => {
   return (

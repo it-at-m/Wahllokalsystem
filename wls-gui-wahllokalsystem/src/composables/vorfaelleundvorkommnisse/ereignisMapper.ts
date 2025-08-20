@@ -35,7 +35,9 @@ export function useEreignisMapper() {
     return {
       keineVorfaelle: ereignisseModel.keineVorfaelle,
       keineVorkommnisse: ereignisseModel.keineVorkommnisse,
-      ereigniseintraege: ereignisseAsDto,
+      ereigniseintraege: ereignisseAsDto?.filter(
+        (ereignis) => ereignis.beschreibung
+      ),
     };
   }
 

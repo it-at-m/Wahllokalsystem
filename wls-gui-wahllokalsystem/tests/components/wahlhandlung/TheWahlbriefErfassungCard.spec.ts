@@ -146,6 +146,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
+
     it("should_renderWithEnabledInputForNachgelieferteWahlbriefe_when_currentTimeIsAfterFruehesteSchliessungsuhrzeit", async (context) => {
       // @ts-expect-error: cannot set readonly
       useInfomanagementStore().fruehesteSchliessungsuhrzeit = "09:15:00";

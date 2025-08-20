@@ -64,7 +64,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithEnabledSaveButton_when_anzahlIsZeroAndUseTimeisFalse", async (context) => {
+    it("should_renderWithEnabledSaveButton_when_anzahlIsZeroAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlen = [
         prepareWahl()

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card v-if="wahl">
-      <v-card-title>Wahlurne öffnen und Stimmzettel zählen</v-card-title>
+      <v-card-title>{{ title }}</v-card-title>
       <v-card-text class="pb-0 pt-2">
         <v-form v-model="anzahlStimmzettelValidForm">
           <v-number-input
@@ -38,6 +38,7 @@ const { maxNumber, minNumber, required } = useRules();
 
 const props = defineProps<{
   wahlId: string;
+  title: string;
 }>();
 
 const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();

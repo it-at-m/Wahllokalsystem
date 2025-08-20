@@ -4,6 +4,11 @@
       <v-card-title>{{ title }}</v-card-title>
       <v-card-text class="pb-0 pt-2">
         <v-form v-model="anzahlStimmzettelValidForm">
+          <base-time-input
+            v-if="useTime"
+            label="Uhrzeit der Öffnung der Wahlurne"
+            min-width="20rem"
+          />
           <v-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
             class="mr-4"
@@ -31,6 +36,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -39,6 +45,7 @@ const { maxNumber, minNumber, required } = useRules();
 const props = defineProps<{
   wahlId: string;
   title: string;
+  useTime?: boolean;
 }>();
 
 const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();

@@ -44,7 +44,6 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       beanstandeteWahlbriefe: [],
       stimmzettelumschlaege: {
         anzahlWaehler: null,
-        urneneroeffnungsUhrzeit: undefined,
       },
     },
     {
@@ -59,7 +58,6 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       beanstandeteWahlbriefe: [],
       stimmzettelumschlaege: {
         anzahlWaehler: null,
-        urneneroeffnungsUhrzeit: undefined,
       },
     },
   ];

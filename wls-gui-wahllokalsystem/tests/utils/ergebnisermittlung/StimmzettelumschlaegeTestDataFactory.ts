@@ -20,10 +20,13 @@ export function useStimmzettelumschlaegeTestDataFactory() {
     };
   }
 
-  function createStimmzettelumschlaege(): Stimmzettelumschlaege {
+  // todo: ein zweites mit uhrzeit oder so lassen?
+  function createStimmzettelumschlaege(
+    overrides: Partial<Stimmzettelumschlaege> = {}
+  ): Stimmzettelumschlaege {
     return {
       anzahlWaehler: generateRandomNumber(3),
-      urneneroeffnungsUhrzeit: undefined,
+      ...overrides,
     };
   }
 

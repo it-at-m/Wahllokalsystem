@@ -71,7 +71,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 0,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -100,7 +99,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: -1,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -129,7 +127,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 10000,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -158,7 +155,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 33,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -187,7 +183,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 33,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -217,7 +212,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 0,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];
@@ -248,7 +242,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .wahlID("123")
           .stimmzettelumschlaege({
             anzahlWaehler: 33,
-            urneneroeffnungsUhrzeit: undefined,
           })
           .build(),
       ];

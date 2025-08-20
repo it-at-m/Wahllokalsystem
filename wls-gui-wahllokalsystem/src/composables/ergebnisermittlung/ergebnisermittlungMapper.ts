@@ -10,17 +10,19 @@ export function useErgebnisermittlungMapper() {
     wahlID: string,
     wahlbezirkID: string
   ): StimmzettelumschlaegeDTO {
-    return {
+    const dto: StimmzettelumschlaegeDTO = {
       bezirkUndWahlID: _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
         wahlID,
         wahlbezirkID
       ),
       anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
-      urneneroeffnungsUhrzeit:
-        model.urneneroeffnungsUhrzeit != null
-          ? model.urneneroeffnungsUhrzeit.toISOString()
-          : undefined,
     };
+
+    if (model.urneneroeffnungsUhrzeit) {
+      dto.urneneroeffnungsUhrzeit = model.urneneroeffnungsUhrzeit.toISOString();
+    }
+
+    return dto;
   }
 
   function _wahlIDAndWahlbezirkIDToBezirkUndWahlID(

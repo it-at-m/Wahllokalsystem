@@ -194,7 +194,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       expect(result).toBe(3);
     });
   });
-  describe("stimmvermerkeTableTotalEachWahldaten", () => {
+  describe("stimmabgabevermerkeTableTotalEachWahldaten", () => {
     it("should_calculateCorrectArrayOfTotalVermerkeForWahldaten_when_givenStimmabgabevermerke", () => {
       const wahldatenOne = prepareWahldaten()
         .vermerke([

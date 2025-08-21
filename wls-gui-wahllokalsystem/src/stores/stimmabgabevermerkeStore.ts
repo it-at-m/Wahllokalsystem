@@ -43,6 +43,38 @@ export const useStimmabgabevermerkeStore = defineStore(
       return totalsForWahldaten;
     });
 
+    function isAnyRowThatShouldBeDeletedFilled(newRowSize: number) {
+      const currentLowestNumberOfRowsOverAllWahldaten =
+        lowestNumberOfRowsOverAllWahldaten.value;
+      const allVermerkeThatShouldBeRemoved: Vermerke[] = [];
+      stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
+        if (newRowSize > 0 && currentLowestNumberOfRowsOverAllWahldaten) {
+          const removeRows =
+            newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
+          if (removeRows != 0) {
+            allVermerkeThatShouldBeRemoved.push(
+              ...wahldaten.vermerke.slice(removeRows)
+            );
+          }
+        }
+      });
+      return allVermerkeThatShouldBeRemoved.some((vermerk) =>
+        vermerk.stimmzettel.some(
+          (stimmzettel) => stimmzettel.anzahl != null && stimmzettel.anzahl != 0
+        )
+      );
+    }
+
+    function changeRowCount(newRowSize: number) {
+      if (lowestNumberOfRowsOverAllWahldaten.value != null) {
+        if (newRowSize - 1 > lowestNumberOfRowsOverAllWahldaten.value) {
+          _increaseRows(newRowSize);
+        } else if (newRowSize - 1 < lowestNumberOfRowsOverAllWahldaten.value) {
+          _decreaseRows(newRowSize);
+        }
+      }
+    }
+
     function _increaseRows(newRowSize: number) {
       const currentLowestRows = lowestNumberOfRowsOverAllWahldaten.value;
 
@@ -67,28 +99,6 @@ export const useStimmabgabevermerkeStore = defineStore(
       }
     }
 
-    function isAnyRowThatShouldBeDeletedFilled(newRowSize: number) {
-      const currentLowestNumberOfRowsOverAllWahldaten =
-        lowestNumberOfRowsOverAllWahldaten.value;
-      const allVermerkeThatShouldBeRemoved: Vermerke[] = [];
-      stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
-        if (newRowSize > 0 && currentLowestNumberOfRowsOverAllWahldaten) {
-          const removeRows =
-            newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
-          if (removeRows != 0) {
-            allVermerkeThatShouldBeRemoved.push(
-              ...wahldaten.vermerke.slice(removeRows)
-            );
-          }
-        }
-      });
-      return allVermerkeThatShouldBeRemoved.some((vermerk) =>
-        vermerk.stimmzettel.some(
-          (stimmzettel) => stimmzettel.anzahl != null && stimmzettel.anzahl != 0
-        )
-      );
-    }
-
     function _decreaseRows(newRowSize: number) {
       const currentLowestNumberOfRowsOverAllWahldaten =
         lowestNumberOfRowsOverAllWahldaten.value;
@@ -99,16 +109,6 @@ export const useStimmabgabevermerkeStore = defineStore(
           wahldaten.vermerke.splice(removeRows, removeRows * -1);
         }
       });
-    }
-
-    function changeRowCount(newRowSize: number) {
-      if (lowestNumberOfRowsOverAllWahldaten.value != null) {
-        if (newRowSize - 1 > lowestNumberOfRowsOverAllWahldaten.value) {
-          _increaseRows(newRowSize);
-        } else if (newRowSize - 1 < lowestNumberOfRowsOverAllWahldaten.value) {
-          _decreaseRows(newRowSize);
-        }
-      }
     }
 
     return {

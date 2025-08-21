@@ -9,7 +9,7 @@
       />
       <v-btn
         class="ml-4 mt-3"
-        primary
+        active
         :disabled="disableChangeRowSizeButton"
         @click="changeRowCountOrOpenDialog"
         >{{ changeRowSizeButtonText }}</v-btn
@@ -77,12 +77,12 @@
       </tbody>
     </v-table>
     <base-dialog
-      :visible="deleteDialog"
+      :visible="isDeleteDialogVisible"
       dialogtitle="Reduzierung der Blätteranzahl des Wählerverzeichnisses"
       confirmtext="Trotzdem Löschen"
       canceltext="Abbrechen"
       icon="$information"
-      @cancel="deleteDialog = false"
+      @cancel="isDeleteDialogVisible = false"
       @confirm="onDialogConfirmDeletingRows"
       ><div>
         Sie wollen Blätter löschen, für die Sie Stimmabgabevermerke eingetragen
@@ -117,7 +117,7 @@ onMounted(() => {
   rowSize.value = lowestNumberOfRowsOverAllWahldaten.value + 1;
 });
 
-const deleteDialog = ref(false);
+const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
 
 const changeRowSizeButtonText = computed(() => {
@@ -137,7 +137,7 @@ const changeRowSizeButtonText = computed(() => {
 });
 
 const disableChangeRowSizeButton = computed(() => {
-  return rowSize.value == null || rowSize.value <= 0;
+  return rowSize.value == null || rowSize.value <= 0 || rowSize.value > 250;
 });
 
 function changeRowCountOrOpenDialog() {
@@ -146,7 +146,7 @@ function changeRowCountOrOpenDialog() {
     rowSize.value != null
   ) {
     if (isAnyRowThatShouldBeDeletedFilled(rowSize.value)) {
-      deleteDialog.value = true;
+      isDeleteDialogVisible.value = true;
     } else {
       changeRowCount(rowSize.value);
     }
@@ -156,7 +156,7 @@ function changeRowCountOrOpenDialog() {
 function onDialogConfirmDeletingRows() {
   if (rowSize.value != null) {
     changeRowCount(rowSize.value);
-    deleteDialog.value = false;
+    isDeleteDialogVisible.value = false;
   }
 }
 </script>

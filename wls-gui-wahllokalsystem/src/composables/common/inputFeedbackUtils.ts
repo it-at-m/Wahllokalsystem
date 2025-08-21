@@ -27,6 +27,19 @@ export function useInputFeedbackUtils() {
     }
   }
 
+  function getBackgroundColorAndBoldTextForInputFeedbackType(
+    inputFeedbackType: InputFeedbackTypeEnum
+  ) {
+    switch (inputFeedbackType) {
+      case InputFeedbackTypeEnum.error:
+        return "bg-error font-weight-bold";
+      case InputFeedbackTypeEnum.information:
+        return "bg-info font-weight-bold";
+      case InputFeedbackTypeEnum.success:
+        return "bg-success font-weight-bold";
+    }
+  }
+
   function getBorderColorForInputFeedbackType(
     inputFeedbackType: InputFeedbackTypeEnum
   ) {
@@ -44,5 +57,6 @@ export function useInputFeedbackUtils() {
     getBorderColorForInputFeedbackType,
     getIconColorForInputFeedbackType,
     getIconForInputFeedbackType,
+    getBackgroundColorAndBoldTextForInputFeedbackType,
   };
 }

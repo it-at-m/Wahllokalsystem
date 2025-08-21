@@ -8,6 +8,7 @@ describe("inputFeedbackUtils.ts", () => {
     getBorderColorForInputFeedbackType,
     getIconColorForInputFeedbackType,
     getIconForInputFeedbackType,
+    getBackgroundColorAndBoldTextForInputFeedbackType,
   } = useInputFeedbackUtils();
 
   describe("getBorderColorForInputFeedbackType", () => {
@@ -83,10 +84,36 @@ describe("inputFeedbackUtils.ts", () => {
     );
   });
 
+  describe("getBackgroundColorAndBoldTextForInputFeedbackType", () => {
+    it.each([
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.error,
+        expectedResult: "bg-error font-weight-bold",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.information,
+        expectedResult: "bg-info font-weight-bold",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.success,
+        expectedResult: "bg-success font-weight-bold",
+      },
+    ])(
+      "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
+      (params) => {
+        const result = getBackgroundColorAndBoldTextForInputFeedbackType(
+          params.inputFeedbackType
+        );
+        expect(result).toStrictEqual(params.expectedResult);
+      }
+    );
+  });
+
   describe.each([
     { functionUnderTest: getBorderColorForInputFeedbackType },
     { functionUnderTest: getIconColorForInputFeedbackType },
     { functionUnderTest: getIconForInputFeedbackType },
+    { functionUnderTest: getBackgroundColorAndBoldTextForInputFeedbackType },
   ])(
     "function $functionUnderTest.name supports any enum value",
     (testSuitParams) => {

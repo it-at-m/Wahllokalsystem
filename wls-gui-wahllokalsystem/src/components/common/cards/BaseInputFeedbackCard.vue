@@ -3,7 +3,12 @@
     class="border-lg"
     :class="borderColor"
   >
-    <v-card-title style="font-size: 1rem">{{ title }}</v-card-title>
+    <v-card-title
+      style="font-size: 1rem"
+      :class="bgColorAndBold"
+    >
+      {{ title }}
+    </v-card-title>
     <v-card-text>
       <div class="d-flex align-center">
         <v-icon
@@ -35,6 +40,7 @@ const {
   getBorderColorForInputFeedbackType,
   getIconColorForInputFeedbackType,
   getIconForInputFeedbackType,
+  getBackgroundColorAndBoldTextForInputFeedbackType,
 } = useInputFeedbackUtils();
 
 const slots = useSlots();
@@ -48,6 +54,9 @@ const icon = computed(() => getIconForInputFeedbackType(props.type));
 const iconColor = computed(() => getIconColorForInputFeedbackType(props.type));
 const borderColor = computed(() =>
   getBorderColorForInputFeedbackType(props.type)
+);
+const bgColorAndBold = computed(() =>
+  getBackgroundColorAndBoldTextForInputFeedbackType(props.type)
 );
 
 const hasAdditionalFeedback = computed(() => !!slots?.additionalFeedback);

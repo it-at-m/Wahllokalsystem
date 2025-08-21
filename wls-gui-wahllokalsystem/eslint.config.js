@@ -52,6 +52,7 @@ export default [
         },
       ],
       "vue/no-multiple-template-root": ["error"],
+      "vue/no-empty-component-block": ["error"],
     },
   },
   // overrides for specific files or directories

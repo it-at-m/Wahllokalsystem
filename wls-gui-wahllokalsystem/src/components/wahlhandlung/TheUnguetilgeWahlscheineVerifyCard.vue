@@ -41,22 +41,40 @@
           :title="titleFeedbackWahlscheinUngueltig"
           :type="InputFeedbackTypeEnum.error"
         >
-          <div>
-            <ul>
-              <li>
-                Die Person darf mit diesem Wahlschein keine Stimme abgeben!
-              </li>
-              <li>Behalten Sie den Wahlschein ein.</li>
-              <li>
-                Fassen Sie einen Beschluss über die Zurückweisung der wählenden
-                Person.
-              </li>
-              <li>
-                Erfassen Sie dies als besonderes Vorkommnis unter dem Punkt
-                "Ereignisse".
-              </li>
-            </ul>
-          </div>
+          <ul>
+            <li>Die Person darf mit diesem Wahlschein keine Stimme abgeben!</li>
+            <li>Behalten Sie den Wahlschein ein.</li>
+            <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
+            <li>Erfassen Sie dies als besonderes Vorkommnis:</li>
+          </ul>
+          <template #additionalFeedback>
+            <v-row>
+              <v-col cols="4">
+                {{ ereignisBeschreibungWahlscheinUnguelttig }}
+              </v-col>
+              <v-col>
+                <v-form v-model="isAbstimmungsergebnisFormValid">
+                  <v-number-input
+                    v-model="stimmenZurueckweisung"
+                    label="Stimmen für die Zurückweisung"
+                    width="350"
+                    :rules="[required, minNumber(0)]"
+                    data-test="number-input-stimmen-zurueckweisung"
+                  />
+                </v-form>
+              </v-col>
+              <v-col>
+                <base-button-save
+                  active
+                  class="mt-2 ml-5"
+                  save-text="Beschluss speichern"
+                  :disabled="!isAbstimmungsergebnisFormValid"
+                  @click="onSaveAbstimmungsergebnisClicked"
+                />
+              </v-col>
+              <v-spacer />
+            </v-row>
+          </template>
         </base-input-feedback-card>
         <v-img
           position="left"
@@ -107,14 +125,19 @@ import { computed, ref, useTemplateRef } from "vue";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const { maxNumber, minNumber, required } = useRules();
+const { addEreignis, sendEreignisse } = useEreignisStore();
 
 const isFormValid = ref<boolean | null>(null);
+const isAbstimmungsergebnisFormValid = ref<boolean | null>(null);
+
 const isSearchButtonDisabled = computed(() => !isFormValid.value);
 const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
@@ -131,6 +154,7 @@ const wahlscheinnummer = ref<null | number>(null);
 const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
 );
+const stimmenZurueckweisung = ref<number | undefined>(undefined);
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>
@@ -155,6 +179,9 @@ const searchButtonLabel = computed(() =>
 const titleFeedbackWahlscheinUngueltig = computed(() => {
   return `Wahlschein ${ungueltigerWahlschein.value?.wahlscheinnummer ?? ""} für ${ungueltigerWahlschein.value?.vorname} ${ungueltigerWahlschein.value?.familienname} ist ungültig`;
 });
+const ereignisBeschreibungWahlscheinUnguelttig = computed(() => {
+  return `${titleFeedbackWahlscheinUngueltig.value}. Die Person wurde zurückgewiesen. Abstimmungsergebnis: `;
+});
 
 function onRefreshClicked() {
   ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
@@ -172,6 +199,17 @@ function onSearchClicked() {
   }
 }
 
+async function onSaveAbstimmungsergebnisClicked() {
+  addEreignis({
+    uhrzeit: new Date(),
+    beschreibung: `${ereignisBeschreibungWahlscheinUnguelttig.value} ${stimmenZurueckweisung.value}`,
+  });
+  await sendEreignisse();
+
+  stimmenZurueckweisung.value = undefined;
+  isAbstimmungsergebnisFormValid.value = false;
+}
+
 function onWahlscheinnummerChanged(newValue: number) {
   wahlscheinnummer.value = newValue;
   resetUngueltigerWahlschein();
@@ -179,5 +217,6 @@ function onWahlscheinnummerChanged(newValue: number) {
 
 function resetUngueltigerWahlschein() {
   ungueltigerWahlschein.value = undefined;
+  stimmenZurueckweisung.value = undefined;
 }
 </script>

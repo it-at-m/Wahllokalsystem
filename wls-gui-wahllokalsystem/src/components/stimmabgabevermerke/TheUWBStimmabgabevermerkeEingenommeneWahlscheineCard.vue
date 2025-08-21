@@ -16,4 +16,4 @@ import { VCard, VCardText, VCardTitle } from "vuetify/components";
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
 </script>
 
-<style scoped></style>
+

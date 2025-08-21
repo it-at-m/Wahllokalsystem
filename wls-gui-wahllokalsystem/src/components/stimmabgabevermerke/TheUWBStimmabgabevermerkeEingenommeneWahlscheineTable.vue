@@ -72,4 +72,4 @@ function setMapValue(
 }
 </script>
 
-<style scoped></style>
+

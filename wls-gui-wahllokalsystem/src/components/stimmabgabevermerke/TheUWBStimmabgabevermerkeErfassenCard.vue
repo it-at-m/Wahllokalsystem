@@ -6,8 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import {VCard, VCardTitle} from "vuetify/components";
+import { VCard, VCardTitle } from "vuetify/components";
 
-import TheUWBStimmabgabevermerkeErfassenTable
-  from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeErfassenTable.vue";
+import TheUWBStimmabgabevermerkeErfassenTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeErfassenTable.vue";
 </script>

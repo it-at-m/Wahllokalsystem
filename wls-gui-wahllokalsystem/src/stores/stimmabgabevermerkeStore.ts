@@ -75,9 +75,11 @@ export const useStimmabgabevermerkeStore = defineStore(
         if (newRowSize > 0 && currentLowestNumberOfRowsOverAllWahldaten) {
           const removeRows =
             newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
-          allVermerkeThatShouldBeRemoved.push(
-            ...wahldaten.vermerke.slice(removeRows)
-          );
+          if (removeRows != 0) {
+            allVermerkeThatShouldBeRemoved.push(
+              ...wahldaten.vermerke.slice(removeRows)
+            );
+          }
         }
       });
       return allVermerkeThatShouldBeRemoved.some((vermerk) =>

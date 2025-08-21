@@ -18,12 +18,22 @@
     <v-table>
       <thead>
         <tr>
-          <td>Blatt</td>
+          <td />
           <td
             v-for="wahldaten in stimmabgabevermerke.wahldaten"
             :key="wahldaten.wahlID"
           >
-            {{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}
+            <b>{{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}</b>
+            <div><b>Personen Mit Stimmabgabevermerk</b></div>
+          </td>
+        </tr>
+        <tr>
+          <td><b>Blatt</b></td>
+          <td
+            v-for="wahldaten in stimmabgabevermerke.wahldaten"
+            :key="wahldaten.wahlID"
+          >
+            <b>Anzahl Stimmabgabevermerke</b>
           </td>
         </tr>
       </thead>
@@ -51,6 +61,7 @@
           >
             <v-number-input
               v-model="wahldaten.vermerke[number - 1].stimmzettel[0].anzahl"
+              :rules="[required]"
             />
           </td>
         </tr>

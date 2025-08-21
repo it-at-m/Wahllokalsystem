@@ -8,7 +8,6 @@ describe("inputFeedbackUtils.ts", () => {
     getBorderColorForInputFeedbackType,
     getIconColorForInputFeedbackType,
     getIconForInputFeedbackType,
-    getTextColorForInputFeedbackType,
   } = useInputFeedbackUtils();
 
   describe("getBorderColorForInputFeedbackType", () => {
@@ -84,36 +83,10 @@ describe("inputFeedbackUtils.ts", () => {
     );
   });
 
-  describe("getTextColorForInputFeedbackType", () => {
-    it.each([
-      {
-        inputFeedbackType: InputFeedbackTypeEnum.error,
-        expectedResult: "text-error",
-      },
-      {
-        inputFeedbackType: InputFeedbackTypeEnum.information,
-        expectedResult: "text-info",
-      },
-      {
-        inputFeedbackType: InputFeedbackTypeEnum.success,
-        expectedResult: "text-success",
-      },
-    ])(
-      "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
-      (params) => {
-        const result = getTextColorForInputFeedbackType(
-          params.inputFeedbackType
-        );
-        expect(result).toStrictEqual(params.expectedResult);
-      }
-    );
-  });
-
   describe.each([
     { functionUnderTest: getBorderColorForInputFeedbackType },
     { functionUnderTest: getIconColorForInputFeedbackType },
     { functionUnderTest: getIconForInputFeedbackType },
-    { functionUnderTest: getTextColorForInputFeedbackType },
   ])(
     "function $functionUnderTest.name supports any enum value",
     (testSuitParams) => {

@@ -27,19 +27,6 @@ export function useInputFeedbackUtils() {
     }
   }
 
-  function getTextColorForInputFeedbackType(
-    inputFeedbackType: InputFeedbackTypeEnum
-  ) {
-    switch (inputFeedbackType) {
-      case InputFeedbackTypeEnum.error:
-        return "text-error";
-      case InputFeedbackTypeEnum.information:
-        return "text-info";
-      case InputFeedbackTypeEnum.success:
-        return "text-success";
-    }
-  }
-
   function getBorderColorForInputFeedbackType(
     inputFeedbackType: InputFeedbackTypeEnum
   ) {
@@ -57,6 +44,5 @@ export function useInputFeedbackUtils() {
     getBorderColorForInputFeedbackType,
     getIconColorForInputFeedbackType,
     getIconForInputFeedbackType,
-    getTextColorForInputFeedbackType,
   };
 }

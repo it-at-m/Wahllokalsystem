@@ -12,9 +12,7 @@
           :icon="icon"
           size="x-large"
         />
-        <div :class="textColor">
-          <slot />
-        </div>
+        <slot />
       </div>
       <div
         v-if="hasAdditionalFeedback"
@@ -37,7 +35,6 @@ const {
   getBorderColorForInputFeedbackType,
   getIconColorForInputFeedbackType,
   getIconForInputFeedbackType,
-  getTextColorForInputFeedbackType,
 } = useInputFeedbackUtils();
 
 const slots = useSlots();
@@ -49,7 +46,6 @@ const props = defineProps<{
 
 const icon = computed(() => getIconForInputFeedbackType(props.type));
 const iconColor = computed(() => getIconColorForInputFeedbackType(props.type));
-const textColor = computed(() => getTextColorForInputFeedbackType(props.type));
 const borderColor = computed(() =>
   getBorderColorForInputFeedbackType(props.type)
 );

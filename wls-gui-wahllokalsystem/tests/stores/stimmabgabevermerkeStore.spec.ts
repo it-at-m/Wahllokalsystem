@@ -1,5 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
-import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import {
+  useStimmabgabevermerkeTestDataFactory
+} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
@@ -24,17 +26,13 @@ describe("taskManagerStore.ts", () => {
 
   describe("isAnyRowThatShouldBeDeletedFilled", () => {
     it("should_returnTrue_when_rowsToRemoveContainLegitValues", () => {
-      const { isAnyRowThatShouldBeDeletedFilled } =
-        useStimmabgabevermerkeStore();
       unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
 
-      const result = isAnyRowThatShouldBeDeletedFilled(2);
+      const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(true);
     });
 
     it("should_returnFalse_when_rowsToRemoveContainOnlyNullOrZero", () => {
-      const { isAnyRowThatShouldBeDeletedFilled } =
-        useStimmabgabevermerkeStore();
       const wahldaten = prepareWahldaten()
         .vermerke([
           {
@@ -69,7 +67,7 @@ describe("taskManagerStore.ts", () => {
       unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
         .wahldaten(new Set([wahldaten, wahldaten]))
         .build();
-      const result = isAnyRowThatShouldBeDeletedFilled(2);
+      const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(false);
     });
   });

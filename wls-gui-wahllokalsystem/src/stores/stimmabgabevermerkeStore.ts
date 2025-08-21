@@ -90,7 +90,7 @@ export const useStimmabgabevermerkeStore = defineStore(
 
       stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
         const totalVermerke = wahldaten.vermerke.reduce((sum, vermerk) => {
-          return sum + (vermerk.stimmzettel[0].anzahl ?? 0);
+          return sum + (vermerk.stimmzettel[0]?.anzahl ?? 0);
         }, 0);
 
         totalsForWahldaten.push(totalVermerke);

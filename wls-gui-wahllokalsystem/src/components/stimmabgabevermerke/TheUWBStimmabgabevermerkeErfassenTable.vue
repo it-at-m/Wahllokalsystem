@@ -55,7 +55,7 @@
           </td>
         </tr>
         <tr>
-          <td><b>Gesammt</b></td>
+          <td><b>Gesamt</b></td>
           <td
             v-for="totalCount in stimmvermerkeTableTotalEachWahldaten"
             :key="totalCount"

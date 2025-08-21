@@ -57,7 +57,7 @@
         <tr>
           <td><b>Gesamt</b></td>
           <td
-            v-for="totalCount in stimmvermerkeTableTotalEachWahldaten"
+            v-for="totalCount in stimmabgabevermerkeTableTotalEachWahldaten"
             :key="totalCount"
           >
             <b>{{ totalCount }}</b>
@@ -95,7 +95,7 @@ const { minNumber, maxNumber, required } = useRules();
 
 const {
   stimmabgabevermerke,
-  stimmvermerkeTableTotalEachWahldaten,
+  stimmabgabevermerkeTableTotalEachWahldaten,
   lowestNumberOfRowsOverAllWahldaten,
 } = storeToRefs(useStimmabgabevermerkeStore());
 const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =

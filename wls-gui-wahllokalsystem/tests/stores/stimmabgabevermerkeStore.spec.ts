@@ -1,7 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
-import {
-  useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
@@ -266,7 +264,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
         .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
         .build();
 
-      const result = unitUnderTest.stimmvermerkeTableTotalEachWahldaten;
+      const result = unitUnderTest.stimmabgabevermerkeTableTotalEachWahldaten;
 
       expect(result).toStrictEqual([6, 25]);
     });

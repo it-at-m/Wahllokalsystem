@@ -29,6 +29,20 @@ export const useStimmabgabevermerkeStore = defineStore(
       return minVermerkeLength === Infinity ? 0 : minVermerkeLength;
     });
 
+    const stimmabgabevermerkeTableTotalEachWahldaten = computed(() => {
+      const totalsForWahldaten: number[] = [];
+
+      stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
+        const totalVermerke = wahldaten.vermerke.reduce((sum, vermerk) => {
+          return sum + (vermerk.stimmzettel[0]?.anzahl ?? 0);
+        }, 0);
+
+        totalsForWahldaten.push(totalVermerke);
+      });
+
+      return totalsForWahldaten;
+    });
+
     function _increaseRows(newRowSize: number) {
       const currentLowestRows = lowestNumberOfRowsOverAllWahldaten.value;
 
@@ -85,20 +99,6 @@ export const useStimmabgabevermerkeStore = defineStore(
       });
     }
 
-    const stimmvermerkeTableTotalEachWahldaten = computed(() => {
-      const totalsForWahldaten: number[] = [];
-
-      stimmabgabevermerke.value?.wahldaten.forEach((wahldaten: Wahldaten) => {
-        const totalVermerke = wahldaten.vermerke.reduce((sum, vermerk) => {
-          return sum + (vermerk.stimmzettel[0]?.anzahl ?? 0);
-        }, 0);
-
-        totalsForWahldaten.push(totalVermerke);
-      });
-
-      return totalsForWahldaten;
-    });
-
     function changeRowCount(newRowSize: number) {
       if (lowestNumberOfRowsOverAllWahldaten.value != null) {
         if (newRowSize - 1 > lowestNumberOfRowsOverAllWahldaten.value) {
@@ -112,7 +112,7 @@ export const useStimmabgabevermerkeStore = defineStore(
     return {
       stimmabgabevermerke,
       isAnyRowThatShouldBeDeletedFilled,
-      stimmvermerkeTableTotalEachWahldaten,
+      stimmabgabevermerkeTableTotalEachWahldaten,
       lowestNumberOfRowsOverAllWahldaten,
       changeRowCount,
     };

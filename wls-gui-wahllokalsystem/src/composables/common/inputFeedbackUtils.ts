@@ -56,7 +56,6 @@ export function useInputFeedbackUtils() {
         return "border-info";
       case InputFeedbackTypeEnum.success:
         return "border-success";
-
       case InputFeedbackTypeEnum.warning:
         return "border-warning";
     }

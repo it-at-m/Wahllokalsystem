@@ -1,6 +1,7 @@
 import "vuetify/styles";
 
 import {
+  mdiAlert,
   mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
@@ -62,6 +63,7 @@ export default createVuetify({
       edit: mdiPencil,
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
+      alert: mdiAlert,
     },
     sets: {
       mdi,
@@ -77,7 +79,7 @@ export default createVuetify({
           info: "#0000f0",
           success: "#008c00",
           error: "#FF0000",
-          warn: "#ffe993",
+          warning: "#E07400",
         },
       },
     },

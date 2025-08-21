@@ -25,6 +25,10 @@ describe("inputFeedbackUtils.ts", () => {
         inputFeedbackType: InputFeedbackTypeEnum.success,
         expectedResult: "border-success",
       },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.warning,
+        expectedResult: "border-warning",
+      },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
       (params) => {
@@ -49,6 +53,10 @@ describe("inputFeedbackUtils.ts", () => {
       {
         inputFeedbackType: InputFeedbackTypeEnum.success,
         expectedResult: "success",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.warning,
+        expectedResult: "warning",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
@@ -75,6 +83,10 @@ describe("inputFeedbackUtils.ts", () => {
         inputFeedbackType: InputFeedbackTypeEnum.success,
         expectedResult: "$valid",
       },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.warning,
+        expectedResult: "$alert",
+      },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",
       (params) => {
@@ -97,6 +109,10 @@ describe("inputFeedbackUtils.ts", () => {
       {
         inputFeedbackType: InputFeedbackTypeEnum.success,
         expectedResult: "bg-success font-weight-bold",
+      },
+      {
+        inputFeedbackType: InputFeedbackTypeEnum.warning,
+        expectedResult: "bg-warning font-weight-bold",
       },
     ])(
       "should_returnCorrectValue_when_inputFeedbackType'$inputFeedbackType'IsGiven",

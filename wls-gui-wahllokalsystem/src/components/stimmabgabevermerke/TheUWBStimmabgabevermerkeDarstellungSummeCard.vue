@@ -1,0 +1,13 @@
+<template>
+  <v-card>
+    <v-card-title> Anzahl Stimmabgabevermerke zusammen</v-card-title>
+    <v-card-text
+      ><TheUWBStimmabgabevermerkeDarstellungSummeTable />
+    </v-card-text>
+  </v-card>
+</template>
+<script setup lang="ts">
+import { VCard, VCardText, VCardTitle } from "vuetify/components";
+
+import TheUWBStimmabgabevermerkeDarstellungSummeTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeDarstellungSummeTable.vue";
+</script>

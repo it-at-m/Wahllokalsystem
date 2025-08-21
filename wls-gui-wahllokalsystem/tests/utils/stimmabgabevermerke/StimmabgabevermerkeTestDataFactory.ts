@@ -20,24 +20,8 @@ export function useStimmabgabevermerkeTestDataFactory() {
         [_getRandomEnumValue(), generateRandomNumber(4)],
       ]),
       vermerke: [
-        {
-          blattnummer: 2,
-          stimmzettel: [
-            {
-              anzahl: generateRandomNumber(2),
-              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-            },
-          ],
-        },
-        {
-          blattnummer: 3,
-          stimmzettel: [
-            {
-              anzahl: generateRandomNumber(2),
-              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-            },
-          ],
-        },
+        prepareVermerk().blattnummer(2).build(),
+        prepareVermerk().blattnummer(3).build(),
       ],
 
       waehlerverzeichnisNummer: generateRandomNumber(1),

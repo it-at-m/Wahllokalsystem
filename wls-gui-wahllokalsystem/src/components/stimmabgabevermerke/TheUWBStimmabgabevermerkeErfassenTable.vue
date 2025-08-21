@@ -145,7 +145,10 @@ function changeRowCountOrOpenDialog() {
     lowestNumberOfRowsOverAllWahldaten.value != null &&
     rowSize.value != null
   ) {
-    if (isAnyRowThatShouldBeDeletedFilled(rowSize.value)) {
+    if (
+      rowSize.value - 1 < lowestNumberOfRowsOverAllWahldaten.value &&
+      isAnyRowThatShouldBeDeletedFilled(rowSize.value)
+    ) {
       isDeleteDialogVisible.value = true;
     } else {
       changeRowCount(rowSize.value);

@@ -3,7 +3,6 @@ import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabev
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
-import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 describe("stimmabgabevermerkeStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useStimmabgabevermerkeStore>;
@@ -12,6 +11,8 @@ describe("stimmabgabevermerkeStore.ts", () => {
     createStimmabgabevermerke,
     prepareWahldaten,
     prepareStimmabgabevermerke,
+    prepareVermerk,
+    prepareStimmzettel,
   } = useStimmabgabevermerkeTestDataFactory();
 
   beforeEach(() => {
@@ -33,33 +34,15 @@ describe("stimmabgabevermerkeStore.ts", () => {
     it("should_returnFalse_when_rowsToRemoveContainOnlyNullOrZero", () => {
       const wahldaten = prepareWahldaten()
         .vermerke([
-          {
-            blattnummer: 2,
-            stimmzettel: [
-              {
-                anzahl: 30,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 3,
-            stimmzettel: [
-              {
-                anzahl: 0,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 4,
-            stimmzettel: [
-              {
-                anzahl: null,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk()
+            .blattnummer(3)
+            .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(4)
+            .stimmzettel([prepareStimmzettel().anzahl(0).build()])
+            .build(),
         ])
         .build();
       unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
@@ -114,74 +97,18 @@ describe("stimmabgabevermerkeStore.ts", () => {
     it("should_calculateTheLowest_when_allWahldatenHaveDifferentNumberOfVermerke", () => {
       const wahldatenOne = prepareWahldaten()
         .vermerke([
-          {
-            blattnummer: 2,
-            stimmzettel: [
-              {
-                anzahl: 30,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 3,
-            stimmzettel: [
-              {
-                anzahl: 0,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 4,
-            stimmzettel: [
-              {
-                anzahl: null,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk().blattnummer(3).build(),
+          prepareVermerk().blattnummer(4).build(),
         ])
         .build();
 
       const wahldatenTwo = prepareWahldaten()
         .vermerke([
-          {
-            blattnummer: 2,
-            stimmzettel: [
-              {
-                anzahl: 30,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 3,
-            stimmzettel: [
-              {
-                anzahl: 0,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 4,
-            stimmzettel: [
-              {
-                anzahl: null,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 5,
-            stimmzettel: [
-              {
-                anzahl: null,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk().blattnummer(3).build(),
+          prepareVermerk().blattnummer(4).build(),
+          prepareVermerk().blattnummer(5).build(),
         ])
         .build();
 
@@ -198,65 +125,35 @@ describe("stimmabgabevermerkeStore.ts", () => {
     it("should_calculateCorrectArrayOfTotalVermerkeForWahldaten_when_givenStimmabgabevermerke", () => {
       const wahldatenOne = prepareWahldaten()
         .vermerke([
-          {
-            blattnummer: 2,
-            stimmzettel: [
-              {
-                anzahl: 1,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 3,
-            stimmzettel: [
-              {
-                anzahl: 2,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 4,
-            stimmzettel: [
-              {
-                anzahl: 3,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
+          prepareVermerk()
+            .blattnummer(2)
+            .stimmzettel([prepareStimmzettel().anzahl(1).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(3)
+            .stimmzettel([prepareStimmzettel().anzahl(2).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(4)
+            .stimmzettel([prepareStimmzettel().anzahl(3).build()])
+            .build(),
         ])
         .build();
 
       const wahldatenTwo = prepareWahldaten()
         .vermerke([
-          {
-            blattnummer: 2,
-            stimmzettel: [
-              {
-                anzahl: 5,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 3,
-            stimmzettel: [
-              {
-                anzahl: 7,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
-          {
-            blattnummer: 4,
-            stimmzettel: [
-              {
-                anzahl: 13,
-                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-              },
-            ],
-          },
+          prepareVermerk()
+            .blattnummer(2)
+            .stimmzettel([prepareStimmzettel().anzahl(5).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(3)
+            .stimmzettel([prepareStimmzettel().anzahl(8).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(4)
+            .stimmzettel([prepareStimmzettel().anzahl(13).build()])
+            .build(),
         ])
         .build();
 
@@ -266,7 +163,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       const result = unitUnderTest.stimmabgabevermerkeTableTotalEachWahldaten;
 
-      expect(result).toStrictEqual([6, 25]);
+      expect(result).toStrictEqual([6, 26]);
     });
   });
 });

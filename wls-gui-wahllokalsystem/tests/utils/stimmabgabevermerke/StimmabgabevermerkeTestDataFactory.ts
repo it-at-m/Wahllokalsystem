@@ -1,4 +1,6 @@
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
+import type { Stimmzettel } from "@/types/stimmabgabevermerke/Stimmzettel.ts";
+import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
 import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
@@ -72,12 +74,34 @@ export function useStimmabgabevermerkeTestDataFactory() {
     };
   }
 
+  function createVermerk(): Vermerke {
+    return {
+      blattnummer: generateRandomNumber(1),
+      stimmzettel: [createStimmzettel()],
+    };
+  }
+
+  function createStimmzettel(): Stimmzettel {
+    return {
+      anzahl: generateRandomNumber(1),
+      stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+    };
+  }
+
   function prepareWahldaten(): Builder<Wahldaten> {
     return proxyBuilder<Wahldaten>(createWahldaten());
   }
 
   function prepareStimmabgabevermerke(): Builder<Stimmabgabevermerke> {
     return proxyBuilder<Stimmabgabevermerke>(createStimmabgabevermerke());
+  }
+
+  function prepareVermerk(): Builder<Vermerke> {
+    return proxyBuilder<Vermerke>(createVermerk());
+  }
+
+  function prepareStimmzettel(): Builder<Stimmzettel> {
+    return proxyBuilder<Stimmzettel>(createStimmzettel());
   }
 
   function _getRandomEnumValue() {
@@ -91,5 +115,9 @@ export function useStimmabgabevermerkeTestDataFactory() {
     prepareWahldaten,
     prepareStimmabgabevermerke,
     createStimmabgabevermerke,
+    createVermerk,
+    prepareVermerk,
+    prepareStimmzettel,
+    createStimmzettel,
   };
 }

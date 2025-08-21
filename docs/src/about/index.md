@@ -203,7 +203,8 @@ In einem Urnenwahlbezirk muss, wenn jemand mit Wahlschein kommt, geprüft werden
 gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Der Nutzer gibt die Nummer des Wahlscheins ein und sucht.
 Nach der Suche erhält der Nutzer Feedback darüber, ob der Wahlschein gültig oder ungültig ist. Entsprechend werden auch
 Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, werden in der Fehlermeldung neben der Wahlscheinnummer
-auch Vor- und Familienname angezeigt.
+auch Vor- und Familienname angezeigt. Außerdem wird der Nutzer in diesem Fall dazu aufgefordert, den Beschluss über die
+Zurückweisung als Ereignis zu erfassen.
 
 Um suchen zu können, muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnummer muss außerdem im Bereich von `1` bis
 `9999999` liegen.

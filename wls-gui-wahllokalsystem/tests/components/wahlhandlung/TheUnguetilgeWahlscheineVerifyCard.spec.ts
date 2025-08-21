@@ -13,17 +13,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUngueltigeWahlscheine: vi.fn(),
+  saveEreignisse: vi.fn(),
 }));
 
 vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
   useUngueltigeWahlscheineService: () => ({
     getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+  }),
+}));
+vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
+  useEreignisService: () => ({
+    saveEreignisse: mockDefinitions.saveEreignisse,
   }),
 }));
 
@@ -97,7 +105,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       );
     });
 
-    it("should_renderInvalidWahlscheinAndChangeSearchButtonLabel_when_wahlscheinnummerIsPartOfUngueltigeWahlscheine", async (context) => {
+    it("should_renderInvalidWahlscheinWithDisabledSaveButtonAndChangeSearchButtonLabel_when_wahlscheinnummerIsPartOfUngueltigeWahlscheine", async (context) => {
       const wahlscheinnummerInput = getInputWahlscheinnummer();
       await wahlscheinnummerInput.setValue(123);
       await wahlscheinnummerInput.vm.validate();
@@ -112,9 +120,41 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
+      const saveBeschlussBtn = getSaveBeschlussButton();
+      const inputAbstimmung = getInputStimmenZurueckweisung();
 
       await flushPromises();
 
+      expect(saveBeschlussBtn.props("disabled")).toStrictEqual(true);
+      expect(inputAbstimmung.props("modelValue")).toStrictEqual(null);
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderInvalidWahlscheinWithEnabledSaveButtonAndChangeSearchButtonLabel_when_wahlscheinnummerIsPartOfUngueltigeWahlscheineAndAbstimmungEingetragen", async (context) => {
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(123);
+      await wahlscheinnummerInput.vm.validate();
+
+      useWahlbezirkStore().ungueltigeWahlscheineState.ungueltigeWahlscheine = [
+        prepareUngueltigerWahlschein()
+          .vorname("testerich")
+          .familienname("testuser")
+          .wahlscheinnummer("123")
+          .build(),
+      ];
+
+      const searchButton = getSearchButton();
+      await searchButton.trigger("click");
+      const saveBeschlussBtn = getSaveBeschlussButton();
+      const inputAbstimmung = getInputStimmenZurueckweisung();
+      await inputAbstimmung.setValue(3);
+
+      await flushPromises();
+
+      expect(saveBeschlussBtn.props("disabled")).toStrictEqual(false);
+      expect(inputAbstimmung.props("modelValue")).toStrictEqual(3);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -199,12 +239,14 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
     beforeEach(() => {
       testPinia = createTestingPinia({
         createSpy: vi.fn,
+        stubActions: false,
       });
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],
         },
       });
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
@@ -244,11 +286,16 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       const searchButton = getSearchButton();
       await searchButton.trigger("click");
 
+      const inputAbstimmung = getInputStimmenZurueckweisung();
+      await inputAbstimmung.setValue(3);
       await flushPromises();
 
+      expect(inputAbstimmung.vm.value).toStrictEqual("3");
       await searchButton.trigger("click");
       await flushPromises();
+
       expect(wahlscheinnummerInput.vm.value).toStrictEqual("");
+      expect(inputAbstimmung.vm.value).toBeUndefined();
     });
 
     it("should_triggerLoadUngueltigeWahlscheine_when_refreshWasClicked", async () => {
@@ -264,18 +311,70 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       expect(loadWahlscheinSpy).toHaveBeenCalled();
     });
+
+    it("should_addAndSaveEreignisAndReset_when_saveBeschlussIsClickedWithValidAbstimmung", async () => {
+      const ereignisStore = useEreignisStore();
+      const ungueltigerWs = createUngueltigerWahlschein();
+
+      const wahlscheinnummerInput = getInputWahlscheinnummer();
+      await wahlscheinnummerInput.setValue(123);
+      await wahlscheinnummerInput.vm.validate();
+
+      useWahlbezirkStore().ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer =
+        vi.fn(() => {
+          return ungueltigerWs;
+        });
+
+      const searchButton = getSearchButton();
+      await searchButton.trigger("click");
+
+      const inputAbstimmung = getInputStimmenZurueckweisung();
+      await inputAbstimmung.setValue(3);
+      await flushPromises();
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        0
+      );
+
+      const expectedEreignisBeschreibung =
+        `Wahlschein ${ungueltigerWs.wahlscheinnummer} für ${ungueltigerWs.vorname} ${ungueltigerWs.familienname} ist` +
+        ` ungültig. Die Person wurde zurückgewiesen. Abstimmungsergebnis:  3`;
+
+      const saveBeschlussBtn = getSaveBeschlussButton();
+      await saveBeschlussBtn.trigger("click");
+      await flushPromises();
+
+      expect(ereignisStore.addEreignis).toHaveBeenCalledWith({
+        uhrzeit: expect.any(Date),
+        beschreibung: expectedEreignisBeschreibung,
+      });
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+        1
+      );
+      expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();
+      expect(inputAbstimmung.vm.value).toStrictEqual("");
+      expect(saveBeschlussBtn.props("disabled")).toStrictEqual(true);
+    });
   });
 
+  function getInputStimmenZurueckweisung() {
+    return wrapper.findComponent<typeof VNumberInput>(
+      '[data-test="number-input-stimmen-zurueckweisung"]'
+    );
+  }
+
   function getInputWahlscheinnummer() {
-    const wahlscheinnummerInput = wrapper.findComponent(VNumberInput);
-    expect(
-      wahlscheinnummerInput.element.getAttribute("data-test")
-    ).toStrictEqual("number-input-wahlscheinnummer");
-    return wahlscheinnummerInput;
+    return wrapper.findComponent<typeof VNumberInput>(
+      '[data-test="number-input-wahlscheinnummer"]'
+    );
   }
 
   function getSearchButton() {
     return wrapper.findComponent('[data-test="button-search"]');
+  }
+
+  function getSaveBeschlussButton() {
+    return wrapper.findComponent(BaseButtonSave);
   }
 
   function getRefreshButton() {

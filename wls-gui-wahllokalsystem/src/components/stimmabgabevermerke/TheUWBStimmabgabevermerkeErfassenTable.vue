@@ -160,5 +160,3 @@ function onDialogConfirmDeletingRows() {
   }
 }
 </script>
-
-<style scoped></style>

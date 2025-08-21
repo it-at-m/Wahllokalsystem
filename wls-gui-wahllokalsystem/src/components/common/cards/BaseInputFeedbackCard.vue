@@ -10,6 +10,7 @@
           :color="iconColor"
           class="mr-5"
           :icon="icon"
+          size="x-large"
         />
         <div :class="textColor">
           <slot />

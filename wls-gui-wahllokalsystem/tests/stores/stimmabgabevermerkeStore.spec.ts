@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
-describe("taskManagerStore.ts", () => {
+describe("stimmabgabevermerkeStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useStimmabgabevermerkeStore>;
 
   const {

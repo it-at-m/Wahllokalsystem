@@ -43,6 +43,25 @@ export const useStimmabgabevermerkeStore = defineStore(
       return totalsForWahldaten;
     });
 
+    const sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl =
+      computed(() => {
+        const result = new Map<string, number>();
+        stimmabgabevermerke.value?.wahldaten.forEach((wahldaten) => {
+          let sumForWahl = 0;
+          wahldaten.vermerke.forEach((vermerk) => {
+            vermerk.stimmzettel.forEach((stimmzettel) => {
+              sumForWahl += stimmzettel.anzahl ?? 0;
+            });
+          });
+          sumForWahl +=
+            wahldaten.eingenommeneWahlscheine.get(
+              StimmzettelStimmzettelartEnum.Klein
+            ) ?? 0;
+          result.set(wahldaten.wahlID, sumForWahl);
+        });
+        return result;
+      });
+
     function isAnyRowThatShouldBeDeletedFilled(newRowSize: number) {
       const currentLowestNumberOfRowsOverAllWahldaten =
         lowestNumberOfRowsOverAllWahldaten.value;
@@ -115,6 +134,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       stimmabgabevermerkeTableTotalEachWahldaten,
       lowestNumberOfRowsOverAllWahldaten,
       changeRowCount,
+      sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl,
     };
   }
 );

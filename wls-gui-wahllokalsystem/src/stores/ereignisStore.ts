@@ -136,7 +136,7 @@ export const useEreignisStore = defineStore(storeID, () => {
       wahlbezirkEreignisse.value = await getEreignisse(
         currentUserWahlbezirkID.value
       );
-      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      _sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
       logDebug("Fehler beim Laden der Ereignisse", e);
@@ -147,7 +147,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     error.value = null;
     isSaving.value = true;
     try {
-      sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      _sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       await saveEreignisse(
         currentUserWahlbezirkID.value,
         wahlbezirkEreignisse.value
@@ -212,6 +212,10 @@ export const useEreignisStore = defineStore(storeID, () => {
       isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
   }
 
+  function _sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
+    return ereigniseintraege?.sort(compareEreignisseByUhrzeit);
+  }
+
   return {
     isEreignisFlagsAndEreigniseintraegeInconsistent,
     wahlbezirkEreignisse,
@@ -228,10 +232,5 @@ export const useEreignisStore = defineStore(storeID, () => {
     error,
   };
 });
-
-// Funktion zum Sortieren der Ereignisse
-function sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
-  return ereigniseintraege?.sort(compareEreignisseByUhrzeit);
-}
 
 registerStoreHMR(useEreignisStore);

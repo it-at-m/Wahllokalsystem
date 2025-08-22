@@ -30,7 +30,7 @@ interface EreignisCreateTemplate {
 
 export const useEreignisStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID, isUWB, isBWB } = storeToRefs(useUserStore());
-  const { schliessungsuhrzeitState, isAuszaehlungStarted } =
+  const { schliessungsuhrzeitState, schliessungsuhrzeitGetter } =
     storeToRefs(useWahlbezirkStore());
 
   const error = ref<string | null>(null);
@@ -68,7 +68,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     return isUWB.value
       ? isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent.value ||
           (isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value &&
-            isAuszaehlungStarted.value)
+            schliessungsuhrzeitGetter.value.isAuszaehlungStarted)
       : isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
   });
 
@@ -204,7 +204,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   }
 
   function _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState() {
-    if (isAuszaehlungStarted.value) {
+    if (schliessungsuhrzeitGetter.value.isAuszaehlungStarted) {
       wahlbezirkEreignisse.value.keineVorkommnisse =
         !ereigniseintraegeContainsVorkommnisse.value;
     }

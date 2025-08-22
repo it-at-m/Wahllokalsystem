@@ -87,9 +87,11 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     schliessungsuhrzeitSent: undefined,
     schliessungsuhrzeitIsSaving: false,
   });
-  const isAuszaehlungStarted = computed(
-    () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent !== undefined
-  );
+
+  const schliessungsuhrzeitGetter = computed(() => ({
+    isAuszaehlungStarted:
+      schliessungsuhrzeitState.value.schliessungsuhrzeitSent !== undefined,
+  }));
 
   const schliessungsuhrzeitActions = {
     sendSchliessungsuhrzeit: async function sendSchliessungsuhrzeit() {
@@ -335,8 +337,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     eroeffnungsuhrzeitState,
     eroeffnungsuhrzeitActions,
     schliessungsuhrzeitState,
+    schliessungsuhrzeitGetter,
     schliessungsuhrzeitActions,
-    isAuszaehlungStarted,
     pflegeWaehlerverzeichnisState,
     pflegeWaehlerverzeichnisActions,
     urnenwahlVorbereitungState,

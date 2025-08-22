@@ -13,7 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getBorderColorForInputFeedbackType: vi.fn(),
   getIconColorForInputFeedbackType: vi.fn(),
   getIconForInputFeedbackType: vi.fn(),
-  getTextColorForInputFeedbackType: vi.fn(),
+  getBackgroundColorAndBoldTextForInputFeedbackType: vi.fn(),
 }));
 
 vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
@@ -23,8 +23,8 @@ vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
     getIconColorForInputFeedbackType:
       mockDefinitions.getIconColorForInputFeedbackType,
     getIconForInputFeedbackType: mockDefinitions.getIconForInputFeedbackType,
-    getTextColorForInputFeedbackType:
-      mockDefinitions.getTextColorForInputFeedbackType,
+    getBackgroundColorAndBoldTextForInputFeedbackType:
+      mockDefinitions.getBackgroundColorAndBoldTextForInputFeedbackType,
   }),
 }));
 
@@ -93,8 +93,8 @@ describe("BaseInputFeedbackCard.vue", () => {
       "mockedIconColor"
     );
     mockDefinitions.getIconForInputFeedbackType.mockReturnValue("$error");
-    mockDefinitions.getTextColorForInputFeedbackType.mockReturnValue(
-      "mockedTextColor"
+    mockDefinitions.getBackgroundColorAndBoldTextForInputFeedbackType.mockReturnValue(
+      "mockedBgColor font-weight-bold"
     );
   }
 });

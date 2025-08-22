@@ -5,6 +5,7 @@ import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 export const useStimmabgabevermerkeStore = defineStore(
@@ -55,7 +56,7 @@ export const useStimmabgabevermerkeStore = defineStore(
           });
           sumForWahl +=
             wahldaten.eingenommeneWahlscheine.get(
-              StimmzettelStimmzettelartEnum.Klein
+              EingenommenerWahlscheinStimmzettelartEnum.Klein
             ) ?? 0;
           result.set(wahldaten.wahlID, sumForWahl);
         });

@@ -116,7 +116,8 @@ import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
+const { maxNumber, minNumber, required, timeNotInFuture, timeGreaterOrEqual } =
+  useRules();
 const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();
@@ -139,6 +140,7 @@ const getDateRules = () => {
     rules.push(required);
   }
   rules.push(timeNotInFuture);
+  rules.push(timeGreaterOrEqual(fruehesteSchliessungsuhrzeit));
   return rules;
 };
 

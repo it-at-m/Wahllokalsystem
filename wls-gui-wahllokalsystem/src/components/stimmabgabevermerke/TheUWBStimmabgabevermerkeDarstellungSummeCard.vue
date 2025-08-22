@@ -7,7 +7,5 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { VCard, VCardText, VCardTitle } from "vuetify/components";
-
 import TheUWBStimmabgabevermerkeDarstellungSummeTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeDarstellungSummeTable.vue";
 </script>

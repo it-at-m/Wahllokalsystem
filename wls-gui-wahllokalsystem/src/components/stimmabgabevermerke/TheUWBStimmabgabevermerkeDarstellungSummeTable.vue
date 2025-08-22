@@ -3,14 +3,14 @@
     <v-table>
       <thead>
         <tr>
-          <td
+          <th
             v-for="key in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
             )"
             :key="key"
           >
             <b>{{ getWahlNameOrBlankStringById(key) }}</b>
-          </td>
+          </th>
         </tr>
       </thead>
       <tbody>

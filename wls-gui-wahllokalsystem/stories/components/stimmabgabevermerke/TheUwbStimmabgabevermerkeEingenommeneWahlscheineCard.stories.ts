@@ -8,6 +8,7 @@ import pinia from "@/plugins/pinia.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const meta = {
@@ -44,6 +45,17 @@ export const Default: Story = {
           eingenommeneWahlscheine: new Map([
             [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
           ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
         },
         {
           wahlID: "wahlID2",
@@ -51,6 +63,17 @@ export const Default: Story = {
           eingenommeneWahlscheine: new Map([
             [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
           ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
         },
       ]),
     };

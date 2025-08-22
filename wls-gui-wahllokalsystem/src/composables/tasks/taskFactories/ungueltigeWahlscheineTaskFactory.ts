@@ -12,10 +12,11 @@ export function useUngueltigeWahlscheineTaskFactory(): TaskFactory {
   }
 
   function _createTask(): Task {
-    const { initUngueltigeWahlscheine } = useWahlbezirkStore();
+    const { ungueltigeWahlscheineActions } = useWahlbezirkStore();
     return {
       name: "UngültigeWahlscheine",
-      callback: () => initUngueltigeWahlscheine(false),
+      callback: () =>
+        ungueltigeWahlscheineActions.initUngueltigeWahlscheine(false),
     };
   }
 

@@ -86,7 +86,7 @@
               :max-width="WIDTH"
               data-test="timeInputZeitNachtraeglichUeberbrachteAnzahl"
               :rules="getDateRules()"
-              :disabled="!isZeitNachtragelichUeberbrachtRequired()"
+              :disabled="!isZeitNachtraegelichUeberbrachtRequired()"
             />
           </div>
         </div>
@@ -136,7 +136,7 @@ const WIDTH = 300;
 
 const getDateRules = () => {
   const rules = [];
-  if (isZeitNachtragelichUeberbrachtRequired()) {
+  if (isZeitNachtraegelichUeberbrachtRequired()) {
     rules.push(required);
   }
   rules.push(timeNotInFuture);
@@ -170,11 +170,11 @@ const isSaveButtonDisabled = computed(() => {
     anzahlVerzeichnisseValid.value !== true ||
     anzahlNachtraegeValid.value !== true ||
     (anzahlNachtraeglichUeberbrachteValid.value !== true &&
-      isZeitNachtragelichUeberbrachtRequired())
+      isZeitNachtraegelichUeberbrachtRequired())
   );
 });
 
-function isZeitNachtragelichUeberbrachtRequired() {
+function isZeitNachtraegelichUeberbrachtRequired() {
   return (
     wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte !==
       undefined &&

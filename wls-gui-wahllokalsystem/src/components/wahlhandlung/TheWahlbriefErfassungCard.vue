@@ -122,7 +122,7 @@ const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
-const { fruehesteSchliessungsuhrzeit } = useInfomanagementStore();
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
@@ -140,7 +140,7 @@ const getDateRules = () => {
     rules.push(required);
   }
   rules.push(timeNotInFuture);
-  rules.push(timeGreaterOrEqual(fruehesteSchliessungsuhrzeit));
+  rules.push(timeGreaterOrEqual(fruehesteSchliessungsuhrzeit.value));
   return rules;
 };
 
@@ -159,7 +159,8 @@ watch(
 
 const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
   return (
-    currentTime.value < getDateFromTimeString(fruehesteSchliessungsuhrzeit)
+    currentTime.value <
+    getDateFromTimeString(fruehesteSchliessungsuhrzeit.value)
   );
 });
 

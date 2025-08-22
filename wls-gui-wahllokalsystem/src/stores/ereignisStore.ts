@@ -186,7 +186,7 @@ export const useEreignisStore = defineStore(storeID, () => {
   function _onSchliessunguhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
-    wahlbezirkEreignisse.value.ereigniseintraege?.forEach((eintrag) => {
+    wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {
       if (eintrag.uhrzeit) {
         eintrag.ereignisart = getEreignisArtForDateRelatedToSchliessungsuhrzeit(
           eintrag.uhrzeit,
@@ -212,8 +212,8 @@ export const useEreignisStore = defineStore(storeID, () => {
       isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
   }
 
-  function _sortEreignisse(ereigniseintraege: Ereignis[] | undefined) {
-    return ereigniseintraege?.sort(compareEreignisseByUhrzeit);
+  function _sortEreignisse(ereigniseintraege: Ereignis[]) {
+    return ereigniseintraege.sort(compareEreignisseByUhrzeit);
   }
 
   return {

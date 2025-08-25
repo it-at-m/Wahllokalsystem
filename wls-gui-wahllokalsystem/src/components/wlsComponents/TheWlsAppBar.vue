@@ -41,21 +41,32 @@
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Home"
-          :to="'/'"
-        />
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-        <the-b-w-b-election-list-group v-if="isBWB" />
-        <the-u-w-b-election-list-group v-if="isUWB" />
-        <v-list-item
-          title="Ereignisse"
-          :to="ROUTE_EREIGNISSE"
-        />
+      <v-list class="pt-0">
+        <v-list-group
+          value="Allgemein"
+          class="bg-primary"
+        >
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Allgemein"
+            />
+          </template>
+          <v-list-item
+            title="Home"
+            :to="'/'"
+          />
+          <v-list-item
+            title="Wahlvorstand"
+            :to="ROUTE_WAHLVORSTAND"
+          />
+          <the-b-w-b-election-list-group v-if="isBWB" />
+          <the-u-w-b-election-list-group v-if="isUWB" />
+          <v-list-item
+            title="Ereignisse"
+            :to="ROUTE_EREIGNISSE"
+          />
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
   </div>

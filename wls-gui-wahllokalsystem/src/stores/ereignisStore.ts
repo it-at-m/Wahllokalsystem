@@ -50,26 +50,13 @@ export const useEreignisStore = defineStore(storeID, () => {
     _hasEintragOfEreignisart(EreignisartEnum.Vorkommnis)
   );
 
-  const isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent =
-    computed(
-      () =>
-        ereigniseintraegeContainsVorfaelle.value ===
-        wahlbezirkEreignisse.value.keineVorfaelle
-    );
-
-  const isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent =
-    computed(
-      () =>
-        ereigniseintraegeContainsVorkommnisse.value ===
-        wahlbezirkEreignisse.value.keineVorkommnisse
-    );
 
   const isEreignisFlagsAndEreigniseintraegeInconsistent = computed(() => {
     return isUWB.value
-      ? isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent.value ||
-          (isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value &&
+      ? _isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent.value ||
+          (_isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value &&
             schliessungsuhrzeitGetter.value.isAuszaehlungStarted)
-      : isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
+      : _isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
   });
 
   watch(
@@ -159,6 +146,20 @@ export const useEreignisStore = defineStore(storeID, () => {
       isSaving.value = false;
     }
   }
+
+  const _isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent =
+    computed(
+      () =>
+        ereigniseintraegeContainsVorfaelle.value ===
+        wahlbezirkEreignisse.value.keineVorfaelle
+    );
+
+  const _isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent =
+    computed(
+      () =>
+        ereigniseintraegeContainsVorkommnisse.value ===
+        wahlbezirkEreignisse.value.keineVorkommnisse
+    );
 
   function _createEreignis(
     nonDefaultValues?: EreignisCreateTemplate

@@ -52,3 +52,10 @@ export const Success: Story = {
     type: InputFeedbackTypeEnum.success,
   },
 };
+
+export const Warning: Story = {
+  args: {
+    title: "Titel zu einer Warnung",
+    type: InputFeedbackTypeEnum.warning,
+  },
+};

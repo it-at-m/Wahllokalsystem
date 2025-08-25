@@ -86,7 +86,7 @@
               :max-width="WIDTH"
               data-test="timeInputZeitNachtraeglichUeberbrachteAnzahl"
               :rules="getDateRules()"
-              :disabled="!isZeitNachtragelichUeberbrachtRequired()"
+              :disabled="!isZeitNachtraegelichUeberbrachtRequired()"
             />
           </div>
         </div>
@@ -116,12 +116,13 @@ import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { maxNumber, minNumber, required, timeNotInFuture } = useRules();
+const { maxNumber, minNumber, required, timeNotInFuture, timeGreaterOrEqual } =
+  useRules();
 const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
-const { fruehesteSchliessungsuhrzeit } = useInfomanagementStore();
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
@@ -135,10 +136,11 @@ const WIDTH = 300;
 
 const getDateRules = () => {
   const rules = [];
-  if (isZeitNachtragelichUeberbrachtRequired()) {
+  if (isZeitNachtraegelichUeberbrachtRequired()) {
     rules.push(required);
   }
   rules.push(timeNotInFuture);
+  rules.push(timeGreaterOrEqual(fruehesteSchliessungsuhrzeit.value));
   return rules;
 };
 
@@ -157,7 +159,8 @@ watch(
 
 const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
   return (
-    currentTime.value < getDateFromTimeString(fruehesteSchliessungsuhrzeit)
+    currentTime.value <
+    getDateFromTimeString(fruehesteSchliessungsuhrzeit.value)
   );
 });
 
@@ -167,11 +170,11 @@ const isSaveButtonDisabled = computed(() => {
     anzahlVerzeichnisseValid.value !== true ||
     anzahlNachtraegeValid.value !== true ||
     (anzahlNachtraeglichUeberbrachteValid.value !== true &&
-      isZeitNachtragelichUeberbrachtRequired())
+      isZeitNachtraegelichUeberbrachtRequired())
   );
 });
 
-function isZeitNachtragelichUeberbrachtRequired() {
+function isZeitNachtraegelichUeberbrachtRequired() {
   return (
     wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte !==
       undefined &&

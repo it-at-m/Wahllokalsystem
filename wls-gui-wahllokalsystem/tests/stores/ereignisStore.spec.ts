@@ -476,7 +476,8 @@ describe("ereignisStore.ts", () => {
 
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalledWith(
         wahlbezirkID,
-        unitUnderTest.wahlbezirkEreignisse
+        unitUnderTest.wahlbezirkEreignisse,
+        true
       );
     });
   });

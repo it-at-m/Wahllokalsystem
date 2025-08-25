@@ -129,14 +129,15 @@ export const useEreignisStore = defineStore(storeID, () => {
     }
   }
 
-  async function sendEreignisse() {
+  async function sendEreignisse(sendNotification = true) {
     error.value = null;
     isSaving.value = true;
     try {
       _sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
       await saveEreignisse(
         currentUserWahlbezirkID.value,
-        wahlbezirkEreignisse.value
+        wahlbezirkEreignisse.value,
+        sendNotification
       );
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
@@ -183,7 +184,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     );
   }
 
-  function _onSchliessunguhrzeitSentChanged(
+  async function _onSchliessunguhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
     wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {
@@ -196,11 +197,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     });
     _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState();
 
-    saveEreignisse(
-      currentUserWahlbezirkID.value,
-      wahlbezirkEreignisse.value,
-      false
-    );
+    await sendEreignisse(false);
   }
 
   function _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState() {

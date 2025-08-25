@@ -50,7 +50,6 @@ export const useEreignisStore = defineStore(storeID, () => {
     _hasEintragOfEreignisart(EreignisartEnum.Vorkommnis)
   );
 
-
   const isEreignisFlagsAndEreigniseintraegeInconsistent = computed(() => {
     return isUWB.value
       ? _isKeineVorfaelleAndEreigniseintraegeContainsVorfaelleInconsistent.value ||

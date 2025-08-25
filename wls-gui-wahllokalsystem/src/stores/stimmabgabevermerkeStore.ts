@@ -5,6 +5,7 @@ import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 export const useStimmabgabevermerkeStore = defineStore(
@@ -42,6 +43,25 @@ export const useStimmabgabevermerkeStore = defineStore(
 
       return totalsForWahldaten;
     });
+
+    const sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl =
+      computed(() => {
+        const result = new Map<string, number>();
+        stimmabgabevermerke.value?.wahldaten.forEach((wahldaten) => {
+          let sumForWahl = 0;
+          wahldaten.vermerke.forEach((vermerk) => {
+            vermerk.stimmzettel.forEach((stimmzettel) => {
+              sumForWahl += stimmzettel.anzahl ?? 0;
+            });
+          });
+          sumForWahl +=
+            wahldaten.eingenommeneWahlscheine.get(
+              EingenommenerWahlscheinStimmzettelartEnum.Klein
+            ) ?? 0;
+          result.set(wahldaten.wahlID, sumForWahl);
+        });
+        return result;
+      });
 
     function isAnyRowThatShouldBeDeletedFilled(newRowSize: number) {
       const currentLowestNumberOfRowsOverAllWahldaten =
@@ -115,6 +135,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       stimmabgabevermerkeTableTotalEachWahldaten,
       lowestNumberOfRowsOverAllWahldaten,
       changeRowCount,
+      sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl,
     };
   }
 );

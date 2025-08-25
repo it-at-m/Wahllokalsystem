@@ -67,7 +67,7 @@
             :to="ROUTE_EREIGNISSE"
           />
         </v-list-group>
-        <the-uwb-kommunalwahlen-scores-list-group v-if="isUWB" />
+        <the-kommunalwahlen-scores-list-group />
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -81,8 +81,8 @@ import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
+import TheKommunalwahlenScoresListGroup from "@/components/navigation/TheKommunalwahlenScoresListGroup.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
-import TheUwbKommunalwahlenScoresListGroup from "@/components/navigation/TheUWBKommunalwahlenScoresListGroup.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

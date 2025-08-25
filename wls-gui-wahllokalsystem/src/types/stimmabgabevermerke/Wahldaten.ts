@@ -4,6 +4,7 @@ import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
 export interface Wahldaten {
   wahlID: string;
   waehlerverzeichnisNummer: number;
+  wahlbezirkID: string;
   eingenommeneWahlscheine: Map<
     EingenommenerWahlscheinStimmzettelartEnum,
     number

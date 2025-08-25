@@ -6,19 +6,21 @@
     <thead>
       <tr>
         <th
-          v-for="wahldaten in stimmabgabevermerke.wahldaten"
-          :key="wahldaten.wahlID"
+          v-for="stimmabgabevermerk in stimmabgabevermerke"
+          :key="stimmabgabevermerk.waehlerverzeichnisNummer"
           class="pl-0 font-weight-bold"
         >
-          {{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}
+          {{
+            getWahlNameOrBlankStringById(stimmabgabevermerk.wahldaten[0].wahlID)
+          }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td
-          v-for="wahldaten in stimmabgabevermerke.wahldaten"
-          :key="wahldaten.wahlID"
+          v-for="stimmabgabevermerk in stimmabgabevermerke"
+          :key="stimmabgabevermerk.waehlerverzeichnisNummer"
           class="pl-0"
         >
           <v-number-input
@@ -27,13 +29,13 @@
             :model-value="
               getMapValue(
                 EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                wahldaten
+                stimmabgabevermerk.wahldaten[0]
               )
             "
             @update:model-value="
               setMapValue(
                 EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                wahldaten,
+                stimmabgabevermerk.wahldaten[0],
                 $event
               )
             "

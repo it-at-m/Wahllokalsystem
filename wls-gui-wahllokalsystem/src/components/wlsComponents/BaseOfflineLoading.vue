@@ -38,7 +38,7 @@
       :current="numberOfFailedTasks"
       :total="numberOfTasksToRun"
       :tasks="failedTasks"
-      color="warn"
+      color="warning"
     />
   </v-container>
 </template>

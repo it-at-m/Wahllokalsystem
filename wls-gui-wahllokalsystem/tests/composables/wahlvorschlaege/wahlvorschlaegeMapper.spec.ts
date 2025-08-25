@@ -5,13 +5,13 @@ import { describe, expect, it } from "vitest";
 
 import { useWahlvorschlaegeMapper } from "@/composables/wahlvorschlaege/wahlvorschlaegeMapper.ts";
 
-const { prepareWahlvorschlaegeDto } = useWahlvorschlaegeTestDataFactory();
+const { createWahlvorschlaegeDto } = useWahlvorschlaegeTestDataFactory();
 const { toModel } = useWahlvorschlaegeMapper();
 
 describe("wahlvorschlaegeMapper.ts", () => {
   describe("toModel", () => {
     it("should_returnModel_when_givenDto", () => {
-      const dto = prepareWahlvorschlaegeDto().build();
+      const dto = createWahlvorschlaegeDto();
 
       const model: Wahlvorschlaege = {
         wahlID: dto.wahlID,

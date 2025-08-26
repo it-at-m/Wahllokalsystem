@@ -56,6 +56,10 @@
           title="Ereignisse"
           :to="ROUTE_EREIGNISSE"
         />
+        <v-list-item
+          title="Stimmabgabevermerke"
+          :to="ROUTE_STIMMABGABEVERMERKE"
+        />
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -73,7 +77,11 @@ import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListG
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
+import {
+  ROUTE_EREIGNISSE,
+  ROUTE_STIMMABGABEVERMERKE,
+  ROUTE_WAHLVORSTAND,
+} from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

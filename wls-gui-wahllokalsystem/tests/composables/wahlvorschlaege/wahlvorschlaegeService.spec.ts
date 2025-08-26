@@ -38,16 +38,25 @@ describe("wahlvorschlaegeService.ts", () => {
     it("should_returnWahlvorschlaege_when_wahlIDAndWahlbezirkIdGiven", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
+
       const mockedWahlvorschlaegeModel = createWahlvorschlaege();
+      const mockedWahlvorschlaegeDto = createWahlvorschlaegeDto();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        Promise.resolve({ status: 200, data: createWahlvorschlaegeDto() })
+        Promise.resolve({ status: 200, data: mockedWahlvorschlaegeDto })
       );
       mockDefinitions.toModel.mockReturnValue(mockedWahlvorschlaegeModel);
 
       const result = await getWahlvorschlaege(wahlID, wahlbezirkID);
 
       expect(result).toEqual(mockedWahlvorschlaegeModel);
+      expect(mockDefinitions.getWahlvorschlaege).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID
+      );
+      expect(mockDefinitions.toModel).toHaveBeenCalledWith(
+        mockedWahlvorschlaegeDto
+      );
     });
   });
 });

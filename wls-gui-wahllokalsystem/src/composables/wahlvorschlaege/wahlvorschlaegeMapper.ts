@@ -1,4 +1,5 @@
 import type {
+  KandidatDTO,
   WahlvorschlaegeDTO,
   WahlvorschlagDTO,
 } from "@/api/wls-clients/generated-basisdaten-api";
@@ -40,7 +41,7 @@ export function useWahlvorschlaegeMapper() {
     return modelWahlvorschlaege;
   }
 
-  function _dtoKandidatenToModel(dtoKandidatenSet: Set<Kandidat>) {
+  function _dtoKandidatenToModel(dtoKandidatenSet: Set<KandidatDTO>) {
     const modelKandidaten = new Set<Kandidat>();
 
     for (const kandidatDto of dtoKandidatenSet) {

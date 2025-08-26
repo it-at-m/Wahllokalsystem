@@ -6,7 +6,7 @@
         title="Ergebnisermittlung"
       />
     </template>
-    <v-list-item :title="isBWB ? 'Wahlscheine' : 'Stimmabgabevermerke'" />
+    <v-list-item :title="title" />
     <the-o-b-w-scores-list-group />
     <the-s-r-w-scores-list-group />
     <the-b-a-w-scores-list-group />
@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheBAWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
@@ -22,4 +23,8 @@ import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { isBWB } = storeToRefs(useUserStore());
+
+const title = computed(() =>
+  isBWB.value ? "Wahlscheine" : "Stimmabgabevermerke"
+);
 </script>

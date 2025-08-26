@@ -7,6 +7,8 @@ import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useWahlvorschlaegeTaskFactory(): TaskFactory {
+  const { loadWahlvorschlaege } = useWahlvorschlaegeStore();
+
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const allWahlenWithoutBEandVE =
       taskFactoryContext.extendedWahlMetaData.filter(
@@ -19,7 +21,6 @@ export function useWahlvorschlaegeTaskFactory(): TaskFactory {
   }
 
   function createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
-    const { loadWahlvorschlaege } = useWahlvorschlaegeStore();
     return {
       callback: () =>
         loadWahlvorschlaege(

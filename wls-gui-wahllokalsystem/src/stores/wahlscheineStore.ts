@@ -1,4 +1,4 @@
-import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";

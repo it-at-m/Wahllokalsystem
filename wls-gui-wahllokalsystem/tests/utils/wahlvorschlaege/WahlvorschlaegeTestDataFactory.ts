@@ -29,7 +29,17 @@ export function useWahlvorschlaegeTestDataFactory() {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(10),
       stimmzettelgebietID: generateRandomString(15),
-      wahlvorschlaege: new Set<Wahlvorschlag>([_createWahlvorschlag()]),
+      wahlvorschlaege: new Set<Wahlvorschlag>([createWahlvorschlag()]),
+    };
+  }
+
+  function createWahlvorschlag(): Wahlvorschlag {
+    return {
+      identifikator: generateRandomString(5),
+      ordnungszahl: generateRandomNumber(1),
+      kurzname: generateRandomString(3),
+      erhaeltStimmen: generateRandomBoolean(),
+      kandidaten: new Set<Kandidat>([_createKandidat()]),
     };
   }
 
@@ -41,6 +51,10 @@ export function useWahlvorschlaegeTestDataFactory() {
     return proxyBuilder<WahlvorschlaegeDTO>(createWahlvorschlaegeDto());
   }
 
+  function prepareWahlvorschlag(): Builder<Wahlvorschlag> {
+    return proxyBuilder<Wahlvorschlag>(createWahlvorschlag());
+  }
+
   function _createWahlvorschlagDto(): WahlvorschlagDTO {
     return {
       identifikator: generateRandomString(5),
@@ -48,16 +62,6 @@ export function useWahlvorschlaegeTestDataFactory() {
       kurzname: generateRandomString(3),
       erhaeltStimmen: generateRandomBoolean(),
       kandidaten: new Set<KandidatDTO>([_createKandidatDto()]),
-    };
-  }
-
-  function _createWahlvorschlag(): Wahlvorschlag {
-    return {
-      identifikator: generateRandomString(5),
-      ordnungszahl: generateRandomNumber(1),
-      kurzname: generateRandomString(3),
-      erhaeltStimmen: generateRandomBoolean(),
-      kandidaten: new Set<Kandidat>([_createKandidat()]),
     };
   }
 
@@ -84,8 +88,10 @@ export function useWahlvorschlaegeTestDataFactory() {
   }
 
   return {
+    createWahlvorschlag,
     createWahlvorschlaege,
     createWahlvorschlaegeDto,
+    prepareWahlvorschlag,
     prepareWahlvorschlaege,
     prepareWahlvorschlaegeDto,
   };

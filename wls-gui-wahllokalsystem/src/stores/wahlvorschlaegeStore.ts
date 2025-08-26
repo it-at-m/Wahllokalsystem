@@ -25,6 +25,20 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
     } catch {
       throw new Error("Fehler beim Laden der Wahlvorschläge");
     }
+    _sortWahlvorschlaegeByOrdnungszahl();
+  }
+
+  function _sortWahlvorschlaegeByOrdnungszahl() {
+    wahlvorschlaege.value.forEach((wahlvorschlag) => {
+      const vorschlaegeSet = wahlvorschlag.wahlvorschlaege;
+
+      const sortedArray = Array.from(vorschlaegeSet).sort(
+        (vorschlagA, vorschlagB) =>
+          vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
+      );
+
+      wahlvorschlag.wahlvorschlaege = new Set(sortedArray);
+    });
   }
 
   return {

@@ -40,7 +40,7 @@ describe("wahlvorschlaegeService.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const mockedWahlvorschlaegeModel = createWahlvorschlaege();
 
-      mockDefinitions.getWahlvorschlaege.mockReturnValue(
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
         Promise.resolve({ status: 200, data: createWahlvorschlaegeDto() })
       );
       mockDefinitions.toModel.mockReturnValue(mockedWahlvorschlaegeModel);

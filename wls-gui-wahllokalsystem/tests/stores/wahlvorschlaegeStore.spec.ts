@@ -36,7 +36,7 @@ describe("wahlvorschlaegeStore.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const mockedWahlvorschlaegeModel = createWahlvorschlaege();
 
-      mockDefinitions.getWahlvorschlaege.mockReturnValue(
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
         mockedWahlvorschlaegeModel
       );
 

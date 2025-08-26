@@ -23,7 +23,7 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
 
       wahlvorschlaege.value.push(loadedWahlvorschlaege);
     } catch {
-      throw new Error("Fehler beim resolven der Wahlvorschlaege");
+      throw new Error("Fehler beim Laden der Wahlvorschläge");
     }
   }
 

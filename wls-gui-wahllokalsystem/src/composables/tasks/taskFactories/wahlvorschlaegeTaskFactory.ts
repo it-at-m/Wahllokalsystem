@@ -4,10 +4,18 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useWahlvorschleageTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    return taskFactoryContext.extendedWahlMetaData.map(createTask);
+    const allWahlenWithoutBEandVE =
+      taskFactoryContext.extendedWahlMetaData.filter(
+        (obj) =>
+          obj.wahlArt !== WahlWahlartEnum.Ve &&
+          obj.wahlArt !== WahlWahlartEnum.Beb
+      );
+
+    return allWahlenWithoutBEandVE.map(createTask);
   }
 
   function createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {

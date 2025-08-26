@@ -4,7 +4,7 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useWahlvorschleageTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -23,7 +23,7 @@ describe("wahlvorschlaegeTaskFactory.ts", () => {
     createExtendedWahlMetaData,
     prepareExtendedWahlMetaData,
   } = useTasksTestDataFactory();
-  const { createTasks } = useWahlvorschleageTaskFactory();
+  const { createTasks } = useWahlvorschlaegeTaskFactory();
   const wahlvorschlaegeNamePrefix = "Wahlvorschläge - ";
 
   beforeEach(() => {

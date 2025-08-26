@@ -58,5 +58,18 @@ describe("wahlvorschlaegeService.ts", () => {
         mockedWahlvorschlaegeDto
       );
     });
+
+    it("should_throwError_when_apiCallFailed", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getWahlvorschlaege.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(getWahlvorschlaege(wahlID, wahlbezirkID)).rejects.toThrow(
+        "GetWahlvorschlaege failed"
+      );
+    });
   });
 });

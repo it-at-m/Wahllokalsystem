@@ -6,14 +6,15 @@ import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskF
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
   const { getWahlOrUndefinedById } = useWahlenStore();
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
@@ -22,6 +23,8 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWahlvorschlaegeTasks } =
+    useWahlvorschlaegeTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -31,6 +34,8 @@ export function useTaskListService() {
     tasks.push(...createWahlvorstandTasks(taskFactoryData));
     tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
     tasks.push(...createWahlscheineTasks(taskFactoryData));
+    tasks.push(...createWahlvorschlaegeTasks(taskFactoryData));
+
     return tasks;
   }
 

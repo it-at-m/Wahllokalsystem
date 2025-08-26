@@ -13,8 +13,8 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
   const { getWahlOrUndefinedById } = useWahlenStore();
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();

@@ -98,7 +98,7 @@ VALUES ('00000000-0000-0000-0000-000000000006', '9899cae4-df9a-4ffc-a940-f20cf22
         '00000001-0000-0000-0000-000000000002');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
-VALUES ('00000000-0000-0000-0006-000000000001', 1, 'Vorschlag für Refendum', 1,
+VALUES ('00000000-0000-0000-0006-000000000001', 1, 'Vorschlag für Referendum', 1,
         '00000000-0000-0000-0000-000000000006');
 INSERT INTO kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber,
                       wahlvorschlagID)

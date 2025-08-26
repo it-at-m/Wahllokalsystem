@@ -20,9 +20,12 @@ export function useStimmzettelumschlaegeTestDataFactory() {
     };
   }
 
-  function createStimmzettelumschlaege(): Stimmzettelumschlaege {
+  function createStimmzettelumschlaege(
+    overrides: Partial<Stimmzettelumschlaege> = {}
+  ): Stimmzettelumschlaege {
     return {
       anzahlWaehler: generateRandomNumber(3),
+      ...overrides,
     };
   }
 

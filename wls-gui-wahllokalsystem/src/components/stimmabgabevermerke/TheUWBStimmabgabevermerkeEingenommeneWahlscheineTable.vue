@@ -71,5 +71,3 @@ function setMapValue(
   wahldaten.eingenommeneWahlscheine.set(key, value);
 }
 </script>
-
-<style scoped></style>

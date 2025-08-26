@@ -2,8 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 
-import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard.vue";
-import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
+import TheUWBStimmabgabevermerkeErfassenCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeErfassenCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -12,7 +11,7 @@ import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/Stimm
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const meta = {
-  component: TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard,
+  component: TheUWBStimmabgabevermerkeErfassenCard,
   args: {},
   decorators: [
     (story) => {
@@ -24,7 +23,7 @@ const meta = {
       };
     },
   ],
-} satisfies Meta<typeof TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable>;
+} satisfies Meta<typeof TheUWBStimmabgabevermerkeErfassenCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -50,7 +49,7 @@ export const Default: Story = {
               blattnummer: 2,
               stimmzettel: [
                 {
-                  anzahl: 20,
+                  anzahl: 15,
                   stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
                 },
               ],

@@ -5,7 +5,6 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
-import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
@@ -34,4 +33,4 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useKopfdatenStore);
+registerStoreHMR(useWahlvorschlaegeStore);

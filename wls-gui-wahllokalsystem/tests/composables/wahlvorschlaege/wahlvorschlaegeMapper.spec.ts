@@ -22,6 +22,7 @@ describe("wahlvorschlaegeMapper.ts", () => {
       const result = toModel(dto);
 
       expect(result).toStrictEqual(model);
+      expect(result.wahlvorschlaege).not.toBe(dto.wahlvorschlaege);
     });
   });
 });

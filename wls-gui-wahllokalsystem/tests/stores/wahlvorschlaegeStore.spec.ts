@@ -45,6 +45,7 @@ describe("wahlvorschlaegeStore.ts", () => {
       expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID],
       ]);
+      expect(unitUnderTest.wahlvorschlaege.length).toBe(1);
     });
 
     it("should_throwError_when_calledServiceThrowsError", async () => {

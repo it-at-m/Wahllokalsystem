@@ -77,5 +77,21 @@ describe("ergebnisService.ts", () => {
         getErgebnisse(wahlbezirkID, wahlID, stapelArt)
       ).rejects.toThrowError();
     });
+
+    it("should_notMapAndReturnNull_when_apiReturnsNoContent", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArt = StapelArtEnum.ObwA;
+
+      mockDefinitions.getErgebnisse.mockResolvedValue({
+        status: 204,
+        data: undefined,
+      });
+
+      const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);
+
+      expect(result).toBeNull();
+      expect(mockDefinitions.toModel).not.toHaveBeenCalled();
+    });
   });
 });

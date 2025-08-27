@@ -68,14 +68,6 @@ export const useStimmabgabevermerkeStore = defineStore(
       }
     }
 
-    async function saveStimmabgabevermerke(
-      stimmabgabevermerke: Stimmabgabevermerke,
-      wahlbezirkID: string,
-      waehlerverzeichnisNummer: number
-    ) {
-      //TODO
-    }
-
     const sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl =
       computed(() => {
         const result = new Map<string, number>();

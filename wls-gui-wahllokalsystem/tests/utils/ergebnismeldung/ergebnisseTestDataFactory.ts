@@ -20,7 +20,9 @@ const { generateRandomString, generateRandomNumber } =
 export function useErgebnisseTestDataFactory() {
   function createErgebnisseDTO(): ErgebnisseDTO {
     return {
-      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelartDTO(),
+      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelartDTO(
+        BezirkUndWahlIDStapelartDTOStapelartEnum.ObwA
+      ),
       ergebnisse: [createErgebnisDTO(), createErgebnisDTO()],
     };
   }
@@ -36,7 +38,9 @@ export function useErgebnisseTestDataFactory() {
 
   function createErgebnisse(): Ergebnisse {
     return {
-      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelart(),
+      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelart(
+        StapelArtEnum.ObwA
+      ),
       ergebnisse: [createErgebnis(), createErgebnis()],
     };
   }
@@ -67,19 +71,23 @@ export function useErgebnisseTestDataFactory() {
     return proxyBuilder<Ergebnis>(createErgebnis());
   }
 
-  function _createBezirkUndWahlIDStapelartDTO(): BezirkUndWahlIDStapelartDTO {
+  function _createBezirkUndWahlIDStapelartDTO(
+    stapelArt: BezirkUndWahlIDStapelartDTOStapelartEnum
+  ): BezirkUndWahlIDStapelartDTO {
     return {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(5),
-      stapelart: BezirkUndWahlIDStapelartDTOStapelartEnum.ObwA,
+      stapelart: stapelArt,
     };
   }
 
-  function _createBezirkUndWahlIDStapelart(): BezirkUndWahlIDStapelart {
+  function _createBezirkUndWahlIDStapelart(
+    stapelArt: StapelArtEnum
+  ): BezirkUndWahlIDStapelart {
     return {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(5),
-      stapelArt: StapelArtEnum.ObwA,
+      stapelArt: stapelArt,
     };
   }
 

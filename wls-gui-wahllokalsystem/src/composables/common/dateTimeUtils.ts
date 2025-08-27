@@ -12,7 +12,7 @@ export function useDateTimeUtils() {
     return mappedUhrzeit;
   };
 
-  const getDateFromTimeString = function (timeString: string): Date {
+  const createTodayWithTime = function (timeString: string): Date {
     // Validate time string format (HH:MM)
     if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
       return new Date(NaN);
@@ -45,6 +45,6 @@ export function useDateTimeUtils() {
   return {
     isValidDate,
     applyLocalTimezoneOffset,
-    getDateFromTimeString,
+    createTodayWithTime,
   };
 }

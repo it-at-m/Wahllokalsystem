@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor
-      {{ toHhMm(getDateFromTimeString(fruehesteSchliessungsuhrzeit)) }} Uhr
+      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
       übergeben wurden)
     </v-card-title>
     <v-card-text class="pb-0 pt-2">
@@ -51,7 +51,7 @@
     </v-card-text>
     <v-card-title>
       Anzahl der nach
-      {{ toHhMm(getDateFromTimeString(fruehesteSchliessungsuhrzeit)) }} Uhr
+      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
       nachgelieferten Wahlbriefe
     </v-card-title>
     <v-card-text>
@@ -125,7 +125,7 @@ const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { toHhMm } = useDateTimeFormatter();
-const { getDateFromTimeString } = useDateTimeUtils();
+const { createTodayWithTime } = useDateTimeUtils();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
@@ -161,8 +161,7 @@ watch(
 
 const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
   return (
-    currentTime.value <
-    getDateFromTimeString(fruehesteSchliessungsuhrzeit.value)
+    currentTime.value < createTodayWithTime(fruehesteSchliessungsuhrzeit.value)
   );
 });
 

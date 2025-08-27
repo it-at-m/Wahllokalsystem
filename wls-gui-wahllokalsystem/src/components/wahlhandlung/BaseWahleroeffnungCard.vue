@@ -40,7 +40,7 @@
     >
       <span>
         Die eingetragene Uhrzeit ist nach
-        {{ toHhMm(getDateFromTimeString(spaetesteEroeffnungsuhrzeit)) }} Uhr,
+        {{ toHhMm(createTodayWithTime(spaetesteEroeffnungsuhrzeit)) }} Uhr,
         bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
         eines besonderen Vorfalls.
       </span>
@@ -67,7 +67,7 @@ const { required, timeGreaterOrEqual, timeLessOrEqual, timeNotInFuture } =
   useRules();
 
 const { toHhMm } = useDateTimeFormatter();
-const { getDateFromTimeString } = useDateTimeUtils();
+const { createTodayWithTime } = useDateTimeUtils();
 
 const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
 const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
@@ -92,7 +92,7 @@ function onSaveEroeffnungsuhrzeitClicked() {
   if (
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
-      getDateFromTimeString(spaetesteEroeffnungsuhrzeit.value)
+      createTodayWithTime(spaetesteEroeffnungsuhrzeit.value)
   ) {
     eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
   } else {

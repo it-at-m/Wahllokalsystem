@@ -25,7 +25,7 @@ import vuetify from "@/plugins/vuetify.ts";
 
 const { required } = useRules();
 
-const { getDateFromTimeString } = useDateTimeUtils();
+const { createTodayWithTime } = useDateTimeUtils();
 const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {
@@ -59,7 +59,7 @@ describe("BaseTimeInput.vue", () => {
 
     it("should_renderTimeInput_when_inputIsTyped", async (context) => {
       const input = "12:12";
-      const date = getDateFromTimeString(input);
+      const date = createTodayWithTime(input);
       await wrapper.setProps({ modelValue: date });
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -86,7 +86,7 @@ describe("BaseTimeInput.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateModelValue_when_elementIsTyped", async () => {
       const input = "12:12";
-      const date = getDateFromTimeString(input);
+      const date = createTodayWithTime(input);
 
       const inputTextfield = wrapper.findComponent(VTextField);
       await inputTextfield.setValue(input);

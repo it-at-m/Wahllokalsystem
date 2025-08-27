@@ -20,7 +20,7 @@ import { useRules } from "@/composables/common/rules.ts";
 const { required } = useRules();
 
 const { toHhMm } = useDateTimeFormatter();
-const { getDateFromTimeString } = useDateTimeUtils();
+const { createTodayWithTime } = useDateTimeUtils();
 
 const modelValue = defineModel({
   type: Object as PropType<Date>,
@@ -28,7 +28,7 @@ const modelValue = defineModel({
 
 function onTimeChanged(time: string | undefined) {
   if (time) {
-    modelValue.value = getDateFromTimeString(time);
+    modelValue.value = createTodayWithTime(time);
   } else {
     modelValue.value = undefined;
   }

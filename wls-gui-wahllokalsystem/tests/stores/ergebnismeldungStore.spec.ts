@@ -1,9 +1,11 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -18,6 +20,7 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnisse } = useErgebnisseTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useErgebnismeldungStore>;
@@ -37,13 +40,12 @@ describe("ergebnismeldungStore.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;
 
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
       mockDefinitions.getErgebnisse.mockResolvedValue(null);
 
-      await unitUnderTest.loadErgebnisseByStapelArt(
-        wahlID,
-        wahlbezirkID,
-        stapelArt
-      );
+      await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID, stapelArt],
@@ -56,15 +58,14 @@ describe("ergebnismeldungStore.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;
 
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
       const mockedErgebnisseModel = createErgebnisse();
 
       mockDefinitions.getErgebnisse.mockResolvedValue(mockedErgebnisseModel);
 
-      await unitUnderTest.loadErgebnisseByStapelArt(
-        wahlID,
-        wahlbezirkID,
-        stapelArt
-      );
+      await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID, stapelArt],
@@ -74,7 +75,6 @@ describe("ergebnismeldungStore.ts", () => {
 
     it("should_throwError_when_calledServiceThrowsError", async () => {
       const wahlID = generateRandomString(10);
-      const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;
 
       mockDefinitions.getErgebnisse.mockRejectedValue(
@@ -83,11 +83,7 @@ describe("ergebnismeldungStore.ts", () => {
 
       await expect(
         async () =>
-          await unitUnderTest.loadErgebnisseByStapelArt(
-            wahlID,
-            wahlbezirkID,
-            stapelArt
-          )
+          await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
   });

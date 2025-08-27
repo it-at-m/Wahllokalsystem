@@ -95,11 +95,7 @@ describe("ergebnisseTaskFactory.ts", () => {
         stapelForWahl.forEach((stapel) => {
           expect(
             mockDefinitions.loadErgebnisseByStapelArt
-          ).toHaveBeenCalledWith(
-            extendedWahlMetaData.wahlID,
-            extendedWahlMetaData.wahlbezirkID,
-            stapel
-          );
+          ).toHaveBeenCalledWith(extendedWahlMetaData.wahlID, stapel);
         });
       }
     );

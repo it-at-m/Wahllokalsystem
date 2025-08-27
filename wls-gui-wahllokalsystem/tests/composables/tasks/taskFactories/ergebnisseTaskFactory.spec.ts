@@ -71,7 +71,7 @@ describe("ergebnisseTaskFactory.ts", () => {
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Baw).build(),
     ])(
       "should_returnTasksWithExpectedCallbacks_when_calledFor%s",
-      (extendedWahlMetaData) => {
+      async (extendedWahlMetaData) => {
         const taskFactoryContext: TaskFactoryContext =
           prepareTaskFactoryContext()
             .extendedWahlMetaData([extendedWahlMetaData])
@@ -86,7 +86,7 @@ describe("ergebnisseTaskFactory.ts", () => {
         );
 
         const result = createTasks(taskFactoryContext);
-        result.forEach((task) => task.callback());
+        await Promise.all(result.map((task) => task.callback()));
 
         expect(result.length).toStrictEqual(stapelForWahl.length);
         expect(mockDefinitions.loadErgebnisseByStapelArt).toHaveBeenCalledTimes(

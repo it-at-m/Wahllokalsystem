@@ -4,9 +4,9 @@ import type {
 } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten.ts";
 
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+const { applyLocalTimezoneOffset } = useDateTimeUtils();
 
 export function useBriefwahlMapper() {
   function toWahlbriefdatenModel(

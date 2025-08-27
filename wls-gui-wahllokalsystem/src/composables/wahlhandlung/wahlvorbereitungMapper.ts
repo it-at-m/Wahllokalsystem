@@ -13,9 +13,9 @@ import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorber
 import type { Wahlurne } from "@/types/wahlhandlung/Wahlurne.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+const { applyLocalTimezoneOffset } = useDateTimeUtils();
 
 export function useWahlvorbereitungMapper() {
   function toEroeffnungsuhrzeitWriteDTO(

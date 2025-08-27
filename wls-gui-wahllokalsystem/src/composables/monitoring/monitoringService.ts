@@ -6,13 +6,13 @@ import {
   WahllokalZustandControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 
 const { toDto, toModel } = useWahlbeteiligungMapper();
-const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+const { applyLocalTimezoneOffset } = useDateTimeUtils();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 const { logDebug } = useLogging("monitoringService");
 

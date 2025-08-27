@@ -6,7 +6,7 @@ const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
   const {
-    time,
+    toHhMmSs,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
     toGermanDateFormat,
@@ -24,15 +24,15 @@ describe("dateTimeFormatter.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("time", () => {
+  describe("toHhMmSs", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {
-      const result = time(null);
+      const result = toHhMmSs(null);
 
       expect(result).toStrictEqual("");
     });
 
     it("should_returnEmptyString_when_parameterIsUndefined", () => {
-      const result = time(undefined);
+      const result = toHhMmSs(undefined);
 
       expect(result).toStrictEqual("");
     });
@@ -40,7 +40,7 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithoutPadding_when_eachTimePartHasTwoDigits", () => {
       const dateWithTwoDigitTimeParts = new Date("2025-02-18T14:10:23");
 
-      const result = time(dateWithTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithTwoDigitTimeParts);
 
       expect(result).toStrictEqual("14:10:23");
     });
@@ -48,7 +48,7 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithPaddingZeros_when_timePartHasNotTwoDigits", () => {
       const dateWithoutTwoDigitTimeParts = new Date("2025-02-18T04:00:03");
 
-      const result = time(dateWithoutTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithoutTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
     });

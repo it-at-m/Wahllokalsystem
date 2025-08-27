@@ -6,7 +6,7 @@ export function useDateTimeFormatter() {
 
   const { isValidDate } = useDateTimeUtils();
 
-  const time = function (date?: Date | null): string {
+  const toHhMmSs = function (date?: Date | null): string {
     if (!date) {
       return NO_VALUE_DEFAULT;
     }
@@ -112,7 +112,7 @@ export function useDateTimeFormatter() {
   }
 
   return {
-    time,
+    toHhMmSs,
     toHhMm,
     toYyyyMmDd,
     applyLocalTimezoneOffset,

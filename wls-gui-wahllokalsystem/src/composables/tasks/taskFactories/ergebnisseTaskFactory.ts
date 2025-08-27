@@ -20,8 +20,8 @@ export function useErgebnisseTaskFactory(): TaskFactory {
 
         allStapelForWahlart.forEach((stapelArt) => {
           if (
-            stapelArt == StapelArtEnum.ObwBLeer &&
-            taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.UWB
+            stapelArt === StapelArtEnum.ObwBLeer &&
+            taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
           ) {
             return;
           }

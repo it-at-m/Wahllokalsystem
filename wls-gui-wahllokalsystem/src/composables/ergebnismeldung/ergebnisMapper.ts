@@ -60,18 +60,13 @@ export function useErgebnisMapper() {
   }
 
   function _dtoErgebnisseToModel(dtos: ErgebnisDTO[]): Ergebnis[] {
-    const models: Ergebnis[] = [];
-
-    dtos.forEach((dto) => {
-      models.push({
-        wahlvorschlagID: dto.wahlvorschlagID ?? null,
-        kandidatID: dto.kandidatID ?? null,
-        wahlvorschlagsOrdnungszahl: dto.wahlvorschlagsordnungszahl ?? null,
-        ergebnis: dto.ergebnis,
-        numIndex: dto.numIndex ?? null,
-      });
-    });
-    return models;
+    return dtos.map((dto) => ({
+      wahlvorschlagID: dto.wahlvorschlagID ?? null,
+      kandidatID: dto.kandidatID ?? null,
+      wahlvorschlagsOrdnungszahl: dto.wahlvorschlagsordnungszahl ?? null,
+      ergebnis: dto.ergebnis,
+      numIndex: dto.numIndex ?? null,
+    }));
   }
   return { toModel };
 }

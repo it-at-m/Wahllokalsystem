@@ -82,8 +82,7 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       await expect(
-        async () =>
-          await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
+        unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
   });

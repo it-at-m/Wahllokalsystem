@@ -30,16 +30,15 @@ export function useTaskListService() {
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
-    const tasks = [];
-    tasks.push(...createKopfdatenTasks(taskFactoryData));
-    tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
-    tasks.push(...createWahlvorstandTasks(taskFactoryData));
-    tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
-    tasks.push(...createWahlscheineTasks(taskFactoryData));
-    tasks.push(...createWahlvorschlaegeTasks(taskFactoryData));
-    tasks.push(...createErgebnisseTasks(taskFactoryData));
-
-    return tasks;
+    return [
+      ...createKopfdatenTasks(taskFactoryData),
+      ...createUngueltigeWahlscheineTasks(taskFactoryData),
+      ...createWahlvorstandTasks(taskFactoryData),
+      ...createKonfigurationsparameterTasks(taskFactoryData),
+      ...createWahlscheineTasks(taskFactoryData),
+      ...createWahlvorschlaegeTasks(taskFactoryData),
+      ...createErgebnisseTasks(taskFactoryData),
+    ];
   }
 
   function _createTaskFactoryData() {

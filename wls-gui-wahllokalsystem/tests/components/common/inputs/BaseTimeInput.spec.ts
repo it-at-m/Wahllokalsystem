@@ -18,14 +18,14 @@ import { nextTick } from "vue";
 import { VTextField } from "vuetify/components";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 
 const { required } = useRules();
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { getDateFromTimeString } = useDateTimeUtils();
 const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {

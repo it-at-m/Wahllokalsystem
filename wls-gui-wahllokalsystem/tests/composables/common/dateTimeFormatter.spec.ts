@@ -5,13 +5,8 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
-  const {
-    toHhMmSs,
-    getDateFromTimeString,
-    toGermanDate,
-    toGermanDateWithLongMonth,
-    toYyyyMmDd,
-  } = useDateTimeFormatter();
+  const { toHhMmSs, toGermanDate, toGermanDateWithLongMonth, toYyyyMmDd } =
+    useDateTimeFormatter();
 
   beforeEach(() => {
     vi.useFakeTimers({
@@ -51,36 +46,6 @@ describe("dateTimeFormatter.ts", () => {
 
       expect(result).toStrictEqual("04:00:03");
     });
-  });
-
-  describe("getDateFromTimeString", () => {
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithGivenTime_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input).toString();
-
-        expect(result).toContain(input);
-      }
-    );
-
-    it.each(["text", "26:12", "11:78", "23:45:67", "", " "])(
-      "should_returnInvalidDate_when_inputStringIsInvalidValue'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result).toBeInstanceOf(Date);
-        expect(isNaN(result.getTime())).toBe(true);
-      }
-    );
-
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result.getMilliseconds()).toBe(0);
-      }
-    );
   });
 
   describe("toGermanDate", () => {

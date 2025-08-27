@@ -111,6 +111,7 @@ import { computed, ref, watch } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -123,7 +124,8 @@ const { currentTime } = useCurrentTime();
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
+const { toHhMm } = useDateTimeFormatter();
+const { getDateFromTimeString } = useDateTimeUtils();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);

@@ -1,6 +1,6 @@
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { getDateFromTimeString } = useDateTimeUtils();
 
 export function useRules() {
   /* eslint-disable */

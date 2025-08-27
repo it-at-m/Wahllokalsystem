@@ -56,6 +56,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -65,7 +66,8 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { required, timeGreaterOrEqual, timeLessOrEqual, timeNotInFuture } =
   useRules();
 
-const { getDateFromTimeString, toHhMm } = useDateTimeFormatter();
+const { toHhMm } = useDateTimeFormatter();
+const { getDateFromTimeString } = useDateTimeUtils();
 
 const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
 const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());

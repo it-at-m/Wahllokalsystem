@@ -29,36 +29,6 @@ export function useDateTimeFormatter() {
     return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  const getDateFromTimeString = function (timeString: string): Date {
-    // Validate time string format (HH:MM)
-    if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
-      return new Date(NaN);
-    }
-
-    const timeParts = timeString.split(":").map(Number);
-
-    const [hours, minutes] = timeParts;
-    if (
-      isNaN(hours) ||
-      isNaN(minutes) ||
-      hours < 0 ||
-      hours > 23 ||
-      minutes < 0 ||
-      minutes > 59
-    ) {
-      return new Date(NaN); // Return invalid date for invalid time values
-    }
-
-    const seconds = timeParts.length === 3 ? timeParts[2] : 0;
-    if (!isNaN(seconds) && (seconds < 0 || seconds > 59)) {
-      return new Date(NaN);
-    }
-
-    const date = new Date();
-    date.setHours(hours, minutes, seconds, 0);
-    return date;
-  };
-
   function toGermanDate(dateString: string) {
     const date = new Date(dateString);
     if (isValidDate(date)) {
@@ -106,7 +76,6 @@ export function useDateTimeFormatter() {
     toHhMmSs,
     toHhMm,
     toYyyyMmDd,
-    getDateFromTimeString,
     toGermanDate,
     toGermanDateWithLongMonth,
   };

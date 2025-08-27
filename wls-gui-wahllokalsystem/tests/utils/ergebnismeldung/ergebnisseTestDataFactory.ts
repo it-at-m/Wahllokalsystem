@@ -3,7 +3,7 @@ import type {
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlIDStapelart } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelart.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
@@ -83,7 +83,7 @@ export function useErgebnisseTestDataFactory() {
 
   function _createBezirkUndWahlIDStapelart(
     stapelArt: StapelArtEnum
-  ): BezirkUndWahlIDStapelart {
+  ): BezirkUndWahlIDStapelArt {
     return {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(5),

@@ -1,7 +1,7 @@
-import type { BezirkUndWahlIDStapelart } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelart.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
 export interface Ergebnisse {
-  bezirkUndWahlIDStapelart: BezirkUndWahlIDStapelart;
+  bezirkUndWahlIDStapelart: BezirkUndWahlIDStapelArt;
   ergebnisse: Ergebnis[];
 }

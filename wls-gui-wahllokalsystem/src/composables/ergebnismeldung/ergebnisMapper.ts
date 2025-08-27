@@ -3,7 +3,7 @@ import type {
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlIDStapelart } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelart.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
@@ -22,7 +22,7 @@ export function useErgebnisMapper() {
 
   function _dtoBezirkUndWahlIDStapelartToModel(
     dto: BezirkUndWahlIDStapelartDTO
-  ): BezirkUndWahlIDStapelart {
+  ): BezirkUndWahlIDStapelArt {
     return {
       wahlID: dto.wahlID,
       wahlbezirkID: dto.wahlbezirkID,

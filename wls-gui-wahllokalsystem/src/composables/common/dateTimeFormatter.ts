@@ -68,7 +68,7 @@ export function useDateTimeFormatter() {
     return date;
   };
 
-  function toGermanDateFormat(dateString: string) {
+  function toGermanDate(dateString: string) {
     const date = new Date(dateString);
     if (isValidDate(date)) {
       return date.toLocaleDateString("de-DE", {
@@ -117,7 +117,7 @@ export function useDateTimeFormatter() {
     toYyyyMmDd,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
-    toGermanDateFormat,
+    toGermanDate,
     toGermanDateWithLongMonth,
   };
 }

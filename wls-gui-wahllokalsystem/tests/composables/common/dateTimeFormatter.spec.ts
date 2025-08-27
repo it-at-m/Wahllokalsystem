@@ -9,7 +9,7 @@ describe("dateTimeFormatter.ts", () => {
     toHhMmSs,
     applyLocalTimezoneOffset,
     getDateFromTimeString,
-    toGermanDateFormat,
+    toGermanDate,
     toGermanDateWithLongMonth,
     toYyyyMmDd,
   } = useDateTimeFormatter();
@@ -106,7 +106,7 @@ describe("dateTimeFormatter.ts", () => {
     );
   });
 
-  describe("toGermanDateFormat", () => {
+  describe("toGermanDate", () => {
     it.each([
       "2026-01-01",
       "2026/01/01",
@@ -116,7 +116,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+        expect(toGermanDate(datestring)).toBe("01.01.2026");
       }
     );
 
@@ -130,7 +130,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });
@@ -159,7 +159,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });

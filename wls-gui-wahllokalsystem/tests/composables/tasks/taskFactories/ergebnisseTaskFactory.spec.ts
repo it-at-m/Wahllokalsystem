@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   loadErgebnisseByStapelArt: vi.fn(),
@@ -119,5 +120,22 @@ describe("ergebnisseTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(0);
     });
+  });
+
+  it("should_skipStapelartObwBLeer_when_usersWahlbezirksArtIsUwb", async () => {
+    const wahlMetaDataOBW = prepareExtendedWahlMetaData()
+      .wahlArt(WahlWahlartEnum.Obw)
+      .build();
+    const taskFactoryContext = prepareTaskFactoryContext()
+      .extendedWahlMetaData([wahlMetaDataOBW])
+      .build();
+    taskFactoryContext.wahlbezirkArt = WahlbezirksArtEnum.UWB;
+
+    const result = createTasks(taskFactoryContext);
+
+    const generatedTaskListNames = result.map((t) => t.name);
+    expect(
+      generatedTaskListNames.some((name) => name.includes("OBW_B_LEER"))
+    ).toBe(false);
   });
 });

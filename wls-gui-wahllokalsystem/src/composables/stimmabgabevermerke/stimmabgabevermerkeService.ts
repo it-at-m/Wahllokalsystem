@@ -19,7 +19,8 @@ export function useStimmabgabevermerkeService() {
 
   async function getStimmabgabevermerke(
     wahlbezirkID: string,
-    waehlerverzeichnisNummer: number
+    waehlerverzeichnisNummer: number,
+    sendNotification = true
   ): Promise<Stimmabgabevermerke> {
     try {
       const response =
@@ -29,10 +30,12 @@ export function useStimmabgabevermerkeService() {
         );
       return toModel(response.data);
     } catch (e) {
-      addNotification(
-        "Fehler beim Laden der Stimmabgabevermerke.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        addNotification(
+          "Fehler beim Laden der Stimmabgabevermerke.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw e;
     }
   }

@@ -24,8 +24,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   ) {
     try {
       ergebnisse.value = await getErgebnisse(
-        wahlID,
         currentUserWahlbezirkID.value,
+        wahlID,
         stapelArt
       );
     } catch {

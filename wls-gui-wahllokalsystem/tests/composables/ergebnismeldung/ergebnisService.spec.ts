@@ -52,12 +52,12 @@ describe("ergebnisService.ts", () => {
       );
       mockDefinitions.toModel.mockReturnValue(mockedErgebnisseModel);
 
-      const result = await getErgebnisse(wahlID, wahlbezirkID, stapelArt);
+      const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);
 
       expect(result).toEqual(mockedErgebnisseModel);
       expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
-        wahlID,
         wahlbezirkID,
+        wahlID,
         stapelArt
       );
       expect(mockDefinitions.toModel).toHaveBeenCalledWith(mockedErgebnisseDto);
@@ -73,7 +73,7 @@ describe("ergebnisService.ts", () => {
       );
 
       await expect(
-        getErgebnisse(wahlID, wahlbezirkID, stapelArt)
+        getErgebnisse(wahlbezirkID, wahlID, stapelArt)
       ).rejects.toThrowError();
     });
   });

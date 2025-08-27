@@ -17,14 +17,14 @@ export function useErgebnisService() {
   );
 
   async function getErgebnisse(
-    wahlID: string,
     wahlbezirkID: string,
+    wahlID: string,
     stapelArt: StapelArtEnum
   ) {
     try {
       const response = await ergebnisseControllerAPI.getErgebnisse(
-        wahlID,
         wahlbezirkID,
+        wahlID,
         stapelArt
       );
 

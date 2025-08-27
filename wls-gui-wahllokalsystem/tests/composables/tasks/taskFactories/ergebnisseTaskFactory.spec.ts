@@ -103,7 +103,7 @@ describe("ergebnisseTaskFactory.ts", () => {
     it("should_returnEmptyTaskListForWahlenNotInObwSrwBaw_when_called", () => {
       const extendedWahlMetaDataForAllWahlenExceptObwSrwBaw: ExtendedWahlMetaData[] =
         [];
-      Object.values(WahlWahlartEnum).filter((value) => {
+      Object.values(WahlWahlartEnum).forEach((value) => {
         if (value !== "OBW" && value !== "BAW" && value !== "SRW") {
           extendedWahlMetaDataForAllWahlenExceptObwSrwBaw.push(
             prepareExtendedWahlMetaData().wahlArt(value).build()

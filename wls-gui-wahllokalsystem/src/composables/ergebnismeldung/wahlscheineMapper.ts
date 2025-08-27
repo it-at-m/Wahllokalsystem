@@ -1,5 +1,7 @@
-import type { WahlscheineDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID as BezirkUndWahlIdDTO } from "@/api/wls-clients/generated-monitoring-api";
+import type {
+  BezirkUndWahlID as BezirkUndWahlIdDTO,
+  WahlscheineDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
 import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 

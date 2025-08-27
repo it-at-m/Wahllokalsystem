@@ -47,9 +47,10 @@ describe("ergebnisService.ts", () => {
       const mockedErgebnisseModel = createErgebnisse();
       const mockedErgebnisseDto = createErgebnisseDTO();
 
-      mockDefinitions.getErgebnisse.mockResolvedValue(
-        Promise.resolve({ status: 200, data: mockedErgebnisseDto })
-      );
+      mockDefinitions.getErgebnisse.mockResolvedValue({
+        status: 200,
+        data: mockedErgebnisseDto,
+      });
       mockDefinitions.toModel.mockReturnValue(mockedErgebnisseModel);
 
       const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);

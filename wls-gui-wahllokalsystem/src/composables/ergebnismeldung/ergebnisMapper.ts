@@ -50,8 +50,6 @@ export function useErgebnisMapper() {
         return StapelArtEnum.SrwBawB;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawAB:
         return StapelArtEnum.SrwBawAB;
-      case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawD:
-        return StapelArtEnum.SrwBawD;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawDUngueltig:
         return StapelArtEnum.SrwBawDUngueltig;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC:

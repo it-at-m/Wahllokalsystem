@@ -7,6 +7,7 @@ import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfd
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -14,8 +15,8 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 export function useTaskListService() {
   const { getWahlOrUndefinedById, getWaehlerverzeichnisNummerOrUndefinedById } =
     useWahlenStore();
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
@@ -24,6 +25,8 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWahlvorschlaegeTasks } =
+    useWahlvorschlaegeTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
 
@@ -36,6 +39,8 @@ export function useTaskListService() {
     tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
     tasks.push(...createWahlscheineTasks(taskFactoryData));
     tasks.push(...createStimmabgabevermerkeTasks(taskFactoryData));
+    tasks.push(...createWahlvorschlaegeTasks(taskFactoryData));
+
     return tasks;
   }
 

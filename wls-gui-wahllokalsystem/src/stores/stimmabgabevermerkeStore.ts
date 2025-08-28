@@ -62,7 +62,9 @@ export const useStimmabgabevermerkeStore = defineStore(
           wahlbezirkID,
           waehlerverzeichnisNummer
         );
-        stimmabgabevermerke.value.push(loadedStimmabgabevermerke);
+        if (loadedStimmabgabevermerke) {
+          stimmabgabevermerke.value.push(loadedStimmabgabevermerke);
+        }
       } catch {
         throw Error(
           `Fehler beim laden des Stimmabgabevermerks mit wahlbezirkID ${wahlbezirkID} und waehlerverzeichnisNummer ${waehlerverzeichnisNummer}`

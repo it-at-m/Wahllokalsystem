@@ -1,20 +1,20 @@
 import type { TestingPinia } from "@pinia/testing";
+
 import { createTestingPinia } from "@pinia/testing";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import {
-  useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
-import { COMPONENT_EVENT_TESTS, COMPONENT_RENDER_TESTS, getSnapshotFilename, } from "@tests/utils/testutils.ts";
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable
-  from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
+import TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineTable.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
-import {
-  EingenommenerWahlscheinStimmzettelartEnum
-} from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlNameOrBlankStringById: vi.fn(),

@@ -1,7 +1,9 @@
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 
-import { Configuration } from "@/api/wls-clients/generated-auth-api";
-import { StimmabgabevermerkeControllerApi } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  Configuration,
+  StimmabgabevermerkeControllerApi,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";

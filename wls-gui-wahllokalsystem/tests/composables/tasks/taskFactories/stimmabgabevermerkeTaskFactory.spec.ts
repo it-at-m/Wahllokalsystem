@@ -17,7 +17,7 @@ vi.mock("@/stores/stimmabgabevermerkeStore.ts", () => ({
     loadStimmabgabevermerke: mockDefinitions.loadStimmabgabevermerke,
   })),
 }));
-describe("kopfdatenTaskFactory.ts", () => {
+describe("stimmabgabevermerkeFactory.ts", () => {
   const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
     useTasksTestDataFactory();
   const { createTasks } = useStimmabgabevermerkeTaskFactory();

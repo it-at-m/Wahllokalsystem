@@ -64,7 +64,9 @@ export const useStimmabgabevermerkeStore = defineStore(
         );
         stimmabgabevermerke.value.push(loadedStimmabgabevermerke);
       } catch {
-        throw Error("Fehler beim Resolven der Promises");
+        throw Error(
+          `Fehler beim laden des Stimmabgabevermerks mit wahlbezirkID ${wahlbezirkID} und waehlerverzeichnisNummer ${waehlerverzeichnisNummer}`
+        );
       }
     }
 
@@ -73,7 +75,7 @@ export const useStimmabgabevermerkeStore = defineStore(
         const result = new Map<string, number>();
         stimmabgabevermerke.value.forEach((stimmabgabevermerke) => {
           let sumForWahl = 0;
-          stimmabgabevermerke.wahldaten[0].vermerke.forEach((vermerk) => {
+          stimmabgabevermerke.wahldaten[0].vermerke?.forEach((vermerk) => {
             vermerk.stimmzettel.forEach((stimmzettel) => {
               sumForWahl += stimmzettel.anzahl ?? 0;
             });

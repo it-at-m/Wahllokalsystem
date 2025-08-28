@@ -41,25 +41,33 @@
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Home"
-          :to="'/'"
-        />
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-        <the-b-w-b-election-list-group v-if="isBWB" />
-        <the-u-w-b-election-list-group v-if="isUWB" />
-        <v-list-item
-          title="Ereignisse"
-          :to="ROUTE_EREIGNISSE"
-        />
-        <v-list-item
-          title="Stimmabgabevermerke"
-          :to="ROUTE_STIMMABGABEVERMERKE"
-        />
+      <v-list class="pt-0">
+        <v-list-group
+          value="Allgemein"
+          class="bg-primary"
+        >
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Allgemein"
+            />
+          </template>
+          <v-list-item
+            title="Home"
+            :to="'/'"
+          />
+          <v-list-item
+            title="Wahlvorstand"
+            :to="ROUTE_WAHLVORSTAND"
+          />
+          <the-b-w-b-election-list-group v-if="isBWB" />
+          <the-u-w-b-election-list-group v-if="isUWB" />
+          <v-list-item
+            title="Ereignisse"
+            :to="ROUTE_EREIGNISSE"
+          />
+        </v-list-group>
+        <the-kommunalwahlen-scores-list-group />
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -73,15 +81,12 @@ import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
+import TheKommunalwahlenScoresListGroup from "@/components/navigation/TheKommunalwahlenScoresListGroup.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import {
-  ROUTE_EREIGNISSE,
-  ROUTE_STIMMABGABEVERMERKE,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants.ts";
+import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

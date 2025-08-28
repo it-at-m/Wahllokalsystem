@@ -35,59 +35,64 @@ export const Default: Story = {
       useStimmabgabevermerkeStore(pinia)
     );
 
-    stimmabgabevermerke.value = [
-      {
-        anzahlBlaetter: 0,
-        waehlerverzeichnisNummer: 0,
-        wahlbezirkID: "wahlbezirkID1",
-        wahldaten: [
-          {
-            wahlID: "wahlID",
-            waehlerverzeichnisNummer: 0,
-            eingenommeneWahlscheine: new Map([
-              [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
-            ]),
-            vermerke: [
-              {
-                blattnummer: 2,
-                stimmzettel: [
-                  {
-                    anzahl: 20,
-                    stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        anzahlBlaetter: 1,
-        waehlerverzeichnisNummer: 2,
-        wahlbezirkID: "wahlbezirkID2",
-        wahldaten: [
-          {
-            wahlID: "wahlID",
-            waehlerverzeichnisNummer: 0,
-            eingenommeneWahlscheine: new Map([
-              [EingenommenerWahlscheinStimmzettelartEnum.Klein, 20],
-            ]),
-            vermerke: [
-              {
-                blattnummer: 2,
-                stimmzettel: [
-                  {
-                    anzahl: 20,
-                    stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ];
+    const stimmabgabevermerkeOne: Stimmabgabevermerke = {
+      anzahlBlaetter: 0,
+      waehlerverzeichnisNummer: 0,
+      wahlbezirkID: "wahlbezikID1",
+      wahldaten: [
+        {
+          wahlbezirkID: "wahlbezikID1",
+          wahlID: "wahlID",
+          waehlerverzeichnisNummer: 0,
+          eingenommeneWahlscheine: new Map([
+            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
+          ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
 
+    const stimmabgabevermerkeTwo: Stimmabgabevermerke = {
+      anzahlBlaetter: 0,
+      waehlerverzeichnisNummer: 0,
+      wahlbezirkID: "wahlbezirkID2",
+      wahldaten: [
+        {
+          wahlbezirkID: "wahlbezirkID2",
+          wahlID: "wahlID2",
+          waehlerverzeichnisNummer: 0,
+          eingenommeneWahlscheine: new Map([
+            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
+          ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+
+    stimmabgabevermerke.value = [
+      stimmabgabevermerkeOne,
+      stimmabgabevermerkeTwo,
+    ];
     const { wahlen } = storeToRefs(useWahlenStore(pinia));
     wahlen.value = [
       {

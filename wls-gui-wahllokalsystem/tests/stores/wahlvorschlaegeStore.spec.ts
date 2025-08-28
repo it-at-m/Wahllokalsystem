@@ -1,0 +1,103 @@
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getWahlvorschlaege: vi.fn(),
+}));
+
+vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
+  useWahlvorschlaegeService: () => ({
+    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+  }),
+}));
+
+const { generateRandomString } = useCommonTestDataFactory();
+const { createWahlvorschlaege, prepareWahlvorschlaege, prepareWahlvorschlag } =
+  useWahlvorschlaegeTestDataFactory();
+
+describe("wahlvorschlaegeStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useWahlvorschlaegeStore>;
+
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    unitUnderTest = useWahlvorschlaegeStore();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("loadWahlvorschlaege", () => {
+    it("should_loadWahlvorschlaege_when_called", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const mockedWahlvorschlaegeModel = createWahlvorschlaege();
+
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+
+      await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID);
+
+      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID],
+      ]);
+      expect(unitUnderTest.wahlvorschlaege.length).toBe(1);
+    });
+
+    it("should_throwError_when_calledServiceThrowsError", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getWahlvorschlaege.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(
+        async () =>
+          await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
+      ).rejects.toThrow();
+    });
+
+    it("should_returnWahlvorschlaegeSortedByOrdnungszahl_when_loaded", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .wahlvorschlaege(
+          new Set<Wahlvorschlag>([
+            prepareWahlvorschlag().ordnungszahl(4).build(),
+            prepareWahlvorschlag().ordnungszahl(2).build(),
+            prepareWahlvorschlag().ordnungszahl(7).build(),
+          ])
+        )
+        .build();
+
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+
+      await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID);
+
+      const sortedWahlvorschlaegeAfterLoading = Array.from(
+        unitUnderTest.wahlvorschlaege[0].wahlvorschlaege
+      );
+
+      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID],
+      ]);
+      expect(unitUnderTest.wahlvorschlaege.length).toBe(1);
+      expect(sortedWahlvorschlaegeAfterLoading[0].ordnungszahl).toBe(2);
+      expect(sortedWahlvorschlaegeAfterLoading[1].ordnungszahl).toBe(4);
+      expect(sortedWahlvorschlaegeAfterLoading[2].ordnungszahl).toBe(7);
+    });
+  });
+});

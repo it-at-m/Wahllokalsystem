@@ -332,7 +332,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await inputAbstimmung.setValue(3);
       await flushPromises();
 
-      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege.length).toBe(
         0
       );
 
@@ -348,7 +348,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         uhrzeit: expect.any(Date),
         beschreibung: expectedEreignisBeschreibung,
       });
-      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege.length).toBe(
         1
       );
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();

@@ -1,7 +1,5 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import {
-  useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";

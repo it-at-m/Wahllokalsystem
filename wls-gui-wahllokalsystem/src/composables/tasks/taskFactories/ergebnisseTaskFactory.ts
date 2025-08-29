@@ -19,13 +19,13 @@ export function useErgebnisseTaskFactory(): TaskFactory {
         const allStapelForWahlart = _getStapelForWahlart(metaData.wahlArt);
 
         allStapelForWahlart.forEach((stapelArt) => {
-          if (
+          const skipStapelObwLeerIfWahlbezirksArtIsUwb =
             stapelArt === StapelArtEnum.ObwBLeer &&
-            taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
-          ) {
-            return;
+            taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB;
+
+          if (!skipStapelObwLeerIfWahlbezirksArtIsUwb) {
+            tasksForWahlen.push(_createTask(metaData, stapelArt));
           }
-          tasksForWahlen.push(_createTask(metaData, stapelArt));
         });
       }
     );

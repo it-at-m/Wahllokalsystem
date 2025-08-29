@@ -6,6 +6,9 @@
         title="🚧 Wahl des Oberbürgermeisters"
       />
     </template>
+    <!-- [Vue warn]: Vuetify error: Multiple nodes with the same ID ist ein bekannter vuetify bug und kommt daher,
+    dass das list-item für SRW und BAW mit der gleichen Route aufgerufen wird. Siehe
+    https://github.com/vuetifyjs/vuetify/issues/20516 -->
     <v-list-item
       title="Zählen der Stimmzettel"
       :to="{

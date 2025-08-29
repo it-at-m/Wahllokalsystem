@@ -12,6 +12,7 @@ export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
 export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
 export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
+export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

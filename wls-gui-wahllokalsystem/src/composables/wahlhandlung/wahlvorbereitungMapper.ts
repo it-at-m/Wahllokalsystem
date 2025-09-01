@@ -13,9 +13,9 @@ import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorber
 import type { Wahlurne } from "@/types/wahlhandlung/Wahlurne.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
-import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorbereitungMapper() {
   function toEroeffnungsuhrzeitWriteDTO(
@@ -23,7 +23,7 @@ export function useWahlvorbereitungMapper() {
   ): EroeffnungsUhrzeitWriteDTO {
     return {
       eroeffnungsuhrzeit:
-        applyLocalTimezoneOffset(eroeffnungsuhrzeit).toISOString(),
+        toYyyyMmDdWithTimeWithoutTimezoneOffset(eroeffnungsuhrzeit),
     };
   }
 
@@ -36,9 +36,11 @@ export function useWahlvorbereitungMapper() {
   function toUrnenwahlSchliessungsuhrzeitDTO(
     schliessungsuhrzeit: Date
   ): UrnenwahlSchliessungsUhrzeitWriteDTO {
-    const mappedUhrzeit = applyLocalTimezoneOffset(schliessungsuhrzeit);
+    console.debug(`schliessungsuhrzeit > ${schliessungsuhrzeit}`);
+    const mappedUhrzeit =
+      toYyyyMmDdWithTimeWithoutTimezoneOffset(schliessungsuhrzeit);
     return {
-      schliessungsuhrzeit: mappedUhrzeit.toISOString(),
+      schliessungsuhrzeit: mappedUhrzeit,
     };
   }
 

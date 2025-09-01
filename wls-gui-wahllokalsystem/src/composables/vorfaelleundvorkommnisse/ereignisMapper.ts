@@ -7,10 +7,10 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { EreignisDTOEreignisartEnum } from "@/api/wls-clients/generated-vorfaelleundvorkommnisse-api";
-import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useEreignisMapper() {
   function toModel(
@@ -58,11 +58,13 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
 function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   let mappedUhrzeit;
   if (ereignisModel.uhrzeit) {
-    mappedUhrzeit = applyLocalTimezoneOffset(ereignisModel.uhrzeit);
+    mappedUhrzeit = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+      ereignisModel.uhrzeit
+    );
   }
   return {
     beschreibung: ereignisModel.beschreibung ?? "",
-    uhrzeit: mappedUhrzeit?.toJSON(),
+    uhrzeit: mappedUhrzeit,
     ereignisart: ereignisartModelToEreignisartDto(ereignisModel.ereignisart),
   };
 }

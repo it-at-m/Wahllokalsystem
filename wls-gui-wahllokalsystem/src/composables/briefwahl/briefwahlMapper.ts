@@ -4,9 +4,9 @@ import type {
 } from "@/api/wls-clients/generated-briefwahl-api";
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten.ts";
 
-import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useBriefwahlMapper() {
   function toWahlbriefdatenModel(
@@ -30,7 +30,7 @@ export function useBriefwahlMapper() {
   ): WahlbriefdatenWriteDTO {
     let mappedUhrzeit;
     if (wahlbriefdaten.zeitNachtraeglichUeberbrachte) {
-      mappedUhrzeit = applyLocalTimezoneOffset(
+      mappedUhrzeit = toYyyyMmDdWithTimeWithoutTimezoneOffset(
         wahlbriefdaten.zeitNachtraeglichUeberbrachte
       );
     }
@@ -39,7 +39,7 @@ export function useBriefwahlMapper() {
       verzeichnisseUngueltige: wahlbriefdaten.verzeichnisseUngueltige,
       nachtraege: wahlbriefdaten.nachtraege,
       nachtraeglichUeberbrachte: wahlbriefdaten.nachtraeglichUeberbrachte,
-      zeitNachtraeglichUeberbrachte: mappedUhrzeit?.toJSON(),
+      zeitNachtraeglichUeberbrachte: mappedUhrzeit,
     };
   }
 

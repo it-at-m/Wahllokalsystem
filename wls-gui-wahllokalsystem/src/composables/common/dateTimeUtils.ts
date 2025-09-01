@@ -3,15 +3,6 @@ export function useDateTimeUtils() {
     return !isNaN(date.getTime());
   }
 
-  const applyLocalTimezoneOffset = function (date: Date | string): Date {
-    const mappedUhrzeit = new Date(date);
-    mappedUhrzeit.setHours(
-      mappedUhrzeit.getHours() -
-        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
-    );
-    return mappedUhrzeit;
-  };
-
   const createTodayWithTime = function (timeString: string): Date {
     // Validate time string format (HH:MM)
     if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
@@ -44,7 +35,6 @@ export function useDateTimeUtils() {
 
   return {
     isValidDate,
-    applyLocalTimezoneOffset,
     createTodayWithTime,
   };
 }

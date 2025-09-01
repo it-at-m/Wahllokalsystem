@@ -92,7 +92,7 @@ const routes = [
     meta: {},
   },
   {
-    path: "/auszaehlungStimmzettel/:wahlId?",
+    path: "/auszaehlungStimmzettel/:wahlId",
     name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
     component: ErfassungStimmzettelView,
   },

@@ -13,7 +13,7 @@
       title="Zählen der Stimmzettel"
       :to="{
         name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-        params: { wahlId: bawWahlID },
+        params: { wahlId: String(bawWahlID) },
       }"
     />
     <v-list-item title="Ungültige Stimmzettel" />
@@ -33,7 +33,7 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
 
-const bawWahlID = computed<string>(() => {
-  return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Baw) || "";
+const bawWahlID = computed<string | undefined>(() => {
+  return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Baw);
 });
 </script>

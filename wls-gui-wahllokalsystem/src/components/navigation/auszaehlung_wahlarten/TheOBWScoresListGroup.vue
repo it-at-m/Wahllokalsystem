@@ -13,7 +13,7 @@
       title="Zählen der Stimmzettel"
       :to="{
         name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-        params: { wahlId: obwWahlID },
+        params: { wahlId: String(obwWahlID) },
       }"
     />
     <v-list-item title="Stapel c" />
@@ -33,7 +33,7 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
 
-const obwWahlID = computed<string>(() => {
-  return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw) || "";
+const obwWahlID = computed<string | undefined>(() => {
+  return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw);
 });
 </script>

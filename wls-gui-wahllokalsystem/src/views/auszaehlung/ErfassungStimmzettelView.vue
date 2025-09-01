@@ -36,7 +36,7 @@ watch(
     if (wahl) {
       router.push({
         name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-        params: { wahlId: wahl.wahlID },
+        params: { wahlId: String(wahl.wahlID) },
       });
     }
   }

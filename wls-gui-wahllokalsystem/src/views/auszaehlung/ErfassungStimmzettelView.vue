@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -17,13 +18,13 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
 const router = useRouter();
-const { isUWB } = useUserStore();
+const { isUWB } = storeToRefs(useUserStore());
 const { getWahlOrUndefinedById } = useWahlenStore();
 
 const wahlID = computed(() => route.params.wahlId as string);
 
 const title = computed(() => {
-  return isUWB
+  return isUWB.value
     ? "Wahlurne öffnen und Stimmzettel zählen"
     : "Wahlurne öffnen und Stimmzettelumschläge zählen";
 });

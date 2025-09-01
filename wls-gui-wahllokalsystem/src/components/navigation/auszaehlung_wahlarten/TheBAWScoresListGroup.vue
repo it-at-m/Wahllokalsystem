@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -36,14 +36,12 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
 const { isUWB } = storeToRefs(useUserStore());
 
-onMounted(() => {
-  console.log(title.value);
-});
 const title = computed(() => {
   return isUWB.value
     ? "Zählen der Stimmzettel"
     : "Zählen der Stimmzettelumschläge";
 });
+
 const bawWahlID = computed<string | undefined>(() => {
   return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Baw);
 });

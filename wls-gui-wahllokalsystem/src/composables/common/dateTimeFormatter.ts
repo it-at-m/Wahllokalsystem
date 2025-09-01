@@ -81,16 +81,6 @@ export function useDateTimeFormatter() {
     }
   }
 
-  function _returnParsedDateOrInvalid(
-    date: Date | string | null | undefined
-  ): Date {
-    if (!date) {
-      return new Date(NaN);
-    }
-
-    return typeof date === "string" ? new Date(date) : date;
-  }
-
   function toYyyyMmDdWithTimeWithoutTimezoneOffset(dateToFormat: Date) {
     if (!isValidDate(dateToFormat)) {
       return NO_VALUE_DEFAULT;
@@ -106,6 +96,16 @@ export function useDateTimeFormatter() {
     const milliseconds = _leftPadWithZero(dateToFormat.getMilliseconds(), 3);
 
     return `${fullYear}-${month}-${day}T${hour}:${minute}:${second}.${milliseconds}`;
+  }
+
+  function _returnParsedDateOrInvalid(
+    date: Date | string | null | undefined
+  ): Date {
+    if (!date) {
+      return new Date(NaN);
+    }
+
+    return typeof date === "string" ? new Date(date) : date;
   }
 
   function _leftPadTwoDigitsWithZero(number: number): string {

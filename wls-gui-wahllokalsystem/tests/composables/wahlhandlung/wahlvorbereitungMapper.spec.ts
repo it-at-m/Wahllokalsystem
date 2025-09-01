@@ -19,8 +19,8 @@ const mockDefinitions = vi.hoisted(() => ({
   applyLocalTimezoneOffset: vi.fn(),
 }));
 
-vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
-  useDateTimeFormatter: () => ({
+vi.mock("@/composables/common/dateTimeUtils.ts", () => ({
+  useDateTimeUtils: () => ({
     applyLocalTimezoneOffset: mockDefinitions.applyLocalTimezoneOffset,
   }),
 }));

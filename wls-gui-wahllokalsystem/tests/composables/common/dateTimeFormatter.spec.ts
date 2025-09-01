@@ -10,7 +10,7 @@ describe("dateTimeFormatter.ts", () => {
     toGermanDate,
     toGermanDateWithLongMonth,
     toYyyyMmDd,
-    toYyyyMmDdWithTimeWithoutTimezoneOffset
+    toYyyyMmDdWithTimeWithoutTimezoneOffset,
   } = useDateTimeFormatter();
 
   beforeEach(() => {

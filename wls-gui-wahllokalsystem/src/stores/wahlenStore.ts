@@ -192,7 +192,7 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   function getWahlIdOrUndefinedByWahlart(wahlart: WahlWahlartEnum) {
     if (wahlen.value) {
-      const wahl = wahlen.value.find((wahl) => wahl.wahlart == wahlart);
+      const wahl = wahlen.value.find((wahl) => wahl.wahlart === wahlart);
 
       return wahl ? wahl.wahlID : undefined;
     }

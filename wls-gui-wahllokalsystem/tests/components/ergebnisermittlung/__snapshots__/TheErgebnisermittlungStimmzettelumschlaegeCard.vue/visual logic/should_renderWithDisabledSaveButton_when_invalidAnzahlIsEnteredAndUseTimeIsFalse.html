@@ -17,10 +17,11 @@
     </div>
     <!---->
     <!---->
-    <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">Wahlurne öffnen und Stimmzettel zählen</div>
-    <div class="v-card-text pb-0 pt-2">
+    <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">Titel</div>
+    <div class="v-card-text pb-0 pt-2 mr-4">
       <form class="v-form" novalidate="">
-        <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field v-number-input v-number-input--default mr-4" style="min-width: 20rem;">
+        <!--v-if-->
+        <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field v-number-input v-number-input--default" style="min-width: 20rem;">
           <!---->
           <div class="v-input__control">
             <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr">
@@ -45,7 +46,7 @@
                 </label><label class="v-label v-field-label" for="input-v-0">
                   <!---->Anzahl der Stimmzettel
                 </label>
-                <!----><input size="1" type="text" id="input-v-0" aria-describedby="input-v-0-messages" inputmode="decimal" class="v-field__input" value="0">
+                <!----><input size="1" type="text" id="input-v-0" aria-describedby="input-v-0-messages" inputmode="decimal" class="v-field__input" value="-1">
                 <!---->
               </div>
               <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -85,7 +86,7 @@
         </div>
       </form>
     </div>
-    <div class="v-card-actions"><button type="button" class="v-btn v-btn--active v-btn--elevated v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-elevated" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern</span>
+    <div class="v-card-actions"><button type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-elevated" disabled="" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern</span>
         <!---->
         <!---->
       </button></div>

@@ -29,13 +29,15 @@ export function useEreignisMapper() {
   }
 
   function toDto(ereignisseModel: WahlbezirkEreignisse): EreignisseWriteDTO {
-    const ereignisseAsDto = ereignisseModel.ereigniseintraege?.map(
+    const ereignisseAsDto = ereignisseModel.ereigniseintraege.map(
       (ereignisModel) => ereignisModelToEreignisDto(ereignisModel)
     );
     return {
       keineVorfaelle: ereignisseModel.keineVorfaelle,
       keineVorkommnisse: ereignisseModel.keineVorkommnisse,
-      ereigniseintraege: ereignisseAsDto,
+      ereigniseintraege: ereignisseAsDto?.filter(
+        (ereignis) => ereignis.beschreibung
+      ),
     };
   }
 

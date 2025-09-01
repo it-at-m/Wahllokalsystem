@@ -242,3 +242,19 @@ Zurückweisungsgrund erhalten, ist `Für diese Wahl nicht Wahlberechtigt`.
 Der Wahlvorstand kann die Daten der Eingabemaske nur speichern, wenn für alle Wahlscheine und Stimmzettelumschläge ein
 valider Wert eingetragen wurde.
 :::
+
+##### Während der Auszählung
+
+📃 **UseCase: `Erfassung abgegebenen Stimmen`**
+
+Im Urnenwahl- sowie im Briefwahlbezirk kann der Wahlvorstand die Anzahl der abgegebenen Stimmen erfassen. Die
+Erfassung erfolgt für jede Wahl einzeln.
+
+::: info `Zählen der Stimmzettel` im Urnenwahlbezirk {data-uwb="true"}
+Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettel zu zählen und zu erfassen.
+:::
+
+::: info `Zählen der Stimmzettelumschläge` im Briefwahlbezirk {data-bwb="true"}
+Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettelumschläge zu zählen und zu erfassen.
+Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffnet wurde.
+:::

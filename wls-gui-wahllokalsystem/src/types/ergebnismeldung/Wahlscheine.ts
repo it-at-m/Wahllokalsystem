@@ -1,4 +1,4 @@
-import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
 
 export interface Wahlscheine {
   bezirkUndWahlID: BezirkUndWahlID;

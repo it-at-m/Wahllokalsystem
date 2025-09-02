@@ -40,16 +40,16 @@ export function useStimmabgabevermerkeTestDataFactory() {
   function createWahldatenDTO(): WahldatenDTO {
     return {
       wahlbezirkID: generateRandomString(2),
-      eingenommeneWahlscheine: new Set([
+      eingenommeneWahlscheine: [
         {
           stimmzettelart: _getRandomEnumValueDTO(),
           anzahl: generateRandomNumber(4),
         },
-      ]),
-      vermerke: new Set([
+      ],
+      vermerke: [
         prepareVermerkDTO().blattnummer(2).build(),
         prepareVermerkDTO().blattnummer(3).build(),
-      ]),
+      ],
 
       waehlerverzeichnisNummer: generateRandomNumber(1),
       wahlID: generateRandomString(10),
@@ -89,36 +89,30 @@ export function useStimmabgabevermerkeTestDataFactory() {
 
   function createStimmabgabevermerkeDTO(): StimmabgabevermerkeDTO {
     const wahldatenOne = prepareWahldatenDTO()
-      .eingenommeneWahlscheine(
-        new Set([
-          {
-            anzahl: generateRandomNumber(1),
-            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
-          },
-        ])
-      )
+      .eingenommeneWahlscheine([
+        {
+          anzahl: generateRandomNumber(1),
+          stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+        },
+      ])
       .build();
     const wahldatenTwo = prepareWahldatenDTO()
-      .eingenommeneWahlscheine(
-        new Set([
-          {
-            anzahl: generateRandomNumber(1),
-            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
-          },
-        ])
-      )
+      .eingenommeneWahlscheine([
+        {
+          anzahl: generateRandomNumber(1),
+          stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+        },
+      ])
       .build();
     const wahldatenThree = prepareWahldatenDTO()
-      .eingenommeneWahlscheine(
-        new Set([
-          {
-            anzahl: generateRandomNumber(1),
-            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
-          },
-        ])
-      )
+      .eingenommeneWahlscheine([
+        {
+          anzahl: generateRandomNumber(1),
+          stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+        },
+      ])
       .build();
-    const wahldaten = new Set([wahldatenOne, wahldatenTwo, wahldatenThree]);
+    const wahldaten = [wahldatenOne, wahldatenTwo, wahldatenThree];
 
     return {
       anzahlBlaetter: generateRandomNumber(1),
@@ -138,7 +132,7 @@ export function useStimmabgabevermerkeTestDataFactory() {
   function createVermerkDTO(): VermerkDTO {
     return {
       blattnummer: generateRandomNumber(1),
-      stimmzettel: new Set([createStimmzettelDTO()]),
+      stimmzettel: [createStimmzettelDTO()],
     };
   }
 

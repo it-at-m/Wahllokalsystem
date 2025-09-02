@@ -28,7 +28,7 @@ describe("stimmabgabevermerkeMapper.ts", () => {
         .build();
 
       const vermerkDTO = prepareVermerkDTO()
-        .stimmzettel(new Set([stimmzettelDTO]))
+        .stimmzettel([stimmzettelDTO])
         .build();
 
       const eingenommenerWahlscheinDTO = {
@@ -37,12 +37,12 @@ describe("stimmabgabevermerkeMapper.ts", () => {
       };
 
       const wahldatenDTO = prepareWahldatenDTO()
-        .vermerke(new Set([vermerkDTO]))
-        .eingenommeneWahlscheine(new Set([eingenommenerWahlscheinDTO]))
+        .vermerke([vermerkDTO])
+        .eingenommeneWahlscheine([eingenommenerWahlscheinDTO])
         .build();
 
       const dto = prepareStimmabgabevermerkeDTO()
-        .wahldaten(new Set([wahldatenDTO]))
+        .wahldaten([wahldatenDTO])
         .build();
 
       const model: Stimmabgabevermerke = {

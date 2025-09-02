@@ -37,7 +37,7 @@ const { generateRandomString, generateRandomNumber } =
 const { createStimmabgabevermerke, createStimmabgabevermerkeDTO } =
   useStimmabgabevermerkeTestDataFactory();
 
-describe("stimmabgabevermekerService.ts", () => {
+describe("stimmabgabevermerkeService.ts", () => {
   const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
 
   beforeEach(() => {

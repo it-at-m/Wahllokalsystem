@@ -158,7 +158,7 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.SrwBawDUngueltig, DtoStapelArtEnum.SrwBawDUngueltig],
       [StapelArtEnum.SrwBawBC, DtoStapelArtEnum.SrwBawBC],
     ])(
-      "should_mapModelStapelart%s_when_givenDtoStapelart%s",
+      "should_mapDtoStapelart%s_when_givenModelStapelart%s",
       (modelStapelart, dtoStapelart) => {
         const model = prepareErgebnisse()
           .bezirkUndWahlIDStapelart({

@@ -1,4 +1,8 @@
+import type { StimmabgabevermerkeDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
+import type { Stimmzettel } from "@/types/stimmabgabevermerke/Stimmzettel.ts";
+import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
+import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
@@ -11,7 +15,7 @@ import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
-const { toModel } = useStimmabgabevermerkeMapper();
+const { toModel, toDto } = useStimmabgabevermerkeMapper();
 
 const {
   prepareStimmabgabevermerkeDTO,
@@ -78,6 +82,72 @@ describe("stimmabgabevermerkeMapper.ts", () => {
       const result = toModel(dto);
 
       expect(result).toStrictEqual(model);
+    });
+  });
+
+  describe("toDTO", () => {
+    it("should_returnDTO_when_modelIsGiven", () => {
+      const stimmzettel: Stimmzettel = {
+        anzahl: null,
+        stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+      };
+
+      const vermerk: Vermerke = {
+        blattnummer: 1,
+        stimmzettel: [stimmzettel],
+      };
+
+      const wahldaten: Wahldaten = {
+        wahlID: "wahl123",
+        waehlerverzeichnisNummer: 12345,
+        vermerke: [vermerk],
+        wahlbezirkID: "bezirk123",
+        eingenommeneWahlscheine: new Map([
+          [EingenommenerWahlscheinStimmzettelartEnum.Klein, 4],
+        ]),
+      };
+
+      const model: Stimmabgabevermerke = {
+        anzahlBlaetter: 2,
+        waehlerverzeichnisNummer: 12345,
+        wahlbezirkID: "bezirk123",
+        wahldaten: [wahldaten],
+      };
+
+      const expectedDTO: StimmabgabevermerkeDTO = {
+        anzahlBlaetter: model.anzahlBlaetter,
+        waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
+        wahlbezirkID: model.wahlbezirkID,
+        wahldaten: [
+          {
+            wahlID: wahldaten.wahlID,
+            waehlerverzeichnisNummer: wahldaten.waehlerverzeichnisNummer,
+            vermerke: [
+              {
+                blattnummer: vermerk.blattnummer,
+                stimmzettel: [
+                  {
+                    anzahl: 0,
+                    stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+                  },
+                ],
+              },
+            ],
+            wahlbezirkID: wahldaten.wahlbezirkID,
+            eingenommeneWahlscheine: [
+              {
+                stimmzettelart:
+                  EingenommenerWahlscheinDTOStimmzettelartEnum.Klein,
+                anzahl: 4,
+              },
+            ],
+          },
+        ],
+      };
+
+      const result = toDto(model);
+
+      expect(result).toStrictEqual(expectedDTO);
     });
   });
 });

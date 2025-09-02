@@ -131,7 +131,7 @@ describe("ergebnisService.ts", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stapelArtModel = StapelArtEnum.ObwA;
-      const stapelArtDto = DtoStapelArtEnum.ObwA;
+      const stapelArtPostDto = PostErgebnisseStapelartEnum.ObwA;
 
       const mockedErgebnisseAsModels = [
         prepareErgebnis().ergebnis(1).build(),
@@ -153,13 +153,13 @@ describe("ergebnisService.ts", () => {
         .bezirkUndWahlIDStapelart({
           wahlID: wahlID,
           wahlbezirkID: wahlbezirkID,
-          stapelart: stapelArtDto,
+          stapelart: DtoStapelArtEnum.ObwA,
         })
         .ergebnisse(mockedErgebnisseAsDtos)
         .build();
 
       mockDefinitions.toPostErgebnisseStapelartEnum.mockReturnValue(
-        PostErgebnisseStapelartEnum.ObwA
+        stapelArtPostDto
       );
       mockDefinitions.toDto.mockReturnValue(mockedErgebnisseDto);
       mockDefinitions.postErgebnisse.mockResolvedValue({});
@@ -174,7 +174,7 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.postErgebnisse).toHaveBeenCalledWith(
         wahlbezirkID,
         wahlID,
-        stapelArtDto,
+        stapelArtPostDto,
         mockedErgebnisseDto
       );
       expect(mockDefinitions.toDto).toHaveBeenCalledWith(ergebnisseModelToSend);

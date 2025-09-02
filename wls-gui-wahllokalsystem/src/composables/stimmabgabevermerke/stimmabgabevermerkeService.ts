@@ -1,10 +1,12 @@
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
+
 import {
   Configuration,
   StimmabgabevermerkeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts";
-import { useUserMapper } from "@/composables/user/userMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -12,6 +14,8 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const { addNotification } = useUserNotificationService();
 const { toModel, toDto } = useStimmabgabevermerkeMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+
+const { logDebug } = useLogging("stimmabgabevermerkeService");
 
 export function useStimmabgabevermerkeService() {
   const stimmabgabevermerkeControllerApi = new StimmabgabevermerkeControllerApi(
@@ -50,18 +54,16 @@ export function useStimmabgabevermerkeService() {
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
     try {
-      const response =
-        await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
-          wahlbezirkID,
-          waehlerverzeichnisNummer,
-          toDto(stimmabgabevermerke)
-        );
-    } catch (e) {
-      addNotification(
-        "Fehler beim Laden der Stimmabgabevermerke.",
-        UserNotificationCategoryEnum.ERROR
+      await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        toDto(stimmabgabevermerke)
       );
-      throw e;
+    } catch (e) {
+      const errorMessage = "Fehler beim Speichern der Stimmabgabevermerke.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
+      throw new Error("Post Beanstandete Stimmabgabevermerke Failed");
     }
   }
 

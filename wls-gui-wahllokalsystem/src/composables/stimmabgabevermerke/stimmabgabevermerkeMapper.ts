@@ -28,11 +28,12 @@ export function useStimmabgabevermerkeMapper() {
   }
 
   function toDto(model: Stimmabgabevermerke): StimmabgabevermerkeDTO {
+    const test = _toWahldatenDTO(model.wahldaten);
     return {
       anzahlBlaetter: model.anzahlBlaetter,
       waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
       wahlbezirkID: model.wahlbezirkID,
-      wahldaten: _toWahldatenDTO(model.wahldaten),
+      wahldaten: test,
     };
   }
 
@@ -67,7 +68,6 @@ export function useStimmabgabevermerkeMapper() {
         wahlID: wahldaten.wahlID,
       });
     });
-
     return setOfWahldatenDTO;
   }
 

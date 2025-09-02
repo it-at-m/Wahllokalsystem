@@ -15,6 +15,7 @@
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
+    <v-divider />
     <v-table>
       <thead>
         <tr>
@@ -63,13 +64,24 @@
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.waehlerverzeichnisNummer"
           >
-            <v-number-input
-              v-model="
-                stimmabgabevermerk.wahldaten[0].vermerke[number - 1]
-                  .stimmzettel[0].anzahl
-              "
-              :rules="[required]"
-            />
+            <template
+              v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
+                number - 1
+              ].stimmzettel"
+            >
+              <v-number-input
+                v-if="
+                  stimmzettel != null &&
+                  stimmzettel.stimmzettelart ==
+                    StimmzettelStimmzettelartEnum.Klein
+                "
+                :key="stimmzettel.stimmzettelart"
+                v-model="stimmzettel.anzahl"
+                :min="0"
+                max-width="15rem"
+                :rules="[required]"
+              />
+            </template>
           </td>
         </tr>
         <tr>
@@ -108,6 +120,7 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 const { minNumber, maxNumber, required } = useRules();
 

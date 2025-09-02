@@ -4,6 +4,7 @@ import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
@@ -12,7 +13,10 @@ export const useStimmabgabevermerkeStore = defineStore(
   "stimmabgabevermerke",
   () => {
     const stimmabgabevermerke = ref<Stimmabgabevermerke[]>([]);
-    const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
+    const isStimmabgabevermerkeSaving = ref(false);
+    const { getStimmabgabevermerke, postStimmabgabevermerke } =
+      useStimmabgabevermerkeService();
+    const { logDebug } = useLogging("stimmabgabevermerkeStore");
 
     const lowestNumberOfRowsOverAllWahldaten = computed(() => {
       if (
@@ -41,11 +45,19 @@ export const useStimmabgabevermerkeStore = defineStore(
         (stimmabgabevermerk: Stimmabgabevermerke) => {
           const totalVermerke = stimmabgabevermerk.wahldaten[0].vermerke.reduce(
             (sum, vermerk) => {
-              return sum + (vermerk.stimmzettel[0]?.anzahl ?? 0);
+              let innerSum = 0;
+              vermerk.stimmzettel.forEach((stimmzettel) => {
+                if (
+                  stimmzettel.stimmzettelart ==
+                  StimmzettelStimmzettelartEnum.Klein
+                ) {
+                  innerSum = stimmzettel.anzahl ?? 0;
+                }
+              });
+              return sum + innerSum;
             },
             0
           );
-
           totalsForStimmabgabevermerke.push(totalVermerke);
         }
       );
@@ -72,29 +84,45 @@ export const useStimmabgabevermerkeStore = defineStore(
       }
     }
 
-    async function saveStimmabgabevermerke(
-      stimmabgabevermerke: Stimmabgabevermerke,
-      wahlbezirkID: string,
-      waehlerverzeichnisNummer: number
-    ) {
-      //TODO
+    async function saveStimmabgabevermerke() {
+      isStimmabgabevermerkeSaving.value = true;
+      for (const stimmabgabevermerk of stimmabgabevermerke.value) {
+        try {
+          await postStimmabgabevermerke(
+            stimmabgabevermerk.wahlbezirkID,
+            stimmabgabevermerk.waehlerverzeichnisNummer,
+            stimmabgabevermerk
+          );
+        } catch (e) {
+          logDebug(
+            `Save Stimmabgabevermerke for wahlbezirkID: ${stimmabgabevermerk.wahlbezirkID} and waehlerverzeichnisNummer: ${stimmabgabevermerk.waehlerverzeichnisNummer} failed`,
+            e
+          );
+        }
+      }
+      isStimmabgabevermerkeSaving.value = false;
     }
 
     const sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl =
       computed(() => {
         const result = new Map<string, number>();
-        stimmabgabevermerke.value.forEach((stimmabgabevermerke) => {
+        stimmabgabevermerke.value.forEach((stimmabgabevermerk) => {
           let sumForWahl = 0;
-          stimmabgabevermerke.wahldaten[0].vermerke?.forEach((vermerk) => {
+          stimmabgabevermerk.wahldaten[0].vermerke?.forEach((vermerk) => {
             vermerk.stimmzettel.forEach((stimmzettel) => {
-              sumForWahl += stimmzettel.anzahl ?? 0;
+              if (
+                stimmzettel.stimmzettelart ==
+                StimmzettelStimmzettelartEnum.Klein
+              ) {
+                sumForWahl += stimmzettel.anzahl ?? 0;
+              }
             });
           });
           sumForWahl +=
-            stimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.get(
+            stimmabgabevermerk.wahldaten[0].eingenommeneWahlscheine.get(
               EingenommenerWahlscheinStimmzettelartEnum.Klein
             ) ?? 0;
-          result.set(stimmabgabevermerke.wahldaten[0].wahlID, sumForWahl);
+          result.set(stimmabgabevermerk.wahldaten[0].wahlID, sumForWahl);
         });
         return result;
       });
@@ -182,6 +210,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       changeRowCount,
       sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl,
       loadStimmabgabevermerke,
+      saveStimmabgabevermerke,
     };
   }
 );

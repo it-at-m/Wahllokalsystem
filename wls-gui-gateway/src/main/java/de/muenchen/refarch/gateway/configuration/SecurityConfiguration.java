@@ -1,7 +1,10 @@
 package de.muenchen.refarch.gateway.configuration;
 
+import java.net.URI;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.boot.autoconfigure.session.SessionProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,16 +12,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.ServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Configuration
 @Profile("!no-security")
 @RequiredArgsConstructor
@@ -45,8 +54,11 @@ public class SecurityConfiguration {
     @Bean
     @Order(1)
     public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
+        val logoutHandler = new DelegatingServerLogoutHandler(
+                new SecurityContextServerLogoutHandler(), new WebSessionServerLogoutHandler()
+        );
+
         http
-                .logout(ServerHttpSecurity.LogoutSpec::disable)
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
                         // permitAll
                         .pathMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
@@ -62,6 +74,19 @@ public class SecurityConfiguration {
                         .permitAll()
                         // only authenticated
                         .anyExchange().authenticated())
+                .logout(spec -> spec.logoutUrl("/logout").logoutHandler(new ServerLogoutHandler() {
+                    @Override
+                    public Mono<Void> logout(WebFilterExchange exchange, Authentication authentication) {
+                        log.info("logout request received");
+                        return logoutHandler.logout(exchange, authentication);
+                    }
+                }).logoutSuccessHandler((exchange, authentication) -> {
+                    log.info("logout successful");
+                    exchange.getExchange().getResponse().setStatusCode(HttpStatus.TEMPORARY_REDIRECT);
+                    exchange.getExchange().getResponse().getHeaders().setLocation(URI.create("http://kubernetes.docker.internal:8100/logout"));
+
+                    return exchange.getExchange().getResponse().setComplete();
+                }))
                 .cors(corsSpec -> {
                 })
                 .csrf(csrfSpec -> {
@@ -91,10 +116,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * Get Spring Session timeout.
-     * Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring
-     * Session itself.
-     * See according
+     * Get Spring Session timeout. Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
+     * according
      * <a href="https://docs.spring.io/spring-boot/reference/web/spring-session.html">Spring
      * documentation</a>.
      *

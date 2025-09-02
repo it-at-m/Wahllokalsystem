@@ -7,7 +7,8 @@ spring:
         webflux:
           routes:
             - id: sso
-              uri: http://kubernetes.docker.internal:8100/
+              #uri: http://kubernetes.docker.internal:8100/
+              uri: https://kubernetes.docker.internal:8100/
               predicates:
                 - Path=/api/sso/userinfo
               filters:
@@ -15,7 +16,8 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RemoveResponseHeader=Set-Cookie
             - id: auth-service
-              uri: http://kubernetes.docker.internal:8100/
+              #uri: http://kubernetes.docker.internal:8100/
+              uri: https://kubernetes.docker.internal:8100/
               predicates:
                 - Path=/api/auth-service/**
               filters:
@@ -85,11 +87,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://kubernetes.docker.internal:8100/user
+          #issuer-uri: http://kubernetes.docker.internal:8100/user
+          issuer-uri: https://kubernetes.docker.internal:8100/user
       client:
         provider:
           sso:
-            issuer-uri: http://kubernetes.docker.internal:8100
+            #issuer-uri: http://kubernetes.docker.internal:8100/
+            issuer-uri: https://kubernetes.docker.internal:8100
         registration:
           sso:
             provider: sso
@@ -108,3 +112,7 @@ logging:
     org.springframework.web: DEBUG
     org.springframework.cloud.gateway: TRACE
     org.springframework.security: DEBUG
+
+ALLOWED_ORIGINS_PUBLIC: "*"
+ALLOWED_ORIGINS_CLIENTS: "*"
+CONFIG_MAP5XXTO400: false

@@ -72,7 +72,7 @@ describe("BaseWahlschliessungCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithDisabledSaveButton_when_noUhrzeitIsEntered", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeit = undefined;
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = undefined;
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -87,7 +87,9 @@ describe("BaseWahlschliessungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "18:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeit = new Date("2025-05-23T17:30:00");
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = new Date(
+        "2025-05-23T17:30:00"
+      );
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -103,7 +105,7 @@ describe("BaseWahlschliessungCard.vue", () => {
 
       const date = new Date("2025-05-23T17:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeit = date;
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
 
       await flushPromises(); //update databinding and enabled button
 
@@ -114,7 +116,7 @@ describe("BaseWahlschliessungCard.vue", () => {
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeitIsSaving = true;
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitIsSaving = true;
 
       await nextTick();
 
@@ -128,15 +130,17 @@ describe("BaseWahlschliessungCard.vue", () => {
     it("should_updateSchliessungsuhrzeitInStore_when_validDateIsEntered", async () => {
       const wahlbezirkStore = useWahlbezirkStore();
 
-      expect(wahlbezirkStore.schliessungsuhrzeit).toBeUndefined();
+      expect(
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit
+      ).toBeUndefined();
 
       const schliessungsuhrzeitTimeInput = wrapper.findComponent(BaseTimeInput);
       const enteredTime = new Date();
       schliessungsuhrzeitTimeInput.vm.$emit("update:modelValue", enteredTime);
 
-      expect(wahlbezirkStore.schliessungsuhrzeit?.getTime()).toStrictEqual(
-        enteredTime.getTime()
-      );
+      expect(
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
+      ).toStrictEqual(enteredTime.getTime());
     });
 
     it("should_callSendSchliessungsuhrzeit_when_saveButtonIsClicked", async () => {
@@ -145,9 +149,16 @@ describe("BaseWahlschliessungCard.vue", () => {
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
 
       const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeit = new Date("2025-05-23T17:30:00");
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = new Date(
+        "2025-05-23T17:30:00"
+      );
 
       await flushPromises();
+
+      const sendUhrzeitSpy = vi.spyOn(
+        wahlbezirkStore.schliessungsuhrzeitActions,
+        "sendSchliessungsuhrzeit"
+      );
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       await saveButton.trigger("click");
@@ -156,7 +167,7 @@ describe("BaseWahlschliessungCard.vue", () => {
         Promise.resolve()
       );
 
-      expect(wahlbezirkStore.sendSchliessungsuhrzeit).toHaveBeenCalled();
+      expect(sendUhrzeitSpy).toHaveBeenCalled();
     });
   });
 });

@@ -13,7 +13,9 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/stores/wahlbezirkStore.ts", () => ({
   useWahlbezirkStore: vi.fn().mockImplementation(() => ({
-    initUngueltigeWahlscheine: mockDefinitions.initUngueltigeWahlscheine,
+    ungueltigeWahlscheineActions: {
+      initUngueltigeWahlscheine: mockDefinitions.initUngueltigeWahlscheine,
+    },
   })),
 }));
 

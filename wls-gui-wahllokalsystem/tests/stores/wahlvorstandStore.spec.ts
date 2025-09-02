@@ -250,8 +250,9 @@ describe("wahlvorstandStore.ts", () => {
     ])(
       "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
       ({ expected, schliessungsuhrzeit, anwesend }) => {
-        const { schliessungsuhrzeitSent } = storeToRefs(useWahlbezirkStore());
-        schliessungsuhrzeitSent.value = schliessungsuhrzeit;
+        const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
+        schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
+          schliessungsuhrzeit;
 
         _addAnwesendeWahlvorstandsmitglieder(anwesend);
 

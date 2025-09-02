@@ -35,7 +35,7 @@
               :items="gruendeWahlscheine"
               hide-details
               auto-select-first
-              :rules="[REQUIRED]"
+              :rules="[required]"
               :data-test="`wahlscheingruende-input-${index - 1}`"
               @update:model-value="
                 (value) => onZulassungsgrundWahlscheinChanged(value, index - 1)
@@ -57,7 +57,7 @@
             :items="gruendeStimmzettel"
             hide-details
             auto-select-first
-            :rules="[REQUIRED]"
+            :rules="[required]"
             :disabled="_isInputDisabled(index - 1)"
             :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
             @update:model-value="
@@ -95,9 +95,11 @@ import { computed, onMounted, ref } from "vue";
 
 import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
-import { REQUIRED } from "@/util/rules.ts";
+
+const { required } = useRules();
 
 const { wahlen } = storeToRefs(useWahlenStore());
 const { deleteBeanstandeterWahlbriefEntry } = useWahlenStore();

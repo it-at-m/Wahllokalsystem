@@ -2,18 +2,20 @@ import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaD
 
 import { storeToRefs } from "pinia";
 
+import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
   const { getWahlOrUndefinedById } = useWahlenStore();
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
@@ -22,16 +24,21 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWahlvorschlaegeTasks } =
+    useWahlvorschlaegeTaskFactory();
+  const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
-    const tasks = [];
-    tasks.push(...createKopfdatenTasks(taskFactoryData));
-    tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
-    tasks.push(...createWahlvorstandTasks(taskFactoryData));
-    tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
-    tasks.push(...createWahlscheineTasks(taskFactoryData));
-    return tasks;
+    return [
+      ...createKopfdatenTasks(taskFactoryData),
+      ...createUngueltigeWahlscheineTasks(taskFactoryData),
+      ...createWahlvorstandTasks(taskFactoryData),
+      ...createKonfigurationsparameterTasks(taskFactoryData),
+      ...createWahlscheineTasks(taskFactoryData),
+      ...createWahlvorschlaegeTasks(taskFactoryData),
+      ...createErgebnisseTasks(taskFactoryData),
+    ];
   }
 
   function _createTaskFactoryData() {

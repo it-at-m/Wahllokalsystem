@@ -2,8 +2,8 @@ import type {
   BezirkUndWahlID as BezirkUndWahlIDTO,
   WahlscheineDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
-import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";

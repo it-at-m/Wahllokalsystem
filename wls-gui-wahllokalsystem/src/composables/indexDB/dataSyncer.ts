@@ -16,7 +16,7 @@ export function useDataSyncer() {
           basicPostConfig(
             item.key,
             FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
-            JSON.parse(item.item.data)
+            item.item.data ? JSON.parse(item.item.data) : undefined
           )
         ),
     }));

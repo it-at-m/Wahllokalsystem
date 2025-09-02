@@ -211,6 +211,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl,
       loadStimmabgabevermerke,
       saveStimmabgabevermerke,
+      isStimmabgabevermerkeSaving,
     };
   }
 );

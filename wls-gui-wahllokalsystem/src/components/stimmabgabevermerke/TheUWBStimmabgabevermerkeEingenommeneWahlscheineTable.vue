@@ -20,7 +20,7 @@
       <tr>
         <td
           v-for="stimmabgabevermerk in stimmabgabevermerke"
-          :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+          :key="stimmabgabevermerk.wahldaten[0].wahlID"
           class="pl-0"
         >
           <v-number-input
@@ -53,7 +53,9 @@ import { VNumberInput, VTable } from "vuetify/components";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import {
+  EingenommenerWahlscheinStimmzettelartEnum
+} from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { getWahlNameOrBlankStringById } = useWahlenStore();

@@ -9,12 +9,12 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisServic
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
-const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
 const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { currentUserWahlMetadata } = storeToRefs(useUserStore());
+  const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
 

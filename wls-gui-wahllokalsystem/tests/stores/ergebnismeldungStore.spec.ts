@@ -41,7 +41,13 @@ describe("ergebnismeldungStore.ts", () => {
       const stapelArt = StapelArtEnum.ObwA;
 
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       mockDefinitions.getErgebnisse.mockResolvedValue(null);
 
@@ -59,7 +65,13 @@ describe("ergebnismeldungStore.ts", () => {
       const stapelArt = StapelArtEnum.ObwA;
 
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       const mockedErgebnisseModel = createErgebnisse();
 
@@ -75,7 +87,17 @@ describe("ergebnismeldungStore.ts", () => {
 
     it("should_throwError_when_calledServiceThrowsError", async () => {
       const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       mockDefinitions.getErgebnisse.mockRejectedValue(
         new Error("service call failed")

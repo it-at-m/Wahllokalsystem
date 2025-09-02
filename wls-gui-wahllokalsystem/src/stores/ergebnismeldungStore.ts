@@ -14,7 +14,7 @@ const { getErgebnisse } = useErgebnisService();
 const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
   const ergebnisse = ref<Ergebnisse | null>(null);
 
@@ -23,14 +23,22 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     stapelArt: StapelArtEnum
   ) {
     try {
-      ergebnisse.value = await getErgebnisse(
-        currentUserWahlbezirkID.value,
-        wahlID,
-        stapelArt
-      );
+      const wahlbezirkID = _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+
+      if (wahlbezirkID) {
+        ergebnisse.value = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);
+      }
     } catch {
       throw new Error("Fehler beim Laden der Ergebnisse");
     }
+  }
+
+  function _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
+    const metadata = currentUserWahlMetadata.value.find((metadata) => {
+      return metadata.wahlID === wahlID;
+    });
+
+    return metadata?.wahlbezirkID;
   }
 
   return { ergebnisse, loadErgebnisseByStapelArt };

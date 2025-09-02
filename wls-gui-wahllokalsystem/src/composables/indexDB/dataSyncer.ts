@@ -1,3 +1,5 @@
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+
 import axios from "axios";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
@@ -9,6 +11,7 @@ const { getDirtyItems } = useIndexDB();
 export function useDataSyncer() {
   async function getSyncTasks() {
     const itemsToSync = await getDirtyItems();
+    itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,
       callback: () =>
@@ -20,6 +23,25 @@ export function useDataSyncer() {
           )
         ),
     }));
+  }
+
+  function _compareSyncItemByTimeStamp(
+    a: { item: IndexDBValue },
+    b: { item: IndexDBValue }
+  ) {
+    if (a.item.timestamp === undefined && b.item.timestamp === undefined) {
+      return 0;
+    }
+
+    if (a.item.timestamp === undefined) {
+      return 1;
+    }
+
+    if (b.item.timestamp === undefined) {
+      return -1;
+    }
+
+    return a.item.timestamp - b.item.timestamp;
   }
 
   return {

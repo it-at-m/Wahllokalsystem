@@ -3,4 +3,5 @@ export interface IndexDBValue {
   contentType: string | null;
   httpStatus?: number;
   dirty?: boolean;
+  timestamp?: number;
 }

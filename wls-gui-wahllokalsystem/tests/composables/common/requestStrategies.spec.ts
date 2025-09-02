@@ -7,6 +7,7 @@ import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValu
 import {
   afterAll,
   afterEach,
+  beforeAll,
   beforeEach,
   describe,
   expect,
@@ -36,8 +37,16 @@ const { generateRandomString } = useCommonTestDataFactory();
 const { createIndexDBValue, prepareIndexDBValue } =
   useIndexDBValueTestDataFactory();
 
+const mockedNow = new Date();
+
 describe("requestStrategies.ts", () => {
   let unitUnderTest: ReturnType<typeof useRequestStrategies>;
+
+  beforeAll(() => {
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
+  });
 
   beforeEach(() => {
     unitUnderTest = useRequestStrategies();
@@ -49,6 +58,7 @@ describe("requestStrategies.ts", () => {
 
   afterAll(() => {
     vi.resetAllMocks();
+    vi.useRealTimers();
   });
 
   describe("unhandledFetch", () => {
@@ -220,6 +230,7 @@ describe("requestStrategies.ts", () => {
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(false)
+        .timestamp(mockedNow.getTime())
         .build();
       delete expectedIndexDBValue.httpStatus;
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
@@ -251,6 +262,7 @@ describe("requestStrategies.ts", () => {
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
+        .timestamp(mockedNow.getTime())
         .build();
       delete expectedIndexDBValue.httpStatus;
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
@@ -282,6 +294,7 @@ describe("requestStrategies.ts", () => {
         .data(requestBody)
         .contentType(requestContentType)
         .dirty(true)
+        .timestamp(mockedNow.getTime())
         .build();
       delete expectedIndexDBValue.httpStatus;
       expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([

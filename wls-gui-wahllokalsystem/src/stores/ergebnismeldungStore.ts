@@ -62,7 +62,11 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         stapelArt
       );
 
-      if (wahlbezirkID && ergebnisseToSend) {
+      if (
+        wahlbezirkID &&
+        ergebnisseToSend &&
+        ergebnisseToSend.ergebnisse.length > 0
+      ) {
         await postErgebnisse(wahlbezirkID, wahlID, stapelArt, ergebnisseToSend);
       }
     } catch {

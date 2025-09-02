@@ -63,7 +63,7 @@ export function useStimmabgabevermerkeService() {
       const errorMessage = "Fehler beim Speichern der Stimmabgabevermerke.";
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
-      throw new Error("Post Beanstandete Stimmabgabevermerke Failed");
+      throw new Error("Post Stimmabgabevermerke Failed");
     }
   }
 

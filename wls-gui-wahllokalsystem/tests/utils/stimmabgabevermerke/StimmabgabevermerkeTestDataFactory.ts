@@ -144,7 +144,7 @@ export function useStimmabgabevermerkeTestDataFactory() {
 
   function createStimmzettel(): Stimmzettel {
     return {
-      anzahl: generateRandomNumber(1),
+      anzahl: generateRandomNumber(1) + 1,
       stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
     };
   }

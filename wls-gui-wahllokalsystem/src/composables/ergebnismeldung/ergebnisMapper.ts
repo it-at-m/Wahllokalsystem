@@ -7,7 +7,11 @@ import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUnd
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
-import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  BezirkUndWahlIDStapelartDTOStapelartEnum,
+  GetErgebnisseStapelartEnum,
+  PostErgebnisseStapelartEnum,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 export function useErgebnisMapper() {
@@ -27,6 +31,64 @@ export function useErgebnisMapper() {
       ),
       ergebnisse: _modelErgebnisseToDto(model.ergebnisse),
     };
+  }
+
+  function toGetErgebnisseStapelartEnum(
+    model: StapelArtEnum
+  ): GetErgebnisseStapelartEnum {
+    switch (model) {
+      case StapelArtEnum.ObwA:
+        return GetErgebnisseStapelartEnum.ObwA;
+      case StapelArtEnum.ObwBLeer:
+        return GetErgebnisseStapelartEnum.ObwBLeer;
+      case StapelArtEnum.ObwBUngekennzeichnet:
+        return GetErgebnisseStapelartEnum.ObwBUngekennzeichnet;
+      case StapelArtEnum.ObwCGueltig:
+        return GetErgebnisseStapelartEnum.ObwCGueltig;
+      case StapelArtEnum.ObwCUngueltig:
+        return GetErgebnisseStapelartEnum.ObwCUngueltig;
+      case StapelArtEnum.SrwBawA:
+        return GetErgebnisseStapelartEnum.SrwBawA;
+      case StapelArtEnum.SrwBawB:
+        return GetErgebnisseStapelartEnum.SrwBawB;
+      case StapelArtEnum.SrwBawAB:
+        return GetErgebnisseStapelartEnum.SrwBawAB;
+      case StapelArtEnum.SrwBawDUngueltig:
+        return GetErgebnisseStapelartEnum.SrwBawDUngueltig;
+      case StapelArtEnum.SrwBawBC:
+        return GetErgebnisseStapelartEnum.SrwBawBC;
+      default:
+        throw new Error("Stapelart nicht gefunden");
+    }
+  }
+
+  function toPostErgebnisseStapelartEnum(
+    model: StapelArtEnum
+  ): PostErgebnisseStapelartEnum {
+    switch (model) {
+      case StapelArtEnum.ObwA:
+        return PostErgebnisseStapelartEnum.ObwA;
+      case StapelArtEnum.ObwBLeer:
+        return PostErgebnisseStapelartEnum.ObwBLeer;
+      case StapelArtEnum.ObwBUngekennzeichnet:
+        return PostErgebnisseStapelartEnum.ObwBUngekennzeichnet;
+      case StapelArtEnum.ObwCGueltig:
+        return PostErgebnisseStapelartEnum.ObwCGueltig;
+      case StapelArtEnum.ObwCUngueltig:
+        return PostErgebnisseStapelartEnum.ObwCUngueltig;
+      case StapelArtEnum.SrwBawA:
+        return PostErgebnisseStapelartEnum.SrwBawA;
+      case StapelArtEnum.SrwBawB:
+        return PostErgebnisseStapelartEnum.SrwBawB;
+      case StapelArtEnum.SrwBawAB:
+        return PostErgebnisseStapelartEnum.SrwBawAB;
+      case StapelArtEnum.SrwBawDUngueltig:
+        return PostErgebnisseStapelartEnum.SrwBawDUngueltig;
+      case StapelArtEnum.SrwBawBC:
+        return PostErgebnisseStapelartEnum.SrwBawBC;
+      default:
+        throw new Error("Stapelart nicht gefunden");
+    }
   }
 
   function _dtoBezirkUndWahlIDStapelartToModel(
@@ -127,5 +189,10 @@ export function useErgebnisMapper() {
     }));
   }
 
-  return { toModel, toDto };
+  return {
+    toModel,
+    toDto,
+    toGetErgebnisseStapelartEnum,
+    toPostErgebnisseStapelartEnum,
+  };
 }

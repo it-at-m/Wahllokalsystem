@@ -4,11 +4,20 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
+  GetErgebnisseStapelartEnum,
+  PostErgebnisseStapelartEnum,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { toModel, toDto } = useErgebnisMapper();
+const {
+  toModel,
+  toDto,
+  toPostErgebnisseStapelartEnum,
+  toGetErgebnisseStapelartEnum,
+} = useErgebnisMapper();
 const {
   prepareErgebnisseDTO,
   createErgebnisDTO,
@@ -175,5 +184,59 @@ describe("ergebnisMapper.ts", () => {
 
       expect(() => toDto(invalidModel)).toThrow("Stapelart nicht gefunden");
     });
+  });
+
+  describe("toPostErgebnisseStapelartEnum", () => {
+    it.each([
+      [StapelArtEnum.ObwA, PostErgebnisseStapelartEnum.ObwA],
+      [StapelArtEnum.ObwBLeer, PostErgebnisseStapelartEnum.ObwBLeer],
+      [
+        StapelArtEnum.ObwBUngekennzeichnet,
+        PostErgebnisseStapelartEnum.ObwBUngekennzeichnet,
+      ],
+      [StapelArtEnum.ObwCGueltig, PostErgebnisseStapelartEnum.ObwCGueltig],
+      [StapelArtEnum.ObwCUngueltig, PostErgebnisseStapelartEnum.ObwCUngueltig],
+      [StapelArtEnum.SrwBawA, PostErgebnisseStapelartEnum.SrwBawA],
+      [StapelArtEnum.SrwBawB, PostErgebnisseStapelartEnum.SrwBawB],
+      [StapelArtEnum.SrwBawAB, PostErgebnisseStapelartEnum.SrwBawAB],
+      [
+        StapelArtEnum.SrwBawDUngueltig,
+        PostErgebnisseStapelartEnum.SrwBawDUngueltig,
+      ],
+      [StapelArtEnum.SrwBawBC, PostErgebnisseStapelartEnum.SrwBawBC],
+    ])(
+      "should_mapModelStapelart%s_when_givenDtoStapelart%s",
+      (modelStapelart, dtoStapelart) => {
+        const result = toPostErgebnisseStapelartEnum(modelStapelart);
+        expect(result).toBe(dtoStapelart);
+      }
+    );
+  });
+
+  describe("toGetErgebnisseStapelartEnum", () => {
+    it.each([
+      [StapelArtEnum.ObwA, GetErgebnisseStapelartEnum.ObwA],
+      [StapelArtEnum.ObwBLeer, GetErgebnisseStapelartEnum.ObwBLeer],
+      [
+        StapelArtEnum.ObwBUngekennzeichnet,
+        GetErgebnisseStapelartEnum.ObwBUngekennzeichnet,
+      ],
+      [StapelArtEnum.ObwCGueltig, GetErgebnisseStapelartEnum.ObwCGueltig],
+      [StapelArtEnum.ObwCUngueltig, GetErgebnisseStapelartEnum.ObwCUngueltig],
+      [StapelArtEnum.SrwBawA, GetErgebnisseStapelartEnum.SrwBawA],
+      [StapelArtEnum.SrwBawB, GetErgebnisseStapelartEnum.SrwBawB],
+      [StapelArtEnum.SrwBawAB, GetErgebnisseStapelartEnum.SrwBawAB],
+      [
+        StapelArtEnum.SrwBawDUngueltig,
+        GetErgebnisseStapelartEnum.SrwBawDUngueltig,
+      ],
+      [StapelArtEnum.SrwBawBC, GetErgebnisseStapelartEnum.SrwBawBC],
+    ])(
+      "should_mapModelStapelart%s_when_givenDtoStapelart%s",
+      (modelStapelart, dtoStapelart) => {
+        const result = toGetErgebnisseStapelartEnum(modelStapelart);
+        expect(result).toBe(dtoStapelart);
+      }
+    );
   });
 });

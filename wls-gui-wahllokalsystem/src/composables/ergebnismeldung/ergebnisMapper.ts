@@ -184,7 +184,7 @@ export function useErgebnisMapper() {
       wahlvorschlagID: model.wahlvorschlagID ?? undefined,
       kandidatID: model.kandidatID ?? undefined,
       wahlvorschlagsordnungszahl: model.wahlvorschlagsOrdnungszahl ?? undefined,
-      ergebnis: model.ergebnis,
+      ergebnis: model.ergebnis ?? 0,
       numIndex: model.numIndex ?? undefined,
     }));
   }

@@ -121,7 +121,7 @@ describe("ergebnisMapper.ts", () => {
         .build();
 
       const dtoErgebnis = createErgebnisDTO({
-        ergebnis: modelErgebnis.ergebnis,
+        ergebnis: modelErgebnis.ergebnis ?? 0,
         kandidatID: undefined,
         numIndex: undefined,
         wahlvorschlagID: undefined,

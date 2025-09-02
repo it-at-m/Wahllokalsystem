@@ -32,7 +32,18 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
           stapelArt
         );
         if (loadedErgebnisse) {
-          ergebnisse.value.push(loadedErgebnisse);
+          const existingErgebnisseIndexForStapelart =
+            ergebnisse.value.findIndex(
+              (ergebnisse) =>
+                ergebnisse.bezirkUndWahlIDStapelart.wahlID === wahlID &&
+                ergebnisse.bezirkUndWahlIDStapelart.stapelArt === stapelArt
+            );
+          if (existingErgebnisseIndexForStapelart >= 0) {
+            ergebnisse.value[existingErgebnisseIndexForStapelart] =
+              loadedErgebnisse;
+          } else {
+            ergebnisse.value.push(loadedErgebnisse);
+          }
         }
       }
     } catch {

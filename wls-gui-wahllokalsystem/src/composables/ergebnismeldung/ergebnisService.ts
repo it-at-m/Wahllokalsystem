@@ -1,3 +1,4 @@
+import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 import {
@@ -8,7 +9,12 @@ import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 
-const { toModel } = useErgebnisMapper();
+const {
+  toModel,
+  toDto,
+  toGetErgebnisseStapelartEnum,
+  toPostErgebnisseStapelartEnum,
+} = useErgebnisMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
 export function useErgebnisService() {
@@ -25,7 +31,7 @@ export function useErgebnisService() {
       const response = await ergebnisseControllerAPI.getErgebnisse(
         wahlbezirkID,
         wahlID,
-        stapelArt
+        toGetErgebnisseStapelartEnum(stapelArt)
       );
 
       const responseData = getNullOn204OrElseResponseData(response);
@@ -35,5 +41,23 @@ export function useErgebnisService() {
     }
   }
 
-  return { getErgebnisse };
+  async function postErgebnisse(
+    wahlbezirkID: string,
+    wahlID: string,
+    stapelArt: StapelArtEnum,
+    ergebnisse: Ergebnisse
+  ) {
+    try {
+      await ergebnisseControllerAPI.postErgebnisse(
+        wahlbezirkID,
+        wahlID,
+        toPostErgebnisseStapelartEnum(stapelArt),
+        toDto(ergebnisse)
+      );
+    } catch {
+      throw new Error(`Post Ergebnisse for Stapelart ${stapelArt} failed.`);
+    }
+  }
+
+  return { getErgebnisse, postErgebnisse };
 }

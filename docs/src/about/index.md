@@ -142,7 +142,7 @@ gefährden. Dementsprechend muss die Summe der Anzahl der Tische mit Sichtblende
 Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
 :::
 
-📃 **UseCase: `Vorbereitung der Wahlhandlung - Überprüfung der ungültigen Wahlscheine`**
+📃 **UseCase: `Vorbereitung der Wahlhandlung - Auf ungültige Wahlscheine hinweisen`**
 
 ::: info Pflege des Wählerverzeichnisses im Urnenwahlbezirk {data-uwb="true"}
 Vor der Wahl muss sichergestellt werden, dass das Wählerverzeichnis aktuell und korrekt ist. Dazu müssen nachträglich

@@ -37,7 +37,7 @@ export function useStimmabgabevermerkeMapper() {
     };
   }
 
-  function _toWahldatenModel(dto: Set<WahldatenDTO>): Wahldaten[] {
+  function _toWahldatenModel(dto: WahldatenDTO[]): Wahldaten[] {
     const arrayOfWahldaten: Wahldaten[] = [];
     dto.forEach((wahldatenDto) => {
       arrayOfWahldaten.push({
@@ -54,11 +54,11 @@ export function useStimmabgabevermerkeMapper() {
     return arrayOfWahldaten;
   }
 
-  function _toWahldatenDTO(model: Wahldaten[]): Set<WahldatenDTO> {
-    const setOfWahldatenDTO = new Set<WahldatenDTO>();
+  function _toWahldatenDTO(model: Wahldaten[]): WahldatenDTO[] {
+    const arrayOfWahldatenDTO: WahldatenDTO[] = [];
 
     model.forEach((wahldaten) => {
-      setOfWahldatenDTO.add({
+      arrayOfWahldatenDTO.push({
         wahlbezirkID: wahldaten.wahlbezirkID,
         eingenommeneWahlscheine: _toEingenommeneWahlscheinDTO(
           wahldaten.eingenommeneWahlscheine
@@ -68,12 +68,10 @@ export function useStimmabgabevermerkeMapper() {
         wahlID: wahldaten.wahlID,
       });
     });
-    return setOfWahldatenDTO;
+    return arrayOfWahldatenDTO;
   }
 
-  function _toEingenommeneWahlscheineModel(
-    dto: Set<EingenommenerWahlscheinDTO>
-  ) {
+  function _toEingenommeneWahlscheineModel(dto: EingenommenerWahlscheinDTO[]) {
     const resultMap = new Map<
       EingenommenerWahlscheinStimmzettelartEnum,
       number
@@ -90,20 +88,20 @@ export function useStimmabgabevermerkeMapper() {
 
   function _toEingenommeneWahlscheinDTO(
     model: Map<EingenommenerWahlscheinStimmzettelartEnum, number>
-  ): Set<EingenommenerWahlscheinDTO> {
-    const dtoSet = new Set<EingenommenerWahlscheinDTO>();
+  ): EingenommenerWahlscheinDTO[] {
+    const dtoArray: EingenommenerWahlscheinDTO[] = [];
 
     for (const [key, value] of model.entries()) {
-      dtoSet.add({
+      dtoArray.push({
         stimmzettelart: _toEingenommenerWahlscheinDTOStimmzettelartEnum(key),
         anzahl: value,
       });
     }
 
-    return dtoSet;
+    return dtoArray;
   }
 
-  function _toVermerkModel(dto: Set<VermerkDTO>): Vermerke[] {
+  function _toVermerkModel(dto: VermerkDTO[]): Vermerke[] {
     const vermerke: Vermerke[] = [];
     dto.forEach((vermerkDto) => {
       vermerke.push({
@@ -114,20 +112,20 @@ export function useStimmabgabevermerkeMapper() {
     return vermerke.sort((a, b) => a.blattnummer - b.blattnummer);
   }
 
-  function _toVermerkDTO(model: Vermerke[]): Set<VermerkDTO> {
-    const vermerkDTOSet = new Set<VermerkDTO>();
+  function _toVermerkDTO(model: Vermerke[]): VermerkDTO[] {
+    const vermerkDTOArray: VermerkDTO[] = [];
 
     model.forEach((vermerk) => {
-      vermerkDTOSet.add({
+      vermerkDTOArray.push({
         blattnummer: vermerk.blattnummer,
         stimmzettel: _toStimmzettelDTO(vermerk.stimmzettel),
       });
     });
 
-    return vermerkDTOSet;
+    return vermerkDTOArray;
   }
 
-  function _toStimmzettelModel(dto: Set<StimmzettelDTO>): Stimmzettel[] {
+  function _toStimmzettelModel(dto: StimmzettelDTO[]): Stimmzettel[] {
     const stimmzettel: Stimmzettel[] = [];
     dto.forEach((stimmzettelDto) => {
       stimmzettel.push({
@@ -140,10 +138,10 @@ export function useStimmabgabevermerkeMapper() {
     return stimmzettel;
   }
 
-  function _toStimmzettelDTO(model: Stimmzettel[]): Set<StimmzettelDTO> {
-    const stimmzettelDTOSet = new Set<StimmzettelDTO>();
+  function _toStimmzettelDTO(model: Stimmzettel[]): StimmzettelDTO[] {
+    const stimmzettelDTOArray: StimmzettelDTO[] = [];
     model.forEach((stimmzettel) => {
-      stimmzettelDTOSet.add({
+      stimmzettelDTOArray.push({
         anzahl: stimmzettel.anzahl ?? 0,
         stimmzettelart: _toStimmzettelStimmzettelartDTOEnum(
           stimmzettel.stimmzettelart
@@ -151,7 +149,7 @@ export function useStimmabgabevermerkeMapper() {
       });
     });
 
-    return stimmzettelDTOSet;
+    return stimmzettelDTOArray;
   }
 
   function _toEingenommenerWahlscheinDTOStimmzettelartEnum(

@@ -20,6 +20,15 @@ export function useErgebnisMapper() {
     };
   }
 
+  function toDto(model: Ergebnisse): ErgebnisseDTO {
+    return {
+      bezirkUndWahlIDStapelart: _modelBezirkUndWahlIDStapelartToDto(
+        model.bezirkUndWahlIDStapelart
+      ),
+      ergebnisse: _modelErgebnisseToDto(model.ergebnisse),
+    };
+  }
+
   function _dtoBezirkUndWahlIDStapelartToModel(
     dto: BezirkUndWahlIDStapelartDTO
   ): BezirkUndWahlIDStapelArt {
@@ -68,5 +77,55 @@ export function useErgebnisMapper() {
       numIndex: dto.numIndex ?? null,
     }));
   }
-  return { toModel };
+
+  function _modelBezirkUndWahlIDStapelartToDto(
+    model: BezirkUndWahlIDStapelArt
+  ): BezirkUndWahlIDStapelartDTO {
+    return {
+      wahlID: model.wahlID,
+      wahlbezirkID: model.wahlbezirkID,
+      stapelart: _modelStapelArtEnumToDto(model.stapelArt),
+    };
+  }
+
+  function _modelStapelArtEnumToDto(
+    model: StapelArtEnum
+  ): BezirkUndWahlIDStapelartDTOStapelartEnum {
+    switch (model) {
+      case StapelArtEnum.ObwA:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.ObwA;
+      case StapelArtEnum.ObwBLeer:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.ObwBLeer;
+      case StapelArtEnum.ObwBUngekennzeichnet:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.ObwBUngekennzeichnet;
+      case StapelArtEnum.ObwCGueltig:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.ObwCGueltig;
+      case StapelArtEnum.ObwCUngueltig:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.ObwCUngueltig;
+      case StapelArtEnum.SrwBawA:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawA;
+      case StapelArtEnum.SrwBawB:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawB;
+      case StapelArtEnum.SrwBawAB:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawAB;
+      case StapelArtEnum.SrwBawDUngueltig:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawDUngueltig;
+      case StapelArtEnum.SrwBawBC:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC;
+      default:
+        throw new Error("Stapelart nicht gefunden");
+    }
+  }
+
+  function _modelErgebnisseToDto(models: Ergebnis[]): ErgebnisDTO[] {
+    return models.map((model) => ({
+      wahlvorschlagID: model.wahlvorschlagID ?? undefined,
+      kandidatID: model.kandidatID ?? undefined,
+      wahlvorschlagsordnungszahl: model.wahlvorschlagsOrdnungszahl ?? undefined,
+      ergebnis: model.ergebnis,
+      numIndex: model.numIndex ?? undefined,
+    }));
+  }
+
+  return { toModel, toDto };
 }

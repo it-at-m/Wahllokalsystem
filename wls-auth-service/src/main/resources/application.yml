@@ -29,6 +29,12 @@ security:
   logging.requests: all
 
 server:
+  ssl:
+    key-store: file:../stack/cert/keystore.p12
+    key-store-password: secret
+    key-store-type: PKCS12
+    key-alias: springboot
+    enabled: true
   shutdown: "graceful"
   port: 8080
   error:
@@ -44,7 +50,10 @@ server:
       cookie:
         max-age: -1
         http-only: true
-        secure: false
+        secure: true
+        same-site: none
+        domain: "kubernetes.docker.internal"
+        path: "/"
 
 # Config for spring actuator endpoints
 management:

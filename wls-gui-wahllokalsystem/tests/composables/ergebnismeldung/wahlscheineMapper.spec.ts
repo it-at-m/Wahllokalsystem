@@ -1,4 +1,4 @@
-import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahlscheineTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";

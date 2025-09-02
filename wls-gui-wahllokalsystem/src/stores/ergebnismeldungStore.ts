@@ -9,14 +9,14 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisServic
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
-const { getErgebnisse } = useErgebnisService();
+const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
 const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
-  const ergebnisse = ref<Ergebnisse | null>(null);
+  const ergebnisse = ref<Ergebnisse[]>([]);
 
   async function loadErgebnisseByStapelArt(
     wahlID: string,
@@ -26,11 +26,48 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       const wahlbezirkID = _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 
       if (wahlbezirkID) {
-        ergebnisse.value = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);
+        const loadedErgebnisse = await getErgebnisse(
+          wahlbezirkID,
+          wahlID,
+          stapelArt
+        );
+        if (loadedErgebnisse) {
+          ergebnisse.value.push(loadedErgebnisse);
+        }
       }
     } catch {
       throw new Error("Fehler beim Laden der Ergebnisse");
     }
+  }
+
+  async function sendErgebnisseByStapelArt(
+    wahlID: string,
+    stapelArt: StapelArtEnum
+  ) {
+    try {
+      const wahlbezirkID = _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const ergebnisseToSend = _getErgebnisseByWahlIdAndStapelartOrUndefined(
+        wahlID,
+        stapelArt
+      );
+
+      if (wahlbezirkID && ergebnisseToSend) {
+        await postErgebnisse(wahlbezirkID, wahlID, stapelArt, ergebnisseToSend);
+      }
+    } catch {
+      throw new Error("Fehler beim Speichern der Ergebnisse");
+    }
+  }
+
+  function _getErgebnisseByWahlIdAndStapelartOrUndefined(
+    wahlID: string,
+    stapelArt: StapelArtEnum
+  ): Ergebnisse | undefined {
+    return ergebnisse.value.find(
+      (ergebnisse) =>
+        ergebnisse.bezirkUndWahlIDStapelart.stapelArt === stapelArt &&
+        ergebnisse.bezirkUndWahlIDStapelart.wahlID === wahlID
+    );
   }
 
   function _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
@@ -41,7 +78,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     return metadata?.wahlbezirkID;
   }
 
-  return { ergebnisse, loadErgebnisseByStapelArt };
+  return { ergebnisse, loadErgebnisseByStapelArt, sendErgebnisseByStapelArt };
 });
 
 registerStoreHMR(useErgebnismeldungStore);

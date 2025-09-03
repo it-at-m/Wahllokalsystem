@@ -182,14 +182,14 @@ describe("App", () => {
     });
 
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
-      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+      const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
       const initBeanstandeteWahlbriefeSpy = vi.spyOn(
         useWahlenStore().beanstandeteWahlbriefeActions,
         "initBeanstandeteWahlbriefe"
       );
 
       // @ts-expect-error: cannot set readonly
-      waehlerverzeichnisNummern.value = [1];
+      waehlerverzeichnisGetter.waehlerverzeichnisNummern = [1];
 
       await flushPromises();
 

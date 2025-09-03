@@ -119,7 +119,7 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   const beanstandeteWahlbriefeActions = {
     initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe() {
-      for (const wvzNr of waehlerverzeichnisNummern.value) {
+      for (const wvzNr of waehlerverzeichnisGetter.value.waehlerverzeichnisNummern()) {
         const beanstandeteWahlbriefe =
           await briefwahlService.getBeanstandeteWahlbriefe(
             wvzNr,
@@ -206,21 +206,27 @@ export const useWahlenStore = defineStore(storeID, () => {
     },
   };
 
-  const waehlerverzeichnisNummern = computed<number[]>(() => {
-    if (!wahlenState.value.wahlen) return [];
+  /* --- waehlerverzeichnis --- */
+  const waehlerverzeichnisGetter = computed(() => ({
+    waehlerverzeichnisNummern: () => {
+      if (!wahlenState.value.wahlen) return [];
 
-    const nummern = new Set<number>();
+      const nummern = new Set<number>();
 
-    for (const wahl of wahlenState.value.wahlen) {
-      nummern.add(wahl.waehlerverzeichnisNummer);
-    }
-    return Array.from(nummern);
-  });
+      for (const wahl of wahlenState.value.wahlen) {
+        nummern.add(wahl.waehlerverzeichnisNummer);
+      }
+      return Array.from(nummern);
+    },
+  }));
 
-  function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-    return wahl ? wahl.waehlerverzeichnisNummer : undefined;
-  }
+  const waehlerverzeichnisActions = {
+    getWaehlerverzeichnisNummerOrUndefinedById:
+      function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
+        const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+        return wahl ? wahl.waehlerverzeichnisNummer : undefined;
+      },
+  };
 
   function _mapWahlMetaDataToWahlNummer() {
     if (wahlenState.value.wahlen && user.value?.wahlMetaData) {
@@ -256,8 +262,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     beanstandeteWahlbriefeActions,
     stimmzettelumschlaegeState,
     stimmzettelumschlaegeActions,
-    getWaehlerverzeichnisNummerOrUndefinedById,
-    waehlerverzeichnisNummern,
+    waehlerverzeichnisGetter,
+    waehlerverzeichnisActions,
   };
 });
 

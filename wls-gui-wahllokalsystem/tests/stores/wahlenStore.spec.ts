@@ -96,7 +96,9 @@ describe("wahlenStore.ts", () => {
 
   describe("waehlerverzeichnisNummern", () => {
     it("should_returnEmptyList_when_wahlenDoNotExist", () => {
-      expect(unitUnderTest.waehlerverzeichnisNummern).toStrictEqual([]);
+      expect(
+        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern()
+      ).toStrictEqual([]);
     });
 
     it("should_returnListOfWvzNummern_when_wahlenExist", () => {
@@ -105,7 +107,9 @@ describe("wahlenStore.ts", () => {
         prepareWahl().waehlerverzeichnisNummer(2).build(),
       ];
 
-      expect(unitUnderTest.waehlerverzeichnisNummern).toStrictEqual([1, 2]);
+      expect(
+        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern()
+      ).toStrictEqual([1, 2]);
     });
   });
 
@@ -117,9 +121,10 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
-        wahlTwo.wahlID
-      );
+      const result =
+        unitUnderTest.waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+          wahlTwo.wahlID
+        );
 
       expect(result).toStrictEqual(wahlTwo.waehlerverzeichnisNummer);
     });
@@ -131,9 +136,10 @@ describe("wahlenStore.ts", () => {
 
       unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
-        wahlThree.wahlID
-      );
+      const result =
+        unitUnderTest.waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+          wahlThree.wahlID
+        );
 
       expect(result).toBeUndefined();
     });

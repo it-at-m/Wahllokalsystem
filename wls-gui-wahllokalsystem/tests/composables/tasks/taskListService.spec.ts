@@ -69,8 +69,10 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
     wahlenActions: {
       getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
     },
-    getWaehlerverzeichnisNummerOrUndefinedById:
-      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
 describe("taskListService.ts", () => {

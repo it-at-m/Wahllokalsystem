@@ -39,9 +39,8 @@ const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
-const { wahlenActions } = useWahlenStore();
+const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
-const { beanstandeteWahlbriefeActions } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();

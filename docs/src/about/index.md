@@ -147,9 +147,10 @@ Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
 ::: info Pflege des Wählerverzeichnisses im Urnenwahlbezirk {data-uwb="true"}
 Vor der Stimmabgabe muss sichergestellt werden, dass das Wählerverzeichnis aktuell und korrekt ist. Dazu müssen
 nachträglich erteilte Wahlscheine berücksichtigt werden, um die Integrität der Wahl zu gewährleisten und allen  
-wahlberechtigten Personen die Möglichkeit zu bieten, ihre Stimmen abzugeben. Der Wahlvorstand wird vom Wahlamt
-darüber benachrichtigt, ob Korrekturen am Wählerverzeichnis und der zugehörigen Ansicht in der Anwendung vorzunehmen
-sind.
+wahlberechtigten Personen die Möglichkeit zu bieten, ihre Stimmen abzugeben. Es muss immer mindestens die Option
+ausgewählt werden, mit welcher bestätigt wird, dass der Wahlvorstand über ungültige Wahlscheine unterrichtet wurde. Der
+Wahlvorstand wird vom Wahlamt darüber benachrichtigt, ob weitere Korrekturen am Wählerverzeichnis und der
+zugehörigen Ansicht in der Anwendung vorzunehmen sind.
 :::
 
 📃 **UseCase: `Wahl eröffnen`**

@@ -95,6 +95,7 @@ const routes = [
     path: "/stimmabgabevermerke",
     name: ROUTE_STIMMABGABEVERMERKE,
     component: UWBStimmabgabevermerkeView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
   },
   {
     path: "/:catchAll(.*)*",

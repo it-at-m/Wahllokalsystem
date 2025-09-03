@@ -265,7 +265,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
   });
 
   describe("saveStimmabgabevermerke", () => {
-    it("should_saveStimmabgabevermerke_when_called", () => {
+    it("should_saveStimmabgabevermerke_when_called", async () => {
       const stimmabgabevermerke = createStimmabgabevermerke();
 
       mockDefinitions.postStimmabgabevermerke.mockReturnValue(
@@ -274,7 +274,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       unitUnderTest.stimmabgabevermerke = [stimmabgabevermerke];
 
-      unitUnderTest.saveStimmabgabevermerke();
+      await unitUnderTest.saveStimmabgabevermerke();
 
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
         stimmabgabevermerke.wahlbezirkID,

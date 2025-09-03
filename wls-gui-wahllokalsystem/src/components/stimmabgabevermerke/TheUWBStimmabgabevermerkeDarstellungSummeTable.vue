@@ -16,10 +16,10 @@
       <tbody>
         <tr>
           <td
-            v-for="value in Array.from(
+            v-for="(value, index) in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.values()
             )"
-            :key="value"
+            :key="`Row-${index}-` + value"
           >
             {{ value }}
           </td>

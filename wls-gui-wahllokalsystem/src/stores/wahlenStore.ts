@@ -1,4 +1,5 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
+import type { Ref } from "vue";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
@@ -19,26 +20,60 @@ const { registerStoreHMR } = useHmrUpdate();
 export const useWahlenStore = defineStore(storeID, () => {
   const { currentUserWahltagID, currentUserWahlbezirkID, user } =
     storeToRefs(useUserStore());
-  const wahlen = ref<Wahl[] | null>();
+
+  /* --- wahlen --- */
+  const wahlenState: Ref<{
+    wahlen: Wahl[] | null;
+  }> = ref({
+    wahlen: null,
+  });
+
+  const wahlenActions = {
+    initWahlen: async function initWahlen(sendNotification = true) {
+      wahlenState.value.wahlen = await wahlenService.getWahlen(
+        currentUserWahltagID.value,
+        sendNotification
+      );
+
+      _mapWahlMetaDataToWahlNummer();
+      _sortWahlenByWahlNummer();
+    },
+    getWahlOrUndefinedById: function getWahlOrUndefinedById(wahlID: string) {
+      return wahlenState.value.wahlen?.find((wahl) => wahl.wahlID === wahlID);
+    },
+    getWahlNameOrBlankStringById: function getWahlNameOrBlankStringById(
+      wahlID: string
+    ) {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      return wahl ? wahl.name : "";
+    },
+    getWahlTagOrBlankStringById: function getWahlTagOrBlankStringById(
+      wahlID: string
+    ) {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      return wahl ? wahl.wahltag : "";
+    },
+  };
+
   const isBeanstandeteWahlbriefeTableValid = ref<null | boolean>(true);
   const isBeanstandeteWahlbriefeSaving = ref<boolean>(false);
 
   const isStimmzettelumschlaegeSaving = ref<boolean>(false);
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
-    if (!wahlen.value) return [];
+    if (!wahlenState.value.wahlen) return [];
 
     const nummern = new Set<number>();
 
-    for (const wahl of wahlen.value) {
+    for (const wahl of wahlenState.value.wahlen) {
       nummern.add(wahl.waehlerverzeichnisNummer);
     }
     return Array.from(nummern);
   });
 
   const summeGueltigerWahlbriefe = computed(() => {
-    if (!wahlen.value) return [];
-    return wahlen.value.map(
+    if (!wahlenState.value.wahlen) return [];
+    return wahlenState.value.wahlen.map(
       (wahl) =>
         wahl.beanstandeteWahlbriefe.filter(
           (brief) => brief === ZurueckweisungsgrundEnum.Zugelassen
@@ -47,8 +82,8 @@ export const useWahlenStore = defineStore(storeID, () => {
   });
 
   const summeUngueltigerWahlbriefe = computed(() => {
-    if (!wahlen.value) return [];
-    return wahlen.value.map(
+    if (!wahlenState.value.wahlen) return [];
+    return wahlenState.value.wahlen.map(
       (wahl) =>
         wahl.beanstandeteWahlbriefe.filter(
           (brief) =>
@@ -58,8 +93,8 @@ export const useWahlenStore = defineStore(storeID, () => {
   });
 
   const summenZurueckweisungsgruende = computed(() => {
-    if (!wahlen.value) return [];
-    const anzahlWahlen = wahlen.value.length;
+    if (!wahlenState.value.wahlen) return [];
+    const anzahlWahlen = wahlenState.value.wahlen.length;
     const summenZurueckweisungsgruende = Object.values(ZurueckweisungsgrundEnum)
       .filter((grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen)
       .map((grund) => ({
@@ -67,7 +102,7 @@ export const useWahlenStore = defineStore(storeID, () => {
         grund: grund,
       }));
 
-    wahlen.value.forEach((wahl, wahlIndex) => {
+    wahlenState.value.wahlen.forEach((wahl, wahlIndex) => {
       if (
         wahl.beanstandeteWahlbriefe &&
         wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
@@ -85,22 +120,8 @@ export const useWahlenStore = defineStore(storeID, () => {
     return summenZurueckweisungsgruende;
   });
 
-  async function initWahlen(sendNotification = true) {
-    wahlen.value = await wahlenService.getWahlen(
-      currentUserWahltagID.value,
-      sendNotification
-    );
-
-    _mapWahlMetaDataToWahlNummer();
-    _sortWahlenByWahlNummer();
-  }
-
-  function getWahlOrUndefinedById(wahlID: string) {
-    return wahlen.value?.find((wahl) => wahl.wahlID === wahlID);
-  }
-
   function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
-    const wahl = getWahlOrUndefinedById(wahlID);
+    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
   }
 
@@ -111,8 +132,8 @@ export const useWahlenStore = defineStore(storeID, () => {
           wvzNr,
           currentUserWahlbezirkID.value
         );
-      if (wahlen.value && beanstandeteWahlbriefe) {
-        wahlen.value.forEach((wahl) => {
+      if (wahlenState.value.wahlen && beanstandeteWahlbriefe) {
+        wahlenState.value.wahlen.forEach((wahl) => {
           if (wahl.waehlerverzeichnisNummer == wvzNr) {
             wahl.beanstandeteWahlbriefe =
               beanstandeteWahlbriefe.beanstandeteWahlbriefe.get(wahl.wahlID) ??
@@ -124,14 +145,16 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function addBeanstandeterWahlbriefEntry() {
-    if (wahlen.value) {
-      wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.push(null));
+    if (wahlenState.value.wahlen) {
+      wahlenState.value.wahlen.map((wahl) =>
+        wahl.beanstandeteWahlbriefe.push(null)
+      );
     }
   }
 
   function deleteBeanstandeterWahlbriefEntry(index: number) {
-    if (wahlen.value) {
-      wahlen.value.forEach((wahl) =>
+    if (wahlenState.value.wahlen) {
+      wahlenState.value.wahlen.forEach((wahl) =>
         wahl.beanstandeteWahlbriefe.splice(index, 1)
       );
     }
@@ -142,8 +165,8 @@ export const useWahlenStore = defineStore(storeID, () => {
 
     try {
       const wahlenGroupedByWvzNr = new Map<number, Wahl[]>();
-      if (wahlen.value) {
-        for (const wahl of wahlen.value) {
+      if (wahlenState.value.wahlen) {
+        for (const wahl of wahlenState.value.wahlen) {
           const wahlenWithWVZNummer =
             wahlenGroupedByWvzNr.get(wahl.waehlerverzeichnisNummer) ?? [];
           wahlenWithWVZNummer.push(wahl);
@@ -164,7 +187,7 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   async function saveStimmzettelumschlaege(wahlID: string) {
-    const wahl = getWahlOrUndefinedById(wahlID);
+    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
     if (wahl) {
       isStimmzettelumschlaegeSaving.value = true;
       try {
@@ -179,22 +202,12 @@ export const useWahlenStore = defineStore(storeID, () => {
     }
   }
 
-  function getWahlNameOrBlankStringById(wahlID: string) {
-    const wahl = getWahlOrUndefinedById(wahlID);
-    return wahl ? wahl.name : "";
-  }
-
-  function getWahlTagOrBlankStringById(wahlID: string) {
-    const wahl = getWahlOrUndefinedById(wahlID);
-    return wahl ? wahl.wahltag : "";
-  }
-
   function _mapWahlMetaDataToWahlNummer() {
-    if (wahlen.value && user.value?.wahlMetaData) {
+    if (wahlenState.value.wahlen && user.value?.wahlMetaData) {
       const wahlnummerMap = new Map(
         user.value.wahlMetaData.map((meta) => [meta.wahlID, meta.wahlnummer])
       );
-      wahlen.value.forEach((wahl) => {
+      wahlenState.value.wahlen.forEach((wahl) => {
         const wahlnummer = wahlnummerMap.get(wahl.wahlID);
         if (wahlnummer !== undefined) {
           wahl.nummer = wahlnummer;
@@ -204,8 +217,8 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   function _sortWahlenByWahlNummer() {
-    if (wahlen.value) {
-      wahlen.value.sort((a: Wahl, b: Wahl) => {
+    if (wahlenState.value.wahlen) {
+      wahlenState.value.wahlen.sort((a: Wahl, b: Wahl) => {
         if (a.nummer && b.nummer) {
           return a.nummer.localeCompare(b.nummer);
         } else {
@@ -216,13 +229,10 @@ export const useWahlenStore = defineStore(storeID, () => {
   }
 
   return {
-    wahlen,
+    wahlenState,
+    wahlenActions,
     getWaehlerverzeichnisNummerOrUndefinedById,
     waehlerverzeichnisNummern,
-    getWahlNameOrBlankStringById,
-    getWahlTagOrBlankStringById,
-    getWahlOrUndefinedById,
-    initWahlen,
     initBeanstandeteWahlbriefe,
     addBeanstandeterWahlbriefEntry,
     deleteBeanstandeterWahlbriefEntry,

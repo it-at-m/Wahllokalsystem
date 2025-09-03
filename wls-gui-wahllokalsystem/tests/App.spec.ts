@@ -4,6 +4,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -23,6 +24,15 @@ import HomeView from "@/views/HomeView.vue";
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
 
+const mockDefinitions = vi.hoisted(() => ({
+  getWahlen: vi.fn(),
+}));
+
+vi.mock("@/composables/wahl/wahlService.ts", () => ({
+  useWahlService: () => ({
+    getWahlen: mockDefinitions.getWahlen,
+  }),
+}));
 vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
   useBroadcastCronjobService: () => ({
     startBroadcastMessageInterval: startBroadcastMessageIntervalMock,
@@ -80,6 +90,14 @@ describe("App", () => {
         ],
       },
     });
+
+    const { createWahl } = useWahlTestDataFactory();
+
+    const mockedWahlArrayFromService = [createWahl(), createWahl()];
+
+    mockDefinitions.getWahlen.mockReturnValue(
+      Promise.resolve(mockedWahlArrayFromService)
+    );
   });
 
   afterEach(() => {

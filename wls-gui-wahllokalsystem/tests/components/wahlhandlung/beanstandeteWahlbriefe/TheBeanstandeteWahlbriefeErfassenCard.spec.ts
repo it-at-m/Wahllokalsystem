@@ -80,7 +80,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_renderWithDisabledSaveButton_when_rowsAreInvalid", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -111,7 +111,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_renderWithEnabledSaveButton_when_rowsAreValid", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -161,7 +161,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_callSendBeanstandeteWahlbriefe_when_saveButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -196,7 +196,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_callAddBeanstandeteWahlbriefe_when_addRowButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")

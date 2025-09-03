@@ -84,9 +84,11 @@ describe("wahlenStore.ts", () => {
         Promise.resolve(mockedWahlArrayFromService)
       );
 
-      await unitUnderTest.initWahlen();
+      await unitUnderTest.wahlenActions.initWahlen();
 
-      expect(unitUnderTest.wahlen).toStrictEqual(expectedSortedWahlArray);
+      expect(unitUnderTest.wahlenState.wahlen).toStrictEqual(
+        expectedSortedWahlArray
+      );
       expect(wahl1.nummer).toStrictEqual("1");
       expect(wahl2.nummer).toStrictEqual("0");
     });
@@ -98,7 +100,7 @@ describe("wahlenStore.ts", () => {
     });
 
     it("should_returnListOfWvzNummern_when_wahlenExist", () => {
-      unitUnderTest.wahlen = [
+      unitUnderTest.wahlenState.wahlen = [
         prepareWahl().waehlerverzeichnisNummer(1).build(),
         prepareWahl().waehlerverzeichnisNummer(2).build(),
       ];
@@ -113,7 +115,7 @@ describe("wahlenStore.ts", () => {
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
       const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlTwo.wahlID
@@ -127,7 +129,7 @@ describe("wahlenStore.ts", () => {
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo];
 
       const result = unitUnderTest.getWaehlerverzeichnisNummerOrUndefinedById(
         wahlThree.wahlID
@@ -143,9 +145,11 @@ describe("wahlenStore.ts", () => {
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlNameOrBlankStringById(wahlOne.wahlID);
+      const result = unitUnderTest.wahlenActions.getWahlNameOrBlankStringById(
+        wahlOne.wahlID
+      );
 
       expect(result).toStrictEqual(wahlOne.name);
     });
@@ -157,9 +161,11 @@ describe("wahlenStore.ts", () => {
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlTagOrBlankStringById(wahlOne.wahlID);
+      const result = unitUnderTest.wahlenActions.getWahlTagOrBlankStringById(
+        wahlOne.wahlID
+      );
 
       expect(result).toStrictEqual(wahlOne.wahltag);
     });
@@ -170,9 +176,11 @@ describe("wahlenStore.ts", () => {
       const wahlThree = createWahl();
       const wahlFour = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlTagOrBlankStringById(wahlFour.wahlID);
+      const result = unitUnderTest.wahlenActions.getWahlTagOrBlankStringById(
+        wahlFour.wahlID
+      );
 
       expect(result).toStrictEqual("");
     });
@@ -184,9 +192,11 @@ describe("wahlenStore.ts", () => {
       const wahlTwo = createWahl();
       const wahlThree = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlOrUndefinedById(wahlOne.wahlID);
+      const result = unitUnderTest.wahlenActions.getWahlOrUndefinedById(
+        wahlOne.wahlID
+      );
 
       expect(result).toStrictEqual(wahlOne);
     });
@@ -197,17 +207,20 @@ describe("wahlenStore.ts", () => {
       const wahlThree = createWahl();
       const wahlFour = createWahl();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo, wahlThree];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo, wahlThree];
 
-      const result = unitUnderTest.getWahlOrUndefinedById(wahlFour.wahlID);
+      const result = unitUnderTest.wahlenActions.getWahlOrUndefinedById(
+        wahlFour.wahlID
+      );
 
       expect(result).toBeUndefined();
     });
 
     it("should_getUndefined_when_wahlenDoNotExist", () => {
-      unitUnderTest.wahlen = null;
+      unitUnderTest.wahlenState.wahlen = null;
 
-      const result = unitUnderTest.getWahlOrUndefinedById("testId");
+      const result =
+        unitUnderTest.wahlenActions.getWahlOrUndefinedById("testId");
 
       expect(result).toBeUndefined();
     });
@@ -232,7 +245,7 @@ describe("wahlenStore.ts", () => {
         mockedBeanstandeteWahlbriefe
       );
 
-      unitUnderTest.wahlen = [
+      unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .wahlID(wahlID)
           .waehlerverzeichnisNummer(wvzNr)
@@ -240,17 +253,19 @@ describe("wahlenStore.ts", () => {
           .build(),
       ];
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual([]);
 
       await unitUnderTest.initBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "ZUGELASSEN",
-      ]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual(["ZUGELASSEN"]);
     });
 
     it("should_notCallService_when_noWahlenGiven", async () => {
-      unitUnderTest.wahlen = [];
+      unitUnderTest.wahlenState.wahlen = [];
 
       await unitUnderTest.initBeanstandeteWahlbriefe();
 
@@ -260,7 +275,7 @@ describe("wahlenStore.ts", () => {
 
   describe("addBeanstandeterWahlbriefEntry", () => {
     it("should_addBeanstandeteWahlbriefeEntryInStore_when_addWahlbriefIsCalled", () => {
-      unitUnderTest.wahlen = [
+      unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -273,29 +288,27 @@ describe("wahlenStore.ts", () => {
           .build(),
       ];
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
-      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
 
       unitUnderTest.addBeanstandeterWahlbriefEntry();
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        null,
-      ]);
-      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        null,
-      ]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", null]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", null]);
     });
   });
 
   describe("deleteBeanstandeterWahlbriefEntry", () => {
     it("should_deleteBeanstandeterWahlbriefEntryFromWahlen_when_called", () => {
-      unitUnderTest.wahlen = [
+      unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -308,23 +321,21 @@ describe("wahlenStore.ts", () => {
           .build(),
       ];
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        "ZUGELASSEN",
-      ]);
-      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-        "ZUGELASSEN",
-      ]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", "ZUGELASSEN"]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", "ZUGELASSEN"]);
 
       unitUnderTest.deleteBeanstandeterWahlbriefEntry(1);
 
-      expect(unitUnderTest.wahlen[0].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
-      expect(unitUnderTest.wahlen[1].beanstandeteWahlbriefe).toStrictEqual([
-        "GEGENSTAND_IM_UMSCHLAG",
-      ]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
+      expect(
+        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+      ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
     });
   });
 
@@ -347,8 +358,8 @@ describe("wahlenStore.ts", () => {
         [wvzNr, [wahl]],
       ]);
 
-      unitUnderTest.wahlen = [wahl];
-      expect(unitUnderTest.wahlen).toBeDefined();
+      unitUnderTest.wahlenState.wahlen = [wahl];
+      expect(unitUnderTest.wahlenState.wahlen).toBeDefined();
 
       mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
         Promise.resolve()
@@ -372,7 +383,7 @@ describe("wahlenStore.ts", () => {
       const wahlID = "wahlID";
       const wvzNr = 1;
 
-      unitUnderTest.wahlen = [
+      unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .wahlID(wahlID)
           .waehlerverzeichnisNummer(wvzNr)
@@ -396,13 +407,14 @@ describe("wahlenStore.ts", () => {
 
   describe("summeGueltigerWahlbriefe", () => {
     it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen =
+        _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([0]);
     });
 
     it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([1, 2]);
     });
@@ -410,13 +422,14 @@ describe("wahlenStore.ts", () => {
 
   describe("summeUngueltigerWahlbriefe", () => {
     it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen =
+        _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0]);
     });
 
     it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0, 1]);
     });
@@ -424,7 +437,8 @@ describe("wahlenStore.ts", () => {
 
   describe("summenZurueckweisungsgruende", () => {
     it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithoutBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen =
+        _getWahlenWithoutBeanstandeteWahlbriefe();
 
       unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
         expect(row.summen).toStrictEqual([0]);
@@ -432,7 +446,7 @@ describe("wahlenStore.ts", () => {
     });
 
     it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
-      unitUnderTest.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
+      unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
         if (row.grund !== "GEGENSTAND_IM_UMSCHLAG") {

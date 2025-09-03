@@ -43,7 +43,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
 
   const { getWaehlerverzeichnisNummerOrUndefinedById } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
-  const { wahlen } = storeToRefs(useWahlenStore());
+  const { wahlenState } = storeToRefs(useWahlenStore());
 
   /* --- eroeffnungsuhrzeit --- */
   const eroeffnungsuhrzeitState: Ref<{
@@ -320,14 +320,14 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 
   /* --- watcher --- */
-  watch(wahlen, () => {
+  watch(wahlenState, () => {
     urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
+      wahlenState.value.wahlen?.map((wahl) => ({
         wahlID: wahl.wahlID,
         anzahl: null,
       })) || [];
     briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
+      wahlenState.value.wahlen?.map((wahl) => ({
         wahlID: wahl.wahlID,
         anzahl: null,
       })) || [];

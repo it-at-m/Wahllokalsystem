@@ -66,7 +66,9 @@ vi.mock(
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
     getWaehlerverzeichnisNummerOrUndefinedById:
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
   }),

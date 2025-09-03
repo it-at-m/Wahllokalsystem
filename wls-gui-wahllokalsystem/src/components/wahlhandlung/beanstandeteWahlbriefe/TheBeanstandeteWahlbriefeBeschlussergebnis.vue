@@ -6,7 +6,7 @@
           <tr>
             <th />
             <th
-              v-for="wahl in wahlen"
+              v-for="wahl in wahlenState.wahlen"
               :key="wahl.wahlID"
               class="font-weight-bold text-center"
             >
@@ -70,7 +70,7 @@ import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beansta
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const {
-  wahlen,
+  wahlenState,
   summeGueltigerWahlbriefe,
   summeUngueltigerWahlbriefe,
   summenZurueckweisungsgruende,

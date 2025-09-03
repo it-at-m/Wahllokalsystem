@@ -24,7 +24,7 @@
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <b>{{
-              getWahlNameOrBlankStringById(
+              wahlenActions.getWahlNameOrBlankStringById(
                 stimmabgabevermerk.wahldaten[0].wahlID
               )
             }}</b>
@@ -120,7 +120,7 @@ const {
 } = storeToRefs(useStimmabgabevermerkeStore());
 const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =
   useStimmabgabevermerkeStore();
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 onMounted(() => {
   rowSize.value = lowestNumberOfRowsOverAllWahldaten.value + 1;

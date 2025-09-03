@@ -46,7 +46,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 
-const { wahlen } = storeToRefs(useWahlenStore());
+const { wahlenState } = storeToRefs(useWahlenStore());
 const { briefwahlVorbereitungActions } = useWahlbezirkStore();
 const { briefwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
@@ -58,7 +58,7 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 const checkboxLabelText = computed(() => {
-  if (wahlen.value && wahlen.value?.length > 1) {
+  if (wahlenState.value.wahlen && wahlenState.value.wahlen?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }
   return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";

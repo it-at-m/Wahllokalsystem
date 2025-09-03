@@ -14,7 +14,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
-  const { getWahlOrUndefinedById, getWaehlerverzeichnisNummerOrUndefinedById } =
+  const { wahlenActions, getWaehlerverzeichnisNummerOrUndefinedById } =
     useWahlenStore();
   const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
@@ -49,7 +49,7 @@ export function useTaskListService() {
   function _createTaskFactoryData() {
     const extendedWahlMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
-        const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
+        const wahl = wahlenActions.getWahlOrUndefinedById(wahlMetadata.wahlID);
         const waehlerverzeichnisNummer =
           getWaehlerverzeichnisNummerOrUndefinedById(wahlMetadata.wahlID);
         if (!wahl || !waehlerverzeichnisNummer) {

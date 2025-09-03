@@ -39,7 +39,7 @@ const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
-const { initWahlen } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 const { initBeanstandeteWahlbriefe } = useWahlenStore();
 
@@ -51,7 +51,7 @@ const { setupIndexDB } = useIndexDB();
 onMounted(async () => {
   try {
     await loadUser();
-    await initWahlen();
+    await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
     await loadEreignisse();

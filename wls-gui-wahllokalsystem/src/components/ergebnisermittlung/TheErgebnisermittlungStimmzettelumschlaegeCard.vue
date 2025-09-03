@@ -48,10 +48,10 @@ const props = defineProps<{
   useTime?: boolean;
 }>();
 
-const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();
+const { wahlenActions, saveStimmzettelumschlaege } = useWahlenStore();
 const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
 
-const wahl = computed(() => getWahlOrUndefinedById(props.wahlId));
+const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 

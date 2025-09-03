@@ -471,6 +471,11 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
             .build(),
         ];
 
+        const deleteBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+          useWahlenStore().beanstandeteWahlbriefeActions,
+          "deleteBeanstandeterWahlbriefEntry"
+        );
+
         wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
             plugins: [pinia, vuetify],
@@ -483,9 +488,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         );
         await deleteButton.trigger("click");
 
-        expect(
-          wahlenStore.deleteBeanstandeterWahlbriefEntry
-        ).toHaveBeenCalled();
+        expect(deleteBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
       });
     });
   });

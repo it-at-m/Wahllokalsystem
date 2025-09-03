@@ -148,7 +148,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       });
 
       const wahlenStore = useWahlenStore();
-      wahlenStore.isBeanstandeteWahlbriefeSaving = true;
+      wahlenStore.beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeSaving = true;
 
       await nextTick();
 
@@ -204,6 +204,11 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
+      const addBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+        useWahlenStore().beanstandeteWahlbriefeActions,
+        "addBeanstandeterWahlbriefEntry"
+      );
+
       wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
         global: {
           plugins: [pinia, vuetify],
@@ -215,7 +220,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       );
       await addRowButton.trigger("click");
 
-      expect(wahlenStore.addBeanstandeterWahlbriefEntry).toHaveBeenCalled();
+      expect(addBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
     });
   });
 });

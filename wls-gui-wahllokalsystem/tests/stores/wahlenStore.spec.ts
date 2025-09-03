@@ -257,7 +257,7 @@ describe("wahlenStore.ts", () => {
         unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
       ).toStrictEqual([]);
 
-      await unitUnderTest.initBeanstandeteWahlbriefe();
+      await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
 
       expect(
         unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
@@ -267,7 +267,7 @@ describe("wahlenStore.ts", () => {
     it("should_notCallService_when_noWahlenGiven", async () => {
       unitUnderTest.wahlenState.wahlen = [];
 
-      await unitUnderTest.initBeanstandeteWahlbriefe();
+      await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
 
       expect(mockDefinitions.getBeanstandeteWahlbriefe).not.toHaveBeenCalled();
     });
@@ -295,7 +295,7 @@ describe("wahlenStore.ts", () => {
         unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
 
-      unitUnderTest.addBeanstandeterWahlbriefEntry();
+      unitUnderTest.beanstandeteWahlbriefeActions.addBeanstandeterWahlbriefEntry();
 
       expect(
         unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
@@ -328,7 +328,9 @@ describe("wahlenStore.ts", () => {
         unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", "ZUGELASSEN"]);
 
-      unitUnderTest.deleteBeanstandeterWahlbriefEntry(1);
+      unitUnderTest.beanstandeteWahlbriefeActions.deleteBeanstandeterWahlbriefEntry(
+        1
+      );
 
       expect(
         unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
@@ -365,7 +367,7 @@ describe("wahlenStore.ts", () => {
         Promise.resolve()
       );
 
-      await unitUnderTest.saveBeanstandeteWahlbriefe();
+      await unitUnderTest.beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
 
       expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalledWith(
         mockedWahlenGroupedByWvzNr,
@@ -391,17 +393,24 @@ describe("wahlenStore.ts", () => {
           .build(),
       ];
 
-      expect(unitUnderTest.isBeanstandeteWahlbriefeSaving).toBe(false);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeSaving
+      ).toBe(false);
 
-      const promise = unitUnderTest.saveBeanstandeteWahlbriefe();
+      const promise =
+        unitUnderTest.beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.isBeanstandeteWahlbriefeSaving).toBe(true);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeSaving
+      ).toBe(true);
 
       const timeout = 100;
       vi.advanceTimersByTime(timeout);
       await promise;
 
-      expect(unitUnderTest.isBeanstandeteWahlbriefeSaving).toBe(false);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeSaving
+      ).toBe(false);
     });
   });
 
@@ -410,13 +419,17 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen =
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([0]);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()
+      ).toStrictEqual([0]);
     });
 
     it("should_calculateSummeGueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.summeGueltigerWahlbriefe).toStrictEqual([1, 2]);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()
+      ).toStrictEqual([1, 2]);
     });
   });
 
@@ -425,13 +438,17 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen =
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0]);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe()
+      ).toStrictEqual([0]);
     });
 
     it("should_calculateSummeUngueltigerWahlbriefe_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
-      expect(unitUnderTest.summeUngueltigerWahlbriefe).toStrictEqual([0, 1]);
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe()
+      ).toStrictEqual([0, 1]);
     });
   });
 
@@ -440,7 +457,9 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen =
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
-      unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
+      const summen =
+        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende();
+      summen.forEach((row) => {
         expect(row.summen).toStrictEqual([0]);
       });
     });
@@ -448,7 +467,9 @@ describe("wahlenStore.ts", () => {
     it("should_calculateSummenZurueckweisungsgruende_when_BeanstandeteWahlbriefeIsNotEmpty", async () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
-      unitUnderTest.summenZurueckweisungsgruende.forEach((row) => {
+      const summen =
+        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende();
+      summen.forEach((row) => {
         if (row.grund !== "GEGENSTAND_IM_UMSCHLAG") {
           expect(row.summen).toStrictEqual([0, 0]);
         } else {

@@ -182,15 +182,18 @@ describe("App", () => {
     });
 
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
-      const { initBeanstandeteWahlbriefe } = useWahlenStore();
       const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+      const initBeanstandeteWahlbriefeSpy = vi.spyOn(
+        useWahlenStore().beanstandeteWahlbriefeActions,
+        "initBeanstandeteWahlbriefe"
+      );
 
       // @ts-expect-error: cannot set readonly
       waehlerverzeichnisNummern.value = [1];
 
       await flushPromises();
 
-      expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
+      expect(initBeanstandeteWahlbriefeSpy).toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

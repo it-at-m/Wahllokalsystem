@@ -31,7 +31,12 @@ describe("wahlvorstandMapper.ts", () => {
       const result = toModel(dtoToMap);
 
       const expectedResult: Wahlvorstand = {
-        wahlvorstandsmitglieder: getWahlvorstandmitglieder(),
+        wahlvorstandsmitglieder: getWahlvorstandmitglieder().map(
+          (mitglied) => ({
+            ...mitglied,
+            anwesend: false,
+          })
+        ),
       };
       expect(result).toStrictEqual(expectedResult);
     });

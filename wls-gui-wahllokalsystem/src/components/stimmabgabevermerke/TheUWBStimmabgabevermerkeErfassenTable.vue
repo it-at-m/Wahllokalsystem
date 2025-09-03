@@ -46,7 +46,7 @@
           <td>Nr. 1</td>
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-text-field
               disabled
@@ -61,7 +61,7 @@
           <td>Nr. {{ number + 1 }}</td>
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-number-input
               v-model="

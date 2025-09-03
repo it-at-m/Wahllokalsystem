@@ -21,7 +21,7 @@
           <td />
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <b>{{
               getWahlNameOrBlankStringById(

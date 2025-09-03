@@ -50,7 +50,9 @@ vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
 }));
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    wahlen: ref(mockDefinitions.mockedWahlen),
+    wahlenState: ref({
+      wahlen: mockDefinitions.mockedWahlen,
+    }),
     waehlerverzeichnisActions: {
       getWaehlerverzeichnisNummerOrUndefinedById:
         mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,

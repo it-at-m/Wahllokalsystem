@@ -320,18 +320,21 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 
   /* --- watcher --- */
-  watch(wahlenState, () => {
-    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
-      wahlenState.value.wahlen?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-    briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
-      wahlenState.value.wahlen?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-  });
+  watch(
+    () => wahlenState.value.wahlen,
+    () => {
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+        wahlenState.value.wahlen?.map((wahl) => ({
+          wahlID: wahl.wahlID,
+          anzahl: null,
+        })) || [];
+      briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
+        wahlenState.value.wahlen?.map((wahl) => ({
+          wahlID: wahl.wahlID,
+          anzahl: null,
+        })) || [];
+    }
+  );
 
   return {
     eroeffnungsuhrzeitState,

@@ -31,8 +31,6 @@ export function useTaskListService() {
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
   const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
-  const { createTasks: createStimmabgabevermerkeTasks } =
-    useStimmabgabevermerkeTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();

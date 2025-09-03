@@ -4,9 +4,11 @@ import axios from "axios";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
 const { getDirtyItems } = useIndexDB();
+const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
   async function getSyncTasks() {
@@ -29,19 +31,7 @@ export function useDataSyncer() {
     a: { item: IndexDBValue },
     b: { item: IndexDBValue }
   ) {
-    if (a.item.timestamp === undefined && b.item.timestamp === undefined) {
-      return 0;
-    }
-
-    if (a.item.timestamp === undefined) {
-      return 1;
-    }
-
-    if (b.item.timestamp === undefined) {
-      return -1;
-    }
-
-    return a.item.timestamp - b.item.timestamp;
+    return compareByTimestamp(a.item, b.item);
   }
 
   return {

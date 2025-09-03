@@ -26,11 +26,19 @@ const stopBroadcastMessageIntervalMock = vi.fn();
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
+  postBeanstandeteWahlbriefe: vi.fn(),
+  getBeanstandeteWahlbriefe: vi.fn(),
 }));
 
 vi.mock("@/composables/wahl/wahlService.ts", () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
+  }),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
   }),
 }));
 vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({

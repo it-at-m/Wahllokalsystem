@@ -2,6 +2,7 @@ import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaD
 
 import { storeToRefs } from "pinia";
 
+import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
@@ -29,19 +30,22 @@ export function useTaskListService() {
     useWahlvorschlaegeTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
+  const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
+  const { createTasks: createStimmabgabevermerkeTasks } =
+    useStimmabgabevermerkeTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
-    const tasks = [];
-    tasks.push(...createKopfdatenTasks(taskFactoryData));
-    tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
-    tasks.push(...createWahlvorstandTasks(taskFactoryData));
-    tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
-    tasks.push(...createWahlscheineTasks(taskFactoryData));
-    tasks.push(...createStimmabgabevermerkeTasks(taskFactoryData));
-    tasks.push(...createWahlvorschlaegeTasks(taskFactoryData));
-
-    return tasks;
+    return [
+      ...createKopfdatenTasks(taskFactoryData),
+      ...createUngueltigeWahlscheineTasks(taskFactoryData),
+      ...createWahlvorstandTasks(taskFactoryData),
+      ...createKonfigurationsparameterTasks(taskFactoryData),
+      ...createWahlscheineTasks(taskFactoryData),
+      ...createWahlvorschlaegeTasks(taskFactoryData),
+      ...createErgebnisseTasks(taskFactoryData),
+      ...createStimmabgabevermerkeTasks(taskFactoryData),
+    ];
   }
 
   function _createTaskFactoryData() {

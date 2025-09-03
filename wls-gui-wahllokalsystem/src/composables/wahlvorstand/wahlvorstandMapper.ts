@@ -7,7 +7,10 @@ import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { WahlvorstandsmitgliedDTOFunktionEnum } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
+
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorstandMapper() {
   function toModel(wahlvorstand: WahlvorstandDTO): Wahlvorstand {
@@ -30,7 +33,7 @@ export function useWahlvorstandMapper() {
       );
 
     return {
-      anwesenheitBeginn: datetime.toISOString(),
+      anwesenheitBeginn: toYyyyMmDdWithTimeWithoutTimezoneOffset(datetime),
       wahlvorstandsmitglieder: wahlvorstandsmitgliederAsDTO,
     };
   }

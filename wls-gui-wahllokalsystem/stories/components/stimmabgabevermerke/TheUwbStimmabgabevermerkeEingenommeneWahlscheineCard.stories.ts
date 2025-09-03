@@ -1,3 +1,4 @@
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";

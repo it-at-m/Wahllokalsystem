@@ -15,14 +15,13 @@
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
-    <v-divider />
     <v-table>
       <thead>
         <tr>
           <td />
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <b>{{
               getWahlNameOrBlankStringById(
@@ -47,7 +46,7 @@
           <td>Nr. 1</td>
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-text-field
               disabled
@@ -62,7 +61,7 @@
           <td>Nr. {{ number + 1 }}</td>
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <template
               v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
@@ -87,8 +86,10 @@
         <tr>
           <td><b>Gesamt</b></td>
           <td
-            v-for="totalCount in stimmabgabevermerkeTableTotalEachWahldaten"
-            :key="totalCount"
+            v-for="(
+              totalCount, index
+            ) in stimmabgabevermerkeTableTotalEachWahldaten"
+            :key="`column-${index}-` + totalCount"
           >
             <b>{{ totalCount }}</b>
           </td>

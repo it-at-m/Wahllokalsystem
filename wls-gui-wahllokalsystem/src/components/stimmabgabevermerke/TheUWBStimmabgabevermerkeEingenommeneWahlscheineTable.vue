@@ -7,7 +7,7 @@
       <tr>
         <th
           v-for="stimmabgabevermerk in stimmabgabevermerke"
-          :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+          :key="stimmabgabevermerk.wahldaten[0].wahlID"
           class="pl-0 font-weight-bold"
         >
           {{
@@ -20,7 +20,7 @@
       <tr>
         <td
           v-for="stimmabgabevermerk in stimmabgabevermerke"
-          :key="stimmabgabevermerk.waehlerverzeichnisNummer"
+          :key="stimmabgabevermerk.wahldaten[0].wahlID"
           class="pl-0"
         >
           <v-number-input

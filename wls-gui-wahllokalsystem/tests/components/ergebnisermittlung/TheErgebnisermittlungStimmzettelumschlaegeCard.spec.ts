@@ -176,7 +176,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .stimmzettelumschlaege({ anzahlWaehler: 33 })
           .build(),
       ];
-      wahlenStore.isStimmzettelumschlaegeSaving = true;
+      wahlenStore.stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving = true;
 
       const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
         global: {

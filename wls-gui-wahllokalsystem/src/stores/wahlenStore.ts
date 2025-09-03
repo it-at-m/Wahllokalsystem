@@ -179,7 +179,32 @@ export const useWahlenStore = defineStore(storeID, () => {
     },
   };
 
-  const isStimmzettelumschlaegeSaving = ref<boolean>(false);
+  /* --- stimmzettelumschlaege --- */
+  const stimmzettelumschlaegeState: Ref<{
+    isStimmzettelumschlaegeSaving: boolean;
+  }> = ref({
+    isStimmzettelumschlaegeSaving: false,
+  });
+
+  const stimmzettelumschlaegeActions = {
+    saveStimmzettelumschlaege: async function saveStimmzettelumschlaege(
+      wahlID: string
+    ) {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      if (wahl) {
+        stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = true;
+        try {
+          await ergebnisermittlungService.saveStimmzettelumschlaege(
+            wahl.wahlID,
+            currentUserWahlbezirkID.value,
+            wahl.stimmzettelumschlaege
+          );
+        } finally {
+          stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;
+        }
+      }
+    },
+  };
 
   const waehlerverzeichnisNummern = computed<number[]>(() => {
     if (!wahlenState.value.wahlen) return [];
@@ -195,22 +220,6 @@ export const useWahlenStore = defineStore(storeID, () => {
   function getWaehlerverzeichnisNummerOrUndefinedById(wahlID: string) {
     const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
     return wahl ? wahl.waehlerverzeichnisNummer : undefined;
-  }
-
-  async function saveStimmzettelumschlaege(wahlID: string) {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-    if (wahl) {
-      isStimmzettelumschlaegeSaving.value = true;
-      try {
-        await ergebnisermittlungService.saveStimmzettelumschlaege(
-          wahl.wahlID,
-          currentUserWahlbezirkID.value,
-          wahl.stimmzettelumschlaege
-        );
-      } finally {
-        isStimmzettelumschlaegeSaving.value = false;
-      }
-    }
   }
 
   function _mapWahlMetaDataToWahlNummer() {
@@ -245,10 +254,10 @@ export const useWahlenStore = defineStore(storeID, () => {
     beanstandeteWahlbriefeState,
     beanstandeteWahlbriefeGetter,
     beanstandeteWahlbriefeActions,
+    stimmzettelumschlaegeState,
+    stimmzettelumschlaegeActions,
     getWaehlerverzeichnisNummerOrUndefinedById,
     waehlerverzeichnisNummern,
-    saveStimmzettelumschlaege,
-    isStimmzettelumschlaegeSaving,
   };
 });
 

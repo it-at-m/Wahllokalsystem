@@ -75,8 +75,10 @@
         <tr>
           <td><b>Gesamt</b></td>
           <td
-            v-for="totalCount in stimmabgabevermerkeTableTotalEachWahldaten"
-            :key="totalCount"
+            v-for="(
+              totalCount, index
+            ) in stimmabgabevermerkeTableTotalEachWahldaten"
+            :key="`column-${index}-` + totalCount"
           >
             <b>{{ totalCount }}</b>
           </td>

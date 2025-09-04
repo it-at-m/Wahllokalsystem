@@ -10,9 +10,9 @@
       :title="title"
       :to="route"
     />
-    <the-o-b-w-scores-list-group />
-    <the-s-r-w-scores-list-group />
-    <the-b-a-w-scores-list-group />
+    <the-o-b-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-s-r-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-b-a-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
   </v-list-group>
 </template>
 
@@ -35,4 +35,9 @@ const title = computed(() =>
 const route = computed(() =>
   isBWB.value ? "Wahlscheine" : ROUTE_STIMMABGABEVERMERKE
 );
+const titleStimmenZaehlen = computed(() => {
+  return isBWB.value
+    ? "Zählen der Stimmzettelumschläge"
+    : "Zählen der Stimmzettel";
+});
 </script>

@@ -6,9 +6,8 @@ const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
   const {
-    time,
-    getDateFromTimeString,
-    toGermanDateFormat,
+    toHhMmSs,
+    toGermanDate,
     toGermanDateWithLongMonth,
     toYyyyMmDd,
     toYyyyMmDdWithTimeWithoutTimezoneOffset,
@@ -24,15 +23,15 @@ describe("dateTimeFormatter.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("time", () => {
+  describe("toHhMmSs", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {
-      const result = time(null);
+      const result = toHhMmSs(null);
 
       expect(result).toStrictEqual("");
     });
 
     it("should_returnEmptyString_when_parameterIsUndefined", () => {
-      const result = time(undefined);
+      const result = toHhMmSs(undefined);
 
       expect(result).toStrictEqual("");
     });
@@ -40,7 +39,7 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithoutPadding_when_eachTimePartHasTwoDigits", () => {
       const dateWithTwoDigitTimeParts = new Date("2025-02-18T14:10:23");
 
-      const result = time(dateWithTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithTwoDigitTimeParts);
 
       expect(result).toStrictEqual("14:10:23");
     });
@@ -48,43 +47,13 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithPaddingZeros_when_timePartHasNotTwoDigits", () => {
       const dateWithoutTwoDigitTimeParts = new Date("2025-02-18T04:00:03");
 
-      const result = time(dateWithoutTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithoutTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
     });
   });
 
-  describe("getDateFromTimeString", () => {
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithGivenTime_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input).toString();
-
-        expect(result).toContain(input);
-      }
-    );
-
-    it.each(["text", "26:12", "11:78", "23:45:67", "", " "])(
-      "should_returnInvalidDate_when_inputStringIsInvalidValue'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result).toBeInstanceOf(Date);
-        expect(isNaN(result.getTime())).toBe(true);
-      }
-    );
-
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result.getMilliseconds()).toBe(0);
-      }
-    );
-  });
-
-  describe("toGermanDateFormat", () => {
+  describe("toGermanDate", () => {
     it.each([
       "2026-01-01",
       "2026/01/01",
@@ -94,7 +63,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+        expect(toGermanDate(datestring)).toBe("01.01.2026");
       }
     );
 
@@ -108,7 +77,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });
@@ -137,7 +106,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });

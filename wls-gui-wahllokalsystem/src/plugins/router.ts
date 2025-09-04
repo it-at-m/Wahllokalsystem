@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import {
   EXAMPLE_ROUTES_NOTFOUND,
+  ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
@@ -16,6 +17,7 @@ import {
 } from "@/constants";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -96,6 +98,11 @@ const routes = [
     name: ROUTE_STIMMABGABEVERMERKE,
     component: UWBStimmabgabevermerkeView,
     beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+  },
+  {
+    path: "/auszaehlungStimmzettel/:wahlId",
+    name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+    component: ErfassungStimmzettelView,
   },
   {
     path: "/:catchAll(.*)*",

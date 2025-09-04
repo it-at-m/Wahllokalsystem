@@ -11,7 +11,8 @@ import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
 
 const { dtoToModel } = useBroadcastMapper();
 const { addNotification } = useUserNotificationService();
-const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+  useCommonApiUtils();
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(
@@ -24,7 +25,10 @@ export function useBroadcastService() {
     wahlbezirkID: string
   ): Promise<BroadcastMessage | null> {
     try {
-      const response = await broadcastCA.getMessage(wahlbezirkID);
+      const response = await broadcastCA.getMessage(
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
 
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? dtoToModel(responseData) : null;
@@ -39,7 +43,10 @@ export function useBroadcastService() {
 
   async function deleteMessage(messageId: string) {
     try {
-      await broadcastCA.deleteMessage(messageId);
+      await broadcastCA.deleteMessage(
+        messageId,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
     } catch {
       addNotification(
         "Löschen der Broadcastnachricht ist fehlgeschlagen",

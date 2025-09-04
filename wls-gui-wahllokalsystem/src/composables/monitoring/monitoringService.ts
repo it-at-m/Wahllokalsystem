@@ -11,7 +11,8 @@ import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligu
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 
 const { toDto, toModel } = useWahlbeteiligungMapper();
-const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+  useCommonApiUtils();
 const { logDebug } = useLogging("monitoringService");
 
 export function useMonitoringService() {
@@ -59,7 +60,10 @@ export function useMonitoringService() {
 
   async function postLastSeen(wahlbezirkID: string) {
     try {
-      await wahllokalZustandControllerApi.postLastSeen(wahlbezirkID);
+      await wahllokalZustandControllerApi.postLastSeen(
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
     } catch {
       throw new Error("postLastSeen failed");
     }

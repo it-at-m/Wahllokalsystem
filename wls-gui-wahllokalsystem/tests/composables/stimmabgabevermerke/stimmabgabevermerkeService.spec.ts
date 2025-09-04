@@ -8,11 +8,14 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmabgabevermerke: vi.fn(),
   toModel: vi.fn(),
   addNotification: vi.fn(),
+  postStimmabgabevermerke: vi.fn(),
+  toDto: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
     getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
+    postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
   })),
   StimmzettelDTOStimmzettelartEnum: vi.fn(),
   Configuration: vi.fn(),
@@ -22,6 +25,7 @@ vi.mock(
   () => ({
     useStimmabgabevermerkeMapper: () => ({
       toModel: mockDefinitions.toModel,
+      toDto: mockDefinitions.toDto,
     }),
   })
 );
@@ -34,11 +38,15 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();
-const { createStimmabgabevermerke, createStimmabgabevermerkeDTO } =
-  useStimmabgabevermerkeTestDataFactory();
+const {
+  createStimmabgabevermerke,
+  createStimmabgabevermerkeDTO,
+  prepareStimmabgabevermerkeDTO,
+} = useStimmabgabevermerkeTestDataFactory();
 
-describe("stimmabgabevermerkeService.ts", () => {
-  const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
+describe("stimmabgabevermekerService.ts", () => {
+  const { getStimmabgabevermerke, postStimmabgabevermerke } =
+    useStimmabgabevermerkeService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -95,6 +103,58 @@ describe("stimmabgabevermerkeService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
+    });
+  });
+
+  describe("postStimmabgabevermerke", () => {
+    it("should_sendStimmabgabevermerke_when_noErrorAppear", () => {
+      const stimmabgabevermerk = createStimmabgabevermerke();
+      const stimmabgabevermerkeDTO = prepareStimmabgabevermerkeDTO()
+        .wahlbezirkID(stimmabgabevermerk.wahlbezirkID)
+        .waehlerverzeichnisNummer(stimmabgabevermerk.waehlerverzeichnisNummer)
+        .build();
+
+      mockDefinitions.postStimmabgabevermerke.mockReturnValue(
+        Promise.resolve({ status: 200 })
+      );
+
+      mockDefinitions.toDto.mockReturnValue(stimmabgabevermerkeDTO);
+
+      postStimmabgabevermerke(
+        stimmabgabevermerk.wahlbezirkID,
+        stimmabgabevermerk.waehlerverzeichnisNummer,
+        stimmabgabevermerk
+      );
+
+      expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
+        stimmabgabevermerk.wahlbezirkID,
+        stimmabgabevermerk.waehlerverzeichnisNummer,
+        stimmabgabevermerkeDTO
+      );
+    });
+
+    it("should_throwError_when_postStimmabgabevermerkeFailed", async () => {
+      const stimmabgabevermerk = createStimmabgabevermerke();
+
+      mockDefinitions.postStimmabgabevermerke.mockRejectedValue(
+        new Error("api called failed")
+      );
+
+      await expect(
+        postStimmabgabevermerke(
+          stimmabgabevermerk.wahlbezirkID,
+          stimmabgabevermerk.waehlerverzeichnisNummer,
+          stimmabgabevermerk
+        )
+      ).rejects.toThrow("Post Stimmabgabevermerke Failed");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        1
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
   });
 });

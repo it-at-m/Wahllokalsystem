@@ -27,7 +27,16 @@ export function useStimmabgabevermerkeMapper() {
     };
   }
 
-  function _toWahldatenModel(dto: Set<WahldatenDTO>): Wahldaten[] {
+  function toDto(model: Stimmabgabevermerke): StimmabgabevermerkeDTO {
+    return {
+      anzahlBlaetter: model.anzahlBlaetter,
+      waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
+      wahlbezirkID: model.wahlbezirkID,
+      wahldaten: _toWahldatenDTO(model.wahldaten),
+    };
+  }
+
+  function _toWahldatenModel(dto: WahldatenDTO[]): Wahldaten[] {
     const arrayOfWahldaten: Wahldaten[] = [];
     dto.forEach((wahldatenDto) => {
       arrayOfWahldaten.push({
@@ -44,9 +53,24 @@ export function useStimmabgabevermerkeMapper() {
     return arrayOfWahldaten;
   }
 
-  function _toEingenommeneWahlscheineModel(
-    dto: Set<EingenommenerWahlscheinDTO>
-  ) {
+  function _toWahldatenDTO(model: Wahldaten[]): WahldatenDTO[] {
+    const arrayOfWahldatenDTO: WahldatenDTO[] = [];
+
+    model.forEach((wahldaten) => {
+      arrayOfWahldatenDTO.push({
+        wahlbezirkID: wahldaten.wahlbezirkID,
+        eingenommeneWahlscheine: _toEingenommeneWahlscheinDTO(
+          wahldaten.eingenommeneWahlscheine
+        ),
+        vermerke: _toVermerkDTO(wahldaten.vermerke),
+        waehlerverzeichnisNummer: wahldaten.waehlerverzeichnisNummer,
+        wahlID: wahldaten.wahlID,
+      });
+    });
+    return arrayOfWahldatenDTO;
+  }
+
+  function _toEingenommeneWahlscheineModel(dto: EingenommenerWahlscheinDTO[]) {
     const resultMap = new Map<
       EingenommenerWahlscheinStimmzettelartEnum,
       number
@@ -61,7 +85,22 @@ export function useStimmabgabevermerkeMapper() {
     return resultMap;
   }
 
-  function _toVermerkModel(dto: Set<VermerkDTO>): Vermerke[] {
+  function _toEingenommeneWahlscheinDTO(
+    model: Map<EingenommenerWahlscheinStimmzettelartEnum, number>
+  ): EingenommenerWahlscheinDTO[] {
+    const dtoArray: EingenommenerWahlscheinDTO[] = [];
+
+    for (const [key, value] of model.entries()) {
+      dtoArray.push({
+        stimmzettelart: _toEingenommenerWahlscheinDTOStimmzettelartEnum(key),
+        anzahl: value,
+      });
+    }
+
+    return dtoArray;
+  }
+
+  function _toVermerkModel(dto: VermerkDTO[]): Vermerke[] {
     const vermerke: Vermerke[] = [];
     dto.forEach((vermerkDto) => {
       vermerke.push({
@@ -72,7 +111,20 @@ export function useStimmabgabevermerkeMapper() {
     return vermerke.sort((a, b) => a.blattnummer - b.blattnummer);
   }
 
-  function _toStimmzettelModel(dto: Set<StimmzettelDTO>): Stimmzettel[] {
+  function _toVermerkDTO(model: Vermerke[]): VermerkDTO[] {
+    const vermerkDTOArray: VermerkDTO[] = [];
+
+    model.forEach((vermerk) => {
+      vermerkDTOArray.push({
+        blattnummer: vermerk.blattnummer,
+        stimmzettel: _toStimmzettelDTO(vermerk.stimmzettel),
+      });
+    });
+
+    return vermerkDTOArray;
+  }
+
+  function _toStimmzettelModel(dto: StimmzettelDTO[]): Stimmzettel[] {
     const stimmzettel: Stimmzettel[] = [];
     dto.forEach((stimmzettelDto) => {
       stimmzettel.push({
@@ -83,6 +135,33 @@ export function useStimmabgabevermerkeMapper() {
       });
     });
     return stimmzettel;
+  }
+
+  function _toStimmzettelDTO(model: Stimmzettel[]): StimmzettelDTO[] {
+    const stimmzettelDTOArray: StimmzettelDTO[] = [];
+    model.forEach((stimmzettel) => {
+      stimmzettelDTOArray.push({
+        anzahl: stimmzettel.anzahl ?? 0,
+        stimmzettelart: _toStimmzettelStimmzettelartDTOEnum(
+          stimmzettel.stimmzettelart
+        ),
+      });
+    });
+
+    return stimmzettelDTOArray;
+  }
+
+  function _toEingenommenerWahlscheinDTOStimmzettelartEnum(
+    value: EingenommenerWahlscheinStimmzettelartEnum
+  ): EingenommenerWahlscheinDTOStimmzettelartEnum {
+    switch (value) {
+      case EingenommenerWahlscheinStimmzettelartEnum.Gross:
+        return EingenommenerWahlscheinDTOStimmzettelartEnum.Gross;
+      case EingenommenerWahlscheinStimmzettelartEnum.Klein:
+        return EingenommenerWahlscheinDTOStimmzettelartEnum.Klein;
+      case EingenommenerWahlscheinStimmzettelartEnum.Beide:
+        return EingenommenerWahlscheinDTOStimmzettelartEnum.Beide;
+    }
   }
 
   function _toEingenommenerWahlscheinStimmzettelartEnum(
@@ -111,7 +190,21 @@ export function useStimmabgabevermerkeMapper() {
     }
   }
 
+  function _toStimmzettelStimmzettelartDTOEnum(
+    value: StimmzettelStimmzettelartEnum
+  ): StimmzettelDTOStimmzettelartEnum {
+    switch (value) {
+      case StimmzettelStimmzettelartEnum.Gross:
+        return StimmzettelDTOStimmzettelartEnum.Gross;
+      case StimmzettelStimmzettelartEnum.Klein:
+        return StimmzettelDTOStimmzettelartEnum.Klein;
+      case StimmzettelStimmzettelartEnum.Beide:
+        return StimmzettelDTOStimmzettelartEnum.Beide;
+    }
+  }
+
   return {
     toModel,
+    toDto,
   };
 }

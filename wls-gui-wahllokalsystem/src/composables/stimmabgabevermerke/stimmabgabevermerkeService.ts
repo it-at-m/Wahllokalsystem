@@ -1,16 +1,21 @@
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
+
 import {
   Configuration,
   StimmabgabevermerkeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
-const { toModel } = useStimmabgabevermerkeMapper();
+const { toModel, toDto } = useStimmabgabevermerkeMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+
+const { logDebug } = useLogging("stimmabgabevermerkeService");
 
 export function useStimmabgabevermerkeService() {
   const stimmabgabevermerkeControllerApi = new StimmabgabevermerkeControllerApi(
@@ -43,5 +48,24 @@ export function useStimmabgabevermerkeService() {
     }
   }
 
-  return { getStimmabgabevermerke };
+  async function postStimmabgabevermerke(
+    wahlbezirkID: string,
+    waehlerverzeichnisNummer: number,
+    stimmabgabevermerke: Stimmabgabevermerke
+  ) {
+    try {
+      await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        toDto(stimmabgabevermerke)
+      );
+    } catch (e) {
+      const errorMessage = "Fehler beim Speichern der Stimmabgabevermerke.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
+      throw new Error("Post Stimmabgabevermerke Failed");
+    }
+  }
+
+  return { getStimmabgabevermerke, postStimmabgabevermerke };
 }

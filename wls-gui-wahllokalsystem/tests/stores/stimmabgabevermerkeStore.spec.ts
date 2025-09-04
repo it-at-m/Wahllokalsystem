@@ -5,6 +5,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  postStimmabgabevermerke: vi.fn(),
+}));
+
+vi.mock(
+  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
+  () => ({
+    useStimmabgabevermerkeService: () => ({
+      postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
+    }),
+  })
+);
+
 describe("stimmabgabevermerkeStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useStimmabgabevermerkeStore>;
 
@@ -248,6 +261,26 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       expect(result.get(wahldatenOne.wahlID)).toStrictEqual(80);
       expect(result.get(wahldatenTwo.wahlID)).toStrictEqual(85);
+    });
+  });
+
+  describe("saveStimmabgabevermerke", () => {
+    it("should_saveStimmabgabevermerke_when_called", async () => {
+      const stimmabgabevermerke = createStimmabgabevermerke();
+
+      mockDefinitions.postStimmabgabevermerke.mockReturnValue(
+        Promise.resolve(null)
+      );
+
+      unitUnderTest.stimmabgabevermerke = [stimmabgabevermerke];
+
+      await unitUnderTest.saveStimmabgabevermerke();
+
+      expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
+        stimmabgabevermerke.wahlbezirkID,
+        stimmabgabevermerke.waehlerverzeichnisNummer,
+        stimmabgabevermerke
+      );
     });
   });
 });

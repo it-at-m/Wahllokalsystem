@@ -464,10 +464,10 @@ export interface StimmabgabevermerkeDTO {
     'anzahlBlaetter': number;
     /**
      * 
-     * @type {Set<WahldatenDTO>}
+     * @type {Array<WahldatenDTO>}
      * @memberof StimmabgabevermerkeDTO
      */
-    'wahldaten': Set<WahldatenDTO>;
+    'wahldaten': Array<WahldatenDTO>;
 }
 /**
  * 
@@ -542,10 +542,10 @@ export interface VermerkDTO {
     'blattnummer': number;
     /**
      * 
-     * @type {Set<StimmzettelDTO>}
+     * @type {Array<StimmzettelDTO>}
      * @memberof VermerkDTO
      */
-    'stimmzettel': Set<StimmzettelDTO>;
+    'stimmzettel': Array<StimmzettelDTO>;
 }
 /**
  * 
@@ -573,16 +573,16 @@ export interface WahldatenDTO {
     'waehlerverzeichnisNummer': number;
     /**
      * 
-     * @type {Set<VermerkDTO>}
+     * @type {Array<VermerkDTO>}
      * @memberof WahldatenDTO
      */
-    'vermerke': Set<VermerkDTO>;
+    'vermerke': Array<VermerkDTO>;
     /**
      * 
-     * @type {Set<EingenommenerWahlscheinDTO>}
+     * @type {Array<EingenommenerWahlscheinDTO>}
      * @memberof WahldatenDTO
      */
-    'eingenommeneWahlscheine': Set<EingenommenerWahlscheinDTO>;
+    'eingenommeneWahlscheine': Array<EingenommenerWahlscheinDTO>;
 }
 /**
  * 

@@ -63,13 +63,23 @@
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
-            <v-number-input
-              v-model="
-                stimmabgabevermerk.wahldaten[0].vermerke[number - 1]
-                  .stimmzettel[0].anzahl
-              "
-              :rules="[required]"
-            />
+            <template
+              v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
+                number - 1
+              ].stimmzettel"
+            >
+              <v-number-input
+                v-if="
+                  stimmzettel != null &&
+                  stimmzettel.stimmzettelart ==
+                    StimmzettelStimmzettelartEnum.Klein
+                "
+                :key="stimmzettel.stimmzettelart"
+                v-model="stimmzettel.anzahl"
+                max-width="15rem"
+                :rules="[required, minNumber(0), maxNumber(9999)]"
+              />
+            </template>
           </td>
         </tr>
         <tr>
@@ -110,6 +120,7 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 const { minNumber, maxNumber, required } = useRules();
 

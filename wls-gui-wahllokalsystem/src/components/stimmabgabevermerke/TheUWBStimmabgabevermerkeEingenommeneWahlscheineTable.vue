@@ -82,7 +82,7 @@ function setMapValue(
 <style scoped>
 thead tr td:first-child,
 tbody tr td:first-child {
-  width: 150px;
+  min-width: 150px;
 }
 
 .stimmabgabevermerke-table {
@@ -91,6 +91,6 @@ tbody tr td:first-child {
 }
 
 .stimmabgabevermerke-table .dynamic-column {
-  width: 500px;
+  min-width: 300px;
 }
 </style>

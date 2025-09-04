@@ -1,4 +1,5 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
+import type { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
@@ -189,6 +190,14 @@ export const useWahlenStore = defineStore(storeID, () => {
     return wahl ? wahl.wahltag : "";
   }
 
+  function getWahlIdOrUndefinedByWahlart(wahlart: WahlWahlartEnum) {
+    if (wahlen.value) {
+      const wahl = wahlen.value.find((wahl) => wahl.wahlart === wahlart);
+
+      return wahl ? wahl.wahlID : undefined;
+    }
+  }
+
   function _mapWahlMetaDataToWahlNummer() {
     if (wahlen.value && user.value?.wahlMetaData) {
       const wahlnummerMap = new Map(
@@ -222,6 +231,7 @@ export const useWahlenStore = defineStore(storeID, () => {
     getWahlNameOrBlankStringById,
     getWahlTagOrBlankStringById,
     getWahlOrUndefinedById,
+    getWahlIdOrUndefinedByWahlart,
     initWahlen,
     initBeanstandeteWahlbriefe,
     addBeanstandeterWahlbriefEntry,

@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
@@ -208,6 +209,51 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlen = null;
 
       const result = unitUnderTest.getWahlOrUndefinedById("testId");
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe("getWahlIdOrUndefinedByWahlart", () => {
+    it("should_getWahlId_when_calledWithWahlArt", () => {
+      const expectedWahlID = "wahlIdOBW";
+      const wahlOne = prepareWahl()
+        .wahlID(expectedWahlID)
+        .wahlart(WahlWahlartEnum.Obw)
+        .build();
+      const wahlTwo = prepareWahl()
+        .wahlID("wahlIdSRW")
+        .wahlart(WahlWahlartEnum.Srw)
+        .build();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+
+      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+        WahlWahlartEnum.Obw
+      );
+
+      expect(result).toBe(expectedWahlID);
+    });
+
+    it("should_getUndefined_when_calledWithWahlArtThatDoesNotExistInWahlen", () => {
+      const wahlOne = prepareWahl().wahlart(WahlWahlartEnum.Obw).build();
+      const wahlTwo = prepareWahl().wahlart(WahlWahlartEnum.Srw).build();
+
+      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+
+      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+        WahlWahlartEnum.Mbw
+      );
+
+      expect(result).toBeUndefined();
+    });
+
+    it("should_getUndefined_when_wahlenDoNotExist", () => {
+      unitUnderTest.wahlen = null;
+
+      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+        WahlWahlartEnum.Obw
+      );
 
       expect(result).toBeUndefined();
     });

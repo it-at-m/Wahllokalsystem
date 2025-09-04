@@ -59,6 +59,10 @@ export function useStimmabgabevermerkeService() {
         waehlerverzeichnisNummer,
         toDto(stimmabgabevermerke)
       );
+      addNotification(
+        `Stimmabgabevermerke erfolgreich gespeichert`,
+        UserNotificationCategoryEnum.SUCCESS
+      );
     } catch (e) {
       const errorMessage = "Fehler beim Speichern der Stimmabgabevermerke.";
       logDebug(errorMessage, e);

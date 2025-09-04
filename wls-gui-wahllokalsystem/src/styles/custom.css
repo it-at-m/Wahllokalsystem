@@ -1,9 +1,9 @@
 .stimmabgabevermerke-table {
     table-layout: fixed;
-    width: 1500px;
+    width: 100%;
 }
 
-.stimmabgabevermerke-table thead tr td:first-child {
+.stimmabgabevermerke-table thead tr .sav-first-column {
     min-width: 150px;
 }
 

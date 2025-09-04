@@ -4,7 +4,7 @@ import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import { useTaskManager } from "@/composables/common/taskManager.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 
 const { createTask, prepareTask } = useTasksTestDataFactory();
 

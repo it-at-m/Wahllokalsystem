@@ -98,9 +98,10 @@ export const useStimmabgabevermerkeStore = defineStore(
             `Save Stimmabgabevermerke for wahlbezirkID: ${stimmabgabevermerk.wahlbezirkID} and waehlerverzeichnisNummer: ${stimmabgabevermerk.waehlerverzeichnisNummer} failed`,
             e
           );
+        } finally {
+          isStimmabgabevermerkeSaving.value = false;
         }
       }
-      isStimmabgabevermerkeSaving.value = false;
     }
 
     const sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl =

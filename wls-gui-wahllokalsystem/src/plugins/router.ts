@@ -115,11 +115,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
-    useTaskManagerStore()
-  );
+  const { hasAllTasksRunSuccessfully } = storeToRefs(useTaskManagerStore());
 
-  if (to.name != ROUTES_HOME && !hasInitializationOfTasksCompletelyRun.value) {
+  if (to.name != ROUTES_HOME && !hasAllTasksRunSuccessfully.value) {
     return { name: ROUTES_HOME };
   }
 });

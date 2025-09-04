@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-table>
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
           <td ref="placeholder" />
@@ -9,7 +9,7 @@
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
             )"
             :key="key"
-            class="font-weight-bold"
+            class="pl-0 font-weight-bold dynamic-column"
           >
             {{ getWahlNameOrBlankStringById(key) }}
           </th>
@@ -45,5 +45,14 @@ const { getWahlNameOrBlankStringById } = useWahlenStore();
 thead tr td:first-child,
 tbody tr td:first-child {
   width: 150px;
+}
+
+.stimmabgabevermerke-table {
+  table-layout: fixed;
+  width: 1500px;
+}
+
+.stimmabgabevermerke-table .dynamic-column {
+  width: 500px;
 }
 </style>

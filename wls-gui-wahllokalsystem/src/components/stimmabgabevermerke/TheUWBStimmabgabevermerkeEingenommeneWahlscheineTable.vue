@@ -1,13 +1,13 @@
 <template>
   <v-container v-if="stimmabgabevermerke">
-    <v-table>
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
           <td ref="placeholder" />
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
-            class="pl-0 font-weight-bold"
+            class="pl-0 font-weight-bold dynamic-column"
           >
             {{
               getWahlNameOrBlankStringById(
@@ -27,7 +27,6 @@
           >
             <v-number-input
               max-width="15rem"
-              class="mt-5 pl-0"
               :min="0"
               :rules="[required]"
               :model-value="
@@ -84,5 +83,14 @@ function setMapValue(
 thead tr td:first-child,
 tbody tr td:first-child {
   width: 150px;
+}
+
+.stimmabgabevermerke-table {
+  table-layout: fixed;
+  width: 1500px;
+}
+
+.stimmabgabevermerke-table .dynamic-column {
+  width: 500px;
 }
 </style>

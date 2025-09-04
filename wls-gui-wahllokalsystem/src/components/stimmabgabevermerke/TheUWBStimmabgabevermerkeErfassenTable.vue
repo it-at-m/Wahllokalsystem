@@ -19,14 +19,14 @@
       :thickness="2"
       class="border-opacity-25"
     />
-    <v-table>
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
           <td ref="placeholder" />
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
-            class="font-weight-bold"
+            class="font-weight-bold dynamic-column"
           >
             {{
               getWahlNameOrBlankStringById(
@@ -193,5 +193,14 @@ function onDialogConfirmDeletingRows() {
 thead tr td:first-child,
 tbody tr td:first-child {
   width: 150px;
+}
+
+.stimmabgabevermerke-table {
+  table-layout: fixed;
+  width: 1500px;
+}
+
+.stimmabgabevermerke-table .dynamic-column {
+  width: 500px;
 }
 </style>

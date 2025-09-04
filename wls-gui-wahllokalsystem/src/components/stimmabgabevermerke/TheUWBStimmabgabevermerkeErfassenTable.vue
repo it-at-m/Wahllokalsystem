@@ -88,6 +88,8 @@
             </template>
           </td>
         </tr>
+      </tbody>
+      <tfoot>
         <tr class="font-weight-bold">
           <td>Gesamt</td>
           <td
@@ -99,7 +101,7 @@
             {{ totalCount }}
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </v-table>
     <base-dialog
       :visible="isDeleteDialogVisible"

@@ -58,7 +58,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
   describe("loadStimmabgabevermerke", () => {
     it("should_addStimmabgabevermerkeToState_when_serviceReturnsData", async () => {
       const wahlbezirkID = generateRandomString(10);
-      const waehlberzeichnisNummer = generateRandomNumber(3);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
       unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
@@ -70,7 +70,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
-        waehlberzeichnisNummer
+        waehlerverzeichnisNummer
       );
 
       expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([
@@ -81,7 +81,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
     it("should_addDefaultStimmabgabevermerkeToState_when_serviceReturnsDataAndUserHasWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
-      const waehlberzeichnisNummer = generateRandomNumber(3);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
       unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
@@ -106,7 +106,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
-        waehlberzeichnisNummer
+        waehlerverzeichnisNummer
       );
 
       expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([
@@ -117,7 +117,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
     it("should_notAddDefaultStimmabgabevermerkeToState_when_serviceReturnsDataButUserHasNotThatWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
-      const waehlberzeichnisNummer = generateRandomNumber(3);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
       unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
@@ -142,7 +142,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
-        waehlberzeichnisNummer
+        waehlerverzeichnisNummer
       );
 
       expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([

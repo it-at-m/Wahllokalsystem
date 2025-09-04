@@ -10,7 +10,7 @@
     dass das list-item für SRW und OBW mit der gleichen Route aufgerufen wird. Siehe
     https://github.com/vuetifyjs/vuetify/issues/20516 -->
     <v-list-item
-      :title="title"
+      :title="titleStimmenZaehlen"
       :to="{
         name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
         params: { wahlId: String(bawWahlID) },
@@ -25,22 +25,17 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
-const { isUWB } = storeToRefs(useUserStore());
 
-const title = computed(() => {
-  return isUWB.value
-    ? "Zählen der Stimmzettel"
-    : "Zählen der Stimmzettelumschläge";
-});
+defineProps<{
+  titleStimmenZaehlen: string;
+}>();
 
 const bawWahlID = computed<string | undefined>(() => {
   return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Baw);

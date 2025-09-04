@@ -7,9 +7,9 @@
       />
     </template>
     <v-list-item :title="title" />
-    <the-o-b-w-scores-list-group />
-    <the-s-r-w-scores-list-group />
-    <the-b-a-w-scores-list-group />
+    <the-o-b-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-s-r-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-b-a-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
   </v-list-group>
 </template>
 
@@ -27,4 +27,9 @@ const { isBWB } = storeToRefs(useUserStore());
 const title = computed(() =>
   isBWB.value ? "Wahlscheine" : "Stimmabgabevermerke"
 );
+const titleStimmenZaehlen = computed(() => {
+  return isBWB.value
+    ? "Zählen der Stimmzettelumschläge"
+    : "Zählen der Stimmzettel";
+});
 </script>

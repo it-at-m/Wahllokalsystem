@@ -94,7 +94,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
-const { toGermanDateFormat } = useDateTimeFormatter();
+const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
   storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
@@ -102,7 +102,7 @@ const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
 );
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>
-  user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
+  user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""

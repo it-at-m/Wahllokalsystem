@@ -26,7 +26,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
   describe("isAnyRowThatShouldBeDeletedFilled", () => {
     it("should_returnTrue_when_rowsToRemoveContainLegitValues", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(true);
@@ -46,9 +46,16 @@ describe("stimmabgabevermerkeStore.ts", () => {
             .build(),
         ])
         .build();
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldaten, wahldaten]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldaten])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldaten])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
       const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(false);
     });
@@ -56,39 +63,39 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
   describe("changeRowCount", () => {
     it("should_decreaseRowCount_when_enteredNumberIsLowerThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(2);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(1);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(1);
       });
     });
 
     it("should_increaseRowCount_when_enteredNumberIsHigherThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(5);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(4);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(4);
       });
     });
 
     it("should_notIncreaseOrDecrease_when_enteredNumberIsSameThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(3);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(2);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(2);
       });
     });
   });
 
   describe("lowestNumberOfRowsOverAllWahldaten", () => {
     it("should_calculateTheCorrectNumber_when_allWahldatenHaveSameNumberOfVermerke", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
 
@@ -112,10 +119,16 @@ describe("stimmabgabevermerkeStore.ts", () => {
           prepareVermerk().blattnummer(5).build(),
         ])
         .build();
-
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
 
@@ -158,9 +171,17 @@ describe("stimmabgabevermerkeStore.ts", () => {
         ])
         .build();
 
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result = unitUnderTest.stimmabgabevermerkeTableTotalEachWahldaten;
 
@@ -210,9 +231,17 @@ describe("stimmabgabevermerkeStore.ts", () => {
         )
         .build();
 
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result =
         unitUnderTest.sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl;

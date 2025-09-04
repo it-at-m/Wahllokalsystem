@@ -1,6 +1,6 @@
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { createTodayWithTime } = useDateTimeUtils();
 
 export function useRules() {
   /* eslint-disable */
@@ -28,15 +28,15 @@ export function useRules() {
     value >= min || `Eingabe darf nicht kleiner als ${min} sein.`;
 
   const timeNotInFuture = (value: string) =>
-    getDateFromTimeString(value) <= new Date() ||
+    createTodayWithTime(value) <= new Date() ||
     `Eingabe darf nicht in der Zukunft liegen.`;
 
   const timeGreaterOrEqual = (compareValue: string) => (value: string) =>
-    getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
+    createTodayWithTime(value) >= createTodayWithTime(compareValue) ||
     `Eingabe muss größer oder gleich ${compareValue} sein.`;
 
   const timeLessOrEqual = (compareValue: string) => (value: string) =>
-    getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||
+    createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
     `Eingabe muss kleiner oder gleich ${compareValue} sein.`;
 
   return {

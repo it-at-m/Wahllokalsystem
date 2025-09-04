@@ -4,7 +4,7 @@ export function useDateTimeUtils() {
   }
 
   const createTodayWithTime = function (timeString: string): Date {
-    // Validate time string format (HH:MM)
+    // Validate time string format (HH:MM:ss)
     if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
       return new Date(NaN);
     }

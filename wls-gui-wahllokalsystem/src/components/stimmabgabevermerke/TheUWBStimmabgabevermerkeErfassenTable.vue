@@ -26,22 +26,23 @@
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="font-weight-bold"
           >
-            <b>{{
+            {{
               getWahlNameOrBlankStringById(
                 stimmabgabevermerk.wahldaten[0].wahlID
               )
-            }}</b>
-            <div><b>Personen Mit Stimmabgabevermerk</b></div>
+            }}
+            <div>Personen Mit Stimmabgabevermerk</div>
           </td>
         </tr>
-        <tr>
-          <td><b>Blatt</b></td>
+        <tr class="font-weight-bold">
+          <td>Blatt</td>
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
-            <b>Anzahl Stimmabgabevermerke</b>
+            Anzahl Stimmabgabevermerke
           </td>
         </tr>
       </thead>
@@ -87,15 +88,15 @@
             </template>
           </td>
         </tr>
-        <tr>
-          <td><b>Gesamt</b></td>
+        <tr class="font-weight-bold">
+          <td>Gesamt</td>
           <td
             v-for="(
               totalCount, index
             ) in stimmabgabevermerkeTableTotalEachWahldaten"
             :key="`column-${index}-` + totalCount"
           >
-            <b>{{ totalCount }}</b>
+            {{ totalCount }}
           </td>
         </tr>
       </tbody>

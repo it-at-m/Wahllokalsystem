@@ -9,8 +9,9 @@
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
             )"
             :key="key"
+            class="font-weight-bold"
           >
-            <b>{{ getWahlNameOrBlankStringById(key) }}</b>
+            {{ getWahlNameOrBlankStringById(key) }}
           </th>
         </tr>
       </thead>

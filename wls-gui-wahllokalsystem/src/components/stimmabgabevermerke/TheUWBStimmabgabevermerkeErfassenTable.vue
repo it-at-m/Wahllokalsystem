@@ -22,11 +22,11 @@
     <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
-          <td class="sav-first-column" />
-          <td
+          <th class="sav-first-column border-b-0" />
+          <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
-            class="font-weight-bold dynamic-column"
+            class="font-weight-bold dynamic-column border-b-0"
           >
             {{
               getWahlNameOrBlankStringById(
@@ -34,16 +34,17 @@
               )
             }}
             <div>Personen mit Stimmabgabevermerk</div>
-          </td>
+          </th>
         </tr>
         <tr class="font-weight-bold">
-          <td>Blatt</td>
-          <td
+          <th class="border-b-0">Blatt</th>
+          <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="border-b-0"
           >
             Anzahl Stimmabgabevermerke
-          </td>
+          </th>
         </tr>
       </thead>
       <tbody>

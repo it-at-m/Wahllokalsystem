@@ -3,7 +3,7 @@
     <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
-          <td class="sav-first-column" />
+          <th class="sav-first-column border-b-0" />
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"

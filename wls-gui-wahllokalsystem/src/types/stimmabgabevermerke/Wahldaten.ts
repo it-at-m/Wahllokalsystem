@@ -9,4 +9,5 @@ export interface Wahldaten {
     number
   >;
   vermerke: Vermerke[];
+  wahlbezirkID: string;
 }

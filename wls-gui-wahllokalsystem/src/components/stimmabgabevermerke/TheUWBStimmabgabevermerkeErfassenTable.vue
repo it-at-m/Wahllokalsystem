@@ -20,18 +20,22 @@
         <tr>
           <td />
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
-            <b>{{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}</b>
+            <b>{{
+              getWahlNameOrBlankStringById(
+                stimmabgabevermerk.wahldaten[0].wahlID
+              )
+            }}</b>
             <div><b>Personen Mit Stimmabgabevermerk</b></div>
           </td>
         </tr>
         <tr>
           <td><b>Blatt</b></td>
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <b>Anzahl Stimmabgabevermerke</b>
           </td>
@@ -41,8 +45,8 @@
         <tr>
           <td>Nr. 1</td>
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-text-field
               disabled
@@ -56,11 +60,14 @@
         >
           <td>Nr. {{ number + 1 }}</td>
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.waehlerverzeichnisNummer"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-number-input
-              v-model="wahldaten.vermerke[number - 1].stimmzettel[0].anzahl"
+              v-model="
+                stimmabgabevermerk.wahldaten[0].vermerke[number - 1]
+                  .stimmzettel[0].anzahl
+              "
               :rules="[required]"
             />
           </td>
@@ -68,8 +75,10 @@
         <tr>
           <td><b>Gesamt</b></td>
           <td
-            v-for="totalCount in stimmabgabevermerkeTableTotalEachWahldaten"
-            :key="totalCount"
+            v-for="(
+              totalCount, index
+            ) in stimmabgabevermerkeTableTotalEachWahldaten"
+            :key="`column-${index}-` + totalCount"
           >
             <b>{{ totalCount }}</b>
           </td>

@@ -22,7 +22,7 @@
     <v-table>
       <thead>
         <tr>
-          <td />
+          <td ref="placeholder" />
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
@@ -188,3 +188,9 @@ function onDialogConfirmDeletingRows() {
   }
 }
 </script>
+<style scoped>
+thead tr td:first-child,
+tbody tr td:first-child {
+  width: 150px;
+}
+</style>

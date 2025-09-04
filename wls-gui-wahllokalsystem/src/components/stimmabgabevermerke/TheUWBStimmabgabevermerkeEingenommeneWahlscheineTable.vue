@@ -1,51 +1,54 @@
 <template>
-  <v-table
-    v-if="stimmabgabevermerke != null"
-    data-test="uwb-stimmabgabevermerke-eingenommene-wahlscheine-table"
-  >
-    <thead>
-      <tr>
-        <th
-          v-for="stimmabgabevermerk in stimmabgabevermerke"
-          :key="stimmabgabevermerk.wahldaten[0].wahlID"
-          class="pl-0 font-weight-bold"
-        >
-          {{
-            getWahlNameOrBlankStringById(stimmabgabevermerk.wahldaten[0].wahlID)
-          }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td
-          v-for="stimmabgabevermerk in stimmabgabevermerke"
-          :key="stimmabgabevermerk.wahldaten[0].wahlID"
-          class="pl-0"
-        >
-          <v-number-input
-            max-width="15rem"
-            class="mt-5 pl-0"
-            :min="0"
-            :rules="[required]"
-            :model-value="
-              getMapValue(
-                EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                stimmabgabevermerk.wahldaten[0]
+  <v-container v-if="stimmabgabevermerke">
+    <v-table>
+      <thead>
+        <tr>
+          <td ref="placeholder" />
+          <th
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="pl-0 font-weight-bold"
+          >
+            {{
+              getWahlNameOrBlankStringById(
+                stimmabgabevermerk.wahldaten[0].wahlID
               )
-            "
-            @update:model-value="
-              setMapValue(
-                EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                stimmabgabevermerk.wahldaten[0],
-                $event
-              )
-            "
-          />
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+            }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td ref="placeholder" />
+          <td
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="pl-0"
+          >
+            <v-number-input
+              max-width="15rem"
+              class="mt-5 pl-0"
+              :min="0"
+              :rules="[required]"
+              :model-value="
+                getMapValue(
+                  EingenommenerWahlscheinStimmzettelartEnum.Klein,
+                  stimmabgabevermerk.wahldaten[0]
+                )
+              "
+              @update:model-value="
+                setMapValue(
+                  EingenommenerWahlscheinStimmzettelartEnum.Klein,
+                  stimmabgabevermerk.wahldaten[0],
+                  $event
+                )
+              "
+            />
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-container>
 </template>
 <script setup lang="ts">
 import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
@@ -77,3 +80,9 @@ function setMapValue(
   wahldaten.eingenommeneWahlscheine.set(key, value);
 }
 </script>
+<style scoped>
+thead tr td:first-child,
+tbody tr td:first-child {
+  width: 150px;
+}
+</style>

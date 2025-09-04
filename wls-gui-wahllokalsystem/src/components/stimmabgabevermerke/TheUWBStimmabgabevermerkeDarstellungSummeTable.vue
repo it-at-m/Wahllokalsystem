@@ -3,6 +3,7 @@
     <v-table>
       <thead>
         <tr>
+          <td ref="placeholder" />
           <th
             v-for="key in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
@@ -15,6 +16,7 @@
       </thead>
       <tbody>
         <tr>
+          <td ref="placeholder" />
           <td
             v-for="(value, index) in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.values()
@@ -38,3 +40,9 @@ const { sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl } =
   storeToRefs(useStimmabgabevermerkeStore());
 const { getWahlNameOrBlankStringById } = useWahlenStore();
 </script>
+<style scoped>
+thead tr td:first-child,
+tbody tr td:first-child {
+  width: 150px;
+}
+</style>

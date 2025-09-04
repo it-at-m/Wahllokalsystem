@@ -11,10 +11,10 @@ export function useStimmabgabevermerkeUtils() {
       wahlbezirkID: wahlbezirkID,
       wahldaten: [
         {
-          wahlbezirkID: wahlbezirkID,
-          waehlerverzeichnisNummer: waehlerverzeichnisNummer,
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
           vermerke: [],
-          wahlID: wahlID,
+          wahlID,
           eingenommeneWahlscheine: new Map(),
         },
       ],

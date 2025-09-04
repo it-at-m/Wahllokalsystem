@@ -55,9 +55,9 @@ export function useStimmabgabevermerkeService() {
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
     const { getWahlNameOrBlankStringById } = useWahlenStore();
-    const wahlname = getWahlNameOrBlankStringById(
-      stimmabgabevermerke.wahldaten[0].wahlID
-    );
+    const wahlname =
+      getWahlNameOrBlankStringById(stimmabgabevermerke.wahldaten?.[0].wahlID) ||
+      "";
     try {
       await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
         wahlbezirkID,

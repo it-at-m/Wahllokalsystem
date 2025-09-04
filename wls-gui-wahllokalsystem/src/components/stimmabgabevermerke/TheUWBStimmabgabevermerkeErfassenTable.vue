@@ -33,7 +33,7 @@
                 stimmabgabevermerk.wahldaten[0].wahlID
               )
             }}
-            <div>Personen Mit Stimmabgabevermerk</div>
+            <div>Personen mit Stimmabgabevermerk</div>
           </td>
         </tr>
         <tr class="font-weight-bold">

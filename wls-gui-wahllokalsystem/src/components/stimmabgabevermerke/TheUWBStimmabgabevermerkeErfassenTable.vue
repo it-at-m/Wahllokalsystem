@@ -15,6 +15,10 @@
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
+    <v-divider
+      :thickness="2"
+      class="border-opacity-25"
+    />
     <v-table>
       <thead>
         <tr>

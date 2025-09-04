@@ -62,11 +62,21 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
           new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 60]])
         )
         .build();
-      const stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo, wahldatenThree]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
+        .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+      const stimmabgabevermerkeThree = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenThree])
         .build();
       stimmabgabevermerkeStore = useStimmabgabevermerkeStore(testPinia);
-      stimmabgabevermerkeStore.stimmabgabevermerke = stimmabgabevermerke;
+      stimmabgabevermerkeStore.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+        stimmabgabevermerkeThree,
+      ];
 
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("Wahlname");
 
@@ -92,7 +102,7 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
     it("should_changeValuesInStore_when_numberInputValueChanges", () => {
       const stimmabgabevermerke = createStimmabgabevermerke();
       stimmabgabevermerkeStore = useStimmabgabevermerkeStore(testPinia);
-      stimmabgabevermerkeStore.stimmabgabevermerke = stimmabgabevermerke;
+      stimmabgabevermerkeStore.stimmabgabevermerke = [stimmabgabevermerke];
 
       mockDefinitions.getWahlNameOrBlankStringById.mockReturnValue("Wahlname");
       const newNumberInputValue = 42;
@@ -111,10 +121,10 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
         numberInput.setValue(newNumberInputValue);
       });
 
-      stimmabgabevermerkeStore.stimmabgabevermerke.wahldaten.forEach(
-        (wahldatenEntries) => {
+      stimmabgabevermerkeStore.stimmabgabevermerke.forEach(
+        (stimmabgabevermerkeEntries) => {
           expect(
-            wahldatenEntries.eingenommeneWahlscheine.get(
+            stimmabgabevermerkeEntries.wahldaten[0].eingenommeneWahlscheine.get(
               EingenommenerWahlscheinStimmzettelartEnum.Klein
             )
           ).toBe(newNumberInputValue);

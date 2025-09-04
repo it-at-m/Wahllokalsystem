@@ -1,3 +1,9 @@
+import type {
+  StimmabgabevermerkeDTO,
+  StimmzettelDTO,
+  VermerkDTO,
+  WahldatenDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Stimmzettel } from "@/types/stimmabgabevermerke/Stimmzettel.ts";
 import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
@@ -8,6 +14,7 @@ import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { StimmzettelDTOStimmzettelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 const { generateRandomString, generateRandomNumber } =
@@ -16,6 +23,7 @@ const { generateRandomString, generateRandomNumber } =
 export function useStimmabgabevermerkeTestDataFactory() {
   function createWahldaten(): Wahldaten {
     return {
+      wahlbezirkID: generateRandomString(2),
       eingenommeneWahlscheine: new Map([
         [_getRandomEnumValue(), generateRandomNumber(4)],
       ]),
@@ -29,10 +37,34 @@ export function useStimmabgabevermerkeTestDataFactory() {
     };
   }
 
+  function createWahldatenDTO(): WahldatenDTO {
+    return {
+      wahlbezirkID: generateRandomString(2),
+      eingenommeneWahlscheine: new Set([
+        {
+          stimmzettelart: _getRandomEnumValueDTO(),
+          anzahl: generateRandomNumber(4),
+        },
+      ]),
+      vermerke: new Set([
+        prepareVermerkDTO().blattnummer(2).build(),
+        prepareVermerkDTO().blattnummer(3).build(),
+      ]),
+
+      waehlerverzeichnisNummer: generateRandomNumber(1),
+      wahlID: generateRandomString(10),
+    };
+  }
+
   function createStimmabgabevermerke(): Stimmabgabevermerke {
     const wahldatenOne = prepareWahldaten()
       .eingenommeneWahlscheine(
-        new Map([[_getRandomEnumValue(), generateRandomNumber(2)]])
+        new Map([
+          [
+            EingenommenerWahlscheinStimmzettelartEnum.Klein,
+            generateRandomNumber(2),
+          ],
+        ])
       )
       .build();
     const wahldatenTwo = prepareWahldaten()
@@ -45,15 +77,53 @@ export function useStimmabgabevermerkeTestDataFactory() {
         new Map([[_getRandomEnumValue(), generateRandomNumber(2)]])
       )
       .build();
-    const wahldaten = new Set<Wahldaten>([
-      wahldatenOne,
-      wahldatenTwo,
-      wahldatenThree,
-    ]);
+    const wahldaten = [wahldatenOne, wahldatenTwo, wahldatenThree];
 
     return {
       anzahlBlaetter: generateRandomNumber(1),
       waehlerverzeichnisNummer: generateRandomNumber(1),
+      wahlbezirkID: generateRandomString(2),
+      wahldaten: wahldaten,
+    };
+  }
+
+  function createStimmabgabevermerkeDTO(): StimmabgabevermerkeDTO {
+    const wahldatenOne = prepareWahldatenDTO()
+      .eingenommeneWahlscheine(
+        new Set([
+          {
+            anzahl: generateRandomNumber(1),
+            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+          },
+        ])
+      )
+      .build();
+    const wahldatenTwo = prepareWahldatenDTO()
+      .eingenommeneWahlscheine(
+        new Set([
+          {
+            anzahl: generateRandomNumber(1),
+            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+          },
+        ])
+      )
+      .build();
+    const wahldatenThree = prepareWahldatenDTO()
+      .eingenommeneWahlscheine(
+        new Set([
+          {
+            anzahl: generateRandomNumber(1),
+            stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
+          },
+        ])
+      )
+      .build();
+    const wahldaten = new Set([wahldatenOne, wahldatenTwo, wahldatenThree]);
+
+    return {
+      anzahlBlaetter: generateRandomNumber(1),
+      waehlerverzeichnisNummer: generateRandomNumber(1),
+      wahlbezirkID: generateRandomString(2),
       wahldaten: wahldaten,
     };
   }
@@ -65,10 +135,24 @@ export function useStimmabgabevermerkeTestDataFactory() {
     };
   }
 
+  function createVermerkDTO(): VermerkDTO {
+    return {
+      blattnummer: generateRandomNumber(1),
+      stimmzettel: new Set([createStimmzettelDTO()]),
+    };
+  }
+
   function createStimmzettel(): Stimmzettel {
     return {
-      anzahl: generateRandomNumber(1),
+      anzahl: generateRandomNumber(1) + 1,
       stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+    };
+  }
+
+  function createStimmzettelDTO(): StimmzettelDTO {
+    return {
+      anzahl: generateRandomNumber(1),
+      stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
     };
   }
 
@@ -76,8 +160,16 @@ export function useStimmabgabevermerkeTestDataFactory() {
     return proxyBuilder<Wahldaten>(createWahldaten());
   }
 
+  function prepareWahldatenDTO(): Builder<WahldatenDTO> {
+    return proxyBuilder<WahldatenDTO>(createWahldatenDTO());
+  }
+
   function prepareStimmabgabevermerke(): Builder<Stimmabgabevermerke> {
     return proxyBuilder<Stimmabgabevermerke>(createStimmabgabevermerke());
+  }
+
+  function prepareStimmabgabevermerkeDTO(): Builder<StimmabgabevermerkeDTO> {
+    return proxyBuilder<StimmabgabevermerkeDTO>(createStimmabgabevermerkeDTO());
   }
 
   function prepareVermerk(): Builder<Vermerke> {
@@ -88,8 +180,22 @@ export function useStimmabgabevermerkeTestDataFactory() {
     return proxyBuilder<Stimmzettel>(createStimmzettel());
   }
 
-  function _getRandomEnumValue() {
+  function prepareVermerkDTO(): Builder<VermerkDTO> {
+    return proxyBuilder<VermerkDTO>(createVermerkDTO());
+  }
+
+  function prepareStimmzettelDTO(): Builder<StimmzettelDTO> {
+    return proxyBuilder<StimmzettelDTO>(createStimmzettelDTO());
+  }
+
+  function _getRandomEnumValueDTO() {
     const enumValues = Object.values(StimmzettelDTOStimmzettelartEnum);
+    const randomIndex = Math.floor(Math.random() * enumValues.length);
+    return enumValues[randomIndex];
+  }
+
+  function _getRandomEnumValue() {
+    const enumValues = Object.values(StimmzettelStimmzettelartEnum);
     const randomIndex = Math.floor(Math.random() * enumValues.length);
     return enumValues[randomIndex];
   }
@@ -103,5 +209,10 @@ export function useStimmabgabevermerkeTestDataFactory() {
     prepareVermerk,
     prepareStimmzettel,
     createStimmzettel,
+    createStimmabgabevermerkeDTO,
+    prepareWahldatenDTO,
+    prepareVermerkDTO,
+    prepareStimmzettelDTO,
+    prepareStimmabgabevermerkeDTO,
   };
 }

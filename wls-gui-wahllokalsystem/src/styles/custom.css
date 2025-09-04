@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-.stimmabgabevermerke-table thead tr .sav-first-column {
+.stimmabgabevermerke-table thead th.sav-first-column {
   min-width: 150px;
 }
 

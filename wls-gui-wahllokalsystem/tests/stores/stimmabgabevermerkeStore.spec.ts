@@ -79,7 +79,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       ]);
     });
 
-    it("should_addDefaultStimmabgabevermerkeToState_when_serviceReturnsDataAndUserHasWahlbezirkID", async () => {
+    it("should_addDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataAndUserHasWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
       const waehlerverzeichnisNummer = generateRandomNumber(3);
 
@@ -115,7 +115,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       ]);
     });
 
-    it("should_notAddDefaultStimmabgabevermerkeToState_when_serviceReturnsDataButUserHasNotThatWahlbezirkID", async () => {
+    it("should_notAddDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataButUserHasNotThatWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
       const waehlerverzeichnisNummer = generateRandomNumber(3);
 

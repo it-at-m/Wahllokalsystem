@@ -1,7 +1,7 @@
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
@@ -13,7 +13,7 @@ const { registerStoreHMR } = useHmrUpdate();
 const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
+  const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
@@ -23,7 +23,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     stapelArt: StapelArtEnum
   ) {
     try {
-      const wahlbezirkID = _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 
       if (wahlbezirkID) {
         const loadedErgebnisse = await getErgebnisse(
@@ -56,7 +56,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     stapelArt: StapelArtEnum
   ) {
     try {
-      const wahlbezirkID = _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
       const ergebnisseToSend = _getErgebnisseByWahlIdAndStapelartOrUndefined(
         wahlID,
         stapelArt
@@ -83,14 +83,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         ergebnisse.bezirkUndWahlIDStapelart.stapelArt === stapelArt &&
         ergebnisse.bezirkUndWahlIDStapelart.wahlID === wahlID
     );
-  }
-
-  function _getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
-    const metadata = currentUserWahlMetadata.value.find((metadata) => {
-      return metadata.wahlID === wahlID;
-    });
-
-    return metadata?.wahlbezirkID;
   }
 
   return { ergebnisse, loadErgebnisseByStapelArt, sendErgebnisseByStapelArt };

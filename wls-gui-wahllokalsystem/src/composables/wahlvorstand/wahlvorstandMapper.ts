@@ -42,7 +42,7 @@ export function useWahlvorstandMapper() {
     wahlvorstandmitglied: WahlvorstandsmitgliedDTO
   ): Wahlvorstandsmitglied {
     return {
-      anwesend: wahlvorstandmitglied.anwesend,
+      anwesend: false,
       familienname: wahlvorstandmitglied.familienname,
       funktion: funktionDtoToFunktionModel(wahlvorstandmitglied.funktion),
       funktionsname: wahlvorstandmitglied.funktionsname,

@@ -79,18 +79,3 @@ function setMapValue(
   wahldaten.eingenommeneWahlscheine.set(key, value);
 }
 </script>
-<style scoped>
-thead tr td:first-child,
-tbody tr td:first-child {
-  min-width: 150px;
-}
-
-.stimmabgabevermerke-table {
-  table-layout: fixed;
-  width: 1500px;
-}
-
-.stimmabgabevermerke-table .dynamic-column {
-  min-width: 300px;
-}
-</style>

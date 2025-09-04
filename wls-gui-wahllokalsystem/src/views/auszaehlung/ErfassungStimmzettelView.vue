@@ -12,7 +12,7 @@ import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnisermittlung/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
-import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -30,14 +30,13 @@ const title = computed(() => {
 });
 
 watch(
-  () => route.params.wahlId,
-  (newId) => {
-    const wahl = getWahlOrUndefinedById(newId as string);
+  () => wahlID.value,
+  (wahlID) => {
+    const wahl = getWahlOrUndefinedById(wahlID);
 
-    if (wahl) {
+    if (!wahl) {
       router.push({
-        name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-        params: { wahlId: String(wahl.wahlID) },
+        name: EXAMPLE_ROUTES_NOTFOUND,
       });
     }
   }

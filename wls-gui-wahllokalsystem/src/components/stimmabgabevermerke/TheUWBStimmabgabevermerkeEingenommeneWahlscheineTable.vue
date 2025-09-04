@@ -26,6 +26,8 @@
           <v-number-input
             max-width="15rem"
             class="mt-5 pl-0"
+            :min="0"
+            :rules="[required]"
             :model-value="
               getMapValue(
                 EingenommenerWahlscheinStimmzettelartEnum.Klein,
@@ -51,10 +53,12 @@ import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 import { storeToRefs } from "pinia";
 import { VNumberInput, VTable } from "vuetify/components";
 
+import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
+const { required } = useRules();
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { getWahlNameOrBlankStringById } = useWahlenStore();
 

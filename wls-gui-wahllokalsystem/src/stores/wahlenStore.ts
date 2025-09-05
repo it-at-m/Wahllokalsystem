@@ -8,6 +8,7 @@ import { useBeanstandeteWahlbriefeGetter } from "@/composables/briefwahl/beansta
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
+import { useWaehlerverzeichnisGetter } from "@/composables/wahl/waehlerverzeichnisGetter.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
@@ -77,7 +78,8 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   const beanstandeteWahlbriefeActions = {
     initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe() {
-      for (const wvzNr of waehlerverzeichnisGetter.value.waehlerverzeichnisNummern()) {
+      for (const wvzNr of waehlerverzeichnisGetter.value
+        .waehlerverzeichnisNummern) {
         const beanstandeteWahlbriefe =
           await briefwahlService.getBeanstandeteWahlbriefe(
             wvzNr,
@@ -165,17 +167,10 @@ export const useWahlenStore = defineStore(storeID, () => {
   };
 
   /* --- waehlerverzeichnis --- */
+  const { waehlerverzeichnisNummern } =
+    useWaehlerverzeichnisGetter(wahlenState);
   const waehlerverzeichnisGetter = computed(() => ({
-    waehlerverzeichnisNummern: () => {
-      if (!wahlenState.value.wahlen) return [];
-
-      const nummern = new Set<number>();
-
-      for (const wahl of wahlenState.value.wahlen) {
-        nummern.add(wahl.waehlerverzeichnisNummer);
-      }
-      return Array.from(nummern);
-    },
+    waehlerverzeichnisNummern: waehlerverzeichnisNummern.value,
   }));
 
   const waehlerverzeichnisActions = {

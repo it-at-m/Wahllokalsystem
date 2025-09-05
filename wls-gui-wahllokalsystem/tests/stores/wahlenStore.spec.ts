@@ -97,7 +97,7 @@ describe("wahlenStore.ts", () => {
   describe("waehlerverzeichnisNummern", () => {
     it("should_returnEmptyList_when_wahlenDoNotExist", () => {
       expect(
-        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern()
+        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern
       ).toStrictEqual([]);
     });
 
@@ -108,7 +108,7 @@ describe("wahlenStore.ts", () => {
       ];
 
       expect(
-        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern()
+        unitUnderTest.waehlerverzeichnisGetter.waehlerverzeichnisNummern
       ).toStrictEqual([1, 2]);
     });
   });

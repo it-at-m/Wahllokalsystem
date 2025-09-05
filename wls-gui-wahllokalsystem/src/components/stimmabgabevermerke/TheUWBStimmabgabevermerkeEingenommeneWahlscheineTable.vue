@@ -19,7 +19,8 @@
       </thead>
       <tbody>
         <tr>
-          <td ref="placeholder" />
+          <!-- placeholder column for spacing -->
+          <td />
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"

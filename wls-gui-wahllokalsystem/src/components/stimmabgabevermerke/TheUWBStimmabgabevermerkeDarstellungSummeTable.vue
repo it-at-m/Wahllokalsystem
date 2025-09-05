@@ -17,7 +17,8 @@
       </thead>
       <tbody>
         <tr>
-          <td ref="placeholder" />
+          <!-- placeholder column for spacing -->
+          <td />
           <td
             v-for="(value, index) in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.values()

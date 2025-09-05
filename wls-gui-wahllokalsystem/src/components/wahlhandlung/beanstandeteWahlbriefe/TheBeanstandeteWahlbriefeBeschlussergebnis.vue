@@ -20,7 +20,7 @@
             <td
               v-for="(
                 value, index
-              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()"
+              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe"
               :key="index"
               class="font-weight-bold text-center"
             >
@@ -32,7 +32,7 @@
             <td
               v-for="(
                 value, index
-              ) in beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe()"
+              ) in beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe"
               :key="index"
               class="font-weight-bold text-center"
             >
@@ -44,14 +44,14 @@
             <td
               v-for="(
                 _, index
-              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()"
+              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe"
               :key="index"
             />
           </tr>
           <tr
             v-for="(
               beanstandung, index
-            ) in beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende()"
+            ) in beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende"
             :key="index"
           >
             <td style="text-indent: 20px">

@@ -4,12 +4,12 @@ import type { Ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import { useBeanstandeteWahlbriefeGetter } from "@/composables/briefwahl/beanstandeteWahlbriefeGetter.ts";
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
@@ -64,57 +64,15 @@ export const useWahlenStore = defineStore(storeID, () => {
     isBeanstandeteWahlbriefeSaving: false,
   });
 
+  const {
+    summeGueltigerWahlbriefe,
+    summeUngueltigerWahlbriefe,
+    summenZurueckweisungsgruende,
+  } = useBeanstandeteWahlbriefeGetter(wahlenState);
   const beanstandeteWahlbriefeGetter = computed(() => ({
-    summeGueltigerWahlbriefe: () => {
-      if (!wahlenState.value.wahlen) return [];
-      return wahlenState.value.wahlen.map(
-        (wahl) =>
-          wahl.beanstandeteWahlbriefe.filter(
-            (brief) => brief === ZurueckweisungsgrundEnum.Zugelassen
-          ).length
-      );
-    },
-    summeUngueltigerWahlbriefe: () => {
-      if (!wahlenState.value.wahlen) return [];
-      return wahlenState.value.wahlen.map(
-        (wahl) =>
-          wahl.beanstandeteWahlbriefe.filter(
-            (brief) =>
-              brief !== ZurueckweisungsgrundEnum.Zugelassen && brief !== null
-          ).length
-      );
-    },
-    summenZurueckweisungsgruende: () => {
-      if (!wahlenState.value.wahlen) return [];
-      const anzahlWahlen = wahlenState.value.wahlen.length;
-      const summenZurueckweisungsgruende = Object.values(
-        ZurueckweisungsgrundEnum
-      )
-        .filter((grund) => grund !== ZurueckweisungsgrundEnum.Zugelassen)
-        .map((grund) => ({
-          summen: new Array(anzahlWahlen).fill(0),
-          grund: grund,
-        }));
-
-      wahlenState.value.wahlen.forEach((wahl, wahlIndex) => {
-        if (
-          wahl.beanstandeteWahlbriefe &&
-          wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
-        ) {
-          wahl.beanstandeteWahlbriefe.forEach((beanstandeterWahlbrief) => {
-            if (
-              beanstandeterWahlbrief !== ZurueckweisungsgrundEnum.Zugelassen
-            ) {
-              const index = summenZurueckweisungsgruende.findIndex(
-                (item) => item.grund === beanstandeterWahlbrief
-              );
-              summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
-            }
-          });
-        }
-      });
-      return summenZurueckweisungsgruende;
-    },
+    summeGueltigerWahlbriefe: summeGueltigerWahlbriefe.value,
+    summeUngueltigerWahlbriefe: summeUngueltigerWahlbriefe.value,
+    summenZurueckweisungsgruende: summenZurueckweisungsgruende.value,
   }));
 
   const beanstandeteWahlbriefeActions = {

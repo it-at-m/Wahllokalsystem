@@ -426,7 +426,7 @@ describe("wahlenStore.ts", () => {
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(
-        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe
       ).toStrictEqual([0]);
     });
 
@@ -434,7 +434,7 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(
-        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe()
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe
       ).toStrictEqual([1, 2]);
     });
   });
@@ -445,7 +445,7 @@ describe("wahlenStore.ts", () => {
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
       expect(
-        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe()
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe
       ).toStrictEqual([0]);
     });
 
@@ -453,7 +453,7 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       expect(
-        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe()
+        unitUnderTest.beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe
       ).toStrictEqual([0, 1]);
     });
   });
@@ -464,7 +464,7 @@ describe("wahlenStore.ts", () => {
         _getWahlenWithoutBeanstandeteWahlbriefe();
 
       const summen =
-        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende();
+        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende;
       summen.forEach((row) => {
         expect(row.summen).toStrictEqual([0]);
       });
@@ -474,7 +474,7 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen = _getWahlenWithBeanstandeteWahlbriefe();
 
       const summen =
-        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende();
+        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende;
       summen.forEach((row) => {
         if (row.grund !== "GEGENSTAND_IM_UMSCHLAG") {
           expect(row.summen).toStrictEqual([0, 0]);

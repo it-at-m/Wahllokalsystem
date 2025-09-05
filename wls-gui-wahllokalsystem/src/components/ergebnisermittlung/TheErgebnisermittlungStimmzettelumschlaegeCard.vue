@@ -7,6 +7,10 @@
           <base-time-input
             v-if="useTime"
             v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
+            :rules="[
+              timeNotInFuture,
+              timeGreaterOrEqual(fruehesteSchliessungsuhrzeit),
+            ]"
             label="Uhrzeit der Öffnung der Wahlurne"
             min-width="20rem"
           />
@@ -38,9 +42,11 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { maxNumber, minNumber, required, timeGreaterOrEqual, timeNotInFuture } =
+  useRules();
 
 const props = defineProps<{
   wahlId: string;
@@ -50,6 +56,7 @@ const props = defineProps<{
 
 const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();
 const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
 const wahl = computed(() => getWahlOrUndefinedById(props.wahlId));
 

@@ -1,4 +1,5 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
+import type { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import type { Ref } from "vue";
 
 import { defineStore, storeToRefs } from "pinia";
@@ -54,6 +55,12 @@ export const useWahlenStore = defineStore(storeID, () => {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
       return wahl ? wahl.wahltag : "";
     },
+    getWahlIdOrUndefinedByWahlart: function getWahlIdOrUndefinedByWahlart(wahlart: WahlWahlartEnum) {
+      if (wahlenState.value.wahlen) {
+        const wahl = wahlenState.value.wahlen.find((wahl) => wahl.wahlart === wahlart);
+        return wahl ? wahl.wahlID : undefined;
+      }
+    }
   };
 
   /* --- beanstandeteWahlbriefe --- */

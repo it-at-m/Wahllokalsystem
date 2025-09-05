@@ -93,7 +93,7 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
       );
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(3);
-      expect(wrapper.findAll("th").length).toBe(3);
+      expect(wrapper.findAll("th").length).toBe(4);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)

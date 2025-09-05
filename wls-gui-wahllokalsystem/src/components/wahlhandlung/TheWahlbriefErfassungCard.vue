@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
       Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor
-      {{ toHhMm(getDateFromTimeString(fruehesteSchliessungsuhrzeit)) }} Uhr
+      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
       übergeben wurden)
     </v-card-title>
     <v-card-text class="pb-0 pt-2">
@@ -51,7 +51,7 @@
     </v-card-text>
     <v-card-title>
       Anzahl der nach
-      {{ toHhMm(getDateFromTimeString(fruehesteSchliessungsuhrzeit)) }} Uhr
+      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
       nachgelieferten Wahlbriefe
     </v-card-title>
     <v-card-text>
@@ -111,6 +111,7 @@ import { computed, ref, watch } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -123,7 +124,8 @@ const { currentTime } = useCurrentTime();
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { toHhMm, getDateFromTimeString } = useDateTimeFormatter();
+const { toHhMm } = useDateTimeFormatter();
+const { createTodayWithTime } = useDateTimeUtils();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
@@ -159,8 +161,7 @@ watch(
 
 const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
   return (
-    currentTime.value <
-    getDateFromTimeString(fruehesteSchliessungsuhrzeit.value)
+    currentTime.value < createTodayWithTime(fruehesteSchliessungsuhrzeit.value)
   );
 });
 

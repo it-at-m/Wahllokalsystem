@@ -27,9 +27,9 @@ export function useTaskListService() {
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
   const { createTasks: createWahlvorschlaegeTasks } =
     useWahlvorschlaegeTaskFactory();
-  const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
+  const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();

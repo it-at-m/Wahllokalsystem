@@ -6,10 +6,19 @@
         title="Ergebnisermittlung"
       />
     </template>
-    <v-list-item :title="title" />
-    <the-o-b-w-scores-list-group />
-    <the-s-r-w-scores-list-group />
-    <the-b-a-w-scores-list-group />
+    <v-list-item
+      v-if="isBWB"
+      title="Wahlscheine"
+      to="/Wahlscheine"
+    />
+    <v-list-item
+      v-if="isUWB"
+      title="Stimmabgabevermerke"
+      :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
+    />
+    <the-o-b-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-s-r-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
+    <the-b-a-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
   </v-list-group>
 </template>
 
@@ -20,11 +29,16 @@ import { computed } from "vue";
 import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheBAWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { ROUTE_STIMMABGABEVERMERKE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-const { isBWB } = storeToRefs(useUserStore());
+const { isBWB, isUWB } = storeToRefs(useUserStore());
+const { routeWithName } = useNavigationUtils();
 
-const title = computed(() =>
-  isBWB.value ? "Wahlscheine" : "Stimmabgabevermerke"
-);
+const titleStimmenZaehlen = computed(() => {
+  return isBWB.value
+    ? "Zählen der Stimmzettelumschläge"
+    : "Zählen der Stimmzettel";
+});
 </script>

@@ -31,7 +31,6 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadEreignisse } = useEreignisStore();
@@ -40,7 +39,6 @@ const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
-const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -55,7 +53,6 @@ onMounted(async () => {
     await initTasks();
     await loadEreignisse();
     await loadWaehler();
-    await pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
     await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);

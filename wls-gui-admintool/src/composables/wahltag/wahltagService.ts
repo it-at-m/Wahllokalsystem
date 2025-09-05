@@ -11,6 +11,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { useWahltagDtoUtils } from "@/composables/wahltag/wahltagDtoUtils.ts";
 import { useWahltagMapper } from "@/composables/wahltag/wahltagMapper.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { compareByNummerAsc } from "@/types/wahltag/WahltagEvent.ts";
 
 export function useWahltagService() {
@@ -47,7 +48,10 @@ export function useWahltagService() {
         result.forEach((wahltag) => wahltag.events.sort(compareByNummerAsc));
       }
     } catch {
-      addNotification("Wahltage konnten nicht geladen werden", "Error");
+      addNotification(
+        "Wahltage konnten nicht geladen werden",
+        UserNotificationCategoryEnum.ERROR
+      );
     }
 
     updateLoading(false, isLoading);
@@ -74,7 +78,7 @@ export function useWahltagService() {
     } catch {
       addNotification(
         "Abrufen der konfigurierten Wahltage fehlgeschlagen",
-        "Error"
+        UserNotificationCategoryEnum.ERROR
       );
     }
 

@@ -80,7 +80,7 @@ export function useWahlvorstandService() {
         axiosConfigWrapper().requestAsOnlineFirst()
       );
       userNotificationService.addNotification(
-        "Der Anwesenheit wurde erfolgreich gespeichert.",
+        "Die Anwesenheit wurde erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (error) {

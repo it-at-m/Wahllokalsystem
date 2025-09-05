@@ -7,20 +7,24 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
+  getStimmzettelumschlaege: vi.fn(),
   addNotification: vi.fn(),
   toDto: vi.fn(),
+  toModel: vi.fn(),
   configurationConstructor: vi.fn().mockImplementation(() => ({})),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
     postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
   })),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
   useErgebnisermittlungMapper: () => ({
     toDto: mockDefinitions.toDto,
+    toModel: mockDefinitions.toModel,
   }),
 }));
 
@@ -30,9 +34,10 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-const { saveStimmzettelumschlaege } = useErgebnisermittlungService();
+const { saveStimmzettelumschlaege, getStimmzettelumschlaege } =
+  useErgebnisermittlungService();
 
-const { createStimmzettelumschlaege } =
+const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
   useStimmzettelumschlaegeTestDataFactory();
 
 const { generateRandomString } = useCommonTestDataFactory();
@@ -107,6 +112,69 @@ describe("ergebnisermittlungService", () => {
       ]);
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
         [stimmzettelumschlaege, wahlID, wahlbezirkID],
+      ]);
+    });
+  });
+
+  describe("getStimmzettelumschlaege", () => {
+    it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const dto = createStimmzettelumschlaegeDto();
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        status: 200,
+        data: dto,
+      });
+      const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
+      mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
+
+      const result = await getStimmzettelumschlaege(
+        wahlID,
+        wahlbezirkID,
+        false
+      );
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([[dto]]);
+      expect(result).toStrictEqual(mockedStimmzettelumschlaege);
+    });
+
+    it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const dto = createStimmzettelumschlaegeDto();
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        status: 200,
+        data: dto,
+      });
+      const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
+      mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
+
+      const result = await getStimmzettelumschlaege(wahlID, wahlbezirkID, true);
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([[dto]]);
+      expect(result).toStrictEqual(mockedStimmzettelumschlaege);
+    });
+
+    it("should_callNotificationServiceAfterFailure_when_sendNotificationParameterIsTrue", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getStimmzettelumschlaege.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(
+        getStimmzettelumschlaege(wahlID, wahlbezirkID, true)
+      ).rejects.toThrow("mocked api call failed");
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
     });
   });

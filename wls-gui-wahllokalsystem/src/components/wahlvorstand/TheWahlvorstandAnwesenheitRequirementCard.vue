@@ -3,21 +3,21 @@
     title="Ungültige Zusammensetzung des Wahlvorstands"
     :type="InputFeedbackTypeEnum.error"
   >
-    <div>
-      <div v-if="!isMindestanwesenheitErreicht">
+    <ul>
+      <li v-if="!isMindestanwesenheitErreicht">
         Vor der Wahlschliessung müssen mindestens
         {{ MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG }} und nach der Schliessung
         mindestens
         {{ MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG }}
         Wahlvorstandsmitglieder anwesend sein.
-      </div>
-      <div v-if="!isSchriftfuehrerAnwesend">
+      </li>
+      <li v-if="!isSchriftfuehrerAnwesend">
         Die Rolle Schriftführer*in muss besetzt sein.
-      </div>
-      <div v-if="!isWahlvorsteherAnwesend">
+      </li>
+      <li v-if="!isWahlvorsteherAnwesend">
         Die Rolle Wahlvorsteher*in muss besetzt sein.
-      </div>
-    </div>
+      </li>
+    </ul>
     <template #additionalFeedback>
       Bitte wenden Sie sich bei fehlenden Mitgliedern oder getauschten Rollen an
       die Bezirksinspektion. Dort werden die Rollen im System richtig

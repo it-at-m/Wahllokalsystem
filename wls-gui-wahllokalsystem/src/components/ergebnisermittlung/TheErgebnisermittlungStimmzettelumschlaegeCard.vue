@@ -26,7 +26,7 @@
       <v-card-actions>
         <base-button-save
           active
-          :loading="isStimmzettelumschlaegeSaving"
+          :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveAnzahlStimmzettelClicked"
         />
@@ -54,11 +54,11 @@ const props = defineProps<{
   useTime?: boolean;
 }>();
 
-const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();
-const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
+const { wahlenActions, stimmzettelumschlaegeActions } = useWahlenStore();
+const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
-const wahl = computed(() => getWahlOrUndefinedById(props.wahlId));
+const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
@@ -67,6 +67,6 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 function onSaveAnzahlStimmzettelClicked() {
-  saveStimmzettelumschlaege(props.wahlId);
+  stimmzettelumschlaegeActions.saveStimmzettelumschlaege(props.wahlId);
 }
 </script>

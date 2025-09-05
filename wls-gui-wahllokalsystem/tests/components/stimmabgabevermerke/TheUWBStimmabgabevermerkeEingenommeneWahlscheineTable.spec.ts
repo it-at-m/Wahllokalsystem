@@ -21,7 +21,10 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    getWahlNameOrBlankStringById: mockDefinitions.getWahlNameOrBlankStringById,
+    wahlenActions: {
+      getWahlNameOrBlankStringById:
+        mockDefinitions.getWahlNameOrBlankStringById,
+    },
   }),
 }));
 

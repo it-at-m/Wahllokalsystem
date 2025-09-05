@@ -19,7 +19,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const route = useRoute();
 const router = useRouter();
 const { isUWB } = storeToRefs(useUserStore());
-const { getWahlOrUndefinedById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 const wahlID = computed(() => route.params.wahlId as string);
 
@@ -32,7 +32,7 @@ const title = computed(() => {
 watch(
   () => wahlID.value,
   (wahlID) => {
-    const wahl = getWahlOrUndefinedById(wahlID);
+    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
     if (!wahl) {
       router.push({

@@ -11,7 +11,7 @@
             :key="key"
             class="pl-0 font-weight-bold dynamic-column"
           >
-            {{ getWahlNameOrBlankStringById(key) }}
+            {{ wahlenActions.getWahlNameOrBlankStringById(key) }}
           </th>
         </tr>
       </thead>
@@ -40,5 +40,5 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl } =
   storeToRefs(useStimmabgabevermerkeStore());
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 </script>

@@ -10,7 +10,7 @@
             class="pl-0 font-weight-bold dynamic-column"
           >
             {{
-              getWahlNameOrBlankStringById(
+              wahlenActions.getWahlNameOrBlankStringById(
                 stimmabgabevermerk.wahldaten[0].wahlID
               )
             }}
@@ -63,7 +63,7 @@ import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabeve
 
 const { required } = useRules();
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 function getMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,

@@ -322,7 +322,7 @@ sequenceDiagram
     wahlWorker ->> wahlWorker : register routerHandlers
 ```
 
-*Mit dem Start der Anwendung werden für bestimmte Requests Requesthandler definiert*
+*Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler definiert.*
 
 ### Requesthandling
 
@@ -332,31 +332,31 @@ flowchart LR
     wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistance| indexDB
 ```
 
-*Übersicht über die wesentlichen Komponenten, die bei Verarbeitung eines Request zum Einsatz kommen*
+*Übersicht über die wesentlichen Komponenten, die bei der Verarbeitung eines Requests zum Einsatz kommen.*
 
 ## Komponenten
 
 ### Request Strategy Manager
 
-Der Request Strategy Manger ist die Fassade zur Verarbeitung einer Anfrage, die durch den Service Worker behandelt werden soll.
+Der Request Strategy Manager ist die Fassade zur Verarbeitung einer Anfrage, die durch den Service Worker behandelt werden soll.
 
-In ihm sind alle Request Strategien definiert. Anhand des Headers `X-WLS-SW-STRATEGY` und der Http-Methode wird entschieden
-welche Strategy zu verwenden ist. Ist keine konkrete Strategy definiert, wird eine Standardstrategie verwendet.
-Ist für die Strategie und die Http-Methode kein expliziter Handler definiert erfolgt ein klassischer fetch ohne zusätzliche Behandlung.
+In ihm sind alle Request-Strategien definiert. Anhand des Headers `X-WLS-SW-STRATEGY` und der HTTP-Methode wird entschieden,
+welche Strategie verwendet werden soll. Ist keine konkrete Strategie definiert, wird eine Standardstrategie verwendet.
+Ist für die Strategie und die HTTP-Methode kein expliziter Handler definiert, erfolgt ein klassischer Fetch ohne zusätzliche Behandlung.
 
-Die Strategie bekommt die Anfrage um sie zu bearbeiten. Die Antwort der Strategie ist auch die Antwort des Managers.
+Die Strategie erhält die Anfrage, um sie zu bearbeiten. Die Antwort der Strategie ist auch die Antwort des Managers.
 
 ### Requeststrategie
-Requeststrategien sind die jeweiligen konkreten Implementierungen der zuvor beschrieben [Varianten](#strategien) wie mit Requests im Rahmen
-der Offlinefähigkeit umzugehen ist.
+Requeststrategien sind die jeweiligen konkreten Implementierungen der zuvor beschriebenen [Varianten](#strategien),
+wie mit Requests im Rahmen der Offlinefähigkeit umzugehen ist.
 
-Um Daten über eine Sitzung zu persistieren wird die IndexDB des Browsers verwendet. Die Strategie verwendet für den Zugriff
-das entsprechende [Composable](#indexdb).
+Um Daten über eine Sitzung hinaus zu persistieren, wird die IndexedDB des Browsers verwendet.
+Die Strategie nutzt für den Zugriff das entsprechende [Composable](#indexdb).
 
 ### IndexDB
 
-Ist ein Composable, dass als Fassade für den Zugriff auf die IndexDB des Browsers dient. Es stellt alle notwendigen
-zur Einrichtung und zum Lesen und Schreiben bereit.
+IndexDB ist ein Composable, das als Fassade für den Zugriff auf die IndexedDB des Browsers dient.
+Es stellt alle notwendigen Funktionen zur Einrichtung sowie zum Lesen und Schreiben bereit.
 
 ### Common API Utils
 

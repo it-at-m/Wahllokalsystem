@@ -1,20 +1,24 @@
 <template>
   <v-container>
-    <v-table>
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
+          <th class="sav-first-column border-b-0" />
           <th
             v-for="key in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
             )"
             :key="key"
+            class="pl-0 font-weight-bold dynamic-column"
           >
-            <b>{{ getWahlNameOrBlankStringById(key) }}</b>
+            {{ getWahlNameOrBlankStringById(key) }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <!-- placeholder column for spacing -->
+          <td />
           <td
             v-for="(value, index) in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.values()

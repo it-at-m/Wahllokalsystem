@@ -308,3 +308,82 @@ ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` z
 - `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
+
+# Umsetzung
+
+## Abläufe
+
+### Start der Anwendung
+
+```mermaid
+sequenceDiagram
+    participant wahlWorker
+
+    wahlWorker ->> wahlWorker : register routerHandlers
+```
+
+*Mit dem Start der Anwendung werden für bestimmte Requests Requesthandler definiert*
+
+### Requesthandling
+
+```mermaid
+flowchart LR
+
+    wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistance| indexDB
+```
+
+*Übersicht über die wesentlichen Komponenten, die bei Verarbeitung eines Request zum Einsatz kommen*
+
+## Komponenten
+
+### Request Strategy Manager
+
+Der Request Strategy Manger ist die Fassade zur Verarbeitung einer Anfrage, die durch den Service Worker behandelt werden soll.
+
+In ihm sind alle Request Strategien definiert. Anhand des Headers `X-WLS-SW-STRATEGY` und der Http-Methode wird entschieden
+welche Strategy zu verwenden ist. Ist keine konkrete Strategy definiert, wird eine Standardstrategie verwendet.
+Ist für die Strategie und die Http-Methode kein expliziter Handler definiert erfolgt ein klassischer fetch ohne zusätzliche Behandlung.
+
+Die Strategie bekommt die Anfrage um sie zu bearbeiten. Die Antwort der Strategie ist auch die Antwort des Managers.
+
+### Requeststrategie
+Requeststrategien sind die jeweiligen konkreten Implementierungen der zuvor beschrieben [Varianten](#strategien) wie mit Requests im Rahmen
+der Offlinefähigkeit umzugehen ist.
+
+Um Daten über eine Sitzung zu persistieren wird die IndexDB des Browsers verwendet. Die Strategie verwendet für den Zugriff
+das entsprechende [Composable](#indexdb).
+
+### IndexDB
+
+Ist ein Composable, dass als Fassade für den Zugriff auf die IndexDB des Browsers dient. Es stellt alle notwendigen
+zur Einrichtung und zum Lesen und Schreiben bereit.
+
+### Common API Utils
+
+Das Composable `commonApiUtils` stellt mit dem `axiosConfigWrapper` eine Fluent-API bereit, damit bei den Requests
+über Axios der korrekte Header für die Offline-Strategie gesetzt wird.
+
+```ts
+const { axiosConfigWrapper } = useCommonApiUtils();
+
+//Abrufen des Wahlvorstandes mit ONLINE_FIRST-Strategie
+await wahlvorstandControllerApi.getWahlvorstand(
+    wahlbezirkID,
+    forceUpdate,
+    axiosConfigWrapper().requestAsOnlineFirst()
+);
+
+//Senden der Wahlteilung mit ONLINE_ONLY-Strategie
+await waehlerAnzahlControllerApi.postWahlbeteiligung(
+    wahlbezirkID,
+    wahlID,
+    toDto(wahlbeteiligung),
+    axiosConfigWrapper().requestAsOnlineOnly()
+);
+
+//Versenden von Ereignisse ohne explizite Strategy. Somit gilt die Standardstrategie.
+await ereignisControllerApi.postEreignisse(
+    wahlbezirkID,
+    ereignisseWriteDto
+);
+```

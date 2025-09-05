@@ -268,6 +268,6 @@ Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettel z
 ::: info `Zählen der Stimmzettelumschläge` im Briefwahlbezirk {data-bwb="true"}
 Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettelumschläge zu zählen und zu erfassen.
 Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffnet wurde. Diese Uhrzeit darf nicht in
-der Zukunft liegen, muss aber nach der erlaubten Schließungsuhrzeit (Default für `FRUEHESTE_EROEFFNUNGSUHRZEIT_BW` ist
-18 Uhr) sein.
+der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrzeit sein
+(Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
 :::

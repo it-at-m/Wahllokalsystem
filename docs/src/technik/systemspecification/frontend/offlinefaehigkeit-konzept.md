@@ -374,7 +374,7 @@ await wahlvorstandControllerApi.getWahlvorstand(
     axiosConfigWrapper().requestAsOnlineFirst()
 );
 
-//Senden der Wahlteilung mit ONLINE_ONLY-Strategie
+//Senden der Wahlbeteiligung mit ONLINE_ONLY-Strategie
 await waehlerAnzahlControllerApi.postWahlbeteiligung(
     wahlbezirkID,
     wahlID,
@@ -382,7 +382,7 @@ await waehlerAnzahlControllerApi.postWahlbeteiligung(
     axiosConfigWrapper().requestAsOnlineOnly()
 );
 
-//Versenden von Ereignisse ohne explizite Strategy. Somit gilt die Standardstrategie.
+//Versenden von Ereignissen ohne explizite Strategie. Somit gilt die Standardstrategie.
 await ereignisControllerApi.postEreignisse(
     wahlbezirkID,
     ereignisseWriteDto

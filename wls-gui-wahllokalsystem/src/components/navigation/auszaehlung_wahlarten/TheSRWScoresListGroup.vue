@@ -33,7 +33,7 @@ import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 const { routeWithNameAndParams } = useNavigationUtils();
 
 defineProps<{
@@ -41,6 +41,6 @@ defineProps<{
 }>();
 
 const srwWahlID = computed<string | undefined>(() => {
-  return getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Srw);
+  return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Srw);
 });
 </script>

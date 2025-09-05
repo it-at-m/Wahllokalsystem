@@ -55,12 +55,16 @@ export const useWahlenStore = defineStore(storeID, () => {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
       return wahl ? wahl.wahltag : "";
     },
-    getWahlIdOrUndefinedByWahlart: function getWahlIdOrUndefinedByWahlart(wahlart: WahlWahlartEnum) {
+    getWahlIdOrUndefinedByWahlart: function getWahlIdOrUndefinedByWahlart(
+      wahlart: WahlWahlartEnum
+    ) {
       if (wahlenState.value.wahlen) {
-        const wahl = wahlenState.value.wahlen.find((wahl) => wahl.wahlart === wahlart);
+        const wahl = wahlenState.value.wahlen.find(
+          (wahl) => wahl.wahlart === wahlart
+        );
         return wahl ? wahl.wahlID : undefined;
       }
-    }
+    },
   };
 
   /* --- beanstandeteWahlbriefe --- */

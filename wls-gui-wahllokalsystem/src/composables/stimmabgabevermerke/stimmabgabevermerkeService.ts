@@ -54,10 +54,11 @@ export function useStimmabgabevermerkeService() {
     waehlerverzeichnisNummer: number,
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
-    const { getWahlNameOrBlankStringById } = useWahlenStore();
+    const { wahlenActions } = useWahlenStore();
     const wahlname =
-      getWahlNameOrBlankStringById(stimmabgabevermerke.wahldaten?.[0].wahlID) ||
-      "";
+      wahlenActions.getWahlNameOrBlankStringById(
+        stimmabgabevermerke.wahldaten?.[0].wahlID
+      ) || "";
     try {
       await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
         wahlbezirkID,

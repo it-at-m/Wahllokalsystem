@@ -245,9 +245,9 @@ describe("wahlenStore.ts", () => {
         .wahlart(WahlWahlartEnum.Srw)
         .build();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+      const result = unitUnderTest.wahlenActions.getWahlIdOrUndefinedByWahlart(
         WahlWahlartEnum.Obw
       );
 
@@ -258,9 +258,9 @@ describe("wahlenStore.ts", () => {
       const wahlOne = prepareWahl().wahlart(WahlWahlartEnum.Obw).build();
       const wahlTwo = prepareWahl().wahlart(WahlWahlartEnum.Srw).build();
 
-      unitUnderTest.wahlen = [wahlOne, wahlTwo];
+      unitUnderTest.wahlenState.wahlen = [wahlOne, wahlTwo];
 
-      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+      const result = unitUnderTest.wahlenActions.getWahlIdOrUndefinedByWahlart(
         WahlWahlartEnum.Mbw
       );
 
@@ -268,9 +268,9 @@ describe("wahlenStore.ts", () => {
     });
 
     it("should_getUndefined_when_wahlenDoNotExist", () => {
-      unitUnderTest.wahlen = null;
+      unitUnderTest.wahlenState.wahlen = null;
 
-      const result = unitUnderTest.getWahlIdOrUndefinedByWahlart(
+      const result = unitUnderTest.wahlenActions.getWahlIdOrUndefinedByWahlart(
         WahlWahlartEnum.Obw
       );
 

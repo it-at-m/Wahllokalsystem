@@ -309,11 +309,11 @@ ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` z
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
 
-# Umsetzung
+## Umsetzung
 
-## Abläufe
+### Abläufe
 
-### Start der Anwendung
+#### Start der Anwendung
 
 ```mermaid
 sequenceDiagram
@@ -322,9 +322,9 @@ sequenceDiagram
     wahlWorker ->> wahlWorker : register routerHandlers
 ```
 
-*Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler definiert.*
+_Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler definiert._
 
-### Requesthandling
+#### Requesthandling
 
 ```mermaid
 flowchart LR
@@ -332,11 +332,11 @@ flowchart LR
     wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistance| indexDB
 ```
 
-*Übersicht über die wesentlichen Komponenten, die bei der Verarbeitung eines Requests zum Einsatz kommen.*
+_Übersicht über die wesentlichen Komponenten, die bei der Verarbeitung eines Requests zum Einsatz kommen._
 
-## Komponenten
+### Komponenten
 
-### Request Strategy Manager
+#### Request Strategy Manager
 
 Der Request Strategy Manager ist die Fassade zur Verarbeitung einer Anfrage, die durch den Service Worker behandelt werden soll.
 
@@ -346,19 +346,20 @@ Ist für die Strategie und die HTTP-Methode kein expliziter Handler definiert, e
 
 Die Strategie erhält die Anfrage, um sie zu bearbeiten. Die Antwort der Strategie ist auch die Antwort des Managers.
 
-### Requeststrategie
+#### Requeststrategie
+
 Requeststrategien sind die jeweiligen konkreten Implementierungen der zuvor beschriebenen [Varianten](#strategien),
 wie mit Requests im Rahmen der Offlinefähigkeit umzugehen ist.
 
 Um Daten über eine Sitzung hinaus zu persistieren, wird die IndexedDB des Browsers verwendet.
 Die Strategie nutzt für den Zugriff das entsprechende [Composable](#indexdb).
 
-### IndexDB
+#### IndexDB
 
 IndexDB ist ein Composable, das als Fassade für den Zugriff auf die IndexedDB des Browsers dient.
 Es stellt alle notwendigen Funktionen zur Einrichtung sowie zum Lesen und Schreiben bereit.
 
-### Common API Utils
+#### Common API Utils
 
 Das Composable `commonApiUtils` stellt mit dem `axiosConfigWrapper` eine Fluent-API bereit, damit bei den Requests
 über Axios der korrekte Header für die Offline-Strategie gesetzt wird.

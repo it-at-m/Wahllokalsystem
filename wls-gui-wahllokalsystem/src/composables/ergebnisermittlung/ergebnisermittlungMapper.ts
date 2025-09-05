@@ -4,6 +4,9 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+
+const { createTodayWithTime } = useDateTimeUtils();
 export function useErgebnisermittlungMapper() {
   function toDto(
     model: Stimmzettelumschlaege,
@@ -25,6 +28,20 @@ export function useErgebnisermittlungMapper() {
     return dto;
   }
 
+  function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
+    const model: Stimmzettelumschlaege = {
+      anzahlWaehler: dto.anzahlWaehler,
+    };
+
+    if (dto.urneneroeffnungsUhrzeit) {
+      model.urneneroeffnungsUhrzeit = createTodayWithTime(
+        dto.urneneroeffnungsUhrzeit
+      );
+    }
+
+    return model;
+  }
+
   function _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
     wahlID: string,
     wahlbezirkID: string
@@ -37,5 +54,6 @@ export function useErgebnisermittlungMapper() {
 
   return {
     toDto,
+    toModel,
   };
 }

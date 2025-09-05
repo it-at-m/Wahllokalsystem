@@ -10,9 +10,12 @@ import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/er
 const { generateRandomString } = useCommonTestDataFactory();
 
 describe("ergebnisermittlungMapper.ts", () => {
-  const { toDto } = useErgebnisermittlungMapper();
-  const { createStimmzettelumschlaege, createBezirkUndWahlIDDto } =
-    useStimmzettelumschlaegeTestDataFactory();
+  const { toDto, toModel } = useErgebnisermittlungMapper();
+  const {
+    createStimmzettelumschlaege,
+    createBezirkUndWahlIDDto,
+    createStimmzettelumschlaegeDto,
+  } = useStimmzettelumschlaegeTestDataFactory();
 
   describe("toDto", () => {
     it("should_returnDto_when_givenModelWithoutUhrzeit", () => {
@@ -47,6 +50,38 @@ describe("ergebnisermittlungMapper.ts", () => {
       const result = toDto(model, wahlID, wahlbezirkID);
 
       expect(result).toStrictEqual(expectedDto);
+    });
+  });
+
+  describe("toModel", () => {
+    it("should_returnModel_when_givenDtoWithoutUhrzeit", () => {
+      const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
+
+      const expectedModel: Stimmzettelumschlaege = {
+        anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+      };
+
+      const result = toModel(dto);
+
+      expect(result).toStrictEqual(expectedModel);
+    });
+
+    it("should_returnModel_when_givenDtoWithUhrzeit", () => {
+      const eroeffnungszeit = "15:00:00";
+      const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
+      dto.urneneroeffnungsUhrzeit = eroeffnungszeit;
+
+      const epectedEroeffnungszeit = new Date();
+      epectedEroeffnungszeit.setHours(15, 0, 0, 0);
+
+      const expectedModel: Stimmzettelumschlaege = {
+        anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+        urneneroeffnungsUhrzeit: epectedEroeffnungszeit,
+      };
+
+      const result = toModel(dto);
+
+      expect(result).toStrictEqual(expectedModel);
     });
   });
 });

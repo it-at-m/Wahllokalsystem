@@ -15,30 +15,36 @@
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
-    <v-table>
+    <v-divider
+      :thickness="2"
+      class="border-opacity-25"
+    />
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
-          <td />
-          <td
+          <th class="sav-first-column border-b-0" />
+          <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="font-weight-bold dynamic-column border-b-0"
           >
-            <b>{{
+            {{
               getWahlNameOrBlankStringById(
                 stimmabgabevermerk.wahldaten[0].wahlID
               )
-            }}</b>
-            <div><b>Personen Mit Stimmabgabevermerk</b></div>
-          </td>
+            }}
+            <div>Personen mit Stimmabgabevermerk</div>
+          </th>
         </tr>
-        <tr>
-          <td><b>Blatt</b></td>
-          <td
+        <tr class="font-weight-bold">
+          <th class="border-b-0">Blatt</th>
+          <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="border-b-0"
           >
-            <b>Anzahl Stimmabgabevermerke</b>
-          </td>
+            Anzahl Stimmabgabevermerke
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -82,18 +88,20 @@
             </template>
           </td>
         </tr>
-        <tr>
-          <td><b>Gesamt</b></td>
+      </tbody>
+      <tfoot>
+        <tr class="font-weight-bold">
+          <td>Gesamt</td>
           <td
             v-for="(
               totalCount, index
             ) in stimmabgabevermerkeTableTotalEachWahldaten"
             :key="`column-${index}-` + totalCount"
           >
-            <b>{{ totalCount }}</b>
+            {{ totalCount }}
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </v-table>
     <base-dialog
       :visible="isDeleteDialogVisible"

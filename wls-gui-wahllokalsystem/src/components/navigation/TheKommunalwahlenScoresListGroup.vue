@@ -7,8 +7,14 @@
       />
     </template>
     <v-list-item
-      :title="title"
-      :to="route"
+      v-if="isBWB"
+      title="Wahlscheine"
+      to="/Wahlscheine"
+    />
+    <v-list-item
+      v-if="isUWB"
+      title="Stimmabgabevermerke"
+      :to="'/' + ROUTE_STIMMABGABEVERMERKE"
     />
     <the-o-b-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
     <the-s-r-w-scores-list-group :title-stimmen-zaehlen="titleStimmenZaehlen" />
@@ -26,15 +32,8 @@ import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import { ROUTE_STIMMABGABEVERMERKE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-const { isBWB } = storeToRefs(useUserStore());
+const { isBWB, isUWB } = storeToRefs(useUserStore());
 
-const title = computed(() =>
-  isBWB.value ? "Wahlscheine" : "Stimmabgabevermerke"
-);
-
-const route = computed(() =>
-  isBWB.value ? "Wahlscheine" : ROUTE_STIMMABGABEVERMERKE
-);
 const titleStimmenZaehlen = computed(() => {
   return isBWB.value
     ? "Zählen der Stimmzettelumschläge"

@@ -11,10 +11,11 @@
     https://github.com/vuetifyjs/vuetify/issues/20516 -->
     <v-list-item
       :title="titleStimmenZaehlen"
-      :to="{
-        name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-        params: { wahlId: String(bawWahlID) },
-      }"
+      :to="
+        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
+          wahlId: String(bawWahlID),
+        })
+      "
     />
     <v-list-item title="Ungültige Stimmzettel" />
     <v-list-item title="Gültige Stimmzettel" />
@@ -27,11 +28,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getWahlIdOrUndefinedByWahlart } = useWahlenStore();
+const { routeWithNameAndParams } = useNavigationUtils();
 
 defineProps<{
   titleStimmenZaehlen: string;

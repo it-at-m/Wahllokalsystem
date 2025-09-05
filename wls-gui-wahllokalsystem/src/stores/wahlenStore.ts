@@ -158,6 +158,24 @@ export const useWahlenStore = defineStore(storeID, () => {
   });
 
   const stimmzettelumschlaegeActions = {
+    loadStimmzettelumschlaege: async function loadStimmzettelumschlaege(
+      wahlID: string,
+      sendNotification = true
+    ) {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      if (wahl) {
+        const loadedStimmzettelumschlaege =
+          await ergebnisermittlungService.getStimmzettelumschlaege(
+            wahl.wahlID,
+            currentUserWahlbezirkID.value,
+            sendNotification
+          );
+
+        if (loadedStimmzettelumschlaege) {
+          wahl.stimmzettelumschlaege = loadedStimmzettelumschlaege;
+        }
+      }
+    },
     saveStimmzettelumschlaege: async function saveStimmzettelumschlaege(
       wahlID: string
     ) {

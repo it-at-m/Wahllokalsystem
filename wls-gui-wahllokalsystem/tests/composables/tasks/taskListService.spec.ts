@@ -174,6 +174,7 @@ describe("taskListService.ts", () => {
         "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+        "Stimmzettel für " + mockedWahl.name,
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));

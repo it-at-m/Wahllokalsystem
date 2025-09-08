@@ -319,10 +319,12 @@ ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` z
 sequenceDiagram
     participant wahlWorker
 
-    wahlWorker ->> wahlWorker : register routerHandlers
+    wahlWorker ->> wahlWorker : register Requests-Handlers
 ```
 
-_Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler definiert._
+_Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler registriert._
+
+Die Registrierung erfolgt mittels `registerRoute(<RegEx für URL>, <Requesthandlerfunktion>, <Http-Methode>)`
 
 #### Requesthandling
 

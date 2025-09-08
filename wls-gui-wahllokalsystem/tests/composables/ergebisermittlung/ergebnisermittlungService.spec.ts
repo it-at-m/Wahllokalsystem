@@ -198,5 +198,26 @@ describe("ergebnisermittlungService", () => {
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
     });
+
+    it("should_notMapAndReturnNull_when_apiReturns204", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
+        status: 204,
+        data: null,
+      });
+
+      const result = await getStimmzettelumschlaege(
+        wahlID,
+        wahlbezirkID,
+        WahlbezirksArtEnum.UWB,
+        "wahlname",
+        false
+      );
+
+      expect(result).toBeNull();
+      expect(mockDefinitions.toModel).not.toHaveBeenCalled();
+      expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
+    });
   });
 });

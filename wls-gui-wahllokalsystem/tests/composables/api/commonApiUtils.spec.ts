@@ -3,7 +3,7 @@ import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValu
 import { HttpStatusCode } from "axios";
 import { describe, expect, it } from "vitest";
 
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
 const { createIndexDBValue, prepareIndexDBValue } =

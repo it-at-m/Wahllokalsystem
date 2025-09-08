@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
@@ -58,6 +59,8 @@ describe("ergebnisermittlungService", () => {
         wahlID,
         wahlbezirkID,
         stimmzettelumschlaege,
+        WahlbezirksArtEnum.UWB,
+        "wahlname",
         false
       );
 
@@ -78,6 +81,8 @@ describe("ergebnisermittlungService", () => {
         wahlID,
         wahlbezirkID,
         stimmzettelumschlaege,
+        WahlbezirksArtEnum.UWB,
+        "wahlname",
         true
       );
 
@@ -103,6 +108,8 @@ describe("ergebnisermittlungService", () => {
           wahlID,
           wahlbezirkID,
           stimmzettelumschlaege,
+          WahlbezirksArtEnum.UWB,
+          "wahlname",
           true
         )
       ).rejects.toThrow("mocked api call failed");
@@ -131,6 +138,8 @@ describe("ergebnisermittlungService", () => {
       const result = await getStimmzettelumschlaege(
         wahlID,
         wahlbezirkID,
+        WahlbezirksArtEnum.UWB,
+        "wahlname",
         false
       );
 
@@ -152,7 +161,13 @@ describe("ergebnisermittlungService", () => {
       const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
       mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
 
-      const result = await getStimmzettelumschlaege(wahlID, wahlbezirkID, true);
+      const result = await getStimmzettelumschlaege(
+        wahlID,
+        wahlbezirkID,
+        WahlbezirksArtEnum.UWB,
+        "wahlname",
+        true
+      );
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -170,7 +185,13 @@ describe("ergebnisermittlungService", () => {
       );
 
       await expect(
-        getStimmzettelumschlaege(wahlID, wahlbezirkID, true)
+        getStimmzettelumschlaege(
+          wahlID,
+          wahlbezirkID,
+          WahlbezirksArtEnum.UWB,
+          "wahlname",
+          true
+        )
       ).rejects.toThrow("mocked api call failed");
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([

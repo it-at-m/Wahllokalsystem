@@ -1,4 +1,5 @@
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 import {
   Configuration,
@@ -26,6 +27,8 @@ export function useErgebnisermittlungService() {
     wahlID: string,
     wahlbezirkID: string,
     stimmzettelumschlaege: Stimmzettelumschlaege,
+    wahlbezirksArt: WahlbezirksArtEnum,
+    wahlName: string,
     sendNotification = true
   ): Promise<void> {
     try {
@@ -36,14 +39,14 @@ export function useErgebnisermittlungService() {
       );
       if (sendNotification) {
         addNotification(
-          "Stimmzettelumschlaege erfolgreich gespeichert.",
+          `${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} erfolgreich gespeichert.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
     } catch (error) {
       if (sendNotification) {
         addNotification(
-          "Speichern der Stimmzettelumschlaege fehlgeschlagen.",
+          `Speichern der ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
@@ -54,6 +57,8 @@ export function useErgebnisermittlungService() {
   async function getStimmzettelumschlaege(
     wahlID: string,
     wahlbezirkID: string,
+    wahlbezirksArt: WahlbezirksArtEnum,
+    wahlName: string,
     sendNotification = true
   ) {
     try {
@@ -64,7 +69,7 @@ export function useErgebnisermittlungService() {
         );
       if (sendNotification) {
         addNotification(
-          "Stimmzettelumschläge erfolgreich geladen.",
+          `${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} erfolgreich geladen.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
@@ -73,11 +78,22 @@ export function useErgebnisermittlungService() {
     } catch (e) {
       if (sendNotification) {
         addNotification(
-          "Laden der Stimmzettelumschläge fehlgeschlagen.",
+          `Laden der ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
       throw e;
+    }
+  }
+
+  function _getStimmzettelTermBasedOnWahlbezirkArt(
+    wahlbezirksArt: WahlbezirksArtEnum
+  ) {
+    switch (wahlbezirksArt) {
+      case "UWB":
+        return "Stimmzettel";
+      case "BWB":
+        return "Stimmzettelumschläge";
     }
   }
 

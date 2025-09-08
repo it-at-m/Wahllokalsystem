@@ -20,8 +20,12 @@ const ergebnisermittlungService = useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID, currentUserWahlbezirkID, user } =
-    storeToRefs(useUserStore());
+  const {
+    currentUserWahltagID,
+    currentUserWahlbezirkID,
+    user,
+    currentUserWahlbezirksArt,
+  } = storeToRefs(useUserStore());
 
   /* --- wahlen --- */
   const wahlenState: Ref<{
@@ -168,6 +172,8 @@ export const useWahlenStore = defineStore(storeID, () => {
           await ergebnisermittlungService.getStimmzettelumschlaege(
             wahl.wahlID,
             currentUserWahlbezirkID.value,
+            currentUserWahlbezirksArt.value,
+            wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID),
             sendNotification
           );
 
@@ -186,7 +192,9 @@ export const useWahlenStore = defineStore(storeID, () => {
           await ergebnisermittlungService.saveStimmzettelumschlaege(
             wahl.wahlID,
             currentUserWahlbezirkID.value,
-            wahl.stimmzettelumschlaege
+            wahl.stimmzettelumschlaege,
+            currentUserWahlbezirksArt.value,
+            wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)
           );
         } finally {
           stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;

@@ -71,12 +71,12 @@ describe("ergebnisermittlungMapper.ts", () => {
       const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
       dto.urneneroeffnungsUhrzeit = eroeffnungszeit;
 
-      const epectedEroeffnungszeit = new Date();
-      epectedEroeffnungszeit.setHours(15, 0, 0, 0);
+      const expectedEroeffnungszeit = new Date();
+      expectedEroeffnungszeit.setHours(15, 0, 0, 0);
 
       const expectedModel: Stimmzettelumschlaege = {
         anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
-        urneneroeffnungsUhrzeit: epectedEroeffnungszeit,
+        urneneroeffnungsUhrzeit: expectedEroeffnungszeit,
       };
 
       const result = toModel(dto);

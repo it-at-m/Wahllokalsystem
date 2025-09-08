@@ -15,7 +15,7 @@
             <div class="v-col v-col-5 d-flex align-center justify-center"></div>
             <div class="v-col v-col-3 d-flex align-center justify-end">
               <!--v-if-->
-              <div class="time navbar-text mx-2 mt-1">07:30:00</div><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-1"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+              <div class="time navbar-text mx-2 mt-1">07:30:00</div><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-1" data-test="button-activator-menu-online-offline"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
                 <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M21,4H16V20H21V4M14,9H9V20H14V9M7,14H2V20H7V14Z"></path></svg></i></span>
                 <!---->
                 <!---->
@@ -38,29 +38,12 @@
         <!---->
         <!---->
         <div class="v-navigation-drawer__content">
-          <div class="v-list v-theme--light bg-transparent v-list--density-default v-list--one-line" tabindex="0" role="listbox"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-              <!---->
-              <div class="v-list-item__content" data-no-activator="">
-                <div class="v-list-item-title">Home</div>
-                <!---->
-                <!---->
-              </div>
-              <!---->
-            </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-              <!---->
-              <div class="v-list-item__content" data-no-activator="">
-                <div class="v-list-item-title">Wahlvorstand</div>
-                <!---->
-                <!---->
-              </div>
-              <!---->
-            </a>
-            <!--v-if-->
-            <div class="v-list-group">
-              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-Wahlhandlung"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+          <div class="v-list v-theme--light bg-transparent v-list--density-default v-list--one-line pt-0" tabindex="0" role="listbox">
+            <div class="v-list-group bg-primary">
+              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-Allgemein"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                 <!---->
                 <div class="v-list-item__content" data-no-activator="">
-                  <div class="v-list-item-title">Wahlhandlung</div>
+                  <div class="v-list-item-title">Allgemein</div>
                   <!---->
                   <!---->
                 </div>
@@ -72,10 +55,10 @@
                 </div>
               </div>
               <transition-stub name="" appear="false" persisted="false" css="false">
-                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Wahlhandlung" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Allgemein" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                     <!---->
                     <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Wahlumgebung</div>
+                      <div class="v-list-item-title">Home</div>
                       <!---->
                       <!---->
                     </div>
@@ -83,38 +66,338 @@
                   </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                     <!---->
                     <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Wählerverzeichnis</div>
+                      <div class="v-list-item-title">Wahlvorstand</div>
                       <!---->
                       <!---->
                     </div>
                     <!---->
-                  </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                  </a>
+                  <!--v-if-->
+                  <div class="v-list-group">
+                    <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-Wahlhandlung"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                      <!---->
+                      <div class="v-list-item__content" data-no-activator="">
+                        <div class="v-list-item-title">Wahlhandlung</div>
+                        <!---->
+                        <!---->
+                      </div>
+                      <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
+                          </svg></i>
+                        <!---->
+                        <div class="v-list-item__spacer"></div>
+                      </div>
+                    </div>
+                    <transition-stub name="" appear="false" persisted="false" css="false">
+                      <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Wahlhandlung" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Wahlumgebung</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Wählerverzeichnis</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Beginn Stimmabgabe</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Stimmabgabe</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a></div>
+                    </transition-stub>
+                  </div><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                     <!---->
                     <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Beginn Stimmabgabe</div>
+                      <div class="v-list-item-title">Ereignisse</div>
                       <!---->
                       <!---->
                     </div>
                     <!---->
-                  </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                    <!---->
-                    <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Stimmabgabe</div>
-                      <!---->
-                      <!---->
-                    </div>
-                    <!---->
-                  </a></div>
+                  </a>
+                </div>
               </transition-stub>
-            </div><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-              <!---->
-              <div class="v-list-item__content" data-no-activator="">
-                <div class="v-list-item-title">Ereignisse</div>
+            </div>
+            <div class="v-list-group">
+              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-Ergebnisse"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                 <!---->
-                <!---->
+                <div class="v-list-item__content" data-no-activator="">
+                  <div class="v-list-item-title">Ergebnisermittlung</div>
+                  <!---->
+                  <!---->
+                </div>
+                <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                      <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
+                    </svg></i>
+                  <!---->
+                  <div class="v-list-item__spacer"></div>
+                </div>
               </div>
-              <!---->
-            </a>
+              <transition-stub name="" appear="false" persisted="false" css="false">
+                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Ergebnisse" style="display: none;">
+                  <!--v-if--><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                    <!---->
+                    <div class="v-list-item__content" data-no-activator="">
+                      <div class="v-list-item-title">Stimmabgabevermerke</div>
+                      <!---->
+                      <!---->
+                    </div>
+                    <!---->
+                  </a>
+                  <div class="v-list-group">
+                    <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-OBW_Scores"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                      <!---->
+                      <div class="v-list-item__content" data-no-activator="">
+                        <div class="v-list-item-title">🚧 Wahl des Oberbürgermeisters</div>
+                        <!---->
+                        <!---->
+                      </div>
+                      <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
+                          </svg></i>
+                        <!---->
+                        <div class="v-list-item__spacer"></div>
+                      </div>
+                    </div>
+                    <transition-stub name="" appear="false" persisted="false" css="false">
+                      <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-OBW_Scores" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Zählen der Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Stapel c</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Stapel b</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Stapel a</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Schnellmeldung</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Niederschrift</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                      </div>
+                    </transition-stub>
+                  </div>
+                  <div class="v-list-group">
+                    <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-SRW_Scores"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                      <!---->
+                      <div class="v-list-item__content" data-no-activator="">
+                        <div class="v-list-item-title">🚧 Wahl des Stadtrats</div>
+                        <!---->
+                        <!---->
+                      </div>
+                      <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
+                          </svg></i>
+                        <!---->
+                        <div class="v-list-item__spacer"></div>
+                      </div>
+                    </div>
+                    <transition-stub name="" appear="false" persisted="false" css="false">
+                      <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-SRW_Scores" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Zählen der Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Ungültige Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Gültige Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Schnellmeldung</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Kandidatinnen- und Kandidatenstimmen</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Niederschrift</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                      </div>
+                    </transition-stub>
+                  </div>
+                  <div class="v-list-group">
+                    <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" tabindex="-2" aria-selected="false" id="v-list-group--id-BAW_Scores"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                      <!---->
+                      <div class="v-list-item__content" data-no-activator="">
+                        <div class="v-list-item-title">🚧 Wahl des Bezirksausschusses</div>
+                        <!---->
+                        <!---->
+                      </div>
+                      <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
+                          </svg></i>
+                        <!---->
+                        <div class="v-list-item__spacer"></div>
+                      </div>
+                    </div>
+                    <transition-stub name="" appear="false" persisted="false" css="false">
+                      <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-BAW_Scores" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Zählen der Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </a>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Ungültige Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Gültige Stimmzettel</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Schnellmeldung</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Kandidatinnen- und Kandidatenstimmen</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                        <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text">
+                          <!----><span class="v-list-item__underlay"></span>
+                          <!---->
+                          <div class="v-list-item__content" data-no-activator="">
+                            <div class="v-list-item-title">Niederschrift</div>
+                            <!---->
+                            <!---->
+                          </div>
+                          <!---->
+                        </div>
+                      </div>
+                    </transition-stub>
+                  </div>
+                </div>
+              </transition-stub>
+            </div>
           </div>
         </div>
         <!---->

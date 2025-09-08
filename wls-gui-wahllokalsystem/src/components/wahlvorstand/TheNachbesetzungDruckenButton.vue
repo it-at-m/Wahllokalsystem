@@ -12,7 +12,6 @@
 import type { NachbesetzungsDruckInput } from "@/types/wahlvorstand/NachbesetzungsDruckInput.ts";
 
 import { storeToRefs } from "pinia";
-import { VBtn } from "vuetify/components";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
@@ -27,7 +26,7 @@ const { toHhMm, toGermanDateWithLongMonth } = useDateTimeFormatter();
 const { currentUserWahlbezirkNummer, isBWB, currentUserHauptWahlID } =
   storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
-const wahlenStore = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 async function onNachbesetzungDruckenClicked() {
   await sendWahlvorstand();
@@ -37,12 +36,12 @@ async function onNachbesetzungDruckenClicked() {
 
 function _openPrintDialog() {
   const data: NachbesetzungsDruckInput = {
-    wahlName: wahlenStore.getWahlNameOrBlankStringById(
+    wahlName: wahlenActions.getWahlNameOrBlankStringById(
       currentUserHauptWahlID.value
     ),
     wahlTag:
       toGermanDateWithLongMonth(
-        wahlenStore.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
+        wahlenActions.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
       ) || "",
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,

@@ -77,7 +77,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithZeroInputFieldsAndDisabledSaveButton_when_noWahlenAreGiven", async (context) => {
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = [];
+      wahlenStore.wahlenState.wahlen = [];
 
       const wrapper = mount(TheWahlumgebungBwbCard, {
         global: {
@@ -97,8 +97,9 @@ describe("TheWahlumgebungBwbCard.vue", () => {
     it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_twoWahlenAreGivenAndInputsAreEmpty", async (context) => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = validWahlen;
-      wahlbezirkStore.briefwahlVorbereitung = validBriefwahlVorbereitung;
+      wahlenStore.wahlenState.wahlen = validWahlen;
+      wahlbezirkStore.briefwahlVorbereitungState.briefwahlVorbereitung =
+        validBriefwahlVorbereitung;
 
       const wrapper = mount(TheWahlumgebungBwbCard, {
         global: {
@@ -122,7 +123,9 @@ describe("TheWahlumgebungBwbCard.vue", () => {
           plugins: [testPinia, vuetify],
         },
         props: {
-          briefwahlVorbereitung: validBriefwahlVorbereitung,
+          briefwahlVorbereitungState: {
+            briefwahlVorbereitung: validBriefwahlVorbereitung,
+          },
         },
       });
 
@@ -130,13 +133,19 @@ describe("TheWahlumgebungBwbCard.vue", () => {
         .find('[data-test="checkboxAlleVersiegelt"]')
         .get("input");
       expect(checkbox).toBeDefined();
-      expect(wrapper.vm.briefwahlVorbereitung.urneVersiegelt).toBe(false);
+      expect(
+        wrapper.vm.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urneVersiegelt
+      ).toBe(false);
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await checkbox.setValue(true);
-      expect(wrapper.vm.briefwahlVorbereitung.urneVersiegelt).toBe(true);
+      expect(
+        wrapper.vm.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urneVersiegelt
+      ).toBe(true);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
 
       await expect(wrapper.html()).toMatchFileSnapshot(

@@ -13,7 +13,10 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
+  createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
+  createTasksStimmabgabevermerke: vi.fn(),
+  getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
 }));
 
 vi.mock(
@@ -46,14 +49,36 @@ vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
   })),
 }));
 
+vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
+  useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlscheine,
+  })),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts",
+  () => ({
+    useStimmabgabevermerkeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmabgabevermerke,
+    })),
+  })
+);
+
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
-  const { generateRandomString } = useCommonTestDataFactory();
+  const { generateRandomString, generateRandomNumber } =
+    useCommonTestDataFactory();
   const { createWahl } = useWahlTestDataFactory();
   beforeEach(() => {
     setActivePinia(
@@ -68,21 +93,23 @@ describe("taskListService.ts", () => {
     it("should_containListWithTasks_when_initTaskListIsCalled", () => {
       const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
         storeToRefs(useUserStore());
-
+      const wahlMedata = {
+        wahlbezirkID: generateRandomString(10),
+        wahlnummer: generateRandomString(10),
+        wahlID: generateRandomString(10),
+      };
       // @ts-expect-error: cannot set readonly
       currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
       // @ts-expect-error: cannot set readonly
-      currentUserWahlMetadata.value = [
-        {
-          wahlbezirkID: generateRandomString(10),
-          wahlnummer: generateRandomString(10),
-          wahlID: generateRandomString(10),
-        },
-      ];
+      currentUserWahlMetadata.value = [wahlMedata];
 
       const mockedWahl = createWahl();
+      const mockedWaehlerverzeichnisNummer = generateRandomNumber(2);
 
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        mockedWaehlerverzeichnisNummer
+      );
       mockDefinitions.createTasksKonfigurationsparameter.mockReturnValue([
         {
           name: "Konfigurationsparameter",
@@ -107,6 +134,18 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksWahlscheine.mockReturnValue([
+        {
+          name: "Wahlscheine - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStimmabgabevermerke.mockReturnValue([
+        {
+          name: `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -117,6 +156,8 @@ describe("taskListService.ts", () => {
         "Wahlvorstand",
         "UngültigeWahlscheine",
         "Kopfdaten - " + mockedWahl.name,
+        "Wahlscheine - " + mockedWahl.name,
+        `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -129,6 +170,8 @@ describe("taskListService.ts", () => {
         mockDefinitions.createTasksUngueltigeWahlscheine
       ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
     });
   });
 });

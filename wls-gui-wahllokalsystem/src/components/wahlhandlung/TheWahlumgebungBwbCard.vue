@@ -8,10 +8,14 @@
           v-model="anzahlWahlurnenValidForm"
         >
           <base-wahlumgebung-wahlurnen-div
-            :wahl-vorbereitung="briefwahlVorbereitung"
+            :wahl-vorbereitung="
+              briefwahlVorbereitungState.briefwahlVorbereitung
+            "
           />
           <v-checkbox
-            v-model="briefwahlVorbereitung.urneVersiegelt"
+            v-model="
+              briefwahlVorbereitungState.briefwahlVorbereitung.urneVersiegelt
+            "
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
@@ -19,7 +23,9 @@
             <base-button-save
               active
               :disabled="isSaveButtonDisabled"
-              :loading="briefWahlVorbereitungIsSaving"
+              :loading="
+                briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
+              "
               @click="onSaveWahlumgebungBWBClicked"
             />
           </v-card-actions>
@@ -32,15 +38,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VCheckbox,
-  VContainer,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
@@ -49,26 +46,25 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 
-const { wahlen } = storeToRefs(useWahlenStore());
-const { sendBriefwahlvorbereitung } = useWahlbezirkStore();
-const { briefWahlVorbereitungIsSaving, briefwahlVorbereitung } =
-  storeToRefs(useWahlbezirkStore());
+const { wahlenState } = storeToRefs(useWahlenStore());
+const { briefwahlVorbereitungActions } = useWahlbezirkStore();
+const { briefwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlurnenValidForm.value !== true ||
-    !briefwahlVorbereitung.value.urneVersiegelt
+    !briefwahlVorbereitungState.value.briefwahlVorbereitung.urneVersiegelt
   );
 });
 
 const checkboxLabelText = computed(() => {
-  if (wahlen.value && wahlen.value?.length > 1) {
+  if (wahlenState.value.wahlen && wahlenState.value.wahlen?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }
   return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
 });
 
 function onSaveWahlumgebungBWBClicked() {
-  sendBriefwahlvorbereitung();
+  briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
 }
 </script>

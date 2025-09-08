@@ -1,23 +1,28 @@
 <template>
   <v-btn
     prepend-icon="$save"
-    :disabled="props.disabled"
+    :disabled="disabled"
     data-test="buttonSave"
-    >Speichern</v-btn
   >
+    {{ saveText }}
+  </v-btn>
 </template>
 
 <script setup lang="ts">
-import { VBtn } from "vuetify/components";
-
-const props = defineProps({
+defineProps({
   /**
    * Is the Button interactable
    */
   disabled: {
     type: Boolean,
     default: false,
-    required: false,
+  },
+  /**
+   * Custom Save Text
+   */
+  saveText: {
+    type: String,
+    default: "Speichern",
   },
 });
 </script>

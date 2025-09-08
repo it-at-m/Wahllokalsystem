@@ -63,7 +63,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWithDisabledSaveButton_when_noRowsGiven", async (context) => {
+    it("should_renderWithEnabledSaveButton_when_noRowsGiven", async (context) => {
       wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
         global: {
           plugins: [pinia, vuetify],
@@ -72,7 +72,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
 
-      expect(saveButton.props("disabled")).toBe(true);
+      expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -80,7 +80,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_renderWithDisabledSaveButton_when_rowsAreInvalid", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -111,7 +111,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_renderWithEnabledSaveButton_when_rowsAreValid", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -148,7 +148,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       });
 
       const wahlenStore = useWahlenStore();
-      wahlenStore.isBeanstandeteWahlbriefeSaving = true;
+      wahlenStore.beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeSaving = true;
 
       await nextTick();
 
@@ -161,7 +161,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_callSendBeanstandeteWahlbriefe_when_saveButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -196,13 +196,18 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
     it("should_callAddBeanstandeteWahlbriefe_when_addRowButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
           .beanstandeteWahlbriefe(["ZUGELASSEN"])
           .build(),
       ];
+
+      const addBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+        useWahlenStore().beanstandeteWahlbriefeActions,
+        "addBeanstandeterWahlbriefEntry"
+      );
 
       wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
         global: {
@@ -215,7 +220,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
       );
       await addRowButton.trigger("click");
 
-      expect(wahlenStore.addBeanstandeterWahlbriefEntry).toHaveBeenCalled();
+      expect(addBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
     });
   });
 });

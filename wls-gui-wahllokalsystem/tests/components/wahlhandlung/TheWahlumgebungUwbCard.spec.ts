@@ -80,7 +80,7 @@ describe("TheWahlumgebungUwbCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithThreeInputFieldsAndDisabledSaveButton_when_noWahlenAreGiven", async (context) => {
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = [];
+      wahlenStore.wahlenState.wahlen = [];
 
       const wrapper = mount(TheWahlumgebungUwbCard, {
         global: {
@@ -100,8 +100,9 @@ describe("TheWahlumgebungUwbCard.vue", () => {
     it("should_renderWithFiveInputFieldsAndDisabledSaveButton_when_twoWahlenAreGiven", async (context) => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = validWahlen;
-      wahlbezirkStore.urnenwahlVorbereitung = validUrnenwahlVorbereitung;
+      wahlenStore.wahlenState.wahlen = validWahlen;
+      wahlbezirkStore.urnenwahlVorbereitungState.urnenwahlVorbereitung =
+        validUrnenwahlVorbereitung;
 
       const wrapper = mount(TheWahlumgebungUwbCard, {
         global: {

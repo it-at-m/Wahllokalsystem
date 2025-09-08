@@ -2,7 +2,7 @@
   <v-text-field
     :model-value="formatedDate"
     type="date"
-    :rules="[REQUIRED]"
+    :rules="[required]"
     label="Datum"
     clearable
     @update:model-value="onModelValueChanged"
@@ -11,10 +11,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { VTextField } from "vuetify/components";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { REQUIRED } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+
+const { required } = useRules();
 
 const { toYyyyMmDd } = useDateTimeFormatter();
 

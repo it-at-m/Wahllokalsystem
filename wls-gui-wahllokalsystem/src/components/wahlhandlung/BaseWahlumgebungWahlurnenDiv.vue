@@ -7,9 +7,9 @@
       <v-number-input
         v-model="wahl.anzahl"
         class="mr-4"
-        :rules="[REQUIRED, MIN_NUMBER(1), MAX_NUMBER(99)]"
+        :rules="[required, minNumber(1), maxNumber(99)]"
         :data-test="`textFieldUrnenAnzahl_${index}`"
-        :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
+        :label="`Anzahl der Wahlurnen ${wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)}`"
         min-width="30rem"
         clearable
       />
@@ -20,14 +20,14 @@
 <script setup lang="ts">
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
-import { VNumberInput } from "vuetify/components";
-
+import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { MAX_NUMBER, MIN_NUMBER, REQUIRED } from "@/util/rules.ts";
+
+const { maxNumber, minNumber, required } = useRules();
 
 defineProps<{
   wahlVorbereitung: Wahlvorbereitung;
 }>();
 
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 </script>

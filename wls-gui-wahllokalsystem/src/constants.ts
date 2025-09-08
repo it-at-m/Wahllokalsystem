@@ -12,6 +12,8 @@ export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
 export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
 export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
+export const ROUTE_STIMMABGABEVERMERKE = "stimmabgabevermerke";
+export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
@@ -21,6 +23,9 @@ export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 
 export const WAHLHOTLINE = "089 233 96233";
 export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
+
+export const REQUEST_HEADER_OFFLINE_STRATEGY = "X-WLS-SW-STRATEGY";
+export const HTTP_HEADER_CONTENT_TYPE = "content-type";
 
 const WLS_SERVICE_API_URL = "/api/";
 
@@ -43,3 +48,5 @@ export const BRIEFWAHL_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "briefwahl-service";
 export const ERGEBNISMELDUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "ergebnismeldung-service";
+
+export const MAX_LENGTH_FOR_TEXT_INPUT = 500;

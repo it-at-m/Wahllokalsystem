@@ -21,8 +21,8 @@
         <v-textarea
           v-model="begruendung"
           :rules="[
-            MIN_LENGTH(minLengthForBegruendung),
-            MAX_LENGTH(maxLengthForBegruendung),
+            minLength(minLengthForBegruendung),
+            maxLength(maxLengthForBegruendung),
           ]"
           rows="1"
           :label="label"
@@ -56,30 +56,26 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VDialog,
-  VIcon,
-  VSpacer,
-  VTextarea,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import { MAX_LENGTH, MIN_LENGTH } from "@/util/rules.ts";
+import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 
-defineProps<{
+const { maxLength, minLength } = useRules();
+
+interface Props {
   visible: boolean;
   dialogtitle: string;
   label: string;
-}>();
+  maxLengthForBegruendung?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxLengthForBegruendung: MAX_LENGTH_FOR_TEXT_INPUT,
+});
 
 const begruendung = ref("");
 const minLengthForBegruendung = 3;
-const maxLengthForBegruendung = 500;
 const isBegruendungValid = ref(false);
 
 const emit = defineEmits<{
@@ -91,7 +87,7 @@ function updateValidationState(): void {
   const value = begruendung.value;
   isBegruendungValid.value =
     value.length >= minLengthForBegruendung &&
-    value.length <= maxLengthForBegruendung;
+    value.length <= props.maxLengthForBegruendung;
 }
 
 function onCancelClicked(): void {

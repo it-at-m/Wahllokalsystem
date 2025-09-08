@@ -3,17 +3,21 @@
     class="border-lg"
     :class="borderColor"
   >
-    <v-card-title style="font-size: 1rem">{{ title }}</v-card-title>
+    <v-card-title
+      style="font-size: 1rem"
+      :class="bgColorAndBold"
+    >
+      {{ title }}
+    </v-card-title>
     <v-card-text>
       <div class="d-flex align-center">
         <v-icon
           :color="iconColor"
           class="mr-5"
           :icon="icon"
+          size="x-large"
         />
-        <div :class="textColor">
-          <slot />
-        </div>
+        <slot />
       </div>
       <div
         v-if="hasAdditionalFeedback"
@@ -29,7 +33,6 @@
 import type { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 import { computed, useSlots } from "vue";
-import { VCard, VCardText, VCardTitle, VIcon } from "vuetify/components";
 
 import { useInputFeedbackUtils } from "@/composables/common/inputFeedbackUtils.ts";
 
@@ -37,7 +40,7 @@ const {
   getBorderColorForInputFeedbackType,
   getIconColorForInputFeedbackType,
   getIconForInputFeedbackType,
-  getTextColorForInputFeedbackType,
+  getBackgroundColorAndBoldTextForInputFeedbackType,
 } = useInputFeedbackUtils();
 
 const slots = useSlots();
@@ -49,9 +52,11 @@ const props = defineProps<{
 
 const icon = computed(() => getIconForInputFeedbackType(props.type));
 const iconColor = computed(() => getIconColorForInputFeedbackType(props.type));
-const textColor = computed(() => getTextColorForInputFeedbackType(props.type));
 const borderColor = computed(() =>
   getBorderColorForInputFeedbackType(props.type)
+);
+const bgColorAndBold = computed(() =>
+  getBackgroundColorAndBoldTextForInputFeedbackType(props.type)
 );
 
 const hasAdditionalFeedback = computed(() => !!slots?.additionalFeedback);

@@ -1,4 +1,10 @@
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { AxiosResponse } from "axios";
+
+import { HttpStatusCode } from "axios";
+
+import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
+import { AxiosConfigWrapper } from "@/types/api/AxiosConfigWrapper.ts";
 
 export function useCommonApiUtils() {
   function getNullOn204OrElseResponseData<T>(
@@ -7,7 +13,33 @@ export function useCommonApiUtils() {
     return response.status === 204 ? null : response.data;
   }
 
+  function createResponseOfIndexDBValue(
+    storedData: IndexDBValue,
+    httpStatusCodeWhenMissingInStoredValue = HttpStatusCode.Ok
+  ) {
+    const response = new Response(storedData.data, {
+      status: storedData.httpStatus ?? httpStatusCodeWhenMissingInStoredValue,
+      statusText: "fetched from idb",
+    });
+    if (storedData.contentType) {
+      response.headers.set(HTTP_HEADER_CONTENT_TYPE, storedData.contentType);
+    }
+    return response;
+  }
+
+  function createResponseOkWithoutResponseBody() {
+    return new Response(null, { status: HttpStatusCode.Ok });
+  }
+
+  function createResponseNotFoundWithoutResponseBody() {
+    return new Response(null, { status: HttpStatusCode.NotFound });
+  }
+
   return {
+    createResponseOfIndexDBValue,
+    createResponseOkWithoutResponseBody,
+    createResponseNotFoundWithoutResponseBody,
     getNullOn204OrElseResponseData,
+    axiosConfigWrapper: () => new AxiosConfigWrapper(),
   };
 }

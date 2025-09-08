@@ -31,14 +31,6 @@ import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VForm,
-} from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
@@ -46,8 +38,11 @@ import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignis
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
-const { hasEintraege, hasMissingEreignisFlags, isSaving } =
-  storeToRefs(ereignisStore);
+const {
+  hasEintraege,
+  isEreignisFlagsAndEreigniseintraegeInconsistent,
+  isSaving,
+} = storeToRefs(ereignisStore);
 const { addEreignis, sendEreignisse } = ereignisStore;
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
@@ -58,7 +53,7 @@ const isEreignisseFormInvalid = computed(
 const isSaveButtonDisabled = computed(
   () =>
     (hasEintraege.value && isEreignisseFormInvalid.value) ||
-    !hasMissingEreignisFlags.value
+    isEreignisFlagsAndEreigniseintraegeInconsistent.value
 );
 
 function onAddEreignisClicked() {

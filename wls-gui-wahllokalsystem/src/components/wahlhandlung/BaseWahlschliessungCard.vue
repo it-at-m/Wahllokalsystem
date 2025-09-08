@@ -6,13 +6,13 @@
       erklärt wurde.
       <v-form v-model="schliessungsuhrzeitValidForm">
         <base-time-input
-          v-model="schliessungsuhrzeit"
+          v-model="schliessungsuhrzeitState.schliessungsuhrzeit"
           class="mt-5"
           max-width="300"
           :rules="[
-            REQUIRED,
-            TIME_NOT_IN_FUTURE,
-            TIME_GREATER_OR_EQUAL(fruehesteSchliessungsuhrzeit),
+            required,
+            timeNotInFuture,
+            timeGreaterOrEqual(fruehesteSchliessungsuhrzeit),
           ]"
         />
       </v-form>
@@ -20,7 +20,7 @@
     <v-card-actions>
       <base-button-save
         active
-        :loading="schliessungsuhrzeitIsSaving"
+        :loading="schliessungsuhrzeitState.schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
@@ -31,21 +31,17 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { VCardActions, VCardText, VCardTitle, VForm } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import {
-  REQUIRED,
-  TIME_GREATER_OR_EQUAL,
-  TIME_NOT_IN_FUTURE,
-} from "@/util/rules.ts";
 
-const { sendSchliessungsuhrzeit } = useWahlbezirkStore();
-const { schliessungsuhrzeit, schliessungsuhrzeitIsSaving } =
-  storeToRefs(useWahlbezirkStore());
+const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
+
+const { schliessungsuhrzeitActions } = useWahlbezirkStore();
+const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
@@ -55,6 +51,6 @@ const isSaveButtonDisabled = computed(
 );
 
 function onSaveSchliessungsuhrzeitClicked() {
-  sendSchliessungsuhrzeit();
+  schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
 }
 </script>

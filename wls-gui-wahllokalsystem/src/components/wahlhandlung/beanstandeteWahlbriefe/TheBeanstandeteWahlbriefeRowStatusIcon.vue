@@ -10,11 +10,10 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { VIcon } from "vuetify/components";
 
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { wahlen } = storeToRefs(useWahlenStore());
+const { wahlenState } = storeToRefs(useWahlenStore());
 
 const props = defineProps<{
   index: number;
@@ -29,8 +28,8 @@ function getColor() {
 }
 
 function areRowInputsValid() {
-  return wahlen.value
-    ? wahlen.value.every(
+  return wahlenState.value.wahlen
+    ? wahlenState.value.wahlen.every(
         (wahl) =>
           wahl.beanstandeteWahlbriefe &&
           wahl.beanstandeteWahlbriefe[props.index]

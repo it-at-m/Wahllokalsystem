@@ -19,15 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import localforage from "localforage";
 import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted } from "vue";
-import { VApp, VContainer, VFadeTransition, VMain } from "vuetify/components";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
@@ -40,35 +39,30 @@ const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
 const { loadWaehler } = useMonitoringStore();
-const { initWahlen } = useWahlenStore();
-const { loadPflegeWaehlerverzeichnis } = useWahlbezirkStore();
-const { initBeanstandeteWahlbriefe } = useWahlenStore();
+const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
+const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
+const { setupIndexDB } = useIndexDB();
+
 onMounted(async () => {
   try {
     await loadUser();
-    await initWahlen();
+    await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
     await loadEreignisse();
     await loadWaehler();
-    await loadPflegeWaehlerverzeichnis();
-    await initBeanstandeteWahlbriefe();
+    await pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
+    await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
-  localforage.config({
-    driver: localforage.INDEXEDDB,
-    name: "wahldb",
-    version: 1.0,
-    storeName: "wahlstore",
-    description: "store for wahlnumber",
-  });
+  setupIndexDB();
 });
 
 onUnmounted(() => {

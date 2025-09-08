@@ -29,33 +29,45 @@
         >
           <the-waehleranzahl-count-button
             v-if="
-              eroeffnungsuhrzeitSent !== undefined &&
-              schliessungsuhrzeitSent === undefined &&
+              eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent !== undefined &&
+              schliessungsuhrzeitState.schliessungsuhrzeitSent === undefined &&
               isUWB
             "
           />
           <wls-clock class="navbar-text mx-2 mt-1" />
-          <wls-heartbeat v-model:is-offline="isOffline" />
+          <the-wls-online-offline-menu />
           <the-info-help-icon />
         </v-col>
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Home"
-          :to="'/'"
-        />
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-        <the-b-w-b-election-list-group v-if="isBWB" />
-        <the-u-w-b-election-list-group v-if="isUWB" />
-        <v-list-item
-          title="Ereignisse"
-          :to="ROUTE_EREIGNISSE"
-        />
+      <v-list class="pt-0">
+        <v-list-group
+          value="Allgemein"
+          class="bg-primary"
+        >
+          <template #activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              title="Allgemein"
+            />
+          </template>
+          <v-list-item
+            title="Home"
+            :to="routeWithName(ROUTES_HOME)"
+          />
+          <v-list-item
+            title="Wahlvorstand"
+            :to="routeWithName(ROUTE_WAHLVORSTAND)"
+          />
+          <the-b-w-b-election-list-group v-if="isBWB" />
+          <the-u-w-b-election-list-group v-if="isUWB" />
+          <v-list-item
+            title="Ereignisse"
+            :to="routeWithName(ROUTE_EREIGNISSE)"
+          />
+        </v-list-group>
+        <the-kommunalwahlen-scores-list-group />
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -63,43 +75,41 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
-import {
-  VAppBar,
-  VAppBarNavIcon,
-  VCol,
-  VList,
-  VListItem,
-  VNavigationDrawer,
-  VRow,
-} from "vuetify/components";
+import { computed } from "vue";
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
+import TheKommunalwahlenScoresListGroup from "@/components/navigation/TheKommunalwahlenScoresListGroup.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
+import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
-import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import {
+  ROUTE_EREIGNISSE,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { eroeffnungsuhrzeitSent, schliessungsuhrzeitSent } =
+const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
-const { toGermanDateFormat } = useDateTimeFormatter();
+const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
   storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );
+const { routeWithName } = useNavigationUtils();
+
 const [drawer, toggleDrawer] = useToggle();
-const isOffline = ref(false);
 const wahltermin = computed(() =>
-  user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
+  user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""

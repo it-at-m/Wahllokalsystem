@@ -173,7 +173,7 @@ export const useWahlenStore = defineStore(storeID, () => {
           wahl.wahlID,
           currentUserWahlbezirkID.value,
           currentUserWahlbezirksArt.value,
-          wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID),
+          wahl.name,
           sendNotification
         );
 
@@ -194,7 +194,7 @@ export const useWahlenStore = defineStore(storeID, () => {
             currentUserWahlbezirkID.value,
             wahl.stimmzettelumschlaege,
             currentUserWahlbezirksArt.value,
-            wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)
+            wahl.name
           );
         } finally {
           stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;

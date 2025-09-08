@@ -5,7 +5,7 @@ import {
   Configuration,
   StimmzettelumschlaegeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";

@@ -4,8 +4,8 @@ import type { HTTPMethod } from "workbox-routing/utils/constants";
 
 import { defaultMethod, validMethods } from "workbox-routing/utils/constants";
 
+import { useRequestStrategies } from "@/composables/api/requestStrategies.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useRequestStrategies } from "@/composables/common/requestStrategies.ts";
 import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 

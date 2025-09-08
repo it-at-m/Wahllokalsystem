@@ -4,7 +4,7 @@ import {
   Configuration,
   StimmabgabevermerkeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";

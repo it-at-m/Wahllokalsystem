@@ -5,7 +5,7 @@ import {
   Configuration,
   ErgebnisseControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 

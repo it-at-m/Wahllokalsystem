@@ -7,9 +7,9 @@ import {
   Configuration,
   WahlbriefdatenControllerApi,
 } from "@/api/wls-clients/generated-briefwahl-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useBriefwahlMapper } from "@/composables/briefwahl/briefwahlMapper.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";

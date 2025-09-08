@@ -4,8 +4,8 @@ import {
   BroadcastControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-broadcast-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
 

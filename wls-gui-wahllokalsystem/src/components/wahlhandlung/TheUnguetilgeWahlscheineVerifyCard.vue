@@ -15,67 +15,124 @@
           @update:model-value="onWahlscheinnummerChanged"
         />
 
-        <base-input-feedback-card
-          v-if="feedbackWahlscheinIsGueltigIsVisible"
-          title="Wahlschein ist gültig"
-          :type="InputFeedbackTypeEnum.success"
-        >
-          <ul>
-            <li>
-              Gleichen Sie die Daten der Person mit einem Ausweisdokument ab.
-            </li>
-            <li>
-              Nehmen Sie den Wahlschein ein und sammeln ihn hinten im
-              Wählerverzeichnis.
-            </li>
-            <li>
-              Lassen Sie den Stimmzettel einwerfen und vermerken dies mit einem
-              Haken auf dem Wahlschein. Es erfolgt kein Eintrag im
-              Wählerverzeichnis.
-            </li>
-          </ul>
-        </base-input-feedback-card>
+        <v-tabs v-model="tab">
+          <v-tab value="1">Gültig</v-tab>
+          <v-tab value="2">Teilweise Ungültig</v-tab>
+          <v-tab value="3">Ungültig</v-tab>
+        </v-tabs>
 
-        <base-input-feedback-card
-          v-if="feedbackWahlscheinIsUngueltigIsVisible"
-          :title="titleFeedbackWahlscheinUngueltig"
-          :type="InputFeedbackTypeEnum.error"
-        >
-          <ul>
-            <li>Die Person darf mit diesem Wahlschein keine Stimme abgeben!</li>
-            <li>Behalten Sie den Wahlschein ein.</li>
-            <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
-            <li>Erfassen Sie dies als besonderes Vorkommnis:</li>
-          </ul>
-          <template #additionalFeedback>
-            <v-row>
-              <v-col cols="4">
-                {{ ereignisBeschreibungWahlscheinUnguelttig }}
-              </v-col>
-              <v-col>
-                <v-form v-model="isAbstimmungsergebnisFormValid">
-                  <v-number-input
-                    v-model="stimmenZurueckweisung"
-                    label="Stimmen für die Zurückweisung"
-                    width="350"
-                    :rules="[required, minNumber(0)]"
-                    data-test="number-input-stimmen-zurueckweisung"
-                  />
-                </v-form>
-              </v-col>
-              <v-col>
-                <base-button-save
-                  active
-                  class="mt-2 ml-5"
-                  save-text="Beschluss speichern"
-                  :disabled="!isAbstimmungsergebnisFormValid"
-                  @click="onSaveAbstimmungsergebnisClicked"
-                />
-              </v-col>
-              <v-spacer />
-            </v-row>
-          </template>
-        </base-input-feedback-card>
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item value="1">
+            <base-input-feedback-card
+              title="Wahlschein ist gültig"
+              :type="InputFeedbackTypeEnum.success"
+            >
+              <ul>
+                <li>
+                  Gleichen Sie die Daten der Person mit einem Ausweisdokument
+                  ab.
+                </li>
+                <li>
+                  Nehmen Sie den Wahlschein ein und sammeln ihn hinten im
+                  Wählerverzeichnis.
+                </li>
+                <li>
+                  Lassen Sie den Stimmzettel einwerfen und vermerken dies mit
+                  einem Haken auf dem Wahlschein. Es erfolgt kein Eintrag im
+                  Wählerverzeichnis.
+                </li>
+              </ul>
+            </base-input-feedback-card>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="2">
+            <base-input-feedback-card
+              title="Wahlschein nicht für alle Wahlen gültig"
+              :type="InputFeedbackTypeEnum.warning"
+            >
+              <div>
+                <div>Wahlschein für folgende Wahlen ungültig</div>
+                <ul>
+                  <li>Desserts</li>
+                  <li>2. Gang</li>
+                </ul>
+              </div>
+
+              <template #additionalFeedback>
+                <v-row>
+                  <v-col cols="4">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                    diam
+                  </v-col>
+                  <v-col>
+                    <v-form v-model="isAbstimmungsergebnisFormValid">
+                      <v-number-input
+                        v-model="stimmenZurueckweisung"
+                        label="Stimmen für die Zurückweisung"
+                        width="350"
+                        :rules="[required, minNumber(0)]"
+                        data-test="number-input-stimmen-zurueckweisung"
+                      />
+                    </v-form>
+                  </v-col>
+                  <v-col>
+                    <base-button-save
+                      active
+                      class="mt-2 ml-5"
+                      save-text="Beschluss speichern"
+                      :disabled="!isAbstimmungsergebnisFormValid"
+                      @click="onSaveAbstimmungsergebnisClicked"
+                    />
+                  </v-col>
+                  <v-spacer />
+                </v-row>
+              </template>
+            </base-input-feedback-card>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="3">
+            <base-input-feedback-card
+              :title="titleFeedbackWahlscheinUngueltig"
+              :type="InputFeedbackTypeEnum.error"
+            >
+              <ul>
+                <li>
+                  Die Person darf mit diesem Wahlschein keine Stimme abgeben!
+                </li>
+                <li>Behalten Sie den Wahlschein ein.</li>
+                <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
+                <li>Erfassen Sie dies als besonderes Vorkommnis:</li>
+              </ul>
+              <template #additionalFeedback>
+                <v-row>
+                  <v-col cols="4">
+                    {{ ereignisBeschreibungWahlscheinUnguelttig }}
+                  </v-col>
+                  <v-col>
+                    <v-form v-model="isAbstimmungsergebnisFormValid">
+                      <v-number-input
+                        v-model="stimmenZurueckweisung"
+                        label="Stimmen für die Zurückweisung"
+                        width="350"
+                        :rules="[required, minNumber(0)]"
+                        data-test="number-input-stimmen-zurueckweisung"
+                      />
+                    </v-form>
+                  </v-col>
+                  <v-col>
+                    <base-button-save
+                      active
+                      class="mt-2 ml-5"
+                      save-text="Beschluss speichern"
+                      :disabled="!isAbstimmungsergebnisFormValid"
+                      @click="onSaveAbstimmungsergebnisClicked"
+                    />
+                  </v-col>
+                  <v-spacer />
+                </v-row>
+              </template>
+            </base-input-feedback-card>
+          </v-tabs-window-item>
+        </v-tabs-window>
+
         <v-img
           position="left"
           style="height: 40mm"
@@ -155,6 +212,8 @@ const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
 );
 const stimmenZurueckweisung = ref<number | undefined>(undefined);
+
+const tab = ref("1");
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>

@@ -16,7 +16,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
-const ergebnisermittlungService = useErgebnisermittlungService();
+const { getStimmzettelumschlaege, postStimmzettelumschlaege } =
+  useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
@@ -168,14 +169,13 @@ export const useWahlenStore = defineStore(storeID, () => {
     ) {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
       if (wahl) {
-        const loadedStimmzettelumschlaege =
-          await ergebnisermittlungService.getStimmzettelumschlaege(
-            wahl.wahlID,
-            currentUserWahlbezirkID.value,
-            currentUserWahlbezirksArt.value,
-            wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID),
-            sendNotification
-          );
+        const loadedStimmzettelumschlaege = await getStimmzettelumschlaege(
+          wahl.wahlID,
+          currentUserWahlbezirkID.value,
+          currentUserWahlbezirksArt.value,
+          wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID),
+          sendNotification
+        );
 
         if (loadedStimmzettelumschlaege) {
           wahl.stimmzettelumschlaege = loadedStimmzettelumschlaege;
@@ -189,7 +189,7 @@ export const useWahlenStore = defineStore(storeID, () => {
       if (wahl) {
         stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = true;
         try {
-          await ergebnisermittlungService.saveStimmzettelumschlaege(
+          await postStimmzettelumschlaege(
             wahl.wahlID,
             currentUserWahlbezirkID.value,
             wahl.stimmzettelumschlaege,

@@ -23,7 +23,7 @@ export function useErgebnisermittlungService() {
       })
     );
 
-  async function saveStimmzettelumschlaege(
+  async function postStimmzettelumschlaege(
     wahlID: string,
     wahlbezirkID: string,
     stimmzettelumschlaege: Stimmzettelumschlaege,
@@ -98,7 +98,7 @@ export function useErgebnisermittlungService() {
   }
 
   return {
-    saveStimmzettelumschlaege,
+    postStimmzettelumschlaege,
     getStimmzettelumschlaege,
   };
 }

@@ -35,7 +35,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-const { saveStimmzettelumschlaege, getStimmzettelumschlaege } =
+const { postStimmzettelumschlaege, getStimmzettelumschlaege } =
   useErgebnisermittlungService();
 
 const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
@@ -49,13 +49,13 @@ describe("ergebnisermittlungService", () => {
     vi.clearAllMocks();
   });
 
-  describe("saveStimmzettelumschlaege", () => {
+  describe("postStimmzettelumschlaege", () => {
     it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stimmzettelumschlaege = createStimmzettelumschlaege();
 
-      await saveStimmzettelumschlaege(
+      await postStimmzettelumschlaege(
         wahlID,
         wahlbezirkID,
         stimmzettelumschlaege,
@@ -77,7 +77,7 @@ describe("ergebnisermittlungService", () => {
       const wahlbezirkID = generateRandomString(10);
       const stimmzettelumschlaege = createStimmzettelumschlaege();
 
-      await saveStimmzettelumschlaege(
+      await postStimmzettelumschlaege(
         wahlID,
         wahlbezirkID,
         stimmzettelumschlaege,
@@ -104,7 +104,7 @@ describe("ergebnisermittlungService", () => {
       );
 
       await expect(
-        saveStimmzettelumschlaege(
+        postStimmzettelumschlaege(
           wahlID,
           wahlbezirkID,
           stimmzettelumschlaege,

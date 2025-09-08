@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getBeanstandeteWahlbriefe: vi.fn(),
@@ -89,7 +90,7 @@ describe("briefwahlService.ts", () => {
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
   });
@@ -126,7 +127,7 @@ describe("briefwahlService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Success",
+        UserNotificationCategoryEnum.SUCCESS,
       ]);
     });
 
@@ -172,7 +173,7 @@ describe("briefwahlService.ts", () => {
           dto
         );
         expect(mockDefinitions.addNotification.mock.calls).toEqual([
-          [expect.any(String), "Error"],
+          [expect.any(String), UserNotificationCategoryEnum.ERROR],
         ]);
       }
     );

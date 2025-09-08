@@ -4,7 +4,7 @@ import {
   Configuration,
   WahlvorstandControllerApi,
 } from "@/api/wls-clients/generated-wahlvorstand-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
 import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";

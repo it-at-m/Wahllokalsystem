@@ -150,7 +150,12 @@ const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
 
 const disableChangeRowSizeButton = computed(() => {
-  return rowSize.value == null || rowSize.value <= 0 || rowSize.value > 250;
+  return (
+    rowSize.value == null ||
+    rowSize.value <= 0 ||
+    rowSize.value > 250 ||
+    rowSize.value == lowestNumberOfRowsOverAllWahldaten.value + 1
+  );
 });
 
 function changeRowCountOrOpenDialog() {

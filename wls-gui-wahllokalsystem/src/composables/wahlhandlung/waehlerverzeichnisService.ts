@@ -1,7 +1,9 @@
 import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerverzeichnis.ts";
 
-import { WaehlerverzeichnisControllerApi } from "@/api/wls-clients/generated-wahlvorbereitung-api";
-import { Configuration } from "@/api/wls-clients/generated-wahlvorstand-api";
+import {
+  Configuration,
+  WaehlerverzeichnisControllerApi,
+} from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWaehlerverzeichnisMapper } from "@/composables/wahlhandlung/waehlerverzeichnisMapper.ts";

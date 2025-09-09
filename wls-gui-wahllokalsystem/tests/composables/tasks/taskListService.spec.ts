@@ -17,6 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createTasksStimmabgabevermerke: vi.fn(),
+  createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   createTasksWaehler: vi.fn(),
 }));
@@ -77,6 +78,15 @@ vi.mock(
   () => ({
     useStimmabgabevermerkeTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksStimmabgabevermerke,
+    })),
+  })
+);
+
+vi.mock(
+  "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts",
+  () => ({
+    useStimmzettelumschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmzettelumschlaege,
     })),
   })
 );
@@ -169,6 +179,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksStimmzettelumschlaege.mockReturnValue([
+        {
+          name: `Stimmzettel für ${mockedWahl.name}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWaehler.mockReturnValue([
         { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
       ]);
@@ -185,6 +201,7 @@ describe("taskListService.ts", () => {
         "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+        "Stimmzettel für " + mockedWahl.name,
         "Wahlbeteiligung",
       ];
 
@@ -201,6 +218,9 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
       expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksStimmzettelumschlaege
+      ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
     });
   });

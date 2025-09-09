@@ -2,6 +2,7 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -15,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
   postBeanstandeteWahlbriefe: vi.fn(),
   getBeanstandeteWahlbriefe: vi.fn(),
+  getStimmzettelumschlaege: vi.fn(),
 }));
 
 vi.mock("@/composables/wahl/wahlService.ts", () => ({
@@ -28,12 +30,22 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
     getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
   }),
 }));
+vi.mock(
+  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
+  () => ({
+    useErgebnisermittlungService: () => ({
+      getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+    }),
+  })
+);
 
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 const { prepareBeanstandeteWahlbriefe } =
   useBeanstandeteWahlbriefeTestDataFactory();
+const { createStimmzettelumschlaege } =
+  useStimmzettelumschlaegeTestDataFactory();
 
 const mockedNow = new Date();
 
@@ -528,6 +540,48 @@ describe("wahlenStore.ts", () => {
           expect(row.summen).toStrictEqual([0, 1]);
         }
       });
+    });
+  });
+
+  describe("loadStimmzettelumschlaege", () => {
+    it("should_loadStimmzettelumschlaege_when_calledWithCorrectWahlID", async () => {
+      const wahlID = "wahlID";
+      unitUnderTest.wahlenState.wahlen = [prepareWahl().wahlID(wahlID).build()];
+
+      const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
+      mockDefinitions.getStimmzettelumschlaege.mockReturnValue(
+        mockedStimmzettelumschlaege
+      );
+
+      await unitUnderTest.stimmzettelumschlaegeActions.loadStimmzettelumschlaege(
+        wahlID
+      );
+
+      expect(unitUnderTest.wahlenState.wahlen[0].wahlID).toStrictEqual(wahlID);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].stimmzettelumschlaege
+      ).toStrictEqual(mockedStimmzettelumschlaege);
+    });
+
+    it("should_loadButNotUpdateStimmzettelumschlaege_when_calledWithCorrectWahlIdAndServiceReturned204", async () => {
+      const wahlID = "wahlID";
+      unitUnderTest.wahlenState.wahlen = [
+        prepareWahl()
+          .wahlID(wahlID)
+          .stimmzettelumschlaege({ anzahlWaehler: null })
+          .build(),
+      ];
+
+      mockDefinitions.getStimmzettelumschlaege.mockReturnValue(null);
+
+      await unitUnderTest.stimmzettelumschlaegeActions.loadStimmzettelumschlaege(
+        wahlID
+      );
+
+      expect(unitUnderTest.wahlenState.wahlen[0].wahlID).toStrictEqual(wahlID);
+      expect(
+        unitUnderTest.wahlenState.wahlen[0].stimmzettelumschlaege
+      ).toStrictEqual({ anzahlWaehler: null });
     });
   });
 });

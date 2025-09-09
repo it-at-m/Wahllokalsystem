@@ -16,12 +16,17 @@ import { useUserStore } from "@/stores/userStore.ts";
 export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
-const ergebnisermittlungService = useErgebnisermittlungService();
+const { getStimmzettelumschlaege, postStimmzettelumschlaege } =
+  useErgebnisermittlungService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlenStore = defineStore(storeID, () => {
-  const { currentUserWahltagID, currentUserWahlbezirkID, user } =
-    storeToRefs(useUserStore());
+  const {
+    currentUserWahltagID,
+    currentUserWahlbezirkID,
+    user,
+    currentUserWahlbezirksArt,
+  } = storeToRefs(useUserStore());
 
   /* --- wahlen --- */
   const wahlenState: Ref<{
@@ -158,6 +163,25 @@ export const useWahlenStore = defineStore(storeID, () => {
   });
 
   const stimmzettelumschlaegeActions = {
+    loadStimmzettelumschlaege: async function loadStimmzettelumschlaege(
+      wahlID: string,
+      sendNotification = true
+    ) {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      if (wahl) {
+        const loadedStimmzettelumschlaege = await getStimmzettelumschlaege(
+          wahl.wahlID,
+          currentUserWahlbezirkID.value,
+          currentUserWahlbezirksArt.value,
+          wahl.name,
+          sendNotification
+        );
+
+        if (loadedStimmzettelumschlaege) {
+          wahl.stimmzettelumschlaege = loadedStimmzettelumschlaege;
+        }
+      }
+    },
     saveStimmzettelumschlaege: async function saveStimmzettelumschlaege(
       wahlID: string
     ) {
@@ -165,10 +189,12 @@ export const useWahlenStore = defineStore(storeID, () => {
       if (wahl) {
         stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = true;
         try {
-          await ergebnisermittlungService.saveStimmzettelumschlaege(
+          await postStimmzettelumschlaege(
             wahl.wahlID,
             currentUserWahlbezirkID.value,
-            wahl.stimmzettelumschlaege
+            wahl.stimmzettelumschlaege,
+            currentUserWahlbezirksArt.value,
+            wahl.name
           );
         } finally {
           stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;

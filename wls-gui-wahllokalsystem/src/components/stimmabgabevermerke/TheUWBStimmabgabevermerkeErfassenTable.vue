@@ -12,8 +12,9 @@
         active
         :disabled="disableChangeRowSizeButton"
         @click="changeRowCountOrOpenDialog"
-        >{{ changeRowSizeButtonText }}</v-btn
       >
+        Übernehmen
+      </v-btn>
     </div>
     <v-divider
       :thickness="2"
@@ -147,22 +148,6 @@ onMounted(() => {
 
 const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
-
-const changeRowSizeButtonText = computed(() => {
-  if (
-    rowSize.value != null &&
-    rowSize.value - 1 > lowestNumberOfRowsOverAllWahldaten.value
-  ) {
-    return "Erhöhen";
-  } else if (
-    rowSize.value != null &&
-    rowSize.value - 1 < lowestNumberOfRowsOverAllWahldaten.value
-  ) {
-    return "Reduzieren";
-  } else {
-    return "Übernehmen";
-  }
-});
 
 const disableChangeRowSizeButton = computed(() => {
   return rowSize.value == null || rowSize.value <= 0 || rowSize.value > 250;

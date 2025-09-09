@@ -19,8 +19,10 @@ import type { PropType } from "vue";
 import { computed } from "vue";
 
 import { useRules } from "@/composables/common/rules.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { required } = useRules();
+const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
 const modelValue = defineModel({
   type: Object as PropType<Ergebnis>,
@@ -34,18 +36,11 @@ const props = defineProps({
   },
 });
 
-const firstKandidatName = computed(() => {
-  if (props.wahlvorschlag?.kandidaten) {
-    const kandidatWithLowedListenPosition = [
-      ...props.wahlvorschlag.kandidaten,
-    ].reduce((min, current) =>
-      current.listenposition < min.listenposition ? current : min
-    );
-    return kandidatWithLowedListenPosition.name;
-  } else {
-    return "";
-  }
-});
+const firstKandidatName = computed(() =>
+  props.wahlvorschlag
+    ? getFirstKandidatNameOrEmptyString(props.wahlvorschlag)
+    : ""
+);
 
 const wahlvorschlagName = computed(() =>
   props.wahlvorschlag

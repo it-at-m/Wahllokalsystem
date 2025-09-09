@@ -3,7 +3,7 @@
     <div class="d-flex">
       <v-number-input
         v-model="rowSize"
-        :rules="[required, minNumber(1), maxNumber(999)]"
+        :rules="[required, minNumber(1), maxNumber(maxRowSize)]"
         max-width="15rem"
         label="Anzahl der Blätter"
       />
@@ -149,12 +149,13 @@ onMounted(() => {
 
 const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
+const maxRowSize = 999;
 
 const disableChangeRowSizeButton = computed(() => {
   return (
     rowSize.value == null ||
     rowSize.value <= 0 ||
-    rowSize.value > 250 ||
+    rowSize.value > maxRowSize ||
     rowSize.value == lowestNumberOfRowsOverAllWahldaten.value + 1
   );
 });

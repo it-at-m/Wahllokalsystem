@@ -25,7 +25,6 @@
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveAnzahlStimmzettelClicked"

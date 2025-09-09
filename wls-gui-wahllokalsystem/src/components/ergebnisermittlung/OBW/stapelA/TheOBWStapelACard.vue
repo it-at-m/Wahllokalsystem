@@ -1,19 +1,42 @@
 <template>
   <v-card>
     <v-card-title>Gültige Stimmabgaben</v-card-title>
-    <v-card-text>
-      <base-row-o-w-b-stapel-a
-        v-for="(
-          ergebnisWithWahlvorschlag, index
-        ) in ergebnisseWithWahlvorschlag"
-        :key="index"
-        :model-value="ergebnisWithWahlvorschlag.ergebnis"
-        :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
-      />
-    </v-card-text>
-    <v-card-actions>
-      <base-button-save />
-    </v-card-actions>
+    <v-form v-model="isFormValid">
+      <v-card-text>
+        <v-table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Wahlvorschlag</th>
+              <th>Stapel a: zweifelsfrei gültig</th>
+            </tr>
+          </thead>
+          <tbody>
+            <base-row-o-w-b-stapel-a
+              v-for="(
+                ergebnisWithWahlvorschlag, index
+              ) in ergebnisseWithWahlvorschlag"
+              :key="index"
+              :model-value="ergebnisWithWahlvorschlag.ergebnis"
+              :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
+            />
+          </tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td>Gültige Stimmen insgesamt</td>
+              <td class="text-end">{{ sumOfValidVotes }}</td>
+            </tr>
+          </tfoot>
+        </v-table>
+      </v-card-text>
+      <v-card-actions>
+        <base-button-save
+          :disabled="!isFormValid"
+          @click="onSaveClicked"
+        />
+      </v-card-actions>
+    </v-form>
   </v-card>
 </template>
 
@@ -21,7 +44,7 @@
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseRowOWBStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOWBStapelA.vue";
@@ -42,6 +65,8 @@ interface ErgebnisWithWahlvorschlag {
   wahlvorschlag: Wahlvorschlag;
 }
 
+const STAPEL = StapelArtEnum.ObwA;
+
 const props = defineProps({
   wahlID: {
     type: String,
@@ -53,11 +78,25 @@ const props = defineProps({
   },
 });
 
+const isFormValid = ref<boolean | null>(null);
+
 const ergebnisseWithWahlvorschlag = computed<ErgebnisWithWahlvorschlag[]>(
   () => {
     return createErgebnisseAndWahlvorschlaege();
   }
 );
+
+const sumOfValidVotes = computed(() =>
+  ergebnisseWithWahlvorschlag.value
+    .map((item) => item.ergebnis)
+    .reduce((sum, ergebnis) => {
+      return sum + (ergebnis.ergebnis ?? 0);
+    }, 0)
+);
+
+function onSaveClicked() {
+  ergebnismeldungsStore.sendErgebnisseByStapelArt(props.wahlID, STAPEL);
+}
 
 function addWahlvorschlagForErgebnisIfExisting(
   ergebnis: Ergebnis,
@@ -103,10 +142,7 @@ function createErgebnisseAndWahlvorschlaege() {
 function loadErgebnisseForWahlAndStapelOrderedByNumIndex(): Ergebnis[] {
   return (
     ergebnismeldungsStore
-      .getErgebnisseByWahlIdAndStapelartOrUndefined(
-        props.wahlID,
-        StapelArtEnum.ObwA
-      )
+      .getErgebnisseByWahlIdAndStapelartOrUndefined(props.wahlID, STAPEL)
       ?.ergebnisse.sort(orderedByNumIndexWithNullAtEnd) ?? []
   );
 }

@@ -1,13 +1,14 @@
 <template>
-  <v-row>
-    <v-col>D{{ wahlvorschlag.ordnungszahl }}</v-col>
-    <v-col>{{ wahlvorschlagName }}</v-col>
-    <v-col
-      ><v-number-input
+  <tr>
+    <td>D{{ wahlvorschlag.ordnungszahl }}</td>
+    <td>{{ wahlvorschlagName }}</td>
+    <td>
+      <v-number-input
         v-model="modelValue.ergebnis"
         :rules="[required]"
-    /></v-col>
-  </v-row>
+      />
+    </td>
+  </tr>
 </template>
 
 <script setup lang="ts">

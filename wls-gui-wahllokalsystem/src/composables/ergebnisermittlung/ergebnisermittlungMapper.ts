@@ -4,9 +4,6 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
-import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
-
-const { createTodayWithTime } = useDateTimeUtils();
 export function useErgebnisermittlungMapper() {
   function toDto(
     model: Stimmzettelumschlaege,
@@ -34,9 +31,7 @@ export function useErgebnisermittlungMapper() {
     };
 
     if (dto.urneneroeffnungsUhrzeit) {
-      model.urneneroeffnungsUhrzeit = createTodayWithTime(
-        dto.urneneroeffnungsUhrzeit
-      );
+      model.urneneroeffnungsUhrzeit = new Date(dto.urneneroeffnungsUhrzeit);
     }
 
     return model;

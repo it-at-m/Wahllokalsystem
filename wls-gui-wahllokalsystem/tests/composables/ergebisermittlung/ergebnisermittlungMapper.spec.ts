@@ -3,7 +3,7 @@ import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzett
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
 
@@ -54,6 +54,17 @@ describe("ergebnisermittlungMapper.ts", () => {
   });
 
   describe("toModel", () => {
+    beforeEach(() => {
+      const mockedNow = new Date();
+      vi.useFakeTimers({
+        now: mockedNow,
+      });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it("should_returnModel_when_givenDtoWithoutUhrzeit", () => {
       const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
 
@@ -67,16 +78,13 @@ describe("ergebnisermittlungMapper.ts", () => {
     });
 
     it("should_returnModel_when_givenDtoWithUhrzeit", () => {
-      const eroeffnungszeit = "15:00:00";
+      const eroeffnungszeit = "2025-09-25T15:00:00.000";
       const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
       dto.urneneroeffnungsUhrzeit = eroeffnungszeit;
 
-      const expectedEroeffnungszeit = new Date();
-      expectedEroeffnungszeit.setHours(15, 0, 0, 0);
-
       const expectedModel: Stimmzettelumschlaege = {
         anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
-        urneneroeffnungsUhrzeit: expectedEroeffnungszeit,
+        urneneroeffnungsUhrzeit: new Date(eroeffnungszeit),
       };
 
       const result = toModel(dto);

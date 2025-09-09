@@ -28,7 +28,6 @@
           >
             <v-number-input
               max-width="15rem"
-              :min="0"
               :rules="[required]"
               :model-value="
                 getMapValue(

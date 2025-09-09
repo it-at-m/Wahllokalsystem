@@ -29,6 +29,7 @@ export function useTaskListService() {
     useWahlvorschlaegeTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
+  //requires wahlvorschlaegeTaskFactory
   const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
 
   function initTasklist() {

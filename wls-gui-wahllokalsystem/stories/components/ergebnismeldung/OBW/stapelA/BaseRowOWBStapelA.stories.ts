@@ -1,0 +1,57 @@
+import type { Meta, StoryObj } from "@storybook/vue3";
+
+import BaseRowOWBStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOWBStapelA.vue";
+
+const meta = {
+  component: BaseRowOWBStapelA,
+  argTypes: {
+    modelValue: {
+      description: "Ergebnis das erfasst wird",
+      table: {
+        category: "props",
+        type: {
+          summary: "Ergebnis",
+        },
+        required: true,
+      },
+    },
+    "onUpdate:modelValue": {
+      description: "Update des erfassten Ergebnisses",
+      name: "update:modelValue",
+      table: {
+        category: "events",
+      },
+    },
+  },
+  args: {
+    modelValue: {
+      wahlvorschlagID: "1",
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: null,
+      ergebnis: null,
+      numIndex: null,
+    },
+    wahlvorschlag: {
+      identifikator: "1",
+      ordnungszahl: 1,
+      kurzname: "Wahlvorschlag Kurzname",
+      erhaeltStimmen: true,
+      kandidaten: new Set([
+        {
+          identifikator: "1",
+          name: "Kandidat",
+          listenposition: 1,
+          direktkandidat: false,
+          tabellenSpalteInNiederschrift: 1,
+          einzelbewerber: false,
+        },
+      ]),
+    },
+  },
+} satisfies Meta<typeof BaseRowOWBStapelA>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = {
+  args: {},
+};

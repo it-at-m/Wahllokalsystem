@@ -2,8 +2,11 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
@@ -80,7 +83,7 @@ describe("WahlvorstandService.ts", () => {
         });
 
         expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-          [wahlbezirkID, expectedApiCallHeader],
+          createExpectedApiParameters(wahlbezirkID, expectedApiCallHeader),
         ]);
         expect(mockDefinitions.addNotification.mock.calls).toEqual([
           [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -102,7 +105,7 @@ describe("WahlvorstandService.ts", () => {
 
       expect(result).toStrictEqual(mockedMappedWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, false],
+        createExpectedApiParameters(wahlbezirkID, false),
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -141,7 +144,7 @@ describe("WahlvorstandService.ts", () => {
       const expectedResult = { updateDatetime: fakedNow };
       expect(result).toStrictEqual(expectedResult);
       expect(mockDefinitions.postWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, mockedMappedWahlvorstand],
+        createExpectedApiParameters(wahlbezirkID, mockedMappedWahlvorstand),
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -163,11 +166,15 @@ describe("WahlvorstandService.ts", () => {
       ).rejects.toThrow("mocked api call failed");
 
       expect(mockDefinitions.postWahlvorstand.mock.calls).toStrictEqual([
-        [wahlbezirkID, mockedMappedWahlvorstand],
+        createExpectedApiParameters(wahlbezirkID, mockedMappedWahlvorstand),
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
     });
   });
+
+  function createExpectedApiParameters(...parameters: unknown[]) {
+    return [...parameters, axiosConfigWrapper().requestAsOnlineFirst()];
+  }
 });

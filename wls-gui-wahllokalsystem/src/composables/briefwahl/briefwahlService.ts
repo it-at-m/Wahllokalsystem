@@ -7,9 +7,10 @@ import {
   Configuration,
   WahlbriefdatenControllerApi,
 } from "@/api/wls-clients/generated-briefwahl-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useBriefwahlMapper } from "@/composables/briefwahl/briefwahlMapper.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -20,6 +21,7 @@ const { addNotification } = useUserNotificationService();
 
 const { toWahlbriefdatenModel, toWahlbriefdatenWriteDTO } =
   useBriefwahlMapper();
+const { logDebug } = useLogging("briefwahlService");
 
 export function useBriefwahlService() {
   const briefwahlServiceConfiguration = new Configuration({
@@ -45,11 +47,10 @@ export function useBriefwahlService() {
 
       return responseData ? toModel(responseData) : null;
     } catch (e) {
-      console.debug(e);
-      addNotification(
-        "Die beanstandeten Wahlbriefe konnten nicht geladen werden.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      const errorMessage =
+        "Die beanstandeten Wahlbriefe konnten nicht geladen werden.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Get beanstandete Wahlbriefe Failed");
     }
   }
@@ -88,11 +89,10 @@ export function useBriefwahlService() {
         UserNotificationCategoryEnum.SUCCESS
       );
     } catch (e) {
-      console.debug(e);
-      addNotification(
-        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      const errorMessage =
+        "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.";
+      logDebug(errorMessage, e);
+      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Post beanstandete Wahlbriefe Failed");
     }
   }

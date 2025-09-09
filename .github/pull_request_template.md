@@ -24,8 +24,8 @@
 ### Frontend
 - [ ] [Naming Conventions][naming-conventions-link] beachtet
 - [ ] Doku aktualisiert
+  - [Fachliche Beschreibung][fachliche-beschreibung-link]
 - [ ] Unit-Tests gepflegt
-- [ ] Komponententests gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
 # Referenzen[^1]:
@@ -37,3 +37,4 @@ Closes #
 > [^1]: _Nicht zutreffende Referenzen vor dem Speichern entfernen_
 
 [naming-conventions-link]: https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/
+[fachliche-beschreibung-link]: https://it-at-m.github.io/Wahllokalsystem/about/#fachliche-anforderungen

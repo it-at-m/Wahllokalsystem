@@ -91,6 +91,59 @@ describe("userStore.ts", () => {
     });
   });
 
+  describe("getWahlbezirkIdFromWahlMetaDataByWahlId", () => {
+    it("should_returnWahlbezirkId_when_givenWahlIdThatExists", () => {
+      const wahlbezirkIdToReturn = "ich bin eine id";
+      const wahlID = "wahlID";
+
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkIdToReturn,
+              wahlID: wahlID,
+              wahlnummer: "0",
+            },
+            {
+              wahlbezirkID: "andere id",
+              wahlID: "andere wahl id",
+              wahlnummer: "1",
+            },
+          ])
+          .build()
+      );
+
+      expect(
+        unitUnderTest.getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID)
+      ).toStrictEqual(wahlbezirkIdToReturn);
+    });
+
+    it("should_notReturnWahlbezirkId_when_givenWahlIdThatDoesNotExist", () => {
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "id",
+              wahlID: "wahl id",
+              wahlnummer: "0",
+            },
+            {
+              wahlbezirkID: "andere id",
+              wahlID: "andere wahl id",
+              wahlnummer: "1",
+            },
+          ])
+          .build()
+      );
+
+      expect(
+        unitUnderTest.getWahlbezirkIdFromWahlMetaDataByWahlId(
+          "non existant wahl id"
+        )
+      ).toBeUndefined();
+    });
+  });
+
   describe("currentUserWahlbezirkID", () => {
     it("should_returnWahlbezirkId_when_wahlbezirkIdExists", () => {
       const wahlbezirkID = "ich bin eine id";
@@ -189,6 +242,42 @@ describe("userStore.ts", () => {
       unitUnderTest.setUser(prepareUser().wahlMetaData(wahlMetadata).build());
 
       expect(unitUnderTest.currentUserWahlMetadata).toStrictEqual(wahlMetadata);
+    });
+  });
+
+  describe("isUWB", () => {
+    it("should_returnTrue_when_wahlbezirksArtIsUWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      expect(unitUnderTest.isUWB).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_wahlbezirksArtIsBWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      expect(unitUnderTest.isUWB).toStrictEqual(false);
+    });
+  });
+
+  describe("isBWB", () => {
+    it("should_returnTrue_when_wahlbezirksArtIsBWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      expect(unitUnderTest.isBWB).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_wahlbezirksArtIsUWB", () => {
+      unitUnderTest.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      expect(unitUnderTest.isBWB).toStrictEqual(false);
     });
   });
 });

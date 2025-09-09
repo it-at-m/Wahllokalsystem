@@ -18,7 +18,9 @@ export default defineConfig({
       },
     }),
     vuetify({
-      autoImport: false,
+      styles: {
+        configFile: "src/styles/settings.scss",
+      },
     }),
     UnpluginFonts({
       fontsource: {
@@ -35,8 +37,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "auto",
       strategies: "injectManifest", // makes it possible to use own service worker
-      srcDir: "src", // custom sw file directory
-      filename: "wahl-worker.js", // custom sw file
+      srcDir: "src/service-worker", // custom sw file directory
+      filename: "wahl-worker.ts", // custom sw file
       injectManifest: {
         // injectionPoint disabled, to avoid compilation errors, because precaching ist not used in wahl-worker.js
         injectionPoint: undefined,

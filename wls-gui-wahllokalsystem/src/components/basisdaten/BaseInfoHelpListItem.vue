@@ -27,8 +27,6 @@
   </v-hover>
 </template>
 <script setup lang="ts">
-import { VHover, VListItem } from "vuetify/components";
-
 import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
 
 const LIST_ITEM_CONTENT_MARGIN = "mx-0 my-1";

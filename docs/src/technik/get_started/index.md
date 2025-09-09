@@ -120,7 +120,7 @@ Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde,
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
 flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
 
-### 1. Starten über das Gateway + Authentifizierung
+### 1. Starten über das Gateway + Authentifizierung {#start-via-gateway}
 
 Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [User](#benutzer) anzumelden.
 Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
@@ -149,9 +149,7 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
 2. `auth-service` starten
 3. `refarch-gateway-wls`-Service in Docker oder über das `docker-compose.yml` starten
 4. Das Wahllokalsystem-Frontend in Docker oder über `npm run dev` starten
-   (siehe [Punkt 1](#1-starten-über-das-gateway--authentifizierung): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
-5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und folgende http-requests ausführen:
-   - `"basisdaten-service/wahltage.http"`: `GET wahltage`
-   - `"basisdaten-service/ungueltigeWahlscheine.http"`: `POST ungueltige Wahlscheine | user wls_all_uwb`
-   - `"basisdaten-service/wahltermindaten.http"`: `Put Wahltermindaten | user wls_all_uwb`
-   - `"infomanagement-service/konfigurierterWahltag.http"`: `POST konfigurierter Wahltag`
+   (siehe [Punkt 1](#start-via-gateway): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
+5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
+   http-requests aus dem File [`initOracleDB.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB.http)
+   ausführen

@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorbereitung-service</artifactId>
-    <version>0.5.0-SNAPSHOT</version>
+    <version>0.4.3-SNAPSHOT</version>
     <name>wls_wahlvorbereitung_service</name>
 
 
@@ -18,10 +18,10 @@
         <spring.cloud.version>2025.0.0</spring.cloud.version>
         <logstash.encoder>8.1</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
-        <apache.commons.csv>1.14.0</apache.commons.csv>
+        <apache.commons.csv>1.14.1</apache.commons.csv>
         <apache.commons.io>2.20.0</apache.commons.io>
         <apache.commons.lang3>3.18.0</apache.commons.lang3>
-        <apache.commons.text>1.13.1</apache.commons.text>
+        <apache.commons.text>1.14.0</apache.commons.text>
         <apache.commons.validator>1.10.0</apache.commons.validator>
         <!-- SonarQube -->
         <sonar.scanner.version>5.1.0.4751</sonar.scanner.version>
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.8.0.25.04</version>
+            <version>23.9.0.25.07</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>

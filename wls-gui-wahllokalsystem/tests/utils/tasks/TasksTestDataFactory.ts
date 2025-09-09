@@ -9,7 +9,8 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import { useCommonTestDataFactory } from "../common/CommonTestDataFactory";
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 
 export function useTasksTestDataFactory() {
   function createTask(name: string): Task {
@@ -35,7 +36,12 @@ export function useTasksTestDataFactory() {
       wahlName: generateRandomString(5),
       wahlID: generateRandomString(20),
       wahlbezirkID: generateRandomString(20),
+      waehlerverzeichnisNummer: generateRandomNumber(2),
     };
+  }
+
+  function prepareTask() {
+    return proxyBuilder<Task>(createTask(generateRandomString(10)));
   }
 
   function prepareTaskFactoryContext(): Builder<TaskFactoryContext> {
@@ -51,6 +57,7 @@ export function useTasksTestDataFactory() {
     createTaskFactoryContext,
     prepareTaskFactoryContext,
     createExtendedWahlMetaData,
+    prepareTask,
     prepareExtendedWahlMetaData,
   };
 }

@@ -18,12 +18,14 @@ import { nextTick } from "vue";
 import { VTextField } from "vuetify/components";
 
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useRules } from "@/composables/common/rules.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
-import { REQUIRED } from "@/util/rules.ts";
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { required } = useRules();
+
+const { createTodayWithTime } = useDateTimeUtils();
 const mockedNow = new Date();
 
 describe("BaseTimeInput.vue", () => {
@@ -57,7 +59,7 @@ describe("BaseTimeInput.vue", () => {
 
     it("should_renderTimeInput_when_inputIsTyped", async (context) => {
       const input = "12:12";
-      const date = getDateFromTimeString(input);
+      const date = createTodayWithTime(input);
       await wrapper.setProps({ modelValue: date });
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -67,7 +69,7 @@ describe("BaseTimeInput.vue", () => {
     });
 
     it("should_renderErrorMessage_when_ruleRequiredIsViolated", async (context) => {
-      const rules = [REQUIRED];
+      const rules = [required];
       const errorMessage = "Feld darf nicht leer sein.";
 
       await wrapper.setProps({ rules: rules, modelValue: new Date() });
@@ -84,7 +86,7 @@ describe("BaseTimeInput.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateModelValue_when_elementIsTyped", async () => {
       const input = "12:12";
-      const date = getDateFromTimeString(input);
+      const date = createTodayWithTime(input);
 
       const inputTextfield = wrapper.findComponent(VTextField);
       await inputTextfield.setValue(input);

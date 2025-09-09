@@ -7,6 +7,8 @@ import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskF
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
+import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
@@ -25,16 +27,20 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWaehlerverzeichnisTasks } =
+    useWaehlverzeichnisTaskFactory();
   const { createTasks: createWahlvorschlaegeTasks } =
     useWahlvorschlaegeTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
   const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
+  const { createTasks: createWaehlerTasks } = useWaehlerTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
     return [
       ...createKopfdatenTasks(taskFactoryData),
+      ...createWaehlerverzeichnisTasks(taskFactoryData),
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),
       ...createKonfigurationsparameterTasks(taskFactoryData),
@@ -42,6 +48,7 @@ export function useTaskListService() {
       ...createWahlvorschlaegeTasks(taskFactoryData),
       ...createErgebnisseTasks(taskFactoryData),
       ...createStimmabgabevermerkeTasks(taskFactoryData),
+      ...createWaehlerTasks(taskFactoryData),
     ];
   }
 

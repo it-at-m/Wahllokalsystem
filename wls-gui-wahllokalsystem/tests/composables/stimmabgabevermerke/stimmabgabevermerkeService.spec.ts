@@ -90,7 +90,7 @@ describe("stimmabgabevermekerService.ts", () => {
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 
@@ -161,7 +161,7 @@ describe("stimmabgabevermekerService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
   });

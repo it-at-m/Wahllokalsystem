@@ -5,7 +5,7 @@ import {
   WaehleranzahlControllerApi,
   WahllokalZustandControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";

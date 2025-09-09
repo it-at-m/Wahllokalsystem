@@ -26,14 +26,14 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  saveStimmzettelumschlaege: vi.fn(),
+  postStimmzettelumschlaege: vi.fn(),
 }));
 
 vi.mock(
   "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
   () => ({
     useErgebnisermittlungService: () => ({
-      saveStimmzettelumschlaege: mockDefinitions.saveStimmzettelumschlaege,
+      postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
     }),
   })
 );
@@ -245,12 +245,12 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       await flushPromises();
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
-      mockDefinitions.saveStimmzettelumschlaege.mockReturnValue(
+      mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );
       await saveButton.trigger("click");
 
-      expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalled();
+      expect(mockDefinitions.postStimmzettelumschlaege).toHaveBeenCalled();
     });
   });
 });

@@ -18,7 +18,7 @@
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
-            label="Anzahl der Stimmzettel"
+            :label="numberInputLabel"
             clearable
           />
         </v-form>
@@ -43,6 +43,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { maxNumber, minNumber, required, timeGreaterOrEqual, timeNotInFuture } =
@@ -57,6 +58,7 @@ const props = defineProps<{
 const { wahlenActions, stimmzettelumschlaegeActions } = useWahlenStore();
 const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
+const { isUWB } = storeToRefs(useUserStore());
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -64,6 +66,12 @@ const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
+});
+
+const numberInputLabel = computed(() => {
+  return isUWB.value
+    ? "Anzahl der Stimmzettel"
+    : "Anzahl der Stimmzettelumschläge";
 });
 
 function onSaveAnzahlStimmzettelClicked() {

@@ -27,7 +27,7 @@ export function useErgebnisermittlungMapper() {
 
   function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
     const model: Stimmzettelumschlaege = {
-      anzahlWaehler: dto.anzahlWaehler,
+      anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
     };
 
     if (dto.urneneroeffnungsUhrzeit) {

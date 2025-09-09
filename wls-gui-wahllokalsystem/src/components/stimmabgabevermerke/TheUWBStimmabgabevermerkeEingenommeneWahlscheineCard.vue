@@ -19,12 +19,14 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const { wahlenState } = storeToRefs(useWahlenStore());
 
 const title = computed(() => {
-  if (wahlenState.value.wahlen) {
-    return wahlenState.value.wahlen.length > 1
-      ? "Anzahl Stimmabgabevermerke bei den eingenommenen Wahlscheinen"
-      : "Anzahl der eingenommenen Wahlscheine";
-  } else {
-    return "";
-  }
+  const anzahlWahlen = wahlenState.value?.wahlen?.length;
+
+  if (anzahlWahlen == null) return "";
+
+  return anzahlWahlen > 1
+    ? "Anzahl Stimmabgabevermerke bei den eingenommenen Wahlscheinen"
+    : anzahlWahlen === 1
+      ? "Anzahl der eingenommenen Wahlscheine"
+      : "";
 });
 </script>

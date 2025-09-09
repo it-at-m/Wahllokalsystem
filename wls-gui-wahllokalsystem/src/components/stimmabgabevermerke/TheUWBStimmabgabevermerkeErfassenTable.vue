@@ -3,7 +3,7 @@
     <div class="d-flex">
       <v-number-input
         v-model="rowSize"
-        :rules="[required, minNumber(1), maxNumber(250)]"
+        :rules="[required, minNumber(1), maxNumber(999)]"
         max-width="15rem"
         label="Anzahl der Blätter"
       />
@@ -84,7 +84,7 @@
                 :key="stimmzettel.stimmzettelart"
                 v-model="stimmzettel.anzahl"
                 max-width="15rem"
-                :rules="[required, minNumber(0), maxNumber(9999)]"
+                :rules="[required, minNumber(0), maxNumber(50)]"
               />
             </template>
           </td>

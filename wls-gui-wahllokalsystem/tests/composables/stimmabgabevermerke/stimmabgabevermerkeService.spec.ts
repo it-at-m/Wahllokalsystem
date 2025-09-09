@@ -1,8 +1,10 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getStimmabgabevermerke: vi.fn(),
@@ -13,6 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
+  StimmzettelumschlaegeControllerApi: vi.fn(),
   StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
     getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
     postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
@@ -49,9 +52,11 @@ describe("stimmabgabevermekerService.ts", () => {
     useStimmabgabevermerkeService();
 
   beforeEach(() => {
+    setActivePinia(createPinia());
     vi.resetAllMocks();
     vi.clearAllMocks();
   });
+
   describe("getStimmabgabevermerke", () => {
     it("should_returnStimmabgabevermerke_when_parameterAreGiven", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
@@ -85,7 +90,7 @@ describe("stimmabgabevermekerService.ts", () => {
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 
@@ -107,7 +112,7 @@ describe("stimmabgabevermekerService.ts", () => {
   });
 
   describe("postStimmabgabevermerke", () => {
-    it("should_sendStimmabgabevermerke_when_noErrorAppear", () => {
+    it("should_sendStimmabgabevermerke_when_noErrorAppear", async () => {
       const stimmabgabevermerk = createStimmabgabevermerke();
       const stimmabgabevermerkeDTO = prepareStimmabgabevermerkeDTO()
         .wahlbezirkID(stimmabgabevermerk.wahlbezirkID)
@@ -120,7 +125,7 @@ describe("stimmabgabevermekerService.ts", () => {
 
       mockDefinitions.toDto.mockReturnValue(stimmabgabevermerkeDTO);
 
-      postStimmabgabevermerke(
+      await postStimmabgabevermerke(
         stimmabgabevermerk.wahlbezirkID,
         stimmabgabevermerk.waehlerverzeichnisNummer,
         stimmabgabevermerk
@@ -131,6 +136,9 @@ describe("stimmabgabevermekerService.ts", () => {
         stimmabgabevermerk.waehlerverzeichnisNummer,
         stimmabgabevermerkeDTO
       );
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
     });
 
     it("should_throwError_when_postStimmabgabevermerkeFailed", async () => {
@@ -153,7 +161,7 @@ describe("stimmabgabevermekerService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
   });

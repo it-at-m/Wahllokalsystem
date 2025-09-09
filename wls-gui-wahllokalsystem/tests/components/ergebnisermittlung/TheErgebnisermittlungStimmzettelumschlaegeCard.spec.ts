@@ -26,14 +26,14 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  saveStimmzettelumschlaege: vi.fn(),
+  postStimmzettelumschlaege: vi.fn(),
 }));
 
 vi.mock(
   "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
   () => ({
     useErgebnisermittlungService: () => ({
-      saveStimmzettelumschlaege: mockDefinitions.saveStimmzettelumschlaege,
+      postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
     }),
   })
 );
@@ -66,7 +66,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEnabledSaveButton_when_anzahlIsZeroAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 0 })
@@ -92,7 +92,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
     it("should_renderWithDisabledSaveButton_when_invalidAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: -1 })
@@ -118,7 +118,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
     it("should_renderWithDisabledSaveButton_when_anzahlExceedsMaximumAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 10000 })
@@ -144,7 +144,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
     it("should_renderWithEnabledSaveButton_when_validAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 33 })
@@ -170,13 +170,13 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrueAndUseTimeIsFalse", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 33 })
           .build(),
       ];
-      wahlenStore.isStimmzettelumschlaegeSaving = true;
+      wahlenStore.stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving = true;
 
       const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
         global: {
@@ -197,7 +197,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_updateWahlenInStore_when_validAnzahlIsEnteredAndUseTimeIsFalse", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 0 })
@@ -218,14 +218,14 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
       await anzahlWaehler.setValue(33);
 
-      expect(wahlenStore.wahlen[0].stimmzettelumschlaege.anzahlWaehler).toBe(
-        33
-      );
+      expect(
+        wahlenStore.wahlenState.wahlen[0].stimmzettelumschlaege.anzahlWaehler
+      ).toBe(33);
     });
 
     it("should_callSaveStimmzettelumschlaege_when_saveButtonIsClickedAndUseTimeIsFalse", async () => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .wahlID("123")
           .stimmzettelumschlaege({ anzahlWaehler: 33 })
@@ -245,12 +245,12 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       await flushPromises();
 
       const saveButton = wrapper.findComponent(BaseButtonSave);
-      mockDefinitions.saveStimmzettelumschlaege.mockReturnValue(
+      mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );
       await saveButton.trigger("click");
 
-      expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalled();
+      expect(mockDefinitions.postStimmzettelumschlaege).toHaveBeenCalled();
     });
   });
 });

@@ -1,11 +1,13 @@
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
+import { useStimmabgabevermerkeUtils } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeUtils.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
@@ -16,6 +18,10 @@ export const useStimmabgabevermerkeStore = defineStore(
     const isStimmabgabevermerkeSaving = ref(false);
     const { getStimmabgabevermerke, postStimmabgabevermerke } =
       useStimmabgabevermerkeService();
+    const { createEmptyStimmabgabevermerke } = useStimmabgabevermerkeUtils();
+
+    const { currentUserWahlMetadata } = storeToRefs(useUserStore());
+
     const { logDebug } = useLogging("stimmabgabevermerkeStore");
 
     const lowestNumberOfRowsOverAllWahldaten = computed(() => {
@@ -74,8 +80,11 @@ export const useStimmabgabevermerkeStore = defineStore(
           wahlbezirkID,
           waehlerverzeichnisNummer
         );
+
         if (loadedStimmabgabevermerke) {
           stimmabgabevermerke.value.push(loadedStimmabgabevermerke);
+        } else {
+          _addEmptyStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
         }
       } catch {
         throw Error(
@@ -157,6 +166,24 @@ export const useStimmabgabevermerkeStore = defineStore(
         } else if (newRowSize - 1 < lowestNumberOfRowsOverAllWahldaten.value) {
           _decreaseRows(newRowSize);
         }
+      }
+    }
+
+    function _addEmptyStimmabgabevermerke(
+      wahlbezirkID: string,
+      waehlerverzeichnisNummer: number
+    ) {
+      const wahlID = currentUserWahlMetadata.value.find(
+        (m) => m.wahlbezirkID === wahlbezirkID
+      )?.wahlID;
+      if (wahlID !== undefined) {
+        stimmabgabevermerke.value.push(
+          createEmptyStimmabgabevermerke(
+            wahlID,
+            wahlbezirkID,
+            waehlerverzeichnisNummer
+          )
+        );
       }
     }
 

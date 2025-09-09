@@ -26,7 +26,7 @@ const { toHhMm, toGermanDateWithLongMonth } = useDateTimeFormatter();
 const { currentUserWahlbezirkNummer, isBWB, currentUserHauptWahlID } =
   storeToRefs(useUserStore());
 const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
-const wahlenStore = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 async function onNachbesetzungDruckenClicked() {
   await sendWahlvorstand();
@@ -36,12 +36,12 @@ async function onNachbesetzungDruckenClicked() {
 
 function _openPrintDialog() {
   const data: NachbesetzungsDruckInput = {
-    wahlName: wahlenStore.getWahlNameOrBlankStringById(
+    wahlName: wahlenActions.getWahlNameOrBlankStringById(
       currentUserHauptWahlID.value
     ),
     wahlTag:
       toGermanDateWithLongMonth(
-        wahlenStore.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
+        wahlenActions.getWahlTagOrBlankStringById(currentUserHauptWahlID.value)
       ) || "",
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,

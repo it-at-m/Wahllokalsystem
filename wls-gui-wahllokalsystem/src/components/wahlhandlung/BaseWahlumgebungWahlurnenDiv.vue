@@ -9,7 +9,7 @@
         class="mr-4"
         :rules="[required, minNumber(1), maxNumber(99)]"
         :data-test="`textFieldUrnenAnzahl_${index}`"
-        :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
+        :label="`Anzahl der Wahlurnen ${wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)}`"
         min-width="30rem"
         clearable
       />
@@ -29,5 +29,5 @@ defineProps<{
   wahlVorbereitung: Wahlvorbereitung;
 }>();
 
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 </script>

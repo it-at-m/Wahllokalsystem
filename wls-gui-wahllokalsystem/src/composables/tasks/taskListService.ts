@@ -6,7 +6,10 @@ import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/erge
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
+import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
+import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
@@ -14,8 +17,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
-  const { getWahlOrUndefinedById, getWaehlerverzeichnisNummerOrUndefinedById } =
-    useWahlenStore();
+  const { wahlenActions, waehlerverzeichnisActions } = useWahlenStore();
   const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
 
@@ -26,16 +28,22 @@ export function useTaskListService() {
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWaehlerverzeichnisTasks } =
+    useWaehlverzeichnisTaskFactory();
   const { createTasks: createWahlvorschlaegeTasks } =
     useWahlvorschlaegeTaskFactory();
   const { createTasks: createStimmabgabevermerkeTasks } =
     useStimmabgabevermerkeTaskFactory();
   const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
+  const { createTasks: createStimmzettelumschlaegeTasks } =
+    useStimmzettelumschlaegeTaskFactory();
+  const { createTasks: createWaehlerTasks } = useWaehlerTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
     return [
       ...createKopfdatenTasks(taskFactoryData),
+      ...createWaehlerverzeichnisTasks(taskFactoryData),
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),
       ...createKonfigurationsparameterTasks(taskFactoryData),
@@ -43,15 +51,19 @@ export function useTaskListService() {
       ...createWahlvorschlaegeTasks(taskFactoryData),
       ...createErgebnisseTasks(taskFactoryData),
       ...createStimmabgabevermerkeTasks(taskFactoryData),
+      ...createStimmzettelumschlaegeTasks(taskFactoryData),
+      ...createWaehlerTasks(taskFactoryData),
     ];
   }
 
   function _createTaskFactoryData() {
     const extendedWahlMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
-        const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
+        const wahl = wahlenActions.getWahlOrUndefinedById(wahlMetadata.wahlID);
         const waehlerverzeichnisNummer =
-          getWaehlerverzeichnisNummerOrUndefinedById(wahlMetadata.wahlID);
+          waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+            wahlMetadata.wahlID
+          );
         if (!wahl || !waehlerverzeichnisNummer) {
           throw new Error(`Wahl not found for wahlID: ${wahlMetadata.wahlID}`);
         }

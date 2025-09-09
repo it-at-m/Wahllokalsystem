@@ -4,11 +4,12 @@ import {
   Configuration,
   StimmabgabevermerkeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
@@ -53,14 +54,25 @@ export function useStimmabgabevermerkeService() {
     waehlerverzeichnisNummer: number,
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
+    const { wahlenActions } = useWahlenStore();
+    const wahlname =
+      wahlenActions.getWahlNameOrBlankStringById(
+        stimmabgabevermerke.wahldaten?.[0].wahlID
+      ) || "";
     try {
       await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
         wahlbezirkID,
         waehlerverzeichnisNummer,
         toDto(stimmabgabevermerke)
       );
+
+      addNotification(
+        `Stimmabgabevermerke für ${wahlname} erfolgreich gespeichert`,
+        UserNotificationCategoryEnum.SUCCESS
+      );
     } catch (e) {
-      const errorMessage = "Fehler beim Speichern der Stimmabgabevermerke.";
+      const errorMessage =
+        "Fehler beim Speichern der Stimmabgabevermerke für " + wahlname;
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Post Stimmabgabevermerke Failed");

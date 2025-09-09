@@ -4,7 +4,7 @@
       <tr>
         <th class="font-weight-bold text-center">Wahlschein</th>
         <th
-          v-for="wahl in wahlen"
+          v-for="wahl in wahlenState.wahlen"
           :key="wahl.wahlID"
           class="font-weight-bold text-center"
         >
@@ -44,7 +44,7 @@
           </v-row>
         </td>
         <td
-          v-for="wahl in wahlen"
+          v-for="wahl in wahlenState.wahlen"
           :key="`${wahl.wahlID}-${index - 1}`"
         >
           <v-autocomplete
@@ -101,17 +101,19 @@ import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/Zurueckweisungsgrund
 
 const { required } = useRules();
 
-const { wahlen } = storeToRefs(useWahlenStore());
-const { deleteBeanstandeterWahlbriefEntry } = useWahlenStore();
+const { wahlenState } = storeToRefs(useWahlenStore());
+const { beanstandeteWahlbriefeActions } = useWahlenStore();
 const {
   zurueckweisungsgrundStringToEnumValue,
   zurueckweisungsgrundEnumToDisplayString,
 } = useBeanstandeteWahlbriefeMapper();
 
 const maxRows = computed(() => {
-  return wahlen.value
+  return wahlenState.value.wahlen
     ? Math.max(
-        ...wahlen.value.map((wahl) => wahl.beanstandeteWahlbriefe.length)
+        ...wahlenState.value.wahlen.map(
+          (wahl) => wahl.beanstandeteWahlbriefe.length
+        )
       )
     : 0;
 });
@@ -139,18 +141,20 @@ const gruendeStimmzettel = [
 onMounted(() => {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     let wahlscheinZurueckweisungsgrund;
-    if (wahlen.value) {
-      const hasAnyWahlAnyWahlscheinGrund = wahlen.value.some((wahl) => {
-        const grund = wahl.beanstandeteWahlbriefe[row];
-        wahlscheinZurueckweisungsgrund = grund;
-        return (
-          grund &&
-          gruendeWahlscheine.includes(
-            zurueckweisungsgrundEnumToDisplayString(grund)
-          ) &&
-          grund !== ZurueckweisungsgrundEnum.Zugelassen
-        );
-      });
+    if (wahlenState.value.wahlen) {
+      const hasAnyWahlAnyWahlscheinGrund = wahlenState.value.wahlen.some(
+        (wahl) => {
+          const grund = wahl.beanstandeteWahlbriefe[row];
+          wahlscheinZurueckweisungsgrund = grund;
+          return (
+            grund &&
+            gruendeWahlscheine.includes(
+              zurueckweisungsgrundEnumToDisplayString(grund)
+            ) &&
+            grund !== ZurueckweisungsgrundEnum.Zugelassen
+          );
+        }
+      );
 
       if (hasAnyWahlAnyWahlscheinGrund) {
         wahlscheinGruende.value[row] = wahlscheinZurueckweisungsgrund;
@@ -168,13 +172,16 @@ function onZulassungsgrundWahlscheinChanged(
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
   wahlscheinGruende.value[rowIndex] = selectedValue;
 
-  if (selectedValue !== ZurueckweisungsgrundEnum.Zugelassen && wahlen.value) {
-    wahlen.value.forEach(
+  if (
+    selectedValue !== ZurueckweisungsgrundEnum.Zugelassen &&
+    wahlenState.value.wahlen
+  ) {
+    wahlenState.value.wahlen.forEach(
       (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue)
     );
-  } else if (wahlen.value) {
+  } else if (wahlenState.value.wahlen) {
     // unset values of stimmzettelumschlag columns if "ZUGELASSEN" is selected
-    wahlen.value.forEach(
+    wahlenState.value.wahlen.forEach(
       (wahl) => (wahl.beanstandeteWahlbriefe[rowIndex] = null)
     );
   }
@@ -188,9 +195,9 @@ function onZulassungsgrundStimmzettelChanged(
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
   wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
 
-  if (wahlen.value) {
+  if (wahlenState.value.wahlen) {
     // add new value to other stimmzettelumschlag columns
-    wahlen.value.forEach((otherWahl) => {
+    wahlenState.value.wahlen.forEach((otherWahl) => {
       // avoid updating the same wahl again
       if (otherWahl.wahlID !== wahl.wahlID) {
         if (
@@ -206,7 +213,7 @@ function onZulassungsgrundStimmzettelChanged(
 }
 
 function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
-  deleteBeanstandeterWahlbriefEntry(rowIndex);
+  beanstandeteWahlbriefeActions.deleteBeanstandeterWahlbriefEntry(rowIndex);
   wahlscheinGruende.value.splice(rowIndex, 1);
 }
 

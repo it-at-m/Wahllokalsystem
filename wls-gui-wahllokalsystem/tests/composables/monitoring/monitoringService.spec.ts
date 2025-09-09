@@ -4,7 +4,7 @@ import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

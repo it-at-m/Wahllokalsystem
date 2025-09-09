@@ -1,8 +1,9 @@
 import { useBroadcastTestDataFactory } from "@tests/utils/broadcast/BroadcastTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useBroadcastService } from "@/composables/broadcast/broadcastService.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
@@ -93,7 +94,7 @@ describe("BroadcastService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
   });
@@ -128,7 +129,7 @@ describe("BroadcastService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
   });

@@ -4,7 +4,7 @@ import {
   Configuration,
   UserControllerApi,
 } from "@/api/wls-clients/generated-auth-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserMapper } from "@/composables/user/userMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { AUTH_SERVICE_API_URL } from "@/constants.ts";

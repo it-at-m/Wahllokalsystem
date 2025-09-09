@@ -4,10 +4,11 @@ import {
   BroadcastControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-broadcast-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useBroadcastMapper } from "@/composables/broadcast/broadcastMapper.ts";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BROADCAST_SERVICE_API_URL } from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { dtoToModel } = useBroadcastMapper();
 const { addNotification } = useUserNotificationService();
@@ -35,7 +36,7 @@ export function useBroadcastService() {
     } catch {
       addNotification(
         "Abrufen der Broadcastnachricht ist fehlgeschlagen",
-        "Error"
+        UserNotificationCategoryEnum.ERROR
       );
       return null;
     }
@@ -50,7 +51,7 @@ export function useBroadcastService() {
     } catch {
       addNotification(
         "Löschen der Broadcastnachricht ist fehlgeschlagen",
-        "Error"
+        UserNotificationCategoryEnum.ERROR
       );
     }
   }

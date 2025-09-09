@@ -27,6 +27,8 @@ frontend-project
 |  ├─ resources
 |  |     └─ openapis
 |  |        └─ openapi.broadcast.0.2.0.json
+|  ├─ service-worker
+|  |     └─ wahl-worker.ts
 |  ├─ stores
 |  |     └─ wahlvorstandStore.ts
 |  ├─ types
@@ -61,13 +63,14 @@ wiederspiegeln.
 Der Anwendungscode besteht auf folgenden Ordnern:
 
 | Ordner            | Beschreibung                                                               |
-| ----------------- | -------------------------------------------------------------------------- |
+|-------------------|----------------------------------------------------------------------------|
 | api               | (generierte) Clients für den Zugriff auf die Backend-Services              |
 | components        | Komponenten die zur Verfügung stehen                                       |
 | composables       | Wiederverwendbarer Code                                                    |
 | resources/openapi | openAPI Beschreibung die für die Clients verwendet werden                  |
 | plugins           | Konfiguration der verwendeten Plugins, z.B. Pinia, Router oder Vuetify     |
 | store             | Stores der Anwendung                                                       |
+| service-worker    | Initialisierung und Routeregistrierung                                     |
 | types             | Eigenen Datentypen der Anwendung (Die Datentypen der Clients sind in `api` |
 | views             | Views der Anwendung                                                        |
 

@@ -94,8 +94,8 @@ export const Default: Story = {
       stimmabgabevermerkeOne,
       stimmabgabevermerkeTwo,
     ];
-    const { wahlen } = storeToRefs(useWahlenStore(pinia));
-    wahlen.value = [
+    const { wahlenState } = storeToRefs(useWahlenStore(pinia));
+    wahlenState.value.wahlen = [
       {
         beanstandeteWahlbriefe: [],
         farbe: undefined,

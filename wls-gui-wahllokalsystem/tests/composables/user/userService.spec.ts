@@ -1,7 +1,7 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

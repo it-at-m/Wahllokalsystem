@@ -5,8 +5,8 @@ import { clientsClaim } from "workbox-core";
 import { cleanupOutdatedCaches } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 
+import { useRequestStrategyManager } from "@/composables/api/RequestStrategyManager.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useRequestStrategyManager } from "@/composables/common/RequestStrategyManager.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 // declare let self: any;

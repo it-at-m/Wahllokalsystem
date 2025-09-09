@@ -3,6 +3,7 @@ import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahl
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createWahlscheine } = useWahlscheineTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
@@ -73,7 +74,7 @@ describe("ergebnismeldungService.ts", () => {
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 

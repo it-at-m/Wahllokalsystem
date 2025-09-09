@@ -3,7 +3,7 @@ spring:
     gateway:
       routes:
         - id: sso
-          uri: http://kubernetes.docker.internal:8100/
+          uri: http://host.docker.internal:8100/
           predicates:
             - Path=/api/sso/userinfo
           filters:
@@ -11,13 +11,13 @@ spring:
             - RemoveRequestHeader=Cookie
             - RemoveResponseHeader=Set-Cookie
         - id: admin-service
-          uri: http://kubernetes.docker.internal:8209/
+          uri: http://host.docker.internal:8209/
           predicates:
             - Path=/api/admin-service/**
           filters:
             - RewritePath=/api/admin-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: auth-service
-          uri: http://kubernetes.docker.internal:8100/
+          uri: http://host.docker.internal:8100/
           predicates:
             - Path=/api/auth-service/**
           filters:
@@ -25,30 +25,30 @@ spring:
             - RemoveRequestHeader=Cookie
             - RemoveResponseHeader=Set-Cookie
         - id: basisdaten-service
-          uri: http://kubernetes.docker.internal:8205/
+          uri: http://host.docker.internal:8205/
           predicates:
             - Path=/api/basisdaten-service/**
           filters:
             - RewritePath=/api/basisdaten-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: broadcast-service
-          uri: http://kubernetes.docker.internal:8200/
+          uri: http://host.docker.internal:8200/
           predicates:
             - Path=/api/broadcast-service/**
           filters:
             - RewritePath=/api/broadcast-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: ergebnismeldung-service
-          uri: http://kubernetes.docker.internal:8208/
+          uri: http://host.docker.internal:8208/
           predicates:
             - Path=/api/ergebnismeldung-service/**
           filters:
             - RewritePath=/api/ergebnismeldung-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: infomanagement-service
-          uri: http://kubernetes.docker.internal:8201/
+          uri: http://host.docker.internal:8201/
           predicates:
             - Path=/api/infomanagement-service/**
           filters:
             - RewritePath=/api/infomanagement-service/(?<urlsegments>.*), /$\{urlsegments}
         - id: frontend-admintool
-          uri: http://kubernetes.docker.internal:8401/
+          uri: http://host.docker.internal:8401/
           predicates:
             - Path=/**

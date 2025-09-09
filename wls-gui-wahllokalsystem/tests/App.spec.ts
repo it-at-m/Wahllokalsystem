@@ -4,6 +4,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -13,7 +14,6 @@ import App from "@/App.vue";
 import { ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -23,6 +23,23 @@ import HomeView from "@/views/HomeView.vue";
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
 
+const mockDefinitions = vi.hoisted(() => ({
+  getWahlen: vi.fn(),
+  postBeanstandeteWahlbriefe: vi.fn(),
+  getBeanstandeteWahlbriefe: vi.fn(),
+}));
+
+vi.mock("@/composables/wahl/wahlService.ts", () => ({
+  useWahlService: () => ({
+    getWahlen: mockDefinitions.getWahlen,
+  }),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+  }),
+}));
 vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
   useBroadcastCronjobService: () => ({
     startBroadcastMessageInterval: startBroadcastMessageIntervalMock,
@@ -80,6 +97,14 @@ describe("App", () => {
         ],
       },
     });
+
+    const { createWahl } = useWahlTestDataFactory();
+
+    const mockedWahlArrayFromService = [createWahl(), createWahl()];
+
+    mockDefinitions.getWahlen.mockReturnValue(
+      Promise.resolve(mockedWahlArrayFromService)
+    );
   });
 
   afterEach(() => {
@@ -155,24 +180,19 @@ describe("App", () => {
       expect(loadEreignisse).toHaveBeenCalled();
     });
 
-    it("should_callLoadWaehler_when_mounted", async () => {
-      const { loadWaehler } = useMonitoringStore();
-
-      await flushPromises();
-
-      expect(loadWaehler).toHaveBeenCalled();
-    });
-
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
-      const { initBeanstandeteWahlbriefe } = useWahlenStore();
-      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+      const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
+      const initBeanstandeteWahlbriefeSpy = vi.spyOn(
+        useWahlenStore().beanstandeteWahlbriefeActions,
+        "initBeanstandeteWahlbriefe"
+      );
 
       // @ts-expect-error: cannot set readonly
-      waehlerverzeichnisNummern.value = [1];
+      waehlerverzeichnisGetter.waehlerverzeichnisNummern = [1];
 
       await flushPromises();
 
-      expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
+      expect(initBeanstandeteWahlbriefeSpy).toHaveBeenCalled();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

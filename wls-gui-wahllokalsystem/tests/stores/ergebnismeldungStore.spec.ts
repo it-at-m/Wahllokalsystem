@@ -10,16 +10,18 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
+  postErgebnisse: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     getErgebnisse: mockDefinitions.getErgebnisse,
+    postErgebnisse: mockDefinitions.postErgebnisse,
   }),
 }));
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { createErgebnisse } = useErgebnisseTestDataFactory();
+const { createErgebnisse, prepareErgebnisse } = useErgebnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
@@ -41,7 +43,13 @@ describe("ergebnismeldungStore.ts", () => {
       const stapelArt = StapelArtEnum.ObwA;
 
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       mockDefinitions.getErgebnisse.mockResolvedValue(null);
 
@@ -50,7 +58,7 @@ describe("ergebnismeldungStore.ts", () => {
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, stapelArt],
       ]);
-      expect(unitUnderTest.ergebnisse).toBeNull();
+      expect(unitUnderTest.ergebnisse).toStrictEqual([]);
     });
 
     it("should_loadErgebnisseByStapelArt_when_calledAndErgebnisseFound", async () => {
@@ -59,7 +67,13 @@ describe("ergebnismeldungStore.ts", () => {
       const stapelArt = StapelArtEnum.ObwA;
 
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       const mockedErgebnisseModel = createErgebnisse();
 
@@ -70,12 +84,22 @@ describe("ergebnismeldungStore.ts", () => {
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, stapelArt],
       ]);
-      expect(unitUnderTest.ergebnisse).toStrictEqual(mockedErgebnisseModel);
+      expect(unitUnderTest.ergebnisse).toStrictEqual([mockedErgebnisseModel]);
     });
 
     it("should_throwError_when_calledServiceThrowsError", async () => {
       const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
 
       mockDefinitions.getErgebnisse.mockRejectedValue(
         new Error("service call failed")
@@ -83,6 +107,90 @@ describe("ergebnismeldungStore.ts", () => {
 
       await expect(
         unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
+      ).rejects.toThrow();
+    });
+  });
+
+  describe("sendErgebnisseByStapelArt", () => {
+    it("should_sendErgebnisse_when_calledWithStapelartAndWahlId", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const mockedErgebnisseModel = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: stapelArt,
+        })
+        .build();
+      const mockedErgebnisseModelNotToSend = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: "otherID",
+          wahlbezirkID: "ID",
+          stapelArt: StapelArtEnum.SrwBawA,
+        })
+        .build();
+      unitUnderTest.ergebnisse = [
+        mockedErgebnisseModel,
+        mockedErgebnisseModelNotToSend,
+      ];
+
+      mockDefinitions.postErgebnisse.mockResolvedValue({});
+
+      await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt);
+
+      expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
+        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel],
+      ]);
+      expect(mockDefinitions.postErgebnisse.mock.calls).not.toEqual([
+        [
+          "ID",
+          "otherID",
+          StapelArtEnum.SrwBawA,
+          mockedErgebnisseModelNotToSend,
+        ],
+      ]);
+    });
+
+    it("should_throwError_when_calledServiceThrowsError", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+      unitUnderTest.ergebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+            stapelArt: stapelArt,
+          })
+          .build(),
+      ];
+
+      mockDefinitions.postErgebnisse.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(
+        unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
   });

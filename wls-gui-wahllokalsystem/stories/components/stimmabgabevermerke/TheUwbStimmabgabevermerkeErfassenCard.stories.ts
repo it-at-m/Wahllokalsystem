@@ -1,3 +1,4 @@
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
@@ -34,11 +35,13 @@ export const Default: Story = {
       useStimmabgabevermerkeStore(pinia)
     );
 
-    stimmabgabevermerke.value = {
+    const stimmabgabevermerkeOne: Stimmabgabevermerke = {
       anzahlBlaetter: 0,
       waehlerverzeichnisNummer: 0,
-      wahldaten: new Set([
+      wahlbezirkID: "wahlbezikID1",
+      wahldaten: [
         {
+          wahlbezirkID: "wahlbezikID1",
           wahlID: "wahlID",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
@@ -49,14 +52,23 @@ export const Default: Story = {
               blattnummer: 2,
               stimmzettel: [
                 {
-                  anzahl: 15,
+                  anzahl: 20,
                   stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
                 },
               ],
             },
           ],
         },
+      ],
+    };
+
+    const stimmabgabevermerkeTwo: Stimmabgabevermerke = {
+      anzahlBlaetter: 0,
+      waehlerverzeichnisNummer: 0,
+      wahlbezirkID: "wahlbezirkID2",
+      wahldaten: [
         {
+          wahlbezirkID: "wahlbezirkID2",
           wahlID: "wahlID2",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
@@ -74,10 +86,15 @@ export const Default: Story = {
             },
           ],
         },
-      ]),
+      ],
     };
-    const { wahlen } = storeToRefs(useWahlenStore(pinia));
-    wahlen.value = [
+
+    stimmabgabevermerke.value = [
+      stimmabgabevermerkeOne,
+      stimmabgabevermerkeTwo,
+    ];
+    const { wahlenState } = storeToRefs(useWahlenStore(pinia));
+    wahlenState.value.wahlen = [
       {
         beanstandeteWahlbriefe: [],
         farbe: undefined,

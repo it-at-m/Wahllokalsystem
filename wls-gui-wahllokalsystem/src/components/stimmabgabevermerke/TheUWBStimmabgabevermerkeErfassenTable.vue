@@ -15,34 +15,44 @@
         >{{ changeRowSizeButtonText }}</v-btn
       >
     </div>
-    <v-table>
+    <v-divider
+      :thickness="2"
+      class="border-opacity-25"
+    />
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
-          <td />
-          <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+          <th class="sav-first-column border-b-0" />
+          <th
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="font-weight-bold dynamic-column border-b-0"
           >
-            <b>{{ getWahlNameOrBlankStringById(wahldaten.wahlID) }}</b>
-            <div><b>Personen Mit Stimmabgabevermerk</b></div>
-          </td>
+            {{
+              wahlenActions.getWahlNameOrBlankStringById(
+                stimmabgabevermerk.wahldaten[0].wahlID
+              )
+            }}
+            <div>Personen mit Stimmabgabevermerk</div>
+          </th>
         </tr>
-        <tr>
-          <td><b>Blatt</b></td>
-          <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+        <tr class="font-weight-bold">
+          <th class="border-b-0">Blatt</th>
+          <th
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            class="border-b-0"
           >
-            <b>Anzahl Stimmabgabevermerke</b>
-          </td>
+            Anzahl Stimmabgabevermerke
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Nr. 1</td>
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.wahlID"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
             <v-text-field
               disabled
@@ -56,25 +66,42 @@
         >
           <td>Nr. {{ number + 1 }}</td>
           <td
-            v-for="wahldaten in stimmabgabevermerke.wahldaten"
-            :key="wahldaten.waehlerverzeichnisNummer"
+            v-for="stimmabgabevermerk in stimmabgabevermerke"
+            :key="stimmabgabevermerk.wahldaten[0].wahlID"
           >
-            <v-number-input
-              v-model="wahldaten.vermerke[number - 1].stimmzettel[0].anzahl"
-              :rules="[required]"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td><b>Gesamt</b></td>
-          <td
-            v-for="totalCount in stimmabgabevermerkeTableTotalEachWahldaten"
-            :key="totalCount"
-          >
-            <b>{{ totalCount }}</b>
+            <template
+              v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
+                number - 1
+              ].stimmzettel"
+            >
+              <v-number-input
+                v-if="
+                  stimmzettel != null &&
+                  stimmzettel.stimmzettelart ==
+                    StimmzettelStimmzettelartEnum.Klein
+                "
+                :key="stimmzettel.stimmzettelart"
+                v-model="stimmzettel.anzahl"
+                max-width="15rem"
+                :rules="[required, minNumber(0), maxNumber(9999)]"
+              />
+            </template>
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr class="font-weight-bold">
+          <td>Gesamt</td>
+          <td
+            v-for="(
+              totalCount, index
+            ) in stimmabgabevermerkeTableTotalEachWahldaten"
+            :key="`column-${index}-` + totalCount"
+          >
+            {{ totalCount }}
+          </td>
+        </tr>
+      </tfoot>
     </v-table>
     <base-dialog
       :visible="isDeleteDialogVisible"
@@ -101,6 +128,7 @@ import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
 const { minNumber, maxNumber, required } = useRules();
 
@@ -111,7 +139,7 @@ const {
 } = storeToRefs(useStimmabgabevermerkeStore());
 const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =
   useStimmabgabevermerkeStore();
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 
 onMounted(() => {
   rowSize.value = lowestNumberOfRowsOverAllWahldaten.value + 1;

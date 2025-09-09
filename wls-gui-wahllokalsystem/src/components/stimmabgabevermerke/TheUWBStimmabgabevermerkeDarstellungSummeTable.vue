@@ -1,25 +1,29 @@
 <template>
   <v-container>
-    <v-table>
+    <v-table class="stimmabgabevermerke-table">
       <thead>
         <tr>
+          <th class="sav-first-column border-b-0" />
           <th
             v-for="key in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.keys()
             )"
             :key="key"
+            class="pl-0 font-weight-bold dynamic-column"
           >
-            <b>{{ getWahlNameOrBlankStringById(key) }}</b>
+            {{ wahlenActions.getWahlNameOrBlankStringById(key) }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <!-- placeholder column for spacing -->
+          <td />
           <td
-            v-for="value in Array.from(
+            v-for="(value, index) in Array.from(
               sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.values()
             )"
-            :key="value"
+            :key="`Row-${index}-` + value"
           >
             {{ value }}
           </td>
@@ -36,5 +40,5 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl } =
   storeToRefs(useStimmabgabevermerkeStore());
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 </script>

@@ -1,9 +1,37 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getStimmabgabevermerke: vi.fn(),
+  postStimmabgabevermerke: vi.fn(),
+  createEmptyStimmabgabevermerke: vi.fn(),
+}));
+
+vi.mock(
+  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
+  () => ({
+    useStimmabgabevermerkeService: () => ({
+      getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
+      postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
+    }),
+  })
+);
+vi.mock(
+  "@/composables/stimmabgabevermerke/stimmabgabevermerkeUtils.ts",
+  () => ({
+    useStimmabgabevermerkeUtils: vi.fn().mockImplementation(() => ({
+      createEmptyStimmabgabevermerke:
+        mockDefinitions.createEmptyStimmabgabevermerke,
+    })),
+  })
+);
 
 describe("stimmabgabevermerkeStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useStimmabgabevermerkeStore>;
@@ -15,6 +43,9 @@ describe("stimmabgabevermerkeStore.ts", () => {
     prepareVermerk,
     prepareStimmzettel,
   } = useStimmabgabevermerkeTestDataFactory();
+  const { generateRandomString, generateRandomNumber } =
+    useCommonTestDataFactory();
+  const { prepareUser } = useUserTestDataFactory();
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
@@ -24,9 +55,105 @@ describe("stimmabgabevermerkeStore.ts", () => {
     unitUnderTest = useStimmabgabevermerkeStore(testPinia);
   });
 
+  describe("loadStimmabgabevermerke", () => {
+    it("should_addStimmabgabevermerkeToState_when_serviceReturnsData", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
+
+      const existingStimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
+
+      const mockedServiceStimmabgabevermerke = createStimmabgabevermerke();
+      mockDefinitions.getStimmabgabevermerke.mockResolvedValue(
+        mockedServiceStimmabgabevermerke
+      );
+
+      await unitUnderTest.loadStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer
+      );
+
+      expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([
+        existingStimmabgabevermerke,
+        mockedServiceStimmabgabevermerke,
+      ]);
+    });
+
+    it("should_addDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataAndUserHasWahlbezirkID", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
+
+      const existingStimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
+
+      mockDefinitions.getStimmabgabevermerke.mockResolvedValue(null);
+      const mockedEmptyStimmabgabevermerke = createStimmabgabevermerke();
+      mockDefinitions.createEmptyStimmabgabevermerke.mockReturnValue(
+        mockedEmptyStimmabgabevermerke
+      );
+
+      useUserStore().setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkID,
+              wahlnummer: generateRandomString(1),
+              wahlID: generateRandomString(10),
+            },
+          ])
+          .build()
+      );
+
+      await unitUnderTest.loadStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer
+      );
+
+      expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([
+        existingStimmabgabevermerke,
+        mockedEmptyStimmabgabevermerke,
+      ]);
+    });
+
+    it("should_notAddDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataButUserHasNotThatWahlbezirkID", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(3);
+
+      const existingStimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [existingStimmabgabevermerke];
+
+      mockDefinitions.postStimmabgabevermerke.mockResolvedValue(null);
+      const mockedEmptyStimmabgabevermerke = createStimmabgabevermerke();
+      mockDefinitions.createEmptyStimmabgabevermerke.mockReturnValue(
+        mockedEmptyStimmabgabevermerke
+      );
+
+      useUserStore().setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkID + wahlbezirkID,
+              wahlnummer: generateRandomString(1),
+              wahlID: generateRandomString(10),
+            },
+          ])
+          .build()
+      );
+
+      await unitUnderTest.loadStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer
+      );
+
+      expect(unitUnderTest.stimmabgabevermerke).toStrictEqual([
+        existingStimmabgabevermerke,
+      ]);
+    });
+  });
+
   describe("isAnyRowThatShouldBeDeletedFilled", () => {
     it("should_returnTrue_when_rowsToRemoveContainLegitValues", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(true);
@@ -46,9 +173,16 @@ describe("stimmabgabevermerkeStore.ts", () => {
             .build(),
         ])
         .build();
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldaten, wahldaten]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldaten])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldaten])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
       const result = unitUnderTest.isAnyRowThatShouldBeDeletedFilled(2);
       expect(result).toBe(false);
     });
@@ -56,39 +190,39 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
   describe("changeRowCount", () => {
     it("should_decreaseRowCount_when_enteredNumberIsLowerThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(2);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(1);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(1);
       });
     });
 
     it("should_increaseRowCount_when_enteredNumberIsHigherThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(5);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(4);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(4);
       });
     });
 
     it("should_notIncreaseOrDecrease_when_enteredNumberIsSameThanActual", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       unitUnderTest.changeRowCount(3);
 
-      unitUnderTest.stimmabgabevermerke.wahldaten.forEach((wahldaten) => {
-        expect(wahldaten.vermerke.length).toBe(2);
+      unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
+        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(2);
       });
     });
   });
 
   describe("lowestNumberOfRowsOverAllWahldaten", () => {
     it("should_calculateTheCorrectNumber_when_allWahldatenHaveSameNumberOfVermerke", () => {
-      unitUnderTest.stimmabgabevermerke = createStimmabgabevermerke();
+      unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
 
       const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
 
@@ -112,10 +246,16 @@ describe("stimmabgabevermerkeStore.ts", () => {
           prepareVermerk().blattnummer(5).build(),
         ])
         .build();
-
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result = unitUnderTest.lowestNumberOfRowsOverAllWahldaten;
 
@@ -158,9 +298,17 @@ describe("stimmabgabevermerkeStore.ts", () => {
         ])
         .build();
 
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result = unitUnderTest.stimmabgabevermerkeTableTotalEachWahldaten;
 
@@ -210,15 +358,43 @@ describe("stimmabgabevermerkeStore.ts", () => {
         )
         .build();
 
-      unitUnderTest.stimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten(new Set([wahldatenOne, wahldatenTwo]))
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
         .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
 
       const result =
         unitUnderTest.sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl;
 
       expect(result.get(wahldatenOne.wahlID)).toStrictEqual(80);
       expect(result.get(wahldatenTwo.wahlID)).toStrictEqual(85);
+    });
+  });
+
+  describe("saveStimmabgabevermerke", () => {
+    it("should_saveStimmabgabevermerke_when_called", async () => {
+      const stimmabgabevermerke = createStimmabgabevermerke();
+
+      mockDefinitions.postStimmabgabevermerke.mockReturnValue(
+        Promise.resolve(null)
+      );
+
+      unitUnderTest.stimmabgabevermerke = [stimmabgabevermerke];
+
+      await unitUnderTest.saveStimmabgabevermerke();
+
+      expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
+        stimmabgabevermerke.wahlbezirkID,
+        stimmabgabevermerke.waehlerverzeichnisNummer,
+        stimmabgabevermerke
+      );
     });
   });
 });

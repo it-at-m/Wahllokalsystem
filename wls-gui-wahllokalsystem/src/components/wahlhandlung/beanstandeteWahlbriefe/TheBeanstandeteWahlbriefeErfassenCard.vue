@@ -1,7 +1,9 @@
 <template>
   <v-card>
     <v-card-text>
-      <v-form v-model="isBeanstandeteWahlbriefeTableValid">
+      <v-form
+        v-model="beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeTableValid"
+      >
         <the-beanstandete-wahlbriefe-table />
       </v-form>
     </v-card-text>
@@ -30,21 +32,21 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { isBeanstandeteWahlbriefeSaving, isBeanstandeteWahlbriefeTableValid } =
-  storeToRefs(useWahlenStore());
-const { addBeanstandeterWahlbriefEntry, saveBeanstandeteWahlbriefe } =
-  useWahlenStore();
+const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
+const { beanstandeteWahlbriefeActions } = useWahlenStore();
 
 const isSaveButtonDisabled = computed(
-  () => !isBeanstandeteWahlbriefeTableValid.value
+  () => !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid
 );
-const isSaving = computed(() => isBeanstandeteWahlbriefeSaving.value);
+const isSaving = computed(
+  () => beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeSaving
+);
 
 function onAddBeanstandeterWahlbriefClicked() {
-  addBeanstandeterWahlbriefEntry();
+  beanstandeteWahlbriefeActions.addBeanstandeterWahlbriefEntry();
 }
 
 function onSaveClicked() {
-  saveBeanstandeteWahlbriefe();
+  beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
 }
 </script>

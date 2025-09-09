@@ -6,7 +6,17 @@
         title="🚧 Wahl des Bezirksausschusses"
       />
     </template>
-    <v-list-item title="Zählen der Stimmzettel" />
+    <!-- [Vue warn]: Vuetify error: Multiple nodes with the same ID ist ein bekannter vuetify bug und kommt daher,
+    dass das list-item für SRW und OBW mit der gleichen Route aufgerufen wird. Siehe
+    https://github.com/vuetifyjs/vuetify/issues/20516 -->
+    <v-list-item
+      :title="titleStimmenZaehlen"
+      :to="
+        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
+          wahlId: String(bawWahlID),
+        })
+      "
+    />
     <v-list-item title="Ungültige Stimmzettel" />
     <v-list-item title="Gültige Stimmzettel" />
     <v-list-item title="Schnellmeldung" />
@@ -14,3 +24,23 @@
     <v-list-item title="Niederschrift" />
   </v-list-group>
 </template>
+
+<script setup lang="ts">
+import { computed } from "vue";
+
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+
+const { wahlenActions } = useWahlenStore();
+const { routeWithNameAndParams } = useNavigationUtils();
+
+defineProps<{
+  titleStimmenZaehlen: string;
+}>();
+
+const bawWahlID = computed<string | undefined>(() => {
+  return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Baw);
+});
+</script>

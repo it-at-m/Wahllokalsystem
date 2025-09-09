@@ -28,7 +28,6 @@ import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -37,7 +36,6 @@ const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
-const { loadWaehler } = useMonitoringStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -52,7 +50,6 @@ onMounted(async () => {
     startBroadcastMessageInterval();
     await initTasks();
     await loadEreignisse();
-    await loadWaehler();
     await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);

@@ -5,7 +5,7 @@ VALUES ('00000001-0000-0000-0000-000000000001', '2026-01-01',
 
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000001', '9899cae4-df9a-4ffc-a940-f20cf2280171',
-        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000001',
+        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000005',
         '00000001-0000-0000-0000-000000000001');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
@@ -82,7 +82,7 @@ VALUES ('00000000-0000-0000-0001-000000000015', 'Reagan', 5, true, 25, true,
 
 INSERT INTO referendumvorlagen (id, wahlbezirkID, wahlID, stimmzettelgebietID)
 VALUES ('00000000-0000-0000-0001-000000000001', '9899cae4-df9a-4ffc-a940-f20cf2280171',
-        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000001');
+        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000005');
 
 INSERT INTO referendumvorlage (id, wahlvorschlagID, ordnungszahl, kurzname, frage, referendumvorlagenID)
 VALUES ('00000000-0000-0001-0001-000000000001', '00000000-0000-0000-0001-000000000001', 1, 'vorlage', 'frage',
@@ -102,7 +102,7 @@ VALUES ('00000001-0000-0000-0000-000000000002', '2026-01-01',
 
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000002', '9081145c-dc16-4a9b-8255-5c49ddb98c14',
-        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000001',
+        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000005',
         '00000001-0000-0000-0000-000000000002');
 
 INSERT INTO wahlvorschlag (id, ordnungszahl, kurzname, erhaeltStimmen, wahlvorschlaegeID)
@@ -179,7 +179,7 @@ VALUES ('00000000-0000-0005-0005-000000000015', 'Reagan', 5, true, 25, true,
 
 INSERT INTO referendumvorlagen (id, wahlbezirkID, wahlID, stimmzettelgebietID)
 VALUES ('00000000-0005-0001-0001-000000000001', '9081145c-dc16-4a9b-8255-5c49ddb98c14',
-        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000001');
+        '28039463-3d3d-4ce5-acc1-0bef931a4409', '00000000-0000-0000-0000-000000000005');
 
 INSERT INTO referendumvorlage (id, wahlvorschlagID, ordnungszahl, kurzname, frage, referendumvorlagenID)
 VALUES ('00000000-0005-0001-0002-000000000001', '00000000-0000-0000-0005-000000000001', 1, 'vorlage', 'frage',

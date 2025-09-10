@@ -1,4 +1,3 @@
-import type BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import type { TestingPinia } from "@pinia/testing";
 import type { VueWrapper } from "@vue/test-utils";
 
@@ -359,17 +358,17 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   });
 
   function getInputStimmenZurueckweisung() {
-    const baseNumberInput = wrapper.findComponent<typeof BaseNumberInput>(
+    const baseNumberInput = wrapper.findComponent(
       '[data-test="number-input-stimmen-zurueckweisung"]'
     );
-    return baseNumberInput.findComponent<typeof VNumberInput>(VNumberInput);
+    return baseNumberInput.findComponent(VNumberInput);
   }
 
   function getInputWahlscheinnummer() {
-    const baseNumberInput = wrapper.findComponent<typeof BaseNumberInput>(
+    const baseNumberInput = wrapper.findComponent(
       '[data-test="number-input-wahlscheinnummer"]'
     );
-    return baseNumberInput.findComponent<typeof VNumberInput>(VNumberInput);
+    return baseNumberInput.findComponent(VNumberInput);
   }
 
   function getSearchButton() {

@@ -5,10 +5,8 @@ import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

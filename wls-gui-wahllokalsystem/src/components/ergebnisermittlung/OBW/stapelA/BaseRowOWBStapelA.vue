@@ -18,8 +18,8 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
-import { useRules } from "@/composables/common/rules.ts";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
+import { useRules } from "@/composables/common/rules";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils";
 
 const { required } = useRules();
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();

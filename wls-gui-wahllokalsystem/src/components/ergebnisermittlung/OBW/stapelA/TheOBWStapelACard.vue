@@ -6,7 +6,7 @@
         <v-table>
           <thead>
             <tr>
-              <th></th>
+              <th />
               <th class="font-weight-bold">Wahlvorschlag</th>
               <th class="font-weight-bold">Stapel a: zweifelsfrei gültig</th>
             </tr>
@@ -23,7 +23,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td></td>
+              <td />
               <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
               <td class="font-weight-bold text-end">{{ sumOfValidVotes }}</td>
             </tr>

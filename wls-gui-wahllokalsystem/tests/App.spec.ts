@@ -14,7 +14,6 @@ import App from "@/App.vue";
 import { ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -179,14 +178,6 @@ describe("App", () => {
       await flushPromises();
 
       expect(loadEreignisse).toHaveBeenCalled();
-    });
-
-    it("should_callLoadWaehler_when_mounted", async () => {
-      const { loadWaehler } = useMonitoringStore();
-
-      await flushPromises();
-
-      expect(loadWaehler).toHaveBeenCalled();
     });
 
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {

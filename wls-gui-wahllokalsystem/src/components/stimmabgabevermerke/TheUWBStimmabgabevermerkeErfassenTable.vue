@@ -3,7 +3,7 @@
     <div class="d-flex">
       <v-number-input
         v-model="rowSize"
-        :rules="[required, minNumber(1), maxNumber(250)]"
+        :rules="[required, minNumber(1), maxNumber(maxRowSize)]"
         max-width="15rem"
         label="Anzahl der Blätter"
       />
@@ -12,8 +12,9 @@
         active
         :disabled="disableChangeRowSizeButton"
         @click="changeRowCountOrOpenDialog"
-        >{{ changeRowSizeButtonText }}</v-btn
       >
+        Übernehmen
+      </v-btn>
     </div>
     <v-divider
       :thickness="2"
@@ -83,7 +84,8 @@
                 :key="stimmzettel.stimmzettelart"
                 v-model="stimmzettel.anzahl"
                 max-width="15rem"
-                :rules="[required, minNumber(0), maxNumber(9999)]"
+                :rules="[required, minNumber(0), maxNumber(50)]"
+                label="Anzahl"
               />
             </template>
           </td>
@@ -147,25 +149,15 @@ onMounted(() => {
 
 const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
-
-const changeRowSizeButtonText = computed(() => {
-  if (
-    rowSize.value != null &&
-    rowSize.value - 1 > lowestNumberOfRowsOverAllWahldaten.value
-  ) {
-    return "Erhöhen";
-  } else if (
-    rowSize.value != null &&
-    rowSize.value - 1 < lowestNumberOfRowsOverAllWahldaten.value
-  ) {
-    return "Reduzieren";
-  } else {
-    return "Übernehmen";
-  }
-});
+const maxRowSize = 999;
 
 const disableChangeRowSizeButton = computed(() => {
-  return rowSize.value == null || rowSize.value <= 0 || rowSize.value > 250;
+  return (
+    rowSize.value == null ||
+    rowSize.value <= 0 ||
+    rowSize.value > maxRowSize ||
+    rowSize.value == lowestNumberOfRowsOverAllWahldaten.value + 1
+  );
 });
 
 function changeRowCountOrOpenDialog() {

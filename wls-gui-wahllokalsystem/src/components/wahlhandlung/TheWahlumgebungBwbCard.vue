@@ -21,7 +21,6 @@
           />
           <v-card-actions>
             <base-button-save
-              active
               :disabled="isSaveButtonDisabled"
               :loading="
                 briefwahlVorbereitungState.briefWahlVorbereitungIsSaving

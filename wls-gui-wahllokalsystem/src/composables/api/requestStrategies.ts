@@ -1,7 +1,7 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
@@ -112,6 +112,7 @@ export function useRequestStrategies() {
       data: requestBody,
       contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE),
       dirty: dirty,
+      timestamp: new Date().getTime(),
     };
     await storeItem(dbKey, requestToStore);
   }

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseRowOWBStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOWBStapelA.vue";
+import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
 
 const meta = {
-  component: BaseRowOWBStapelA,
+  component: BaseRowObwStapelA,
   argTypes: {
     modelValue: {
       description: "Ergebnis das erfasst wird",
@@ -48,7 +48,7 @@ const meta = {
       ]),
     },
   },
-} satisfies Meta<typeof BaseRowOWBStapelA>;
+} satisfies Meta<typeof BaseRowObwStapelA>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

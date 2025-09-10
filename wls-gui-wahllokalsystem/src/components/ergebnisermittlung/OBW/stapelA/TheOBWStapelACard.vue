@@ -12,7 +12,7 @@
             </tr>
           </thead>
           <tbody>
-            <base-row-o-w-b-stapel-a
+            <base-row-obw-stapel-a
               v-for="(
                 ergebnisWithWahlvorschlag, index
               ) in ergebnisseWithWahlvorschlag"
@@ -47,7 +47,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseRowOWBStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOWBStapelA.vue";
+import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useLogging } from "@/composables/common/logging";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore";

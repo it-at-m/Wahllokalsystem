@@ -28,6 +28,10 @@ describe("ergebnisermittlungMapper.ts", () => {
     createStimmzettelumschlaegeDto,
   } = useStimmzettelumschlaegeTestDataFactory();
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe("toDto", () => {
     it("should_returnDto_when_givenModelWithoutUhrzeit", () => {
       const model: Stimmzettelumschlaege = createStimmzettelumschlaege();

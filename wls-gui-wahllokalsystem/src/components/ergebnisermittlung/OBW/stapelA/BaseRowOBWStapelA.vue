@@ -12,14 +12,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag";
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";
 
-import { useRules } from "@/composables/common/rules";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils";
+import { useRules } from "@/composables/common/rules.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { required } = useRules();
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();

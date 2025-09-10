@@ -20,7 +20,6 @@
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveEroeffnungsuhrzeitClicked"

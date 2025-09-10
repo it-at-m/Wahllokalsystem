@@ -68,7 +68,7 @@ describe("wahlvorschlagUtils.ts", () => {
       expect(result).toStrictEqual(kandidatenNameToGet);
     });
 
-    it("should_returnNameOfKandidatWithFirstAppearenceOfLoweseListenPosition_when_moreThanOneKandidatAreGivenWithSameListenPosition", () => {
+    it("should_returnNameOfKandidatWithFirstAppearanceOfLowestListenPosition_when_moreThanOneKandidatAreGivenWithSameListenPosition", () => {
       const kandidatenNameToGet = generateRandomString(10);
       const wahlvorschlag = prepareWahlvorschlag()
         .kandidaten(

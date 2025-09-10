@@ -65,6 +65,8 @@ describe("TheWlsAppBar.vue", () => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = true;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
 
@@ -77,6 +79,8 @@ describe("TheWlsAppBar.vue", () => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
 

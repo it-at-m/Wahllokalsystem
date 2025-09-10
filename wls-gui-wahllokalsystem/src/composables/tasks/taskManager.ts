@@ -23,17 +23,10 @@ export function useTaskManager(tasksToManage: Task[] = []) {
   const numberOfTasksSucceeded = computed(() => successfullyTasks.value.length);
 
   const hasAllTasksRun = computed(
-    () =>
-      numberOfTasksToRun.value > 0 &&
-      numberOfTasksToRun.value ==
-        failedTasks.value.length + successfullyTasks.value.length
+    () => numberOfTasksToRun.value === numberOfTasksFinished.value
   );
   const hasAllTasksRunSuccessfully = computed(
-    () =>
-      numberOfTasksToRun.value > 0 &&
-      numberOfTasksToRun.value ==
-        failedTasks.value.length + successfullyTasks.value.length &&
-      failedTasks.value.length === 0
+    () => hasAllTasksRun.value && failedTasks.value.length === 0
   );
   const hasTasksToRun = computed(() => managedTasks.value.length > 0);
 

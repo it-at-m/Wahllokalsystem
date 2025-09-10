@@ -55,9 +55,9 @@ describe("taskManager.ts", () => {
   });
 
   describe("hasAllTasksRun", () => {
-    it("should_returnFalse_when_noTasksAreSet", () => {
+    it("should_returnTrue_when_noTasksAreSet", () => {
       unitUnderTest.setTasks([]);
-      expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(false);
+      expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(true);
     });
 
     it("should_returnFalse_when_tasksAreSetButHasNotRunYet", () => {
@@ -112,6 +112,93 @@ describe("taskManager.ts", () => {
       await unitUnderTest.runAllTasks();
 
       expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(true);
+    });
+  });
+
+  describe("hasAllTasksRunSuccessfully", () => {
+    it("should_returnTrue_when_noTasksAreSet", () => {
+      unitUnderTest.setTasks([]);
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_returnFalse_when_tasksAreSetButHasNotRunYet", () => {
+      unitUnderTest.setTasks([{ name: "mocked task", callback: vi.fn() }]);
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_returnFalse_when_isRunningButNotAllTasksAreDone", async () => {
+      const timeout = 100;
+
+      const task1: Task = {
+        name: "successful task",
+        callback: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({});
+            }, timeout);
+          })
+        ),
+      };
+      const task2: Task = {
+        name: "successful task",
+        callback: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({});
+            }, timeout);
+          })
+        ),
+      };
+      unitUnderTest.setTasks([task1, task2]);
+
+      const runAllTasksPromise = unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
+
+      vi.advanceTimersByTime(timeout * 2);
+      await runAllTasksPromise;
+    });
+
+    it("should_returnTrue_when_allTasksHaveRunWithOutError", async () => {
+      const taskThatFails: Task = {
+        name: "failing task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      const taskThatSucceeded: Task = {
+        name: "successful task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      unitUnderTest.setTasks([taskThatFails, taskThatSucceeded]);
+
+      await unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_returnFalse_when_allTasksHaveRunButAtLeastOneProducedAnError", async () => {
+      const taskThatFails: Task = {
+        name: "failing task",
+        callback: vi.fn().mockRejectedValue(new Error("mocked task failed")),
+      };
+      const taskThatSucceeded: Task = {
+        name: "successful task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      unitUnderTest.setTasks([taskThatFails, taskThatSucceeded]);
+
+      await unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
     });
   });
 

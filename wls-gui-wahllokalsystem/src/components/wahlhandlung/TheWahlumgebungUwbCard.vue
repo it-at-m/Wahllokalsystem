@@ -84,7 +84,6 @@
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
           :disabled="isSaveButtonDisabled"
           :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"

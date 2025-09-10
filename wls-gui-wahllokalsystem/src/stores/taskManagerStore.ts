@@ -1,60 +1,25 @@
-import type { Task } from "@/types/tasks/Task.ts";
-import type { Ref } from "vue";
-
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTaskListService } from "@/composables/tasks/taskListService.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 
 const storeID = "taskManager";
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useTaskManagerStore = defineStore(storeID, () => {
   const { initTasklist } = useTaskListService();
-  const currentlyRunningTask = ref<null | Task>(null);
-  const failedTasks: Ref<Task[]> = ref([]);
-  const successfullyTasks: Ref<Task[]> = ref([]);
-  const numberOfTasksToRun = ref(0);
-  const numberOfFailedTasks = computed(() => {
-    return failedTasks.value.length;
-  });
-  const numberOfSuccessfulTasks = computed(() => {
-    return successfullyTasks.value.length;
-  });
-
-  const hasInitializationOfTasksCompletelyRun = computed(
-    () =>
-      numberOfTasksToRun.value > 0 &&
-      numberOfTasksToRun.value ==
-        numberOfSuccessfulTasks.value + numberOfFailedTasks.value &&
-      numberOfFailedTasks.value == 0
-  );
+  const taskManager = useTaskManager([]);
 
   async function initTasks() {
     const taskList = initTasklist();
-    numberOfTasksToRun.value = taskList.length;
-    for (const task of taskList) {
-      currentlyRunningTask.value = task;
-      try {
-        await task.callback();
-        successfullyTasks.value.push(task);
-      } catch {
-        failedTasks.value.push(task);
-      }
-    }
-    currentlyRunningTask.value = null;
+    taskManager.setTasks(taskList);
+    await taskManager.runAllTasks();
   }
 
   return {
+    ...taskManager,
     initTasks,
-    numberOfSuccessfulTasks,
-    numberOfFailedTasks,
-    numberOfTasksToRun,
-    currentlyRunningTask,
-    successfullyTasks,
-    failedTasks,
-    hasInitializationOfTasksCompletelyRun,
   };
 });
 

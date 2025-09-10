@@ -18,7 +18,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
-  mockedWahlen: vi.fn(),
 }));
 
 const { createPflegeWaehlerverzeichnis } =
@@ -50,9 +49,13 @@ vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
 }));
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    wahlen: ref(mockDefinitions.mockedWahlen),
-    getWaehlerverzeichnisNummerOrUndefinedById:
-      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    wahlenState: ref({
+      wahlen: [],
+    }),
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
 

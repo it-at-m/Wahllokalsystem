@@ -54,17 +54,17 @@
           </template>
           <v-list-item
             title="Home"
-            :to="'/'"
+            :to="routeWithName(ROUTES_HOME)"
           />
           <v-list-item
             title="Wahlvorstand"
-            :to="ROUTE_WAHLVORSTAND"
+            :to="routeWithName(ROUTE_WAHLVORSTAND)"
           />
           <the-b-w-b-election-list-group v-if="isBWB" />
           <the-u-w-b-election-list-group v-if="isUWB" />
           <v-list-item
             title="Ereignisse"
-            :to="ROUTE_EREIGNISSE"
+            :to="routeWithName(ROUTE_EREIGNISSE)"
           />
         </v-list-group>
         <the-kommunalwahlen-scores-list-group />
@@ -86,7 +86,12 @@ import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListG
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import {
+  ROUTE_EREIGNISSE,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -94,15 +99,17 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
-const { toGermanDateFormat } = useDateTimeFormatter();
+const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
   storeToRefs(useUserStore());
 const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
   useTaskManagerStore()
 );
+const { routeWithName } = useNavigationUtils();
+
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>
-  user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
+  user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""

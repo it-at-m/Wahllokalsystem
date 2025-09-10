@@ -4,11 +4,20 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
+  GetErgebnisseStapelartEnum,
+  PostErgebnisseStapelartEnum,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { toModel } = useErgebnisMapper();
+const {
+  toModel,
+  toDto,
+  toPostErgebnisseStapelartEnum,
+  toGetErgebnisseStapelartEnum,
+} = useErgebnisMapper();
 const {
   prepareErgebnisseDTO,
   createErgebnisDTO,
@@ -51,43 +60,183 @@ describe("ergebnisMapper.ts", () => {
       expect(result).toStrictEqual(modelErgebnisse);
       expect(result.ergebnisse).not.toBe(dtoErgebnisse.ergebnisse);
     });
-  });
 
-  it.each([
-    [DtoStapelArtEnum.ObwA, StapelArtEnum.ObwA],
-    [DtoStapelArtEnum.ObwBLeer, StapelArtEnum.ObwBLeer],
-    [DtoStapelArtEnum.ObwBUngekennzeichnet, StapelArtEnum.ObwBUngekennzeichnet],
-    [DtoStapelArtEnum.ObwCGueltig, StapelArtEnum.ObwCGueltig],
-    [DtoStapelArtEnum.ObwCUngueltig, StapelArtEnum.ObwCUngueltig],
-    [DtoStapelArtEnum.SrwBawA, StapelArtEnum.SrwBawA],
-    [DtoStapelArtEnum.SrwBawB, StapelArtEnum.SrwBawB],
-    [DtoStapelArtEnum.SrwBawAB, StapelArtEnum.SrwBawAB],
-    [DtoStapelArtEnum.SrwBawDUngueltig, StapelArtEnum.SrwBawDUngueltig],
-    [DtoStapelArtEnum.SrwBawBC, StapelArtEnum.SrwBawBC],
-  ])(
-    "should_mapDtoStapelart%s_when_givenModelStapelart%s",
-    (dtoStapelart, modelStapelart) => {
-      const dto = prepareErgebnisseDTO()
+    it.each([
+      [DtoStapelArtEnum.ObwA, StapelArtEnum.ObwA],
+      [DtoStapelArtEnum.ObwBLeer, StapelArtEnum.ObwBLeer],
+      [
+        DtoStapelArtEnum.ObwBUngekennzeichnet,
+        StapelArtEnum.ObwBUngekennzeichnet,
+      ],
+      [DtoStapelArtEnum.ObwCGueltig, StapelArtEnum.ObwCGueltig],
+      [DtoStapelArtEnum.ObwCUngueltig, StapelArtEnum.ObwCUngueltig],
+      [DtoStapelArtEnum.SrwBawA, StapelArtEnum.SrwBawA],
+      [DtoStapelArtEnum.SrwBawB, StapelArtEnum.SrwBawB],
+      [DtoStapelArtEnum.SrwBawAB, StapelArtEnum.SrwBawAB],
+      [DtoStapelArtEnum.SrwBawDUngueltig, StapelArtEnum.SrwBawDUngueltig],
+      [DtoStapelArtEnum.SrwBawBC, StapelArtEnum.SrwBawBC],
+    ])(
+      "should_mapDtoStapelart%s_when_givenModelStapelart%s",
+      (dtoStapelart, modelStapelart) => {
+        const dto = prepareErgebnisseDTO()
+          .bezirkUndWahlIDStapelart({
+            wahlID: "w",
+            wahlbezirkID: "b",
+            stapelart: dtoStapelart,
+          })
+          .build();
+        const result = toModel(dto);
+        expect(result.bezirkUndWahlIDStapelart.stapelArt).toBe(modelStapelart);
+      }
+    );
+
+    it("should_throwError_when_unknownStapelartProvided", () => {
+      const invalidDto = prepareErgebnisseDTO()
         .bezirkUndWahlIDStapelart({
           wahlID: "w",
           wahlbezirkID: "b",
-          stapelart: dtoStapelart,
+          stapelart: "UNKNOWN" as unknown as DtoStapelArtEnum,
         })
         .build();
-      const result = toModel(dto);
-      expect(result.bezirkUndWahlIDStapelart.stapelArt).toBe(modelStapelart);
-    }
-  );
 
-  it("should_throwError_when_unknownStapelartProvided", () => {
-    const invalidDto = prepareErgebnisseDTO()
-      .bezirkUndWahlIDStapelart({
-        wahlID: "w",
-        wahlbezirkID: "b",
-        stapelart: "UNKNOWN" as unknown as DtoStapelArtEnum,
-      })
-      .build();
+      expect(() => toModel(invalidDto)).toThrow("Stapelart nicht gefunden");
+    });
+  });
 
-    expect(() => toModel(invalidDto)).toThrow("Stapelart nicht gefunden");
+  describe("toDto", () => {
+    it("should_returnDto_when_givenModel", () => {
+      const wahlbezirkID = "wahlbezirkID";
+      const wahlID = "wahlID";
+      const stapelArtDTO = DtoStapelArtEnum.ObwA;
+      const stapelArtModel = StapelArtEnum.ObwA;
+
+      const modelErgebnis = createErgebnis();
+      const modelErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: stapelArtModel,
+        })
+        .ergebnisse([modelErgebnis])
+        .build();
+
+      const dtoErgebnis = createErgebnisDTO({
+        ergebnis: modelErgebnis.ergebnis ?? 0,
+        kandidatID: undefined,
+        numIndex: undefined,
+        wahlvorschlagID: undefined,
+        wahlvorschlagsordnungszahl: undefined,
+      });
+
+      const expectedDto = prepareErgebnisseDTO()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelart: stapelArtDTO,
+        })
+        .ergebnisse([dtoErgebnis])
+        .build();
+
+      const result = toDto(modelErgebnisse);
+
+      expect(result).toStrictEqual(expectedDto);
+      expect(result.ergebnisse).not.toBe(expectedDto.ergebnisse);
+    });
+
+    it.each([
+      [StapelArtEnum.ObwA, DtoStapelArtEnum.ObwA],
+      [StapelArtEnum.ObwBLeer, DtoStapelArtEnum.ObwBLeer],
+      [
+        StapelArtEnum.ObwBUngekennzeichnet,
+        DtoStapelArtEnum.ObwBUngekennzeichnet,
+      ],
+      [StapelArtEnum.ObwCGueltig, DtoStapelArtEnum.ObwCGueltig],
+      [StapelArtEnum.ObwCUngueltig, DtoStapelArtEnum.ObwCUngueltig],
+      [StapelArtEnum.SrwBawA, DtoStapelArtEnum.SrwBawA],
+      [StapelArtEnum.SrwBawB, DtoStapelArtEnum.SrwBawB],
+      [StapelArtEnum.SrwBawAB, DtoStapelArtEnum.SrwBawAB],
+      [StapelArtEnum.SrwBawDUngueltig, DtoStapelArtEnum.SrwBawDUngueltig],
+      [StapelArtEnum.SrwBawBC, DtoStapelArtEnum.SrwBawBC],
+    ])(
+      "should_mapDtoStapelart%s_when_givenModelStapelart%s",
+      (modelStapelart, dtoStapelart) => {
+        const model = prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID: "w",
+            wahlbezirkID: "b",
+            stapelArt: modelStapelart,
+          })
+          .build();
+
+        const result = toDto(model);
+        expect(result.bezirkUndWahlIDStapelart.stapelart).toBe(dtoStapelart);
+      }
+    );
+
+    it("should_throwError_when_unknownStapelartProvided", () => {
+      const invalidModel = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: "w",
+          wahlbezirkID: "b",
+          stapelArt: "UNKNOWN" as unknown as StapelArtEnum,
+        })
+        .build();
+
+      expect(() => toDto(invalidModel)).toThrow("Stapelart nicht gefunden");
+    });
+  });
+
+  describe("toPostErgebnisseStapelartEnum", () => {
+    it.each([
+      [StapelArtEnum.ObwA, PostErgebnisseStapelartEnum.ObwA],
+      [StapelArtEnum.ObwBLeer, PostErgebnisseStapelartEnum.ObwBLeer],
+      [
+        StapelArtEnum.ObwBUngekennzeichnet,
+        PostErgebnisseStapelartEnum.ObwBUngekennzeichnet,
+      ],
+      [StapelArtEnum.ObwCGueltig, PostErgebnisseStapelartEnum.ObwCGueltig],
+      [StapelArtEnum.ObwCUngueltig, PostErgebnisseStapelartEnum.ObwCUngueltig],
+      [StapelArtEnum.SrwBawA, PostErgebnisseStapelartEnum.SrwBawA],
+      [StapelArtEnum.SrwBawB, PostErgebnisseStapelartEnum.SrwBawB],
+      [StapelArtEnum.SrwBawAB, PostErgebnisseStapelartEnum.SrwBawAB],
+      [
+        StapelArtEnum.SrwBawDUngueltig,
+        PostErgebnisseStapelartEnum.SrwBawDUngueltig,
+      ],
+      [StapelArtEnum.SrwBawBC, PostErgebnisseStapelartEnum.SrwBawBC],
+    ])(
+      "should_mapModelStapelart%s_when_givenDtoStapelart%s",
+      (modelStapelart, dtoStapelart) => {
+        const result = toPostErgebnisseStapelartEnum(modelStapelart);
+        expect(result).toBe(dtoStapelart);
+      }
+    );
+  });
+
+  describe("toGetErgebnisseStapelartEnum", () => {
+    it.each([
+      [StapelArtEnum.ObwA, GetErgebnisseStapelartEnum.ObwA],
+      [StapelArtEnum.ObwBLeer, GetErgebnisseStapelartEnum.ObwBLeer],
+      [
+        StapelArtEnum.ObwBUngekennzeichnet,
+        GetErgebnisseStapelartEnum.ObwBUngekennzeichnet,
+      ],
+      [StapelArtEnum.ObwCGueltig, GetErgebnisseStapelartEnum.ObwCGueltig],
+      [StapelArtEnum.ObwCUngueltig, GetErgebnisseStapelartEnum.ObwCUngueltig],
+      [StapelArtEnum.SrwBawA, GetErgebnisseStapelartEnum.SrwBawA],
+      [StapelArtEnum.SrwBawB, GetErgebnisseStapelartEnum.SrwBawB],
+      [StapelArtEnum.SrwBawAB, GetErgebnisseStapelartEnum.SrwBawAB],
+      [
+        StapelArtEnum.SrwBawDUngueltig,
+        GetErgebnisseStapelartEnum.SrwBawDUngueltig,
+      ],
+      [StapelArtEnum.SrwBawBC, GetErgebnisseStapelartEnum.SrwBawBC],
+    ])(
+      "should_mapModelStapelart%s_when_givenDtoStapelart%s",
+      (modelStapelart, dtoStapelart) => {
+        const result = toGetErgebnisseStapelartEnum(modelStapelart);
+        expect(result).toBe(dtoStapelart);
+      }
+    );
   });
 });

@@ -15,7 +15,7 @@ import {
   vi,
 } from "vitest";
 
-import { useRequestStrategies } from "@/composables/common/requestStrategies.ts";
+import { useRequestStrategies } from "@/composables/api/requestStrategies.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

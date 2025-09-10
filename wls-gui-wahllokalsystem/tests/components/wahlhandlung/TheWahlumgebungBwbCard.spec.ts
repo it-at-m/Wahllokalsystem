@@ -77,7 +77,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithZeroInputFieldsAndDisabledSaveButton_when_noWahlenAreGiven", async (context) => {
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = [];
+      wahlenStore.wahlenState.wahlen = [];
 
       const wrapper = mount(TheWahlumgebungBwbCard, {
         global: {
@@ -97,7 +97,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
     it("should_renderWithTwoInputFieldsAndDisabledSaveButton_when_twoWahlenAreGivenAndInputsAreEmpty", async (context) => {
       wahlbezirkStore = useWahlbezirkStore(testPinia);
       wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = validWahlen;
+      wahlenStore.wahlenState.wahlen = validWahlen;
       wahlbezirkStore.briefwahlVorbereitungState.briefwahlVorbereitung =
         validBriefwahlVorbereitung;
 

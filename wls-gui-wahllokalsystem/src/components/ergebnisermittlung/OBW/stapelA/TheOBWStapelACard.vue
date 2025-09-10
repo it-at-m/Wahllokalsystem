@@ -41,18 +41,18 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag";
 
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseRowOWBStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOWBStapelA.vue";
-import { useLogging } from "@/composables/common/logging.ts";
-import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { useLogging } from "@/composables/common/logging";
+import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils";
+import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore";
+import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore";
+import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum";
 
 const ergebnismeldungsStore = useErgebnismeldungStore();
 const wahlvorschlaegeStore = useWahlvorschlaegeStore();

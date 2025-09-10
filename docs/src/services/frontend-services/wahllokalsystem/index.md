@@ -12,7 +12,7 @@ die Anwendung nach jeder Änderung im SW-File neu gebaut werden.
 ### IndexedDB
 
 Nach der Synchronisation der Offline-Daten aus der IndexedDB müssen in den Entwicklertools des Browsers die Einträge
-der IndexedDB aktualisiert werden, um die Änderungen der dirty-Flags nachvollziehen zu können.
+der IndexedDB **manuell** aktualisiert werden, um die Änderungen der dirty-Flags nachvollziehen zu können.
 
 ### Debugging
 

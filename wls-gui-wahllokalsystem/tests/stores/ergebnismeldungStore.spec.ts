@@ -1,16 +1,20 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
+  getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
@@ -19,9 +23,18 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
   }),
 }));
+vi.mock("@/stores/wahlvorschlaegeStore.ts", () => ({
+  useWahlvorschlaegeStore: () => ({
+    getWahlvorschlaegeByWahlIDAndWahlbezirkID:
+      mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID,
+  }),
+}));
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { createErgebnisse, prepareErgebnisse } = useErgebnisseTestDataFactory();
+const { createErgebnisse, prepareErgebnis, prepareErgebnisse } =
+  useErgebnisseTestDataFactory();
+const { prepareWahlvorschlaege, prepareWahlvorschlag } =
+  useWahlvorschlaegeTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
@@ -59,6 +72,77 @@ describe("ergebnismeldungStore.ts", () => {
         [wahlbezirkID, wahlID, stapelArt],
       ]);
       expect(unitUnderTest.ergebnisse).toStrictEqual([]);
+    });
+
+    it("should_loadErgebnisseByStapelArtAndReturnErgebnisse_when_calledAndNoErgebnisseFoundButInitializedWithWahlvorschlaege", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.getErgebnisse.mockResolvedValue(null);
+      mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
+        prepareWahlvorschlaege()
+          .wahlbezirkID(wahlbezirkID)
+          .wahlID(wahlID)
+          .wahlvorschlaege(
+            new Set([
+              prepareWahlvorschlag()
+                .identifikator("wahlvorschlag1")
+                .ordnungszahl(1)
+                .build(),
+              prepareWahlvorschlag()
+                .identifikator("wahlvorschlag2")
+                .ordnungszahl(2)
+                .build(),
+            ])
+          )
+          .build()
+      );
+
+      await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
+
+      expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
+        [wahlbezirkID, wahlID, stapelArt],
+      ]);
+      expect(
+        mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mock.calls
+      ).toStrictEqual([[wahlID, wahlbezirkID]]);
+
+      const expectedErgebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID,
+            wahlbezirkID,
+            stapelArt,
+          })
+          .ergebnisse([
+            prepareErgebnis()
+              .numIndex(1)
+              .wahlvorschlagsOrdnungszahl(1)
+              .wahlvorschlagID("wahlvorschlag1")
+              .ergebnis(null)
+              .kandidatID(null)
+              .build(),
+            prepareErgebnis()
+              .numIndex(2)
+              .wahlvorschlagsOrdnungszahl(2)
+              .wahlvorschlagID("wahlvorschlag2")
+              .ergebnis(null)
+              .kandidatID(null)
+              .build(),
+          ])
+          .build(),
+      ];
+      expect(unitUnderTest.ergebnisse).toStrictEqual(expectedErgebnisse);
     });
 
     it("should_loadErgebnisseByStapelArt_when_calledAndErgebnisseFound", async () => {

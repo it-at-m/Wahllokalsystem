@@ -3,6 +3,7 @@
     prepend-icon="$save"
     :disabled="disabled"
     data-test="buttonSave"
+    active
   >
     {{ saveText }}
   </v-btn>

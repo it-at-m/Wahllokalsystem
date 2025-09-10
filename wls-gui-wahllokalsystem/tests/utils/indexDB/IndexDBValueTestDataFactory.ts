@@ -3,8 +3,12 @@ import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
-const { generateRandomString, generateRandomBoolean, getRandomItem } =
-  useCommonTestDataFactory();
+const {
+  generateRandomString,
+  generateRandomBoolean,
+  generateRandomNumber,
+  getRandomItem,
+} = useCommonTestDataFactory();
 
 export function useIndexDBValueTestDataFactory() {
   //response requires a range; but not all values in that range
@@ -21,6 +25,7 @@ export function useIndexDBValueTestDataFactory() {
       contentType: generateRandomString(10),
       dirty: generateRandomBoolean(),
       httpStatus: getRandomItem(allowedHttpResponseStatusCodes),
+      timestamp: generateRandomNumber(6),
     };
   }
 

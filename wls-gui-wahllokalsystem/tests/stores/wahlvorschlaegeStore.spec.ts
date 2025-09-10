@@ -34,7 +34,7 @@ describe("wahlvorschlaegeStore.ts", () => {
   });
 
   describe("getWahlvorschlaegeByWahlIDAndWahlbezirkID", () => {
-    it("should_returnNull_when_wahlvorschlaegeAreEmpty", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeAreEmpty", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -49,7 +49,7 @@ describe("wahlvorschlaegeStore.ts", () => {
       expect(wahlvorschlaege).toStrictEqual(undefined);
     });
 
-    it("should_returnNull_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -102,7 +102,7 @@ describe("wahlvorschlaegeStore.ts", () => {
   });
 
   describe("getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID", () => {
-    it("should_returnNull_when_wahlvorschlaegeAreEmpty", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeAreEmpty", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const wahlvorschlagID = generateRandomString(10);
@@ -118,7 +118,7 @@ describe("wahlvorschlaegeStore.ts", () => {
 
       expect(wahlvorschlag).toStrictEqual(undefined);
     });
-    it("should_returnNull_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const wahlvorschlagID = generateRandomString(10);

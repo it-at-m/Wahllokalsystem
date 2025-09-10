@@ -29,7 +29,7 @@
         >
           <div class="d-flex flex-wrap justify-start">
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahltische
@@ -43,7 +43,7 @@
               />
             </div>
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlNebenraeume
@@ -57,7 +57,7 @@
               />
             </div>
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahlkabinen
@@ -99,6 +99,7 @@ import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

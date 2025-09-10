@@ -2,7 +2,7 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 export function useWahlvorschlagUtils() {
   function getFirstKandidatNameOrEmptyString(wahlvorschlag: Wahlvorschlag) {
-    if (wahlvorschlag.kandidaten) {
+    if (wahlvorschlag.kandidaten && wahlvorschlag.kandidaten.size > 0) {
       const kandidatWithLowedListenPosition = [
         ...wahlvorschlag.kandidaten,
       ].reduce((min, current) =>

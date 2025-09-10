@@ -78,7 +78,7 @@ function setMapValue(
   wahldaten: Wahldaten,
   value: number | null | undefined
 ) {
-  if (value) {
+  if (value !== null && value !== undefined) {
     wahldaten.eingenommeneWahlscheine.set(key, value);
   }
 }

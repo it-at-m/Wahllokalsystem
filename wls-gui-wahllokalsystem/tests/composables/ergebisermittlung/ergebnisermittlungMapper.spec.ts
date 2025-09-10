@@ -9,6 +9,17 @@ import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/er
 
 const { generateRandomString } = useCommonTestDataFactory();
 
+const mockDefinitions = vi.hoisted(() => ({
+  toYyyyMmDdWithTimeWithoutTimezoneOffset: vi.fn(),
+}));
+
+vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
+  useDateTimeFormatter: () => ({
+    toYyyyMmDdWithTimeWithoutTimezoneOffset:
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
+  }),
+}));
+
 describe("ergebnisermittlungMapper.ts", () => {
   const { toDto, toModel } = useErgebnisermittlungMapper();
   const {
@@ -41,10 +52,15 @@ describe("ergebnisermittlungMapper.ts", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
+      const mockedMappedDate = "2025-08-20T15:00:00.000";
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        mockedMappedDate
+      );
+
       const expectedDto: StimmzettelumschlaegeDTO = {
         bezirkUndWahlID: createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
         anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
-        urneneroeffnungsUhrzeit: eroeffnungszeit.toISOString(),
+        urneneroeffnungsUhrzeit: mockedMappedDate,
       };
 
       const result = toDto(model, wahlID, wahlbezirkID);

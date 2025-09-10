@@ -7,7 +7,7 @@
           class="d-flex align-center justify-start"
         >
           <v-app-bar-nav-icon
-            v-if="hasInitializationOfTasksCompletelyRun"
+            v-if="hasAllTasksRunSuccessfully && hasTasksToRun"
             @click.stop="toggleDrawer()"
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
@@ -54,17 +54,17 @@
           </template>
           <v-list-item
             title="Home"
-            :to="'/'"
+            :to="routeWithName(ROUTES_HOME)"
           />
           <v-list-item
             title="Wahlvorstand"
-            :to="ROUTE_WAHLVORSTAND"
+            :to="routeWithName(ROUTE_WAHLVORSTAND)"
           />
           <the-b-w-b-election-list-group v-if="isBWB" />
           <the-u-w-b-election-list-group v-if="isUWB" />
           <v-list-item
             title="Ereignisse"
-            :to="ROUTE_EREIGNISSE"
+            :to="routeWithName(ROUTE_EREIGNISSE)"
           />
         </v-list-group>
         <the-kommunalwahlen-scores-list-group />
@@ -86,7 +86,12 @@ import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListG
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import {
+  ROUTE_EREIGNISSE,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -97,9 +102,10 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
 const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
   storeToRefs(useUserStore());
-const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
+const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
   useTaskManagerStore()
 );
+const { routeWithName } = useNavigationUtils();
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""

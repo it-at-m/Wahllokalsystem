@@ -19,7 +19,6 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        active
         :loading="schliessungsuhrzeitState.schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveSchliessungsuhrzeitClicked"

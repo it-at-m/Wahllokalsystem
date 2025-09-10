@@ -41,9 +41,9 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     postWaehlerverzeichnis,
   } = useWaehlerverzeichnisService();
 
-  const { getWaehlerverzeichnisNummerOrUndefinedById } = useWahlenStore();
+  const { waehlerverzeichnisActions } = useWahlenStore();
   const { isValidDate } = useDateTimeUtils();
-  const { wahlen } = storeToRefs(useWahlenStore());
+  const { wahlenState } = storeToRefs(useWahlenStore());
 
   /* --- eroeffnungsuhrzeit --- */
   const eroeffnungsuhrzeitState: Ref<{
@@ -130,7 +130,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       sendNotification = true
     ) {
       const waehlerverzeichnisNummer =
-        getWaehlerverzeichnisNummerOrUndefinedById(
+        waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
           currentUserHauptWahlID.value
         );
       if (waehlerverzeichnisNummer !== undefined) {
@@ -145,7 +145,7 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     sendPflegeWaehlerverzeichnis:
       async function sendPflegeWaehlerverzeichnis() {
         const waehlerverzeichnisNummer =
-          getWaehlerverzeichnisNummerOrUndefinedById(
+          waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
             currentUserHauptWahlID.value
           );
         if (waehlerverzeichnisNummer !== undefined) {
@@ -320,18 +320,21 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
   };
 
   /* --- watcher --- */
-  watch(wahlen, () => {
-    urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-    briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
-      wahlen.value?.map((wahl) => ({
-        wahlID: wahl.wahlID,
-        anzahl: null,
-      })) || [];
-  });
+  watch(
+    () => wahlenState.value.wahlen,
+    () => {
+      urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl =
+        wahlenState.value.wahlen?.map((wahl) => ({
+          wahlID: wahl.wahlID,
+          anzahl: null,
+        })) || [];
+      briefwahlVorbereitungState.value.briefwahlVorbereitung.urnenAnzahl =
+        wahlenState.value.wahlen?.map((wahl) => ({
+          wahlID: wahl.wahlID,
+          anzahl: null,
+        })) || [];
+    }
+  );
 
   return {
     eroeffnungsuhrzeitState,

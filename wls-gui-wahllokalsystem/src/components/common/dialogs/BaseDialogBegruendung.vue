@@ -45,7 +45,6 @@
         </v-btn>
         <base-button-save
           data-test="basedialogbegruendung-btn-confirm"
-          active
           :disabled="!isBegruendungValid"
           @click="onConfirmClicked"
         />

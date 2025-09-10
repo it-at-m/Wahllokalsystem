@@ -9,6 +9,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
+  configurationConstructor: vi.fn().mockImplementation(() => ({})),
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   mapToPflegeWaehlerverzeichnis: vi.fn(),
@@ -19,6 +20,7 @@ vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
     getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
     postWaehlerverzeichnis: mockDefinitions.postWaehlerverzeichnis,
   })),
+  Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({

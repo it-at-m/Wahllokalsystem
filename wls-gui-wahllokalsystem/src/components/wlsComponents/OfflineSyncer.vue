@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import { mergeProps, ref } from "vue";
 
-import { useTaskManager } from "@/composables/common/taskManager.ts";
 import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 
 const { getSyncTasks } = useDataSyncer();
 

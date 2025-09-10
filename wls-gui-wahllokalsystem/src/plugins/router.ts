@@ -8,6 +8,7 @@ import {
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_STIMMABGABE,
+  ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
@@ -20,6 +21,7 @@ import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelVi
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
+import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
 import BWBWahlbriefErfassungView from "@/views/wahlhandlung/BWBWahlbriefErfassungView.vue";
 import BwbWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
 import UWBStimmabgabeView from "@/views/wahlhandlung/UWBStimmabgabeView.vue";
@@ -92,6 +94,12 @@ const routes = [
     meta: {},
   },
   {
+    path: "/stimmabgabevermerke",
+    name: ROUTE_STIMMABGABEVERMERKE,
+    component: UWBStimmabgabevermerkeView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+  },
+  {
     path: "/auszaehlungStimmzettel/:wahlId",
     name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
     component: ErfassungStimmzettelView,
@@ -115,11 +123,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
-    useTaskManagerStore()
-  );
+  const { hasAllTasksRunSuccessfully } = storeToRefs(useTaskManagerStore());
 
-  if (to.name != ROUTES_HOME && !hasInitializationOfTasksCompletelyRun.value) {
+  if (to.name != ROUTES_HOME && !hasAllTasksRunSuccessfully.value) {
     return { name: ROUTES_HOME };
   }
 });

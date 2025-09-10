@@ -12,11 +12,14 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksKopfdaten: vi.fn(),
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
+  createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createTasksStimmabgabevermerke: vi.fn(),
+  createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  createTasksWaehler: vi.fn(),
 }));
 
 vi.mock(
@@ -43,6 +46,21 @@ vi.mock(
   })
 );
 
+vi.mock("@/composables/tasks/taskFactories/waehlerTaskFactory.ts", () => ({
+  useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWaehler,
+  })),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts",
+  () => ({
+    useWaehlverzeichnisTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createWaehlerverzeichnisTasks,
+    })),
+  })
+);
+
 vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
   useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
@@ -64,11 +82,24 @@ vi.mock(
   })
 );
 
+vi.mock(
+  "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts",
+  () => ({
+    useStimmzettelumschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmzettelumschlaege,
+    })),
+  })
+);
+
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
-    getWaehlerverzeichnisNummerOrUndefinedById:
-      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
 describe("taskListService.ts", () => {
@@ -124,6 +155,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createWaehlerverzeichnisTasks.mockReturnValue([
+        {
+          name: "Waehlerverzeichnis",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlvorstand.mockReturnValue([
         {
           name: "Wahlvorstand",
@@ -142,6 +179,15 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksStimmzettelumschlaege.mockReturnValue([
+        {
+          name: `Stimmzettel für ${mockedWahl.name}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksWaehler.mockReturnValue([
+        { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -151,9 +197,12 @@ describe("taskListService.ts", () => {
         "Konfigurationsparameter",
         "Wahlvorstand",
         "UngültigeWahlscheine",
+        "Waehlerverzeichnis",
         "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+        "Stimmzettel für " + mockedWahl.name,
+        "Wahlbeteiligung",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -165,9 +214,14 @@ describe("taskListService.ts", () => {
       expect(
         mockDefinitions.createTasksUngueltigeWahlscheine
       ).toHaveBeenCalled();
+      expect(mockDefinitions.createWaehlerverzeichnisTasks).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
       expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksStimmzettelumschlaege
+      ).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
     });
   });
 });

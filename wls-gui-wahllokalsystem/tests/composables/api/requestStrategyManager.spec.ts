@@ -13,7 +13,7 @@ import {
   vi,
 } from "vitest";
 
-import { useRequestStrategyManager } from "@/composables/common/RequestStrategyManager.ts";
+import { useRequestStrategyManager } from "@/composables/api/RequestStrategyManager.ts";
 import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
@@ -29,7 +29,7 @@ const mockDefinitions = vi.hoisted(() => ({
   unhandledFetch: vi.fn().mockName("unhandledFetch"),
 }));
 
-vi.mock("@/composables/common/requestStrategies.ts", () => ({
+vi.mock("@/composables/api/requestStrategies.ts", () => ({
   useRequestStrategies: vi.fn().mockImplementation(() => ({
     onlineFirstGetRequestHandler: mockDefinitions.onlineFirstGetRequestHandler,
     postRequestHandler: mockDefinitions.postRequestHandler,

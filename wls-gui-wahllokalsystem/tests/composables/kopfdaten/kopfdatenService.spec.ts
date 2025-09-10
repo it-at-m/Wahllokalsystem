@@ -3,6 +3,7 @@ import { useKopfdatenTestDataFactory } from "@tests/utils/kopfdaten/KopfdatenTes
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createKopfdaten, createKopfdatenDto } = useKopfdatenTestDataFactory();
 
@@ -77,7 +78,7 @@ describe("KopfdatenService.ts", () => {
 
     expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
       expect.any(String),
-      "Error",
+      UserNotificationCategoryEnum.ERROR,
     ]);
   });
 

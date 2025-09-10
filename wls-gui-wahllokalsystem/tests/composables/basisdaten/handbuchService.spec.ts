@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -92,7 +93,7 @@ describe("handbuchService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 

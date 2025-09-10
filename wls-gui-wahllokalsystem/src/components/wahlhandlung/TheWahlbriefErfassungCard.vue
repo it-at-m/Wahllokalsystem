@@ -94,7 +94,6 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        active
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"

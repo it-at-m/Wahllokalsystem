@@ -350,8 +350,9 @@ describe("requestStrategies.ts", () => {
       .contentType(mockedContentTypeHeader)
       .data(mockedResponseBody)
       .build();
-    //required cause builder creates dirty with value or undefined but stored item does not have this property
+    //required cause builder creates dirty and timestamp with value or undefined but stored item does not have this property
     delete expectedIndexDBValue.dirty;
+    delete expectedIndexDBValue.timestamp;
     expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
       [callbackOptions.request.url, expectedIndexDBValue],
     ]);

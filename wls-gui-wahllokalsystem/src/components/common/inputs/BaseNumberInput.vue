@@ -8,7 +8,6 @@
     control-variant="hidden"
     @keydown.capture="onKeyDownCapture"
   />
-  <!-- todo zahlen rechts ausrichten -->
 </template>
 
 <script setup lang="ts">
@@ -34,3 +33,8 @@ function onKeyDownCapture(e: KeyboardEvent) {
   }
 }
 </script>
+<style scoped>
+:deep(.v-field__input) {
+  text-align: right;
+}
+</style>

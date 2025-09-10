@@ -5,7 +5,7 @@
     <td>
       <v-number-input
         v-model="modelValue.ergebnis"
-        :rules="[required]"
+        :rules="[required, minNumber(0)]"
       />
     </td>
   </tr>
@@ -21,7 +21,7 @@ import { computed } from "vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
-const { required } = useRules();
+const { required, minNumber } = useRules();
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
 const modelValue = defineModel({

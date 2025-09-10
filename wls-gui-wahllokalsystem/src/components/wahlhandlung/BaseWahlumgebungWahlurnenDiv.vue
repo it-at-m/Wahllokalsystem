@@ -4,7 +4,7 @@
       v-for="(wahl, index) in wahlVorbereitung.urnenAnzahl"
       :key="index"
     >
-      <v-number-input
+      <base-number-input
         v-model="wahl.anzahl"
         class="mr-4"
         :rules="[required, minNumber(1), maxNumber(99)]"
@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

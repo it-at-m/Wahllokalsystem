@@ -28,8 +28,7 @@
           >
             <v-number-input
               max-width="15rem"
-              :min="0"
-              :rules="[required]"
+              :rules="[required, minNumber(0)]"
               :model-value="
                 getMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
@@ -61,7 +60,7 @@ import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.t
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
-const { required } = useRules();
+const { required, minNumber } = useRules();
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { wahlenActions } = useWahlenStore();
 

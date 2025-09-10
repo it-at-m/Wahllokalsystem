@@ -27,7 +27,6 @@
       <base-button-save
         :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
-        active
         @click="sendWahlvorstand()"
       />
       <the-nachbesetzung-drucken-button />

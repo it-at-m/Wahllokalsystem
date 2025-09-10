@@ -65,7 +65,6 @@
               </v-col>
               <v-col>
                 <base-button-save
-                  active
                   class="mt-2 ml-5"
                   save-text="Beschluss speichern"
                   :disabled="!isAbstimmungsergebnisFormValid"

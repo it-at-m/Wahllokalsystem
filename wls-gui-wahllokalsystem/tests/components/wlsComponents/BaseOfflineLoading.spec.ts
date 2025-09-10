@@ -51,6 +51,7 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useTaskManagerStore();
 
       taskManagerStore.successfullyTasks.push(createTask("test"));
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
 
       await nextTick();
@@ -64,6 +65,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       const taskName = "test task";
       taskManagerStore.successfullyTasks.push(createTask(taskName));
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
 
       const successExpansionPanel = wrapper.findComponent(
@@ -89,6 +91,7 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useTaskManagerStore();
 
       taskManagerStore.failedTasks.push(createTask("test"));
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
 
       await nextTick();
@@ -102,6 +105,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       const taskName = "test task";
       taskManagerStore.failedTasks.push(createTask(taskName));
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
 
       const failedExpansionPanel = wrapper.findComponent(
@@ -127,6 +131,7 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useTaskManagerStore();
 
       taskManagerStore.successfullyTasks.push(createTask("test"));
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 5;
 
       await nextTick();

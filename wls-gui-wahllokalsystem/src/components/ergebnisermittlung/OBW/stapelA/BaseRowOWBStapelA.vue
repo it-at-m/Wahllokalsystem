@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag";
 import type { PropType } from "vue";
 
 import { computed } from "vue";

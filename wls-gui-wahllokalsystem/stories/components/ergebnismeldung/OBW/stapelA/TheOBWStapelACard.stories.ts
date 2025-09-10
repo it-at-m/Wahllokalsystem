@@ -4,7 +4,6 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
-import { createPinia, setActivePinia } from "pinia";
 
 import TheOBWStapelACard from "@/components/ergebnisermittlung/OBW/stapelA/TheOBWStapelACard.vue";
 import pinia from "@/plugins/pinia.ts";
@@ -27,8 +26,6 @@ const meta = {
   },
   decorators: [
     (story) => {
-      const pinia = createPinia();
-      setActivePinia(pinia);
       return {
         component: { story },
         template: "<story />",

@@ -19,8 +19,6 @@
 import type { Progress } from "@/types/common/Progress.ts";
 import type { PropType } from "vue";
 
-import { VCol, VProgressLinear, VRow } from "vuetify/components";
-
 defineProps({
   progress: {
     type: Object as PropType<Progress>,

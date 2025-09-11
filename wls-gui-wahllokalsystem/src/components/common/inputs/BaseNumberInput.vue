@@ -33,8 +33,3 @@ function onKeyDownCapture(e: KeyboardEvent) {
   }
 }
 </script>
-<style scoped>
-:deep(.v-field__input) {
-  text-align: right;
-}
-</style>

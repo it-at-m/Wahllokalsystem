@@ -6,12 +6,12 @@
 
 ## Kontext
 
-`VNumberInput` bietet die Möglichkeit die Zahl zusätzlich über Spinner-Buttons oder die Pfeiltasten `↑` und `↓`
+`VNumberInput` bietet die Möglichkeit, die Zahl zusätzlich über Spinner-Buttons oder die Pfeiltasten `↑` und `↓`
 zu verändern.
 
 ## Entscheidung
 
-Die Eingabemöglichkeiten soll sich auf eine direkte Eingabe beschränken.
+Die Eingabemöglichkeiten sollen sich auf die direkte Eingabe beschränken.
 
 ## Konsequenzen
 
@@ -19,5 +19,5 @@ Die Eingabemöglichkeiten soll sich auf eine direkte Eingabe beschränken.
 
 Es soll nur möglich sein, Werte über die Tastatur direkt zu erfassen.
 
-Die Interaktionsmöglichkeiten bei VNumberInput wurden beschränkt. Es gibt keine Spinner-Buttons bei der Eingaben und
-eine Veränderung des Wertes über die Pfeiltasten ist ebenfalls nicht mehr möglich.
+Die Interaktionsmöglichkeiten bei `VNumberInput` wurden beschränkt. Spinner-Buttons sind bei der
+Eingabe nicht mehr verfügbar, und eine Veränderung des Wertes über die Pfeiltasten ist ebenfalls nicht mehr möglich.

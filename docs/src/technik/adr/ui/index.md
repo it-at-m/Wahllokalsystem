@@ -1,3 +1,3 @@
-# UI/UX Design Entscheidungen
+# UI/UX Designentscheidungen
 
-Hier werden alle Entscheidungen die sich auf das Erscheinungsbild und das Nutzererlebnis beziehen festgehalten.
+Hier werden alle Entscheidungen festgehalten, die sich auf das Erscheinungsbild und das Nutzererlebnis beziehen.

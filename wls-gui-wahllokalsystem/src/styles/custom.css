@@ -1,17 +1,17 @@
 .stimmabgabevermerke-table {
-  table-layout: fixed;
-  width: 100%;
+    table-layout: fixed;
+    width: 100%;
 }
 
 .stimmabgabevermerke-table thead th.sav-first-column {
-  min-width: 150px;
+    min-width: 150px;
 }
 
 .stimmabgabevermerke-table .dynamic-column {
-  min-width: 300px;
+    min-width: 300px;
 }
 
 .v-btn.v-btn--active:hover > .v-btn__overlay,
 .v-btn.v-btn--active:focus > .v-btn__overlay {
-  background-color: rgba(44, 58, 64, 0.04);
+    opacity: 0.01;
 }

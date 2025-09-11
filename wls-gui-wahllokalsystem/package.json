@@ -37,7 +37,7 @@
     "vue-currency-input": "3.2.1",
     "vue-router": "4.5.1",
     "vue3-toastify": "0.2.8",
-    "vuetify": "3.9.3"
+    "vuetify": "3.9.7"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.7",

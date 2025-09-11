@@ -6,7 +6,7 @@
 
 ## Kontext
 
-Es gibt Masken, bei denen Aufgrund des Prozesses Eingabe von Daten nicht der Leserichtung entspricht.
+Es gibt Masken, bei denen die Eingabe von Daten aufgrund des Prozesses nicht der Leserichtung entspricht.
 
 ## Entscheidung
 
@@ -17,6 +17,6 @@ definieren.
 
 ### Abweichung: Auszählung gültiger Stimmen bei SRW, BAW und MGW
 
-Bei der Erfassung der gültigen Stimmen je Wahlvorschlag, **nicht** der Kandidaten, erfolgt die Erfassung
-Spaltenweise. Zuerst werden die Stimmen je Wahlvorschlag von Stapel A erfasst. Danach werden die erfassten
-Stimmen von Stapel B für alle Wahlvorschläge erfasst.
+Bei der Erfassung der gültigen Stimmen je Wahlvorschlag, **nicht** der Kandidaten, erfolgt die Erfassung spaltenweise.
+Zuerst werden die Stimmen je Wahlvorschlag von Stapel A erfasst. Danach werden die erfassten Stimmen von Stapel B
+für alle Wahlvorschläge erfasst.

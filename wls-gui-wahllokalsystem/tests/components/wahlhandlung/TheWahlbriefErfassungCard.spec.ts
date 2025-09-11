@@ -1,3 +1,4 @@
+import type BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import type { TestingPinia } from "@pinia/testing";
 import type { VForm } from "vuetify/components";
 
@@ -141,8 +142,8 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         },
       });
 
-      const input = wrapper.findComponent(
-        '[data-test="textField<NachtraeglichUeberbrachteAnzahl"]'
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
+        '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
       );
 
       expect(input.attributes().class).toContain("disabled");
@@ -162,7 +163,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         },
       });
 
-      const input = wrapper.findComponent(
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
         '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
       );
 

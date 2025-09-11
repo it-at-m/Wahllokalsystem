@@ -136,6 +136,10 @@ export default withMermaid({
                   text: "Abweichung von Tabreihenfolge in Leserichtung, wenn notwendig",
                   link: `${PATH_ADR_UI}adr003-tab-order.md`,
                 },
+                {
+                  text: "Styling des active Button",
+                  link: `${PATH_ADR_UI}adr004-active-btn-styling.md`,
+                },
               ],
             },
           ],

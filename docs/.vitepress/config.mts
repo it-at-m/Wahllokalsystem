@@ -134,7 +134,7 @@ export default withMermaid({
                 },
                 {
                   text: "Abweichung von Tabreihenfolge in Leserichtung, wenn notwendig",
-                  link: `${PATH_ADR_UI}adr002-simplify-user-input-options.md`,
+                  link: `${PATH_ADR_UI}adr003-tab-order.md`,
                 },
               ],
             },

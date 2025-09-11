@@ -41,6 +41,7 @@
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { PropType } from "vue";
 
 import { computed } from "vue";
 
@@ -50,17 +51,17 @@ const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
 const props = defineProps({
   ergebnisseStapelCUngueltig: {
-    type: Array<Ergebnis>,
+    type: Array as PropType<Ergebnis[]>,
     required: false,
     default: () => [],
   },
   ergebnisseStapelCGueltig: {
-    type: Array<Ergebnis>,
+    type: Array as PropType<Ergebnis[]>,
     required: false,
     default: () => [],
   },
   wahlvorschlaege: {
-    type: Array<Wahlvorschlag>,
+    type: Array as PropType<Wahlvorschlag[]>,
     required: true,
   },
 });

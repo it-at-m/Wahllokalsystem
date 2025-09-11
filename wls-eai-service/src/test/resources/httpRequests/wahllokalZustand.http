@@ -9,7 +9,7 @@ Content-Type: application/json
   "zuletztGesehen": "2025-06-20T08:54:00.000",
   "druckzustaende": [
     {
-      "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
       "niederschriftDruckUhrzeit": "2025-06-20T08:54:00.000",
       "schnellmeldungDruckUhrzeit": "2025-06-20T08:34:00.000",
       "niederschriftSendenUhrzeit": "2025-06-20T08:44:00.000",

@@ -123,9 +123,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { hasAllTasksRunSuccessfully } = storeToRefs(useTaskManagerStore());
+  const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
+    useTaskManagerStore()
+  );
 
-  if (to.name != ROUTES_HOME && !hasAllTasksRunSuccessfully.value) {
+  if (
+    to.name != ROUTES_HOME &&
+    (!hasAllTasksRunSuccessfully.value || !hasTasksToRun.value)
+  ) {
     return { name: ROUTES_HOME };
   }
 });

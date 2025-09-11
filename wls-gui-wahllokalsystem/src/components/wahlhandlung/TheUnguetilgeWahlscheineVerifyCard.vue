@@ -229,8 +229,10 @@ async function onSaveAbstimmungsergebnisClicked() {
 function onWahlscheinnummerChanged(newValue: number | null | undefined) {
   if (newValue !== undefined) {
     wahlscheinnummer.value = newValue;
-    resetUngueltigerWahlschein();
+  } else {
+    wahlscheinnummer.value = null;
   }
+  resetUngueltigerWahlschein();
 }
 
 function resetUngueltigerWahlschein() {

@@ -13,29 +13,13 @@ const meta = {
   args: {},
 } satisfies Meta<typeof TheOBWStapelCSummaryCard>;
 
-const { prepareErgebnisse, prepareErgebnis } = useErgebnisseTestDataFactory();
+const { prepareErgebnis } = useErgebnisseTestDataFactory();
 const { prepareWahlvorschlag, prepareKandidat } =
   useWahlvorschlaegeTestDataFactory();
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
-  async beforeEach() {
-    const ergebnisseStore = useErgebnismeldungStore(pinia);
-    ergebnisseStore.ergebnisse = [
-      prepareErgebnisse()
-        .bezirkUndWahlIDStapelart({
-          wahlID: "wahlID",
-          wahlbezirkID: "wahlbezirkID",
-          stapelArt: StapelArtEnum.ObwCUngueltig,
-        })
-        .ergebnisse([
-          prepareErgebnis().ergebnis(1).build(),
-          prepareErgebnis().ergebnis(1).build(),
-        ])
-        .build(),
-    ];
-  },
   args: {
     ergebnisseStapelCUngueltig: [
       prepareErgebnis().ergebnis(1).build(),
@@ -69,22 +53,6 @@ export const Default: Story = {
 };
 
 export const KeineUngueltigen: Story = {
-  async beforeEach() {
-    const ergebnisseStore = useErgebnismeldungStore(pinia);
-    ergebnisseStore.ergebnisse = [
-      prepareErgebnisse()
-        .bezirkUndWahlIDStapelart({
-          wahlID: "wahlID",
-          wahlbezirkID: "wahlbezirkID",
-          stapelArt: StapelArtEnum.ObwCUngueltig,
-        })
-        .ergebnisse([
-          prepareErgebnis().ergebnis(1).build(),
-          prepareErgebnis().ergebnis(1).build(),
-        ])
-        .build(),
-    ];
-  },
   args: {
     ergebnisseStapelCGueltig: [
       prepareErgebnis().wahlvorschlagID("id1").ergebnis(1).build(),
@@ -114,22 +82,6 @@ export const KeineUngueltigen: Story = {
 };
 
 export const KeineGueltigen: Story = {
-  async beforeEach() {
-    const ergebnisseStore = useErgebnismeldungStore(pinia);
-    ergebnisseStore.ergebnisse = [
-      prepareErgebnisse()
-        .bezirkUndWahlIDStapelart({
-          wahlID: "wahlID",
-          wahlbezirkID: "wahlbezirkID",
-          stapelArt: StapelArtEnum.ObwCUngueltig,
-        })
-        .ergebnisse([
-          prepareErgebnis().ergebnis(1).build(),
-          prepareErgebnis().ergebnis(1).build(),
-        ])
-        .build(),
-    ];
-  },
   args: {
     ergebnisseStapelCUngueltig: [
       prepareErgebnis().ergebnis(1).build(),
@@ -156,22 +108,6 @@ export const KeineGueltigen: Story = {
 };
 
 export const WederGueltigeNochUngueltige: Story = {
-  async beforeEach() {
-    const ergebnisseStore = useErgebnismeldungStore(pinia);
-    ergebnisseStore.ergebnisse = [
-      prepareErgebnisse()
-        .bezirkUndWahlIDStapelart({
-          wahlID: "wahlID",
-          wahlbezirkID: "wahlbezirkID",
-          stapelArt: StapelArtEnum.ObwCUngueltig,
-        })
-        .ergebnisse([
-          prepareErgebnis().ergebnis(1).build(),
-          prepareErgebnis().ergebnis(1).build(),
-        ])
-        .build(),
-    ];
-  },
   args: {
     wahlvorschlaege: [
       prepareWahlvorschlag()

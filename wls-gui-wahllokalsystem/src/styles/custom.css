@@ -11,6 +11,7 @@
   min-width: 300px;
 }
 
-.v-btn.v-btn--active:hover > .v-btn__overlay {
+.v-btn.v-btn--active:hover > .v-btn__overlay,
+.v-btn.v-btn--active:focus > .v-btn__overlay {
   background-color: rgba(44, 58, 64, 0.04);
 }

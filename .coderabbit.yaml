@@ -1,5 +1,6 @@
 # only values that differ from default are listed here
 reviews:
+  path_filters: [ '!**/package-lock.json', '!**/visual logic/**.html' ]
   high_level_summary_placeholder: ''
   auto_title_placeholder: ''
   poem: false

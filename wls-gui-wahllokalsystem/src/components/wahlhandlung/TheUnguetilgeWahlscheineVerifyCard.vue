@@ -45,7 +45,7 @@
             <li>Die Person darf mit diesem Wahlschein keine Stimme abgeben!</li>
             <li>Behalten Sie den Wahlschein ein.</li>
             <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
-            <li>Erfassen Sie dies als besonderes Vorkommnis:</li>
+            <li>Erfassen Sie dies als besonderes Ereignis:</li>
           </ul>
           <template #additionalFeedback>
             <v-row>
@@ -54,12 +54,21 @@
               </v-col>
               <v-col>
                 <v-form v-model="isAbstimmungsergebnisFormValid">
-                  <v-number-input
-                    v-model="stimmenZurueckweisung"
-                    label="Stimmen für die Zurückweisung"
+                  <v-textarea
+                    v-model="abstimmungsergebnis"
+                    label="Abstimmungsergebnis"
                     width="350"
-                    :rules="[required, minNumber(0)]"
-                    data-test="number-input-stimmen-zurueckweisung"
+                    :rules="[
+                      required,
+                      minLength(0),
+                      maxLength(maxLengthForAbstimmungsergebnis),
+                    ]"
+                    persistent-counter
+                    :counter="maxLengthForAbstimmungsergebnis"
+                    clearable
+                    rows="1"
+                    auto-grow
+                    data-test="text-input-abstimmungsergebnis"
                   />
                 </v-form>
               </v-col>
@@ -127,11 +136,12 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { maxNumber, minNumber, required, maxLength, minLength } = useRules();
 const { addEreignis, sendEreignisse } = useEreignisStore();
 
 const isFormValid = ref<boolean | null>(null);
@@ -153,7 +163,13 @@ const wahlscheinnummer = ref<null | number>(null);
 const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
 );
-const stimmenZurueckweisung = ref<number | undefined>(undefined);
+const abstimmungsergebnis = ref<string | undefined>(undefined);
+
+const maxLengthForAbstimmungsergebnis = computed(
+  () =>
+    MAX_LENGTH_FOR_TEXT_INPUT -
+    ereignisBeschreibungWahlscheinUnguelttig.value.length
+);
 
 const feedbackNoDataAvailableIsVisible = computed(
   () =>
@@ -201,11 +217,11 @@ function onSearchClicked() {
 async function onSaveAbstimmungsergebnisClicked() {
   addEreignis({
     uhrzeit: new Date(),
-    beschreibung: `${ereignisBeschreibungWahlscheinUnguelttig.value} ${stimmenZurueckweisung.value}`,
+    beschreibung: `${ereignisBeschreibungWahlscheinUnguelttig.value}${abstimmungsergebnis.value}`,
   });
   await sendEreignisse();
 
-  stimmenZurueckweisung.value = undefined;
+  abstimmungsergebnis.value = undefined;
   isAbstimmungsergebnisFormValid.value = false;
 }
 
@@ -216,6 +232,6 @@ function onWahlscheinnummerChanged(newValue: number) {
 
 function resetUngueltigerWahlschein() {
   ungueltigerWahlschein.value = undefined;
-  stimmenZurueckweisung.value = undefined;
+  abstimmungsergebnis.value = undefined;
 }
 </script>

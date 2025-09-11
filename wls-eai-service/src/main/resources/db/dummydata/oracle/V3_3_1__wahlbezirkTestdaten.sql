@@ -1,6 +1,6 @@
 -- wahlbezirk for user wls_all_uwb
 INSERT INTO wahlbezirk (id, wahlbezirkArt, nummer, stimmzettelgebietID, a1, a2, a3)
-values ('9899cae4-df9a-4ffc-a940-f20cf2280171', 'UWB', 'Wahlbezirk 1', '00000000-0000-0000-0000-000000000001', 30, 5,
+values ('9899cae4-df9a-4ffc-a940-f20cf2280171', 'UWB', 'Wahlbezirk 1', '00000000-0000-0000-0000-000000000005', 30, 5,
         1);
 
 -- wahlbezirk for user wls_all_bwb

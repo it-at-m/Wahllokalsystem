@@ -25,7 +25,7 @@
             <tr>
               <td />
               <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
-              <td class="font-weight-bold text-end">{{ sumOfValidVotes }}</td>
+              <td class="font-weight-bold">{{ sumOfValidVotes }}</td>
             </tr>
           </tfoot>
         </v-table>

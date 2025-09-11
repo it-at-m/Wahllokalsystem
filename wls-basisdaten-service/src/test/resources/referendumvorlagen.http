@@ -3,7 +3,7 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Referendumvorlagen | user wls_all_uwb
-GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/referendumvorlagen/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/9899cae4-df9a-4ffc-a940-f20cf2280171
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/referendumvorlagen/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Referendumvorlagen | user wls_all_bwb

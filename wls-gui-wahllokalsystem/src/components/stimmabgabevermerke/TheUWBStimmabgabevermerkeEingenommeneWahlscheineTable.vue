@@ -53,7 +53,6 @@
 import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { storeToRefs } from "pinia";
-import { VNumberInput, VTable } from "vuetify/components";
 
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";

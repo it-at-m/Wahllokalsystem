@@ -4,7 +4,7 @@ In den Wahllokalen kann die Internetverbindung instabil sein, was jedoch die Bed
 Eine Voraussetzung für die Nutzung ist, dass zu Beginn des Wahltages beim Anmelden eine Internetverbindung verfügbar ist.
 Anschließend sollte der Benutzer bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. Sollte am Ende des Tages
 weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und telefonisch übermittelt.
-Die Datenübertragung an das Backend kann auch am nächsten Tag dürch das Hochfahren des Notebooks erfolgen.
+Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des Notebooks erfolgen.
 
 ## Beschreibung Offlinefähigkeit
 
@@ -308,3 +308,85 @@ ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` z
 - `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
+
+## Umsetzung
+
+### Abläufe
+
+#### Start der Anwendung
+
+```mermaid
+sequenceDiagram
+    participant wahlWorker
+
+    wahlWorker ->> wahlWorker : register Requests-Handlers
+```
+
+_Mit dem Start der Anwendung werden für bestimmte Requests Request-Handler registriert._
+
+Die Registrierung erfolgt mittels `registerRoute(<RegEx für URL>, <Requesthandlerfunktion>, <Http-Methode>)`
+
+#### Requesthandling
+
+```mermaid
+flowchart LR
+
+    wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistance| indexDB
+```
+
+_Übersicht über die wesentlichen Komponenten, die bei der Verarbeitung eines Requests zum Einsatz kommen._
+
+### Komponenten
+
+#### Request Strategy Manager
+
+Der Request Strategy Manager ist die Fassade zur Verarbeitung einer Anfrage, die durch den Service Worker behandelt werden soll.
+
+In ihm sind alle Request-Strategien definiert. Anhand des Headers `X-WLS-SW-STRATEGY` und der HTTP-Methode wird entschieden,
+welche Strategie verwendet werden soll. Ist keine konkrete Strategie definiert, wird eine Standardstrategie verwendet.
+Ist für die Strategie und die HTTP-Methode kein expliziter Handler definiert, erfolgt ein klassischer Fetch ohne zusätzliche Behandlung.
+
+Die Strategie erhält die Anfrage, um sie zu bearbeiten. Die Antwort der Strategie ist auch die Antwort des Managers.
+
+#### Requeststrategie
+
+Requeststrategien sind die jeweiligen konkreten Implementierungen der zuvor beschriebenen [Varianten](#strategien),
+wie mit Requests im Rahmen der Offlinefähigkeit umzugehen ist.
+
+Um Daten über eine Sitzung hinaus zu persistieren, wird die IndexedDB des Browsers verwendet.
+Die Strategie nutzt für den Zugriff das entsprechende [Composable](#indexdb).
+
+#### IndexDB
+
+IndexDB ist ein Composable, das als Fassade für den Zugriff auf die IndexedDB des Browsers dient.
+Es stellt alle notwendigen Funktionen zur Einrichtung sowie zum Lesen und Schreiben bereit.
+
+#### Common API Utils
+
+Das Composable `commonApiUtils` stellt mit dem `axiosConfigWrapper` eine Fluent-API bereit, damit bei den Requests
+über Axios der korrekte Header für die Offline-Strategie gesetzt wird.
+
+```ts
+const { axiosConfigWrapper } = useCommonApiUtils();
+
+//Abrufen des Wahlvorstandes mit ONLINE_FIRST-Strategie
+await wahlvorstandControllerApi.getWahlvorstand(
+    wahlbezirkID,
+    forceUpdate,
+    axiosConfigWrapper().requestAsOnlineFirst()
+);
+
+//Senden der Wahlbeteiligung mit ONLINE_ONLY-Strategie
+await waehlerAnzahlControllerApi.postWahlbeteiligung(
+    wahlbezirkID,
+    wahlID,
+    toDto(wahlbeteiligung),
+    axiosConfigWrapper().requestAsOnlineOnly()
+);
+
+//Versenden von Ereignissen ohne explizite Strategie. Somit gilt die Standardstrategie.
+await ereignisControllerApi.postEreignisse(
+    wahlbezirkID,
+    ereignisseWriteDto
+);
+```

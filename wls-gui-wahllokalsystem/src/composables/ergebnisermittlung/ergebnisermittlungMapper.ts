@@ -25,6 +25,18 @@ export function useErgebnisermittlungMapper() {
     return dto;
   }
 
+  function toModel(dto: StimmzettelumschlaegeDTO): Stimmzettelumschlaege {
+    const model: Stimmzettelumschlaege = {
+      anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+    };
+
+    if (dto.urneneroeffnungsUhrzeit) {
+      model.urneneroeffnungsUhrzeit = new Date(dto.urneneroeffnungsUhrzeit);
+    }
+
+    return model;
+  }
+
   function _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
     wahlID: string,
     wahlbezirkID: string
@@ -37,5 +49,6 @@ export function useErgebnisermittlungMapper() {
 
   return {
     toDto,
+    toModel,
   };
 }

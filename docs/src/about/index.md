@@ -256,7 +256,7 @@ valider Wert eingetragen wurde.
 
 ##### Während der Auszählung
 
-📃 **UseCase: `Erfassung abgegebenen Stimmen`**
+📃 **UseCase: `Erfassung abgegebener Stimmen`**
 
 Im Urnenwahl- sowie im Briefwahlbezirk kann der Wahlvorstand die Anzahl der abgegebenen Stimmen erfassen. Die
 Erfassung erfolgt für jede Wahl einzeln.

@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { VTab, VTabs, VTabsWindow, VTabsWindowItem } from "vuetify/components";
 
 import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";

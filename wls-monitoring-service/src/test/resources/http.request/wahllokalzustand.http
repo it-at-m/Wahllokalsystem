@@ -39,7 +39,7 @@ Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "sendungsuhrzeit": "2026-01-01T23:59:12.123"
@@ -78,7 +78,7 @@ Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "druckuhrzeit": "2026-01-01T23:59:12.123"
@@ -117,7 +117,7 @@ Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "sendungsuhrzeit": "2026-01-01T23:59:12.123"
@@ -156,7 +156,7 @@ Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "druckuhrzeit": "2026-01-01T23:59:12.123"

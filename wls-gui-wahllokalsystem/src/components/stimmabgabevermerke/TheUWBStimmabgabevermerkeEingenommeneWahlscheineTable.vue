@@ -80,6 +80,8 @@ function setMapValue(
 ) {
   if (value !== null && value !== undefined) {
     wahldaten.eingenommeneWahlscheine.set(key, value);
+  } else {
+    wahldaten.eingenommeneWahlscheine.delete(key);
   }
 }
 </script>

@@ -4,9 +4,6 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
 import TheOBWStapelCSummaryCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCSummaryCard.vue";
-import pinia from "@/plugins/pinia.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const meta = {
   component: TheOBWStapelCSummaryCard,

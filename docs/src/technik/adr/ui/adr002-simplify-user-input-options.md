@@ -17,7 +17,7 @@ Die Eingabemöglichkeiten sollen sich auf die direkte Eingabe beschränken.
 
 ### VNumberInput
 
-Es soll nur möglich sein, Werte über die Tastatur direkt zu erfassen.
+Es soll nur möglich sein, Werte über die Zahlentasten der Tastatur direkt zu erfassen.
 
 Die Interaktionsmöglichkeiten bei `VNumberInput` wurden beschränkt. Spinner-Buttons sind bei der
 Eingabe nicht mehr verfügbar, und eine Veränderung des Wertes über die Pfeiltasten ist ebenfalls nicht mehr möglich.

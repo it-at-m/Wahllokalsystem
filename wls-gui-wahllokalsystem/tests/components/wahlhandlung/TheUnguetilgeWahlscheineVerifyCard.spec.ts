@@ -10,7 +10,7 @@ import {
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { VNumberInput } from "vuetify/components";
+import { VNumberInput, VTextarea } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -40,6 +40,7 @@ const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
 
 const WAHLSCHEIN_MIN_VALUE = 1;
 const WAHLSCHEIN_MAX_VALUE = 9999999;
+const ABSTIMMUNGSERGEBNIS = "einstimmig zurückgewiesen";
 
 describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   let wrapper: VueWrapper;
@@ -126,7 +127,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await flushPromises();
 
       expect(saveBeschlussBtn.props("disabled")).toStrictEqual(true);
-      expect(inputAbstimmung.props("modelValue")).toStrictEqual(null);
+      expect(inputAbstimmung.props("modelValue")).toStrictEqual(undefined);
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -149,12 +150,14 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await searchButton.trigger("click");
       const saveBeschlussBtn = getSaveBeschlussButton();
       const inputAbstimmung = getInputStimmenZurueckweisung();
-      await inputAbstimmung.setValue(3);
+      await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);
 
       await flushPromises();
 
       expect(saveBeschlussBtn.props("disabled")).toStrictEqual(false);
-      expect(inputAbstimmung.props("modelValue")).toStrictEqual(3);
+      expect(inputAbstimmung.props("modelValue")).toStrictEqual(
+        ABSTIMMUNGSERGEBNIS
+      );
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -287,10 +290,10 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await searchButton.trigger("click");
 
       const inputAbstimmung = getInputStimmenZurueckweisung();
-      await inputAbstimmung.setValue(3);
+      await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);
       await flushPromises();
 
-      expect(inputAbstimmung.vm.value).toStrictEqual("3");
+      expect(inputAbstimmung.vm.value).toStrictEqual(ABSTIMMUNGSERGEBNIS);
       await searchButton.trigger("click");
       await flushPromises();
 
@@ -329,7 +332,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
       await searchButton.trigger("click");
 
       const inputAbstimmung = getInputStimmenZurueckweisung();
-      await inputAbstimmung.setValue(3);
+      await inputAbstimmung.setValue(ABSTIMMUNGSERGEBNIS);
       await flushPromises();
 
       expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege.length).toBe(
@@ -338,7 +341,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
 
       const expectedEreignisBeschreibung =
         `Wahlschein ${ungueltigerWs.wahlscheinnummer} für ${ungueltigerWs.vorname} ${ungueltigerWs.familienname} ist` +
-        ` ungültig. Die Person wurde zurückgewiesen. Abstimmungsergebnis:  3`;
+        ` ungültig. Die Person wurde zurückgewiesen. Abstimmungsergebnis: ${ABSTIMMUNGSERGEBNIS}`;
 
       const saveBeschlussBtn = getSaveBeschlussButton();
       await saveBeschlussBtn.trigger("click");
@@ -358,10 +361,9 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   });
 
   function getInputStimmenZurueckweisung() {
-    const baseNumberInput = wrapper.findComponent(
-      '[data-test="number-input-stimmen-zurueckweisung"]'
+    return wrapper.findComponent<typeof VTextarea>(
+      '[data-test="text-input-abstimmungsergebnis"]'
     );
-    return baseNumberInput.findComponent(VNumberInput);
   }
 
   function getInputWahlscheinnummer() {

@@ -54,7 +54,6 @@
 import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { storeToRefs } from "pinia";
-import { VTable } from "vuetify/components";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";

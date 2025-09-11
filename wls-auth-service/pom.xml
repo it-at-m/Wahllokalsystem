@@ -186,7 +186,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
+            <version>0.2.7</version>
         </dependency>
 
         <!-- wls-common -->
@@ -639,7 +639,7 @@
                     <dependency>
                         <groupId>org.webjars</groupId>
                         <artifactId>bootstrap</artifactId>
-                        <version>5.3.7</version>
+                        <version>5.3.8</version>
                         <type>pom</type>
                     </dependency>
                 </dependencies>

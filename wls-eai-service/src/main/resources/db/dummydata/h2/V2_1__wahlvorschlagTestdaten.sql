@@ -1,4 +1,4 @@
--- for user wls_all_uwb
+-- Wahlvorschläge für die SRW im UWB (wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280171)
 INSERT INTO wahlvorschlaegeliste (id, wahltag, wahlID)
 VALUES ('00000001-0000-0000-0000-000000000001', '2026-01-01',
         '28039463-3d3d-4ce5-acc1-0bef931a4409');
@@ -95,7 +95,7 @@ INSERT INTO referendumoption (id, name, position, referendumvorlageid)
 VALUES ('00000000-0001-0001-0001-000000000003', 'name drei', 3, '00000000-0000-0001-0001-000000000001');
 
 
--- for user wls_all_bwb
+-- Wahlvorschläge für die SRW im BWB (wahlbezirkID 9081145c-dc16-4a9b-8255-5c49ddb98c14)
 INSERT INTO wahlvorschlaegeliste (id, wahltag, wahlID)
 VALUES ('00000001-0000-0000-0000-000000000002', '2026-01-01',
         '28039463-3d3d-4ce5-acc1-0bef931a4409');

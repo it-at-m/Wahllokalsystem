@@ -1,4 +1,4 @@
--- for user wls_all_uwb (wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280172)
+-- Wahlvorschläge für die OBW im UWB (wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280172)
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000006', '9899cae4-df9a-4ffc-a940-f20cf2280172',
         'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000001',
@@ -50,7 +50,7 @@ INSERT INTO referendumoption (id, name, position, referendumvorlageid)
 VALUES ('00000000-0006-0002-0002-000000000006', 'name1', 1, '00000000-0006-0001-0002-000000000003');
 
 
--- for user wls_all_bwb (wahlbezirkID 9081145c-dc16-4a9b-8255-5c49ddb98c15)
+-- Wahlvorschläge für die OBW im BWB (wahlbezirkID 9081145c-dc16-4a9b-8255-5c49ddb98c15)
 INSERT INTO wahlvorschlaege (id, wahlbezirkID, wahlID, stimmzettelgebietID, wahlvorschlaegelisteID)
 VALUES ('00000000-0000-0000-0000-000000000005', '9081145c-dc16-4a9b-8255-5c49ddb98c15',
         'd8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1', '00000000-0000-0000-0000-000000000001',

@@ -12,21 +12,19 @@
       v-else
       class="my-4"
     >
-      Herunterladen der Daten abgeschlossen ({{
-        numberOfSuccessfulTasks + numberOfFailedTasks
-      }}
-      / {{ numberOfTasksToRun }})
+      Herunterladen der Daten abgeschlossen ({{ numberOfTasksFinished }} /
+      {{ numberOfTasksToRun }})
     </p>
     <v-progress-linear
       :striped="isLoading"
       :max="numberOfTasksToRun"
-      :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
+      :model-value="numberOfTasksFinished"
     />
     <base-progress-linear
       titel="Erfolgreich heruntergeladen"
       data-test="base-progress-success"
       :is-loading="isLoading"
-      :current="numberOfSuccessfulTasks"
+      :current="numberOfTasksSucceeded"
       :total="numberOfTasksToRun"
       :tasks="successfullyTasks"
       color="success"
@@ -35,7 +33,7 @@
       titel="Fehlgeschlagen"
       data-test="base-progress-failed"
       :is-loading="isLoading"
-      :current="numberOfFailedTasks"
+      :current="numberOfTasksFailed"
       :total="numberOfTasksToRun"
       :tasks="failedTasks"
       color="warning"
@@ -50,9 +48,10 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
 const {
-  numberOfSuccessfulTasks,
-  numberOfFailedTasks,
   numberOfTasksToRun,
+  numberOfTasksSucceeded,
+  numberOfTasksFailed,
+  numberOfTasksFinished,
   currentlyRunningTask,
   successfullyTasks,
   failedTasks,
@@ -60,7 +59,7 @@ const {
 
 const isLoading = computed(() => {
   return (
-    numberOfSuccessfulTasks.value + numberOfFailedTasks.value !=
+    successfullyTasks.value.length + failedTasks.value.length !=
     numberOfTasksToRun.value
   );
 });

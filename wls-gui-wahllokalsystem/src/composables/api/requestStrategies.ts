@@ -112,6 +112,7 @@ export function useRequestStrategies() {
       data: requestBody,
       contentType: clonedRequest.headers.get(HTTP_HEADER_CONTENT_TYPE),
       dirty: dirty,
+      timestamp: new Date().getTime(),
     };
     await storeItem(dbKey, requestToStore);
   }

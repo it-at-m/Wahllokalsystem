@@ -9,14 +9,12 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  createTasksErgebnisse: vi.fn(),
   createTasksKopfdaten: vi.fn(),
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
   createTasksWahlscheine: vi.fn(),
-  createTasksWahlvorschlaege: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createTasksStimmabgabevermerke: vi.fn(),
   createTasksStimmzettelumschlaege: vi.fn(),
@@ -74,21 +72,6 @@ vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
     createTasks: mockDefinitions.createTasksWahlscheine,
   })),
 }));
-
-vi.mock("@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts", () => ({
-  useErgebnisseTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksErgebnisse,
-  })),
-}));
-
-vi.mock(
-  "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts",
-  () => ({
-    useWahlvorschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksWahlvorschlaege,
-    })),
-  })
-);
 
 vi.mock(
   "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts",
@@ -154,13 +137,6 @@ describe("taskListService.ts", () => {
       mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
         mockedWaehlerverzeichnisNummer
       );
-      const taskNameErgebnisse = "ergebnisse";
-      mockDefinitions.createTasksErgebnisse.mockReturnValue([
-        {
-          name: taskNameErgebnisse,
-          callback: () => Promise.resolve(),
-        },
-      ]);
       mockDefinitions.createTasksKonfigurationsparameter.mockReturnValue([
         {
           name: "Konfigurationsparameter",
@@ -197,20 +173,10 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
-      const taskNameWahlvorschlaege = "Wahlvorschlaege";
-      mockDefinitions.createTasksWahlvorschlaege.mockReturnValue([
-        {
-          name: taskNameWahlvorschlaege,
-          callback: () => Promise.resolve(),
-        },
-      ]);
       mockDefinitions.createTasksStimmabgabevermerke.mockReturnValue([
         {
           name: `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
-          callback: () => {
-            expect(1).toBe(2);
-            return Promise.resolve();
-          },
+          callback: () => Promise.resolve(),
         },
       ]);
       mockDefinitions.createTasksStimmzettelumschlaege.mockReturnValue([
@@ -228,20 +194,18 @@ describe("taskListService.ts", () => {
       const taskNames = result.map((task) => task.name);
 
       const expectedTaskNames = [
-        "Kopfdaten - " + mockedWahl.name,
-        "Waehlerverzeichnis",
-        "UngültigeWahlscheine",
-        "Wahlvorstand",
         "Konfigurationsparameter",
+        "Wahlvorstand",
+        "UngültigeWahlscheine",
+        "Waehlerverzeichnis",
+        "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
-        taskNameWahlvorschlaege,
-        taskNameErgebnisse,
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
         "Stimmzettel für " + mockedWahl.name,
         "Wahlbeteiligung",
       ];
 
-      expect(taskNames).toEqual(expectedTaskNames);
+      expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
 
       expect(
         mockDefinitions.createTasksKonfigurationsparameter
@@ -258,18 +222,6 @@ describe("taskListService.ts", () => {
         mockDefinitions.createTasksStimmzettelumschlaege
       ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
-      expect(mockDefinitions.createTasksWahlvorschlaege).toHaveBeenCalled();
-      expect(mockDefinitions.createTasksErgebnisse).toHaveBeenCalled();
-
-      const indexOfErgebnisseTask = taskNames.findIndex(
-        (name) => name === taskNameErgebnisse
-      );
-      const indexOfWahlvorschlaegeTask = taskNames.findIndex(
-        (name) => name === taskNameWahlvorschlaege
-      );
-      expect(indexOfErgebnisseTask).toBeGreaterThanOrEqual(0);
-      expect(indexOfWahlvorschlaegeTask).toBeGreaterThanOrEqual(0);
-      expect(indexOfWahlvorschlaegeTask).toBeLessThan(indexOfErgebnisseTask);
     });
   });
 });

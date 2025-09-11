@@ -14,7 +14,7 @@
             label="Uhrzeit der Öffnung der Wahlurne"
             min-width="20rem"
           />
-          <v-number-input
+          <base-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
@@ -39,6 +39,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";

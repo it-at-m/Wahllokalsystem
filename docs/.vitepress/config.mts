@@ -132,6 +132,10 @@ export default withMermaid({
                   text: "Begrenzte Interaktionsmöglichkeiten bei Benutzereingaben",
                   link: `${PATH_ADR_UI}adr002-simplify-user-input-options.md`,
                 },
+                {
+                  text: "Abweichung von Tabreihenfolge in Leserichtung, wenn notwendig",
+                  link: `${PATH_ADR_UI}adr002-simplify-user-input-options.md`,
+                },
               ],
             },
           ],

@@ -14,7 +14,18 @@ export function useErgebnisUtils() {
     return a.numIndex - b.numIndex;
   }
 
+  function reduceToMaxOfNumIndex(maxValue: number | null, ergebnis: Ergebnis) {
+    if (maxValue === null) {
+      return ergebnis.numIndex;
+    } else if (ergebnis.numIndex === null) {
+      return maxValue;
+    } else {
+      return maxValue < ergebnis.numIndex ? ergebnis.numIndex : maxValue;
+    }
+  }
+
   return {
     orderedByNumIndexWithNullAtEnd,
+    reduceToMaxOfNumIndex,
   };
 }

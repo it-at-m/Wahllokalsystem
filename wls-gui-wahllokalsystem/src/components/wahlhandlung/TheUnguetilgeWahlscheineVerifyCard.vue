@@ -6,7 +6,7 @@
         ref="wahlscheinValidationForm"
         v-model="isFormValid"
       >
-        <v-number-input
+        <base-number-input
           :model-value="wahlscheinnummer"
           :rules="[required, minNumber(1), maxNumber(9999999)]"
           label="Wahlscheinnummer"
@@ -135,6 +135,7 @@ import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -225,8 +226,12 @@ async function onSaveAbstimmungsergebnisClicked() {
   isAbstimmungsergebnisFormValid.value = false;
 }
 
-function onWahlscheinnummerChanged(newValue: number) {
-  wahlscheinnummer.value = newValue;
+function onWahlscheinnummerChanged(newValue: number | null | undefined) {
+  if (newValue !== undefined) {
+    wahlscheinnummer.value = newValue;
+  } else {
+    wahlscheinnummer.value = null;
+  }
   resetUngueltigerWahlschein();
 }
 

@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="stimmabgabevermerke">
     <div class="d-flex">
-      <v-number-input
+      <base-number-input
         v-model="rowSize"
         :rules="[required, minNumber(1), maxNumber(maxRowSize)]"
         max-width="15rem"
@@ -75,7 +75,7 @@
                 number - 1
               ].stimmzettel"
             >
-              <v-number-input
+              <base-number-input
                 v-if="
                   stimmzettel != null &&
                   stimmzettel.stimmzettelart ==
@@ -127,6 +127,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

@@ -1,4 +1,5 @@
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -28,6 +29,36 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
     _sortWahlvorschlaegeByOrdnungszahl();
   }
 
+  function getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+    wahlID: string,
+    wahlbezirkID: string
+  ): Wahlvorschlaege | undefined {
+    return wahlvorschlaege.value.find(
+      (wahlvorschlaege) =>
+        wahlvorschlaege.wahlID === wahlID &&
+        wahlvorschlaege.wahlbezirkID === wahlbezirkID
+    );
+  }
+
+  function getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
+    wahlID: string,
+    wahlbezirkID: string,
+    wahlvorschlagID: string
+  ): Wahlvorschlag | undefined {
+    const wahlvorschlaege = getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+      wahlID,
+      wahlbezirkID
+    )?.wahlvorschlaege;
+
+    if (!wahlvorschlaege) {
+      return undefined;
+    }
+
+    return [...wahlvorschlaege].find(
+      (wahlvorschlag) => wahlvorschlag.identifikator === wahlvorschlagID
+    );
+  }
+
   function _sortWahlvorschlaegeByOrdnungszahl() {
     wahlvorschlaege.value.forEach((wahlvorschlag) => {
       const vorschlaegeSet = wahlvorschlag.wahlvorschlaege;
@@ -43,6 +74,8 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
 
   return {
     wahlvorschlaege,
+    getWahlvorschlaegeByWahlIDAndWahlbezirkID,
+    getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
     loadWahlvorschlaege,
   };
 });

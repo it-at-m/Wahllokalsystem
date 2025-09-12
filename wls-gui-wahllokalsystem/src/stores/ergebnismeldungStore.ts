@@ -57,7 +57,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   ) {
     try {
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
-      const ergebnisseToSend = _getErgebnisseByWahlIdAndStapelartOrUndefined(
+      const ergebnisseToSend = getErgebnisseByWahlIdAndStapelartOrUndefined(
         wahlID,
         stapelArt
       );
@@ -74,7 +74,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
-  function _getErgebnisseByWahlIdAndStapelartOrUndefined(
+  function getErgebnisseByWahlIdAndStapelartOrUndefined(
     wahlID: string,
     stapelArt: StapelArtEnum
   ): Ergebnisse | undefined {
@@ -85,7 +85,12 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     );
   }
 
-  return { ergebnisse, loadErgebnisseByStapelArt, sendErgebnisseByStapelArt };
+  return {
+    ergebnisse,
+    getErgebnisseByWahlIdAndStapelartOrUndefined,
+    loadErgebnisseByStapelArt,
+    sendErgebnisseByStapelArt,
+  };
 });
 
 registerStoreHMR(useErgebnismeldungStore);

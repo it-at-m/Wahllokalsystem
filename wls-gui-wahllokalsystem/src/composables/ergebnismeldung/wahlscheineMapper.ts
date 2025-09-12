@@ -17,7 +17,7 @@ export function useWahlscheineMapper() {
     return {
       bezirkUndWahlID: _toBezirkUndWahlIDDTO(model.bezirkUndWahlID),
       stimmabgabevermerke: model.stimmabgabevermerke,
-    }
+    };
   }
 
   function _toBezirkUndWahlIDModel(dto: BezirkUndWahlIdDTO): BezirkUndWahlID {
@@ -31,7 +31,7 @@ export function useWahlscheineMapper() {
     return {
       wahlID: model.wahlID,
       wahlbezirkID: model.wahlbezirkID,
-    }
+    };
   }
 
   return {

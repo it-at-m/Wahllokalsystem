@@ -5,7 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { createWahlscheine, prepareWahlscheineDTO } = useWahlscheineTestDataFactory();
+const { createWahlscheine, prepareWahlscheineDTO } =
+  useWahlscheineTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const mockDefinitions = vi.hoisted(() => ({
   getWahlscheine: vi.fn(),
@@ -125,10 +126,10 @@ describe("wahlscheineService.ts", () => {
         wahlschein.bezirkUndWahlID.wahlbezirkID,
         wahlschein
       );
-      expect(mockDefinitions.addNotification.mock.calls).toEqual(
-        [[expect.any(String), UserNotificationCategoryEnum.SUCCESS]]
-      );
-    })
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
 
     it("should_throwError_when_postWahlscheineFailed", async () => {
       const wahlschein = createWahlscheine();
@@ -137,14 +138,21 @@ describe("wahlscheineService.ts", () => {
         new Error("api called failed")
       );
 
-      await expect(postWahlscheine(
-        wahlschein.bezirkUndWahlID.wahlID,
-        wahlschein.bezirkUndWahlID.wahlbezirkID,
-        wahlschein)
+      await expect(
+        postWahlscheine(
+          wahlschein.bezirkUndWahlID.wahlID,
+          wahlschein.bezirkUndWahlID.wahlbezirkID,
+          wahlschein
+        )
       ).rejects.toThrow("Post Wahlscheine Failed");
 
-      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(1);
-      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([expect.any(String), UserNotificationCategoryEnum.ERROR]);
-    })
-  })
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        1
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+  });
 });

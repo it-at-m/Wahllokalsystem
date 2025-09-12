@@ -30,7 +30,7 @@ import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import {ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE} from "@/constants.ts";
+import { ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { isBWB, isUWB } = storeToRefs(useUserStore());

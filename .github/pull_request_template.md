@@ -25,6 +25,7 @@
 - [ ] [Naming Conventions][naming-conventions-link] beachtet
 - [ ] Doku aktualisiert
   - [Fachliche Beschreibung][fachliche-beschreibung-link]
+  - [UI/UX-Adrs][ui-ux-adrs-link]
 - [ ] Unit-Tests gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
 
@@ -38,3 +39,4 @@ Closes #
 
 [naming-conventions-link]: https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/
 [fachliche-beschreibung-link]: https://it-at-m.github.io/Wahllokalsystem/about/#fachliche-anforderungen
+[ui-ux-adrs-link]: https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/

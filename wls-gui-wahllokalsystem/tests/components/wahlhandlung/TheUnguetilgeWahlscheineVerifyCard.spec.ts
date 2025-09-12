@@ -367,9 +367,10 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   }
 
   function getInputWahlscheinnummer() {
-    return wrapper.findComponent<typeof VNumberInput>(
+    const baseNumberInput = wrapper.findComponent(
       '[data-test="number-input-wahlscheinnummer"]'
     );
+    return baseNumberInput.findComponent(VNumberInput);
   }
 
   function getSearchButton() {

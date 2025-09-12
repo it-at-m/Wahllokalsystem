@@ -4,8 +4,9 @@ import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahl
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useWahlscheineMapper } from "@/composables/ergebnismeldung/wahlscheineMapper.ts";
+import type {WahlscheineDTO} from "@/api/wls-clients/generated-ergebnismeldung-api";
 
-const { createWahlscheineDTO } = useWahlscheineTestDataFactory();
+const { createWahlscheineDTO, createWahlscheine } = useWahlscheineTestDataFactory();
 
 describe("wahlscheineMapper", () => {
   let unitUnderTest: ReturnType<typeof useWahlscheineMapper>;
@@ -28,4 +29,19 @@ describe("wahlscheineMapper", () => {
       expect(result).toStrictEqual(expectedObject);
     });
   });
+
+  describe("toDto", () => {
+    it("should_createWahlscheineDTO_when_wahlscheineModelIsGiven", () => {
+      const objectToMap = createWahlscheine();
+
+      const result = unitUnderTest.toDto(objectToMap);
+
+      const expectedObject: WahlscheineDTO = {
+        bezirkUndWahlID: objectToMap.bezirkUndWahlID,
+        stimmabgabevermerke: objectToMap.stimmabgabevermerke,
+      };
+
+      expect(result).toStrictEqual(expectedObject);
+    })
+  })
 });

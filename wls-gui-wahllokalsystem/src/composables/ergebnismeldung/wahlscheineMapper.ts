@@ -13,6 +13,13 @@ export function useWahlscheineMapper() {
     };
   }
 
+  function toDto(model: Wahlscheine): WahlscheineDTO {
+    return {
+      bezirkUndWahlID: _toBezirkUndWahlIDDTO(model.bezirkUndWahlID),
+      stimmabgabevermerke: model.stimmabgabevermerke,
+    }
+  }
+
   function _toBezirkUndWahlIDModel(dto: BezirkUndWahlIdDTO): BezirkUndWahlID {
     return {
       wahlID: dto.wahlID,
@@ -20,7 +27,15 @@ export function useWahlscheineMapper() {
     };
   }
 
+  function _toBezirkUndWahlIDDTO(model: BezirkUndWahlID): BezirkUndWahlIdDTO {
+    return {
+      wahlID: model.wahlID,
+      wahlbezirkID: model.wahlbezirkID,
+    }
+  }
+
   return {
     toModel,
+    toDto,
   };
 }

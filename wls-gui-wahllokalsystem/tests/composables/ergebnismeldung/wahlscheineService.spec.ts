@@ -5,18 +5,21 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { createWahlscheine } = useWahlscheineTestDataFactory();
+const { createWahlscheine, prepareWahlscheineDTO } = useWahlscheineTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
 const mockDefinitions = vi.hoisted(() => ({
   getWahlscheine: vi.fn(),
+  postWahlscheine: vi.fn(),
   configurationConstructor: vi.fn(),
   addNotification: vi.fn(),
   mapDtoToModel: vi.fn(),
+  mapModelToDto: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   WahlscheineControllerApi: vi.fn().mockImplementation(() => ({
     getWahlscheine: mockDefinitions.getWahlscheine,
+    postWahlscheine: mockDefinitions.postWahlscheine,
   })),
   Configuration: mockDefinitions.configurationConstructor,
 }));
@@ -30,11 +33,12 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 vi.mock("@/composables/ergebnismeldung/wahlscheineMapper.ts", () => ({
   useWahlscheineMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
+    toDto: mockDefinitions.mapModelToDto,
   }),
 }));
 
-describe("ergebnismeldungService.ts", () => {
-  const { getWahlscheine } = useWahlscheineService();
+describe("wahlscheineService.ts", () => {
+  const { getWahlscheine, postWahlscheine } = useWahlscheineService();
   beforeEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
@@ -95,4 +99,52 @@ describe("ergebnismeldungService.ts", () => {
       );
     });
   });
+
+  describe("postWahlscheine", () => {
+    it("should_sendWahlscheine_when_noErrorAppear", async () => {
+      const wahlschein = createWahlscheine();
+      const wahlscheinDTO = prepareWahlscheineDTO()
+        .bezirkUndWahlID(wahlschein.bezirkUndWahlID)
+        .stimmabgabevermerke(wahlschein.stimmabgabevermerke)
+        .build();
+
+      mockDefinitions.postWahlscheine.mockReturnValue(
+        Promise.resolve({ status: 200 })
+      );
+
+      mockDefinitions.mapModelToDto.mockReturnValue(wahlscheinDTO);
+
+      await postWahlscheine(
+        wahlschein.bezirkUndWahlID.wahlID,
+        wahlschein.bezirkUndWahlID.wahlbezirkID,
+        wahlschein
+      );
+
+      expect(mockDefinitions.postWahlscheine).toHaveBeenCalledWith(
+        wahlschein.bezirkUndWahlID.wahlID,
+        wahlschein.bezirkUndWahlID.wahlbezirkID,
+        wahlschein
+      );
+      expect(mockDefinitions.addNotification.mock.calls).toEqual(
+        [[expect.any(String), UserNotificationCategoryEnum.SUCCESS]]
+      );
+    })
+
+    it("should_throwError_when_postWahlscheineFailed", async () => {
+      const wahlschein = createWahlscheine();
+
+      mockDefinitions.postWahlscheine.mockRejectedValue(
+        new Error("api called failed")
+      );
+
+      await expect(postWahlscheine(
+        wahlschein.bezirkUndWahlID.wahlID,
+        wahlschein.bezirkUndWahlID.wahlbezirkID,
+        wahlschein)
+      ).rejects.toThrow("Post Wahlscheine Failed");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(1);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([expect.any(String), UserNotificationCategoryEnum.ERROR]);
+    })
+  })
 });

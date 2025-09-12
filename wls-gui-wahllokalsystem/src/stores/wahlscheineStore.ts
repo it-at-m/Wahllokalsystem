@@ -5,14 +5,18 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
+import {useLogging} from "@/composables/common/logging.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
-const { getWahlscheine } = useWahlscheineService();
+const { getWahlscheine, postWahlscheine } = useWahlscheineService();
 
 export const storeID = "wahlscheine";
 
 export const useWahlscheineStore = defineStore(storeID, () => {
   const wahlscheine = ref<Wahlscheine[]>([]);
+  const isWahlscheineSaving = ref(false);
+
+  const { logDebug } = useLogging("wahlscheineStore");
 
   async function loadWahlscheine(wahlID: string, wahlbezirkID: string) {
     try {
@@ -25,7 +29,27 @@ export const useWahlscheineStore = defineStore(storeID, () => {
     }
   }
 
-  return { loadWahlscheine };
+  async function saveWahlscheine() {
+    isWahlscheineSaving.value = true;
+    for (const wahlschein of wahlscheine.value) {
+      try {
+        await postWahlscheine(
+          wahlschein.bezirkUndWahlID.wahlID,
+          wahlschein.bezirkUndWahlID.wahlbezirkID,
+          wahlschein
+        );
+      } catch (e) {
+        logDebug(
+          `Save Wahlschein for wahlbezirkID: ${wahlschein.bezirkUndWahlID.wahlbezirkID} and wahlID: ${wahlschein.bezirkUndWahlID.wahlID} failed`,
+          e
+        );
+      } finally {
+        isWahlscheineSaving.value = false;
+      }
+    }
+  }
+
+  return { wahlscheine, isWahlscheineSaving, loadWahlscheine, saveWahlscheine };
 });
 
 registerStoreHMR(useWahlscheineStore);

@@ -15,43 +15,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="(ergebnis, index) in stapelCErgebnisseOrdereByNumIndex"
+            <base-row-stapel-c
+              v-for="(
+                ergebnisAndStapel, index
+              ) in stapelCErgebnisseOrdereByNumIndex"
               :key="index"
-            >
-              <td>{{ ergebnis.ergebnis.numIndex }}</td>
-              <td>
-                {{ ergebnis.stapelArt }}
-                <v-checkbox-btn
-                  :model-value="
-                    ergebnis.stapelArt === StapelArtEnum.ObwCUngueltig
-                  "
-                  @update:model-value="
-                    switchStapel(ergebnis.ergebnis.numIndex, ergebnis.stapelArt)
-                  "
-                />
-              </td>
-              <td>
-                <v-autocomplete
-                  v-model="ergebnis.ergebnis.wahlvorschlagID"
-                  :items="wahlvorschlaege"
-                  :item-title="getWahlvorschlagTitle"
-                  item-value="identifikator"
-                  :disabled="ergebnis.stapelArt === StapelArtEnum.ObwCUngueltig"
-                  clearable
-                  persistent-clear
-                  label="Wahlvorschlag"
-                />
-              </td>
-              <td>
-                <!-- mit dem Delete Icon Button aus anderen Komponenten zusammenlegen -->
-                <v-icon
-                  icon="$clear"
-                  title="Löschen"
-                  @click="onDeleteIconClicked(ergebnis.ergebnis.numIndex)"
-                />
-              </td>
-            </tr>
+              :wahlvorschlaege="wahlvorschlaege"
+              :stapel-art="ergebnisAndStapel.stapelArt"
+              :ergebnis="ergebnisAndStapel.ergebnis"
+              :index="index + 1"
+              @selectionChanged="
+                onGueltigkeitOfRowChanged($event, ergebnisAndStapel)
+              "
+            />
           </tbody>
         </v-table>
       </v-form>
@@ -63,37 +39,44 @@
         @click="onAddClicked()"
         >Eintrag hinzufügen</v-btn
       >
-      <base-button-save @click="onSaveClicked" />
+      <base-button-save
+        :disabled="!areStapelCGueltigeErgebnisseValid"
+        @click="onSaveClicked"
+      />
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { ComputedRef } from "vue";
 
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import { useLogging } from "@/composables/common/logging.ts";
+import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
+import { useMathUtils } from "@/composables/common/mathUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
-import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
-
-const { logDebug } = useLogging("TheOBWStapelCErfassungCard");
 
 const ergebnismeldungsStore = useErgebnismeldungStore();
 const wahalvorschlaegeStore = useWahlvorschlaegeStore();
 const { orderedByNumIndexWithNullAtEnd, reduceToMaxOfNumIndex } =
   useErgebnisUtils();
-const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
+const { maxOfOptionalNumbers } = useMathUtils();
 
-interface ErgebnisAndStapel {
+interface ErgebnisAndStapelArt {
   ergebnis: Ergebnis;
   stapelArt: StapelArtEnum;
+}
+interface ErgebnisWithNumIndexAndStapel extends ErgebnisAndStapelArt {
+  ergebnis: ErgebnisWithNumIndex;
+}
+
+interface ErgebnisWithNumIndex extends Ergebnis {
+  numIndex: number;
 }
 
 const props = defineProps({
@@ -116,19 +99,20 @@ const wahlvorschlaege = computed(() => {
   return wahlvorschlaege ? [...(wahlvorschlaege.wahlvorschlaege ?? [])] : [];
 });
 
-const stapelCUngueltigErgebnisse: ComputedRef<ErgebnisAndStapel[]> = computed(
-  () =>
-    ergebnismeldungsStore
-      .getErgebnisseByWahlIdAndStapelartOrUndefined(
-        props.wahlID,
-        StapelArtEnum.ObwCUngueltig
-      )
-      ?.ergebnisse.map((ergebnis) => ({
-        ergebnis: ergebnis,
-        stapelArt: StapelArtEnum.ObwCUngueltig,
-      })) ?? []
-);
-const stapelCGueltigErgebnisse: ComputedRef<ErgebnisAndStapel[]> = computed(
+const stapelCUngueltigErgebnisse: ComputedRef<ErgebnisAndStapelArt[]> =
+  computed(
+    () =>
+      ergebnismeldungsStore
+        .getErgebnisseByWahlIdAndStapelartOrUndefined(
+          props.wahlID,
+          StapelArtEnum.ObwCUngueltig
+        )
+        ?.ergebnisse.map((ergebnis) => ({
+          ergebnis: ergebnis,
+          stapelArt: StapelArtEnum.ObwCUngueltig,
+        })) ?? []
+  );
+const stapelCGueltigErgebnisse: ComputedRef<ErgebnisAndStapelArt[]> = computed(
   () =>
     ergebnismeldungsStore
       .getErgebnisseByWahlIdAndStapelartOrUndefined(
@@ -149,6 +133,12 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
 });
 
 const isFormValid = ref<boolean | null>(null);
+
+const areStapelCGueltigeErgebnisseValid = computed(() =>
+  stapelCGueltigErgebnisse.value.every(
+    (value) => value.ergebnis.wahlvorschlagID !== null
+  )
+);
 
 function onAddClicked() {
   const maxNumIndexOfUngueltig = stapelCUngueltigErgebnisse.value
@@ -181,32 +171,6 @@ function onAddClicked() {
   );
 }
 
-function onDeleteIconClicked(index: number | null) {
-  if (index === null) {
-    return;
-  }
-
-  if (
-    !ergebnismeldungsStore.deleteByNumIndexIfExists(
-      {
-        wahlID: props.wahlID,
-        wahlbezirkID: props.wahlbezirkID,
-        stapelArt: StapelArtEnum.ObwCUngueltig,
-      },
-      index
-    )
-  ) {
-    ergebnismeldungsStore.deleteByNumIndexIfExists(
-      {
-        wahlID: props.wahlID,
-        wahlbezirkID: props.wahlbezirkID,
-        stapelArt: StapelArtEnum.ObwCGueltig,
-      },
-      index
-    );
-  }
-}
-
 function onSaveClicked() {
   ergebnismeldungsStore.sendErgebnisseByStapelArt(
     props.wahlID,
@@ -218,37 +182,55 @@ function onSaveClicked() {
   );
 }
 
-function getWahlvorschlagTitle(wahlvorschlag: Wahlvorschlag) {
-  return [
-    wahlvorschlag.kurzname,
-    getFirstKandidatNameOrEmptyString(wahlvorschlag),
-  ].join(", ");
-}
-
-function maxOfOptionalNumbers(numbers: (number | null)[]): number | null {
-  const nonNullNumbers = numbers.filter((n) => n !== null) as number[];
-  if (nonNullNumbers.length === 0) {
-    return null;
+function onGueltigkeitOfRowChanged(
+  shouldSetStapelUngueltig: boolean,
+  ergebnisAndStapelArt: ErgebnisAndStapelArt
+) {
+  if (!hasErgebnisNumIndex(ergebnisAndStapelArt)) {
+    return;
   }
 
-  return Math.max(...nonNullNumbers);
+  removeWahlvorschlagIDIfNewStapelIsCUngueltig(
+    ergebnisAndStapelArt.ergebnis,
+    shouldSetStapelUngueltig
+  );
+  switchStapelCOfErgebnis(ergebnisAndStapelArt, shouldSetStapelUngueltig);
 }
 
-function switchStapel(numIndex: number, currentStapelArt: StapelArtEnum) {
-  logDebug(
-    `switchStapel - numIndex: ${numIndex}, currentStapelArt: ${currentStapelArt}`
-  );
-  const newStapelArt =
-    currentStapelArt === StapelArtEnum.ObwCGueltig
-      ? StapelArtEnum.ObwCUngueltig
-      : StapelArtEnum.ObwCGueltig;
+function hasErgebnisNumIndex(
+  ergebnisAndStapelArt: ErgebnisAndStapelArt
+): ergebnisAndStapelArt is ErgebnisWithNumIndexAndStapel {
+  return ergebnisAndStapelArt.ergebnis.numIndex !== null;
+}
+
+function removeWahlvorschlagIDIfNewStapelIsCUngueltig(
+  ergebnis: Ergebnis,
+  isNewStapelCUngueltig: boolean
+) {
+  if (isNewStapelCUngueltig) {
+    ergebnis.wahlvorschlagID = null;
+  }
+}
+
+function switchStapelCOfErgebnis(
+  currentErgebnisAndStapel: {
+    stapelArt: StapelArtEnum;
+    ergebnis: {
+      numIndex: number;
+    };
+  },
+  shouldSetStapelUngueltig: boolean
+) {
+  const newStapelArt = shouldSetStapelUngueltig
+    ? StapelArtEnum.ObwCUngueltig
+    : StapelArtEnum.ObwCGueltig;
   ergebnismeldungsStore.switchStapelOfErgebnis(
     {
       wahlID: props.wahlID,
       wahlbezirkID: props.wahlbezirkID,
-      stapelArt: currentStapelArt,
+      stapelArt: currentErgebnisAndStapel.stapelArt,
     },
-    numIndex,
+    currentErgebnisAndStapel.ergebnis.numIndex,
     newStapelArt
   );
 }

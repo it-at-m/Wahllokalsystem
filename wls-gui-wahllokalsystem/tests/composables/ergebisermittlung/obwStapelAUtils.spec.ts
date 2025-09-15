@@ -195,6 +195,34 @@ describe("obwStapelAUtils", () => {
       ergebnisseWithWahlvorschlagSpy.mockRestore();
     });
 
+    it("should_countNullAsZero_when_wahlvorschlaeHasEntries", () => {
+      const ergebnisseWithWahlvorschlagSpy = vi.spyOn(
+        unitUnderTest.ergebnisseAndWahlvorschlaege,
+        "value",
+        "get"
+      );
+      ergebnisseWithWahlvorschlagSpy.mockReturnValue([
+        {
+          ergebnis: prepareErgebnis().ergebnis(2).build(),
+          wahlvorschlag: createWahlvorschlag(),
+        },
+        {
+          ergebnis: prepareErgebnis().ergebnis(null).build(),
+          wahlvorschlag: createWahlvorschlag(),
+        },
+        {
+          ergebnis: prepareErgebnis().ergebnis(42).build(),
+          wahlvorschlag: createWahlvorschlag(),
+        },
+      ]);
+
+      const result = unitUnderTest.sumOfValidVotes.value;
+
+      expect(result).toStrictEqual(2 + 42);
+
+      ergebnisseWithWahlvorschlagSpy.mockRestore();
+    });
+
     it("should_return0_when_ergebnisseAndWahlvorschlagHasNoEntries", () => {
       const ergebnisseWithWahlvorschlagSpy = vi.spyOn(
         unitUnderTest.ergebnisseAndWahlvorschlaege,

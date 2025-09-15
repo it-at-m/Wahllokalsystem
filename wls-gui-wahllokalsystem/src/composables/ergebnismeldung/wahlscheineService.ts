@@ -1,7 +1,9 @@
 import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 
-import { Configuration } from "@/api/wls-clients/generated-briefwahl-api";
-import { WahlscheineControllerApi } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import {
+  Configuration,
+  WahlscheineControllerApi,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlscheineMapper } from "@/composables/ergebnismeldung/wahlscheineMapper.ts";

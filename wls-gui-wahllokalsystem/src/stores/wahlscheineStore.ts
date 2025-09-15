@@ -31,21 +31,23 @@ export const useWahlscheineStore = defineStore(storeID, () => {
 
   async function saveWahlscheine() {
     isWahlscheineSaving.value = true;
-    for (const wahlschein of wahlscheine.value) {
-      try {
-        await postWahlscheine(
-          wahlschein.bezirkUndWahlID.wahlID,
-          wahlschein.bezirkUndWahlID.wahlbezirkID,
-          wahlschein
-        );
-      } catch (e) {
-        logDebug(
-          `Save Wahlschein for wahlbezirkID: ${wahlschein.bezirkUndWahlID.wahlbezirkID} and wahlID: ${wahlschein.bezirkUndWahlID.wahlID} failed`,
-          e
-        );
-      } finally {
-        isWahlscheineSaving.value = false;
+    try {
+      for (const wahlschein of wahlscheine.value) {
+        try {
+          await postWahlscheine(
+            wahlschein.bezirkUndWahlID.wahlID,
+            wahlschein.bezirkUndWahlID.wahlbezirkID,
+            wahlschein
+          );
+        } catch (e) {
+          logDebug(
+            `Save Wahlschein for wahlbezirkID: ${wahlschein.bezirkUndWahlID.wahlbezirkID} and wahlID: ${wahlschein.bezirkUndWahlID.wahlID} failed`,
+            e
+          );
+        }
       }
+    } finally {
+      isWahlscheineSaving.value = false;
     }
   }
 

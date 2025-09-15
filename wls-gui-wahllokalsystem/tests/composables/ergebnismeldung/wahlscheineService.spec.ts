@@ -133,8 +133,9 @@ describe("wahlscheineService.ts", () => {
       expect(mockDefinitions.postWahlscheine).toHaveBeenCalledWith(
         wahlschein.bezirkUndWahlID.wahlID,
         wahlschein.bezirkUndWahlID.wahlbezirkID,
-        wahlschein
+        wahlscheinDTO
       );
+      expect(mockDefinitions.mapModelToDto).toHaveBeenCalledWith(wahlschein);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);

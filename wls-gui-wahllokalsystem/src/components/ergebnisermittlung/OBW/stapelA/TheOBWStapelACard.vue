@@ -54,8 +54,12 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { sendErgebnisseByStapelArt, getErgebnisseByWahlIdAndStapelartOrUndefined } = useErgebnismeldungStore();
-const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } = useWahlvorschlaegeStore();
+const {
+  sendErgebnisseByStapelArt,
+  getErgebnisseByWahlIdAndStapelartOrUndefined,
+} = useErgebnismeldungStore();
+const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } =
+  useWahlvorschlaegeStore();
 
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { logWarn } = useLogging("TheOBWStapelACard");
@@ -88,7 +92,7 @@ const sumOfValidVotes = computed(() =>
 );
 
 function onSaveClicked() {
-  ergebnismeldungsStore.sendErgebnisseByStapelArt(props.wahlID, STAPEL);
+  sendErgebnisseByStapelArt(props.wahlID, STAPEL);
 }
 
 function addWahlvorschlagForErgebnisIfExisting(
@@ -97,7 +101,7 @@ function addWahlvorschlagForErgebnisIfExisting(
 ): void {
   if (ergebnis.wahlvorschlagID) {
     const wahlvorschlagForErgebnis =
-      wahlvorschlaegeStore.getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
+      getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
         props.wahlID,
         props.wahlbezirkID,
         ergebnis.wahlvorschlagID
@@ -134,9 +138,10 @@ function createErgebnisseAndWahlvorschlaege() {
 
 function loadErgebnisseForWahlAndStapelOrderedByNumIndex(): Ergebnis[] {
   return (
-    ergebnismeldungsStore
-      .getErgebnisseByWahlIdAndStapelartOrUndefined(props.wahlID, STAPEL)
-      ?.ergebnisse.sort(orderedByNumIndexWithNullAtEnd) ?? []
+    getErgebnisseByWahlIdAndStapelartOrUndefined(
+      props.wahlID,
+      STAPEL
+    )?.ergebnisse.sort(orderedByNumIndexWithNullAtEnd) ?? []
   );
 }
 </script>

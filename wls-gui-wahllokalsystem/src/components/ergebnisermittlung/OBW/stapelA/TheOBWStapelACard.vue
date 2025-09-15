@@ -41,8 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { computed, ref } from "vue";
 
@@ -60,11 +60,6 @@ const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } = us
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { logWarn } = useLogging("TheOBWStapelACard");
 
-interface ErgebnisWithWahlvorschlag {
-  ergebnis: Ergebnis;
-  wahlvorschlag: Wahlvorschlag;
-}
-
 const STAPEL = StapelArtEnum.ObwA;
 
 const props = defineProps({
@@ -80,11 +75,9 @@ const props = defineProps({
 
 const isFormValid = ref<boolean | null>(null);
 
-const ergebnisseWithWahlvorschlag = computed<ErgebnisWithWahlvorschlag[]>(
-  () => {
-    return createErgebnisseAndWahlvorschlaege();
-  }
-);
+const ergebnisseWithWahlvorschlag = computed<ErgebnisAndWahlvorschlag[]>(() => {
+  return createErgebnisseAndWahlvorschlaege();
+});
 
 const sumOfValidVotes = computed(() =>
   ergebnisseWithWahlvorschlag.value
@@ -100,7 +93,7 @@ function onSaveClicked() {
 
 function addWahlvorschlagForErgebnisIfExisting(
   ergebnis: Ergebnis,
-  result: ErgebnisWithWahlvorschlag[]
+  result: ErgebnisAndWahlvorschlag[]
 ): void {
   if (ergebnis.wahlvorschlagID) {
     const wahlvorschlagForErgebnis =
@@ -127,7 +120,7 @@ function addWahlvorschlagForErgebnisIfExisting(
 }
 
 function createErgebnisseAndWahlvorschlaege() {
-  const result: ErgebnisWithWahlvorschlag[] = [];
+  const result: ErgebnisAndWahlvorschlag[] = [];
 
   const ergebnisseForWahlAndStapel =
     loadErgebnisseForWahlAndStapelOrderedByNumIndex();

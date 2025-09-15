@@ -73,7 +73,7 @@ export function useOBWStapelAUtils(
       getErgebnisseByWahlIdAndStapelartOrUndefined(
         wahlID.value,
         STAPEL
-      )?.ergebnisse.sort(orderedByNumIndexWithNullAtEnd) ?? [];
+      )?.ergebnisse?.sort(orderedByNumIndexWithNullAtEnd) ?? [];
 
     ergebnisseForWahlAndStapel.forEach((ergebnis) => {
       _addWahlvorschlagForErgebnisIfExisting(ergebnis, result);

@@ -7,7 +7,7 @@
     </v-card-title>
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlWahlbriefeValid">
-        <v-number-input
+        <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
           :rules="[required, minNumber(1), maxNumber(9999)]"
@@ -24,7 +24,7 @@
     >
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlVerzeichnisseValid">
-        <v-number-input
+        <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
           :rules="[required, minNumber(0), maxNumber(9999)]"
@@ -38,7 +38,7 @@
     <v-card-title>Anzahl der Nachträge zu den Verzeichnissen</v-card-title>
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlNachtraegeValid">
-        <v-number-input
+        <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.nachtraege"
           class="mr-4"
           :rules="[required, minNumber(0), maxNumber(9999)]"
@@ -62,7 +62,7 @@
       >
         <div class="d-flex flex-wrap justify-start">
           <div>
-            <v-number-input
+            <base-number-input
               v-model="
                 wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
               "
@@ -108,6 +108,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";

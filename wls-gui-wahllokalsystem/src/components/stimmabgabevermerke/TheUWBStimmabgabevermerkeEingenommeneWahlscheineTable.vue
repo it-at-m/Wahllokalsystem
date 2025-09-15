@@ -26,8 +26,9 @@
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
             class="pl-0"
           >
-            <v-number-input
+            <base-number-input
               max-width="15rem"
+              label="Anzahl"
               :rules="[required, minNumber(0)]"
               :model-value="
                 getMapValue(
@@ -53,8 +54,8 @@
 import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { storeToRefs } from "pinia";
-import { VNumberInput, VTable } from "vuetify/components";
 
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -74,8 +75,12 @@ function getMapValue(
 function setMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
   wahldaten: Wahldaten,
-  value: number
+  value: number | null | undefined
 ) {
-  wahldaten.eingenommeneWahlscheine.set(key, value);
+  if (value !== null && value !== undefined) {
+    wahldaten.eingenommeneWahlscheine.set(key, value);
+  } else {
+    wahldaten.eingenommeneWahlscheine.delete(key);
+  }
 }
 </script>

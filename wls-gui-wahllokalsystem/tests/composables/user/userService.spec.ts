@@ -1,6 +1,7 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -22,6 +23,7 @@ vi.mock("@/composables/user/userMapper.ts", () => ({
 
 const { getUser } = useUserService();
 const { prepareUserDTO, mapValidUserDtoToUser } = useUserTestDataFactory();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("userService.ts", () => {
   beforeEach(() => {
@@ -41,7 +43,9 @@ describe("userService.ts", () => {
 
       const result = await getUser();
 
-      expect(mockDefinitions.user.mock.calls.length).toStrictEqual(1);
+      expect(mockDefinitions.user.mock.calls).toStrictEqual([
+        [axiosConfigWrapper().requestAsOnlineOnly()],
+      ]);
       expect(result).toEqual(mockedMappeduser);
     });
 

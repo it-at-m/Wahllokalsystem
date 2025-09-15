@@ -55,7 +55,7 @@ describe("ergebnisUtils.ts", () => {
       expect(result).toStrictEqual(-1);
     });
 
-    it("should_returnDifferenceOfNumIndex_when_ergebnisAAndErgebnisHasAValue", () => {
+    it("should_returnDifferenceOfNumIndex_when_ergebnisAAndErgebnisBHasAValue", () => {
       const numIndex1 = generateRandomNumber(4);
       const ergebnis1 = prepareErgebnis().numIndex(numIndex1).build();
 

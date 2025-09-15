@@ -51,7 +51,7 @@ const meta = {
   decorators: [
     (story) => {
       return {
-        component: { story },
+        components: { story },
         template: "<table style='width:100%'><story /></table>",
       };
     },

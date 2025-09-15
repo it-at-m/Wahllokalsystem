@@ -1,5 +1,6 @@
+import type BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import type { TestingPinia } from "@pinia/testing";
-import type { VForm, VNumberInput } from "vuetify/components";
+import type { VForm } from "vuetify/components";
 
 import { createTestingPinia } from "@pinia/testing";
 import {
@@ -141,11 +142,11 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         },
       });
 
-      const input = wrapper.findComponent<typeof VNumberInput>(
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
         '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
       );
 
-      expect(input.props("disabled")).toStrictEqual(true);
+      expect(input.attributes().class).toContain("disabled");
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -162,11 +163,11 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         },
       });
 
-      const input = wrapper.findComponent<typeof VNumberInput>(
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
         '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
       );
 
-      expect(input.props("disabled")).toStrictEqual(false);
+      expect(input.attributes().class).not.toContain("disabled");
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

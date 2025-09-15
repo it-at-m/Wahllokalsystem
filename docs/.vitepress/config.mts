@@ -7,6 +7,7 @@ const PATH_TECHNIK = "/technik/";
 const PATH_ECOSYSTEM = PATH_TECHNIK + "ecosystem/";
 const PATH_ECOSTYSTEM_WORKFLOWS = `${PATH_ECOSYSTEM}workflowsAndArtifacts/`;
 const PATH_ADR = PATH_TECHNIK + "adr/";
+const PATH_ADR_UI = PATH_ADR + "ui/";
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + "naming_conventions/";
 const PATH_GUIDES = PATH_TECHNIK + "guides/";
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + "api-client-generation/";
@@ -117,6 +118,29 @@ export default withMermaid({
             {
               text: "Kleine Menge von Renovate-PRs",
               link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
+            },
+            {
+              text: "UI/UX",
+              link: `${PATH_ADR_UI}`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Keine Wertveränderung durch die Anwendung",
+                  link: `${PATH_ADR_UI}adr001-no-user-input-override.md`,
+                },
+                {
+                  text: "Begrenzte Interaktionsmöglichkeiten bei Benutzereingaben",
+                  link: `${PATH_ADR_UI}adr002-simplify-user-input-options.md`,
+                },
+                {
+                  text: "Abweichung von Tabreihenfolge in Leserichtung, wenn notwendig",
+                  link: `${PATH_ADR_UI}adr003-tab-order.md`,
+                },
+                {
+                  text: "Styling des active Button",
+                  link: `${PATH_ADR_UI}adr004-active-btn-styling.md`,
+                },
+              ],
             },
           ],
         },

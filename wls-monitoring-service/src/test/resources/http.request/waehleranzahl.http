@@ -3,16 +3,16 @@ GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get wahleranzahl by wahlID and wahlbezirkID | user wls_all_uwb
-GET {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/9899cae4-df9a-4ffc-a940-f20cf2280171
+GET {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST waehleranzahl | user wls_all_uwb
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/9899cae4-df9a-4ffc-a940-f20cf2280171
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
   "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "anzahlWaehler": 99,
   "uhrzeit": "2026-01-01T23:59:12.123"

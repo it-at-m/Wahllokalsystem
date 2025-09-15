@@ -9,6 +9,11 @@ Um während der Entwicklung die Funktionalität des Service Workers zu testen, m
 `package.json`-Datei gestartet werden. Der SW bezieht sich auf die Elemente, die im `dist`-Ordner liegen, daher muss
 die Anwendung nach jeder Änderung im SW-File neu gebaut werden.
 
+### IndexedDB
+
+Nach der Synchronisation der Offline-Daten aus der IndexedDB müssen in den Entwicklertools des Browsers die Einträge
+der IndexedDB **manuell** aktualisiert werden, um die Änderungen der dirty-Flags nachvollziehen zu können.
+
 ### Debugging
 
 Je nach verwendetem Browser sind unterschiedliche Schritte notwendig, um die Konsolenausgaben des SW zu sehen.

@@ -4,6 +4,10 @@ import type {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
+
 export function useErgebnisermittlungMapper() {
   function toDto(
     model: Stimmzettelumschlaege,
@@ -19,7 +23,9 @@ export function useErgebnisermittlungMapper() {
     };
 
     if (model.urneneroeffnungsUhrzeit) {
-      dto.urneneroeffnungsUhrzeit = model.urneneroeffnungsUhrzeit.toISOString();
+      dto.urneneroeffnungsUhrzeit = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+        model.urneneroeffnungsUhrzeit
+      );
     }
 
     return dto;

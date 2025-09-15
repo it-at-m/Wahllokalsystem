@@ -4,7 +4,7 @@ In den Wahllokalen kann die Internetverbindung instabil sein, was jedoch die Bed
 Eine Voraussetzung für die Nutzung ist, dass zu Beginn des Wahltages beim Anmelden eine Internetverbindung verfügbar ist.
 Anschließend sollte der Benutzer bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. Sollte am Ende des Tages
 weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und telefonisch übermittelt.
-Die Datenübertragung an das Backend kann auch am nächsten Tag dürch das Hochfahren des Notebooks erfolgen.
+Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des Notebooks erfolgen.
 
 ## Beschreibung Offlinefähigkeit
 

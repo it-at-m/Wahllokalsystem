@@ -10,3 +10,8 @@
 .stimmabgabevermerke-table .dynamic-column {
   min-width: 300px;
 }
+
+.v-btn.v-btn--active:hover > .v-btn__overlay,
+.v-btn.v-btn--active:focus > .v-btn__overlay {
+  opacity: 0.01;
+}

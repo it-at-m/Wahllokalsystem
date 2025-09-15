@@ -11,7 +11,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/composables/ergebnismeldung/wahlscheineService.ts", () => ({
-  useStimmabgabevermerkeService: () => ({
+  useWahlscheineService: () => ({
     getWahlscheine: mockDefinitions.getWahlscheine,
     postWahlscheine: mockDefinitions.postWahlscheine,
   }),

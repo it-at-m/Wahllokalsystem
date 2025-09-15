@@ -1,5 +1,6 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahlscheineTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
@@ -17,13 +18,20 @@ const mockDefinitions = vi.hoisted(() => ({
   mapModelToDto: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  WahlscheineControllerApi: vi.fn().mockImplementation(() => ({
-    getWahlscheine: mockDefinitions.getWahlscheine,
-    postWahlscheine: mockDefinitions.postWahlscheine,
-  })),
-  Configuration: mockDefinitions.configurationConstructor,
-}));
+vi.mock(
+  "@/api/wls-clients/generated-ergebnismeldung-api",
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...(mod as object),
+      WahlscheineControllerApi: vi.fn().mockImplementation(() => ({
+        getWahlscheine: mockDefinitions.getWahlscheine,
+        postWahlscheine: mockDefinitions.postWahlscheine,
+      })),
+      Configuration: mockDefinitions.configurationConstructor,
+    };
+  }
+);
 
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
@@ -41,6 +49,7 @@ vi.mock("@/composables/ergebnismeldung/wahlscheineMapper.ts", () => ({
 describe("wahlscheineService.ts", () => {
   const { getWahlscheine, postWahlscheine } = useWahlscheineService();
   beforeEach(() => {
+    setActivePinia(createPinia());
     vi.resetAllMocks();
     vi.clearAllMocks();
   });

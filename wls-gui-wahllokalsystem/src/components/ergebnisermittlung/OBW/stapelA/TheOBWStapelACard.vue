@@ -15,7 +15,7 @@
             <base-row-obw-stapel-a
               v-for="(
                 ergebnisWithWahlvorschlag, index
-              ) in ergebnisseWithWahlvorschlag"
+              ) in ergebnisseAndWahlvorschlaege"
               :key="index"
               :model-value="ergebnisWithWahlvorschlag.ergebnis"
               :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
@@ -64,7 +64,7 @@ const props = defineProps({
   },
 });
 
-const { ergebnisseWithWahlvorschlag, sumOfValidVotes } = useOBWStapelAUtils(
+const { ergebnisseAndWahlvorschlaege, sumOfValidVotes } = useOBWStapelAUtils(
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
 );

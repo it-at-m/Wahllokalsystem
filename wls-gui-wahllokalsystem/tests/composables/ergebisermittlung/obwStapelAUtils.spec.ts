@@ -106,7 +106,7 @@ describe("obwStapelAUtils", () => {
         }
       );
 
-      const result = unitUnderTest.ergebnisseWithWahlvorschlag.value;
+      const result = unitUnderTest.ergebnisseAndWahlvorschlaege.value;
 
       expect(
         mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mock.calls
@@ -151,7 +151,7 @@ describe("obwStapelAUtils", () => {
           testcaseArguments.mockedResult
         );
 
-        const result = unitUnderTest.ergebnisseWithWahlvorschlag.value;
+        const result = unitUnderTest.ergebnisseAndWahlvorschlaege.value;
 
         expect(result).toStrictEqual([]);
       }
@@ -161,7 +161,7 @@ describe("obwStapelAUtils", () => {
   describe("sumOfValidVotes", () => {
     it("should_returnSumOfErgebnis_when_ergebnisseAndWahlvorschlagHasEntries", () => {
       const ergebnisseWithWahlvorschlagSpy = vi.spyOn(
-        unitUnderTest.ergebnisseWithWahlvorschlag,
+        unitUnderTest.ergebnisseAndWahlvorschlaege,
         "value",
         "get"
       );
@@ -197,7 +197,7 @@ describe("obwStapelAUtils", () => {
 
     it("should_return0_when_ergebnisseAndWahlvorschlagHasNoEntries", () => {
       const ergebnisseWithWahlvorschlagSpy = vi.spyOn(
-        unitUnderTest.ergebnisseWithWahlvorschlag,
+        unitUnderTest.ergebnisseAndWahlvorschlaege,
         "value",
         "get"
       );

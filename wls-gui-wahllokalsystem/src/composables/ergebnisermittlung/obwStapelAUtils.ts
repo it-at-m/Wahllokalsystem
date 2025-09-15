@@ -24,14 +24,14 @@ export function useOBWStapelAUtils(
 
   const { logWarn } = useLogging("obwUtils");
 
-  const ergebnisseWithWahlvorschlag = computed<ErgebnisAndWahlvorschlag[]>(
+  const ergebnisseAndWahlvorschlaege = computed<ErgebnisAndWahlvorschlag[]>(
     () => {
       return _createErgebnisseAndWahlvorschlaege();
     }
   );
 
   const sumOfValidVotes = computed(() =>
-    ergebnisseWithWahlvorschlag.value
+    ergebnisseAndWahlvorschlaege.value
       .map((item) => item.ergebnis)
       .reduce((sum, ergebnis) => {
         return sum + (ergebnis.ergebnis ?? 0);
@@ -83,7 +83,7 @@ export function useOBWStapelAUtils(
   }
 
   return {
-    ergebnisseWithWahlvorschlag,
+    ergebnisseAndWahlvorschlaege,
     sumOfValidVotes,
   };
 }

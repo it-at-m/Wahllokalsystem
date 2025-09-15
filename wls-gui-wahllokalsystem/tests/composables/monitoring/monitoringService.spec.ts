@@ -4,6 +4,7 @@ import type { Waehleranzahl } from "@/types/monitoring/Waehleranzahl.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -40,6 +41,8 @@ vi.mock("@/composables/monitoring/wahlbeteiligungMapper.ts", () => ({
 const { generateRandomString } = useCommonTestDataFactory();
 const { postWahlbeteiligung, getWahlbeteiligung, postLastSeen } =
   useMonitoringService();
+const { axiosConfigWrapper } = useCommonApiUtils();
+
 const mockedNow = new Date();
 
 describe("monitoringService.ts", () => {
@@ -215,7 +218,7 @@ describe("monitoringService.ts", () => {
       await postLastSeen(wahlbezirkID);
 
       expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-        [wahlbezirkID],
+        [wahlbezirkID, axiosConfigWrapper().requestAsOnlineOnly()],
       ]);
     });
 
@@ -229,7 +232,7 @@ describe("monitoringService.ts", () => {
         "postLastSeen failed"
       );
       expect(mockDefinitions.postLastSeen.mock.calls).toStrictEqual([
-        [wahlbezirkID],
+        [wahlbezirkID, axiosConfigWrapper().requestAsOnlineOnly()],
       ]);
     });
   });

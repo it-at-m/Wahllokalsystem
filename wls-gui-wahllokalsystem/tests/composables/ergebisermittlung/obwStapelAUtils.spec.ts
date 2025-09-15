@@ -1,12 +1,8 @@
-import { mock } from "node:test";
-
 import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
 
-import { mocked } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { flushPromises } from "@vue/test-utils";
 import {
   afterAll,
   afterEach,
@@ -16,7 +12,7 @@ import {
   it,
   vi,
 } from "vitest";
-import { computed, nextTick } from "vue";
+import { computed } from "vue";
 
 import { useOBWStapelAUtils } from "@/composables/ergebnisermittlung/obwStapelAUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";

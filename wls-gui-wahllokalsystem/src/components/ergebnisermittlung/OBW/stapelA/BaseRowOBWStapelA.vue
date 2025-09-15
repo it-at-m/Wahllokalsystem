@@ -3,7 +3,7 @@
     <td>D{{ wahlvorschlag.ordnungszahl }}</td>
     <td>{{ wahlvorschlagName }}</td>
     <td>
-      <v-number-input
+      <base-number-input
         v-model="modelValue.ergebnis"
         :rules="[required, minNumber(0)]"
       />
@@ -18,6 +18,7 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 

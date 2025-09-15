@@ -13,7 +13,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from "@/App.vue";
 import { ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -170,14 +169,6 @@ describe("App", () => {
       await flushPromises();
 
       expect(initTasks).toHaveBeenCalled();
-    });
-
-    it("should_callLoadEreignisse_when_mounted", async () => {
-      const { loadEreignisse } = useEreignisStore();
-
-      await flushPromises();
-
-      expect(loadEreignisse).toHaveBeenCalled();
     });
 
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {

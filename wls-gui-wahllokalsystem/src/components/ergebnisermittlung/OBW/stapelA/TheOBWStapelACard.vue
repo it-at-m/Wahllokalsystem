@@ -54,8 +54,8 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const ergebnismeldungsStore = useErgebnismeldungStore();
-const wahlvorschlaegeStore = useWahlvorschlaegeStore();
+const { sendErgebnisseByStapelArt, getErgebnisseByWahlIdAndStapelartOrUndefined } = useErgebnismeldungStore();
+const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } = useWahlvorschlaegeStore();
 
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { logWarn } = useLogging("TheOBWStapelACard");
@@ -116,7 +116,7 @@ function addWahlvorschlagForErgebnisIfExisting(
       });
     } else {
       logWarn(
-        `ergebnis wahlID=${props.wahlID}, wahlbezirkID=${props.wahlbezirkID}, wahlvorschlagID=${ergebnis.wahlvorschlagID} hat keine Wahlvorschlag`
+        `ergebnis wahlID=${props.wahlID}, wahlbezirkID=${props.wahlbezirkID}, wahlvorschlagID=${ergebnis.wahlvorschlagID} hat keinen Wahlvorschlag`
       );
     }
   } else {

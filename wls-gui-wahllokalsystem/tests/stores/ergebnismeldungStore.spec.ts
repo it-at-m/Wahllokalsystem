@@ -57,7 +57,7 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt],
+        [wahlbezirkID, wahlID, stapelArt, true],
       ]);
       expect(unitUnderTest.ergebnisse).toStrictEqual([]);
     });
@@ -83,7 +83,7 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt],
+        [wahlbezirkID, wahlID, stapelArt, true],
       ]);
       expect(unitUnderTest.ergebnisse).toStrictEqual([mockedErgebnisseModel]);
     });
@@ -151,7 +151,7 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel],
+        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],
       ]);
       expect(mockDefinitions.postErgebnisse.mock.calls).not.toEqual([
         [

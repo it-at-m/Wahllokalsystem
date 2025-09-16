@@ -22,7 +22,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   async function loadErgebnisseByStapelArt(
     wahlID: string,
-    stapelArt: StapelArtEnum
+    stapelArt: StapelArtEnum,
+    sendNotification = true
   ) {
     try {
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
@@ -31,7 +32,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         const loadedErgebnisse = await getErgebnisse(
           wahlbezirkID,
           wahlID,
-          stapelArt
+          stapelArt,
+          sendNotification
         );
         if (loadedErgebnisse) {
           const existingErgebnisseIndexForStapelart =
@@ -55,7 +57,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   async function sendErgebnisseByStapelArt(
     wahlID: string,
-    stapelArt: StapelArtEnum
+    stapelArt: StapelArtEnum,
+    sendNotification = true
   ) {
     try {
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
@@ -69,7 +72,13 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         ergebnisseToSend &&
         ergebnisseToSend.ergebnisse.length > 0
       ) {
-        await postErgebnisse(wahlbezirkID, wahlID, stapelArt, ergebnisseToSend);
+        await postErgebnisse(
+          wahlbezirkID,
+          wahlID,
+          stapelArt,
+          ergebnisseToSend,
+          sendNotification
+        );
       }
     } catch {
       throw new Error("Fehler beim Speichern der Ergebnisse");

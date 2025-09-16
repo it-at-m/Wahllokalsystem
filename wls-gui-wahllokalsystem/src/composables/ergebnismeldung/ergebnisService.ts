@@ -7,7 +7,9 @@ import {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const {
   toModel,
@@ -16,6 +18,7 @@ const {
   toPostErgebnisseStapelartEnum,
 } = useErgebnisMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { addNotification } = useUserNotificationService();
 
 export function useErgebnisService() {
   const ergebnisseControllerAPI = new ErgebnisseControllerApi(
@@ -25,7 +28,8 @@ export function useErgebnisService() {
   async function getErgebnisse(
     wahlbezirkID: string,
     wahlID: string,
-    stapelArt: StapelArtEnum
+    stapelArt: StapelArtEnum,
+    sendNotification = true
   ) {
     try {
       const response = await ergebnisseControllerAPI.getErgebnisse(
@@ -34,9 +38,22 @@ export function useErgebnisService() {
         toGetErgebnisseStapelartEnum(stapelArt)
       );
 
+      if (sendNotification) {
+        addNotification(
+          `Ergebnisse für Stapelart ${stapelArt} erfolgreich geladen.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? toModel(responseData) : null;
     } catch {
+      if (sendNotification) {
+        addNotification(
+          `Fehler beim Laden der Ergebnisse für Stapelart ${stapelArt}.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw new Error(`Get Ergebnisse for Stapelart ${stapelArt} failed.`);
     }
   }
@@ -45,7 +62,8 @@ export function useErgebnisService() {
     wahlbezirkID: string,
     wahlID: string,
     stapelArt: StapelArtEnum,
-    ergebnisse: Ergebnisse
+    ergebnisse: Ergebnisse,
+    sendNotification = true
   ) {
     try {
       await ergebnisseControllerAPI.postErgebnisse(
@@ -54,7 +72,19 @@ export function useErgebnisService() {
         toPostErgebnisseStapelartEnum(stapelArt),
         toDto(ergebnisse)
       );
+      if (sendNotification) {
+        addNotification(
+          `Ergebnisse für Stapelart ${stapelArt} gespeichert.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
     } catch {
+      if (sendNotification) {
+        addNotification(
+          `Fehler beim Speichern der Ergebnisse für Stapelart ${stapelArt}.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw new Error(`Post Ergebnisse for Stapelart ${stapelArt} failed.`);
     }
   }

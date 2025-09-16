@@ -18,7 +18,14 @@
       "
     />
     <v-list-item title="Stapel c" />
-    <v-list-item title="Stapel b" />
+    <v-list-item
+      title="Stapel b"
+      :to="
+        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STAPEL_B, {
+          wahlId: String(obwWahlID),
+        })
+      "
+    />
     <v-list-item title="Stapel a" />
     <v-list-item title="Schnellmeldung" />
     <v-list-item title="Niederschrift" />
@@ -29,7 +36,10 @@
 import { computed } from "vue";
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import {
+  ROUTE_AUSZAEHLUNG_STAPEL_B,
+  ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+} from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 

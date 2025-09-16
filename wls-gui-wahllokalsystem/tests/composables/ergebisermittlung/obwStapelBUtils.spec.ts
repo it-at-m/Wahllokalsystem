@@ -46,14 +46,14 @@ describe("obwStapelAUtils", () => {
 
   describe("ergebnisseStapelBLeer", () => {
     it("should_returnNumber_when_ergebnisseGiven", () => {
-      const ergebnistoFind = 5;
+      const ergebnisToFind = 5;
       const mockedErgebnisse = prepareErgebnisse()
         .bezirkUndWahlIDStapelart({
           wahlID: "wahlid",
           wahlbezirkID: "wahlbezirkid",
           stapelArt: StapelArtEnum.ObwBLeer,
         })
-        .ergebnisse([prepareErgebnis().ergebnis(ergebnistoFind).build()])
+        .ergebnisse([prepareErgebnis().ergebnis(ergebnisToFind).build()])
         .build();
 
       mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
@@ -62,7 +62,7 @@ describe("obwStapelAUtils", () => {
 
       const result = unitUnderTest.ergebnisseStapelBLeer.value;
 
-      expect(result).toStrictEqual(ergebnistoFind);
+      expect(result).toStrictEqual(ergebnisToFind);
     });
 
     it("should_returnUndefined_when_noErgebnisseGiven", () => {
@@ -78,23 +78,23 @@ describe("obwStapelAUtils", () => {
 
   describe("ergebnisseStapelBUngekennzeichnet", () => {
     it("should_returnNumber_when_ergebnisseGiven", () => {
-      const ergebnistoFind = 5;
+      const ergebnisToFind = 9;
       const mockedErgebnisse = prepareErgebnisse()
         .bezirkUndWahlIDStapelart({
           wahlID: "wahlid",
           wahlbezirkID: "wahlbezirkid",
           stapelArt: StapelArtEnum.ObwBUngekennzeichnet,
         })
-        .ergebnisse([prepareErgebnis().ergebnis(ergebnistoFind).build()])
+        .ergebnisse([prepareErgebnis().ergebnis(ergebnisToFind).build()])
         .build();
 
       mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
         mockedErgebnisse
       );
 
-      const result = unitUnderTest.ergebnisseStapelBLeer.value;
+      const result = unitUnderTest.ergebnisseStapelBUngekennzeichnet.value;
 
-      expect(result).toStrictEqual(ergebnistoFind);
+      expect(result).toStrictEqual(ergebnisToFind);
     });
 
     it("should_returnUndefined_when_noErgebnisseGiven", () => {
@@ -102,7 +102,7 @@ describe("obwStapelAUtils", () => {
         undefined
       );
 
-      const result = unitUnderTest.ergebnisseStapelBLeer.value;
+      const result = unitUnderTest.ergebnisseStapelBUngekennzeichnet.value;
 
       expect(result).toStrictEqual(undefined);
     });

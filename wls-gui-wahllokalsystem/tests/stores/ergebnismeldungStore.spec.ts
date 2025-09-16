@@ -21,7 +21,8 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
 }));
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { createErgebnisse, prepareErgebnisse } = useErgebnisseTestDataFactory();
+const { createErgebnisse, prepareErgebnisse, prepareErgebnis } =
+  useErgebnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
@@ -192,6 +193,73 @@ describe("ergebnismeldungStore.ts", () => {
       await expect(
         unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
+    });
+  });
+
+  describe("findAndUpdateErgebnisseByWahlIdAndStapelArt", () => {
+    it("should_updateErgebnisseForStapelB_when_existingErgebnisseFound", () => {
+      const wahlID = "id";
+      const stapelArt = StapelArtEnum.ObwBLeer;
+
+      const ergebnisBeforeUpdating = 5;
+      const ergebnisAfterUpdating = 38;
+
+      unitUnderTest.ergebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID: wahlID,
+            wahlbezirkID: "wahlbezirkID",
+            stapelArt: stapelArt,
+          })
+          .ergebnisse([
+            prepareErgebnis().ergebnis(ergebnisBeforeUpdating).build(),
+          ])
+          .build(),
+      ];
+
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisBeforeUpdating
+      );
+
+      unitUnderTest.findAndUpdateErgebnisseByWahlIdAndStapelArt(
+        wahlID,
+        stapelArt,
+        [prepareErgebnis().ergebnis(ergebnisAfterUpdating).build()]
+      );
+
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisAfterUpdating
+      );
+    });
+
+    it("should_createNewErgebnisseForStapelB_when_noExistingErgebnisseFound", () => {
+      const wahlID = "id";
+      const stapelArt = StapelArtEnum.ObwBLeer;
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: "wahlbezirkID", wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const ergebnisAfterUpdating = 38;
+
+      unitUnderTest.ergebnisse = [];
+
+      expect(unitUnderTest.ergebnisse.length).toStrictEqual(0);
+
+      unitUnderTest.findAndUpdateErgebnisseByWahlIdAndStapelArt(
+        wahlID,
+        stapelArt,
+        [prepareErgebnis().ergebnis(ergebnisAfterUpdating).build()]
+      );
+
+      expect(unitUnderTest.ergebnisse.length).toStrictEqual(1);
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisAfterUpdating
+      );
     });
   });
 });

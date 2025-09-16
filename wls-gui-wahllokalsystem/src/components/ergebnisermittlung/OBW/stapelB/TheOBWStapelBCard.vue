@@ -35,7 +35,7 @@
       </v-form>
       <v-card-actions>
         <base-button-save
-          :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
+          :loading="isErgebnisseSaving"
           :disabled="!stapelBInputsForm"
           @click="onSaveAnzahlStimmzettelClicked"
         />
@@ -66,12 +66,12 @@ const props = defineProps<{
 }>();
 
 const { wahlenActions } = useWahlenStore();
-const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { isUWB } = storeToRefs(useUserStore());
 const {
   sendErgebnisseByStapelArt,
   findAndUpdateErgebnisseByWahlIdAndStapelArt,
 } = useErgebnismeldungStore();
+const { isErgebnisseSaving } = storeToRefs(useErgebnismeldungStore());
 const { ergebnisseStapelBUngekennzeichnet, ergebnisseStapelBLeer, sumStapelB } =
   useOBWStapelBUtils(computed(() => props.wahlId));
 

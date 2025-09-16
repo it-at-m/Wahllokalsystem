@@ -6,7 +6,7 @@ import {
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { storeToRefs } from "pinia";
+import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -175,13 +175,14 @@ describe("App", () => {
       const testingPinia = createTestingPinia({
         createSpy: vi.fn,
       });
+      setActivePinia(testingPinia);
       const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
       const initBeanstandeteWahlbriefeSpy = vi.spyOn(
         useWahlenStore().beanstandeteWahlbriefeActions,
         "initBeanstandeteWahlbriefe"
       );
 
-      mount(App, {
+      const localWrapper = mount(App, {
         global: {
           plugins: [testingPinia, vuetify, router],
         },
@@ -193,6 +194,7 @@ describe("App", () => {
       await flushPromises();
 
       expect(initBeanstandeteWahlbriefeSpy).toHaveBeenCalled();
+      localWrapper.unmount();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

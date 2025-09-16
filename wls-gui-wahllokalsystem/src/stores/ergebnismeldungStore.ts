@@ -1,12 +1,14 @@
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useOBWStapelBUtils } from "@/composables/ergebnisermittlung/obwStapelBUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 
@@ -85,9 +87,43 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     );
   }
 
+  function findAndUpdateErgebnisseByWahlIdAndStapelArt(
+    wahlID: string,
+    stapelArt: StapelArtEnum,
+    ergebnisList: Ergebnis[]
+  ) {
+    const ergebnisseFound = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      wahlID,
+      stapelArt
+    );
+    if (ergebnisseFound) {
+      ergebnisseFound.ergebnisse = ergebnisList;
+    } else {
+      if (
+        stapelArt === StapelArtEnum.ObwBLeer ||
+        stapelArt === StapelArtEnum.ObwBUngekennzeichnet
+      ) {
+        const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+        const { createNewErgebnisseForStapelartObwB } = useOBWStapelBUtils(
+          computed(() => wahlID)
+        );
+
+        if (wahlbezirkID) {
+          const newErgebnisseToAdd = createNewErgebnisseForStapelartObwB(
+            stapelArt,
+            wahlbezirkID,
+            ergebnisList
+          );
+          ergebnisse.value.push(newErgebnisseToAdd);
+        }
+      }
+    }
+  }
+
   return {
     ergebnisse,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
+    findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,
   };

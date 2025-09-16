@@ -1,5 +1,3 @@
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { ComputedRef } from "vue";
 
 import { computed } from "vue";
@@ -33,23 +31,7 @@ export function useOBWStapelBUtils(wahlID: ComputedRef<string>) {
       (ergebnisseStapelBLeer.value || 0)
   );
 
-  function createNewErgebnisseForStapelartObwB(
-    stapelArt: StapelArtEnum,
-    wahlbezirkID: string,
-    ergebnisList: Ergebnis[]
-  ): Ergebnisse {
-    return {
-      bezirkUndWahlIDStapelart: {
-        wahlID: wahlID.value,
-        wahlbezirkID: wahlbezirkID,
-        stapelArt: stapelArt,
-      },
-      ergebnisse: ergebnisList,
-    };
-  }
-
   return {
-    createNewErgebnisseForStapelartObwB,
     ergebnisseStapelBLeer,
     ergebnisseStapelBUngekennzeichnet,
     sumStapelB,

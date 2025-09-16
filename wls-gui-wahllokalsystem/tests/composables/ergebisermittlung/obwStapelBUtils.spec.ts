@@ -171,29 +171,4 @@ describe("obwStapelBUtils", () => {
       }
     );
   });
-
-  describe("createNewErgebnisseForStapelartObwB", () => {
-    it("should_returnErgebnisse_whenGivenErgebnisList", () => {
-      const wahlbezirkID = "wahlbezirkid";
-      const stapelArt = StapelArtEnum.ObwBLeer;
-      const ergebnisList = [prepareErgebnis().build()];
-
-      const expectedErgebnisse = prepareErgebnisse()
-        .bezirkUndWahlIDStapelart({
-          wahlID: wahlID,
-          wahlbezirkID: wahlbezirkID,
-          stapelArt: stapelArt,
-        })
-        .ergebnisse(ergebnisList)
-        .build();
-
-      const result = unitUnderTest.createNewErgebnisseForStapelartObwB(
-        stapelArt,
-        wahlbezirkID,
-        ergebnisList
-      );
-
-      expect(result).toStrictEqual(expectedErgebnisse);
-    });
-  });
 });

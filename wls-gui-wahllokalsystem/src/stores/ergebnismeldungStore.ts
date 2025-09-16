@@ -2,10 +2,9 @@ import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useOBWStapelBUtils } from "@/composables/ergebnisermittlung/obwStapelBUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -113,16 +112,16 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         stapelArt === StapelArtEnum.ObwBUngekennzeichnet
       ) {
         const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
-        const { createNewErgebnisseForStapelartObwB } = useOBWStapelBUtils(
-          computed(() => wahlID)
-        );
 
         if (wahlbezirkID) {
-          const newErgebnisseToAdd = createNewErgebnisseForStapelartObwB(
-            stapelArt,
-            wahlbezirkID,
-            ergebnisList
-          );
+          const newErgebnisseToAdd: Ergebnisse = {
+            bezirkUndWahlIDStapelart: {
+              wahlID: wahlID,
+              wahlbezirkID: wahlbezirkID,
+              stapelArt: stapelArt,
+            },
+            ergebnisse: ergebnisList,
+          };
           ergebnisse.value.push(newErgebnisseToAdd);
         }
       }

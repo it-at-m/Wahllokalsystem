@@ -14,15 +14,15 @@
             <td>{{ stapelCUngueltigErgebnisseSum }}</td>
           </tr>
           <tr
-            v-for="a in wahlvorschlaegeToShow"
-            :key="a.wahlvorschlag.identifikator"
+            v-for="wahlvorschlagAndSum in wahlvorschlaegeAndSumAboveZero"
+            :key="wahlvorschlagAndSum.wahlvorschlag.identifikator"
           >
             <td>
               {{
-                `${a.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(a.wahlvorschlag)}`
+                `${wahlvorschlagAndSum.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlagAndSum.wahlvorschlag)}`
               }}
             </td>
-            <td>{{ a.sum }}</td>
+            <td>{{ wahlvorschlagAndSum.sum }}</td>
           </tr>
         </tbody>
         <tfoot>
@@ -45,6 +45,7 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
+import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
@@ -66,47 +67,13 @@ const props = defineProps({
   },
 });
 
-const stapelCUngueltigErgebnisseSum = computed(() =>
-  props.ergebnisseStapelCUngueltig.reduce(
-    (sum, ergebnis) => sum + (ergebnis.ergebnis ?? 0),
-    0
-  )
-);
-
-const stapelCGueltigSums = computed(() =>
-  props.ergebnisseStapelCGueltig.reduce(
-    (sumOfWahlvorschlag: Map<string, number>, ergebnis) => {
-      if (ergebnis.wahlvorschlagID !== null && ergebnis.ergebnis !== null) {
-        const currentSum =
-          sumOfWahlvorschlag.get(ergebnis.wahlvorschlagID) || 0;
-        sumOfWahlvorschlag.set(
-          ergebnis.wahlvorschlagID,
-          currentSum + ergebnis.ergebnis
-        );
-      }
-      return sumOfWahlvorschlag;
-    },
-    new Map<string, number>()
-  )
-);
-
-const wahlvorschlaegeToShow = computed(() =>
-  props.wahlvorschlaege
-    .filter((wahlvorschlag) =>
-      stapelCGueltigSums.value.has(wahlvorschlag.identifikator)
-    )
-    .map((wahlvorschlag) => ({
-      wahlvorschlag,
-      sum: stapelCGueltigSums.value.get(wahlvorschlag.identifikator) || 0,
-    }))
-);
-
-const totalSum = computed(
-  () =>
-    stapelCUngueltigErgebnisseSum.value +
-    [...stapelCGueltigSums.value.values()].reduce(
-      (sum, currentValue) => sum + currentValue,
-      0
-    )
+const {
+  stapelCUngueltigErgebnisseSum,
+  totalSum,
+  wahlvorschlaegeAndSumAboveZero,
+} = useOBWStapelCUtils(
+  computed(() => props.wahlvorschlaege),
+  computed(() => props.ergebnisseStapelCUngueltig),
+  computed(() => props.ergebnisseStapelCGueltig)
 );
 </script>

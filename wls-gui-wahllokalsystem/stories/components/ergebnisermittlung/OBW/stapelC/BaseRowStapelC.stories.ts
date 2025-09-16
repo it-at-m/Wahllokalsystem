@@ -55,7 +55,7 @@ export const Default: Story = {
   args: {
     index: generateRandomNumber(2),
     stapelArt: StapelArtEnum.ObwCGueltig,
-    ergebnis: prepareErgebnis().ergebnis(1).build(),
+    modelValue: prepareErgebnis().ergebnis(1).build(),
     wahlvorschlaege,
   },
 };
@@ -63,7 +63,7 @@ export const Default: Story = {
 export const UngueltigSelected: Story = {
   args: {
     stapelArt: StapelArtEnum.ObwCUngueltig,
-    ergebnis: prepareErgebnis().ergebnis(1).build(),
+    modelValue: prepareErgebnis().ergebnis(1).build(),
     wahlvorschlaege,
   },
 };

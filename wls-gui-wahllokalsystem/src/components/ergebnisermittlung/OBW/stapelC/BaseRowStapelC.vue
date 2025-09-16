@@ -39,13 +39,14 @@ const REF_AUTOCOMPLETE_WAHLVORSCHLAG = "wahlvorschlagSelection";
 
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
+const modelValue = defineModel({
+  type: Object as PropType<Ergebnis>,
+  required: true,
+});
+
 const props = defineProps({
   index: {
     type: Number,
-    required: true,
-  },
-  ergebnis: {
-    type: Object as PropType<Ergebnis>,
     required: true,
   },
   stapelArt: {
@@ -68,7 +69,7 @@ const emit = defineEmits<{
 
 //Notwendig damit das Label nach dem Löschen wieder mittig steht, wie nach einem Clear
 watchEffect(() => {
-  if (props.ergebnis.wahlvorschlagID === null) {
+  if (modelValue.value.wahlvorschlagID === null) {
     wahlvorschlagSelection.value?.reset();
   }
 });

@@ -22,7 +22,7 @@
               :key="index"
               :wahlvorschlaege="wahlvorschlaege"
               :stapel-art="ergebnisAndStapel.stapelArt"
-              :ergebnis="ergebnisAndStapel.ergebnis"
+              :model-value="ergebnisAndStapel.ergebnis"
               :index="index + 1"
               @selection-changed="
                 onGueltigkeitOfRowChanged($event, ergebnisAndStapel)

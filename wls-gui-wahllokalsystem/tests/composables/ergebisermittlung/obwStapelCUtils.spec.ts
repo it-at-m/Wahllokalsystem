@@ -197,7 +197,7 @@ describe("obwStapelCUtils", () => {
   });
 
   describe("wahlvorschlaegeAndSumAboveZero", () => {
-    it("should_subSetOfWahlvorschlaegeWithErgebnis_when_gueltigErgebnisForWahlvorschlagExists", () => {
+    it("should_returnSubsetOfWahlvorschlaegeWithErgebnis_when_gueltigErgebnisForWahlvorschlagExists", () => {
       const wahlvorschlag1 = prepareWahlvorschlag()
         .identifikator("wahlvorschlag1")
         .build();

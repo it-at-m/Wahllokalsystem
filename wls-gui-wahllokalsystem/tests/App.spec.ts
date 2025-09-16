@@ -172,11 +172,20 @@ describe("App", () => {
     });
 
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
+      const testingPinia = createTestingPinia({
+        createSpy: vi.fn,
+      });
       const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
       const initBeanstandeteWahlbriefeSpy = vi.spyOn(
         useWahlenStore().beanstandeteWahlbriefeActions,
         "initBeanstandeteWahlbriefe"
       );
+
+      mount(App, {
+        global: {
+          plugins: [testingPinia, vuetify, router],
+        },
+      });
 
       // @ts-expect-error: cannot set readonly
       waehlerverzeichnisGetter.waehlerverzeichnisNummern = [1];

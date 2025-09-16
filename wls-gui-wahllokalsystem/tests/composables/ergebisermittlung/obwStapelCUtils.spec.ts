@@ -1,6 +1,7 @@
 import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
@@ -17,6 +18,7 @@ const { prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
 
 type ErgebnisWithErgebnis = Ergebnis & { ergebnis: number };
+type ErgebnisWithNumIndex = Ergebnis & { numIndex: number };
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
@@ -356,7 +358,7 @@ describe("obwStapelCUtils", () => {
     it("should_returnEmptyArray_when_wahlvorschlaegeForWahlIdAndWahlbezirkIdHasNoWahlvorschlaeage", () => {
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
         prepareWahlvorschlaege()
-          .wahlvorschlaege(new Set<Wahlvorschlaeg>([]))
+          .wahlvorschlaege(new Set<Wahlvorschlag>([]))
           .build()
       );
 
@@ -475,7 +477,9 @@ describe("obwStapelCUtils", () => {
 
   describe("switchStapelCOfErgebnis", () => {
     it("should_switchToObwCGueltig_when_setStapelUngueltigIsFalse", () => {
-      const ergebnis = prepareErgebnis().build();
+      const ergebnis = prepareErgebnis()
+        .numIndex(generateRandomNumber(4))
+        .build() as ErgebnisWithNumIndex;
       const stapelArt = getRandomItem(Object.values(StapelArtEnum));
       unitUnderTest.switchStapelCOfErgebnis(
         { stapelArt: stapelArt, ergebnis },
@@ -492,7 +496,9 @@ describe("obwStapelCUtils", () => {
     });
 
     it("should_switchToObwCUngueltig_when_setStapelUngueltigIsTrue", () => {
-      const ergebnis = prepareErgebnis().build();
+      const ergebnis = prepareErgebnis()
+        .numIndex(generateRandomNumber(4))
+        .build() as ErgebnisWithNumIndex;
       const stapelArt = getRandomItem(Object.values(StapelArtEnum));
       unitUnderTest.switchStapelCOfErgebnis(
         { stapelArt: stapelArt, ergebnis },

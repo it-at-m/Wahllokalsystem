@@ -27,7 +27,7 @@ vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareErgebnisse, prepareErgebnis } = useErgebnisseTestDataFactory();
 
-describe("obwStapelAUtils", () => {
+describe("obwStapelBUtils", () => {
   const wahlID = generateRandomString(10);
 
   let unitUnderTest: ReturnType<typeof useOBWStapelBUtils>;

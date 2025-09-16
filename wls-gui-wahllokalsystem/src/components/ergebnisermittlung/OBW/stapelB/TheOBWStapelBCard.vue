@@ -98,7 +98,9 @@ function onModelValueStapelBChanged(
 }
 
 function onSaveAnzahlStimmzettelClicked() {
-  sendErgebnisseByStapelArt(props.wahlId, StapelArtEnum.ObwBLeer);
+  if (!isUWB.value) {
+    sendErgebnisseByStapelArt(props.wahlId, StapelArtEnum.ObwBLeer);
+  }
   sendErgebnisseByStapelArt(props.wahlId, StapelArtEnum.ObwBUngekennzeichnet);
 }
 </script>

@@ -4,6 +4,7 @@ import {
   Configuration,
   UserControllerApi,
 } from "@/api/wls-clients/generated-auth-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserMapper } from "@/composables/user/userMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { AUTH_SERVICE_API_URL } from "@/constants.ts";
@@ -11,6 +12,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const { validateDtoAndMapToModel } = useUserMapper();
 const { addNotification } = useUserNotificationService();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useUserService() {
   const userControllerApi = new UserControllerApi(
@@ -21,7 +23,9 @@ export function useUserService() {
 
   async function getUser(): Promise<User> {
     try {
-      const response = await userControllerApi.user();
+      const response = await userControllerApi.user(
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
       return validateDtoAndMapToModel(response.data);
     } catch (e) {
       addNotification(

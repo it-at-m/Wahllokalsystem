@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
-import type { PropType, ShallowRef } from "vue";
+import type { PropType } from "vue";
 import type { VAutocomplete } from "vuetify/components";
 
 import { computed, useTemplateRef, watchEffect } from "vue";
@@ -59,9 +59,9 @@ const props = defineProps({
   },
 });
 
-const wahlvorschlagSelection = useTemplateRef(
+const wahlvorschlagSelection = useTemplateRef<typeof VAutocomplete>(
   REF_AUTOCOMPLETE_WAHLVORSCHLAG
-) as Readonly<ShallowRef<InstanceType<typeof VAutocomplete>>>;
+);
 
 const emit = defineEmits<{
   selectionChanged: [newValue: boolean];

@@ -1,4 +1,5 @@
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { ComputedRef } from "vue";
 
 import { computed } from "vue";
@@ -36,7 +37,7 @@ export function useOBWStapelBUtils(wahlID: ComputedRef<string>) {
     stapelArt: StapelArtEnum,
     wahlbezirkID: string,
     ergebnisList: Ergebnis[]
-  ) {
+  ): Ergebnisse {
     return {
       bezirkUndWahlIDStapelart: {
         wahlID: wahlID.value,

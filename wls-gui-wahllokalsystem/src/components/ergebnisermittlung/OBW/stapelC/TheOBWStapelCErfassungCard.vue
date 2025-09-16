@@ -24,7 +24,7 @@
               :stapel-art="ergebnisAndStapel.stapelArt"
               :ergebnis="ergebnisAndStapel.ergebnis"
               :index="index + 1"
-              @selectionChanged="
+              @selection-changed="
                 onGueltigkeitOfRowChanged($event, ergebnisAndStapel)
               "
             />

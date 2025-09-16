@@ -9,8 +9,8 @@
     </td>
     <td>
       <v-autocomplete
-        v-model="ergebnis.wahlvorschlagID"
         :ref="REF_AUTOCOMPLETE_WAHLVORSCHLAG"
+        v-model="modelValue.wahlvorschlagID"
         :items="wahlvorschlaege"
         :item-title="getWahlvorschlagTitle"
         item-value="identifikator"

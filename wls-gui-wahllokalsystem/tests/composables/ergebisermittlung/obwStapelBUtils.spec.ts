@@ -47,11 +47,12 @@ describe("obwStapelBUtils", () => {
   describe("ergebnisseStapelBLeer", () => {
     it("should_returnNumber_when_ergebnisseGiven", () => {
       const ergebnisToFind = 5;
+      const stapelArt = StapelArtEnum.ObwBLeer;
       const mockedErgebnisse = prepareErgebnisse()
         .bezirkUndWahlIDStapelart({
-          wahlID: "wahlid",
+          wahlID: wahlID,
           wahlbezirkID: "wahlbezirkid",
-          stapelArt: StapelArtEnum.ObwBLeer,
+          stapelArt: stapelArt,
         })
         .ergebnisse([prepareErgebnis().ergebnis(ergebnisToFind).build()])
         .build();
@@ -63,6 +64,9 @@ describe("obwStapelBUtils", () => {
       const result = unitUnderTest.ergebnisseStapelBLeer.value;
 
       expect(result).toStrictEqual(ergebnisToFind);
+      expect(
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined
+      ).toHaveBeenCalledWith(wahlID, stapelArt);
     });
 
     it("should_returnUndefined_when_noErgebnisseGiven", () => {
@@ -73,17 +77,21 @@ describe("obwStapelBUtils", () => {
       const result = unitUnderTest.ergebnisseStapelBLeer.value;
 
       expect(result).toStrictEqual(undefined);
+      expect(
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined
+      ).toHaveBeenCalledWith(wahlID, StapelArtEnum.ObwBLeer);
     });
   });
 
   describe("ergebnisseStapelBUngekennzeichnet", () => {
     it("should_returnNumber_when_ergebnisseGiven", () => {
       const ergebnisToFind = 9;
+      const stapelArt = StapelArtEnum.ObwBUngekennzeichnet;
       const mockedErgebnisse = prepareErgebnisse()
         .bezirkUndWahlIDStapelart({
-          wahlID: "wahlid",
+          wahlID: wahlID,
           wahlbezirkID: "wahlbezirkid",
-          stapelArt: StapelArtEnum.ObwBUngekennzeichnet,
+          stapelArt: stapelArt,
         })
         .ergebnisse([prepareErgebnis().ergebnis(ergebnisToFind).build()])
         .build();
@@ -95,6 +103,9 @@ describe("obwStapelBUtils", () => {
       const result = unitUnderTest.ergebnisseStapelBUngekennzeichnet.value;
 
       expect(result).toStrictEqual(ergebnisToFind);
+      expect(
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined
+      ).toHaveBeenCalledWith(wahlID, stapelArt);
     });
 
     it("should_returnUndefined_when_noErgebnisseGiven", () => {
@@ -105,6 +116,9 @@ describe("obwStapelBUtils", () => {
       const result = unitUnderTest.ergebnisseStapelBUngekennzeichnet.value;
 
       expect(result).toStrictEqual(undefined);
+      expect(
+        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined
+      ).toHaveBeenCalledWith(wahlID, StapelArtEnum.ObwBUngekennzeichnet);
     });
   });
 

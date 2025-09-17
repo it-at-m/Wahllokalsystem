@@ -83,18 +83,16 @@ function onModelValueStapelBChanged(
   stapelArt: StapelArtEnum,
   newValue?: number | null | undefined
 ) {
-  if (newValue !== undefined) {
-    const ergebnis: Ergebnis = {
-      wahlvorschlagID: null,
-      kandidatID: null,
-      wahlvorschlagsOrdnungszahl: null,
-      ergebnis: newValue,
-      numIndex: null,
-    };
-    findAndUpdateErgebnisseByWahlIdAndStapelArt(props.wahlId, stapelArt, [
-      ergebnis,
-    ]);
-  }
+  const ergebnis: Ergebnis = {
+    wahlvorschlagID: null,
+    kandidatID: null,
+    wahlvorschlagsOrdnungszahl: null,
+    ergebnis: newValue ?? null,
+    numIndex: null,
+  };
+  findAndUpdateErgebnisseByWahlIdAndStapelArt(props.wahlId, stapelArt, [
+    ergebnis,
+  ]);
 }
 
 function onSaveAnzahlStimmzettelClicked() {

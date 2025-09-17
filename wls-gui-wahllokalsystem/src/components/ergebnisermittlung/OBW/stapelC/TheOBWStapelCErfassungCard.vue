@@ -4,21 +4,23 @@
       Stapel c - Stimmzettel, die Anlass zu Bedenken geben
     </v-card-title>
     <v-card-text>
-      <div class="d-flex">
-        <base-number-input
-          :model-value="countRows"
-          :rules="[minNumber(0), maxNumber(9999), required]"
-          label="Anzahl"
-          max-width="15rem"
-        />
-        <v-btn
-          active
-          :disabled="isApplyRowCountDisabled"
-          class="ml-4 mt-3"
-          @click="onApplyRowCountClicked"
-          >Übernehmen</v-btn
-        >
-      </div>
+      <v-form v-model="isChangeRowCountFormValid">
+        <div class="d-flex">
+          <base-number-input
+            v-model="countRows"
+            :rules="[minNumber(0), maxNumber(9999), required]"
+            label="Anzahl"
+            max-width="15rem"
+          />
+          <v-btn
+            active
+            :disabled="isApplyRowCountDisabled"
+            class="ml-4 mt-3"
+            @click="onApplyRowCountClicked"
+            >Übernehmen</v-btn
+          >
+        </div>
+      </v-form>
       <v-form v-model="isFormValid">
         <v-table>
           <thead>
@@ -64,7 +66,7 @@ import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAn
 import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnisermittlung/ErgebnisWithNumIndexAndStapel.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -80,6 +82,10 @@ const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { minNumber, maxNumber, required } = useRules();
 
 const {
+  addGueltigErgebnisse,
+  deleteErgebnisseWithNumIndexAbove,
+  getMaxNumIndex,
+  getMaxNumIndexWithValueSet,
   stapelCUngueltigErgebnisse,
   stapelCGueltigErgebnisse,
   switchStapelCOfErgebnis,
@@ -108,6 +114,7 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
 });
 
 const isFormValid = ref<boolean | null>(null);
+const isChangeRowCountFormValid = ref<boolean | null>(null);
 const countRows = ref<number | null>(null);
 
 const areStapelCGueltigeErgebnisseValid = computed(() =>
@@ -118,10 +125,41 @@ const areStapelCGueltigeErgebnisseValid = computed(() =>
 const isApplyRowCountDisabled = computed(
   () =>
     stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value ||
-    countRows.value === null
+    countRows.value === null ||
+    isChangeRowCountFormValid.value !== true
 );
 
-function onApplyRowCountClicked() {}
+onMounted(() => {
+  countRows.value = stapelCErgebnisseOrdereByNumIndex.value.length;
+});
+
+function onApplyRowCountClicked() {
+  if (countRows.value === null || countRows.value === undefined) {
+    return;
+  }
+
+  if (countRows.value < (getMaxNumIndexWithValueSet() || 0)) {
+    console.log(`kann nicht reduziert werden`);
+    return;
+  }
+
+  if (countRows.value !== stapelCErgebnisseOrdereByNumIndex.value.length) {
+    const maxUsedNumIndex = getMaxNumIndex();
+    if (maxUsedNumIndex === null) {
+      console.log(`increasing countRows to ${countRows.value}`);
+      addGueltigErgebnisse(countRows.value);
+    } else if (countRows.value > maxUsedNumIndex) {
+      console.log(
+        `increasing countRows to ${countRows.value}`,
+        maxUsedNumIndex
+      );
+      addGueltigErgebnisse(countRows.value);
+    } else {
+      console.log(`decreasing countRows to ${countRows.value}`);
+      deleteErgebnisseWithNumIndexAbove(countRows.value);
+    }
+  }
+}
 
 function onSaveClicked() {
   ergebnismeldungsStore.sendErgebnisseByStapelArt(

@@ -14,10 +14,20 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { generateRandomString, generateRandomNumber } =
+const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();
 
 export function useErgebnisseTestDataFactory() {
+  function createBezirkUndWahlIDStapelart(
+    stapelArt?: StapelArtEnum
+  ): BezirkUndWahlIDStapelArt {
+    return {
+      wahlID: generateRandomString(10),
+      wahlbezirkID: generateRandomString(5),
+      stapelArt: stapelArt ?? getRandomItem(Object.values(StapelArtEnum)),
+    };
+  }
+
   function createErgebnisseDTO(): ErgebnisseDTO {
     return {
       bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelartDTO(
@@ -38,7 +48,7 @@ export function useErgebnisseTestDataFactory() {
 
   function createErgebnisse(): Ergebnisse {
     return {
-      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelart(
+      bezirkUndWahlIDStapelart: createBezirkUndWahlIDStapelart(
         StapelArtEnum.ObwA
       ),
       ergebnisse: [createErgebnis(), createErgebnis()],
@@ -53,6 +63,12 @@ export function useErgebnisseTestDataFactory() {
       ergebnis: generateRandomNumber(2),
       numIndex: null,
     };
+  }
+
+  function prepareBezirkUndWahlIDStapelart(): Builder<BezirkUndWahlIDStapelArt> {
+    return proxyBuilder<BezirkUndWahlIDStapelArt>(
+      createBezirkUndWahlIDStapelart()
+    );
   }
 
   function prepareErgebnisseDTO(): Builder<ErgebnisseDTO> {
@@ -81,17 +97,9 @@ export function useErgebnisseTestDataFactory() {
     };
   }
 
-  function _createBezirkUndWahlIDStapelart(
-    stapelArt: StapelArtEnum
-  ): BezirkUndWahlIDStapelArt {
-    return {
-      wahlID: generateRandomString(10),
-      wahlbezirkID: generateRandomString(5),
-      stapelArt: stapelArt,
-    };
-  }
-
   return {
+    createBezirkUndWahlIDStapelart,
+    prepareBezirkUndWahlIDStapelart,
     createErgebnisseDTO,
     prepareErgebnisseDTO,
     createErgebnisDTO,

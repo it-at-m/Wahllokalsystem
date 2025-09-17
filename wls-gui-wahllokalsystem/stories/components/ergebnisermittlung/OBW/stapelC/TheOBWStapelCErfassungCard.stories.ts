@@ -2,8 +2,10 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 
 import TheOBWStapelCErfassungCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
+import pinia from "@/plugins/pinia";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -15,6 +17,16 @@ const { prepareKandidat, prepareWahlvorschlaege, prepareWahlvorschlag } =
 const meta = {
   component: TheOBWStapelCErfassungCard,
   args: {},
+  decorators: [
+    (story) => {
+      const pinia = createPinia();
+      setActivePinia(pinia);
+      return {
+        component: { story },
+        template: "<story />",
+      };
+    },
+  ],
 } satisfies Meta<typeof TheOBWStapelCErfassungCard>;
 
 const wahlID = "wahlID";
@@ -24,7 +36,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   async beforeEach() {
-    const ergebnismeldungsStore = useErgebnismeldungStore();
+    const ergebnismeldungsStore = useErgebnismeldungStore(pinia);
 
     ergebnismeldungsStore.ergebnisse = [
       prepareErgebnisse()
@@ -64,7 +76,7 @@ export const Default: Story = {
         .build(),
     ];
 
-    const wahlvorschlaegStore = useWahlvorschlaegeStore();
+    const wahlvorschlaegStore = useWahlvorschlaegeStore(pinia);
     wahlvorschlaegStore.wahlvorschlaege = [
       prepareWahlvorschlaege()
         .wahlID(wahlID)

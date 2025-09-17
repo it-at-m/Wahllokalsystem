@@ -142,6 +142,8 @@ describe("obwStapelBUtils", () => {
       { stapelBLeer: 0, stapelBUngekennzeichnet: 3, sum: 3 },
       { stapelBLeer: 4, stapelBUngekennzeichnet: 7, sum: 11 },
       { stapelBLeer: null, stapelBUngekennzeichnet: 17, sum: 17 },
+      { stapelBLeer: undefined, stapelBUngekennzeichnet: 17, sum: 17 },
+      { stapelBLeer: 8, stapelBUngekennzeichnet: null, sum: 8 },
       { stapelBLeer: 8, stapelBUngekennzeichnet: undefined, sum: 8 },
     ])(
       `should_returnSum'$sum'_when_ergebnisForStapelIs'$stapelBLeer'And'$stapelBUngekennzeichnet'`,

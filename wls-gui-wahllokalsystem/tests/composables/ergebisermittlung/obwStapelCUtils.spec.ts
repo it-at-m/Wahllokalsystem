@@ -465,9 +465,11 @@ describe("obwStapelCUtils", () => {
         .identifikator("wahlvorschlag3")
         .build();
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
-        prepareWahlvorschlaege().wahlvorschlaege(
-          new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
-        ).build
+        prepareWahlvorschlaege()
+          .wahlvorschlaege(
+            new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
+          )
+          .build()
       );
 
       const result = unitUnderTest.wahlvorschlaegeAndSumAboveZero.value;

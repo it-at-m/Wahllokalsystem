@@ -1,3 +1,5 @@
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
+
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -20,8 +22,14 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   }),
 }));
 
-const { generateRandomString } = useCommonTestDataFactory();
-const { createErgebnisse, prepareErgebnisse } = useErgebnisseTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
+const {
+  prepareErgebnis,
+  createErgebnisse,
+  prepareErgebnisse,
+  prepareBezirkUndWahlIDStapelart,
+} = useErgebnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
@@ -192,6 +200,107 @@ describe("ergebnismeldungStore.ts", () => {
       await expect(
         unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
+    });
+  });
+
+  describe("switchStapelOfErgebnis", () => {
+    it("should_switchStapelOfErgebnis_when_ergebnisseForStapelArtExist", () => {
+      const sourceStapelArt = StapelArtEnum.ObwA;
+      const keyForErgebnisse: BezirkUndWahlIDStapelArt =
+        prepareBezirkUndWahlIDStapelart().stapelArt(sourceStapelArt).build();
+      const numIndexOfItemToChange = generateRandomNumber(2);
+      const targetStapelArt = StapelArtEnum.SrwBawA;
+
+      const ergebnisToMove = prepareErgebnis()
+        .numIndex(numIndexOfItemToChange)
+        .build();
+      const ergebnisToIgnore = prepareErgebnis()
+        .numIndex(numIndexOfItemToChange + 1)
+        .build();
+      const sourceErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart(keyForErgebnisse)
+        .ergebnisse([ergebnisToIgnore, ergebnisToMove])
+        .build();
+      const targetErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          ...keyForErgebnisse,
+          stapelArt: targetStapelArt,
+        })
+        .ergebnisse([])
+        .build();
+      unitUnderTest.ergebnisse = [sourceErgebnisse, targetErgebnisse];
+
+      unitUnderTest.switchStapelOfErgebnis(
+        keyForErgebnisse,
+        numIndexOfItemToChange,
+        targetStapelArt
+      );
+
+      expect(sourceErgebnisse.ergebnisse).toStrictEqual([ergebnisToIgnore]);
+      expect(targetErgebnisse.ergebnisse).toStrictEqual([ergebnisToMove]);
+    });
+
+    it("should_createNewErgebnisse_when_ergebnisseForTargetStapelArtDoNotExist", () => {
+      const sourceStapelArt = StapelArtEnum.ObwA;
+      const keyForErgebnisse: BezirkUndWahlIDStapelArt =
+        prepareBezirkUndWahlIDStapelart().stapelArt(sourceStapelArt).build();
+      const numIndexOfItemToChange = generateRandomNumber(2);
+      const targetStapelArt = StapelArtEnum.SrwBawA;
+
+      const ergebnisToMove = prepareErgebnis()
+        .numIndex(numIndexOfItemToChange)
+        .build();
+      const ergebnisToIgnore = prepareErgebnis()
+        .numIndex(numIndexOfItemToChange + 1)
+        .build();
+      const sourceErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart(keyForErgebnisse)
+        .ergebnisse([ergebnisToIgnore, ergebnisToMove])
+        .build();
+      unitUnderTest.ergebnisse = [sourceErgebnisse];
+
+      unitUnderTest.switchStapelOfErgebnis(
+        keyForErgebnisse,
+        numIndexOfItemToChange,
+        targetStapelArt
+      );
+
+      expect(sourceErgebnisse.ergebnisse).toStrictEqual([ergebnisToIgnore]);
+      const createdErgebnisse = unitUnderTest.ergebnisse.find(
+        (ergebnisse) =>
+          ergebnisse.bezirkUndWahlIDStapelart.stapelArt === targetStapelArt
+      );
+      const expectedCreatedErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          ...keyForErgebnisse,
+          stapelArt: targetStapelArt,
+        })
+        .ergebnisse([ergebnisToMove])
+        .build();
+      expect(createdErgebnisse).toStrictEqual(expectedCreatedErgebnisse);
+    });
+
+    it("should_doNothing_when_sourceErgebnisseHasNoItemWithNumIndex", () => {
+      const sourceStapelArt = StapelArtEnum.ObwA;
+      const keyForErgebnisse: BezirkUndWahlIDStapelArt =
+        prepareBezirkUndWahlIDStapelart().stapelArt(sourceStapelArt).build();
+      const numIndex = generateRandomNumber(2);
+      const targetStapelArt = StapelArtEnum.SrwBawA;
+
+      const ergebnisToIgnore = prepareErgebnis().numIndex(numIndex).build();
+      const sourceErgebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart(keyForErgebnisse)
+        .ergebnisse([ergebnisToIgnore])
+        .build();
+      unitUnderTest.ergebnisse = [sourceErgebnisse];
+
+      unitUnderTest.switchStapelOfErgebnis(
+        keyForErgebnisse,
+        numIndex + 1,
+        targetStapelArt
+      );
+
+      expect(sourceErgebnisse.ergebnisse).toStrictEqual([ergebnisToIgnore]);
     });
   });
 });

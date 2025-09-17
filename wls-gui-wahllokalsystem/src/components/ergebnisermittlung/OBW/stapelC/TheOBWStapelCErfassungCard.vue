@@ -34,7 +34,10 @@
               v-for="(
                 ergebnisAndStapel, index
               ) in stapelCErgebnisseOrdereByNumIndex"
-              :key="index"
+              :key="
+                ergebnisAndStapel.ergebnis.numIndex ??
+                `${ergebnisAndStapel.stapelArt}-${index}`
+              "
               :wahlvorschlaege="wahlvorschlaege"
               :stapel-art="ergebnisAndStapel.stapelArt"
               :model-value="ergebnisAndStapel.ergebnis"
@@ -58,6 +61,7 @@
 
 <script setup lang="ts">
 import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
+import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnisermittlung/ErgebnisWithNumIndexAndStapel.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
 import { computed, ref } from "vue";
@@ -84,14 +88,6 @@ const {
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
 );
-
-interface ErgebnisWithNumIndexAndStapel extends ErgebnisAndStapelArt {
-  ergebnis: ErgebnisWithNumIndex;
-}
-
-interface ErgebnisWithNumIndex extends Ergebnis {
-  numIndex: number;
-}
 
 const props = defineProps({
   wahlID: {

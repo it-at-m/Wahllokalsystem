@@ -1,5 +1,4 @@
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -19,34 +18,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
-
-  function addErgebnis(key: BezirkUndWahlIDStapelArt, ergebnis: Ergebnis) {
-    const ergebnisseForKey = _getErgebnisseAndCreateIfMissing(key);
-    ergebnisseForKey.ergebnisse.push(ergebnis);
-  }
-
-  function deleteByNumIndexIfExists(
-    key: BezirkUndWahlIDStapelArt,
-    numIndex: number
-  ): boolean {
-    const ergebnisseForKey = getErgebnisseByWahlIdAndStapelartOrUndefined(
-      key.wahlID,
-      key.stapelArt
-    );
-    if (!ergebnisseForKey) {
-      return false;
-    }
-
-    const indexOfItemToDelete = ergebnisseForKey.ergebnisse.findIndex(
-      (ergebnis) => ergebnis.numIndex === numIndex
-    );
-    if (indexOfItemToDelete < 0) {
-      return false;
-    } else {
-      ergebnisseForKey.ergebnisse.splice(indexOfItemToDelete, 1);
-      return true;
-    }
-  }
 
   async function loadErgebnisseByStapelArt(
     wahlID: string,
@@ -153,8 +124,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   return {
     ergebnisse,
-    addErgebnis,
-    deleteByNumIndexIfExists,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,

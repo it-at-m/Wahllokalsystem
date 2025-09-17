@@ -111,23 +111,18 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     if (ergebnisseFound) {
       ergebnisseFound.ergebnisse = ergebnisList;
     } else {
-      if (
-        stapelArt === StapelArtEnum.ObwBLeer ||
-        stapelArt === StapelArtEnum.ObwBUngekennzeichnet
-      ) {
-        const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 
-        if (wahlbezirkID) {
-          const newErgebnisseToAdd: Ergebnisse = {
-            bezirkUndWahlIDStapelart: {
-              wahlID: wahlID,
-              wahlbezirkID: wahlbezirkID,
-              stapelArt: stapelArt,
-            },
-            ergebnisse: ergebnisList,
-          };
-          ergebnisse.value.push(newErgebnisseToAdd);
-        }
+      if (wahlbezirkID) {
+        const newErgebnisseToAdd: Ergebnisse = {
+          bezirkUndWahlIDStapelart: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+            stapelArt: stapelArt,
+          },
+          ergebnisse: ergebnisList,
+        };
+        ergebnisse.value.push(newErgebnisseToAdd);
       }
     }
   }

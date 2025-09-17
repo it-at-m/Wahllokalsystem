@@ -148,7 +148,14 @@ describe("ergebnismeldungStore.ts", () => {
 
       mockDefinitions.postErgebnisse.mockResolvedValue({});
 
-      await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt);
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
+      const saveErgebnissePromise = unitUnderTest.sendErgebnisseByStapelArt(
+        wahlID,
+        stapelArt
+      );
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(true);
+
+      await saveErgebnissePromise;
 
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],

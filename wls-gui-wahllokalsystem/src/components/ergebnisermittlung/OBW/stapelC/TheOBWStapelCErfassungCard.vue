@@ -4,6 +4,21 @@
       Stapel c - Stimmzettel, die Anlass zu Bedenken geben
     </v-card-title>
     <v-card-text>
+      <div class="d-flex">
+        <base-number-input
+          :model-value="countRows"
+          :rules="[minNumber(0), maxNumber(9999), required]"
+          label="Anzahl"
+          max-width="15rem"
+        />
+        <v-btn
+          active
+          :disabled="isApplyRowCountDisabled"
+          class="ml-4 mt-3"
+          @click="onApplyRowCountClicked"
+          >Übernehmen</v-btn
+        >
+      </div>
       <v-form v-model="isFormValid">
         <v-table>
           <thead>
@@ -48,7 +63,9 @@ import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
@@ -56,6 +73,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const ergebnismeldungsStore = useErgebnismeldungStore();
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
+const { minNumber, maxNumber, required } = useRules();
 
 const {
   stapelCUngueltigErgebnisse,
@@ -94,12 +112,20 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
 });
 
 const isFormValid = ref<boolean | null>(null);
+const countRows = ref<number | null>(null);
 
 const areStapelCGueltigeErgebnisseValid = computed(() =>
   stapelCGueltigErgebnisse.value.every(
     (value) => value.ergebnis.wahlvorschlagID !== null
   )
 );
+const isApplyRowCountDisabled = computed(
+  () =>
+    stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value ||
+    countRows.value === null
+);
+
+function onApplyRowCountClicked() {}
 
 function onSaveClicked() {
   ergebnismeldungsStore.sendErgebnisseByStapelArt(

@@ -19,7 +19,10 @@
               v-for="(
                 ergebnisAndStapel, index
               ) in stapelCErgebnisseOrdereByNumIndex"
-              :key="index"
+              :key="
+                ergebnisAndStapel.ergebnis.numIndex ??
+                `${ergebnisAndStapel.stapelArt}-${index}`
+              "
               :wahlvorschlaege="wahlvorschlaege"
               :stapel-art="ergebnisAndStapel.stapelArt"
               :model-value="ergebnisAndStapel.ergebnis"

@@ -264,6 +264,22 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       expect(unitUnderTest.ergebnisse.length).toStrictEqual(1);
+      expect(unitUnderTest.ergebnisse[0]).toStrictEqual({
+        bezirkUndWahlIDStapelart: {
+          stapelArt: stapelArt,
+          wahlID: wahlID,
+          wahlbezirkID: "wahlbezirkID",
+        },
+        ergebnisse: [
+          {
+            ergebnis: ergebnisAfterUpdating,
+            kandidatID: null,
+            numIndex: null,
+            wahlvorschlagID: null,
+            wahlvorschlagsOrdnungszahl: null,
+          },
+        ],
+      });
       expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
         ergebnisAfterUpdating
       );

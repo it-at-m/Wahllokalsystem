@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card v-if="wahl">
+    <v-card>
       <v-form v-model="stapelBInputsForm">
         <div v-if="!isUWB">
           <v-card-title>Leere Stimmzettelumschläge</v-card-title>
@@ -56,7 +56,6 @@ import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelBUtils } from "@/composables/ergebnisermittlung/obwStapelBUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { maxNumber, minNumber, required } = useRules();
@@ -65,7 +64,6 @@ const props = defineProps<{
   wahlId: string;
 }>();
 
-const { wahlenActions } = useWahlenStore();
 const { isUWB } = storeToRefs(useUserStore());
 const {
   sendErgebnisseByStapelArt,
@@ -74,8 +72,6 @@ const {
 const { isErgebnisseSaving } = storeToRefs(useErgebnismeldungStore());
 const { ergebnisseStapelBUngekennzeichnet, ergebnisseStapelBLeer, sumStapelB } =
   useOBWStapelBUtils(computed(() => props.wahlId));
-
-const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const stapelBInputsForm = ref<null | boolean>(null);
 

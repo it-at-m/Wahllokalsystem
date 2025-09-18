@@ -13,6 +13,7 @@ export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
 export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
 export const ROUTE_STIMMABGABEVERMERKE = "stimmabgabevermerke";
+export const ROUTE_WAHLSCHEINE = "wahlscheine";
 export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
 
 export const TOAST = "toast";

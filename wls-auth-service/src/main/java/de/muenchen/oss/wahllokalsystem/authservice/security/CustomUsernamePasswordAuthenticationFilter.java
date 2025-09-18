@@ -60,13 +60,13 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 
     private final UserService userService;
 
-    private final LoginInterceptorService loginInterceptorService;
+    private final LoginInterceptor loginInterceptor;
 
-    public CustomUsernamePasswordAuthenticationFilter(final UserService userService, final LoginInterceptorService loginInterceptorService,
+    public CustomUsernamePasswordAuthenticationFilter(final UserService userService, final LoginInterceptor loginInterceptor,
             final AuthenticationManager authenticationManager) {
         super(authenticationManager);
         this.userService = userService;
-        this.loginInterceptorService = loginInterceptorService;
+        this.loginInterceptor = loginInterceptor;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
         userService.resetFailAttempts(username);
 
         try {
-            loginInterceptorService.validateLoginOrThrow(principal);
+            loginInterceptor.validateLoginOrThrow(principal);
             logUserCustom("0", "benutzername=" + username + "|message=Der Benutzer hat sich erfolgreich am System angemeldet|", username);
             super.successfulAuthentication(request, response, chain, authResult);
         } catch (AuthenticationException e) {

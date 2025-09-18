@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.security;
+package de.muenchen.oss.wahllokalsystem.authservice.service;
 
 import java.time.LocalDateTime;
 

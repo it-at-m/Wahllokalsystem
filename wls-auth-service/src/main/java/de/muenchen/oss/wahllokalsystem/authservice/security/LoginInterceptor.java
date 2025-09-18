@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LoginInterceptorService {
+public class LoginInterceptor {
 
     private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
     private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();

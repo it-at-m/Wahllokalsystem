@@ -173,7 +173,7 @@ export function useOBWStapelCUtils(
       await savingGueltigPromise;
     } catch (error) {
       logError(
-        `speichern von Stapel ${StapelArtEnum.ObwCGueltig} fehlgeschlagen`,
+        `Speichern von Stapel ${StapelArtEnum.ObwCGueltig} fehlgeschlagen`,
         error
       );
     }
@@ -181,7 +181,7 @@ export function useOBWStapelCUtils(
       await savingUngueltigPromise;
     } catch (error) {
       logError(
-        `speichern von Stapel ${StapelArtEnum.ObwCUngueltig} fehlgeschlagen`,
+        `Speichern von Stapel ${StapelArtEnum.ObwCUngueltig} fehlgeschlagen`,
         error
       );
     }

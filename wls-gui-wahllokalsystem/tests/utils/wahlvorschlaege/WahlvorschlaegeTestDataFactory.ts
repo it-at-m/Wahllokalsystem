@@ -43,6 +43,10 @@ export function useWahlvorschlaegeTestDataFactory() {
     };
   }
 
+  function prepareKandidat() {
+    return proxyBuilder<Kandidat>(_createKandidat());
+  }
+
   function prepareWahlvorschlaege(): Builder<Wahlvorschlaege> {
     return proxyBuilder<Wahlvorschlaege>(createWahlvorschlaege());
   }
@@ -91,6 +95,7 @@ export function useWahlvorschlaegeTestDataFactory() {
     createWahlvorschlag,
     createWahlvorschlaege,
     createWahlvorschlaegeDto,
+    prepareKandidat,
     prepareWahlvorschlag,
     prepareWahlvorschlaege,
     prepareWahlvorschlaegeDto,

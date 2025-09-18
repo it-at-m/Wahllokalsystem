@@ -21,9 +21,11 @@
     <v-list-item title="Stapel b" />
     <v-list-item
       title="Stapel a"
-      :to="routeWithNameAndParams(ROUTE_STAPEL_A, {
-        wahlId: String(obwWahlID),
-      })"
+      :to="
+        routeWithNameAndParams(ROUTE_STAPEL_A, {
+          wahlId: String(obwWahlID),
+        })
+      "
     />
     <v-list-item title="Schnellmeldung" />
     <v-list-item title="Niederschrift" />

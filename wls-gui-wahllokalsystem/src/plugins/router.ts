@@ -6,7 +6,8 @@ import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
-  ROUTE_ERFASSUNG_WAHLBRIEFE, ROUTE_STAPEL_A,
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_STAPEL_A,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -18,6 +19,7 @@ import {
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
+import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -29,7 +31,6 @@ import UWBWaehlerverzeichnisView from "@/views/wahlhandlung/UWBWaehlerverzeichni
 import WahleroeffnungView from "@/views/wahlhandlung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
-import OWBStapelA from "@/views/auszaehlung/OWBStapelA.vue";
 
 const permitNavigationOnlyForWahlbezirksArtUwb = () => {
   const { isUWB } = storeToRefs(useUserStore());
@@ -108,7 +109,7 @@ const routes = [
   {
     path: "/stapelA/:wahlId",
     name: ROUTE_STAPEL_A,
-    component: OWBStapelA,
+    component: OWBStapelAView,
   },
   {
     path: "/:catchAll(.*)*",

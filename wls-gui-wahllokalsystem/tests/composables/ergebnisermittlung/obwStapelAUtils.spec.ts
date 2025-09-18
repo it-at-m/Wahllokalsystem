@@ -1,4 +1,5 @@
 import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
@@ -20,6 +21,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
   getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID: vi.fn(),
+  getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
 }));
 
 vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
@@ -32,12 +34,14 @@ vi.mock("@/stores/wahlvorschlaegeStore.ts", () => ({
   useWahlvorschlaegeStore: () => ({
     getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID:
       mockDefinitions.getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
+    getWahlvorschlaegeByWahlIDAndWahlbezirkID:
+      mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID,
   }),
 }));
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareErgebnisse, prepareErgebnis } = useErgebnisseTestDataFactory();
-const { createWahlvorschlag, prepareWahlvorschlag } =
+const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
 
 describe("obwStapelAUtils", () => {
@@ -151,9 +155,51 @@ describe("obwStapelAUtils", () => {
           testcaseArguments.mockedResult
         );
 
+        const mockedWahlvorschlag1 = prepareWahlvorschlag()
+          .identifikator("wahlvorschlag1")
+          .ordnungszahl(1)
+          .build();
+        const mockedWahlvorschlag2 = prepareWahlvorschlag()
+          .identifikator("wahlvorschlag2")
+          .ordnungszahl(2)
+          .build();
+        mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockImplementation(
+          () =>
+            prepareWahlvorschlaege()
+              .wahlvorschlaege(
+                new Set<Wahlvorschlag>([
+                  mockedWahlvorschlag1,
+                  mockedWahlvorschlag2,
+                ])
+              )
+              .build()
+        );
+
         const result = unitUnderTest.ergebnisseAndWahlvorschlaege.value;
 
-        expect(result).toStrictEqual([]);
+        const expectedResult: ErgebnisAndWahlvorschlag[] = [
+          {
+            ergebnis: {
+              numIndex: 1,
+              wahlvorschlagID: "wahlvorschlag1",
+              kandidatID: null,
+              wahlvorschlagsOrdnungszahl: 1,
+              ergebnis: null,
+            },
+            wahlvorschlag: mockedWahlvorschlag1,
+          },
+          {
+            ergebnis: {
+              numIndex: 2,
+              wahlvorschlagID: "wahlvorschlag2",
+              kandidatID: null,
+              wahlvorschlagsOrdnungszahl: 2,
+              ergebnis: null,
+            },
+            wahlvorschlag: mockedWahlvorschlag2,
+          },
+        ];
+        expect(result).toStrictEqual(expectedResult);
       }
     );
   });

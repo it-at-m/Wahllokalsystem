@@ -19,8 +19,10 @@ export function useOBWStapelAUtils(
   const { getErgebnisseByWahlIdAndStapelartOrUndefined } =
     useErgebnismeldungStore();
   const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
-  const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } =
-    useWahlvorschlaegeStore();
+  const {
+    getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
+    getWahlvorschlaegeByWahlIDAndWahlbezirkID,
+  } = useWahlvorschlaegeStore();
 
   const { logWarn } = useLogging("obwUtils");
 
@@ -78,6 +80,27 @@ export function useOBWStapelAUtils(
     ergebnisseForWahlAndStapel.forEach((ergebnis) => {
       _addWahlvorschlagForErgebnisIfExisting(ergebnis, result);
     });
+
+    if (result.length === 0) {
+      const wahlvorschlaege = getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+        wahlID.value,
+        wahlbezirkID.value
+      );
+      if (wahlvorschlaege) {
+        [...wahlvorschlaege.wahlvorschlaege].forEach((wahlvorschlag, index) => {
+          result.push({
+            wahlvorschlag,
+            ergebnis: {
+              numIndex: index + 1,
+              wahlvorschlagID: wahlvorschlag.identifikator,
+              kandidatID: null,
+              wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+              ergebnis: null,
+            },
+          });
+        });
+      }
+    }
 
     return result;
   }

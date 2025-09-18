@@ -60,17 +60,9 @@
         />
       </v-card-actions>
     </v-card>
-    <base-dialog
-      :visible="isConfirmDialogVisible"
-      :dialogtitle="CONFIRM_DIALOG_TITLE"
-      confirmtext="Hinweis schließen"
-      icon="$information"
-      @confirm="onConfirmDialogConfirmClicked"
-    >
-      Sie haben die Anzahl der bedenklichen Stimmzettel verändert. Zeilen können
-      nur gelöscht werden, wenn für einen Stimmzettel noch kein Beschluss im
-      System gespeichert worden ist. Bitte überprüfen Sie Ihre Eingaben.
-    </base-dialog>
+    <the-o-b-w-stapel-c-deletion-denied-dialog
+      :ref="REF_DELETION_DENIED_DIALOG"
+    />
   </div>
 </template>
 
@@ -79,23 +71,23 @@ import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAn
 import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnisermittlung/ErgebnisWithNumIndexAndStapel.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, useTemplateRef } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
+import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const CONFIRM_DIALOG_TITLE = "Reduzierung der Anzahl bedenklicher Stimmzettel";
-
 const ergebnismeldungsStore = useErgebnismeldungStore();
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { minNumber, maxNumber, required } = useRules();
+
+const REF_DELETION_DENIED_DIALOG = "refDeletionDeniedDialog";
 
 const {
   addGueltigErgebnisse,
@@ -130,9 +122,11 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
 });
 
 const isFormValid = ref<boolean | null>(null);
-const isConfirmDialogVisible = ref(false);
 const isChangeRowCountFormValid = ref<boolean | null>(null);
 const countRows = ref<number | null>(null);
+const templateRefDeletionDeniedDialog = useTemplateRef<
+  typeof TheOBWStapelCDeletionDeniedDialog
+>(REF_DELETION_DENIED_DIALOG);
 
 const areStapelCGueltigeErgebnisseValid = computed(() =>
   stapelCGueltigErgebnisse.value.every(
@@ -156,7 +150,7 @@ function onApplyRowCountClicked() {
   }
 
   if (countRows.value < (getMaxNumIndexWithValueSet() || 0)) {
-    showConfirmDialog();
+    templateRefDeletionDeniedDialog.value?.showDialog();
     return;
   }
 
@@ -170,10 +164,6 @@ function onApplyRowCountClicked() {
       removeErgebnisseWithNumIndexAbove(countRows.value);
     }
   }
-}
-
-function onConfirmDialogConfirmClicked() {
-  hideConfirmDialog();
 }
 
 function onSaveClicked() {
@@ -208,10 +198,6 @@ function hasErgebnisNumIndex(
   return ergebnisAndStapelArt.ergebnis.numIndex !== null;
 }
 
-function hideConfirmDialog() {
-  isConfirmDialogVisible.value = false;
-}
-
 function removeWahlvorschlagIDIfNewStapelIsCUngueltig(
   ergebnis: Ergebnis,
   isNewStapelCUngueltig: boolean
@@ -219,9 +205,5 @@ function removeWahlvorschlagIDIfNewStapelIsCUngueltig(
   if (isNewStapelCUngueltig) {
     ergebnis.wahlvorschlagID = null;
   }
-}
-
-function showConfirmDialog() {
-  isConfirmDialogVisible.value = true;
 }
 </script>

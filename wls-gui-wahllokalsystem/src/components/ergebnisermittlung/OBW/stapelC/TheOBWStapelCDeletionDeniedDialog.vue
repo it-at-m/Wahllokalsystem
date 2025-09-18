@@ -31,5 +31,3 @@ function showDialog() {
   isConfirmDialogVisible.value = true;
 }
 </script>
-
-<style scoped></style>

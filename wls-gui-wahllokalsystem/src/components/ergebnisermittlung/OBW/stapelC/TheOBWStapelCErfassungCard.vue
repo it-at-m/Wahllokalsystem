@@ -56,6 +56,7 @@
       <v-card-actions>
         <base-button-save
           :disabled="!areStapelCGueltigeErgebnisseValid"
+          :loading="isSaving"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -80,10 +81,7 @@ import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/O
 import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const ergebnismeldungsStore = useErgebnismeldungStore();
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { minNumber, maxNumber, required } = useRules();
 
@@ -91,9 +89,11 @@ const REF_DELETION_DENIED_DIALOG = "refDeletionDeniedDialog";
 
 const {
   addGueltigErgebnisse,
+  isSaving,
   removeErgebnisseWithNumIndexAbove,
   getMaxNumIndex,
   getMaxNumIndexWithValueSet,
+  saveErgebnisse,
   stapelCUngueltigErgebnisse,
   stapelCGueltigErgebnisse,
   switchStapelCOfErgebnis,
@@ -177,14 +177,7 @@ function onApplyRowCountClicked() {
 }
 
 function onSaveClicked() {
-  ergebnismeldungsStore.sendErgebnisseByStapelArt(
-    props.wahlID,
-    StapelArtEnum.ObwCGueltig
-  );
-  ergebnismeldungsStore.sendErgebnisseByStapelArt(
-    props.wahlID,
-    StapelArtEnum.ObwCUngueltig
-  );
+  saveErgebnisse();
 }
 
 function onGueltigkeitOfRowChanged(

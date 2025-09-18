@@ -2,8 +2,9 @@ import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAn
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { ComputedRef } from "vue";
 
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useMathUtils } from "@/composables/common/mathUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
@@ -18,12 +19,16 @@ export function useOBWStapelCUtils(
     deleteErgebnisseWithNumIndexAbove,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
+    sendErgebnisseByStapelArt,
     switchStapelOfErgebnis,
   } = useErgebnismeldungStore();
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
   const { reduceToMaxOfNumIndex } = useErgebnisUtils();
   const { maxOfOptionalNumbers } = useMathUtils();
+  const { logError } = useLogging("obwStapelCUtils");
+
+  const isSaving = ref(false);
 
   const stapelCUngueltigErgebnisse: ComputedRef<ErgebnisAndStapelArt[]> =
     computed(
@@ -150,6 +155,40 @@ export function useOBWStapelCUtils(
     ]);
   }
 
+  async function saveErgebnisse() {
+    isSaving.value = true;
+
+    const savingGueltigPromise = sendErgebnisseByStapelArt(
+      wahlID.value,
+      StapelArtEnum.ObwCGueltig,
+      true
+    );
+    const savingUngueltigPromise = sendErgebnisseByStapelArt(
+      wahlID.value,
+      StapelArtEnum.ObwCUngueltig,
+      true
+    );
+
+    try {
+      await savingGueltigPromise;
+    } catch (error) {
+      logError(
+        `speichern von Stapel ${StapelArtEnum.ObwCGueltig} fehlgeschlagen`,
+        error
+      );
+    }
+    try {
+      await savingUngueltigPromise;
+    } catch (error) {
+      logError(
+        `speichern von Stapel ${StapelArtEnum.ObwCUngueltig} fehlgeschlagen`,
+        error
+      );
+    }
+
+    isSaving.value = false;
+  }
+
   function switchStapelCOfErgebnis(
     currentErgebnisAndStapel: {
       stapelArt: StapelArtEnum;
@@ -193,6 +232,7 @@ export function useOBWStapelCUtils(
   }
 
   return {
+    isSaving,
     stapelCUngueltigErgebnisse,
     stapelCUngueltigErgebnisseSum,
     stapelCGueltigErgebnisse,
@@ -202,6 +242,7 @@ export function useOBWStapelCUtils(
     totalSum,
     addGueltigErgebnisse,
     removeErgebnisseWithNumIndexAbove,
+    saveErgebnisse,
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,
     switchStapelCOfErgebnis,

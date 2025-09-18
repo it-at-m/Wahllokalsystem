@@ -1,7 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
-import de.muenchen.oss.wahllokalsystem.authservice.rest.OAuthServerSession;
-import de.muenchen.oss.wahllokalsystem.authservice.rest.OAuthServerSessions;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 import java.util.ArrayList;

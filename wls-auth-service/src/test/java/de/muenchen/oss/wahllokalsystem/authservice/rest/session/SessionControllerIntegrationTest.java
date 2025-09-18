@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.authservice.rest.OAuthServerSessions;
+import de.muenchen.oss.wahllokalsystem.authservice.service.OAuthServerSessions;
 import de.muenchen.oss.wahllokalsystem.authservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;

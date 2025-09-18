@@ -282,7 +282,7 @@ Stapel für die **Oberbürgermeisterwahl**:
   | Stapel               | Beschreibung                                                  | Anmerkung |
   |----------------------|---------------------------------------------------------------|-----------|
   | `A`                  | Zweifelsfrei gültige Stimmen                                  |           |
-  | `B_Leer`             | Zweifelsfrei ungültige Stimmen: Leere Stimmzettel             | nur BWB   |
+  | `B_Leer`             | Zweifelsfrei ungültige Stimmen: Leere Stimmzettelumschläge    | nur BWB   |
   | `B_Ungekennzeichnet` | Zweifelsfrei ungültige Stimmen: Ungekennzeichnete Stimmzettel |           |
   | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
   | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |

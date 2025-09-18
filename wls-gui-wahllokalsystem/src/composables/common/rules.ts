@@ -1,6 +1,8 @@
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
 const { createTodayWithTime } = useDateTimeUtils();
+const { toGermanDate } = useDateTimeFormatter();
 
 export function useRules() {
   /* eslint-disable */
@@ -39,6 +41,13 @@ export function useRules() {
     createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
     `Eingabe muss kleiner oder gleich ${compareValue} sein.`;
 
+  const dateNotInFuture = (value: string) =>
+    new Date(value) <= new Date() || `Datum darf nicht in der Zukunft liegen.`;
+
+  const dateGreaterOrEqual = (compareValue: string) => (value: string) =>
+    new Date(value) >= new Date(compareValue) ||
+    `Datum muss größer oder gleich ${toGermanDate(compareValue)} sein.`;
+
   return {
     required,
     maxLength,
@@ -48,5 +57,7 @@ export function useRules() {
     timeNotInFuture,
     timeGreaterOrEqual,
     timeLessOrEqual,
+    dateNotInFuture,
+    dateGreaterOrEqual,
   };
 }

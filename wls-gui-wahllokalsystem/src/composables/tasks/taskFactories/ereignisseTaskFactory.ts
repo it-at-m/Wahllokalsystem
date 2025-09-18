@@ -5,10 +5,10 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 export function useEreignisseTaskFactory(): TaskFactory {
   function createTasks(): Task[] {
-    return [createTask()];
+    return [_createTask()];
   }
 
-  function createTask(): Task {
+  function _createTask(): Task {
     const { loadEreignisse } = useEreignisStore();
     return {
       name: "Ereignisse",

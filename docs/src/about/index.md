@@ -277,7 +277,7 @@ der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrz
 Für jede Wahl gibt es ein bestimmtes Zählverfahren, in welchem die Stimmzettel nach verschiedenen Stapeln sortiert
 und anschließend ausgezählt werden.
 
-**Stapel für die Oberbürgermeisterwahl**
+Stapel für die **Oberbürgermeisterwahl**:
 
   | Stapel               | Beschreibung                                                  | Anmerkung |
   |----------------------|---------------------------------------------------------------|-----------|

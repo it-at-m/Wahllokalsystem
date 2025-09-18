@@ -99,7 +99,7 @@ const { minNumber, maxNumber, required } = useRules();
 
 const {
   addGueltigErgebnisse,
-  deleteErgebnisseWithNumIndexAbove,
+  removeErgebnisseWithNumIndexAbove,
   getMaxNumIndex,
   getMaxNumIndexWithValueSet,
   stapelCUngueltigErgebnisse,
@@ -167,7 +167,7 @@ function onApplyRowCountClicked() {
     } else if (countRows.value > maxUsedNumIndex) {
       addGueltigErgebnisse(countRows.value);
     } else {
-      deleteErgebnisseWithNumIndexAbove(countRows.value);
+      removeErgebnisseWithNumIndexAbove(countRows.value);
     }
   }
 }

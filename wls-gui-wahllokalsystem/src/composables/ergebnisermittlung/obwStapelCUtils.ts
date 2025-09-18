@@ -15,6 +15,7 @@ export function useOBWStapelCUtils(
   wahlbezirkID: ComputedRef<string>
 ) {
   const {
+    deleteErgebnisseWithNumIndexAbove,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
     switchStapelOfErgebnis,
@@ -118,26 +119,17 @@ export function useOBWStapelCUtils(
     ergebnisseForAdding.ergebnisse.push(...itemsToAdd);
   }
 
-  function deleteErgebnisseWithNumIndexAbove(numIndex: number) {
-    const ergebnisseGueltigToUpdate = getErgebnisseAndCreateIfMissing({
-      wahlID: wahlID.value,
-      wahlbezirkID: wahlbezirkID.value,
-      stapelArt: StapelArtEnum.ObwCGueltig,
-    });
-    const gueltigeToKeep = ergebnisseGueltigToUpdate.ergebnisse.filter(
-      (ergebnis) => (ergebnis.numIndex || 0) <= numIndex
+  function removeErgebnisseWithNumIndexAbove(numIndex: number) {
+    deleteErgebnisseWithNumIndexAbove(
+      wahlID.value,
+      StapelArtEnum.ObwCGueltig,
+      numIndex
     );
-    ergebnisseGueltigToUpdate.ergebnisse = gueltigeToKeep;
-
-    const ergebnisseUngueltigToUpdate = getErgebnisseAndCreateIfMissing({
-      wahlID: wahlID.value,
-      wahlbezirkID: wahlbezirkID.value,
-      stapelArt: StapelArtEnum.ObwCUngueltig,
-    });
-    const ungueltigeToKeep = ergebnisseUngueltigToUpdate.ergebnisse.filter(
-      (ergebnis) => (ergebnis.numIndex || 0) <= numIndex
+    deleteErgebnisseWithNumIndexAbove(
+      wahlID.value,
+      StapelArtEnum.ObwCUngueltig,
+      numIndex
     );
-    ergebnisseUngueltigToUpdate.ergebnisse = ungueltigeToKeep;
   }
 
   function getMaxNumIndex() {
@@ -209,7 +201,7 @@ export function useOBWStapelCUtils(
     wahlvorschlaegeAndSumAboveZero,
     totalSum,
     addGueltigErgebnisse,
-    deleteErgebnisseWithNumIndexAbove,
+    removeErgebnisseWithNumIndexAbove,
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,
     switchStapelCOfErgebnis,

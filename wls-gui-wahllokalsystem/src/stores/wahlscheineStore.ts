@@ -23,6 +23,11 @@ export const useWahlscheineStore = defineStore(storeID, () => {
       const wahlscheineForWahl = await getWahlscheine(wahlID, wahlbezirkID);
       if (wahlscheineForWahl) {
         wahlscheine.value.push(wahlscheineForWahl);
+      } else {
+        wahlscheine.value.push({
+          bezirkUndWahlID: { wahlID, wahlbezirkID },
+          stimmabgabevermerke: 0,
+        });
       }
     } catch {
       throw Error(`Fehler beim Laden der Wahlscheine für WahlID: ${wahlID}`);

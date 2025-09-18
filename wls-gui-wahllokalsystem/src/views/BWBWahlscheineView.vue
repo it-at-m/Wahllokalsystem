@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Zählen der Wahlscheine</v-card-title>
     <v-card-text>
-      <v-form v-model="wahlscheineModel">
+      <v-form v-model="isWahlscheineFormValid">
         <div class="d-flex flex-wrap justify-start">
           <template
             v-for="wahlschein in wahlscheine"
@@ -25,7 +25,7 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        :disabled="!wahlscheineModel"
+        :disabled="!isWahlscheineFormValid"
         :loading="isWahlscheineSaving"
         @click="saveWahlscheine"
       />
@@ -33,6 +33,8 @@
   </v-card>
 </template>
 <script setup lang="ts">
+import type { Ref } from "vue";
+
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -47,5 +49,5 @@ const { minNumber, maxNumber, required } = useRules();
 
 const { saveWahlscheine } = useWahlscheineStore();
 const { wahlscheine, isWahlscheineSaving } = storeToRefs(useWahlscheineStore());
-const wahlscheineModel = ref(false);
+const isWahlscheineFormValid: Ref<null | boolean> = ref(null);
 </script>

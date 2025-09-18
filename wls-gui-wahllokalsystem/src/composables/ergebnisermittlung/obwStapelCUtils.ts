@@ -113,13 +113,11 @@ export function useOBWStapelCUtils(
     const lastUsedNumIndex = getMaxNumIndex() ?? 0;
     const itemsToAdd: Ergebnis[] = [];
     for (let i = 0; i < newAmount - lastUsedNumIndex; i++) {
-      itemsToAdd.push({
-        numIndex: lastUsedNumIndex + i + 1,
-        wahlvorschlagID: null,
-        ergebnis: 1,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl: null,
-      });
+      itemsToAdd.push(
+        _createNewErgebnisWithoutWahlvorschlagWithNumIndex(
+          lastUsedNumIndex + i + 1
+        )
+      );
     }
     ergebnisseForAdding.ergebnisse.push(...itemsToAdd);
   }
@@ -210,6 +208,18 @@ export function useOBWStapelCUtils(
       currentErgebnisAndStapel.ergebnis.numIndex,
       newStapelArt
     );
+  }
+
+  function _createNewErgebnisWithoutWahlvorschlagWithNumIndex(
+    numIndex: number
+  ): Ergebnis {
+    return {
+      numIndex: numIndex,
+      wahlvorschlagID: null,
+      ergebnis: 1,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: null,
+    };
   }
 
   function _getMaxNumIndexOfCUngueltig() {

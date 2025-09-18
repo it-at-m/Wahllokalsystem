@@ -1,5 +1,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 
+import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
@@ -29,7 +30,12 @@ describe("BaseEreignisRow.vue", () => {
   beforeEach(() => {
     wrapper = mount(BaseEreignisRow, {
       global: {
-        plugins: [vuetify],
+        plugins: [
+          createTestingPinia({
+            createSpy: vi.fn,
+          }),
+          vuetify,
+        ],
       },
       props: {
         lineNumber: 1,

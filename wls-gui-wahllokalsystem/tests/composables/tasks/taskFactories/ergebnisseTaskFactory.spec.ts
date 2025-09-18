@@ -96,7 +96,7 @@ describe("ergebnisseTaskFactory.ts", () => {
         stapelForWahl.forEach((stapel) => {
           expect(
             mockDefinitions.loadErgebnisseByStapelArt
-          ).toHaveBeenCalledWith(extendedWahlMetaData.wahlID, stapel);
+          ).toHaveBeenCalledWith(extendedWahlMetaData.wahlID, stapel, false);
         });
       }
     );

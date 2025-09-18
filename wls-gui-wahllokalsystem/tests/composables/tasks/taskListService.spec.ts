@@ -20,6 +20,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksStimmzettelumschlaege: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
   createTasksWaehler: vi.fn(),
+  createTasksEreignisse: vi.fn(),
 }));
 
 vi.mock(
@@ -90,6 +91,12 @@ vi.mock(
     })),
   })
 );
+
+vi.mock("@/composables/tasks/taskFactories/ereignisseTaskFactory.ts", () => ({
+  useEreignisseTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksEreignisse,
+  })),
+}));
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
@@ -188,6 +195,9 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksWaehler.mockReturnValue([
         { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
       ]);
+      mockDefinitions.createTasksEreignisse.mockReturnValue([
+        { name: "Ereignisse", callback: () => Promise.resolve() },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -203,6 +213,7 @@ describe("taskListService.ts", () => {
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
         "Stimmzettel für " + mockedWahl.name,
         "Wahlbeteiligung",
+        "Ereignisse",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -222,6 +233,7 @@ describe("taskListService.ts", () => {
         mockDefinitions.createTasksStimmzettelumschlaege
       ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksEreignisse).toHaveBeenCalled();
     });
   });
 });

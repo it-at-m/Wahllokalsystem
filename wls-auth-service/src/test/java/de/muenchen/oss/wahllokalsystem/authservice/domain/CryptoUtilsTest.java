@@ -84,7 +84,7 @@ class CryptoUtilsTest {
         }
 
         @ParameterizedTest
-        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.domain.CryptoUtilsTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val valueToEncrypt = "hello world";
 
@@ -129,7 +129,7 @@ class CryptoUtilsTest {
         }
 
         @ParameterizedTest
-        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.domain.CryptoUtilsTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val encryptedValue = "the encrypted value";
             val encryptedValueAsBase64WithPrefix = ENCRYPTION_PREFIX + Base64.getEncoder().encodeToString(encryptedValue.getBytes());

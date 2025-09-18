@@ -9,10 +9,10 @@ import de.muenchen.oss.wahllokalsystem.authservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Authority;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.CryptoUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -63,7 +63,7 @@ class WahllokalBenutzerControllerIntegrationTest {
     TransactionTemplate transactionTemplate;
 
     @Autowired
-    CryptoService cryptoService;
+    CryptoUtils cryptoUtils;
 
     @AfterEach
     void teardown() {
@@ -93,8 +93,8 @@ class WahllokalBenutzerControllerIntegrationTest {
             val result = mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
 
             final List<User> persistedUsers = (List) entityManager.createQuery("SELECT u FROM User u").getResultList();
-            val username1 = cryptoService.decrypt(persistedUsers.get(0).getUsername());
-            val username2 = cryptoService.decrypt(persistedUsers.get(1).getUsername());
+            val username1 = cryptoUtils.decrypt(persistedUsers.get(0).getUsername());
+            val username2 = cryptoUtils.decrypt(persistedUsers.get(1).getUsername());
             val expectedResult = username1 + "\r\n" + username2;
 
             Assertions.assertThat(persistedUsers).hasSize(2);

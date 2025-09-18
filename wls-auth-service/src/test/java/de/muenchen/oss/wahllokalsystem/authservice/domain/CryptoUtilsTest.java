@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.service;
+package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
 import de.muenchen.oss.wahllokalsystem.authservice.rest.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class CryptoServiceTest {
+class CryptoUtilsTest {
 
     private static final String ENCRYPTION_PREFIX = "encryptionPrefix";
 
@@ -35,7 +35,7 @@ class CryptoServiceTest {
     Cipher cipher;
 
     @InjectMocks
-    CryptoService unitUnderTest;
+    CryptoUtils unitUnderTest;
 
     @BeforeEach
     void setup() {

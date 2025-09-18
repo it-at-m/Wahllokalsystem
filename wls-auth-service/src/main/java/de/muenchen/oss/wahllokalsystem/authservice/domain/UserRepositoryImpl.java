@@ -3,7 +3,6 @@
  */
 package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.util.Collection;
@@ -26,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final int FIVE_MINUTES_IN_MILLIS = 5 * 60 * 1000;
 
-    private final CryptoService cryptoService;
+    private final CryptoUtils cryptoUtils;
     private final CrudUserRepository userRepository;
 
     @PostConstruct
@@ -69,17 +68,17 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public Optional<User> findByUsername(final String username) {
-        String encrypted = cryptoService.encrypt(username);
+        String encrypted = cryptoUtils.encrypt(username);
         return userRepository.findByUsername(encrypted).map(this::decrypt);
     }
 
     public boolean exists(final String username) {
-        val encryptedUsername = cryptoService.encrypt(username);
+        val encryptedUsername = cryptoUtils.encrypt(username);
         return userRepository.existsByUsername(encryptedUsername);
     }
 
     public boolean isLocked(final String username) {
-        val encryptedUsername = cryptoService.encrypt(username);
+        val encryptedUsername = cryptoUtils.encrypt(username);
         return userRepository.countUsersLockedByUsername(encryptedUsername) > 0;
     }
 
@@ -89,7 +88,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private void encryptUsernames() {
         val newEncryptedUsers = userRepository.findAll().stream()
-                .filter(user -> !cryptoService.isEncrypted(user.getUsername()))
+                .filter(user -> !cryptoUtils.isEncrypted(user.getUsername()))
                 .peek(this::encrypt)
                 .toList();
 
@@ -102,7 +101,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (user == null) return null;
 
         val userNameToEncrypt = user.getUsername();
-        val encryptedUsername = cryptoService.encrypt(userNameToEncrypt);
+        val encryptedUsername = cryptoUtils.encrypt(userNameToEncrypt);
         user.setUsername(encryptedUsername);
         log.debug("encrypting: <{}> --> <{}>", userNameToEncrypt, encryptedUsername);
 
@@ -115,7 +114,7 @@ public class UserRepositoryImpl implements UserRepository {
         val username = decryptedUser.getUsername();
         log.debug("decrypting user <{}>...", username);
         if (username != null) {
-            decryptedUser.setUsername(cryptoService.decrypt(username));
+            decryptedUser.setUsername(cryptoUtils.decrypt(username));
         }
         return decryptedUser;
     }

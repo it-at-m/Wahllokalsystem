@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.authservice.domain;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
-import de.muenchen.oss.wahllokalsystem.authservice.service.CryptoService;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class UserRepositoryImplTest {
 
     @Mock
-    CryptoService cryptoService;
+    CryptoUtils cryptoUtils;
 
     @Mock
     CrudUserRepository userRepository;
@@ -46,9 +45,9 @@ class UserRepositoryImplTest {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findAll()).thenReturn(mockedUsersFromRepo);
-            Mockito.when(cryptoService.encrypt("user1")).thenReturn(mockedEncryptedUsername);
-            Mockito.when(cryptoService.encrypt("user2")).thenReturn(mockedEncryptedUsername);
-            Mockito.when(cryptoService.isEncrypted(any())).thenReturn(false);
+            Mockito.when(cryptoUtils.encrypt("user1")).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt("user2")).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.isEncrypted(any())).thenReturn(false);
 
             unitUnderTest.onInit();
 
@@ -62,7 +61,7 @@ class UserRepositoryImplTest {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findAll()).thenReturn(mockedUsersFromRepo);
-            Mockito.when(cryptoService.isEncrypted(any())).thenReturn(true);
+            Mockito.when(cryptoUtils.isEncrypted(any())).thenReturn(true);
 
             unitUnderTest.onInit();
 
@@ -78,9 +77,9 @@ class UserRepositoryImplTest {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findAll()).thenReturn(mockedUsersFromRepo);
-            Mockito.when(cryptoService.encrypt("user1")).thenReturn(mockedEncryptedUsername);
-            Mockito.when(cryptoService.encrypt("user2")).thenReturn(mockedEncryptedUsername);
-            Mockito.when(cryptoService.isEncrypted(any())).thenReturn(false);
+            Mockito.when(cryptoUtils.encrypt("user1")).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt("user2")).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.isEncrypted(any())).thenReturn(false);
 
             unitUnderTest.onSchedule();
 
@@ -94,7 +93,7 @@ class UserRepositoryImplTest {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findAll()).thenReturn(mockedUsersFromRepo);
-            Mockito.when(cryptoService.isEncrypted(any())).thenReturn(true);
+            Mockito.when(cryptoUtils.isEncrypted(any())).thenReturn(true);
 
             unitUnderTest.onSchedule();
 
@@ -113,8 +112,8 @@ class UserRepositoryImplTest {
             val mockedUsersFromRepo = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
 
             Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(mockedUsersFromRepo);
-            Mockito.when(cryptoService.decrypt("user1")).thenReturn(decryptedUsername);
-            Mockito.when(cryptoService.decrypt("user2")).thenReturn(decryptedUsername);
+            Mockito.when(cryptoUtils.decrypt("user1")).thenReturn(decryptedUsername);
+            Mockito.when(cryptoUtils.decrypt("user2")).thenReturn(decryptedUsername);
 
             val result = unitUnderTest.findByWahltagID(wahltagID);
 
@@ -143,7 +142,7 @@ class UserRepositoryImplTest {
             val mockedFoundUser = createUserWithUsername("user1");
 
             Mockito.when(userRepository.findById(oid)).thenReturn(Optional.of(mockedFoundUser));
-            Mockito.when(cryptoService.decrypt("user1")).thenReturn(mockedDecryptedUsername);
+            Mockito.when(cryptoUtils.decrypt("user1")).thenReturn(mockedDecryptedUsername);
 
             val result = unitUnderTest.findById(oid);
 
@@ -172,8 +171,8 @@ class UserRepositoryImplTest {
             val mockedEncryptedUsername1 = "encryptedUsername1";
             val mockedEncryptedUsername2 = "encryptedUsername2";
 
-            Mockito.when(cryptoService.encrypt(username1)).thenReturn(mockedEncryptedUsername1);
-            Mockito.when(cryptoService.encrypt(username2)).thenReturn(mockedEncryptedUsername2);
+            Mockito.when(cryptoUtils.encrypt(username1)).thenReturn(mockedEncryptedUsername1);
+            Mockito.when(cryptoUtils.encrypt(username2)).thenReturn(mockedEncryptedUsername2);
             val savedUsernames = new LinkedList<>();
             Mockito.doAnswer(invocation -> {
                 val users = (List<User>) invocation.getArgument(0, List.class);
@@ -196,10 +195,10 @@ class UserRepositoryImplTest {
             val mockedEncryptedUsername1 = "encryptedUsername1";
             val mockedEncryptedUsername2 = "encryptedUsername2";
 
-            Mockito.when(cryptoService.encrypt(username1)).thenReturn(mockedEncryptedUsername1);
-            Mockito.when(cryptoService.encrypt(username2)).thenReturn(mockedEncryptedUsername2);
-            Mockito.when(cryptoService.decrypt(mockedEncryptedUsername1)).thenReturn(username1);
-            Mockito.when(cryptoService.decrypt(mockedEncryptedUsername2)).thenReturn(username2);
+            Mockito.when(cryptoUtils.encrypt(username1)).thenReturn(mockedEncryptedUsername1);
+            Mockito.when(cryptoUtils.encrypt(username2)).thenReturn(mockedEncryptedUsername2);
+            Mockito.when(cryptoUtils.decrypt(mockedEncryptedUsername1)).thenReturn(username1);
+            Mockito.when(cryptoUtils.decrypt(mockedEncryptedUsername2)).thenReturn(username2);
             Mockito.when(userRepository.saveAll(usersToSave)).then(invocationOnMock -> invocationOnMock.getArgument(0, List.class));
 
             val result = unitUnderTest.saveAll(usersToSave);
@@ -218,7 +217,7 @@ class UserRepositoryImplTest {
             val userToSave = createUserWithUsername(username);
 
             val mockedEncryptedUsername1 = "encryptedUsername1";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername1);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername1);
 
             Mockito.when(userRepository.save(userToSave)).then(invocationOnMock -> {
                 val user = invocationOnMock.getArgument(0, User.class);
@@ -235,8 +234,8 @@ class UserRepositoryImplTest {
             val userToSave = createUserWithUsername(username);
 
             val mockedEncryptedUsername1 = "encryptedUsername1";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername1);
-            Mockito.when(cryptoService.decrypt(mockedEncryptedUsername1)).thenReturn(username);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername1);
+            Mockito.when(cryptoUtils.decrypt(mockedEncryptedUsername1)).thenReturn(username);
 
             Mockito.when(userRepository.save(userToSave)).then(invocationOnMock -> invocationOnMock.getArgument(0, User.class));
 
@@ -256,8 +255,8 @@ class UserRepositoryImplTest {
             val encryptedUsername = "encryptedUsername";
             val mockedUserFromRepo = createUserWithUsername(encryptedUsername);
 
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(encryptedUsername);
-            Mockito.when(cryptoService.decrypt(encryptedUsername)).thenReturn(username);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(encryptedUsername);
+            Mockito.when(cryptoUtils.decrypt(encryptedUsername)).thenReturn(username);
             Mockito.when(userRepository.findByUsername(encryptedUsername)).thenReturn(Optional.of(mockedUserFromRepo));
 
             val result = unitUnderTest.findByUsername(username);
@@ -271,7 +270,7 @@ class UserRepositoryImplTest {
 
             val encryptedUsername = "encryptedUsername";
 
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(encryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(encryptedUsername);
             Mockito.when(userRepository.findByUsername(encryptedUsername)).thenReturn(Optional.empty());
 
             val result = unitUnderTest.findByUsername(username);
@@ -288,7 +287,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
 
             unitUnderTest.exists(username);
 
@@ -300,7 +299,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
             Mockito.when(userRepository.existsByUsername(mockedEncryptedUsername)).thenReturn(true);
 
             Assertions.assertThat(unitUnderTest.exists(username)).isTrue();
@@ -311,7 +310,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
             Mockito.when(userRepository.existsByUsername(mockedEncryptedUsername)).thenReturn(false);
 
             Assertions.assertThat(unitUnderTest.exists(username)).isFalse();
@@ -326,7 +325,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
 
             unitUnderTest.isLocked(username);
 
@@ -338,7 +337,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
             Mockito.when(userRepository.countUsersLockedByUsername(mockedEncryptedUsername)).thenReturn(0L);
 
             val result = unitUnderTest.isLocked(username);
@@ -351,7 +350,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
             Mockito.when(userRepository.countUsersLockedByUsername(mockedEncryptedUsername)).thenReturn(1L);
 
             val result = unitUnderTest.isLocked(username);
@@ -364,7 +363,7 @@ class UserRepositoryImplTest {
             val username = "username";
 
             val mockedEncryptedUsername = "encryptedUsername";
-            Mockito.when(cryptoService.encrypt(username)).thenReturn(mockedEncryptedUsername);
+            Mockito.when(cryptoUtils.encrypt(username)).thenReturn(mockedEncryptedUsername);
             Mockito.when(userRepository.countUsersLockedByUsername(mockedEncryptedUsername)).thenReturn(2L);
 
             val result = unitUnderTest.isLocked(username);

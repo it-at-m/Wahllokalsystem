@@ -133,9 +133,12 @@ const areStapelCGueltigeErgebnisseValid = computed(() =>
     (value) => value.ergebnis.wahlvorschlagID !== null
   )
 );
+const isNewRowCountSameAsActualRowCount = computed(
+  () => stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value
+);
 const isApplyRowCountDisabled = computed(
   () =>
-    stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value ||
+    isNewRowCountSameAsActualRowCount.value ||
     countRows.value === null ||
     isChangeRowCountFormValid.value !== true
 );
@@ -144,17 +147,24 @@ onMounted(() => {
   countRows.value = stapelCErgebnisseOrdereByNumIndex.value.length;
 });
 
+function isTryingToRemoveNonEmptyValues() {
+  return (
+    countRows.value !== null &&
+    countRows.value < (getMaxNumIndexWithValueSet() || 0)
+  );
+}
+
 function onApplyRowCountClicked() {
   if (countRows.value === null || countRows.value === undefined) {
     return;
   }
 
-  if (countRows.value < (getMaxNumIndexWithValueSet() || 0)) {
+  if (isTryingToRemoveNonEmptyValues()) {
     templateRefDeletionDeniedDialog.value?.showDialog();
     return;
   }
 
-  if (countRows.value !== stapelCErgebnisseOrdereByNumIndex.value.length) {
+  if (!isNewRowCountSameAsActualRowCount.value) {
     const maxUsedNumIndex = getMaxNumIndex();
     if (maxUsedNumIndex === null) {
       addGueltigErgebnisse(countRows.value);

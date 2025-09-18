@@ -133,14 +133,14 @@ const areStapelCGueltigeErgebnisseValid = computed(() =>
     (value) => value.ergebnis.wahlvorschlagID !== null
   )
 );
-const isNewRowCountSameAsActualRowCount = computed(
-  () => stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value
-);
 const isApplyRowCountDisabled = computed(
   () =>
     isNewRowCountSameAsActualRowCount.value ||
     countRows.value === null ||
     isChangeRowCountFormValid.value !== true
+);
+const isNewRowCountSameAsActualRowCount = computed(
+  () => stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value
 );
 
 onMounted(() => {

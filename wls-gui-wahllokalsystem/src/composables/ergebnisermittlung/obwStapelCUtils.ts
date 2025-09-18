@@ -99,7 +99,6 @@ export function useOBWStapelCUtils(
   });
 
   function addGueltigErgebnisse(newAmount: number) {
-    console.log("addGueltigErgebnisse", newAmount);
     const ergebnisseForAdding = getErgebnisseAndCreateIfMissing({
       wahlID: wahlID.value,
       wahlbezirkID: wahlbezirkID.value,
@@ -120,7 +119,6 @@ export function useOBWStapelCUtils(
   }
 
   function deleteErgebnisseWithNumIndexAbove(numIndex: number) {
-    console.log("deleteErgebnisseWithNumIndexAbove", numIndex);
     const ergebnisseGueltigToUpdate = getErgebnisseAndCreateIfMissing({
       wahlID: wahlID.value,
       wahlbezirkID: wahlbezirkID.value,
@@ -129,7 +127,6 @@ export function useOBWStapelCUtils(
     const gueltigeToKeep = ergebnisseGueltigToUpdate.ergebnisse.filter(
       (ergebnis) => (ergebnis.numIndex || 0) <= numIndex
     );
-    console.log("gueltigeToKeep", gueltigeToKeep);
     ergebnisseGueltigToUpdate.ergebnisse = gueltigeToKeep;
 
     const ergebnisseUngueltigToUpdate = getErgebnisseAndCreateIfMissing({
@@ -140,7 +137,6 @@ export function useOBWStapelCUtils(
     const ungueltigeToKeep = ergebnisseUngueltigToUpdate.ergebnisse.filter(
       (ergebnis) => (ergebnis.numIndex || 0) <= numIndex
     );
-    console.log("ungueltigeToKeep", ungueltigeToKeep);
     ergebnisseUngueltigToUpdate.ergebnisse = ungueltigeToKeep;
   }
 

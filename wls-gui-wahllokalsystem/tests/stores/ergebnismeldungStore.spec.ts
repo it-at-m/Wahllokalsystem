@@ -157,6 +157,7 @@ describe("ergebnismeldungStore.ts", () => {
 
       await saveErgebnissePromise;
 
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],
       ]);

@@ -33,6 +33,154 @@ describe("wahlvorschlaegeStore.ts", () => {
     vi.clearAllMocks();
   });
 
+  describe("getWahlvorschlaegeByWahlIDAndWahlbezirkID", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeAreEmpty", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      unitUnderTest.wahlvorschlaege = [];
+
+      const wahlvorschlaege =
+        unitUnderTest.getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+          wahlID,
+          wahlbezirkID
+        );
+
+      expect(wahlvorschlaege).toStrictEqual(undefined);
+    });
+
+    it("should_returnUndefined_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      unitUnderTest.wahlvorschlaege = [
+        prepareWahlvorschlaege()
+          .wahlbezirkID(generateRandomString(1))
+          .wahlID(generateRandomString(1))
+          .build(),
+      ];
+
+      const result = unitUnderTest.getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+        wahlID,
+        wahlbezirkID
+      );
+
+      expect(result).toStrictEqual(undefined);
+    });
+
+    it("should_returnFirstMatchingWahlvorschlaege_when_wahlvorschlaegeHaveMatchingEntry", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlvorschlaegeToFind = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .build();
+
+      unitUnderTest.wahlvorschlaege = [
+        prepareWahlvorschlaege()
+          .wahlID(generateRandomString(1))
+          .wahlbezirkID(generateRandomString(1))
+          .build(),
+        wahlvorschlaegeToFind,
+        prepareWahlvorschlaege()
+          .wahlID(generateRandomString(1))
+          .wahlbezirkID(generateRandomString(1))
+          .build(),
+        prepareWahlvorschlaege()
+          .wahlID(wahlID)
+          .wahlbezirkID(wahlbezirkID)
+          .build(),
+      ];
+
+      const result = unitUnderTest.getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+        wahlID,
+        wahlbezirkID
+      );
+
+      expect(result).toStrictEqual(wahlvorschlaegeToFind);
+    });
+  });
+
+  describe("getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID", () => {
+    it("should_returnUndefined_when_wahlvorschlaegeAreEmpty", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlvorschlagID = generateRandomString(10);
+
+      unitUnderTest.wahlvorschlaege = [];
+
+      const wahlvorschlag =
+        unitUnderTest.getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
+          wahlID,
+          wahlbezirkID,
+          wahlvorschlagID
+        );
+
+      expect(wahlvorschlag).toStrictEqual(undefined);
+    });
+    it("should_returnUndefined_when_wahlvorschlaegeHaveNoMatchingEntry", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlvorschlagID = generateRandomString(10);
+
+      unitUnderTest.wahlvorschlaege = [
+        prepareWahlvorschlaege()
+          .wahlbezirkID(generateRandomString(1))
+          .wahlID(generateRandomString(1))
+          .wahlvorschlaege(
+            new Set([
+              prepareWahlvorschlag()
+                .identifikator(wahlvorschlagID + "sth more")
+                .build(),
+            ])
+          )
+          .build(),
+      ];
+
+      const wahlvorschlag =
+        unitUnderTest.getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
+          wahlID,
+          wahlbezirkID,
+          wahlvorschlagID
+        );
+
+      expect(wahlvorschlag).toStrictEqual(undefined);
+    });
+    it("should_returnFirstMatchingWahlvorschlaege_when_wahlvorschlaegeHaveMatchingEntry", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlvorschlagID = generateRandomString(10);
+
+      const wahlvorschlagToFind = prepareWahlvorschlag()
+        .identifikator(wahlvorschlagID)
+        .build();
+      unitUnderTest.wahlvorschlaege = [
+        prepareWahlvorschlaege()
+          .wahlbezirkID(wahlbezirkID)
+          .wahlID(wahlID)
+          .wahlvorschlaege(
+            new Set([
+              prepareWahlvorschlag()
+                .identifikator(wahlvorschlagID + "sth more")
+                .build(),
+              wahlvorschlagToFind,
+              prepareWahlvorschlag().identifikator(wahlvorschlagID).build(),
+            ])
+          )
+          .build(),
+      ];
+
+      const wahlvorschlag =
+        unitUnderTest.getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID(
+          wahlID,
+          wahlbezirkID,
+          wahlvorschlagID
+        );
+
+      expect(wahlvorschlag).toStrictEqual(wahlvorschlagToFind);
+    });
+  });
+
   describe("loadWahlvorschlaege", () => {
     it("should_loadWahlvorschlaege_when_called", async () => {
       const wahlID = generateRandomString(10);

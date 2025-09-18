@@ -148,8 +148,16 @@ describe("ergebnismeldungStore.ts", () => {
 
       mockDefinitions.postErgebnisse.mockResolvedValue({});
 
-      await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt);
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
+      const saveErgebnissePromise = unitUnderTest.sendErgebnisseByStapelArt(
+        wahlID,
+        stapelArt
+      );
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(true);
 
+      await saveErgebnissePromise;
+
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],
       ]);
@@ -257,6 +265,22 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       expect(unitUnderTest.ergebnisse.length).toStrictEqual(1);
+      expect(unitUnderTest.ergebnisse[0]).toStrictEqual({
+        bezirkUndWahlIDStapelart: {
+          stapelArt: stapelArt,
+          wahlID: wahlID,
+          wahlbezirkID: "wahlbezirkID",
+        },
+        ergebnisse: [
+          {
+            ergebnis: ergebnisAfterUpdating,
+            kandidatID: null,
+            numIndex: null,
+            wahlvorschlagID: null,
+            wahlvorschlagsOrdnungszahl: null,
+          },
+        ],
+      });
       expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
         ergebnisAfterUpdating
       );

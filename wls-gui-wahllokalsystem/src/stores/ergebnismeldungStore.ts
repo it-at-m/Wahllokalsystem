@@ -18,6 +18,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
+  const isErgebnisseSaving = ref<boolean>(false);
 
   async function loadErgebnisseByStapelArt(
     wahlID: string,
@@ -60,6 +61,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     sendNotification = true
   ) {
     try {
+      isErgebnisseSaving.value = true;
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
       const ergebnisseToSend = getErgebnisseByWahlIdAndStapelartOrUndefined(
         wahlID,
@@ -81,6 +83,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       }
     } catch {
       throw new Error("Fehler beim Speichern der Ergebnisse");
+    } finally {
+      isErgebnisseSaving.value = false;
     }
   }
 
@@ -107,29 +111,25 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     if (ergebnisseFound) {
       ergebnisseFound.ergebnisse = ergebnisList;
     } else {
-      if (
-        stapelArt === StapelArtEnum.ObwBLeer ||
-        stapelArt === StapelArtEnum.ObwBUngekennzeichnet
-      ) {
-        const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 
-        if (wahlbezirkID) {
-          const newErgebnisseToAdd: Ergebnisse = {
-            bezirkUndWahlIDStapelart: {
-              wahlID: wahlID,
-              wahlbezirkID: wahlbezirkID,
-              stapelArt: stapelArt,
-            },
-            ergebnisse: ergebnisList,
-          };
-          ergebnisse.value.push(newErgebnisseToAdd);
-        }
+      if (wahlbezirkID) {
+        const newErgebnisseToAdd: Ergebnisse = {
+          bezirkUndWahlIDStapelart: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+            stapelArt: stapelArt,
+          },
+          ergebnisse: ergebnisList,
+        };
+        ergebnisse.value.push(newErgebnisseToAdd);
       }
     }
   }
 
   return {
     ergebnisse,
+    isErgebnisseSaving,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,

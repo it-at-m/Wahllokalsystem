@@ -41,7 +41,16 @@ export const Default: Story = {
 
     const userStore = useUserStore(pinia);
     userStore.setUser(
-      prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: "wahlbezirkID",
+            wahlID: wahlId,
+            wahlnummer: "wahlnummer",
+          },
+        ])
+        .build()
     );
   },
   args: {
@@ -56,7 +65,16 @@ export const UserWithWahlbezirksartBwb: Story = {
 
     const userStore = useUserStore(pinia);
     userStore.setUser(
-      prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: "wahlbezirkID",
+            wahlID: wahlId,
+            wahlnummer: "wahlnummer",
+          },
+        ])
+        .build()
     );
 
     await flushPromises();

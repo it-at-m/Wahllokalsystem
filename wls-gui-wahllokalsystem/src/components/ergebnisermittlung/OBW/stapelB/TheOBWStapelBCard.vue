@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card v-if="wahl">
+    <v-card>
       <v-form v-model="stapelBInputsForm">
         <div v-if="!isUWB">
           <v-card-title>Leere Stimmzettelumschläge</v-card-title>
@@ -35,7 +35,7 @@
       </v-form>
       <v-card-actions>
         <base-button-save
-          :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
+          :loading="isErgebnisseSaving"
           :disabled="!stapelBInputsForm"
           @click="onSaveAnzahlStimmzettelClicked"
         />
@@ -56,7 +56,6 @@ import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelBUtils } from "@/composables/ergebnisermittlung/obwStapelBUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { maxNumber, minNumber, required } = useRules();
@@ -65,17 +64,14 @@ const props = defineProps<{
   wahlId: string;
 }>();
 
-const { wahlenActions } = useWahlenStore();
-const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { isUWB } = storeToRefs(useUserStore());
 const {
   sendErgebnisseByStapelArt,
   findAndUpdateErgebnisseByWahlIdAndStapelArt,
 } = useErgebnismeldungStore();
+const { isErgebnisseSaving } = storeToRefs(useErgebnismeldungStore());
 const { ergebnisseStapelBUngekennzeichnet, ergebnisseStapelBLeer, sumStapelB } =
   useOBWStapelBUtils(computed(() => props.wahlId));
-
-const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const stapelBInputsForm = ref<null | boolean>(null);
 
@@ -83,18 +79,16 @@ function onModelValueStapelBChanged(
   stapelArt: StapelArtEnum,
   newValue?: number | null | undefined
 ) {
-  if (newValue !== undefined) {
-    const ergebnis: Ergebnis = {
-      wahlvorschlagID: null,
-      kandidatID: null,
-      wahlvorschlagsOrdnungszahl: null,
-      ergebnis: newValue,
-      numIndex: null,
-    };
-    findAndUpdateErgebnisseByWahlIdAndStapelArt(props.wahlId, stapelArt, [
-      ergebnis,
-    ]);
-  }
+  const ergebnis: Ergebnis = {
+    wahlvorschlagID: null,
+    kandidatID: null,
+    wahlvorschlagsOrdnungszahl: null,
+    ergebnis: newValue ?? null,
+    numIndex: null,
+  };
+  findAndUpdateErgebnisseByWahlIdAndStapelArt(props.wahlId, stapelArt, [
+    ergebnis,
+  ]);
 }
 
 function onSaveAnzahlStimmzettelClicked() {

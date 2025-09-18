@@ -39,7 +39,7 @@ export function useErgebnisseTaskFactory(): TaskFactory {
   ): Task {
     return {
       callback: () =>
-        loadErgebnisseByStapelArt(taskFactoryMetaData.wahlID, stapelArt),
+        loadErgebnisseByStapelArt(taskFactoryMetaData.wahlID, stapelArt, false),
       name: `Stapel - ${stapelArt} für ${taskFactoryMetaData.wahlName}`,
     };
   }

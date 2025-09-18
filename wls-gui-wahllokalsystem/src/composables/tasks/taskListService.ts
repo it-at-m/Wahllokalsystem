@@ -2,6 +2,7 @@ import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaD
 
 import { storeToRefs } from "pinia";
 
+import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
@@ -38,6 +39,7 @@ export function useTaskListService() {
   const { createTasks: createStimmzettelumschlaegeTasks } =
     useStimmzettelumschlaegeTaskFactory();
   const { createTasks: createWaehlerTasks } = useWaehlerTaskFactory();
+  const { createTasks: createEreignisseTasks } = useEreignisseTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -50,6 +52,7 @@ export function useTaskListService() {
       ...createWahlscheineTasks(taskFactoryData),
       ...createWahlvorschlaegeTasks(taskFactoryData),
       ...createErgebnisseTasks(taskFactoryData),
+      ...createEreignisseTasks(taskFactoryData),
       ...createStimmabgabevermerkeTasks(taskFactoryData),
       ...createStimmzettelumschlaegeTasks(taskFactoryData),
       ...createWaehlerTasks(taskFactoryData),

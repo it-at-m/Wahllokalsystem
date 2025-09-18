@@ -64,7 +64,7 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt],
+        [wahlbezirkID, wahlID, stapelArt, true],
       ]);
       expect(unitUnderTest.ergebnisse).toStrictEqual([]);
     });
@@ -90,7 +90,7 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt);
 
       expect(mockDefinitions.getErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt],
+        [wahlbezirkID, wahlID, stapelArt, true],
       ]);
       expect(unitUnderTest.ergebnisse).toStrictEqual([mockedErgebnisseModel]);
     });
@@ -155,10 +155,18 @@ describe("ergebnismeldungStore.ts", () => {
 
       mockDefinitions.postErgebnisse.mockResolvedValue({});
 
-      await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt);
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
+      const saveErgebnissePromise = unitUnderTest.sendErgebnisseByStapelArt(
+        wahlID,
+        stapelArt
+      );
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(true);
 
+      await saveErgebnissePromise;
+
+      expect(unitUnderTest.isErgebnisseSaving).toStrictEqual(false);
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
-        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel],
+        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],
       ]);
       expect(mockDefinitions.postErgebnisse.mock.calls).not.toEqual([
         [
@@ -200,6 +208,89 @@ describe("ergebnismeldungStore.ts", () => {
       await expect(
         unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
+    });
+  });
+
+  describe("findAndUpdateErgebnisseByWahlIdAndStapelArt", () => {
+    it("should_updateErgebnisseForStapelB_when_existingErgebnisseFound", () => {
+      const wahlID = "id";
+      const stapelArt = StapelArtEnum.ObwBLeer;
+
+      const ergebnisBeforeUpdating = 5;
+      const ergebnisAfterUpdating = 38;
+
+      unitUnderTest.ergebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID: wahlID,
+            wahlbezirkID: "wahlbezirkID",
+            stapelArt: stapelArt,
+          })
+          .ergebnisse([
+            prepareErgebnis().ergebnis(ergebnisBeforeUpdating).build(),
+          ])
+          .build(),
+      ];
+
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisBeforeUpdating
+      );
+
+      unitUnderTest.findAndUpdateErgebnisseByWahlIdAndStapelArt(
+        wahlID,
+        stapelArt,
+        [prepareErgebnis().ergebnis(ergebnisAfterUpdating).build()]
+      );
+
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisAfterUpdating
+      );
+    });
+
+    it("should_createNewErgebnisseForStapelB_when_noExistingErgebnisseFound", () => {
+      const wahlID = "id";
+      const stapelArt = StapelArtEnum.ObwBLeer;
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: "wahlbezirkID", wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const ergebnisAfterUpdating = 38;
+
+      unitUnderTest.ergebnisse = [];
+
+      expect(unitUnderTest.ergebnisse.length).toStrictEqual(0);
+
+      unitUnderTest.findAndUpdateErgebnisseByWahlIdAndStapelArt(
+        wahlID,
+        stapelArt,
+        [prepareErgebnis().ergebnis(ergebnisAfterUpdating).build()]
+      );
+
+      expect(unitUnderTest.ergebnisse.length).toStrictEqual(1);
+      expect(unitUnderTest.ergebnisse[0]).toStrictEqual({
+        bezirkUndWahlIDStapelart: {
+          stapelArt: stapelArt,
+          wahlID: wahlID,
+          wahlbezirkID: "wahlbezirkID",
+        },
+        ergebnisse: [
+          {
+            ergebnis: ergebnisAfterUpdating,
+            kandidatID: null,
+            numIndex: null,
+            wahlvorschlagID: null,
+            wahlvorschlagsOrdnungszahl: null,
+          },
+        ],
+      });
+      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
+        ergebnisAfterUpdating
+      );
     });
   });
 

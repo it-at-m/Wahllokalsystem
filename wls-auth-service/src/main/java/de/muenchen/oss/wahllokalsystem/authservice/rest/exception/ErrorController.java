@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.exception;
+package de.muenchen.oss.wahllokalsystem.authservice.rest.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

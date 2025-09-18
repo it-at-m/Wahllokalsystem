@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
-import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WahltagClient;

@@ -1,4 +1,4 @@
-package de.muenchen.oss.wahllokalsystem.authservice.exception;
+package de.muenchen.oss.wahllokalsystem.authservice.rest.exception;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import lombok.AccessLevel;

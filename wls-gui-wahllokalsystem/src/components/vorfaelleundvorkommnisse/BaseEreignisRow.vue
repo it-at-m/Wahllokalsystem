@@ -6,15 +6,16 @@
       style="min-width: 380px; max-width: 380px"
     >
       <v-row>
-        <v-col cols="7"
-          ><base-date-input
+        <v-col cols="7">
+          <base-date-input
             v-model="dateOnly"
             :rules="[
               required,
               dateNotInFuture,
               dateGreaterOrEqual(currentUserWahltag),
             ]"
-        /></v-col>
+          />
+        </v-col>
         <v-col cols="5"><base-time-input v-model="timeOnly" /></v-col>
       </v-row>
     </v-col>

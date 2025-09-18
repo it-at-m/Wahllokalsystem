@@ -22,9 +22,10 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   }),
 }));
 
-const { generateRandomString, generateRandomNumber } =
+const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();
 const {
+  createErgebnis,
   prepareErgebnis,
   createErgebnisse,
   prepareErgebnisse,
@@ -42,6 +43,158 @@ describe("ergebnismeldungStore.ts", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe("deleteErgebnisseWithNumIndexAbove", () => {
+    it("should_removeItemsWithNumIndexAboveGivenValue_when_ergebnisseForWahlIdAndStapelArtExists", () => {
+      const wahlID = generateRandomString(10);
+      const stapelArt = getRandomItem(Object.values(StapelArtEnum));
+      const maxAllowedNumIndex = generateRandomNumber(3);
+
+      const itemToKeep1 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex - 1)
+        .build();
+      const itemToKeep2 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex)
+        .build();
+      const itemToDelete1 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex + 1)
+        .build();
+      const itemToDelete2 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex + generateRandomNumber(3))
+        .build();
+      unitUnderTest.ergebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID,
+            wahlbezirkID: generateRandomString(10),
+            stapelArt,
+          })
+          .ergebnisse([itemToKeep1, itemToDelete1, itemToDelete2, itemToKeep2])
+          .build(),
+      ];
+
+      unitUnderTest.deleteErgebnisseWithNumIndexAbove(
+        wahlID,
+        stapelArt,
+        maxAllowedNumIndex
+      );
+      expect(unitUnderTest.ergebnisse[0].ergebnisse).toStrictEqual([
+        itemToKeep1,
+        itemToKeep2,
+      ]);
+    });
+
+    it("should_doNothing_when_noErgebnisseForWahlIdAndStapelArtExists", () => {
+      const wahlID = generateRandomString(10);
+      const stapelArt = getRandomItem(Object.values(StapelArtEnum));
+      const maxAllowedNumIndex = generateRandomNumber(3);
+
+      unitUnderTest.ergebnisse = [];
+
+      unitUnderTest.deleteErgebnisseWithNumIndexAbove(
+        wahlID,
+        stapelArt,
+        maxAllowedNumIndex
+      );
+      expect(unitUnderTest.ergebnisse.length).toStrictEqual(0);
+    });
+
+    it("should_doNothing_when_noErgebnisseWithNumIndexAboveValueExists", () => {
+      const wahlID = generateRandomString(10);
+      const stapelArt = getRandomItem(Object.values(StapelArtEnum));
+      const maxAllowedNumIndex = generateRandomNumber(3);
+
+      const itemToKeep1 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex - 1)
+        .build();
+      const itemToKeep2 = prepareErgebnis()
+        .numIndex(maxAllowedNumIndex)
+        .build();
+      unitUnderTest.ergebnisse = [
+        prepareErgebnisse()
+          .bezirkUndWahlIDStapelart({
+            wahlID,
+            wahlbezirkID: generateRandomString(10),
+            stapelArt,
+          })
+          .ergebnisse([itemToKeep1, itemToKeep2])
+          .build(),
+      ];
+
+      unitUnderTest.deleteErgebnisseWithNumIndexAbove(
+        wahlID,
+        stapelArt,
+        maxAllowedNumIndex
+      );
+      expect(unitUnderTest.ergebnisse[0].ergebnisse).toStrictEqual([
+        itemToKeep1,
+        itemToKeep2,
+      ]);
+    });
+  });
+
+  describe("getErgebnisseAndCreateIfMissing", () => {
+    it("should_returnExistingErgebnisse_when_ergebnisseForWahlIdAndStapelartExist", () => {
+      const wahlID = generateRandomString(10);
+      const stapelArt = getRandomItem(Object.values(StapelArtEnum));
+
+      const ergebnisseToFind = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID,
+          wahlbezirkID: generateRandomString(10),
+          stapelArt,
+        })
+        .ergebnisse([createErgebnis(), createErgebnis()])
+        .build();
+      const ergebnisseToIgnore = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID + generateRandomString(2),
+          wahlbezirkID: generateRandomString(10),
+          stapelArt,
+        })
+        .ergebnisse([createErgebnis(), createErgebnis()])
+        .build();
+      unitUnderTest.ergebnisse = [ergebnisseToFind, ergebnisseToIgnore];
+
+      const result = unitUnderTest.getErgebnisseAndCreateIfMissing({
+        wahlID,
+        wahlbezirkID: generateRandomString(10),
+        stapelArt,
+      });
+      expect(result).toStrictEqual(ergebnisseToFind);
+    });
+
+    it("should_returnNewErgebnisse_when_ergebnisseForWahlIdAndStapelartDoesNotExist", () => {
+      const wahlID = generateRandomString(10);
+      const stapelArt = getRandomItem(Object.values(StapelArtEnum));
+
+      const ergebnisseToIgnore = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID + generateRandomString(2),
+          wahlbezirkID: generateRandomString(10),
+          stapelArt,
+        })
+        .ergebnisse([createErgebnis(), createErgebnis()])
+        .build();
+      unitUnderTest.ergebnisse = [ergebnisseToIgnore];
+
+      const wahlbezirkID = generateRandomString(10);
+      const result = unitUnderTest.getErgebnisseAndCreateIfMissing({
+        wahlID,
+        wahlbezirkID,
+        stapelArt,
+      });
+      const ergebnisseToCreat = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID,
+          wahlbezirkID,
+          stapelArt,
+        })
+        .ergebnisse([])
+        .build();
+      expect(result).toStrictEqual(ergebnisseToCreat);
+    });
   });
 
   describe("loadErgebnisseByStapelArt", () => {

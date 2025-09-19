@@ -54,7 +54,7 @@ describe("obwStapelCUtils", () => {
     };
   }
 
-  function initUnderUnderTest() {
+  function initUnitUnderTest() {
     unitUnderTest = useOBWStapelCUtils(
       computed(() => wahlID),
       computed(() => wahlbezirkID)
@@ -62,7 +62,7 @@ describe("obwStapelCUtils", () => {
   }
 
   beforeEach(() => {
-    initUnderUnderTest();
+    initUnitUnderTest();
   });
 
   afterEach(() => {

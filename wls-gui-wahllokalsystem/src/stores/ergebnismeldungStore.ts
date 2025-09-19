@@ -1,3 +1,4 @@
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
@@ -88,6 +89,27 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
+  function switchStapelOfErgebnis(
+    key: BezirkUndWahlIDStapelArt,
+    numIndex: number,
+    targetStapelArt: StapelArtEnum
+  ) {
+    const sourceErgebnisse = _getErgebnisseAndCreateIfMissing(key);
+    const targetErgebnisse = _getErgebnisseAndCreateIfMissing({
+      ...key,
+      stapelArt: targetStapelArt,
+    });
+
+    const indexOfErgebnisToMove = sourceErgebnisse.ergebnisse.findIndex(
+      (ergebnis) => ergebnis.numIndex === numIndex
+    );
+    if (indexOfErgebnisToMove >= 0) {
+      targetErgebnisse.ergebnisse.push(
+        ...sourceErgebnisse.ergebnisse.splice(indexOfErgebnisToMove, 1)
+      );
+    }
+  }
+
   function getErgebnisseByWahlIdAndStapelartOrUndefined(
     wahlID: string,
     stapelArt: StapelArtEnum
@@ -127,6 +149,21 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
+  function _getErgebnisseAndCreateIfMissing(key: BezirkUndWahlIDStapelArt) {
+    let ergebnisseForKey = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      key.wahlID,
+      key.stapelArt
+    );
+    if (!ergebnisseForKey) {
+      ergebnisseForKey = {
+        bezirkUndWahlIDStapelart: key,
+        ergebnisse: [],
+      };
+      ergebnisse.value.push(ergebnisseForKey);
+    }
+    return ergebnisseForKey;
+  }
+
   return {
     ergebnisse,
     isErgebnisseSaving,
@@ -134,6 +171,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,
+    switchStapelOfErgebnis,
   };
 });
 

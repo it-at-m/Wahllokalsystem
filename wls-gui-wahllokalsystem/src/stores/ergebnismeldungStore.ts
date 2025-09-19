@@ -1,5 +1,6 @@
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -7,6 +8,7 @@ import { ref } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 
@@ -17,10 +19,12 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
+  const isErgebnisseSaving = ref<boolean>(false);
 
   async function loadErgebnisseByStapelArt(
     wahlID: string,
-    stapelArt: StapelArtEnum
+    stapelArt: StapelArtEnum,
+    sendNotification = true
   ) {
     try {
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
@@ -29,7 +33,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         const loadedErgebnisse = await getErgebnisse(
           wahlbezirkID,
           wahlID,
-          stapelArt
+          stapelArt,
+          sendNotification
         );
         if (loadedErgebnisse) {
           const existingErgebnisseIndexForStapelart =
@@ -53,9 +58,11 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   async function sendErgebnisseByStapelArt(
     wahlID: string,
-    stapelArt: StapelArtEnum
+    stapelArt: StapelArtEnum,
+    sendNotification = true
   ) {
     try {
+      isErgebnisseSaving.value = true;
       const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
       const ergebnisseToSend = getErgebnisseByWahlIdAndStapelartOrUndefined(
         wahlID,
@@ -67,10 +74,39 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         ergebnisseToSend &&
         ergebnisseToSend.ergebnisse.length > 0
       ) {
-        await postErgebnisse(wahlbezirkID, wahlID, stapelArt, ergebnisseToSend);
+        await postErgebnisse(
+          wahlbezirkID,
+          wahlID,
+          stapelArt,
+          ergebnisseToSend,
+          sendNotification
+        );
       }
     } catch {
       throw new Error("Fehler beim Speichern der Ergebnisse");
+    } finally {
+      isErgebnisseSaving.value = false;
+    }
+  }
+
+  function switchStapelOfErgebnis(
+    key: BezirkUndWahlIDStapelArt,
+    numIndex: number,
+    targetStapelArt: StapelArtEnum
+  ) {
+    const sourceErgebnisse = _getErgebnisseAndCreateIfMissing(key);
+    const targetErgebnisse = _getErgebnisseAndCreateIfMissing({
+      ...key,
+      stapelArt: targetStapelArt,
+    });
+
+    const indexOfErgebnisToMove = sourceErgebnisse.ergebnisse.findIndex(
+      (ergebnis) => ergebnis.numIndex === numIndex
+    );
+    if (indexOfErgebnisToMove >= 0) {
+      targetErgebnisse.ergebnisse.push(
+        ...sourceErgebnisse.ergebnisse.splice(indexOfErgebnisToMove, 1)
+      );
     }
   }
 
@@ -85,11 +121,57 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     );
   }
 
+  function findAndUpdateErgebnisseByWahlIdAndStapelArt(
+    wahlID: string,
+    stapelArt: StapelArtEnum,
+    ergebnisList: Ergebnis[]
+  ) {
+    const ergebnisseFound = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      wahlID,
+      stapelArt
+    );
+    if (ergebnisseFound) {
+      ergebnisseFound.ergebnisse = ergebnisList;
+    } else {
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+
+      if (wahlbezirkID) {
+        const newErgebnisseToAdd: Ergebnisse = {
+          bezirkUndWahlIDStapelart: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+            stapelArt: stapelArt,
+          },
+          ergebnisse: ergebnisList,
+        };
+        ergebnisse.value.push(newErgebnisseToAdd);
+      }
+    }
+  }
+
+  function _getErgebnisseAndCreateIfMissing(key: BezirkUndWahlIDStapelArt) {
+    let ergebnisseForKey = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      key.wahlID,
+      key.stapelArt
+    );
+    if (!ergebnisseForKey) {
+      ergebnisseForKey = {
+        bezirkUndWahlIDStapelart: key,
+        ergebnisse: [],
+      };
+      ergebnisse.value.push(ergebnisseForKey);
+    }
+    return ergebnisseForKey;
+  }
+
   return {
     ergebnisse,
+    isErgebnisseSaving,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
+    findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,
+    switchStapelOfErgebnis,
   };
 });
 

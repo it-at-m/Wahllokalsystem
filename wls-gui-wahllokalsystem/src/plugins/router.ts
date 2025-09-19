@@ -11,6 +11,7 @@ import {
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
+  ROUTE_WAHLSCHEINE,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
@@ -20,6 +21,7 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
 import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
+import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -100,6 +102,12 @@ const routes = [
     name: ROUTE_STIMMABGABEVERMERKE,
     component: UWBStimmabgabevermerkeView,
     beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+  },
+  {
+    path: "/wahlscheine",
+    name: ROUTE_WAHLSCHEINE,
+    component: BWBWahlscheineView,
+    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
     path: "/auszaehlungStimmzettel/:wahlId",

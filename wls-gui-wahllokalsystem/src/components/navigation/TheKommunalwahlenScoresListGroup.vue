@@ -9,7 +9,7 @@
     <v-list-item
       v-if="isBWB"
       title="Wahlscheine"
-      to="/Wahlscheine"
+      :to="routeWithName(ROUTE_WAHLSCHEINE)"
     />
     <v-list-item
       v-if="isUWB"
@@ -30,7 +30,7 @@ import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_STIMMABGABEVERMERKE } from "@/constants.ts";
+import { ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { isBWB, isUWB } = storeToRefs(useUserStore());

@@ -22,12 +22,15 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
   getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID: vi.fn(),
   getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
+  getErgebnisseAndCreateIfMissing: vi.fn(),
 }));
 
 vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
   useErgebnismeldungStore: vi.fn().mockImplementation(() => ({
     getErgebnisseByWahlIdAndStapelartOrUndefined:
       mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined,
+    getErgebnisseAndCreateIfMissing:
+      mockDefinitions.getErgebnisseAndCreateIfMissing,
   })),
 }));
 vi.mock("@/stores/wahlvorschlaegeStore.ts", () => ({
@@ -88,7 +91,7 @@ describe("obwStapelAUtils", () => {
           mockedErgebnis4,
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         mockedErgebnisseArray
       );
 
@@ -113,8 +116,10 @@ describe("obwStapelAUtils", () => {
       const result = unitUnderTest.ergebnisseAndWahlvorschlaege.value;
 
       expect(
-        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mock.calls
-      ).toStrictEqual([[wahlID, StapelArtEnum.ObwA]]);
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
+      ).toStrictEqual([
+        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwA }],
+      ]);
       expect(
         mockDefinitions
           .getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID
@@ -151,7 +156,7 @@ describe("obwStapelAUtils", () => {
     ])(
       "should_returnEmptyArray_when_noErgebnisseForIDsAreGiven_ergebnisseAre'$description'",
       (testcaseArguments) => {
-        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
           testcaseArguments.mockedResult
         );
 

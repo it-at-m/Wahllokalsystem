@@ -94,8 +94,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     numIndex: number,
     targetStapelArt: StapelArtEnum
   ) {
-    const sourceErgebnisse = _getErgebnisseAndCreateIfMissing(key);
-    const targetErgebnisse = _getErgebnisseAndCreateIfMissing({
+    const sourceErgebnisse = getErgebnisseAndCreateIfMissing(key);
+    const targetErgebnisse = getErgebnisseAndCreateIfMissing({
       ...key,
       stapelArt: targetStapelArt,
     });
@@ -149,7 +149,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
-  function _getErgebnisseAndCreateIfMissing(key: BezirkUndWahlIDStapelArt) {
+  function getErgebnisseAndCreateIfMissing(key: BezirkUndWahlIDStapelArt) {
     let ergebnisseForKey = getErgebnisseByWahlIdAndStapelartOrUndefined(
       key.wahlID,
       key.stapelArt
@@ -167,6 +167,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   return {
     ergebnisse,
     isErgebnisseSaving,
+    getErgebnisseAndCreateIfMissing,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,

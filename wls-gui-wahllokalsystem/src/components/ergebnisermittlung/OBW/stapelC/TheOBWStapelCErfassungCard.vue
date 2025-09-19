@@ -81,10 +81,7 @@ import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/O
 import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const ergebnismeldungsStore = useErgebnismeldungStore();
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { minNumber, maxNumber, required } = useRules();
 

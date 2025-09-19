@@ -7,6 +7,9 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
+type WahlvorschlagID = string;
+type ErgebnisSum = number;
+
 export function useOBWStapelCUtils(
   wahlID: ComputedRef<string>,
   wahlbezirkID: ComputedRef<string>
@@ -49,17 +52,20 @@ export function useOBWStapelCUtils(
   const stapelCGueltigErgebnisseSums = computed(() =>
     stapelCGueltigErgebnisse.value
       .map((ergebnisseAndStapelArt) => ergebnisseAndStapelArt.ergebnis)
-      .reduce((sumOfWahlvorschlag: Map<string, number>, ergebnis) => {
-        if (ergebnis.wahlvorschlagID !== null && ergebnis.ergebnis !== null) {
-          const currentSum =
-            sumOfWahlvorschlag.get(ergebnis.wahlvorschlagID) || 0;
-          sumOfWahlvorschlag.set(
-            ergebnis.wahlvorschlagID,
-            currentSum + ergebnis.ergebnis
-          );
-        }
-        return sumOfWahlvorschlag;
-      }, new Map<string, number>())
+      .reduce(
+        (sumOfWahlvorschlag: Map<WahlvorschlagID, ErgebnisSum>, ergebnis) => {
+          if (ergebnis.wahlvorschlagID !== null && ergebnis.ergebnis !== null) {
+            const currentSum =
+              sumOfWahlvorschlag.get(ergebnis.wahlvorschlagID) || 0;
+            sumOfWahlvorschlag.set(
+              ergebnis.wahlvorschlagID,
+              currentSum + ergebnis.ergebnis
+            );
+          }
+          return sumOfWahlvorschlag;
+        },
+        new Map<WahlvorschlagID, ErgebnisSum>()
+      )
   );
 
   const wahlvorschlaegeAndSumAboveZero = computed(() =>

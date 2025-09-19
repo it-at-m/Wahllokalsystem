@@ -70,7 +70,7 @@ describe("obwStapelCUtils", () => {
   });
 
   describe("stapelCUngueltigErgebnisse", () => {
-    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigsAreGiven", () => {
+    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
@@ -154,7 +154,7 @@ describe("obwStapelCUtils", () => {
   });
 
   describe("stapelCGueltigErgebnisse", () => {
-    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigsAreGiven", () => {
+    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;

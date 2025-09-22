@@ -166,9 +166,7 @@ function onApplyRowCountClicked() {
 
   if (!isNewRowCountSameAsActualRowCount.value) {
     const maxUsedNumIndex = getMaxNumIndex();
-    if (maxUsedNumIndex === null) {
-      addGueltigErgebnisse(countRows.value);
-    } else if (countRows.value > maxUsedNumIndex) {
+    if (maxUsedNumIndex === null || countRows.value > maxUsedNumIndex) {
       addGueltigErgebnisse(countRows.value);
     } else {
       removeErgebnisseWithNumIndexAbove(countRows.value);

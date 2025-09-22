@@ -1,47 +1,70 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Stapel c - Stimmzettel, die Anlass zu Bedenken geben
-    </v-card-title>
-    <v-card-text>
-      <v-form v-model="isFormValid">
-        <v-table>
-          <thead>
-            <tr>
-              <th />
-              <th>Ungültig</th>
-              <th>Gültig für Wahlvorschlag</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            <base-row-stapel-c
-              v-for="(
-                ergebnisAndStapel, index
-              ) in stapelCErgebnisseOrdereByNumIndex"
-              :key="
-                ergebnisAndStapel.ergebnis.numIndex ??
-                `${ergebnisAndStapel.stapelArt}-${index}`
-              "
-              :wahlvorschlaege="wahlvorschlaege"
-              :stapel-art="ergebnisAndStapel.stapelArt"
-              :model-value="ergebnisAndStapel.ergebnis"
-              :index="index + 1"
-              @selection-changed="
-                onGueltigkeitOfRowChanged($event, ergebnisAndStapel)
-              "
+  <div>
+    <v-card>
+      <v-card-title>
+        Stapel c - Stimmzettel, die Anlass zu Bedenken geben
+      </v-card-title>
+      <v-card-text>
+        <v-form v-model="isChangeRowCountFormValid">
+          <div class="d-flex">
+            <base-number-input
+              v-model="countRows"
+              :rules="[minNumber(0), maxNumber(9999), required]"
+              label="Anzahl"
+              max-width="15rem"
             />
-          </tbody>
-        </v-table>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <base-button-save
-        :disabled="!areStapelCGueltigeErgebnisseValid"
-        @click="onSaveClicked"
-      />
-    </v-card-actions>
-  </v-card>
+            <v-btn
+              active
+              :disabled="isApplyRowCountDisabled"
+              class="ml-4 mt-3"
+              @click="onApplyRowCountClicked"
+              >Übernehmen</v-btn
+            >
+          </div>
+        </v-form>
+        <v-form v-model="isRowsFormValid">
+          <v-table>
+            <thead>
+              <tr>
+                <th />
+                <th>Ungültig</th>
+                <th>Gültig für Wahlvorschlag</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              <base-row-stapel-c
+                v-for="(
+                  ergebnisAndStapel, index
+                ) in stapelCErgebnisseOrdereByNumIndex"
+                :key="
+                  ergebnisAndStapel.ergebnis.numIndex ??
+                  `${ergebnisAndStapel.stapelArt}-${index}`
+                "
+                :wahlvorschlaege="wahlvorschlaege"
+                :stapel-art="ergebnisAndStapel.stapelArt"
+                :model-value="ergebnisAndStapel.ergebnis"
+                :index="index + 1"
+                @selection-changed="
+                  onGueltigkeitOfRowChanged($event, ergebnisAndStapel)
+                "
+              />
+            </tbody>
+          </v-table>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <base-button-save
+          :disabled="!areStapelCGueltigeErgebnisseValid"
+          :loading="isSaving"
+          @click="onSaveClicked"
+        />
+      </v-card-actions>
+    </v-card>
+    <the-o-b-w-stapel-c-deletion-denied-dialog
+      :ref="REF_DELETION_DENIED_DIALOG"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -49,19 +72,28 @@ import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAn
 import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnisermittlung/ErgebnisWithNumIndexAndStapel.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, useTemplateRef } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
+import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
+import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const ergebnismeldungsStore = useErgebnismeldungStore();
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
+const { minNumber, maxNumber, required } = useRules();
+
+const REF_DELETION_DENIED_DIALOG = "refDeletionDeniedDialog";
 
 const {
+  addGueltigErgebnisse,
+  isSaving,
+  removeErgebnisseWithNumIndexAbove,
+  getMaxNumIndex,
+  getMaxNumIndexWithValueSet,
+  saveErgebnisse,
   stapelCUngueltigErgebnisse,
   stapelCGueltigErgebnisse,
   switchStapelCOfErgebnis,
@@ -89,23 +121,61 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
   ].sort((a, b) => orderedByNumIndexWithNullAtEnd(a.ergebnis, b.ergebnis));
 });
 
-const isFormValid = ref<boolean | null>(null);
+const isRowsFormValid = ref<boolean | null>(null);
+const isChangeRowCountFormValid = ref<boolean | null>(null);
+const countRows = ref<number | null>(null);
+const templateRefDeletionDeniedDialog = useTemplateRef<
+  typeof TheOBWStapelCDeletionDeniedDialog
+>(REF_DELETION_DENIED_DIALOG);
 
 const areStapelCGueltigeErgebnisseValid = computed(() =>
   stapelCGueltigErgebnisse.value.every(
     (value) => value.ergebnis.wahlvorschlagID !== null
   )
 );
+const isApplyRowCountDisabled = computed(
+  () =>
+    isNewRowCountSameAsActualRowCount.value ||
+    countRows.value === null ||
+    isChangeRowCountFormValid.value !== true
+);
+const isNewRowCountSameAsActualRowCount = computed(
+  () => stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value
+);
+
+onMounted(() => {
+  countRows.value = stapelCErgebnisseOrdereByNumIndex.value.length;
+});
+
+function isTryingToRemoveNonEmptyValues() {
+  return (
+    countRows.value !== null &&
+    countRows.value < (getMaxNumIndexWithValueSet() || 0)
+  );
+}
+
+function onApplyRowCountClicked() {
+  if (countRows.value === null || countRows.value === undefined) {
+    return;
+  }
+
+  if (isTryingToRemoveNonEmptyValues()) {
+    templateRefDeletionDeniedDialog.value?.showDialog();
+    return;
+  }
+
+  if (!isNewRowCountSameAsActualRowCount.value) {
+    const maxUsedNumIndex = getMaxNumIndex();
+    if (maxUsedNumIndex === null || countRows.value > maxUsedNumIndex) {
+      addGueltigErgebnisse(countRows.value);
+    } else {
+      removeErgebnisseWithNumIndexAbove(countRows.value);
+    }
+  }
+}
 
 function onSaveClicked() {
-  ergebnismeldungsStore.sendErgebnisseByStapelArt(
-    props.wahlID,
-    StapelArtEnum.ObwCGueltig
-  );
-  ergebnismeldungsStore.sendErgebnisseByStapelArt(
-    props.wahlID,
-    StapelArtEnum.ObwCUngueltig
-  );
+  saveErgebnisse();
 }
 
 function onGueltigkeitOfRowChanged(

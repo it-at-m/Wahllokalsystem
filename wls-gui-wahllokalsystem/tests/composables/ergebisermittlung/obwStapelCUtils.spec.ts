@@ -12,8 +12,10 @@ import { computed } from "vue";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { generateRandomNumber, getRandomItem } = useCommonTestDataFactory();
-const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
+const { generateRandomNumber, getRandomItem, generateRandomString } =
+  useCommonTestDataFactory();
+const { createErgebnis, prepareErgebnis, prepareErgebnisse } =
+  useErgebnisseTestDataFactory();
 const { prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
 
@@ -21,15 +23,23 @@ type ErgebnisWithErgebnis = Ergebnis & { ergebnis: number };
 type ErgebnisWithNumIndex = Ergebnis & { numIndex: number };
 
 const mockDefinitions = vi.hoisted(() => ({
+  deleteErgebnisseWithNumIndexAbove: vi.fn(),
+  getErgebnisseAndCreateIfMissing: vi.fn(),
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
   getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
+  sendErgebnisseByStapelArt: vi.fn(),
   switchStapelOfErgebnis: vi.fn(),
 }));
 
 vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
   useErgebnismeldungStore: () => ({
+    deleteErgebnisseWithNumIndexAbove:
+      mockDefinitions.deleteErgebnisseWithNumIndexAbove,
+    getErgebnisseAndCreateIfMissing:
+      mockDefinitions.getErgebnisseAndCreateIfMissing,
     getErgebnisseByWahlIdAndStapelartOrUndefined:
       mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined,
+    sendErgebnisseByStapelArt: mockDefinitions.sendErgebnisseByStapelArt,
     switchStapelOfErgebnis: mockDefinitions.switchStapelOfErgebnis,
   }),
 }));
@@ -63,14 +73,61 @@ describe("obwStapelCUtils", () => {
 
   beforeEach(() => {
     initUnitUnderTest();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.resetAllMocks();
+    vi.useRealTimers();
+  });
+
+  describe("isSaving", () => {
+    it("should_getUpdated_when_saveErgebnisseIsCalled", async () => {
+      const timeout = 100;
+
+      mockDefinitions.sendErgebnisseByStapelArt.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+
+      const saveErgebnissePromise = unitUnderTest.saveErgebnisse();
+      expect(unitUnderTest.isSaving.value).toStrictEqual(true);
+
+      vi.advanceTimersByTime(2 * timeout);
+      await saveErgebnissePromise;
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+    });
+    it("should_getUpdated_when_saveErgebnisseIsCalledAndRequestFail", async () => {
+      const timeout = 100;
+
+      mockDefinitions.sendErgebnisseByStapelArt.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error("mocked api request failed"));
+          }, timeout);
+        })
+      );
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+
+      const saveErgebnissePromise = unitUnderTest.saveErgebnisse();
+      expect(unitUnderTest.isSaving.value).toStrictEqual(true);
+
+      vi.advanceTimersByTime(2 * timeout);
+      await saveErgebnissePromise;
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+    });
   });
 
   describe("stapelCUngueltigErgebnisse", () => {
-    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
+    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigsAreGiven", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
@@ -154,7 +211,7 @@ describe("obwStapelCUtils", () => {
   });
 
   describe("stapelCGueltigErgebnisse", () => {
-    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
+    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCGueltigsAreGiven", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
@@ -602,6 +659,387 @@ describe("obwStapelCUtils", () => {
       const result = unitUnderTest.totalSum.value;
 
       expect(result).toStrictEqual(gueltig1.ergebnis + gueltig2.ergebnis);
+    });
+  });
+
+  describe("addGueltigErgebnisse", () => {
+    it("should_addGueltigErgebnisseWithNewAmount_when_noErgebnisseExist", () => {
+      const mockedErgebnisse = prepareErgebnisse().ergebnisse([]).build();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        mockedErgebnisse
+      );
+
+      unitUnderTest.addGueltigErgebnisse(3);
+
+      const expectedErgebnisse = [
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(1)
+          .kandidatID(null)
+          .build(),
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(2)
+          .kandidatID(null)
+          .build(),
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(3)
+          .kandidatID(null)
+          .build(),
+      ];
+      expect(mockedErgebnisse.ergebnisse).toStrictEqual(expectedErgebnisse);
+      expect(
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
+      ).toStrictEqual([
+        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwCGueltig }],
+      ]);
+    });
+    it("should_addGueltigErgebnisseWithNewAmount_when_ergebnisseAlreadyExist", () => {
+      const existingErgebnis1 = createErgebnis();
+      const existingErgebnis2 = createErgebnis();
+      const mockedErgebnisse = prepareErgebnisse()
+        .ergebnisse([existingErgebnis1, existingErgebnis2])
+        .build();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        mockedErgebnisse
+      );
+
+      unitUnderTest.addGueltigErgebnisse(3);
+
+      const expectedErgebnisse = [
+        ...[existingErgebnis1, existingErgebnis2],
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(1)
+          .kandidatID(null)
+          .build(),
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(2)
+          .kandidatID(null)
+          .build(),
+        prepareErgebnis()
+          .ergebnis(1)
+          .wahlvorschlagID(null)
+          .wahlvorschlagsOrdnungszahl(null)
+          .numIndex(3)
+          .kandidatID(null)
+          .build(),
+      ];
+      expect(mockedErgebnisse.ergebnisse).toStrictEqual(expectedErgebnisse);
+    });
+  });
+
+  describe("removeErgebnisseWithNumIndexAbove", () => {
+    it("should_useStoreFunctionForBothStapelC_when_called", () => {
+      unitUnderTest.removeErgebnisseWithNumIndexAbove(4);
+
+      expect(
+        mockDefinitions.deleteErgebnisseWithNumIndexAbove
+      ).toHaveBeenCalledWith(wahlID, StapelArtEnum.ObwCGueltig, 4);
+      expect(
+        mockDefinitions.deleteErgebnisseWithNumIndexAbove
+      ).toHaveBeenCalledWith(wahlID, StapelArtEnum.ObwCUngueltig, 4);
+      expect(
+        mockDefinitions.deleteErgebnisseWithNumIndexAbove.mock.calls.length
+      ).toStrictEqual(2);
+    });
+  });
+
+  describe("saveErgebnisse", () => {
+    it("should_callServiceForBothStapelC_when_called", () => {
+      unitUnderTest.saveErgebnisse();
+
+      mockDefinitions.sendErgebnisseByStapelArt.mockImplementation(() =>
+        Promise.resolve()
+      );
+
+      expect(mockDefinitions.sendErgebnisseByStapelArt).toHaveBeenCalledWith(
+        wahlID,
+        StapelArtEnum.ObwCGueltig,
+        true
+      );
+      expect(mockDefinitions.sendErgebnisseByStapelArt).toHaveBeenCalledWith(
+        wahlID,
+        StapelArtEnum.ObwCUngueltig,
+        true
+      );
+    });
+    it("should_callServiceForBothStapelC_when_calledEvenWhenServiceFunctionFails", () => {
+      unitUnderTest.saveErgebnisse();
+
+      mockDefinitions.sendErgebnisseByStapelArt.mockImplementation(() =>
+        Promise.reject(new Error("mocked send ergebnisse failed"))
+      );
+
+      expect(mockDefinitions.sendErgebnisseByStapelArt).toHaveBeenCalledWith(
+        wahlID,
+        StapelArtEnum.ObwCGueltig,
+        true
+      );
+      expect(mockDefinitions.sendErgebnisseByStapelArt).toHaveBeenCalledWith(
+        wahlID,
+        StapelArtEnum.ObwCUngueltig,
+        true
+      );
+    });
+  });
+
+  describe("getMaxNumIndex", () => {
+    it("should_returnMaxNumIndexOfUngueltig_when_bothStapelHaveValuesButUngueltigHasHighestNumIndex", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(1).build(),
+          prepareErgebnis().numIndex(11).build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(12).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndex();
+      expect(result).toStrictEqual(12);
+    });
+    it("should_returnMaxNumIndexOfGueltig_when_bothStapelHaveValuesButGueltigHasHighestNumIndex", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(1).build(),
+          prepareErgebnis().numIndex(11).build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(10).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndex();
+      expect(result).toStrictEqual(11);
+    });
+    it("should_returnMaxNumIndexOfUngueltig_when_onlyUngueltigHaveValues", () => {
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(10).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([[StapelArtEnum.ObwCUngueltig, ungueltige]])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndex();
+      expect(result).toStrictEqual(10);
+    });
+    it("should_returnMaxNumIndexOfGueltig_when_onlyGueltigHaveValues", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(1).build(),
+          prepareErgebnis().numIndex(11).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([[StapelArtEnum.ObwCGueltig, gueltige]])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndex();
+      expect(result).toStrictEqual(11);
+    });
+    it("should_returnNull_when_bothStapelHaveNoValues", () => {
+      const gueltige = prepareErgebnisse().ergebnisse([]).build();
+      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndex();
+      expect(result).toStrictEqual(null);
+    });
+  });
+
+  describe("getMaxNumIndexWithValueSet", () => {
+    it("should_returnMaxNumIndexOfUngueltig_when_bothStapelHaveValuesButUngueltigHasHighestNumIndex", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis()
+            .numIndex(1)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+          prepareErgebnis()
+            .numIndex(11)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+          prepareErgebnis().numIndex(13).wahlvorschlagID(null).build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(12).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(12);
+    });
+    it("should_returnMaxNumIndexOfGueltig_when_bothStapelHaveValuesButGueltigHasHighestNumIndexWithWahlvorschlagID", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis()
+            .numIndex(1)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+          prepareErgebnis()
+            .numIndex(11)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(10).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(11);
+    });
+    it("should_returnMaxNumIndexOfUngueltig_when_onlyUngueltigHaveValues", () => {
+      const gueltige = prepareErgebnisse().ergebnisse([]).build();
+      const ungueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(3).build(),
+          prepareErgebnis().numIndex(10).build(),
+        ])
+        .build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(10);
+    });
+    it("should_returnMaxNumIndexOfGueltig_when_onlyGueltigHaveValuesWithWahlvorschlagID", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis()
+            .numIndex(1)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+          prepareErgebnis()
+            .numIndex(11)
+            .wahlvorschlagID(generateRandomString(10))
+            .build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(11);
+    });
+    it("should_returnNull_when_bothStapelHaveNoValues", () => {
+      const gueltige = prepareErgebnisse().ergebnisse([]).build();
+      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(null);
+    });
+    it("should_returnNull_when_onlyGueltigHaveValuesButNonWithWahlvorschlagID", () => {
+      const gueltige = prepareErgebnisse()
+        .ergebnisse([
+          prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+          prepareErgebnis().numIndex(11).wahlvorschlagID(null).build(),
+        ])
+        .build();
+      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
+        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getMaxNumIndexWithValueSet();
+      expect(result).toStrictEqual(null);
     });
   });
 });

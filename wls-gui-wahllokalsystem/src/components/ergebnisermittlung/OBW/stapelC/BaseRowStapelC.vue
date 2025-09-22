@@ -4,7 +4,6 @@
     <td>
       <v-checkbox-btn
         :model-value="isSelected"
-        :aria-label="`Stimmzettel ${index} als ungültig markieren`"
         @update:model-value="onUngueltigCheckboxChanged"
       />
     </td>

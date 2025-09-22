@@ -22,7 +22,7 @@
             >
           </div>
         </v-form>
-        <v-form v-model="isFormValid">
+        <v-form v-model="isRowsFormValid">
           <v-table>
             <thead>
               <tr>
@@ -121,7 +121,7 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
   ].sort((a, b) => orderedByNumIndexWithNullAtEnd(a.ergebnis, b.ergebnis));
 });
 
-const isFormValid = ref<boolean | null>(null);
+const isRowsFormValid = ref<boolean | null>(null);
 const isChangeRowCountFormValid = ref<boolean | null>(null);
 const countRows = ref<number | null>(null);
 const templateRefDeletionDeniedDialog = useTemplateRef<

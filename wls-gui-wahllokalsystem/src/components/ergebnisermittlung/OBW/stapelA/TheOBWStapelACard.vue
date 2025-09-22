@@ -9,6 +9,8 @@
               <th />
               <th class="font-weight-bold">Wahlvorschlag</th>
               <th class="font-weight-bold">Stapel a: zweifelsfrei gültig</th>
+              <th class="font-weight-bold">Stapel c: laut Beschluss gültig</th>
+              <th class="font-weight-bold">Insgesamt</th>
             </tr>
           </thead>
           <tbody>
@@ -19,6 +21,11 @@
               :key="index"
               :model-value="ergebnisWithWahlvorschlag.ergebnis"
               :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
+              :ergebnis-stapel-c="
+                getErgebnisStapelC(
+                  ergebnisWithWahlvorschlag.ergebnis.wahlvorschlagID
+                )
+              "
             />
           </tbody>
           <tfoot>
@@ -46,6 +53,7 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useOBWStapelAUtils } from "@/composables/ergebnisermittlung/obwStapelAUtils.ts";
+import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -64,6 +72,11 @@ const props = defineProps({
   },
 });
 
+const { stapelCGueltigErgebnisse } = useOBWStapelCUtils(
+  computed(() => props.wahlID),
+  computed(() => props.wahlbezirkID)
+);
+
 const { ergebnisseAndWahlvorschlaege, sumOfValidVotes } = useOBWStapelAUtils(
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
@@ -73,5 +86,12 @@ const isFormValid = ref<boolean | null>(null);
 
 function onSaveClicked() {
   sendErgebnisseByStapelArt(props.wahlID, STAPEL);
+}
+
+function getErgebnisStapelC(wahlvorschlagID: string | null) {
+  const foundItem = stapelCGueltigErgebnisse.value.find(
+    (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
+  );
+  return foundItem ? foundItem.ergebnis.ergebnis : 0;
 }
 </script>

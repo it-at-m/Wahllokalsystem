@@ -66,6 +66,19 @@ export const Default: Story = {
             .build(),
         ])
         .build(),
+      prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID,
+          wahlbezirkID: "wahlbezirkID",
+          stapelArt: StapelArtEnum.ObwCGueltig,
+        })
+        .ergebnisse([
+          prepareErgebnis().wahlvorschlagID("wahlvorschlag1").build(),
+          prepareErgebnis().wahlvorschlagID("wahlvorschlag2").build(),
+          prepareErgebnis().wahlvorschlagID("wahlvorschlag3").build(),
+          prepareErgebnis().wahlvorschlagID("wahlvorschlag4").build(),
+        ])
+        .build(),
     ];
 
     const wahlvorschlaegeStore = useWahlvorschlaegeStore(pinia);

@@ -64,7 +64,7 @@ describe("obwStapelCUtils", () => {
     };
   }
 
-  function initUnderUnderTest() {
+  function initUnitUnderTest() {
     unitUnderTest = useOBWStapelCUtils(
       computed(() => wahlID),
       computed(() => wahlbezirkID)
@@ -72,7 +72,7 @@ describe("obwStapelCUtils", () => {
   }
 
   beforeEach(() => {
-    initUnderUnderTest();
+    initUnitUnderTest();
     vi.useFakeTimers();
   });
 
@@ -211,7 +211,7 @@ describe("obwStapelCUtils", () => {
   });
 
   describe("stapelCGueltigErgebnisse", () => {
-    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCUngueltigsAreGiven", () => {
+    it("should_returnArrayOfErgebnisse_when_ergebnisseForWahlIDAndStapelObwCGueltigsAreGiven", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;

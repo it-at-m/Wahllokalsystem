@@ -10,7 +10,7 @@ describe("mathUtils", () => {
   });
   describe("maxOfOptionalNumbers", () => {
     it.each([
-      { values: [9, 2, 3, 15, 4, 2], description: "WithNoNullValues" },
+      { values: [9, 2, 3, 15, 4, 2], description: "WithoutNullValues" },
       {
         values: [9, 2, 3, 15, null, 4, 2],
         description: "WithAtLeastOneNullValue",

@@ -30,13 +30,11 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       ergebnisseWahlID,
       ergebnisseStapelArt
     );
-    if (!ergebnisseFound) {
-      return;
+    if (ergebnisseFound) {
+      ergebnisseFound.ergebnisse = ergebnisseFound.ergebnisse.filter(
+        (ergebnis) => (ergebnis.numIndex || 0) <= highestAllowedNumIndex
+      );
     }
-
-    ergebnisseFound.ergebnisse = ergebnisseFound.ergebnisse.filter(
-      (ergebnis) => (ergebnis.numIndex || 0) <= highestAllowedNumIndex
-    );
   }
 
   async function loadErgebnisseByStapelArt(

@@ -117,8 +117,8 @@ export const Default: Story = {
     },
   ],
   args: {
-    wahlID: wahlID,
-    wahlbezirkID: wahlbezirkID,
+    wahlId: wahlID,
+    wahlbezirkId: wahlbezirkID,
   },
 };
 
@@ -164,7 +164,7 @@ export const NoErgebnisseInStore: Story = {
     },
   ],
   args: {
-    wahlID: wahlID,
-    wahlbezirkID: wahlbezirkID,
+    wahlId: wahlID,
+    wahlbezirkId: wahlbezirkID,
   },
 };

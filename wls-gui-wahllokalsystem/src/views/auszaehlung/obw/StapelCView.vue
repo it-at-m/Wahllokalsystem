@@ -1,13 +1,13 @@
 <template>
   <div v-if="wahlbezirkID && wahlID">
     <the-o-b-w-stapel-c-erfassung-card
-      :wahlbezirk-i-d="wahlbezirkID"
-      :wahl-i-d="wahlID"
+      :wahlbezirk-id="wahlbezirkID"
+      :wahl-id="wahlID"
     />
     <the-o-b-w-stapel-c-summary-card
       v-if="totalSum > 0"
-      :wahlbezirk-i-d="wahlbezirkID"
-      :wahl-i-d="wahlID"
+      :wahlbezirk-id="wahlbezirkID"
+      :wahl-id="wahlID"
     />
   </div>
 </template>

@@ -47,11 +47,11 @@ import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschl
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
 const props = defineProps({
-  wahlID: {
+  wahlId: {
     type: String,
     required: true,
   },
-  wahlbezirkID: {
+  wahlbezirkId: {
     type: String,
     required: true,
   },
@@ -62,7 +62,7 @@ const {
   totalSum,
   wahlvorschlaegeAndSumAboveZero,
 } = useOBWStapelCUtils(
-  computed(() => props.wahlID),
-  computed(() => props.wahlbezirkID)
+  computed(() => props.wahlId),
+  computed(() => props.wahlbezirkId)
 );
 </script>

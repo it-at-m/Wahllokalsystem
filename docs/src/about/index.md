@@ -271,3 +271,13 @@ Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffne
 der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrzeit sein
 (Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
 :::
+
+📃 **UseCase: `Beschluss zu uneindeutigen Stimmzettel fassen`**
+
+::: info `Oberbürgermeisterwahl`
+Die Ergebnisse werden mit Stapel C erfasst. Dieser besteht aus den Teilstapeln für gültige und ungültige Stimmen.
+Für jeden bedenklichen Stimmzettel muss eine Entscheidung getroffen werden. Bei den gültigen Stimmzetteln handelt es
+sich um solche, bei denen die Entscheidung für einen konkreten Wahlvorschlag getroffen wurde.
+
+Die Reihenfolge der getroffenen Beschlüsse muss stabil bleiben.
+:::

@@ -121,3 +121,50 @@ export const Default: Story = {
     wahlbezirkID: wahlbezirkID,
   },
 };
+
+export const NoErgebnisseInStore: Story = {
+  loaders: [
+    async () => {
+      const ergebnismeldungsStore = useErgebnismeldungStore(pinia);
+
+      ergebnismeldungsStore.ergebnisse = [];
+
+      const wahlvorschlaegStore = useWahlvorschlaegeStore(pinia);
+      wahlvorschlaegStore.wahlvorschlaege = [
+        prepareWahlvorschlaege()
+          .wahlID(wahlID)
+          .wahlbezirkID(wahlbezirkID)
+          .wahlvorschlaege(
+            new Set([
+              prepareWahlvorschlag()
+                .identifikator("wahlvorschlag1")
+                .kurzname("Wahlvorschlag1")
+                .kandidaten(
+                  new Set([prepareKandidat().name("Kandidat 11").build()])
+                )
+                .build(),
+              prepareWahlvorschlag()
+                .identifikator("wahlvorschlag2")
+                .kurzname("Wahlvorschlag2")
+                .kandidaten(
+                  new Set([prepareKandidat().name("Kandidat 21").build()])
+                )
+                .build(),
+            ])
+          )
+          .build(),
+      ];
+
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([{ wahlbezirkID, wahlID, wahlnummer: "0" }])
+          .build()
+      );
+    },
+  ],
+  args: {
+    wahlID: wahlID,
+    wahlbezirkID: wahlbezirkID,
+  },
+};

@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title> Beschlussergebnis </v-card-title>
     <v-card-text>
       <v-table>
         <thead>

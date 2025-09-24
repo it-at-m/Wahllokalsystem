@@ -21,6 +21,22 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const ergebnisse = ref<Ergebnisse[]>([]);
   const isErgebnisseSaving = ref<boolean>(false);
 
+  function deleteErgebnisseWithNumIndexAbove(
+    ergebnisseWahlID: string,
+    ergebnisseStapelArt: StapelArtEnum,
+    highestAllowedNumIndex: number
+  ) {
+    const ergebnisseFound = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      ergebnisseWahlID,
+      ergebnisseStapelArt
+    );
+    if (ergebnisseFound) {
+      ergebnisseFound.ergebnisse = ergebnisseFound.ergebnisse.filter(
+        (ergebnis) => (ergebnis.numIndex || 0) <= highestAllowedNumIndex
+      );
+    }
+  }
+
   async function loadErgebnisseByStapelArt(
     wahlID: string,
     stapelArt: StapelArtEnum,
@@ -166,9 +182,11 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   return {
     ergebnisse,
+    deleteErgebnisseWithNumIndexAbove,
     isErgebnisseSaving,
     getErgebnisseAndCreateIfMissing,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
+    getErgebnisseAndCreateIfMissing,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,

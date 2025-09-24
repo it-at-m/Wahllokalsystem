@@ -1,21 +1,37 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { delay, http, HttpResponse } from "msw";
 
 import TheOBWStapelCErfassungCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
 import pinia from "@/plugins/pinia";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { prepareErgebnisse, prepareErgebnis } = useErgebnisseTestDataFactory();
 const { prepareKandidat, prepareWahlvorschlaege, prepareWahlvorschlag } =
   useWahlvorschlaegeTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 const meta = {
   component: TheOBWStapelCErfassungCard,
   args: {},
+  parameters: {
+    msw: {
+      handlers: [
+        http.all("/api/*", async () => {
+          await delay(2000);
+          return new HttpResponse(null, {
+            status: 200,
+          });
+        }),
+      ],
+    },
+  },
 } satisfies Meta<typeof TheOBWStapelCErfassungCard>;
 
 const wahlID = "wahlID";
@@ -91,6 +107,13 @@ export const Default: Story = {
           )
           .build(),
       ];
+
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([{ wahlbezirkID, wahlID, wahlnummer: "0" }])
+          .build()
+      );
     },
   ],
   args: {

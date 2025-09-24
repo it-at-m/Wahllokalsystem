@@ -3,12 +3,12 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 import {
   EXAMPLE_ROUTES_NOTFOUND,
-  ROUTE_AUSZAEHLUNG_STAPEL_B,
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_STAPEL_A,
+  ROUTE_STAPEL_B,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -21,6 +21,7 @@ import {
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
+import ObwStapelBView from "@/views/auszaehlung/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
@@ -122,8 +123,8 @@ const routes = [
   },
   {
     path: "/auszaehlungStapelB/:wahlId",
-    name: ROUTE_AUSZAEHLUNG_STAPEL_B,
-    component: ErfassungOBWStapelBView,
+    name: ROUTE_STAPEL_B,
+    component: ObwStapelBView,
   },
   {
     path: "/:catchAll(.*)*",

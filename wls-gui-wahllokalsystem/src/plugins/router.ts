@@ -122,7 +122,7 @@ const routes = [
     component: OWBStapelAView,
   },
   {
-    path: "/auszaehlungStapelB/:wahlId",
+    path: "/stapelB/:wahlId",
     name: ROUTE_STAPEL_B,
     component: ObwStapelBView,
   },

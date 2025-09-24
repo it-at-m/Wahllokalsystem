@@ -56,7 +56,7 @@ export function useRules() {
     if (isValidDate(date) && isValidDate(compareDate)) {
       return (
         date >= compareDate ||
-        `Datum muss größer oder gleich ${toGermanDate(compareValue)} sein.`
+        `Datum darf nicht vor dem ${toGermanDate(compareValue)} liegen.`
       );
     } else {
       return `Ungültiges Datum`;

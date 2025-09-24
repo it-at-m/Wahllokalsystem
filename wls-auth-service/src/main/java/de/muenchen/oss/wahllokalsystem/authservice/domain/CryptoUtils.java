@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.authservice.service;
+package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
-import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.Base64;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Getter
 @Setter
-public class CryptoService {
+public class CryptoUtils {
 
     private final ServiceIDFormatter formatter;
     private final Cipher encryptionCipher;
@@ -28,7 +28,7 @@ public class CryptoService {
     @Value("${service.config.crypto.encryptionPrefix}")
     private String encryptedPrefix = "";
 
-    public CryptoService(ServiceIDFormatter formatter,
+    public CryptoUtils(ServiceIDFormatter formatter,
             @Qualifier("encryptionCipher") Cipher encryptionCipher,
             @Qualifier("decryptionCipher") Cipher decryptionCipher) {
         this.formatter = formatter;

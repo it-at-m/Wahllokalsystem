@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.authservice.client;
 
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
-import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
+import de.muenchen.oss.wahllokalsystem.authservice.service.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WahltagClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WelcomeClient;
 import java.time.LocalDateTime;

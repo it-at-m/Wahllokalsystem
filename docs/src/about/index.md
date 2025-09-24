@@ -65,7 +65,7 @@ Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfas
 Pflichtfelder:
 
 - eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](./#infobox-ereignisse-uwb))
-- ein Datum mit Uhrzeit
+- ein Datum mit Uhrzeit, welches nicht in der Zukunft und nicht vor dem Wahltag liegen darf
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 
 Weiterhin gibt es einige Verhaltensregeln für die Ereigniserfassung:

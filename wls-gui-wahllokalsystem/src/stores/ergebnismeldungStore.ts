@@ -184,7 +184,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     ergebnisse,
     deleteErgebnisseWithNumIndexAbove,
     isErgebnisseSaving,
-    getErgebnisseAndCreateIfMissing,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,

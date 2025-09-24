@@ -18,7 +18,7 @@
         label="Beschreibung"
         auto-grow
         clearable
-        autofokus
+        autofocus
         persistent-counter
         :counter="maxLengthForEreignisBeschreibung"
       />

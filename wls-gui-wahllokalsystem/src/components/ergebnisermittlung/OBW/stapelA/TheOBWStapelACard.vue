@@ -33,6 +33,8 @@
               <td />
               <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
               <td class="font-weight-bold">{{ sumOfValidVotes }}</td>
+              <td />
+              <td />
             </tr>
           </tfoot>
         </v-table>

@@ -22,11 +22,14 @@
     />
     <v-list-item title="Stapel c" />
     <v-list-item
+      :disabled="!obwWahlID"
       title="Stapel b"
       :to="
-        routeWithNameAndParams(ROUTE_STAPEL_B, {
-          wahlId: String(obwWahlID),
-        })
+        obwWahlID
+          ? routeWithNameAndParams(ROUTE_STAPEL_B, {
+              wahlId: String(obwWahlID),
+            })
+          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
       "
     />
     <v-list-item

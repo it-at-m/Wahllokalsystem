@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.security;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WahlbezirksartModel;
@@ -27,7 +28,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapUserDetails;
 
 @ExtendWith(MockitoExtension.class)
-class LoginInterceptorServiceTest {
+class LoginInterceptorTest {
 
     @Mock
     LoginTimeClient loginTimeClient;
@@ -39,7 +40,7 @@ class LoginInterceptorServiceTest {
     UserService userService;
 
     @InjectMocks
-    LoginInterceptorService unitUnderTest;
+    LoginInterceptor unitUnderTest;
 
     @Nested
     class ValidateLoginOrThrow {

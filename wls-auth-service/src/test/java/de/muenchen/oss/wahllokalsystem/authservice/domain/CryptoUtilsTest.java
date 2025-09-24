@@ -1,6 +1,6 @@
-package de.muenchen.oss.wahllokalsystem.authservice.service;
+package de.muenchen.oss.wahllokalsystem.authservice.domain;
 
-import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.util.Base64;
@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class CryptoServiceTest {
+class CryptoUtilsTest {
 
     private static final String ENCRYPTION_PREFIX = "encryptionPrefix";
 
@@ -35,7 +35,7 @@ class CryptoServiceTest {
     Cipher cipher;
 
     @InjectMocks
-    CryptoService unitUnderTest;
+    CryptoUtils unitUnderTest;
 
     @BeforeEach
     void setup() {
@@ -84,7 +84,7 @@ class CryptoServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.domain.CryptoUtilsTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val valueToEncrypt = "hello world";
 
@@ -129,7 +129,7 @@ class CryptoServiceTest {
         }
 
         @ParameterizedTest
-        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.service.CryptoServiceTest#exceptionsMappedToWlsException")
+        @MethodSource("de.muenchen.oss.wahllokalsystem.authservice.domain.CryptoUtilsTest#exceptionsMappedToWlsException")
         void should_throwTechnischeWlsException_when_cipherThrowsException(final Exception exceptionThrownByCipher) throws Exception {
             val encryptedValue = "the encrypted value";
             val encryptedValueAsBase64WithPrefix = ENCRYPTION_PREFIX + Base64.getEncoder().encodeToString(encryptedValue.getBytes());

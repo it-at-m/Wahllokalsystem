@@ -15,6 +15,7 @@ export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
 export const ROUTE_STIMMABGABEVERMERKE = "stimmabgabevermerke";
 export const ROUTE_WAHLSCHEINE = "wahlscheine";
 export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
+export const ROUTE_STAPEL_A = "stapelA";
 export const ROUTE_AUSZAEHLUNG_STAPEL_B = "auszaehlungStapelB";
 
 export const TOAST = "toast";

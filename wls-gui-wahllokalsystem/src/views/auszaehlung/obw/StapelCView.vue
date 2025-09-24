@@ -30,7 +30,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 const { params: routeParams } = useRoute();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const { sm, name } = useDisplay();
+const { sm } = useDisplay();
 
 const wahlID = computed(() => routeParams.wahlId as string);
 const wahlbezirkID = computed(

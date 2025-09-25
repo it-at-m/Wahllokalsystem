@@ -12,18 +12,36 @@
     <v-list-item
       :disabled="!obwWahlID"
       :title="titleStimmenZaehlen"
-      :to="navigateToNotFoundOrView(ROUTE_AUSZAEHLUNG_STIMMZETTEL)"
+      :to="
+        obwWahlID
+          ? routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
+              wahlId: String(obwWahlID),
+            })
+          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
+      "
     />
     <v-list-item title="Stapel c" />
     <v-list-item
       :disabled="!obwWahlID"
       title="Stapel b"
-      :to="navigateToNotFoundOrView(ROUTE_STAPEL_B)"
+      :to="
+        obwWahlID
+          ? routeWithNameAndParams(ROUTE_STAPEL_B, {
+              wahlId: String(obwWahlID),
+            })
+          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
+      "
     />
     <v-list-item
       :disabled="!obwWahlID"
       title="Stapel a"
-      :to="navigateToNotFoundOrView(ROUTE_STAPEL_A)"
+      :to="
+        obwWahlID
+          ? routeWithNameAndParams(ROUTE_STAPEL_A, {
+              wahlId: String(obwWahlID),
+            })
+          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
+      "
     />
     <v-list-item title="Schnellmeldung" />
     <v-list-item title="Niederschrift" />
@@ -53,12 +71,4 @@ defineProps<{
 const obwWahlID = computed<string | undefined>(() => {
   return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw);
 });
-
-function navigateToNotFoundOrView(route: string) {
-  return obwWahlID.value
-    ? routeWithNameAndParams(route, {
-        wahlId: String(obwWahlID),
-      })
-    : routeWithName(EXAMPLE_ROUTES_NOTFOUND);
-}
 </script>

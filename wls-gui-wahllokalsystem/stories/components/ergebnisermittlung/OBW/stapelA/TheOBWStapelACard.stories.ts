@@ -76,7 +76,6 @@ export const Default: Story = {
           prepareErgebnis().wahlvorschlagID("wahlvorschlag1").build(),
           prepareErgebnis().wahlvorschlagID("wahlvorschlag2").build(),
           prepareErgebnis().wahlvorschlagID("wahlvorschlag3").build(),
-          prepareErgebnis().wahlvorschlagID("wahlvorschlag4").build(),
         ])
         .build(),
     ];

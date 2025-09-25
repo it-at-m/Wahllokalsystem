@@ -1,3 +1,4 @@
+import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
 import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -23,6 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID: vi.fn(),
   getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
   getErgebnisseAndCreateIfMissing: vi.fn(),
+  stapelCGueltigErgebnisse: vi.fn(),
 }));
 
 vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
@@ -41,8 +43,14 @@ vi.mock("@/stores/wahlvorschlaegeStore.ts", () => ({
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID,
   }),
 }));
+vi.mock("@/composables/ergebnisermittlung/obwStapelCUtils.ts", () => ({
+  useOBWStapelCUtils: vi.fn().mockImplementation(() => ({
+    stapelCGueltigErgebnisse: mockDefinitions.stapelCGueltigErgebnisse,
+  })),
+}));
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 const { prepareErgebnisse, prepareErgebnis } = useErgebnisseTestDataFactory();
 const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
@@ -287,6 +295,33 @@ describe("obwStapelAUtils", () => {
       expect(result).toStrictEqual(0);
 
       ergebnisseWithWahlvorschlagSpy.mockRestore();
+    });
+  });
+
+  describe("getErgebnisStapelCByWahlvorschlagIdOrZero", () => {
+    it("should_returnErgebnisStapelC_when_ergebnisCHasEntry", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const mockedErgebnisAndStapelArtArray: ErgebnisAndStapelArt[] = [
+        { ergebnis: ergebnis1, stapelArt: StapelArtEnum.ObwCGueltig },
+        { ergebnis: ergebnis2, stapelArt: StapelArtEnum.ObwCGueltig },
+      ];
+
+      mockDefinitions.stapelCGueltigErgebnisse.mockReturnValue(
+        mockedErgebnisAndStapelArtArray
+      );
+
+      const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
+        ergebnis1.wahlvorschlagID
+      );
+
+      expect(result).toStrictEqual(ergebnis1.ergebnis);
     });
   });
 });

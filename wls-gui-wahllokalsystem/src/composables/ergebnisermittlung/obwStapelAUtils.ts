@@ -18,14 +18,14 @@ export function useOBWStapelAUtils(
   const STAPEL = StapelArtEnum.ObwA;
 
   const { stapelCGueltigErgebnisse } = useOBWStapelCUtils(wahlID, wahlbezirkID);
-  
+
   const {
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
   } = useErgebnismeldungStore();
-  
+
   const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
-  
+
   const {
     getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
     getWahlvorschlaegeByWahlIDAndWahlbezirkID,

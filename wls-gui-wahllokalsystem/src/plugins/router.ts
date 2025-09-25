@@ -7,9 +7,9 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
-  ROUTE_OBW_STAPEL_C,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_B,
+  ROUTE_STAPEL_C,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -130,7 +130,7 @@ const routes = [
   },
   {
     path: "/stapelC/:wahlId",
-    name: ROUTE_OBW_STAPEL_C,
+    name: ROUTE_STAPEL_C,
     component: StapelCView,
   },
   {

@@ -34,9 +34,9 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   EXAMPLE_ROUTES_NOTFOUND,
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-  ROUTE_OBW_STAPEL_C,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_B,
+  ROUTE_STAPEL_C,
 } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -57,7 +57,7 @@ const items = [
     title: properties.titleStimmenZaehlen,
     routeName: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   },
-  { title: "Stapel c", routeName: ROUTE_OBW_STAPEL_C },
+  { title: "Stapel c", routeName: ROUTE_STAPEL_C },
   { title: "Stapel b", routeName: ROUTE_STAPEL_B },
   { title: "Stapel a", routeName: ROUTE_STAPEL_A },
 ];

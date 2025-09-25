@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,13 +30,12 @@ public class Ergebnisse {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "Ergebnissammlung", joinColumns = {
-                    @JoinColumn(name = "fk_wahlid", referencedColumnName = "wahlid"),
-                    @JoinColumn(name = "fk_wahlbezirkid", referencedColumnName = "wahlbezirkid"),
-                    @JoinColumn(name = "fk_stapelart", referencedColumnName = "stapelart")
-            }
+            @JoinColumn(name = "fk_wahlid", referencedColumnName = "wahlid"),
+            @JoinColumn(name = "fk_wahlbezirkid", referencedColumnName = "wahlbezirkid"),
+            @JoinColumn(name = "fk_stapelart", referencedColumnName = "stapelart")
+    }
     )
     @NotNull
-    @Size(min = 1)
     @Builder.Default
     private List<Ergebnis> ergebnisse = new ArrayList<>();
 }

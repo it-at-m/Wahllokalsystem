@@ -331,6 +331,39 @@ describe("ergebnismeldungStore.ts", () => {
       ]);
     });
 
+    it("should_send_emptyErgebnisse_when_noErgebnisseAreGiven", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArt = StapelArtEnum.ObwA;
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const mockedErgebnisseModel = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: stapelArt,
+        })
+        .ergebnisse([])
+        .build();
+      unitUnderTest.ergebnisse = [mockedErgebnisseModel];
+
+      mockDefinitions.postErgebnisse.mockResolvedValue({});
+
+      await unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt, true);
+
+      expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
+        [wahlbezirkID, wahlID, stapelArt, mockedErgebnisseModel, true],
+      ]);
+    });
+
     it("should_throwError_when_calledServiceThrowsError", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);

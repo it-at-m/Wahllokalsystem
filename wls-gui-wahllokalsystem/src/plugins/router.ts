@@ -129,7 +129,7 @@ const routes = [
     component: ObwStapelBView,
   },
   {
-    path: "/wahl/:wahlId/stapelc",
+    path: "/stapelC/:wahlId",
     name: ROUTE_OBW_STAPEL_C,
     component: StapelCView,
   },

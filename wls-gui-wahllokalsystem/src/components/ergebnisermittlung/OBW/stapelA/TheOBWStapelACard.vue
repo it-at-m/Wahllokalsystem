@@ -22,7 +22,7 @@
               :model-value="ergebnisWithWahlvorschlag.ergebnis"
               :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
               :ergebnis-stapel-c="
-                getErgebnisStapelC(
+                getErgebnisStapelCByWahlvorschlagIdOrZero(
                   ergebnisWithWahlvorschlag.ergebnis.wahlvorschlagID
                 )
               "
@@ -55,7 +55,6 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useOBWStapelAUtils } from "@/composables/ergebnisermittlung/obwStapelAUtils.ts";
-import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -74,12 +73,11 @@ const props = defineProps({
   },
 });
 
-const { stapelCGueltigErgebnisse } = useOBWStapelCUtils(
-  computed(() => props.wahlID),
-  computed(() => props.wahlbezirkID)
-);
-
-const { ergebnisseAndWahlvorschlaege, sumOfValidVotes } = useOBWStapelAUtils(
+const {
+  ergebnisseAndWahlvorschlaege,
+  sumOfValidVotes,
+  getErgebnisStapelCByWahlvorschlagIdOrZero,
+} = useOBWStapelAUtils(
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
 );
@@ -88,12 +86,5 @@ const isFormValid = ref<boolean | null>(null);
 
 function onSaveClicked() {
   sendErgebnisseByStapelArt(props.wahlID, STAPEL);
-}
-
-function getErgebnisStapelC(wahlvorschlagID: string | null) {
-  const foundItem = stapelCGueltigErgebnisse.value.find(
-    (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
-  );
-  return foundItem ? foundItem.ergebnis.ergebnis : 0;
 }
 </script>

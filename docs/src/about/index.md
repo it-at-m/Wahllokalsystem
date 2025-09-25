@@ -272,12 +272,17 @@ der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrz
 (Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
 :::
 
-📃 **UseCase: `Beschluss zu uneindeutigen Stimmzettel fassen`**
+📃 **UseCase: `Stimmzettel auswerten und Stimmen zählen`**
 
-::: info `Oberbürgermeisterwahl`
-Die Ergebnisse werden mit Stapel C erfasst. Dieser besteht aus den Teilstapeln für gültige und ungültige Stimmen.
-Für jeden bedenklichen Stimmzettel muss eine Entscheidung getroffen werden. Bei den gültigen Stimmzetteln handelt es
-sich um solche, bei denen die Entscheidung für einen konkreten Wahlvorschlag getroffen wurde.
+Für jede Wahl gibt es ein bestimmtes Zählverfahren, in welchem die Stimmzettel nach verschiedenen Stapeln sortiert
+und anschließend ausgezählt werden.
 
-Die Reihenfolge der getroffenen Beschlüsse muss stabil bleiben.
-:::
+Stapel für die **Oberbürgermeisterwahl**:
+
+  | Stapel               | Beschreibung                                                  | Anmerkung |
+  |----------------------|---------------------------------------------------------------|-----------|
+  | `A`                  | Zweifelsfrei gültige Stimmen                                  |           |
+  | `B_Leer`             | Zweifelsfrei ungültige Stimmen: Leere Stimmzettelumschläge    | nur BWB   |
+  | `B_Ungekennzeichnet` | Zweifelsfrei ungültige Stimmen: Ungekennzeichnete Stimmzettel |           |
+  | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
+  | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |

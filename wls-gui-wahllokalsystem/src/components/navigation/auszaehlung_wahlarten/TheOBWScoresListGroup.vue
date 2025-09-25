@@ -10,31 +10,13 @@
     dass das list-item für SRW und BAW mit der gleichen Route aufgerufen wird. Siehe
     https://github.com/vuetifyjs/vuetify/issues/20516 -->
     <v-list-item
+      v-for="(item, index) in items"
+      :key="index"
       :disabled="!obwWahlID"
-      :title="titleStimmenZaehlen"
+      :title="item.title"
       :to="
         obwWahlID
-          ? routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
-              wahlId: String(obwWahlID),
-            })
-          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
-      "
-    />
-    <v-list-item
-      title="Stapel c"
-      :to="
-        routeWithNameAndParams(ROUTE_OBW_STAPEL_C, {
-          wahlId: String(obwWahlID),
-        })
-      "
-    />
-    <v-list-item title="Stapel b" />
-    <v-list-item
-      :disabled="!obwWahlID"
-      title="Stapel a"
-      :to="
-        obwWahlID
-          ? routeWithNameAndParams(ROUTE_STAPEL_A, {
+          ? routeWithNameAndParams(item.routeName, {
               wahlId: String(obwWahlID),
             })
           : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
@@ -54,6 +36,7 @@ import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_OBW_STAPEL_C,
   ROUTE_STAPEL_A,
+  ROUTE_STAPEL_B,
 } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -61,11 +44,21 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 const { wahlenActions } = useWahlenStore();
 const { routeWithNameAndParams, routeWithName } = useNavigationUtils();
 
-defineProps<{
+const properties = defineProps<{
   titleStimmenZaehlen: string;
 }>();
 
 const obwWahlID = computed<string | undefined>(() => {
   return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw);
 });
+
+const items = [
+  {
+    title: properties.titleStimmenZaehlen,
+    routeName: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+  },
+  { title: "Stapel c", routeName: ROUTE_OBW_STAPEL_C },
+  { title: "Stapel b", routeName: ROUTE_STAPEL_B },
+  { title: "Stapel a", routeName: ROUTE_STAPEL_A },
+];
 </script>

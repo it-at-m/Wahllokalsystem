@@ -53,7 +53,7 @@ describe("obwStapelCUtils", () => {
   const wahlID = "wahlID";
   const wahlbezirkID = "wahlbezirkID";
 
-  function createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+  function createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
     ergebnisse: Map<StapelArtEnum, Ergebnisse>
   ) {
     return (args: {
@@ -509,7 +509,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([[StapelArtEnum.ObwCGueltig, gueltige]])
         )
       );
@@ -537,7 +537,7 @@ describe("obwStapelCUtils", () => {
       );
 
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
             [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
@@ -615,7 +615,7 @@ describe("obwStapelCUtils", () => {
         .build();
 
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -644,7 +644,7 @@ describe("obwStapelCUtils", () => {
         .ergebnisse([ungueltig1, ungueltig2])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCUngueltig, ungueltige],
             [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
@@ -670,7 +670,7 @@ describe("obwStapelCUtils", () => {
         .ergebnisse([gueltig1, gueltig2])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
             [StapelArtEnum.ObwCGueltig, gueltige],
@@ -835,7 +835,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -860,7 +860,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -879,7 +879,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCUngueltig, ungueltige],
             [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
@@ -898,7 +898,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
@@ -913,7 +913,7 @@ describe("obwStapelCUtils", () => {
       const gueltige = createErgebnisseWithNoErgebnisse();
       const ungueltige = createErgebnisseWithNoErgebnisse();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -948,7 +948,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -979,7 +979,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -999,7 +999,7 @@ describe("obwStapelCUtils", () => {
         ])
         .build();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1025,7 +1025,7 @@ describe("obwStapelCUtils", () => {
         .build();
       const ungueltige = createErgebnisseWithNoErgebnisse();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1040,7 +1040,7 @@ describe("obwStapelCUtils", () => {
       const gueltige = createErgebnisseWithNoErgebnisse();
       const ungueltige = createErgebnisseWithNoErgebnisse();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1060,7 +1060,7 @@ describe("obwStapelCUtils", () => {
         .build();
       const ungueltige = createErgebnisseWithNoErgebnisse();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],

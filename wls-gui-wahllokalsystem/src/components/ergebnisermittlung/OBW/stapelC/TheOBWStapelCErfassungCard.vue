@@ -99,16 +99,16 @@ const {
   switchStapelCOfErgebnis,
   wahlvorschlaege,
 } = useOBWStapelCUtils(
-  computed(() => props.wahlID),
-  computed(() => props.wahlbezirkID)
+  computed(() => props.wahlId),
+  computed(() => props.wahlbezirkId)
 );
 
 const props = defineProps({
-  wahlID: {
+  wahlId: {
     type: String,
     required: true,
   },
-  wahlbezirkID: {
+  wahlbezirkId: {
     type: String,
     required: true,
   },

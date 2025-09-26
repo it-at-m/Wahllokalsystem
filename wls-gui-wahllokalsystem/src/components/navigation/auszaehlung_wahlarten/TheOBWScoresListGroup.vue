@@ -36,6 +36,7 @@ import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_B,
+  ROUTE_STAPEL_C,
 } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -56,7 +57,7 @@ const items = [
     title: properties.titleStimmenZaehlen,
     routeName: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   },
-  { title: "Stapel c", routeName: EXAMPLE_ROUTES_NOTFOUND },
+  { title: "Stapel c", routeName: ROUTE_STAPEL_C },
   { title: "Stapel b", routeName: ROUTE_STAPEL_B },
   { title: "Stapel a", routeName: ROUTE_STAPEL_A },
 ];

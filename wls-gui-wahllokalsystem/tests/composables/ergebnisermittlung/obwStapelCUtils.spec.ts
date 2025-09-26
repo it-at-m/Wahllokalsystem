@@ -590,8 +590,8 @@ describe("obwStapelCUtils", () => {
     });
   });
 
-  describe("getErgebnisStapelCByWahlvorschlagIdOrZero", () => {
-    it("should_returnErgebnisStapelC_when_stapelCGueltigErgebnisseHasEntryForWahlvorschlagID", () => {
+  describe("getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero", () => {
+    it("should_returnStapelCGueltigErgebnis_when_stapelCGueltigErgebnisseHasEntryForWahlvorschlagID", () => {
       const ergebnis1 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .wahlvorschlagID(generateRandomString(8))
@@ -605,12 +605,14 @@ describe("obwStapelCUtils", () => {
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
-      const result1 = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
-        ergebnis1.wahlvorschlagID
-      );
-      const result2 = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
-        ergebnis2.wahlvorschlagID
-      );
+      const result1 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis1.wahlvorschlagID
+        );
+      const result2 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis2.wahlvorschlagID
+        );
 
       expect(result1).toStrictEqual(ergebnis1.ergebnis);
       expect(result2).toStrictEqual(ergebnis2.ergebnis);
@@ -630,9 +632,10 @@ describe("obwStapelCUtils", () => {
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
-      const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
-        generateRandomString(8)
-      );
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
 
       expect(result).toStrictEqual(0);
     });
@@ -642,9 +645,10 @@ describe("obwStapelCUtils", () => {
         prepareErgebnisse().ergebnisse([]).build()
       );
 
-      const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
-        generateRandomString(8)
-      );
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
 
       expect(result).toStrictEqual(0);
     });

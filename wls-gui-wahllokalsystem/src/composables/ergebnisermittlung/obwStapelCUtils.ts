@@ -217,7 +217,7 @@ export function useOBWStapelCUtils(
     );
   }
 
-  function getErgebnisStapelCByWahlvorschlagIdOrZero(
+  function getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
     wahlvorschlagID: string | null
   ): number | null {
     const foundItem = stapelCGueltigErgebnisse.value.find(
@@ -272,6 +272,6 @@ export function useOBWStapelCUtils(
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,
     switchStapelCOfErgebnis,
-    getErgebnisStapelCByWahlvorschlagIdOrZero,
+    getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero,
   };
 }

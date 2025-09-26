@@ -22,7 +22,7 @@
               :model-value="ergebnisWithWahlvorschlag.ergebnis"
               :wahlvorschlag="ergebnisWithWahlvorschlag.wahlvorschlag"
               :ergebnis-stapel-c="
-                getErgebnisStapelCByWahlvorschlagIdOrZero(
+                getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
                   ergebnisWithWahlvorschlag.ergebnis.wahlvorschlagID
                 )
               "
@@ -78,10 +78,11 @@ const { ergebnisseAndWahlvorschlaege, sumOfValidVotes } = useOBWStapelAUtils(
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
 );
-const { getErgebnisStapelCByWahlvorschlagIdOrZero } = useOBWStapelCUtils(
-  computed(() => props.wahlID),
-  computed(() => props.wahlbezirkID)
-);
+const { getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero } =
+  useOBWStapelCUtils(
+    computed(() => props.wahlID),
+    computed(() => props.wahlbezirkID)
+  );
 
 const isFormValid = ref<boolean | null>(null);
 

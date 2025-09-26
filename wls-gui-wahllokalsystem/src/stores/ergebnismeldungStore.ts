@@ -85,11 +85,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         stapelArt
       );
 
-      if (
-        wahlbezirkID &&
-        ergebnisseToSend &&
-        ergebnisseToSend.ergebnisse.length > 0
-      ) {
+      if (wahlbezirkID && ergebnisseToSend) {
         await postErgebnisse(
           wahlbezirkID,
           wahlID,

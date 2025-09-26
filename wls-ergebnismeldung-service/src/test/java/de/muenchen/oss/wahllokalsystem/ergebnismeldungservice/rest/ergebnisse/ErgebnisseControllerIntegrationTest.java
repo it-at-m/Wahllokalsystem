@@ -26,11 +26,16 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -146,7 +151,7 @@ public class ErgebnisseControllerIntegrationTest {
             val stapelart1 = Stapelart.LTW_BZW_A;
             val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            val requestBody = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID1, wahlID1, stapelartDTO), Collections.emptyList());
+            val requestBody = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID1, wahlID1, stapelartDTO), null);
 
             val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -299,24 +304,19 @@ public class ErgebnisseControllerIntegrationTest {
             Assertions.assertThat(repoResponse).usingRecursiveComparison().isEqualTo(expectedRepoResponse);
         }
 
-        @Test
+        @ParameterizedTest()
+        @MethodSource("getReplacingData")
         @WithMockUser(
                 authorities = { Authorities.SERVICE_SET_ERGEBNISSE, Authorities.REPOSITORY_READ_ERGEBNISSE,
                         Authorities.REPOSITORY_WRITE_ERGEBNISSE }
         )
-        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+        void should_replaceOldData_when_dataIsPresentInRepository(final ArgumentsAccessor arguments) throws Exception {
             val wahlID = "wahlID";
             val wahlbezirkID = "wahlbezirkID";
             val stapelart = Stapelart.LTW_BZW_A;
             val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart(wahlbezirkID, wahlID, stapelart);
 
-            val ergebnisDTO1 = new ErgebnisDTO("wahlvorschlagID1", "kandidatID1", 1L, 1, 1L);
-            val ergebnisDTO2 = new ErgebnisDTO("wahlvorschlagID2", "kandidatID2", 2L, 1, 2L);
-            val newErgebnisDTOList = new ArrayList<ErgebnisDTO>();
-            newErgebnisDTOList.add(ergebnisDTO1);
-            newErgebnisDTOList.add(ergebnisDTO2);
-
-            val requestBody = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, StapelartDTO.LTW_BZW_A), newErgebnisDTOList);
+            val requestBody = arguments.get(0, ErgebnisseDTO.class);
 
             val request = MockMvcRequestBuilders.post("/businessActions/ergebnisse/" + wahlID + "/" + wahlbezirkID + "/" + Stapelart.LTW_BZW_A).with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -339,6 +339,21 @@ public class ErgebnisseControllerIntegrationTest {
             Assertions.assertThat(entityFromRepo)
                     .usingRecursiveComparison()
                     .isEqualTo(expectedEntity);
+        }
+
+        public static Stream<Arguments> getReplacingData() {
+            val ergebnisDTO1 = new ErgebnisDTO("wahlvorschlagID1", "kandidatID1", 1L, 1, 1L);
+            val ergebnisDTO2 = new ErgebnisDTO("wahlvorschlagID2", "kandidatID2", 2L, 1, 2L);
+            val newErgebnisDTOList = new ArrayList<ErgebnisDTO>();
+            newErgebnisDTOList.add(ergebnisDTO1);
+            newErgebnisDTOList.add(ergebnisDTO2);
+
+            return Stream.of(Arguments.of(
+                    new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), newErgebnisDTOList),
+                    "withNewDataWithErgebnisse"),
+                    Arguments.of(
+                            new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO("wahlbezirkID", "wahlID", StapelartDTO.LTW_BZW_A), Collections.emptyList()),
+                            "withNewDataWithoutErgebnisse"));
         }
     }
 }

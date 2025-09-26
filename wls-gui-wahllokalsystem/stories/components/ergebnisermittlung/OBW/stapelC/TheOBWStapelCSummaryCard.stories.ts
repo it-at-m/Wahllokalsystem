@@ -15,8 +15,8 @@ const wahlbezirkID = "wahlbezirkID";
 const meta = {
   component: TheOBWStapelCSummaryCard,
   args: {
-    wahlID: wahlID,
-    wahlbezirkID: wahlbezirkID,
+    wahlId: wahlID,
+    wahlbezirkId: wahlbezirkID,
   },
 } satisfies Meta<typeof TheOBWStapelCSummaryCard>;
 

@@ -32,7 +32,7 @@ public class ErgebnisseValidator {
     }
 
     public void validModelOrThrow(final ErgebnisseModel ergebnisseToAdd) throws FachlicheWlsException {
-        if (ergebnisseToAdd.ergebnisse() == null || ergebnisseToAdd.ergebnisse().isEmpty()) {
+        if (ergebnisseToAdd.ergebnisse() == null) {
             throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG);
         }
     }

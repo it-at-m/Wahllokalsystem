@@ -654,6 +654,7 @@ describe("obwStapelCUtils", () => {
         );
 
       expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
     });
 
     it("should_return0_when_stapelCGueltigErgebnisseIsEmptyArray", () => {

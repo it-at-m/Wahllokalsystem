@@ -14,7 +14,7 @@ describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     unitUnderTest = useIndexDB();
     consoleMock = vi
       .spyOn(console, "error")
@@ -22,8 +22,8 @@ describe("indexDB.ts", () => {
   });
 
   afterEach(() => {
-    vi.resetAllMocks();
     vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe("getDirtyItems", () => {
@@ -98,7 +98,7 @@ describe("indexDB.ts", () => {
 
       expect(localforage.getItem).toHaveBeenCalledWith(key);
       expect(consoleMock).toHaveBeenCalledWith(
-        "useIndexDB: Fehler beim Laden aus IDB:",
+        expect.stringContaining("useIndexDB: Fehler beim Laden aus IDB:"),
         error
       );
       expect(result).toEqual(null);

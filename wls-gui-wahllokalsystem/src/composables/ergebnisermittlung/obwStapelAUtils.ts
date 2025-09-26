@@ -5,7 +5,6 @@ import type { ComputedRef } from "vue";
 import { computed } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
@@ -16,8 +15,6 @@ export function useOBWStapelAUtils(
   wahlbezirkID: ComputedRef<string>
 ) {
   const STAPEL = StapelArtEnum.ObwA;
-
-  const { stapelCGueltigErgebnisse } = useOBWStapelCUtils(wahlID, wahlbezirkID);
 
   const {
     getErgebnisseByWahlIdAndStapelartOrUndefined,
@@ -46,15 +43,6 @@ export function useOBWStapelAUtils(
         return sum + (ergebnis.ergebnis ?? 0);
       }, 0)
   );
-
-  function getErgebnisStapelCByWahlvorschlagIdOrZero(
-    wahlvorschlagID: string | null
-  ): number | null {
-    const foundItem = stapelCGueltigErgebnisse.value.find(
-      (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
-    );
-    return foundItem ? foundItem.ergebnis.ergebnis : 0;
-  }
 
   function _addWahlvorschlagForErgebnisIfExisting(
     ergebnis: Ergebnis,
@@ -133,6 +121,5 @@ export function useOBWStapelAUtils(
   return {
     ergebnisseAndWahlvorschlaege,
     sumOfValidVotes,
-    getErgebnisStapelCByWahlvorschlagIdOrZero,
   };
 }

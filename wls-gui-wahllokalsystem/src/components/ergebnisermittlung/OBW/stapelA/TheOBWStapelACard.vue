@@ -55,6 +55,7 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useOBWStapelAUtils } from "@/composables/ergebnisermittlung/obwStapelAUtils.ts";
+import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -73,11 +74,11 @@ const props = defineProps({
   },
 });
 
-const {
-  ergebnisseAndWahlvorschlaege,
-  sumOfValidVotes,
-  getErgebnisStapelCByWahlvorschlagIdOrZero,
-} = useOBWStapelAUtils(
+const { ergebnisseAndWahlvorschlaege, sumOfValidVotes } = useOBWStapelAUtils(
+  computed(() => props.wahlID),
+  computed(() => props.wahlbezirkID)
+);
+const { getErgebnisStapelCByWahlvorschlagIdOrZero } = useOBWStapelCUtils(
   computed(() => props.wahlID),
   computed(() => props.wahlbezirkID)
 );

@@ -574,6 +574,66 @@ describe("obwStapelCUtils", () => {
     });
   });
 
+  describe("getErgebnisStapelCByWahlvorschlagIdOrZero", () => {
+    it("should_returnErgebnisStapelC_when_stapelCGueltigErgebnisseHasEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+        prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
+      );
+
+      const result1 = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
+        ergebnis1.wahlvorschlagID
+      );
+      const result2 = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
+        ergebnis2.wahlvorschlagID
+      );
+
+      expect(result1).toStrictEqual(ergebnis1.ergebnis);
+      expect(result2).toStrictEqual(ergebnis2.ergebnis);
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseHasNoEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+        prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
+      );
+
+      const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
+        generateRandomString(8)
+      );
+
+      expect(result).toStrictEqual(0);
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseIsUndefined", () => {
+      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+        undefined
+      );
+
+      const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(
+        generateRandomString(8)
+      );
+
+      expect(result).toStrictEqual(0);
+    });
+  });
+
   describe("totalSum", () => {
     it("should_buildSumOfGueltigAndUngueltig_when_valuesAreGiven", () => {
       const gueltig1 = prepareErgebnis()

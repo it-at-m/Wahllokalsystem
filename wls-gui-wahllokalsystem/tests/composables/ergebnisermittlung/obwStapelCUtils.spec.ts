@@ -601,7 +601,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID(generateRandomString(8))
         .build();
 
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
@@ -626,7 +626,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID(generateRandomString(8))
         .build();
 
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
@@ -637,9 +637,9 @@ describe("obwStapelCUtils", () => {
       expect(result).toStrictEqual(0);
     });
 
-    it("should_return0_when_stapelCGueltigErgebnisseIsUndefined", () => {
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        undefined
+    it("should_return0_when_stapelCGueltigErgebnisseIsEmptyArray", () => {
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse().ergebnisse([]).build()
       );
 
       const result = unitUnderTest.getErgebnisStapelCByWahlvorschlagIdOrZero(

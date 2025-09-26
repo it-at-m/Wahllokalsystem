@@ -668,6 +668,7 @@ describe("obwStapelCUtils", () => {
         );
 
       expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
     });
   });
 

@@ -24,7 +24,7 @@
               :ergebnis-stapel-c="
                 getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
                   ergebnisWithWahlvorschlag.ergebnis.wahlvorschlagID
-                )
+                ).length
               "
             />
           </tbody>

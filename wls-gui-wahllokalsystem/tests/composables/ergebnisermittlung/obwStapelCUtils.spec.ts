@@ -598,11 +598,17 @@ describe("obwStapelCUtils", () => {
         .build();
       const ergebnis2 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(ergebnis1.wahlvorschlagID)
+        .build();
+      const ergebnis3 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
         .wahlvorschlagID(generateRandomString(8))
         .build();
 
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
-        prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
+        prepareErgebnisse()
+          .ergebnisse([ergebnis1, ergebnis2, ergebnis3])
+          .build()
       );
 
       const result1 =
@@ -611,11 +617,11 @@ describe("obwStapelCUtils", () => {
         );
       const result2 =
         unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
-          ergebnis2.wahlvorschlagID
+          ergebnis3.wahlvorschlagID
         );
 
-      expect(result1).toStrictEqual(ergebnis1.ergebnis);
-      expect(result2).toStrictEqual(ergebnis2.ergebnis);
+      expect(result1.length).toStrictEqual(2);
+      expect(result2.length).toStrictEqual(1);
     });
 
     it("should_return0_when_stapelCGueltigErgebnisseHasNoEntryForWahlvorschlagID", () => {
@@ -637,7 +643,7 @@ describe("obwStapelCUtils", () => {
           generateRandomString(8)
         );
 
-      expect(result).toStrictEqual(0);
+      expect(result.length).toStrictEqual(0);
     });
 
     it("should_return0_when_stapelCGueltigErgebnisseIsEmptyArray", () => {
@@ -650,7 +656,7 @@ describe("obwStapelCUtils", () => {
           generateRandomString(8)
         );
 
-      expect(result).toStrictEqual(0);
+      expect(result.length).toStrictEqual(0);
     });
   });
 

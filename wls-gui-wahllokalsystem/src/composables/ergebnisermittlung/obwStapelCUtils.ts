@@ -219,11 +219,10 @@ export function useOBWStapelCUtils(
 
   function getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
     wahlvorschlagID: string | null
-  ): number | null {
-    const foundItem = stapelCGueltigErgebnisse.value.find(
+  ): ErgebnisAndStapelArt[] {
+    return stapelCGueltigErgebnisse.value.filter(
       (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
     );
-    return foundItem ? foundItem.ergebnis.ergebnis : 0;
   }
 
   function _createNewErgebnisWithoutWahlvorschlagWithNumIndex(

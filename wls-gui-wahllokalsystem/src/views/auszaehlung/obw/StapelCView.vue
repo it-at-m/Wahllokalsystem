@@ -1,5 +1,6 @@
 <template>
   <v-row v-if="wahlbezirkID && wahlID">
+    <!--    {{ totalSum }}-->
     <v-col :cols="colsErfassungsCard">
       <the-o-b-w-stapel-c-erfassung-card
         :wahlbezirk-id="wahlbezirkID"
@@ -37,11 +38,16 @@ const wahlbezirkID = computed(
   () => getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID.value) ?? ""
 );
 
-const { totalSum } = useOBWStapelCUtils(wahlID, wahlbezirkID);
+const { wahlvorschlaegeAndSumAboveZero, stapelCUngueltigErgebnisseSum } =
+  useOBWStapelCUtils(wahlID, wahlbezirkID);
 
 const colsErfassungsCard = computed(() =>
   hasResultsToShow.value ? (sm.value ? 12 : 8) : 12
 );
 const colsSummaryCard = computed(() => (sm.value ? 12 : 4));
-const hasResultsToShow = computed(() => totalSum.value > 0);
+const hasResultsToShow = computed(
+  () =>
+    wahlvorschlaegeAndSumAboveZero.value.length > 0 ||
+    stapelCUngueltigErgebnisseSum.value > 0
+);
 </script>

@@ -590,6 +590,88 @@ describe("obwStapelCUtils", () => {
     });
   });
 
+  describe("getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero", () => {
+    it("should_returnStapelCGueltigErgebnis_when_stapelCGueltigErgebnisseHasEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(ergebnis1.wahlvorschlagID)
+        .build();
+      const ergebnis3 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse()
+          .ergebnisse([ergebnis1, ergebnis2, ergebnis3])
+          .build()
+      );
+
+      const result1 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis1.wahlvorschlagID
+        );
+      const result2 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis3.wahlvorschlagID
+        );
+
+      expect(result1.length).toStrictEqual(2);
+      expect(result2.length).toStrictEqual(1);
+      for (const ergebnis of result1) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis1.wahlvorschlagID
+        );
+      }
+      for (const ergebnis of result2) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis3.wahlvorschlagID
+        );
+      }
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseHasNoEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
+      );
+
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
+
+      expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseIsEmptyArray", () => {
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse().ergebnisse([]).build()
+      );
+
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
+
+      expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
+    });
+  });
+
   describe("totalSum", () => {
     it("should_buildSumOfGueltigAndUngueltig_when_valuesAreGiven", () => {
       const gueltig1 = prepareErgebnis()

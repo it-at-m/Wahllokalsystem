@@ -20,7 +20,9 @@ export function useOBWStapelAUtils(
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
   } = useErgebnismeldungStore();
+
   const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
+
   const {
     getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
     getWahlvorschlaegeByWahlIDAndWahlbezirkID,

@@ -217,6 +217,14 @@ export function useOBWStapelCUtils(
     );
   }
 
+  function getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+    wahlvorschlagID: string | null
+  ): ErgebnisAndStapelArt[] {
+    return stapelCGueltigErgebnisse.value.filter(
+      (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
+    );
+  }
+
   function _createNewErgebnisWithoutWahlvorschlagWithNumIndex(
     numIndex: number
   ): Ergebnis {
@@ -263,5 +271,6 @@ export function useOBWStapelCUtils(
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,
     switchStapelCOfErgebnis,
+    getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero,
   };
 }

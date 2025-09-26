@@ -622,6 +622,16 @@ describe("obwStapelCUtils", () => {
 
       expect(result1.length).toStrictEqual(2);
       expect(result2.length).toStrictEqual(1);
+      for (const ergebnis of result1) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis1.wahlvorschlagID
+        );
+      }
+      for (const ergebnis of result2) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis3.wahlvorschlagID
+        );
+      }
     });
 
     it("should_return0_when_stapelCGueltigErgebnisseHasNoEntryForWahlvorschlagID", () => {

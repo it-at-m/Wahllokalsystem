@@ -1,6 +1,5 @@
 <template>
   <v-row v-if="wahlbezirkID && wahlID">
-    <!--    {{ totalSum }}-->
     <v-col :cols="colsErfassungsCard">
       <the-o-b-w-stapel-c-erfassung-card
         :wahlbezirk-id="wahlbezirkID"

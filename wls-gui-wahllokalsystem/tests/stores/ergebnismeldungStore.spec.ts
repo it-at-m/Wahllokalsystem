@@ -331,7 +331,7 @@ describe("ergebnismeldungStore.ts", () => {
       ]);
     });
 
-    it("should_send_emptyErgebnisse_when_noErgebnisseAreGiven", async () => {
+    it("should_sendEmptyErgebnisse_when_noErgebnisseAreGiven", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stapelArt = StapelArtEnum.ObwA;

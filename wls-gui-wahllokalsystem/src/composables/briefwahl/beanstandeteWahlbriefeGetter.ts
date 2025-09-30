@@ -3,11 +3,15 @@ import type { Ref } from "vue";
 
 import { computed } from "vue";
 
+import { useZurueckweisungsgrundEnumUtils } from "@/composables/briefwahl/zurueckweisungsgrundEnumUtils.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
 export function useBeanstandeteWahlbriefeGetter(
   wahlenState: Ref<{ wahlen: Wahl[] | null }>
 ) {
+  const { isRejectingZurueckweisungsgrund } =
+    useZurueckweisungsgrundEnumUtils();
+
   const summeGueltigerWahlbriefe = computed(() => {
     if (!wahlenState.value.wahlen) return [];
     return wahlenState.value.wahlen.map(
@@ -40,19 +44,14 @@ export function useBeanstandeteWahlbriefeGetter(
       }));
 
     wahlenState.value.wahlen.forEach((wahl, wahlIndex) => {
-      if (
-        wahl.beanstandeteWahlbriefe &&
-        wahl.beanstandeteWahlbriefe.every((grund) => grund !== null)
-      ) {
-        wahl.beanstandeteWahlbriefe.forEach((beanstandeterWahlbrief) => {
-          if (beanstandeterWahlbrief !== ZurueckweisungsgrundEnum.Zugelassen) {
-            const index = summenZurueckweisungsgruende.findIndex(
-              (item) => item.grund === beanstandeterWahlbrief
-            );
-            summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
-          }
-        });
-      }
+      wahl.beanstandeteWahlbriefe.forEach((beanstandeterWahlbrief) => {
+        if (isRejectingZurueckweisungsgrund(beanstandeterWahlbrief)) {
+          const index = summenZurueckweisungsgruende.findIndex(
+            (item) => item.grund === beanstandeterWahlbrief
+          );
+          summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
+        }
+      });
     });
     return summenZurueckweisungsgruende;
   });

@@ -2,11 +2,11 @@ import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/Zurueckweisungsgrund
 
 export function useZurueckweisungsgrundEnumUtils() {
   function isRejectingZurueckweisungsgrund(
-    zurueckweisungsgruend: ZurueckweisungsgrundEnum | null
+    zurueckweisungsgrund: ZurueckweisungsgrundEnum | null
   ) {
     return (
-      zurueckweisungsgruend !== null &&
-      zurueckweisungsgruend !== ZurueckweisungsgrundEnum.Zugelassen
+      zurueckweisungsgrund !== null &&
+      zurueckweisungsgrund !== ZurueckweisungsgrundEnum.Zugelassen
     );
   }
 

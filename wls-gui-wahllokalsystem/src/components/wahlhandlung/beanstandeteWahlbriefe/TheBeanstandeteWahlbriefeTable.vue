@@ -93,7 +93,7 @@
       confirmtext="Trotzdem Löschen"
       canceltext="Abbrechen"
       icon="$information"
-      @cancel="rowIndexToDelete = null"
+      @cancel="onCancelDialog"
       @confirm="onDialogConfirmDeletingRows"
       ><div>
         Sie wollen einen Beschluss löschen, für den Sie bereits Werte erfasst
@@ -278,6 +278,10 @@ function onDialogConfirmDeletingRows() {
     _deleteBeanstandeterWahlbrief(rowIndexToDelete.value);
     rowIndexToDelete.value = null;
   }
+}
+
+function onCancelDialog() {
+  rowIndexToDelete.value = null;
 }
 
 function _deleteBeanstandeterWahlbrief(rowIndex: number) {

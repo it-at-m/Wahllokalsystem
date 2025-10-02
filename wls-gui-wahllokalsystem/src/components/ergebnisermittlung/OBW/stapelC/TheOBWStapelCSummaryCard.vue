@@ -20,7 +20,7 @@
           >
             <td>
               {{
-                `${wahlvorschlagAndSum.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlagAndSum.wahlvorschlag)}`
+                `${wahlvorschlagAndSum.wahlvorschlag.ordnungszahl} - ${wahlvorschlagAndSum.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlagAndSum.wahlvorschlag)}`
               }}
             </td>
             <td>{{ wahlvorschlagAndSum.sum }}</td>

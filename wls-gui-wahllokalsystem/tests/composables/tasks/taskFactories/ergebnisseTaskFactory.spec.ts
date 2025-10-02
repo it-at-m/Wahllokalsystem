@@ -101,11 +101,16 @@ describe("ergebnisseTaskFactory.ts", () => {
       }
     );
 
-    it("should_returnEmptyTaskListForWahlenNotInObwSrwBaw_when_called", () => {
+    it("should_returnEmptyTaskListForWahlenNotInObwSrwBawMbw_when_called", () => {
       const extendedWahlMetaDataForAllWahlenExceptObwSrwBaw: ExtendedWahlMetaData[] =
         [];
       Object.values(WahlWahlartEnum).forEach((value) => {
-        if (value !== "OBW" && value !== "BAW" && value !== "SRW") {
+        if (
+          value !== "OBW" &&
+          value !== "BAW" &&
+          value !== "SRW" &&
+          value != "MBW"
+        ) {
           extendedWahlMetaDataForAllWahlenExceptObwSrwBaw.push(
             prepareExtendedWahlMetaData().wahlArt(value).build()
           );

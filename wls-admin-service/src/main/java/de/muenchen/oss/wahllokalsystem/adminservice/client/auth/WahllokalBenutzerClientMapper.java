@@ -11,14 +11,13 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface WahllokalBenutzerClientMapper {
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Mapping(target = "wbidWahlnummer", source = "wbid_wahlnummer")
     WahllokalUserInfoDTO toDTO(WahllokalBenutzerModel wahllokalBenutzerModel);
 
     default String mapTripleToJsonAsString(final List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(wbid_wahlnummer);
+        return "{ \"wbid_wahlnummer\": " + objectMapper.writeValueAsString(wbid_wahlnummer) + "}";
     }
 
     List<WahllokalUserInfoDTO> toDTO(List<WahllokalBenutzerModel> wahllokalBenutzerModelList);

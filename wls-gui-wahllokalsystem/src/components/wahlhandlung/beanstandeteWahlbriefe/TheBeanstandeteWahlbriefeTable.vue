@@ -96,10 +96,11 @@
       @cancel="onCancelDialog"
       @confirm="onDialogConfirmDeletingRows"
       ><div>
-        Sie wollen einen Beschluss löschen, für den Sie bereits Werte erfasst
-        haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende Werte
-        gelöscht:
-        <br ><br >
+        <div style="margin-bottom: 20px">
+          Sie wollen einen Beschluss löschen, für den Sie bereits Werte erfasst
+          haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende
+          Werte gelöscht:
+        </div>
         <div :style="{ whiteSpace: 'pre-line' }">{{ contextForDeletion }}</div>
       </div></base-dialog
     >

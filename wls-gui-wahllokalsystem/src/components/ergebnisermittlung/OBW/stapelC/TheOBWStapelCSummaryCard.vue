@@ -19,9 +19,7 @@
             :key="wahlvorschlagAndSum.wahlvorschlag.identifikator"
           >
             <td>
-              {{
-                `${wahlvorschlagAndSum.wahlvorschlag.ordnungszahl} - ${wahlvorschlagAndSum.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlagAndSum.wahlvorschlag)}`
-              }}
+              {{ getWahlvorschlagTitle(wahlvorschlagAndSum.wahlvorschlag) }}
             </td>
             <td>{{ wahlvorschlagAndSum.sum }}</td>
           </tr>
@@ -45,7 +43,7 @@ import { computed } from "vue";
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
-const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
+const { getWahlvorschlagTitle } = useWahlvorschlagUtils();
 
 const props = defineProps({
   wahlId: {

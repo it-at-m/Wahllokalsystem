@@ -20,7 +20,6 @@ export function useOBWStapelCUtils(
 ) {
   const {
     deleteErgebnisseWithNumIndexAbove,
-    getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
     sendErgebnisseByStapelArt,
     switchStapelOfErgebnis,
@@ -36,10 +35,11 @@ export function useOBWStapelCUtils(
   const stapelCUngueltigErgebnisse: ComputedRef<ErgebnisAndStapelArt[]> =
     computed(
       () =>
-        getErgebnisseByWahlIdAndStapelartOrUndefined(
-          wahlID.value,
-          StapelArtEnum.ObwCUngueltig
-        )?.ergebnisse.map((ergebnis) => ({
+        getErgebnisseAndCreateIfMissing({
+          wahlID: wahlID.value,
+          wahlbezirkID: wahlbezirkID.value,
+          stapelArt: StapelArtEnum.ObwCUngueltig,
+        }).ergebnisse.map((ergebnis) => ({
           ergebnis: ergebnis,
           stapelArt: StapelArtEnum.ObwCUngueltig,
         })) ?? []
@@ -53,10 +53,11 @@ export function useOBWStapelCUtils(
   const stapelCGueltigErgebnisse: ComputedRef<ErgebnisAndStapelArt[]> =
     computed(
       () =>
-        getErgebnisseByWahlIdAndStapelartOrUndefined(
-          wahlID.value,
-          StapelArtEnum.ObwCGueltig
-        )?.ergebnisse.map((ergebnis) => ({
+        getErgebnisseAndCreateIfMissing({
+          wahlID: wahlID.value,
+          wahlbezirkID: wahlbezirkID.value,
+          stapelArt: StapelArtEnum.ObwCGueltig,
+        }).ergebnisse.map((ergebnis) => ({
           ergebnis: ergebnis,
           stapelArt: StapelArtEnum.ObwCGueltig,
         })) ?? []
@@ -216,6 +217,14 @@ export function useOBWStapelCUtils(
     );
   }
 
+  function getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+    wahlvorschlagID: string | null
+  ): ErgebnisAndStapelArt[] {
+    return stapelCGueltigErgebnisse.value.filter(
+      (item) => item.ergebnis.wahlvorschlagID === wahlvorschlagID
+    );
+  }
+
   function _createNewErgebnisWithoutWahlvorschlagWithNumIndex(
     numIndex: number
   ): Ergebnis {
@@ -262,5 +271,6 @@ export function useOBWStapelCUtils(
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,
     switchStapelCOfErgebnis,
+    getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero,
   };
 }

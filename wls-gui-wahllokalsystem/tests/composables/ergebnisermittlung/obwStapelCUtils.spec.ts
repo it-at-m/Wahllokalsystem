@@ -25,7 +25,6 @@ type ErgebnisWithNumIndex = Ergebnis & { numIndex: number };
 const mockDefinitions = vi.hoisted(() => ({
   deleteErgebnisseWithNumIndexAbove: vi.fn(),
   getErgebnisseAndCreateIfMissing: vi.fn(),
-  getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
   getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
   sendErgebnisseByStapelArt: vi.fn(),
   switchStapelOfErgebnis: vi.fn(),
@@ -37,8 +36,6 @@ vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
       mockDefinitions.deleteErgebnisseWithNumIndexAbove,
     getErgebnisseAndCreateIfMissing:
       mockDefinitions.getErgebnisseAndCreateIfMissing,
-    getErgebnisseByWahlIdAndStapelartOrUndefined:
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined,
     sendErgebnisseByStapelArt: mockDefinitions.sendErgebnisseByStapelArt,
     switchStapelOfErgebnis: mockDefinitions.switchStapelOfErgebnis,
   }),
@@ -56,11 +53,15 @@ describe("obwStapelCUtils", () => {
   const wahlID = "wahlID";
   const wahlbezirkID = "wahlbezirkID";
 
-  function createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+  function createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
     ergebnisse: Map<StapelArtEnum, Ergebnisse>
   ) {
-    return (wahlID: string, stapelArt: StapelArtEnum) => {
-      return ergebnisse.get(stapelArt);
+    return (args: {
+      wahlID: string;
+      wahlbezirkID: string;
+      stapelArt: StapelArtEnum;
+    }) => {
+      return ergebnisse.get(args.stapelArt);
     };
   }
 
@@ -134,7 +135,7 @@ describe("obwStapelCUtils", () => {
       const ergebnis2 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
@@ -146,13 +147,15 @@ describe("obwStapelCUtils", () => {
       ];
       expect(result).toStrictEqual(expectedResult);
       expect(
-        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mock.calls
-      ).toStrictEqual([[wahlID, StapelArtEnum.ObwCUngueltig]]);
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
+      ).toStrictEqual([
+        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwCUngueltig }],
+      ]);
     });
 
     it("should_returnEmptyArray_when_noErgebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        undefined
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        createErgebnisseWithNoErgebnisse()
       );
 
       const result = unitUnderTest.stapelCUngueltigErgebnisse.value;
@@ -168,21 +171,23 @@ describe("obwStapelCUtils", () => {
       const ergebnis2 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
       const result = unitUnderTest.stapelCUngueltigErgebnisseSum.value;
 
       expect(
-        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mock.calls
-      ).toStrictEqual([[wahlID, StapelArtEnum.ObwCUngueltig]]);
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
+      ).toStrictEqual([
+        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwCUngueltig }],
+      ]);
       expect(result).toStrictEqual(ergebnis1.ergebnis + ergebnis2.ergebnis);
     });
 
     it("should_returnZero_when_ergebnisseStapelCUngueltigIsEmptyArray", () => {
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        prepareErgebnisse().ergebnisse([]).build()
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        createErgebnisseWithNoErgebnisse()
       );
 
       const result = unitUnderTest.stapelCUngueltigErgebnisseSum.value;
@@ -198,7 +203,7 @@ describe("obwStapelCUtils", () => {
       const ergebnis3 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse()
           .ergebnisse([ergebnis1, ergebnis2, ergebnis3])
           .build()
@@ -218,7 +223,7 @@ describe("obwStapelCUtils", () => {
       const ergebnis2 = prepareErgebnis()
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
       );
 
@@ -230,13 +235,15 @@ describe("obwStapelCUtils", () => {
       ];
       expect(result).toStrictEqual(expectedResult);
       expect(
-        mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mock.calls
-      ).toStrictEqual([[wahlID, StapelArtEnum.ObwCGueltig]]);
+        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
+      ).toStrictEqual([
+        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwCGueltig }],
+      ]);
     });
 
     it("should_returnEmptyArray_when_noErgebnisseForWahlIDAndStapelObwCUngueltigAreGiven", () => {
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
-        undefined
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        createErgebnisseWithNoErgebnisse()
       );
 
       const result = unitUnderTest.stapelCGueltigErgebnisse.value;
@@ -270,7 +277,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID("wahlvorschlag3")
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse()
           .ergebnisse([
             ergebnis1Wahlvorschlag1,
@@ -316,7 +323,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID(null)
         .ergebnis(9)
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse()
           .ergebnisse([
             ergebnis1Wahlvorschlag1,
@@ -354,7 +361,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID("wahlvorschlag1")
         .ergebnis(null)
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse()
           .ergebnisse([
             ergebnis1Wahlvorschlag1,
@@ -455,7 +462,7 @@ describe("obwStapelCUtils", () => {
         .wahlvorschlagID(wahlvorschlag2.identifikator)
         .ergebnis(generateRandomNumber(4))
         .build() as ErgebnisWithErgebnis;
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockReturnValue(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         prepareErgebnisse()
           .ergebnisse([
             ergebnis1Wahlvorschlag1,
@@ -501,8 +508,8 @@ describe("obwStapelCUtils", () => {
           ergebnis1Wahlvorschlag2,
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([[StapelArtEnum.ObwCGueltig, gueltige]])
         )
       );
@@ -527,6 +534,15 @@ describe("obwStapelCUtils", () => {
             new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
           )
           .build()
+      );
+
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
+            [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
+          ])
+        )
       );
 
       const result = unitUnderTest.wahlvorschlaegeAndSumAboveZero.value;
@@ -574,6 +590,88 @@ describe("obwStapelCUtils", () => {
     });
   });
 
+  describe("getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero", () => {
+    it("should_returnStapelCGueltigErgebnis_when_stapelCGueltigErgebnisseHasEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(ergebnis1.wahlvorschlagID)
+        .build();
+      const ergebnis3 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse()
+          .ergebnisse([ergebnis1, ergebnis2, ergebnis3])
+          .build()
+      );
+
+      const result1 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis1.wahlvorschlagID
+        );
+      const result2 =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          ergebnis3.wahlvorschlagID
+        );
+
+      expect(result1.length).toStrictEqual(2);
+      expect(result2.length).toStrictEqual(1);
+      for (const ergebnis of result1) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis1.wahlvorschlagID
+        );
+      }
+      for (const ergebnis of result2) {
+        expect(ergebnis.ergebnis.wahlvorschlagID).toStrictEqual(
+          ergebnis3.wahlvorschlagID
+        );
+      }
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseHasNoEntryForWahlvorschlagID", () => {
+      const ergebnis1 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+      const ergebnis2 = prepareErgebnis()
+        .ergebnis(generateRandomNumber(4))
+        .wahlvorschlagID(generateRandomString(8))
+        .build();
+
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse().ergebnisse([ergebnis1, ergebnis2]).build()
+      );
+
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
+
+      expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
+    });
+
+    it("should_return0_when_stapelCGueltigErgebnisseIsEmptyArray", () => {
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
+        prepareErgebnisse().ergebnisse([]).build()
+      );
+
+      const result =
+        unitUnderTest.getStapelCGueltigErgebnisseByWahlvorschlagIdOrZero(
+          generateRandomString(8)
+        );
+
+      expect(result.length).toStrictEqual(0);
+      expect(result).toStrictEqual([]);
+    });
+  });
+
   describe("totalSum", () => {
     it("should_buildSumOfGueltigAndUngueltig_when_valuesAreGiven", () => {
       const gueltig1 = prepareErgebnis()
@@ -598,8 +696,8 @@ describe("obwStapelCUtils", () => {
         .ergebnisse([ungueltig1, ungueltig2])
         .build();
 
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -627,9 +725,12 @@ describe("obwStapelCUtils", () => {
       const ungueltige = prepareErgebnisse()
         .ergebnisse([ungueltig1, ungueltig2])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
-          new Map([[StapelArtEnum.ObwCUngueltig, ungueltige]])
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+            [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
+          ])
         )
       );
 
@@ -650,9 +751,12 @@ describe("obwStapelCUtils", () => {
       const gueltige = prepareErgebnisse()
         .ergebnisse([gueltig1, gueltig2])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
-          new Map([[StapelArtEnum.ObwCGueltig, gueltige]])
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
+            [StapelArtEnum.ObwCGueltig, gueltige],
+          ])
         )
       );
 
@@ -664,7 +768,7 @@ describe("obwStapelCUtils", () => {
 
   describe("addGueltigErgebnisse", () => {
     it("should_addGueltigErgebnisseWithNewAmount_when_noErgebnisseExist", () => {
-      const mockedErgebnisse = prepareErgebnisse().ergebnisse([]).build();
+      const mockedErgebnisse = createErgebnisseWithNoErgebnisse();
       mockDefinitions.getErgebnisseAndCreateIfMissing.mockReturnValue(
         mockedErgebnisse
       );
@@ -696,10 +800,12 @@ describe("obwStapelCUtils", () => {
       ];
       expect(mockedErgebnisse.ergebnisse).toStrictEqual(expectedErgebnisse);
       expect(
-        mockDefinitions.getErgebnisseAndCreateIfMissing.mock.calls
-      ).toStrictEqual([
-        [{ wahlID, wahlbezirkID, stapelArt: StapelArtEnum.ObwCGueltig }],
-      ]);
+        mockDefinitions.getErgebnisseAndCreateIfMissing
+      ).toHaveBeenCalledWith({
+        wahlID,
+        wahlbezirkID,
+        stapelArt: StapelArtEnum.ObwCGueltig,
+      });
     });
     it("should_addGueltigErgebnisseWithNewAmount_when_ergebnisseAlreadyExist", () => {
       const existingErgebnis1 = createErgebnis();
@@ -810,8 +916,8 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(12).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -835,8 +941,8 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(10).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -854,9 +960,12 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(10).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
-          new Map([[StapelArtEnum.ObwCUngueltig, ungueltige]])
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCUngueltig, ungueltige],
+            [StapelArtEnum.ObwCGueltig, createErgebnisseWithNoErgebnisse()],
+          ])
         )
       );
 
@@ -870,9 +979,12 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(11).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
-          new Map([[StapelArtEnum.ObwCGueltig, gueltige]])
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, gueltige],
+            [StapelArtEnum.ObwCUngueltig, createErgebnisseWithNoErgebnisse()],
+          ])
         )
       );
 
@@ -880,10 +992,10 @@ describe("obwStapelCUtils", () => {
       expect(result).toStrictEqual(11);
     });
     it("should_returnNull_when_bothStapelHaveNoValues", () => {
-      const gueltige = prepareErgebnisse().ergebnisse([]).build();
-      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      const gueltige = createErgebnisseWithNoErgebnisse();
+      const ungueltige = createErgebnisseWithNoErgebnisse();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -917,8 +1029,8 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(12).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -948,8 +1060,8 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(10).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -961,15 +1073,15 @@ describe("obwStapelCUtils", () => {
       expect(result).toStrictEqual(11);
     });
     it("should_returnMaxNumIndexOfUngueltig_when_onlyUngueltigHaveValues", () => {
-      const gueltige = prepareErgebnisse().ergebnisse([]).build();
+      const gueltige = createErgebnisseWithNoErgebnisse();
       const ungueltige = prepareErgebnisse()
         .ergebnisse([
           prepareErgebnis().numIndex(3).build(),
           prepareErgebnis().numIndex(10).build(),
         ])
         .build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -993,9 +1105,9 @@ describe("obwStapelCUtils", () => {
             .build(),
         ])
         .build();
-      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      const ungueltige = createErgebnisseWithNoErgebnisse();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1007,10 +1119,10 @@ describe("obwStapelCUtils", () => {
       expect(result).toStrictEqual(11);
     });
     it("should_returnNull_when_bothStapelHaveNoValues", () => {
-      const gueltige = prepareErgebnisse().ergebnisse([]).build();
-      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      const gueltige = createErgebnisseWithNoErgebnisse();
+      const ungueltige = createErgebnisseWithNoErgebnisse();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1028,9 +1140,9 @@ describe("obwStapelCUtils", () => {
           prepareErgebnis().numIndex(11).wahlvorschlagID(null).build(),
         ])
         .build();
-      const ungueltige = prepareErgebnisse().ergebnisse([]).build();
-      mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-        createMockImplementationForGetErgebnisseByWahlIdAndStapelartOrUndefinedWithErgebnisseForStapelArt(
+      const ungueltige = createErgebnisseWithNoErgebnisse();
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
           new Map([
             [StapelArtEnum.ObwCGueltig, gueltige],
             [StapelArtEnum.ObwCUngueltig, ungueltige],
@@ -1042,4 +1154,8 @@ describe("obwStapelCUtils", () => {
       expect(result).toStrictEqual(null);
     });
   });
+
+  function createErgebnisseWithNoErgebnisse() {
+    return prepareErgebnisse().ergebnisse([]).build();
+  }
 });

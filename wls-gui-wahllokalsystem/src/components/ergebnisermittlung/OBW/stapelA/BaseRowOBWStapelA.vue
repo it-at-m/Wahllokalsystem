@@ -8,6 +8,8 @@
         :rules="[required, minNumber(0)]"
       />
     </td>
+    <td>{{ ergebnisC }}</td>
+    <td>{{ sumCAndA }}</td>
   </tr>
 </template>
 
@@ -35,6 +37,11 @@ const props = defineProps({
     type: Object as PropType<Wahlvorschlag>,
     required: true,
   },
+  ergebnisStapelC: {
+    type: Number as PropType<number | null>,
+    required: false,
+    default: null,
+  },
 });
 
 const firstKandidatName = computed(() =>
@@ -48,4 +55,10 @@ const wahlvorschlagName = computed(() =>
     ? `${[props.wahlvorschlag.kurzname, firstKandidatName.value].join(", ")}`
     : ""
 );
+
+const ergebnisC = computed(() => props.ergebnisStapelC ?? 0);
+
+const sumCAndA = computed(() => {
+  return ergebnisC.value + (modelValue.value.ergebnis ?? 0);
+});
 </script>

@@ -1,90 +1,109 @@
 <template>
-  <v-table>
-    <thead>
-      <tr>
-        <th class="font-weight-bold text-center">Wahlschein</th>
-        <th
-          v-for="wahl in wahlenState.wahlen"
-          :key="wahl.wahlID"
-          class="font-weight-bold text-center"
-        >
-          Stimmzettelumschlag für {{ wahl.name }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="index in maxRows"
-        :key="index"
-      >
-        <td>
-          <v-row
-            align="center"
-            class="my-2"
-            style="min-width: 350px"
+  <v-container>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="font-weight-bold text-center">Wahlschein</th>
+          <th
+            v-for="wahl in wahlenState.wahlen"
+            :key="wahl.wahlID"
+            class="font-weight-bold text-center"
           >
-            {{ index }}
+            Stimmzettelumschlag für {{ wahl.name }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="index in maxRows"
+          :key="index"
+        >
+          <td>
+            <v-row
+              align="center"
+              class="my-2"
+              style="min-width: 350px"
+            >
+              {{ index }}
+              <v-autocomplete
+                :model-value="
+                  zurueckweisungsgrundEnumToDisplayString(
+                    wahlscheinGruende[index - 1]
+                  )
+                "
+                label="Beschlussergebnis"
+                class="ml-5"
+                :items="gruendeWahlscheine"
+                hide-details
+                auto-select-first
+                :rules="[required]"
+                :data-test="`wahlscheingruende-input-${index - 1}`"
+                @update:model-value="
+                  (value) =>
+                    onZulassungsgrundWahlscheinChanged(value, index - 1)
+                "
+              />
+            </v-row>
+          </td>
+          <td
+            v-for="wahl in wahlenState.wahlen"
+            :key="`${wahl.wahlID}-${index - 1}`"
+          >
             <v-autocomplete
               :model-value="
                 zurueckweisungsgrundEnumToDisplayString(
-                  wahlscheinGruende[index - 1]
+                  wahl.beanstandeteWahlbriefe[index - 1]
                 )
               "
               label="Beschlussergebnis"
-              class="ml-5"
-              :items="gruendeWahlscheine"
+              :items="gruendeStimmzettel"
               hide-details
               auto-select-first
               :rules="[required]"
-              :data-test="`wahlscheingruende-input-${index - 1}`"
+              :disabled="_isInputDisabled(index - 1)"
+              :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
               @update:model-value="
-                (value) => onZulassungsgrundWahlscheinChanged(value, index - 1)
+                (value) =>
+                  onZulassungsgrundStimmzettelChanged(value, index - 1, wahl)
               "
             />
-          </v-row>
-        </td>
-        <td
-          v-for="wahl in wahlenState.wahlen"
-          :key="`${wahl.wahlID}-${index - 1}`"
-        >
-          <v-autocomplete
-            :model-value="
-              zurueckweisungsgrundEnumToDisplayString(
-                wahl.beanstandeteWahlbriefe[index - 1]
-              )
-            "
-            label="Beschlussergebnis"
-            :items="gruendeStimmzettel"
-            hide-details
-            auto-select-first
-            :rules="[required]"
-            :disabled="_isInputDisabled(index - 1)"
-            :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
-            @update:model-value="
-              (value) =>
-                onZulassungsgrundStimmzettelChanged(value, index - 1, wahl)
-            "
-          />
-        </td>
-        <td>
-          <v-row
-            align="center"
-            justify="space-between"
-            class="px-2"
-            style="min-width: 115px"
-          >
-            <v-btn
-              icon="$delete"
-              variant="text"
-              :data-test="`delete-btn-${index - 1}`"
-              @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
-            />
-            <the-beanstandete-wahlbriefe-row-status-icon :index="index - 1" />
-          </v-row>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+          </td>
+          <td>
+            <v-row
+              align="center"
+              justify="space-between"
+              class="px-2"
+              style="min-width: 115px"
+            >
+              <v-btn
+                icon="$delete"
+                variant="text"
+                :data-test="`delete-btn-${index - 1}`"
+                @click="onDeleteBeanstandeteWahlbriefeRowClicked(index - 1)"
+              />
+              <the-beanstandete-wahlbriefe-row-status-icon :index="index - 1" />
+            </v-row>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+    <base-dialog
+      :visible="rowIndexToDelete !== null"
+      dialogtitle="Löschen eines Beschlusses"
+      confirmtext="Trotzdem Löschen"
+      canceltext="Abbrechen"
+      icon="$information"
+      @cancel="rowIndexToDelete = null"
+      @confirm="onDialogConfirmDeletingRows"
+      ><div>
+        Sie wollen einen Beschluss löschen, für den Sie bereits Werte erfasst
+        haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende Werte
+        gelöscht:
+        <br ><br >
+        <div :style="{ whiteSpace: 'pre-line' }">{{ contextForDeletion }}</div>
+      </div></base-dialog
+    >
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -93,6 +112,7 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
 
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useRules } from "@/composables/common/rules.ts";
@@ -118,6 +138,34 @@ const maxRows = computed(() => {
     : 0;
 });
 
+const contextForDeletion = computed(() => {
+  const contextLines = [];
+  if (rowIndexToDelete.value !== null) {
+    contextLines.push(
+      zurueckweisungsgrundEnumToDisplayString(
+        wahlscheinGruende.value[rowIndexToDelete.value]
+      ) + " (Wahlschein)\n"
+    );
+    wahlenState.value.wahlen?.map((wahl) => {
+      if (rowIndexToDelete.value !== null) {
+        const beanstandeterWahlbrief =
+          beanstandeteWahlbriefeActions.getBeanstandeterWahlbriefEntryByWahl(
+            rowIndexToDelete.value,
+            wahl.wahlID
+          );
+        contextLines.push(
+          beanstandeterWahlbrief != null
+            ? zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
+                ` (Stimmzettelumschlag für ${wahl.name})\n`
+            : ""
+        );
+      }
+    });
+  }
+  return contextLines.join("");
+});
+
+const rowIndexToDelete = ref<number | null>(null);
 const wahlscheinGruende = ref(Array(maxRows.value).fill(""));
 
 const gruendeWahlscheine = [
@@ -213,6 +261,26 @@ function onZulassungsgrundStimmzettelChanged(
 }
 
 function onDeleteBeanstandeteWahlbriefeRowClicked(rowIndex: number) {
+  if (
+    !beanstandeteWahlbriefeActions.isBeanstandeterWahlbriefEntryEmpty(
+      rowIndex
+    ) ||
+    wahlscheinGruende.value[rowIndex] !== undefined
+  ) {
+    rowIndexToDelete.value = rowIndex;
+  } else {
+    _deleteBeanstandeterWahlbrief(rowIndex);
+  }
+}
+
+function onDialogConfirmDeletingRows() {
+  if (rowIndexToDelete.value !== null) {
+    _deleteBeanstandeterWahlbrief(rowIndexToDelete.value);
+    rowIndexToDelete.value = null;
+  }
+}
+
+function _deleteBeanstandeterWahlbrief(rowIndex: number) {
   beanstandeteWahlbriefeActions.deleteBeanstandeterWahlbriefEntry(rowIndex);
   wahlscheinGruende.value.splice(rowIndex, 1);
 }

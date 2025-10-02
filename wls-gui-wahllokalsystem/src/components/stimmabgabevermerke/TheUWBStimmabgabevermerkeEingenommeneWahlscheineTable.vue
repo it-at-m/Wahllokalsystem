@@ -28,7 +28,6 @@
           >
             <base-number-input
               max-width="15rem"
-              label="Anzahl"
               :rules="[required, minNumber(0)]"
               :model-value="
                 getMapValue(

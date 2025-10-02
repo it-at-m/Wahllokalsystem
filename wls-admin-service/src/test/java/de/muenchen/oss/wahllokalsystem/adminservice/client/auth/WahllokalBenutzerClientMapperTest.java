@@ -64,7 +64,7 @@ class WahllokalBenutzerClientMapperTest {
 
         @Test
         void should_returnNull_when_nullIsGiven() throws JsonProcessingException {
-            Assertions.assertThat(unitUnderTest.mapTripleToJsonAsString(null)).isEqualTo("{ \"wbid_wahlnummer\": null}");
+            Assertions.assertThat(unitUnderTest.mapTripleToJsonAsString(null)).isEqualTo("{\"wbid_wahlnummer\":null}");
         }
 
         @Test
@@ -112,7 +112,7 @@ class WahllokalBenutzerClientMapperTest {
             wahllokalUserInfoDTO.setWahltag(wahltag);
             wahllokalUserInfoDTO.setWahlbezirksart(wahlbezirkModel);
             wahllokalUserInfoDTO.setWbidWahlnummer(
-                    String.format("{ \"wbid_wahlnummer\": [" +
+                    String.format("{\"wbid_wahlnummer\":[" +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                             "{\"wahlbezirkID\":\"wahlbezirkID%s_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
@@ -165,7 +165,7 @@ class WahllokalBenutzerClientMapperTest {
         wahllokalUserInfoDTO.setWahltag(wahltag);
         wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.UWB);
         wahllokalUserInfoDTO.setWbidWahlnummer(
-                "{ \"wbid_wahlnummer\": [" +
+                "{\"wbid_wahlnummer\":[" +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
@@ -184,7 +184,7 @@ class WahllokalBenutzerClientMapperTest {
         wahllokalUserInfoDTO.setWahltag(wahltag);
         wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.BWB);
         wahllokalUserInfoDTO.setWbidWahlnummer(
-                "{ \"wbid_wahlnummer\": [" +
+                "{\"wbid_wahlnummer\":[" +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
                         "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +

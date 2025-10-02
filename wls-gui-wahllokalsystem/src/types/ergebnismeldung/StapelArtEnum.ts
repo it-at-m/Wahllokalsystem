@@ -9,6 +9,7 @@ export const StapelArtEnum = {
   SrwBawAB: "SRW_BAW_A_B",
   SrwBawDUngueltig: "SRW_BAW_D_UNGUELTIG",
   SrwBawBC: "SRW_BAW_B_C",
+  StimmzettelUmschlaege: "STIMMZETTEL_UMSCHLAEGE",
 } as const;
 
 export type StapelArtEnum = (typeof StapelArtEnum)[keyof typeof StapelArtEnum];

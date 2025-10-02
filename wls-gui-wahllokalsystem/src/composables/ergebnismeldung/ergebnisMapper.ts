@@ -1,8 +1,10 @@
 import type {
+  BegruendungDTO,
   BezirkUndWahlIDStapelartDTO,
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
@@ -89,6 +91,19 @@ export function useErgebnisMapper() {
       default:
         throw new Error("Stapelart nicht gefunden");
     }
+  }
+
+  function toBegruendungModel(dto: BegruendungDTO): Begruendung {
+    const bezirkUndWahlIdStapelart = _dtoBezirkUndWahlIDStapelartToModel(
+      dto.bezirkUndWahlIDStapelart
+    );
+    return {
+      wahlID: bezirkUndWahlIdStapelart.wahlID,
+      stapelart: bezirkUndWahlIdStapelart.stapelArt,
+      grund: dto.grund,
+      nachzaehlung: dto.nachzaehlung,
+      unstimmigkeiten: dto.unstimmigkeiten,
+    };
   }
 
   function _dtoBezirkUndWahlIDStapelartToModel(
@@ -194,5 +209,6 @@ export function useErgebnisMapper() {
     toDto,
     toGetErgebnisseStapelartEnum,
     toPostErgebnisseStapelartEnum,
+    toBegruendungModel,
   };
 }

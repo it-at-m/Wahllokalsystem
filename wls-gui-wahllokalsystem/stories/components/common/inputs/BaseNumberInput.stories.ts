@@ -51,7 +51,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    label: "Zahl eingeben",
     "onUpdate:modelValue": fn(),
   },
 };

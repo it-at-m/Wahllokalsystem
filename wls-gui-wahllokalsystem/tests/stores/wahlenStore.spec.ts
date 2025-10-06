@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -586,6 +587,28 @@ describe("wahlenStore.ts", () => {
           expect(row.summen).toStrictEqual([0, 1]);
         }
       });
+    });
+
+    it("should_ignoreBeanstandeWahlbriefeWithoutZurueckweisungsgrund_when_calculatingSum", () => {
+      unitUnderTest.wahlenState.wahlen = [
+        prepareWahl()
+          .beanstandeteWahlbriefe([
+            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            null,
+            null,
+            ZurueckweisungsgrundEnum.ScheinUngueltig,
+            ZurueckweisungsgrundEnum.LoseStimmzettel,
+          ])
+          .build(),
+      ];
+
+      const summen =
+        unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende;
+      const summeLoseStimmzettel = summen.find(
+        (summe) => summe.grund === ZurueckweisungsgrundEnum.LoseStimmzettel
+      );
+      expect(summeLoseStimmzettel?.summen).toStrictEqual([3]);
     });
   });
 

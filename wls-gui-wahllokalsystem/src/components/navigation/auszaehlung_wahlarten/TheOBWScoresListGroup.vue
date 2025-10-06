@@ -52,7 +52,7 @@ const obwWahlID = computed<string | undefined>(() => {
   return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw);
 });
 
-const items = [
+const items = computed(() => [
   {
     title: properties.titleStimmenZaehlen,
     routeName: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
@@ -60,5 +60,5 @@ const items = [
   { title: "Stapel c", routeName: ROUTE_STAPEL_C },
   { title: "Stapel b", routeName: ROUTE_STAPEL_B },
   { title: "Stapel a", routeName: ROUTE_STAPEL_A },
-];
+]);
 </script>

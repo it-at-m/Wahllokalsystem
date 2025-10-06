@@ -37,7 +37,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 const STAPELART_FOR_INVALID = StapelArtEnum.ObwCUngueltig;
 const REF_AUTOCOMPLETE_WAHLVORSCHLAG = "wahlvorschlagSelection";
 
-const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
+const { getWahlvorschlagTitle } = useWahlvorschlagUtils();
 
 const modelValue = defineModel({
   type: Object as PropType<Ergebnis>,
@@ -78,10 +78,6 @@ const isSelected = computed(() => props.stapelArt === STAPELART_FOR_INVALID);
 const isWahlvorschlagSelectionDisabled = computed(
   () => props.stapelArt === STAPELART_FOR_INVALID
 );
-
-function getWahlvorschlagTitle(wahlvorschlag: Wahlvorschlag) {
-  return `${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlag)}`;
-}
 
 function onUngueltigCheckboxChanged(newValue: boolean) {
   emit("selectionChanged", newValue);

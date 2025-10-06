@@ -69,6 +69,8 @@ export function useErgebnisMapper() {
         return GetErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
         return GetErgebnisseStapelartEnum.MbwBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return GetErgebnisseStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -108,6 +110,8 @@ export function useErgebnisMapper() {
         return PostErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
         return PostErgebnisseStapelartEnum.MbwBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return PostErgebnisseStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }

@@ -220,6 +220,10 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.MbwB, PostErgebnisseStapelartEnum.MbwB],
       [StapelArtEnum.MbwBC, PostErgebnisseStapelartEnum.MbwBC],
       [StapelArtEnum.MbwD, PostErgebnisseStapelartEnum.MbwD],
+      [
+        StapelArtEnum.StimmzettelUmschlaege,
+        PostErgebnisseStapelartEnum.StimmzettelUmschlaege,
+      ],
     ];
 
     it("should_haveCompleteListOfMappingTestCases_when_allStapelArtValuesWereTestedInMapping", () => {
@@ -269,6 +273,10 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.MbwB, GetErgebnisseStapelartEnum.MbwB],
       [StapelArtEnum.MbwBC, GetErgebnisseStapelartEnum.MbwBC],
       [StapelArtEnum.MbwD, GetErgebnisseStapelartEnum.MbwD],
+      [
+        StapelArtEnum.StimmzettelUmschlaege,
+        GetErgebnisseStapelartEnum.StimmzettelUmschlaege,
+      ],
     ]);
 
     it("should_haveCompleteListOfMappingTestCases_when_allStapelArtValuesWereTestedInMapping", () => {

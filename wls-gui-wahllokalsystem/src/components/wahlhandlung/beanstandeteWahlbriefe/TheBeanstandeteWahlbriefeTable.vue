@@ -96,12 +96,17 @@
       @cancel="onCancelDialog"
       @confirm="onDialogConfirmDeletingRows"
       ><div>
-        <div style="margin-bottom: 20px">
+        <div class="mb-4">
           Sie wollen einen Beschluss löschen, für den Sie bereits Werte erfasst
           haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende
           Werte gelöscht:
         </div>
-        <div :style="{ whiteSpace: 'pre-line' }">{{ contextForDeletion }}</div>
+        <div
+          v-for="context in contextForDeletion"
+          :key="context"
+        >
+          {{ context }}
+        </div>
       </div></base-dialog
     >
   </v-container>
@@ -145,7 +150,7 @@ const contextForDeletion = computed(() => {
     contextLines.push(
       zurueckweisungsgrundEnumToDisplayString(
         wahlscheinGruende.value[rowIndexToDelete.value]
-      ) + " (Wahlschein)\n"
+      ) + " (Wahlschein)"
     );
     wahlenState.value.wahlen?.map((wahl) => {
       if (rowIndexToDelete.value !== null) {
@@ -154,16 +159,16 @@ const contextForDeletion = computed(() => {
             rowIndexToDelete.value,
             wahl.wahlID
           );
-        contextLines.push(
-          beanstandeterWahlbrief != null
-            ? zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
-                ` (Stimmzettelumschlag für ${wahl.name})\n`
-            : ""
-        );
+        if (beanstandeterWahlbrief != null) {
+          contextLines.push(
+            zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
+              ` (Stimmzettelumschlag für ${wahl.name})`
+          );
+        }
       }
     });
   }
-  return contextLines.join("");
+  return contextLines;
 });
 
 const rowIndexToDelete = ref<number | null>(null);

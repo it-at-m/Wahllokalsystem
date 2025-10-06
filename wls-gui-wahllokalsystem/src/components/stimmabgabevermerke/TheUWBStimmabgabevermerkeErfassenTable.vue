@@ -107,17 +107,21 @@
     <base-dialog
       :visible="isDeleteDialogVisible"
       dialogtitle="Reduzierung der Blätteranzahl des Wählerverzeichnisses"
-      confirmtext="Trotzdem Löschen"
-      canceltext="Abbrechen"
+      confirmtext="Hinweis schließen"
       icon="$information"
-      @cancel="isDeleteDialogVisible = false"
-      @confirm="onDialogConfirmDeletingRows"
-      ><div>
-        Sie wollen Blätter löschen, für die Sie Stimmabgabevermerke eingetragen
-        haben. Wenn Sie diese löschen, werden dadurch auch die Werte für die
-        Stimmabgabevermerke gelöscht.
-      </div></base-dialog
-    >
+      @confirm="isDeleteDialogVisible = false"
+      ><div class="mb-4">
+        Sie haben die Blätteranzahl des Wählerverzeichnisses verändert. Zeilen
+        können nur gelöscht werden, wenn noch keine Stimmabgabevermerke erfasst
+        wurden.
+      </div>
+      <div>
+        {{ blattnummernThatPreventDeletion.length }} Elemente verhindern das
+        Löschen: Für die Blattnummern
+        {{ blattnummernThatPreventDeletion.join(", ") }} wurden bereits
+        Stimmabgabevermerke erfasst.
+      </div>
+    </base-dialog>
   </v-container>
 </template>
 
@@ -139,8 +143,11 @@ const {
   stimmabgabevermerkeTableTotalEachWahldaten,
   lowestNumberOfRowsOverAllWahldaten,
 } = storeToRefs(useStimmabgabevermerkeStore());
-const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =
-  useStimmabgabevermerkeStore();
+const {
+  isAnyRowThatShouldBeDeletedFilled,
+  changeRowCount,
+  getBlattnummernThatPreventDeletion,
+} = useStimmabgabevermerkeStore();
 const { wahlenActions } = useWahlenStore();
 
 onMounted(() => {
@@ -160,6 +167,17 @@ const disableChangeRowSizeButton = computed(() => {
   );
 });
 
+const blattnummernThatPreventDeletion = computed(() => {
+  let blattnummern: number[] = [];
+  if (
+    rowSize.value != null &&
+    isAnyRowThatShouldBeDeletedFilled(rowSize.value)
+  ) {
+    blattnummern = getBlattnummernThatPreventDeletion(rowSize.value);
+  }
+  return blattnummern;
+});
+
 function changeRowCountOrOpenDialog() {
   if (
     lowestNumberOfRowsOverAllWahldaten.value != null &&
@@ -173,13 +191,6 @@ function changeRowCountOrOpenDialog() {
     } else {
       changeRowCount(rowSize.value);
     }
-  }
-}
-
-function onDialogConfirmDeletingRows() {
-  if (rowSize.value != null) {
-    changeRowCount(rowSize.value);
-    isDeleteDialogVisible.value = false;
   }
 }
 </script>

@@ -191,7 +191,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
   describe("getBlattnummernThatPreventDeletion", () => {
     it.each([
       {
-        description: "should_returnEmptySet_when_rowsToDeleteAreEmpty",
+        description: "should_returnEmptyArray_when_rowsToDeleteAreEmpty",
         wahldaten: prepareWahldaten()
           .vermerke([
             prepareVermerk().blattnummer(2).build(),
@@ -244,9 +244,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       const result = unitUnderTest.getBlattnummernThatPreventDeletion(2);
 
       expect(result.length).toBe(testCaseParameter.expectedSize);
-      expect(Array.from(result)).toEqual(
-        testCaseParameter.expectedBlattnummern
-      );
+      expect(result).toEqual(testCaseParameter.expectedBlattnummern);
     });
 
     it("should_returnBlattnummern_when_someRowsToDeleteAreFilledInDifferentStimmabgabevermerke", () => {
@@ -284,7 +282,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       const result = unitUnderTest.getBlattnummernThatPreventDeletion(2);
 
       expect(result.length).toBe(2);
-      expect(Array.from(result)).toEqual([3, 4]);
+      expect(result).toEqual([3, 4]);
     });
   });
 

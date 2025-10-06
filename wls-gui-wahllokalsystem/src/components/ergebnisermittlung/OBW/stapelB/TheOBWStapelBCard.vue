@@ -9,7 +9,6 @@
               :model-value="ergebnisseStapelBLeer"
               :rules="[required, minNumber(0), maxNumber(9999)]"
               min-width="20rem"
-              label="Anzahl"
               @update:model-value="
                 onModelValueStapelBChanged(StapelArtEnum.ObwBLeer, $event)
               "
@@ -22,7 +21,6 @@
             :model-value="ergebnisseStapelBUngekennzeichnet"
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
-            label="Anzahl"
             @update:model-value="
               onModelValueStapelBChanged(
                 StapelArtEnum.ObwBUngekennzeichnet,

@@ -406,6 +406,52 @@ describe("wahlenStore.ts", () => {
     });
   });
 
+  describe("isBeanstandeterWahlbriefEntryEmpty", () => {
+    it.each([
+      [0, false],
+      [1, true],
+    ])("should_returnIfEntriesAreEmtpy_when_called", (input, expected) => {
+      const wahl1 = prepareWahl()
+        .wahlID("wahl1")
+        .beanstandeteWahlbriefe(["ZUGELASSEN", null])
+        .build();
+      const wahl2 = prepareWahl()
+        .wahlID("wahl2")
+        .beanstandeteWahlbriefe([null, null])
+        .build();
+      unitUnderTest.wahlenState.wahlen = [wahl1, wahl2];
+      expect(
+        unitUnderTest.beanstandeteWahlbriefeActions.isBeanstandeterWahlbriefEntryEmpty(
+          input
+        )
+      ).equals(expected);
+    });
+  });
+
+  describe("getBeanstandeterWahlbriefEntryByWahl", () => {
+    it.each([
+      [0, "wahl1", "ZUGELASSEN"],
+      [1, "wahl1", null],
+      [2, "wahl1", undefined],
+      [0, "wahl2", undefined],
+    ])(
+      "should_returnBeanstandetenWahlbrief_when_existsForIndexAndWahlId",
+      (index, wahlId, expected) => {
+        const wahl = prepareWahl()
+          .wahlID("wahl1")
+          .beanstandeteWahlbriefe(["ZUGELASSEN", null])
+          .build();
+        unitUnderTest.wahlenState.wahlen = [wahl];
+        expect(
+          unitUnderTest.beanstandeteWahlbriefeActions.getBeanstandeterWahlbriefEntryByWahl(
+            index,
+            wahlId
+          )
+        ).equals(expected);
+      }
+    );
+  });
+
   describe("saveBeanstandeteWahlbriefe", () => {
     it("should_saveBeanstandeteWahlbriefe_when_called", async () => {
       const wahlbezirkID = "wahlbezirkId";

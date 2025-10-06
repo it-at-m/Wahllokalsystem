@@ -176,6 +176,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   return {
     ergebnisse,
+    begruendungen,
     isErgebnisseSaving,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,

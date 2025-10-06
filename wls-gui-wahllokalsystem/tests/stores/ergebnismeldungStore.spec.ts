@@ -1,16 +1,21 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/begruendungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
+  getBegruendungStimmzettelumschlaege: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
@@ -19,11 +24,22 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
   }),
 }));
+vi.mock(
+  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
+  () => ({
+    useErgebnisermittlungService: () => ({
+      getBegruendungStimmzettelumschlaege:
+        mockDefinitions.getBegruendungStimmzettelumschlaege,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnisse, prepareErgebnisse, prepareErgebnis } =
   useErgebnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareWahl } = useWahlTestDataFactory();
+const { createBegruendung } = useBegruendungTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useErgebnismeldungStore>;
@@ -284,6 +300,103 @@ describe("ergebnismeldungStore.ts", () => {
       expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
         ergebnisAfterUpdating
       );
+    });
+  });
+
+  describe("loadBegruendungForWahl", () => {
+    it("should_loadBegruendungByWahlIdAndReturnNull_when_calledAndNoErgebnisseFound", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      const wahlname = "name";
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlbezirksArt(wahlbezirksArt)
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl().wahlID(wahlID).name(wahlname).build(),
+      ];
+
+      mockDefinitions.getBegruendungStimmzettelumschlaege.mockResolvedValue(
+        null
+      );
+
+      await unitUnderTest.loadBegruendungForWahl(wahlID);
+
+      expect(
+        mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
+      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      expect(unitUnderTest.begruendungen).toStrictEqual([]);
+    });
+
+    it("should_loadBegrundungByWahlI_when_calledAndBegruendungFound", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      const wahlname = "name";
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlbezirksArt(wahlbezirksArt)
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl().wahlID(wahlID).name(wahlname).build(),
+      ];
+
+      const mockedBegruendung = createBegruendung();
+
+      mockDefinitions.getBegruendungStimmzettelumschlaege.mockResolvedValue(
+        mockedBegruendung
+      );
+
+      await unitUnderTest.loadBegruendungForWahl(wahlID);
+
+      expect(
+        mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
+      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      expect(unitUnderTest.begruendungen).toStrictEqual([mockedBegruendung]);
+    });
+
+    it("should_throwError_when_calledServiceThrowsError", async () => {
+      const wahlID = generateRandomString(10);
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+          .wahlMetaData([
+            { wahlbezirkID: "wahlbezirkID", wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl().wahlID(wahlID).name("wahlname").build(),
+      ];
+
+      mockDefinitions.getBegruendungStimmzettelumschlaege.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(
+        unitUnderTest.loadBegruendungForWahl(wahlID)
+      ).rejects.toThrow();
     });
   });
 });

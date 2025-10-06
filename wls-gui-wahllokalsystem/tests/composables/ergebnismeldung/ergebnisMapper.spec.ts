@@ -1,6 +1,9 @@
+import type { BegruendungDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
+import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/begruendungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
@@ -17,6 +20,7 @@ const {
   toDto,
   toPostErgebnisseStapelartEnum,
   toGetErgebnisseStapelartEnum,
+  toBegruendungModel,
 } = useErgebnisMapper();
 const {
   prepareErgebnisseDTO,
@@ -24,6 +28,8 @@ const {
   prepareErgebnisse,
   createErgebnis,
 } = useErgebnisseTestDataFactory();
+const { prepareBegruendungDTO, prepareBegruendung } =
+  useBegruendungTestDataFactory();
 
 describe("ergebnisMapper.ts", () => {
   describe("toModel", () => {
@@ -238,5 +244,30 @@ describe("ergebnisMapper.ts", () => {
         expect(result).toBe(dtoStapelart);
       }
     );
+  });
+
+  describe("toBegruendungModel", () => {
+    it("should_returnModel_when_givenDTO", () => {
+      const dtoBegruendung: BegruendungDTO = prepareBegruendungDTO()
+        .bezirkUndWahlIDStapelart({
+          wahlID: "wahlID",
+          wahlbezirkID: "wahlbezirkID",
+          stapelart: DtoStapelArtEnum.StimmzettelUmschlaege,
+        })
+        .grund("eben weil")
+        .build();
+
+      const modelBegruendung: Begruendung = prepareBegruendung()
+        .wahlID(dtoBegruendung.bezirkUndWahlIDStapelart.wahlID)
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund(dtoBegruendung.grund)
+        .nachzaehlung(undefined)
+        .unstimmigkeiten(undefined)
+        .build();
+
+      const result = toBegruendungModel(dtoBegruendung);
+
+      expect(result).toStrictEqual(modelBegruendung);
+    });
   });
 });

@@ -10,7 +10,6 @@
             <base-number-input
               v-model="countRows"
               :rules="[minNumber(0), maxNumber(9999), required]"
-              label="Anzahl"
               max-width="15rem"
             />
             <v-btn

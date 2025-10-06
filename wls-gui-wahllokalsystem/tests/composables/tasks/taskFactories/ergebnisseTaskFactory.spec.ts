@@ -40,6 +40,7 @@ describe("ergebnisseTaskFactory.ts", () => {
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Obw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Srw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Baw).build(),
+      prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Mbw).build(),
     ])("should_returnTaskListFor%s_when_called", (extendedWahlMetaData) => {
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
         .extendedWahlMetaData([extendedWahlMetaData])
@@ -70,6 +71,7 @@ describe("ergebnisseTaskFactory.ts", () => {
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Obw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Srw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Baw).build(),
+      prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Mbw).build(),
     ])(
       "should_returnTasksWithExpectedCallbacks_when_calledFor%s",
       async (extendedWahlMetaData) => {

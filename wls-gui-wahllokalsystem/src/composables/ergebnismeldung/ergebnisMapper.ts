@@ -140,6 +140,8 @@ export function useErgebnisMapper() {
         return StapelArtEnum.SrwBawDUngueltig;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC:
         return StapelArtEnum.SrwBawBC;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege:
+        return StapelArtEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -189,6 +191,8 @@ export function useErgebnisMapper() {
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawDUngueltig;
       case StapelArtEnum.SrwBawBC:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }

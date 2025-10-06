@@ -35,7 +35,9 @@ export function useCommonErgebnismeldungTestDataFactory() {
     return {
       wahlID: generateRandomString(10),
       wahlbezirkID: generateRandomString(5),
-      stapelart: stapelArt ?? getRandomItem(Object.values(StapelArtEnum)),
+      stapelart:
+        stapelArt ??
+        getRandomItem(Object.values(BezirkUndWahlIDStapelartDTOStapelartEnum)),
     };
   }
 

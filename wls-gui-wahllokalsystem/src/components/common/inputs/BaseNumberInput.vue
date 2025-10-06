@@ -17,7 +17,7 @@ const props = defineProps({
   label: {
     type: String,
     required: false,
-    default: "Zahl eingeben",
+    default: "Anzahl",
   },
   rules: {
     type: Array<(value: number) => string | boolean>,

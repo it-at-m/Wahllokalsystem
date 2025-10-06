@@ -57,7 +57,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
     UserService userService;
 
     @Mock
-    LoginInterceptorService loginInterceptorService;
+    LoginInterceptor loginInterceptor;
 
     @Mock
     AuthenticationManager authenticationManager;
@@ -206,7 +206,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
 
             unitUnderTest.successfulAuthentication(httpServletRequest, new MockHttpServletResponse(), mockedFilterChain, mockedAuthentication);
 
-            Mockito.verify(loginInterceptorService).validateLoginOrThrow(mockedLdapUserDetails);
+            Mockito.verify(loginInterceptor).validateLoginOrThrow(mockedLdapUserDetails);
             Mockito.verify(userService).resetFailAttempts(username);
             Mockito.verify(unitUnderTest).successfulAuthentication(same(httpServletRequest), any(), same(mockedFilterChain), same(mockedAuthentication));
         }
@@ -224,7 +224,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
 
             Mockito.when(mockedLdapUserDetails.getUsername()).thenReturn(username);
             Mockito.when(mockedAuthentication.getPrincipal()).thenReturn(mockedLdapUserDetails);
-            Mockito.doThrow(mockedValidationException).when(loginInterceptorService).validateLoginOrThrow(mockedLdapUserDetails);
+            Mockito.doThrow(mockedValidationException).when(loginInterceptor).validateLoginOrThrow(mockedLdapUserDetails);
 
             unitUnderTest.successfulAuthentication(httpServletRequest, new MockHttpServletResponse(), mockedFilterChain, mockedAuthentication);
 
@@ -245,7 +245,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
 
             Mockito.when(mockedLdapUserDetails.getUsername()).thenReturn(username);
             Mockito.when(mockedAuthentication.getPrincipal()).thenReturn(mockedLdapUserDetails);
-            Mockito.doThrow(mockedValidationException).when(loginInterceptorService).validateLoginOrThrow(mockedLdapUserDetails);
+            Mockito.doThrow(mockedValidationException).when(loginInterceptor).validateLoginOrThrow(mockedLdapUserDetails);
 
             Assertions.assertThatException().isThrownBy(
                     () -> unitUnderTest.successfulAuthentication(httpServletRequest, new MockHttpServletResponse(), mockedFilterChain, mockedAuthentication))

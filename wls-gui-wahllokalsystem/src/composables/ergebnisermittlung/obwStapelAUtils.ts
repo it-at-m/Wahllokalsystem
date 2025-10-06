@@ -16,11 +16,17 @@ export function useOBWStapelAUtils(
 ) {
   const STAPEL = StapelArtEnum.ObwA;
 
-  const { getErgebnisseByWahlIdAndStapelartOrUndefined } =
-    useErgebnismeldungStore();
+  const {
+    getErgebnisseByWahlIdAndStapelartOrUndefined,
+    getErgebnisseAndCreateIfMissing,
+  } = useErgebnismeldungStore();
+
   const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
-  const { getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID } =
-    useWahlvorschlaegeStore();
+
+  const {
+    getWahlvorschlagOrUndefinedByWahlIDWahlbezirkIDAndWahlvorschlagID,
+    getWahlvorschlaegeByWahlIDAndWahlbezirkID,
+  } = useWahlvorschlaegeStore();
 
   const { logWarn } = useLogging("obwUtils");
 
@@ -69,16 +75,46 @@ export function useOBWStapelAUtils(
   function _createErgebnisseAndWahlvorschlaege() {
     const result: ErgebnisAndWahlvorschlag[] = [];
 
-    const ergebnisseForWahlAndStapel =
-      getErgebnisseByWahlIdAndStapelartOrUndefined(
-        wahlID.value,
-        STAPEL
-      )?.ergebnisse?.sort(orderedByNumIndexWithNullAtEnd) ?? [];
+    const ergebnisseOfErgebnisse =
+      getErgebnisseAndCreateIfMissing({
+        wahlID: wahlID.value,
+        wahlbezirkID: wahlbezirkID.value,
+        stapelArt: STAPEL,
+      })?.ergebnisse?.sort(orderedByNumIndexWithNullAtEnd) ?? [];
 
-    ergebnisseForWahlAndStapel.forEach((ergebnis) => {
+    ergebnisseOfErgebnisse.forEach((ergebnis) => {
       _addWahlvorschlagForErgebnisIfExisting(ergebnis, result);
     });
 
+    if (result.length === 0) {
+      const wahlvorschlaege = getWahlvorschlaegeByWahlIDAndWahlbezirkID(
+        wahlID.value,
+        wahlbezirkID.value
+      );
+      if (wahlvorschlaege) {
+        [...wahlvorschlaege.wahlvorschlaege].forEach((wahlvorschlag, index) => {
+          result.push({
+            wahlvorschlag,
+            ergebnis: {
+              numIndex: index + 1,
+              wahlvorschlagID: wahlvorschlag.identifikator,
+              kandidatID: null,
+              wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+              ergebnis: null,
+            },
+          });
+        });
+        const ergebnisse = getErgebnisseByWahlIdAndStapelartOrUndefined(
+          wahlID.value,
+          STAPEL
+        );
+        if (ergebnisse) {
+          ergebnisse.ergebnisse = result.map(
+            (ergebnisAndWahlvorschlag) => ergebnisAndWahlvorschlag.ergebnis
+          );
+        }
+      }
+    }
     return result;
   }
 

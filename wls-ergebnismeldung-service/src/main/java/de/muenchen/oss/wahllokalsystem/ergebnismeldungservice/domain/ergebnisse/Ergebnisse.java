@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -37,7 +36,6 @@ public class Ergebnisse {
             }
     )
     @NotNull
-    @Size(min = 1)
     @Builder.Default
     private List<Ergebnis> ergebnisse = new ArrayList<>();
 }

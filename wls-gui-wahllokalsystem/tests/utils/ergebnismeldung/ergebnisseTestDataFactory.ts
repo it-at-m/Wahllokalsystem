@@ -13,11 +13,22 @@ import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnisme
 import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { generateRandomNumber } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber, getRandomItem } =
+  useCommonTestDataFactory();
 const { createBezirkUndWahlIDStapelart, createBezirkUndWahlIDStapelartDTO } =
-  useCommonErgebnismeldungTestDataFactory();
+    useCommonErgebnismeldungTestDataFactory();
 
 export function useErgebnisseTestDataFactory() {
+  function createBezirkUndWahlIDStapelart(
+    stapelArt?: StapelArtEnum
+  ): BezirkUndWahlIDStapelArt {
+    return {
+      wahlID: generateRandomString(10),
+      wahlbezirkID: generateRandomString(5),
+      stapelArt: stapelArt ?? getRandomItem(Object.values(StapelArtEnum)),
+    };
+  }
+
   function createErgebnisseDTO(): ErgebnisseDTO {
     return {
       bezirkUndWahlIDStapelart: createBezirkUndWahlIDStapelartDTO(
@@ -55,6 +66,12 @@ export function useErgebnisseTestDataFactory() {
     };
   }
 
+  function prepareBezirkUndWahlIDStapelart(): Builder<BezirkUndWahlIDStapelArt> {
+    return proxyBuilder<BezirkUndWahlIDStapelArt>(
+      createBezirkUndWahlIDStapelart()
+    );
+  }
+
   function prepareErgebnisseDTO(): Builder<ErgebnisseDTO> {
     return proxyBuilder<ErgebnisseDTO>(createErgebnisseDTO());
   }
@@ -71,7 +88,19 @@ export function useErgebnisseTestDataFactory() {
     return proxyBuilder<Ergebnis>(createErgebnis());
   }
 
+  function _createBezirkUndWahlIDStapelartDTO(
+    stapelArt: BezirkUndWahlIDStapelartDTOStapelartEnum
+  ): BezirkUndWahlIDStapelartDTO {
+    return {
+      wahlID: generateRandomString(10),
+      wahlbezirkID: generateRandomString(5),
+      stapelart: stapelArt,
+    };
+  }
+
   return {
+    createBezirkUndWahlIDStapelart,
+    prepareBezirkUndWahlIDStapelart,
     createErgebnisseDTO,
     prepareErgebnisseDTO,
     createErgebnisDTO,

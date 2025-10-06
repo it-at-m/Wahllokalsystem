@@ -12,6 +12,7 @@ import { nextTick } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 
@@ -59,6 +60,10 @@ describe("TheEreignisseView", () => {
 
     it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
       const ereignisStore = useEreignisStore();
+      const userStore = useUserStore();
+
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserWahltag = "2025-01-01";
 
       const validEreignis: Ereignis = {
         ereignisart: EreignisartEnum.Vorfall,

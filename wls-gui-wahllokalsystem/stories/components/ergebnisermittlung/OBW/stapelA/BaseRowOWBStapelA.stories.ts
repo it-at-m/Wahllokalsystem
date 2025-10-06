@@ -47,6 +47,7 @@ const meta = {
         },
       ]),
     },
+    ergebnisStapelC: 0,
   },
   decorators: [
     (story) => {
@@ -60,6 +61,20 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
 export const Default: Story = {
   args: {},
+};
+
+export const WithErgebnisSetAndStapelCGueltigValue: Story = {
+  args: {
+    modelValue: {
+      wahlvorschlagID: "1",
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: null,
+      ergebnis: 33,
+      numIndex: null,
+    },
+    ergebnisStapelC: 7,
+  },
 };

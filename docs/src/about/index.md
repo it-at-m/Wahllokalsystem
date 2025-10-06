@@ -65,7 +65,7 @@ Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfas
 Pflichtfelder:
 
 - eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](./#infobox-ereignisse-uwb))
-- ein Datum mit Uhrzeit
+- ein Datum mit Uhrzeit, welches nicht in der Zukunft und nicht vor dem Wahltag liegen darf
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 
 Weiterhin gibt es einige Verhaltensregeln für die Ereigniserfassung:
@@ -271,3 +271,18 @@ Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffne
 der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrzeit sein
 (Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
 :::
+
+📃 **UseCase: `Stimmzettel auswerten und Stimmen zählen`**
+
+Für jede Wahl gibt es ein bestimmtes Zählverfahren, in welchem die Stimmzettel nach verschiedenen Stapeln sortiert
+und anschließend ausgezählt werden.
+
+Stapel für die **Oberbürgermeisterwahl**:
+
+  | Stapel               | Beschreibung                                                  | Anmerkung |
+  |----------------------|---------------------------------------------------------------|-----------|
+  | `A`                  | Zweifelsfrei gültige Stimmen                                  |           |
+  | `B_Leer`             | Zweifelsfrei ungültige Stimmen: Leere Stimmzettelumschläge    | nur BWB   |
+  | `B_Ungekennzeichnet` | Zweifelsfrei ungültige Stimmen: Ungekennzeichnete Stimmzettel |           |
+  | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
+  | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |

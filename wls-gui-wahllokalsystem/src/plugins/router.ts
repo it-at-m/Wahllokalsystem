@@ -7,6 +7,9 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_STAPEL_A,
+  ROUTE_STAPEL_B,
+  ROUTE_STAPEL_C,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -19,6 +22,9 @@ import {
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
+import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
+import ObwStapelBView from "@/views/auszaehlung/OBWStapelBView.vue";
+import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
@@ -111,6 +117,21 @@ const routes = [
     path: "/auszaehlungStimmzettel/:wahlId",
     name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
     component: ErfassungStimmzettelView,
+  },
+  {
+    path: "/stapelA/:wahlId",
+    name: ROUTE_STAPEL_A,
+    component: OWBStapelAView,
+  },
+  {
+    path: "/stapelB/:wahlId",
+    name: ROUTE_STAPEL_B,
+    component: ObwStapelBView,
+  },
+  {
+    path: "/stapelC/:wahlId",
+    name: ROUTE_STAPEL_C,
+    component: StapelCView,
   },
   {
     path: "/:catchAll(.*)*",

@@ -81,6 +81,11 @@ describe("ergebnisMapper.ts", () => {
       [DtoStapelArtEnum.SrwBawAB, StapelArtEnum.SrwBawAB],
       [DtoStapelArtEnum.SrwBawDUngueltig, StapelArtEnum.SrwBawDUngueltig],
       [DtoStapelArtEnum.SrwBawBC, StapelArtEnum.SrwBawBC],
+      [DtoStapelArtEnum.MbwA, StapelArtEnum.MbwA],
+      [DtoStapelArtEnum.MbwAB, StapelArtEnum.MbwAB],
+      [DtoStapelArtEnum.MbwB, StapelArtEnum.MbwB],
+      [DtoStapelArtEnum.MbwBC, StapelArtEnum.MbwBC],
+      [DtoStapelArtEnum.MbwD, StapelArtEnum.MbwD],
     ])(
       "should_mapDtoStapelart%s_when_givenModelStapelart%s",
       (dtoStapelart, modelStapelart) => {
@@ -193,7 +198,7 @@ describe("ergebnisMapper.ts", () => {
   });
 
   describe("toPostErgebnisseStapelartEnum", () => {
-    it.each([
+    const mapStapelArtModelToDtoCases: string[][] = [
       [StapelArtEnum.ObwA, PostErgebnisseStapelartEnum.ObwA],
       [StapelArtEnum.ObwBLeer, PostErgebnisseStapelartEnum.ObwBLeer],
       [
@@ -210,17 +215,39 @@ describe("ergebnisMapper.ts", () => {
         PostErgebnisseStapelartEnum.SrwBawDUngueltig,
       ],
       [StapelArtEnum.SrwBawBC, PostErgebnisseStapelartEnum.SrwBawBC],
-    ])(
+      [StapelArtEnum.MbwA, PostErgebnisseStapelartEnum.MbwA],
+      [StapelArtEnum.MbwAB, PostErgebnisseStapelartEnum.MbwAB],
+      [StapelArtEnum.MbwB, PostErgebnisseStapelartEnum.MbwB],
+      [StapelArtEnum.MbwBC, PostErgebnisseStapelartEnum.MbwBC],
+      [StapelArtEnum.MbwD, PostErgebnisseStapelartEnum.MbwD],
+    ];
+
+    it("should_haveCompleteListOfMappingTestCases_when_allStapelArtValuesWereTestedInMapping", () => {
+      expect(mapStapelArtModelToDtoCases.length).toStrictEqual(
+        Object.values(StapelArtEnum).length
+      );
+    });
+
+    it.each(mapStapelArtModelToDtoCases)(
       "should_mapModelStapelart%s_when_givenDtoStapelart%s",
       (modelStapelart, dtoStapelart) => {
-        const result = toPostErgebnisseStapelartEnum(modelStapelart);
+        const result = toPostErgebnisseStapelartEnum(
+          modelStapelart as StapelArtEnum
+        );
         expect(result).toBe(dtoStapelart);
       }
     );
+
+    it("should_returnAValueForAllStapelartEnumValues_when_stapelArtIsGiven", () => {
+      const enumValues = Object.values(StapelArtEnum);
+      enumValues.forEach((value) => {
+        expect(() => toPostErgebnisseStapelartEnum(value)).not.toThrow();
+      });
+    });
   });
 
   describe("toGetErgebnisseStapelartEnum", () => {
-    it.each([
+    const mapStapelArtModelToDtoCases: string[][] = Array.from([
       [StapelArtEnum.ObwA, GetErgebnisseStapelartEnum.ObwA],
       [StapelArtEnum.ObwBLeer, GetErgebnisseStapelartEnum.ObwBLeer],
       [
@@ -237,13 +264,35 @@ describe("ergebnisMapper.ts", () => {
         GetErgebnisseStapelartEnum.SrwBawDUngueltig,
       ],
       [StapelArtEnum.SrwBawBC, GetErgebnisseStapelartEnum.SrwBawBC],
-    ])(
+      [StapelArtEnum.MbwA, GetErgebnisseStapelartEnum.MbwA],
+      [StapelArtEnum.MbwAB, GetErgebnisseStapelartEnum.MbwAB],
+      [StapelArtEnum.MbwB, GetErgebnisseStapelartEnum.MbwB],
+      [StapelArtEnum.MbwBC, GetErgebnisseStapelartEnum.MbwBC],
+      [StapelArtEnum.MbwD, GetErgebnisseStapelartEnum.MbwD],
+    ]);
+
+    it("should_haveCompleteListOfMappingTestCases_when_allStapelArtValuesWereTestedInMapping", () => {
+      expect(mapStapelArtModelToDtoCases.length).toStrictEqual(
+        Object.values(StapelArtEnum).length
+      );
+    });
+
+    it.each(mapStapelArtModelToDtoCases)(
       "should_mapModelStapelart%s_when_givenDtoStapelart%s",
       (modelStapelart, dtoStapelart) => {
-        const result = toGetErgebnisseStapelartEnum(modelStapelart);
+        const result = toGetErgebnisseStapelartEnum(
+          modelStapelart as StapelArtEnum
+        );
         expect(result).toBe(dtoStapelart);
       }
     );
+
+    it("should_returnAValueForAllStapelartEnumValues_when_stapelArtIsGiven", () => {
+      const enumValues = Object.values(StapelArtEnum);
+      enumValues.forEach((value) => {
+        expect(() => toGetErgebnisseStapelartEnum(value)).not.toThrow();
+      });
+    });
   });
 
   describe("toBegruendungModel", () => {

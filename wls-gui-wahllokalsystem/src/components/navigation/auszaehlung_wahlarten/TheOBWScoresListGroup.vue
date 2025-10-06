@@ -10,16 +10,18 @@
     dass das list-item für SRW und BAW mit der gleichen Route aufgerufen wird. Siehe
     https://github.com/vuetifyjs/vuetify/issues/20516 -->
     <v-list-item
-      :title="titleStimmenZaehlen"
+      v-for="(item, index) in items"
+      :key="index"
+      :disabled="!obwWahlID"
+      :title="item.title"
       :to="
-        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
-          wahlId: String(obwWahlID),
-        })
+        obwWahlID
+          ? routeWithNameAndParams(item.routeName, {
+              wahlId: String(obwWahlID),
+            })
+          : routeWithName(EXAMPLE_ROUTES_NOTFOUND)
       "
     />
-    <v-list-item title="Stapel c" />
-    <v-list-item title="Stapel b" />
-    <v-list-item title="Stapel a" />
     <v-list-item title="Schnellmeldung" />
     <v-list-item title="Niederschrift" />
   </v-list-group>
@@ -29,18 +31,34 @@
 import { computed } from "vue";
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import {
+  EXAMPLE_ROUTES_NOTFOUND,
+  ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+  ROUTE_STAPEL_A,
+  ROUTE_STAPEL_B,
+  ROUTE_STAPEL_C,
+} from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { wahlenActions } = useWahlenStore();
-const { routeWithNameAndParams } = useNavigationUtils();
+const { routeWithNameAndParams, routeWithName } = useNavigationUtils();
 
-defineProps<{
+const properties = defineProps<{
   titleStimmenZaehlen: string;
 }>();
 
 const obwWahlID = computed<string | undefined>(() => {
   return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Obw);
 });
+
+const items = computed(() => [
+  {
+    title: properties.titleStimmenZaehlen,
+    routeName: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+  },
+  { title: "Stapel c", routeName: ROUTE_STAPEL_C },
+  { title: "Stapel b", routeName: ROUTE_STAPEL_B },
+  { title: "Stapel a", routeName: ROUTE_STAPEL_A },
+]);
 </script>

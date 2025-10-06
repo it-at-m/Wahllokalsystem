@@ -1,5 +1,6 @@
 <template>
   <v-card>
+    <v-card-title> Beschlussergebnis </v-card-title>
     <v-card-text>
       <v-table>
         <thead>
@@ -18,9 +19,7 @@
             :key="wahlvorschlagAndSum.wahlvorschlag.identifikator"
           >
             <td>
-              {{
-                `${wahlvorschlagAndSum.wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlagAndSum.wahlvorschlag)}`
-              }}
+              {{ getWahlvorschlagTitle(wahlvorschlagAndSum.wahlvorschlag) }}
             </td>
             <td>{{ wahlvorschlagAndSum.sum }}</td>
           </tr>
@@ -39,30 +38,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
-import type { PropType } from "vue";
-
 import { computed } from "vue";
 
 import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
-const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
+const { getWahlvorschlagTitle } = useWahlvorschlagUtils();
 
 const props = defineProps({
-  ergebnisseStapelCUngueltig: {
-    type: Array as PropType<Ergebnis[]>,
-    required: false,
-    default: () => [],
+  wahlId: {
+    type: String,
+    required: true,
   },
-  ergebnisseStapelCGueltig: {
-    type: Array as PropType<Ergebnis[]>,
-    required: false,
-    default: () => [],
-  },
-  wahlvorschlaege: {
-    type: Array as PropType<Wahlvorschlag[]>,
+  wahlbezirkId: {
+    type: String,
     required: true,
   },
 });
@@ -72,8 +61,7 @@ const {
   totalSum,
   wahlvorschlaegeAndSumAboveZero,
 } = useOBWStapelCUtils(
-  computed(() => props.wahlvorschlaege),
-  computed(() => props.ergebnisseStapelCUngueltig),
-  computed(() => props.ergebnisseStapelCGueltig)
+  computed(() => props.wahlId),
+  computed(() => props.wahlbezirkId)
 );
 </script>

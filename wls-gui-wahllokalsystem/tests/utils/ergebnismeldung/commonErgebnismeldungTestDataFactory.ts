@@ -1,4 +1,8 @@
-import type { BezirkUndWahlIDStapelartDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type {
+  BezirkUndWahlIDStapelartDTO,
+  BezirkUndWahlID as BezirkUndWahlIDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
@@ -11,6 +15,20 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 
 export function useCommonErgebnismeldungTestDataFactory() {
+  function createBezirkUndWahlID(): BezirkUndWahlID {
+    return {
+      wahlID: generateRandomString(10),
+      wahlbezirkID: generateRandomString(5),
+    };
+  }
+
+  function createBezirkUndWahlIDDTO(): BezirkUndWahlIDTO {
+    return {
+      wahlID: generateRandomString(10),
+      wahlbezirkID: generateRandomString(5),
+    };
+  }
+
   function createBezirkUndWahlIDStapelartDTO(
     stapelArt?: BezirkUndWahlIDStapelartDTOStapelartEnum
   ): BezirkUndWahlIDStapelartDTO {
@@ -31,6 +49,14 @@ export function useCommonErgebnismeldungTestDataFactory() {
     };
   }
 
+  function prepareBezirkUndWahlID(): Builder<BezirkUndWahlID> {
+    return proxyBuilder<BezirkUndWahlID>(createBezirkUndWahlID());
+  }
+
+  function prepareBezirkUndWahlIDDTO(): Builder<BezirkUndWahlIDTO> {
+    return proxyBuilder<BezirkUndWahlIDTO>(createBezirkUndWahlIDDTO());
+  }
+
   function prepareBezirkUndWahlIDStapelart(): Builder<BezirkUndWahlIDStapelArt> {
     return proxyBuilder<BezirkUndWahlIDStapelArt>(
       createBezirkUndWahlIDStapelart()
@@ -44,8 +70,12 @@ export function useCommonErgebnismeldungTestDataFactory() {
   }
 
   return {
+    createBezirkUndWahlID,
+    createBezirkUndWahlIDDTO,
     createBezirkUndWahlIDStapelartDTO,
     createBezirkUndWahlIDStapelart,
+    prepareBezirkUndWahlID,
+    prepareBezirkUndWahlIDDTO,
     prepareBezirkUndWahlIDStapelart,
     prepareBezirkUndWahlIDStapelartDTO,
   };

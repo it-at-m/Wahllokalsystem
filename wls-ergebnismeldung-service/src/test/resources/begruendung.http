@@ -23,6 +23,23 @@ Content-Type: application/json
   "unstimmigkeiten": true
 }
 
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c15/1/STIMMZETTEL_UMSCHLAEGE
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c15",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "stapelart": "STIMMZETTEL_UMSCHLAEGE"
+  },
+  "grund": "grund",
+  "grund2": "grund2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}
+
 ### Begründung ohne Grund 2 | user wls_all_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9899cae4-df9a-4ffc-a940-f20cf2280171/1/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}

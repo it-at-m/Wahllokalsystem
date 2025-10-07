@@ -5,7 +5,7 @@
     <td>
       <base-number-input
         v-model="modelValue.ergebnis"
-        :rules="[required, minNumber(0)]"
+        :rules="[required, minNumber(0), maxNumber(9999)]"
       />
     </td>
     <td>{{ ergebnisC }}</td>
@@ -24,7 +24,7 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
-const { required, minNumber } = useRules();
+const { required, minNumber, maxNumber } = useRules();
 const { getFirstKandidatNameOrEmptyString } = useWahlvorschlagUtils();
 
 const modelValue = defineModel({

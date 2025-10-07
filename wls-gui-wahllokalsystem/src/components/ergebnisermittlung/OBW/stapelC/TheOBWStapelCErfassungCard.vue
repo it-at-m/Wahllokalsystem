@@ -92,6 +92,7 @@ const {
   removeErgebnisseWithNumIndexAbove,
   getMaxNumIndex,
   getMaxNumIndexWithValueSet,
+  getStimmzettelNumIndexThatPreventDeletion,
   saveErgebnisse,
   stapelCUngueltigErgebnisse,
   stapelCGueltigErgebnisse,
@@ -159,7 +160,10 @@ function onApplyRowCountClicked() {
   }
 
   if (isTryingToRemoveNonEmptyValues()) {
-    templateRefDeletionDeniedDialog.value?.showDialog();
+    const stimmzettel = getStimmzettelNumIndexThatPreventDeletion(
+      countRows.value
+    );
+    templateRefDeletionDeniedDialog.value?.showDialog(stimmzettel);
     return;
   }
 

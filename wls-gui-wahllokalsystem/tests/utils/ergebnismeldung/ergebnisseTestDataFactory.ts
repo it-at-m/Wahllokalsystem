@@ -1,36 +1,26 @@
 import type {
-  BezirkUndWahlIDStapelartDTO,
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/commonErgebnismeldungTestDataFactory.ts";
 
 import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { generateRandomString, generateRandomNumber, getRandomItem } =
-  useCommonTestDataFactory();
+const { generateRandomNumber } = useCommonTestDataFactory();
+const { createBezirkUndWahlIDStapelartDTO, createBezirkUndWahlIDStapelart } =
+  useCommonErgebnismeldungTestDataFactory();
 
 export function useErgebnisseTestDataFactory() {
-  function createBezirkUndWahlIDStapelart(
-    stapelArt?: StapelArtEnum
-  ): BezirkUndWahlIDStapelArt {
-    return {
-      wahlID: generateRandomString(10),
-      wahlbezirkID: generateRandomString(5),
-      stapelArt: stapelArt ?? getRandomItem(Object.values(StapelArtEnum)),
-    };
-  }
-
   function createErgebnisseDTO(): ErgebnisseDTO {
     return {
-      bezirkUndWahlIDStapelart: _createBezirkUndWahlIDStapelartDTO(
+      bezirkUndWahlIDStapelart: createBezirkUndWahlIDStapelartDTO(
         BezirkUndWahlIDStapelartDTOStapelartEnum.ObwA
       ),
       ergebnisse: [createErgebnisDTO(), createErgebnisDTO()],
@@ -65,12 +55,6 @@ export function useErgebnisseTestDataFactory() {
     };
   }
 
-  function prepareBezirkUndWahlIDStapelart(): Builder<BezirkUndWahlIDStapelArt> {
-    return proxyBuilder<BezirkUndWahlIDStapelArt>(
-      createBezirkUndWahlIDStapelart()
-    );
-  }
-
   function prepareErgebnisseDTO(): Builder<ErgebnisseDTO> {
     return proxyBuilder<ErgebnisseDTO>(createErgebnisseDTO());
   }
@@ -87,19 +71,7 @@ export function useErgebnisseTestDataFactory() {
     return proxyBuilder<Ergebnis>(createErgebnis());
   }
 
-  function _createBezirkUndWahlIDStapelartDTO(
-    stapelArt: BezirkUndWahlIDStapelartDTOStapelartEnum
-  ): BezirkUndWahlIDStapelartDTO {
-    return {
-      wahlID: generateRandomString(10),
-      wahlbezirkID: generateRandomString(5),
-      stapelart: stapelArt,
-    };
-  }
-
   return {
-    createBezirkUndWahlIDStapelart,
-    prepareBezirkUndWahlIDStapelart,
     createErgebnisseDTO,
     prepareErgebnisseDTO,
     createErgebnisDTO,

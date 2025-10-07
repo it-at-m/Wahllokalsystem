@@ -128,6 +128,20 @@ export const useWahlenStore = defineStore(storeID, () => {
           );
         }
       },
+    isBeanstandeterWahlbriefEntryEmpty:
+      function isBeanstandeterWahlbriefEntryEmpty(index: number) {
+        return !wahlenState.value.wahlen?.some(
+          (wahl) => wahl.beanstandeteWahlbriefe[index] !== null
+        );
+      },
+    getBeanstandeterWahlbriefEntryByWahl:
+      function getBeanstandeterWahlbriefEntryByWahl(
+        index: number,
+        wahlId: string
+      ) {
+        return wahlenState.value.wahlen?.find((wahl) => wahl.wahlID === wahlId)
+          ?.beanstandeteWahlbriefe[index];
+      },
     saveBeanstandeteWahlbriefe: async function saveBeanstandeteWahlbriefe() {
       beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeSaving = true;
 

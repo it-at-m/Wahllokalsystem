@@ -28,6 +28,13 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
+declare module "@vue/runtime-core" {
+  interface ComponentCustomProperties {
+    rowIndexToDelete: number;
+    wahlscheinGruende: string[];
+  }
+}
+
 describe("TheBeanstandeteWahlbriefeTable", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
@@ -461,7 +468,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
     });
 
     describe("onDeleteBeanstandeteWahlbriefeRowClicked", () => {
-      it("should_deleteStoreValues_when_deleteRowClicked", async () => {
+      it("should_deleteStoreValuesWithDialog_when_deleteRowClicked", async () => {
         const wahlenStore = useWahlenStore();
         wahlenStore.wahlenState.wahlen = [
           prepareWahl()
@@ -481,6 +488,45 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
             plugins: [pinia, vuetify],
           },
         });
+
+        // delete first row
+        const deleteButton = wrapper.findComponent<typeof VBtn>(
+          `[data-test="delete-btn-0"]`
+        );
+        await deleteButton.trigger("click");
+
+        expect(wrapper.vm.rowIndexToDelete).equals(0);
+
+        const confirmButton = wrapper.findComponent(
+          '[data-test="basedialog-btn-confirm"]'
+        );
+        await confirmButton.trigger("click");
+
+        expect(deleteBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
+      });
+
+      it("should_deleteEmptyRow_when_deleteRowClicked", async () => {
+        const wahlenStore = useWahlenStore();
+        wahlenStore.wahlenState.wahlen = [
+          prepareWahl()
+            .name("Wahl1")
+            .wahlID("id1")
+            .beanstandeteWahlbriefe([null])
+            .build(),
+        ];
+
+        const deleteBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+          useWahlenStore().beanstandeteWahlbriefeActions,
+          "deleteBeanstandeterWahlbriefEntry"
+        );
+
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+          global: {
+            plugins: [pinia, vuetify],
+          },
+        });
+
+        wrapper.vm.wahlscheinGruende = [];
 
         // delete first row
         const deleteButton = wrapper.findComponent<typeof VBtn>(

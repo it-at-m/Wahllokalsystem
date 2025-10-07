@@ -37,7 +37,7 @@ import { ref } from "vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 
 const isConfirmDialogVisible = ref(false);
-let stimmzettelThatPreventDeletion: number[] = [];
+const stimmzettelThatPreventDeletion = ref<number[]>([]);
 
 defineExpose({
   showDialog,
@@ -48,7 +48,7 @@ function onConfirmDialogConfirmClicked() {
 }
 
 function showDialog(stimmzettel: number[]) {
-  stimmzettelThatPreventDeletion = stimmzettel;
+  stimmzettelThatPreventDeletion.value = stimmzettel;
   isConfirmDialogVisible.value = true;
 }
 </script>

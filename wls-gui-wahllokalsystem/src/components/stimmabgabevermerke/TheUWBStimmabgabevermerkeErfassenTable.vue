@@ -116,8 +116,18 @@
         wurden.
       </div>
       <div>
-        {{ blattnummernThatPreventDeletion.length }} Elemente verhindern das
-        Löschen: Für die Blattnummern
+        {{ blattnummernThatPreventDeletion.length }}
+        {{
+          blattnummernThatPreventDeletion.length === 1
+            ? "Element verhindert"
+            : "Elemente verhindern"
+        }}
+        das Löschen: Für die
+        {{
+          blattnummernThatPreventDeletion.length === 1
+            ? "Blattnummer"
+            : "Blattnummern"
+        }}
         {{ blattnummernThatPreventDeletion.join(", ") }} wurden bereits
         Stimmabgabevermerke erfasst.
       </div>

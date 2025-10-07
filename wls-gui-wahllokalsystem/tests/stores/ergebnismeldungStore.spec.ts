@@ -1,6 +1,7 @@
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/commonErgebnismeldungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -24,14 +25,11 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
 
 const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();
-const {
-  createErgebnis,
-  prepareErgebnis,
-  createErgebnisse,
-  prepareErgebnisse,
-  prepareBezirkUndWahlIDStapelart,
-} = useErgebnisseTestDataFactory();
+const { createErgebnis, prepareErgebnis, createErgebnisse, prepareErgebnisse } =
+  useErgebnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const { prepareBezirkUndWahlIDStapelart } =
+  useCommonErgebnismeldungTestDataFactory();
 
 describe("ergebnismeldungStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useErgebnismeldungStore>;

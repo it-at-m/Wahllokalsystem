@@ -86,6 +86,7 @@ function _formatDeleteDialogText(
   timeOnly: Date | undefined,
   beschreibung: string | undefined
 ): string {
-  return `Möchten Sie das Ereignis wirklich löschen? Datum: ${toGermanDate(dateOnly) ?? ""}, Uhrzeit: ${toHhMm(timeOnly)}, Beschreibung: ${beschreibung}`;
+  return `Möchten Sie das Ereignis wirklich löschen? Datum: ${toGermanDate(dateOnly) ?? ""},
+   Uhrzeit: ${toHhMm(timeOnly)}, Beschreibung: ${beschreibung}`;
 }
 </script>

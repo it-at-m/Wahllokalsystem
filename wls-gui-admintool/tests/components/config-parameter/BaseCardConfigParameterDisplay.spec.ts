@@ -24,7 +24,8 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
   let wrapper: VueWrapper;
   const mountComponent = (config: InfomanagementConfigParameter[]) => {
     wrapper = mount(BaseCardConfigParameterDisplay, {
-      props: { configParameter: config[0] },
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      props: { configParameter: config[0]! },
       global: { plugins: [vuetify] },
     });
   };
@@ -51,7 +52,8 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
       await button.trigger("click");
       const emitted = wrapper.emitted("clickEdit");
       expect(emitted).toBeDefined();
-      expect(emitted?.[0]?.[0]).toBe(configParameter[0].name);
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      expect(emitted?.[0]?.[0]).toBe(configParameter[0]!.name);
     });
   });
 });

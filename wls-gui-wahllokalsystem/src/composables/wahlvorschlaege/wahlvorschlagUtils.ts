@@ -1,6 +1,10 @@
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 export function useWahlvorschlagUtils() {
+  function getWahlvorschlagTitle(wahlvorschlag: Wahlvorschlag) {
+    return `${wahlvorschlag.ordnungszahl} - ${wahlvorschlag.kurzname}, ${getFirstKandidatNameOrEmptyString(wahlvorschlag)}`;
+  }
+
   function getFirstKandidatNameOrEmptyString(wahlvorschlag: Wahlvorschlag) {
     if (wahlvorschlag.kandidaten && wahlvorschlag.kandidaten.size > 0) {
       const kandidatWithLowedListenPosition = [
@@ -14,6 +18,7 @@ export function useWahlvorschlagUtils() {
     }
   }
   return {
+    getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
   };
 }

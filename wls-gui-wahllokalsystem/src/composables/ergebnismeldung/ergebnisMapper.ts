@@ -57,6 +57,16 @@ export function useErgebnisMapper() {
         return GetErgebnisseStapelartEnum.SrwBawDUngueltig;
       case StapelArtEnum.SrwBawBC:
         return GetErgebnisseStapelartEnum.SrwBawBC;
+      case StapelArtEnum.MbwA:
+        return GetErgebnisseStapelartEnum.MbwA;
+      case StapelArtEnum.MbwB:
+        return GetErgebnisseStapelartEnum.MbwB;
+      case StapelArtEnum.MbwD:
+        return GetErgebnisseStapelartEnum.MbwD;
+      case StapelArtEnum.MbwAB:
+        return GetErgebnisseStapelartEnum.MbwAB;
+      case StapelArtEnum.MbwBC:
+        return GetErgebnisseStapelartEnum.MbwBC;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -86,6 +96,16 @@ export function useErgebnisMapper() {
         return PostErgebnisseStapelartEnum.SrwBawDUngueltig;
       case StapelArtEnum.SrwBawBC:
         return PostErgebnisseStapelartEnum.SrwBawBC;
+      case StapelArtEnum.MbwA:
+        return PostErgebnisseStapelartEnum.MbwA;
+      case StapelArtEnum.MbwB:
+        return PostErgebnisseStapelartEnum.MbwB;
+      case StapelArtEnum.MbwD:
+        return PostErgebnisseStapelartEnum.MbwD;
+      case StapelArtEnum.MbwAB:
+        return PostErgebnisseStapelartEnum.MbwAB;
+      case StapelArtEnum.MbwBC:
+        return PostErgebnisseStapelartEnum.MbwBC;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -125,6 +145,16 @@ export function useErgebnisMapper() {
         return StapelArtEnum.SrwBawDUngueltig;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC:
         return StapelArtEnum.SrwBawBC;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwA:
+        return StapelArtEnum.MbwA;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwAB:
+        return StapelArtEnum.MbwAB;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwB:
+        return StapelArtEnum.MbwB;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwBC:
+        return StapelArtEnum.MbwBC;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD:
+        return StapelArtEnum.MbwD;
       default:
         throw new Error("Stapelart nicht gefunden");
     }

@@ -1,8 +1,10 @@
 import type {
+  BegruendungDTO,
   BezirkUndWahlIDStapelartDTO,
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
@@ -67,6 +69,8 @@ export function useErgebnisMapper() {
         return GetErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
         return GetErgebnisseStapelartEnum.MbwBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return GetErgebnisseStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -106,9 +110,24 @@ export function useErgebnisMapper() {
         return PostErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
         return PostErgebnisseStapelartEnum.MbwBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return PostErgebnisseStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
+  }
+
+  function toBegruendungModel(dto: BegruendungDTO): Begruendung {
+    const bezirkUndWahlIdStapelart = _dtoBezirkUndWahlIDStapelartToModel(
+      dto.bezirkUndWahlIDStapelart
+    );
+    return {
+      wahlID: bezirkUndWahlIdStapelart.wahlID,
+      stapelart: bezirkUndWahlIdStapelart.stapelArt,
+      grund: dto.grund,
+      nachzaehlung: dto.nachzaehlung,
+      unstimmigkeiten: dto.unstimmigkeiten,
+    };
   }
 
   function _dtoBezirkUndWahlIDStapelartToModel(
@@ -155,6 +174,8 @@ export function useErgebnisMapper() {
         return StapelArtEnum.MbwBC;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD:
         return StapelArtEnum.MbwD;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege:
+        return StapelArtEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -204,6 +225,8 @@ export function useErgebnisMapper() {
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawDUngueltig;
       case StapelArtEnum.SrwBawBC:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC;
+      case StapelArtEnum.StimmzettelUmschlaege:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege;
       default:
         throw new Error("Stapelart nicht gefunden");
     }
@@ -224,5 +247,6 @@ export function useErgebnisMapper() {
     toDto,
     toGetErgebnisseStapelartEnum,
     toPostErgebnisseStapelartEnum,
+    toBegruendungModel,
   };
 }

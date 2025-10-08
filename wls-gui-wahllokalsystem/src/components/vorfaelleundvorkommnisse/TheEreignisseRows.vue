@@ -5,7 +5,10 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @delete="() => onDeleteIconClicked(index, ereignis)"
+      @delete="
+        (dateOnly, timeOnly, beschreibung) =>
+          onDeleteIconClicked(index, dateOnly, timeOnly, beschreibung)
+      "
     />
     <yes-no-dialog
       v-model="deleteDialog"
@@ -18,8 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
-
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -29,6 +30,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
+const { toHhMm, toGermanDate } = useDateTimeFormatter();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
 const deleteDialogText = ref("");
@@ -38,22 +40,33 @@ function closeYesNoDialog() {
   deleteDialog.value = false;
 }
 
-function showYesNoDialogForItem(index: number, ereignis: Ereignis) {
+function showYesNoDialogForItem(
+  index: number,
+  dateOnly: Date | undefined,
+  timeOnly: Date | undefined,
+  beschreibung: string | undefined
+) {
   deleteIndex.value = index;
   deleteDialog.value = true;
-  const { toHhMm, toGermanDate } = useDateTimeFormatter();
-  deleteDialogText.value =
-    "Möchten Sie das Ereignis  wirklich löschen?" +
-    " Datum: " +
-    toGermanDate(ereignis.uhrzeit) +
-    ", Uhrzeit: " +
-    toHhMm(ereignis.uhrzeit) +
-    ", Beschreibung: " +
-    ereignis.beschreibung;
+  deleteDialogText.value = _formatDeleteDialogText(
+    dateOnly,
+    timeOnly,
+    beschreibung
+  );
 }
 
-function onDeleteIconClicked(index: number, ereignis: Ereignis) {
-  showYesNoDialogForItem(index, ereignis);
+function onDeleteIconClicked(
+  index: number,
+  dateOnly: Date | undefined,
+  timeOnly: Date | undefined,
+  beschreibung: string | undefined
+) {
+  if (!dateOnly && !timeOnly && !beschreibung) {
+    deleteIndex.value = index;
+    onYesNoDialogYesClicked();
+  } else {
+    showYesNoDialogForItem(index, dateOnly, timeOnly, beschreibung);
+  }
 }
 
 function onYesNoDialogNoClicked() {
@@ -66,5 +79,21 @@ function onYesNoDialogYesClicked() {
     deleteIndex.value = null;
   }
   closeYesNoDialog();
+}
+
+function _formatDeleteDialogText(
+  dateOnly: Date | undefined,
+  timeOnly: Date | undefined,
+  beschreibung: string | undefined
+): string {
+  return (
+    "Möchten Sie das Ereignis  wirklich löschen?\n" +
+    " Datum: " +
+    toGermanDate(dateOnly) +
+    ", Uhrzeit: " +
+    toHhMm(timeOnly) +
+    ", Beschreibung: " +
+    beschreibung
+  );
 }
 </script>

@@ -86,9 +86,16 @@ watch(dateAndTimeCombined, (newValue) => {
   }
 });
 
-const emit = defineEmits<{ delete: [] }>();
+const emit = defineEmits<{
+  delete: [Date | undefined, Date | undefined, string | undefined];
+}>();
 
 function onDeleteIconClicked() {
-  emit("delete");
+  emit(
+    "delete",
+    dateOnly.value,
+    timeOnly.value,
+    ereignisModel.value.beschreibung
+  );
 }
 </script>

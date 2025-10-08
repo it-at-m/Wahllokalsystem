@@ -86,14 +86,26 @@ describe("BaseEreignisRow.vue", () => {
 
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_emitDeleteEvent_when_deleteIconIsClicked", async () => {
+      await wrapper.setProps({
+        lineNumber: 1,
+        modelValue: prepareEreignis()
+          .beschreibung("Beschreibung")
+          .uhrzeit(new Date("2025-07-29T15:36:42.23"))
+          .build(),
+      });
       const deleteIcon = wrapper.findComponent(
         '[data-test="delete-ereignis-icon"]'
       );
       expect(deleteIcon.exists()).toBe(true);
 
       await deleteIcon.trigger("click");
-
-      expect(wrapper.emitted("delete")).toEqual([[]]);
+      expect(wrapper.emitted("delete")).toEqual([
+        [
+          new Date("2025-07-29T15:36:42.23"),
+          new Date("2025-07-29T15:36:42.23"),
+          "Beschreibung",
+        ],
+      ]);
     });
   });
 });

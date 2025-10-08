@@ -16,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   StimmzettelumschlaegeControllerApi: vi.fn(),
+  BegruendungControllerApi: vi.fn(),
   StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
     getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
     postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,

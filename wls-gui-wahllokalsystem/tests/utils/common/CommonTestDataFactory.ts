@@ -39,7 +39,9 @@ export function useCommonTestDataFactory() {
   }
 
   function getRandomItem<T>(items: T[]): T {
-    return items[generateRandomNumberInRange(0, items.length - 1)];
+    const item = items[generateRandomNumberInRange(0, items.length - 1)];
+    if (!item) throw new Error("Fehler beim Generieren eines Zufälligen Items");
+    return item;
   }
 
   return {

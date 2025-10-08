@@ -236,7 +236,8 @@ describe("wahlvorschlaegeStore.ts", () => {
       await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID);
 
       const sortedWahlvorschlaegeAfterLoading = Array.from(
-        unitUnderTest.wahlvorschlaege[0].wahlvorschlaege
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        unitUnderTest.wahlvorschlaege[0]!.wahlvorschlaege
       );
 
       expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([

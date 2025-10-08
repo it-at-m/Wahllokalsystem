@@ -77,7 +77,7 @@ class WahllokalBenutzerClientMapperTest {
 
             val expectedStringOfWbidWahlnummerWahlId = getWahllokalUserInfoDTOWithUWB().getWbidWahlnummer();
 
-            Assertions.assertThat(expectedStringOfWbidWahlnummerWahlId).isEqualTo(result);
+            Assertions.assertThat(result).isEqualTo(expectedStringOfWbidWahlnummerWahlId);
         }
     }
 

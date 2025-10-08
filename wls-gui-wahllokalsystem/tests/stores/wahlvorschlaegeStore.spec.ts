@@ -243,9 +243,9 @@ describe("wahlvorschlaegeStore.ts", () => {
         [wahlID, wahlbezirkID],
       ]);
       expect(unitUnderTest.wahlvorschlaege.length).toBe(1);
-      expect(sortedWahlvorschlaegeAfterLoading[0].ordnungszahl).toBe(2);
-      expect(sortedWahlvorschlaegeAfterLoading[1].ordnungszahl).toBe(4);
-      expect(sortedWahlvorschlaegeAfterLoading[2].ordnungszahl).toBe(7);
+      expect(sortedWahlvorschlaegeAfterLoading[0]?.ordnungszahl).toBe(2);
+      expect(sortedWahlvorschlaegeAfterLoading[1]?.ordnungszahl).toBe(4);
+      expect(sortedWahlvorschlaegeAfterLoading[2]?.ordnungszahl).toBe(7);
     });
   });
 });

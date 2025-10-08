@@ -118,7 +118,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
           '[data-test="checkboxAnwesend"]'
         )[1];
 
-        await secondCheckBox.setValue(true);
+        await secondCheckBox?.setValue(true);
 
         expect(
           wahlvorstandStore.changeAnwesendOfMitglied
@@ -149,7 +149,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
           '[data-test="checkboxAnwesend"]'
         )[1];
 
-        await secondCheckBox.setValue(false);
+        await secondCheckBox?.setValue(false);
 
         expect(
           wahlvorstandStore.changeAnwesendOfMitglied

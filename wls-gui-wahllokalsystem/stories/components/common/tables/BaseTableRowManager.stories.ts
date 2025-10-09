@@ -11,7 +11,7 @@ const meta: Meta<typeof BaseTableRowManager> = {
   component: BaseTableRowManager,
   args: {
     currentRowCount: 0,
-    onRowCountChanged: fn(),
+    onChangeRowCountClicked: fn(),
   },
   argTypes: {
     modelValue: {
@@ -30,7 +30,7 @@ const meta: Meta<typeof BaseTableRowManager> = {
         disable: true,
       },
     },
-    onRowCountChanged: {
+    onChangeRowCountClicked: {
       table: {
         disable: true,
       },

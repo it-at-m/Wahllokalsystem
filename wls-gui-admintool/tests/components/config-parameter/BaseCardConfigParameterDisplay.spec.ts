@@ -53,7 +53,7 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
       const emitted = wrapper.emitted("clickEdit");
       expect(emitted).toBeDefined();
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      expect(emitted?.[0]?.[0]).toBe(configParameter[0]!.name);
+      expect(emitted?.[0]?.[0]).toBe(configParameter[0]?.name);
     });
   });
 });

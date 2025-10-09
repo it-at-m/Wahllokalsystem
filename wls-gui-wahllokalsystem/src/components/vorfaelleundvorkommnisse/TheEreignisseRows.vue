@@ -16,7 +16,7 @@
       @confirm="onConfirmDelete"
       @cancel="onCancelDelete"
     >
-      <div>Möchten Sie das Ereignis wirklich löschen?<br ><br ></div>
+      <div class="mb-3">Möchten Sie das Ereignis wirklich löschen?</div>
       <div>Datum: {{ dialogDate }}</div>
       <div>Uhrzeit: {{ dialogTime }}</div>
       <div>Beschreibung: {{ dialogBeschreibung }}</div>

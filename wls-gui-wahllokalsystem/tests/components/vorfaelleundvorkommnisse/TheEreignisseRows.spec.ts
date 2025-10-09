@@ -24,7 +24,8 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
-import YesNoDialog from "@/components/common/YesNoDialog.vue";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+//import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import vuetify from "@/plugins/vuetify";
@@ -126,7 +127,7 @@ describe("TheEreignisseRows.vue", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_openYesNoDialogAndDelete_when_deleteWasEmittedByARowAndDeletionWasConfirmed", async () => {
+    it("should_openDialogAndDelete_when_deleteWasEmittedByARowAndDeletionWasConfirmed", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
@@ -152,10 +153,10 @@ describe("TheEreignisseRows.vue", () => {
 
       await flushPromises();
 
-      const deleteDialog = wrapper.findComponent(YesNoDialog);
+      const deleteDialog = wrapper.findComponent(BaseDialog);
       expect(deleteDialog.exists()).toBe(true);
 
-      deleteDialog.vm.$emit("yes");
+      deleteDialog.vm.$emit("confirm");
       await nextTick();
 
       expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
@@ -163,7 +164,7 @@ describe("TheEreignisseRows.vue", () => {
       );
     });
 
-    it("should_openYesNoDialogButNotDelete_when_deleteWasEmittedByARowAndDeletionWasCanceled", async () => {
+    it("should_openDialogButNotDelete_when_deleteWasEmittedByARowAndDeletionWasCanceled", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
@@ -189,11 +190,11 @@ describe("TheEreignisseRows.vue", () => {
 
       await flushPromises();
 
-      const deleteDialog = wrapper.findComponent(YesNoDialog);
+      const deleteDialog = wrapper.findComponent(BaseDialog);
       expect(deleteDialog.exists()).toBe(true);
-      expect(deleteDialog.vm.modelValue).toBe(true);
+      expect(deleteDialog.vm.visible).toBe(true);
 
-      deleteDialog.vm.$emit("no");
+      deleteDialog.vm.$emit("cancel");
       await nextTick();
 
       expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
@@ -201,7 +202,7 @@ describe("TheEreignisseRows.vue", () => {
       );
     });
 
-    it("should_notOpenYesNoDialogButDelete_when_deleteWasEmittedByARowWithAllFieldsUndefinedOrEmpty", async () => {
+    it("should_notOpenDialogButDelete_when_deleteWasEmittedByARowWithAllFieldsUndefinedOrEmpty", async () => {
       const ereignisStore = useEreignisStore();
       const ereigniseintraege = [] as Ereignis[];
 
@@ -227,9 +228,9 @@ describe("TheEreignisseRows.vue", () => {
 
       await flushPromises();
 
-      const deleteDialog = wrapper.findComponent(YesNoDialog);
+      const deleteDialog = wrapper.findComponent(BaseDialog);
       expect(deleteDialog.exists()).toBe(true);
-      expect(deleteDialog.vm.modelValue).toBe(false);
+      expect(deleteDialog.vm.visible).toBe(false);
 
       expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
         0

@@ -5,15 +5,22 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @delete="(payload) => onDeleteIconClicked(index, payload)"
+      @delete="(payload) => onDeleteIcon(index, payload)"
     />
-    <yes-no-dialog
-      v-model="deleteDialog"
+    <base-dialog
+      :visible="deleteDialog"
       dialogtitle="Ereignis löschen"
-      :dialogtext="deleteDialogText"
-      @no="onYesNoDialogNoClicked"
-      @yes="onYesNoDialogYesClicked"
-    />
+      confirmtext="Ja"
+      canceltext="Nein"
+      icon="$information"
+      @confirm="onConfirmDelete"
+      @cancel="onCancelDelete"
+    >
+      <div>Möchten Sie das Ereignis wirklich löschen?<br ><br ></div>
+      <div>Datum: {{ dialogDate }}</div>
+      <div>Uhrzeit: {{ dialogTime }}</div>
+      <div>Beschreibung: {{ dialogBeschreibung }}</div>
+    </base-dialog>
   </div>
 </template>
 
@@ -21,7 +28,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import YesNoDialog from "@/components/common/YesNoDialog.vue";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -30,54 +37,46 @@ const ereignisStore = useEreignisStore();
 const { toHhMm, toGermanDate } = useDateTimeFormatter();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
-const deleteDialogText = ref("");
 const deleteIndex = ref<number | null>(null);
+const dialogTime = ref("");
+const dialogDate = ref("");
+const dialogBeschreibung = ref("");
 
-function closeYesNoDialog() {
+function closeDeleteDialog() {
   deleteDialog.value = false;
 }
 
-function showYesNoDialogForItem(
-  index: number,
-  payload: { dateOnly?: Date; timeOnly?: Date; beschreibung?: string }
-) {
+function showDeleteDialog(index: number) {
   deleteIndex.value = index;
   deleteDialog.value = true;
-  deleteDialogText.value = _formatDeleteDialogText(payload);
 }
 
-function onDeleteIconClicked(
+function onDeleteIcon(
   index: number,
   payload: { dateOnly?: Date; timeOnly?: Date; beschreibung?: string }
 ) {
   const { dateOnly, timeOnly, beschreibung } = payload;
+  dialogTime.value = toHhMm(timeOnly);
+  dialogDate.value = toGermanDate(dateOnly) ?? "";
+  dialogBeschreibung.value = beschreibung ?? "";
+
   if (!dateOnly && !timeOnly && !beschreibung) {
     deleteIndex.value = index;
-    onYesNoDialogYesClicked();
+    onConfirmDelete();
   } else {
-    showYesNoDialogForItem(index, payload);
+    showDeleteDialog(index);
   }
 }
 
-function onYesNoDialogNoClicked() {
-  closeYesNoDialog();
+function onCancelDelete() {
+  closeDeleteDialog();
 }
 
-function onYesNoDialogYesClicked() {
+function onConfirmDelete() {
   if (deleteIndex.value !== null) {
     ereignisStore.deleteEreignisByIndex(deleteIndex.value);
     deleteIndex.value = null;
   }
-  closeYesNoDialog();
-}
-
-function _formatDeleteDialogText(payload: {
-  dateOnly?: Date;
-  timeOnly?: Date;
-  beschreibung?: string;
-}): string {
-  const { dateOnly, timeOnly, beschreibung } = payload;
-  return `Möchten Sie das Ereignis wirklich löschen? Datum: ${toGermanDate(dateOnly) ?? ""},
-   Uhrzeit: ${toHhMm(timeOnly)}, Beschreibung: ${beschreibung}`;
+  closeDeleteDialog();
 }
 </script>

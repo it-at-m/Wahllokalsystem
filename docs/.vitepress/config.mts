@@ -140,6 +140,10 @@ export default withMermaid({
                   text: "Styling des active Button",
                   link: `${PATH_ADR_UI}adr004-active-btn-styling.md`,
                 },
+                {
+                  text: "Löschen von Werten in Tabellen",
+                  link: `${PATH_ADR_UI}adr005-delete-table-values.md`,
+                },
               ],
             },
           ],

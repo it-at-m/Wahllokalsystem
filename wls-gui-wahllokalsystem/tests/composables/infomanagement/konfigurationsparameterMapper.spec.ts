@@ -20,7 +20,7 @@ describe("konfigurationsparameterMapper.ts", () => {
       const dto: KonfigurationDTO[] = createKonfigurationDtoList(3);
 
       const expectedModel: Konfigurationsparameter[] = [
-        /* eslint-disable @typescript-eslint/no-non-null-assertion -- Temporarily disabling because only valid dto is given as input */
+        /* eslint-disable @typescript-eslint/no-non-null-assertion -- disabling because only valid dto is given as input */
         { schluessel: dto[0]!.schluessel, wert: dto[0]!.wert },
         { schluessel: dto[1]!.schluessel, wert: dto[1]!.wert },
         { schluessel: dto[2]!.schluessel, wert: dto[2]!.wert },

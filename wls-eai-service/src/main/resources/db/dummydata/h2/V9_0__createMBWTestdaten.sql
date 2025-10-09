@@ -19,49 +19,6 @@ INSERT INTO WAHLBEZIRK (ID, WAHLBEZIRKART, NUMMER, A1, A2, A3, STIMMZETTELGEBIET
 VALUES ('e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b', 'BWB', 'WB-BWB-001', 2000, 1800, 200,
         'c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f');
 
--- Wahlvorstandsmitglieder für Wahlbezirk 1 (UWB)
-INSERT INTO WAHLVORSTAND (ID, WAHLBEZIRKID)
-VALUES ('f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c', 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d', 'Maria', 'Schmidt', 'Wahlvorsteher/in', 1,
-        'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c', TIMESTAMP '2026-01-01 08:00:00');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e', 'Thomas', 'Müller', 'Stellvertreter/in', 1,
-        'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c', TIMESTAMP '2026-01-01 08:00:00');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-8a9b0c1d2e3f', 'Fatima', 'Yilmaz', 'Schriftführer/in', 1,
-        'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c', TIMESTAMP '2026-01-01 08:00:00');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('d0e1f2a3-b4c5-4d6e-7f8a-9b0c1d2e3f4a', 'Ahmed', 'Hassan', 'Beisitzer/in', 1,
-        'f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c', TIMESTAMP '2026-01-01 08:00:00');
-
--- Wahlvorstandsmitglieder für Wahlbezirk 2 (BWB)
-INSERT INTO WAHLVORSTAND (ID, WAHLBEZIRKID)
-VALUES ('e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b', 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6c', 'Anna', 'Kowalski', 'Wahlvorsteher/in', 1,
-        'e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b', TIMESTAMP '2026-01-01 08:00:00');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('a3b4c5d6-e7f8-4a9b-0c1d-2e3f4a5b6c7d', 'Dimitri', 'Popov', 'Stellvertreter/in', 1,
-        'e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b', TIMESTAMP '2026-01-01 08:00:00');
-
-INSERT INTO WAHLVORSTANDSMITGLIED (ID, VORNAME, NACHNAME, FUNKTION, ANWESEND, WAHLVORSTANDID,
-                                   ANWESENHEITUPDATEDON)
-VALUES ('b4c5d6e7-f8a9-4b0c-1d2e-3f4a5b6c7d8e', 'Sofia', 'Rodriguez', 'Schriftführer/in', 1,
-        'e1f2a3b4-c5d6-4e7f-8a9b-0c1d2e3f4a5b', TIMESTAMP '2026-01-01 08:00:00');
-
 -- Wahlvorschlägeliste erstellen
 INSERT INTO WAHLVORSCHLAEGELISTE (ID, WAHLTAG, WAHLID)
 VALUES ('c5d6e7f8-a9b0-4c1d-2e3f-4a5b6c7d8e9f', TIMESTAMP '2026-01-01 00:00:00',

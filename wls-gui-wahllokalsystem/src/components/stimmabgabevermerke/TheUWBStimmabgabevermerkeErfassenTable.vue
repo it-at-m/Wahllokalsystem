@@ -4,7 +4,7 @@
       :current-row-count="lowestNumberOfRowsOverAllWahldaten + 1"
       :model-value="rowSize"
       :rules="[minNumber(1), maxNumber(maxRowSize)]"
-      @on-change-row-count-clicked="changeRowCountOrOpenDialog"
+      @change-row-count-clicked="changeRowCountOrOpenDialog"
     />
     <v-divider
       :thickness="2"

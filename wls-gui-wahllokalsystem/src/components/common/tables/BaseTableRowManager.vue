@@ -54,7 +54,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  onChangeRowCountClicked: [newValue: number | null];
+  changeRowCountClicked: [newValue: number | null];
 }>();
 
 const isChangeRowCountFormValid = ref<boolean | null>(null);
@@ -71,6 +71,6 @@ const validationRules = computed(() => {
 });
 
 function onChangeRowCountClicked() {
-  emit("onChangeRowCountClicked", newRowCount.value);
+  emit("changeRowCountClicked", newRowCount.value);
 }
 </script>

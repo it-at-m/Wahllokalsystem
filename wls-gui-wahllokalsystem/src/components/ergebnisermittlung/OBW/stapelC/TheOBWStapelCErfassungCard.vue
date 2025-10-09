@@ -9,7 +9,7 @@
           :current-row-count="stapelCErgebnisseOrdereByNumIndex.length"
           :model-value="countRows"
           :rules="[minNumber(0), maxNumber(9999)]"
-          @on-change-row-count-clicked="onApplyRowCountClicked"
+          @change-row-count-clicked="onApplyRowCountClicked"
         />
         <v-form v-model="isRowsFormValid">
           <v-table>

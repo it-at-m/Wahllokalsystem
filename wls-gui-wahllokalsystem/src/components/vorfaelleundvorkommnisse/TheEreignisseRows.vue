@@ -5,10 +5,7 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @delete="
-        (dateOnly, timeOnly, beschreibung) =>
-          onDeleteIconClicked(index, dateOnly, timeOnly, beschreibung)
-      "
+      @delete="(payload) => onDeleteIconClicked(index, payload)"
     />
     <yes-no-dialog
       v-model="deleteDialog"
@@ -42,30 +39,23 @@ function closeYesNoDialog() {
 
 function showYesNoDialogForItem(
   index: number,
-  dateOnly: Date | undefined,
-  timeOnly: Date | undefined,
-  beschreibung: string | undefined
+  payload: { dateOnly?: Date; timeOnly?: Date; beschreibung?: string }
 ) {
   deleteIndex.value = index;
   deleteDialog.value = true;
-  deleteDialogText.value = _formatDeleteDialogText(
-    dateOnly,
-    timeOnly,
-    beschreibung
-  );
+  deleteDialogText.value = _formatDeleteDialogText(payload);
 }
 
 function onDeleteIconClicked(
   index: number,
-  dateOnly: Date | undefined,
-  timeOnly: Date | undefined,
-  beschreibung: string | undefined
+  payload: { dateOnly?: Date; timeOnly?: Date; beschreibung?: string }
 ) {
+  const { dateOnly, timeOnly, beschreibung } = payload;
   if (!dateOnly && !timeOnly && !beschreibung) {
     deleteIndex.value = index;
     onYesNoDialogYesClicked();
   } else {
-    showYesNoDialogForItem(index, dateOnly, timeOnly, beschreibung);
+    showYesNoDialogForItem(index, payload);
   }
 }
 
@@ -81,11 +71,12 @@ function onYesNoDialogYesClicked() {
   closeYesNoDialog();
 }
 
-function _formatDeleteDialogText(
-  dateOnly: Date | undefined,
-  timeOnly: Date | undefined,
-  beschreibung: string | undefined
-): string {
+function _formatDeleteDialogText(payload: {
+  dateOnly?: Date;
+  timeOnly?: Date;
+  beschreibung?: string;
+}): string {
+  const { dateOnly, timeOnly, beschreibung } = payload;
   return `Möchten Sie das Ereignis wirklich löschen? Datum: ${toGermanDate(dateOnly) ?? ""},
    Uhrzeit: ${toHhMm(timeOnly)}, Beschreibung: ${beschreibung}`;
 }

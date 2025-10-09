@@ -143,7 +143,12 @@ describe("TheEreignisseRows.vue", () => {
       await nextTick();
 
       const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
-      baseEreignisRow.vm.$emit("delete");
+      const payload = {
+        dateOnly: date,
+        timeOnly: date,
+        beschreibung: "Beschreibung",
+      };
+      baseEreignisRow.vm.$emit("delete", payload);
 
       await flushPromises();
 
@@ -175,12 +180,12 @@ describe("TheEreignisseRows.vue", () => {
       await nextTick();
 
       const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
-      baseEreignisRow.vm.$emit(
-        "delete",
-        date,
-        date,
-        ereigniseintraege[0].beschreibung
-      );
+      const payload = {
+        dateOnly: date,
+        timeOnly: date,
+        beschreibung: "Beschreibung",
+      };
+      baseEreignisRow.vm.$emit("delete", payload);
 
       await flushPromises();
 
@@ -213,7 +218,12 @@ describe("TheEreignisseRows.vue", () => {
       await nextTick();
 
       const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
-      baseEreignisRow.vm.$emit("delete", undefined, undefined, "");
+      const payload = {
+        dateOnly: undefined,
+        timeOnly: undefined,
+        beschreibung: "",
+      };
+      baseEreignisRow.vm.$emit("delete", payload);
 
       await flushPromises();
 

@@ -101,9 +101,11 @@ describe("BaseEreignisRow.vue", () => {
       await deleteIcon.trigger("click");
       expect(wrapper.emitted("delete")).toEqual([
         [
-          new Date("2025-07-29T15:36:42.23"),
-          new Date("2025-07-29T15:36:42.23"),
-          "Beschreibung",
+          {
+            dateOnly: new Date("2025-07-29T15:36:42.23"),
+            timeOnly: new Date("2025-07-29T15:36:42.23"),
+            beschreibung: "Beschreibung",
+          },
         ],
       ]);
     });

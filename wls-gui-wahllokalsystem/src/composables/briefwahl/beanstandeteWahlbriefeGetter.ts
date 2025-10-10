@@ -49,7 +49,9 @@ export function useBeanstandeteWahlbriefeGetter(
           const index = summenZurueckweisungsgruende.findIndex(
             (item) => item.grund === beanstandeterWahlbrief
           );
-          summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
+          if (summenZurueckweisungsgruende[index]) {
+            summenZurueckweisungsgruende[index].summen[wahlIndex] += 1;
+          }
         }
       });
     });

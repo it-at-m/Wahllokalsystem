@@ -102,8 +102,8 @@ describe("BaseEreignisRow.vue", () => {
       expect(wrapper.emitted("delete")).toEqual([
         [
           {
-            dateOnly: new Date("2025-07-29T15:36:42.23"),
-            timeOnly: new Date("2025-07-29T15:36:42.23"),
+            dateStr: "29.07.2025",
+            timeStr: "15:36",
             beschreibung: "Beschreibung",
           },
         ],

@@ -5,7 +5,7 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @delete="(payload) => onDeleteIcon(index, payload)"
+      @delete="(ereignisPayload) => onDeleteIcon(index, ereignisPayload)"
     />
     <base-dialog
       :visible="deleteDialog"
@@ -25,16 +25,16 @@
 </template>
 
 <script setup lang="ts">
+import type { EreignisPayload } from "@/types/vorfaelleundvorkommnisse/EreignisPayload.ts";
+
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
-const { toHhMm, toGermanDate } = useDateTimeFormatter();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
@@ -51,16 +51,13 @@ function showDeleteDialog(index: number) {
   deleteDialog.value = true;
 }
 
-function onDeleteIcon(
-  index: number,
-  payload: { dateOnly?: Date; timeOnly?: Date; beschreibung?: string }
-) {
-  const { dateOnly, timeOnly, beschreibung } = payload;
-  dialogTime.value = toHhMm(timeOnly);
-  dialogDate.value = toGermanDate(dateOnly) ?? "";
+function onDeleteIcon(index: number, ereignisPayload: EreignisPayload) {
+  const { dateStr, timeStr, beschreibung } = ereignisPayload;
+  dialogTime.value = timeStr ?? "";
+  dialogDate.value = dateStr ?? "";
   dialogBeschreibung.value = beschreibung ?? "";
 
-  if (!dateOnly && !timeOnly && !beschreibung) {
+  if (!dateStr && !timeStr && !beschreibung) {
     deleteIndex.value = index;
     onConfirmDelete();
   } else {

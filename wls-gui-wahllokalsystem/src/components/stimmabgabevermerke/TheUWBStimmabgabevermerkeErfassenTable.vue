@@ -1,21 +1,11 @@
 <template>
   <v-container v-if="stimmabgabevermerke">
-    <div class="d-flex">
-      <base-number-input
-        v-model="rowSize"
-        :rules="[required, minNumber(1), maxNumber(maxRowSize)]"
-        max-width="15rem"
-        label="Anzahl der Blätter"
-      />
-      <v-btn
-        class="ml-4 mt-3"
-        active
-        :disabled="disableChangeRowSizeButton"
-        @click="changeRowCountOrOpenDialog"
-      >
-        Übernehmen
-      </v-btn>
-    </div>
+    <base-table-row-manager
+      :current-row-count="lowestNumberOfRowsOverAllWahldaten + 1"
+      :model-value="rowSize"
+      :rules="[minNumber(1), maxNumber(maxRowSize)]"
+      @change-row-count-clicked="changeRowCountOrOpenDialog"
+    />
     <v-divider
       :thickness="2"
       class="border-opacity-25"
@@ -129,10 +119,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -157,16 +148,9 @@ const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
 const maxRowSize = 999;
 
-const disableChangeRowSizeButton = computed(() => {
-  return (
-    rowSize.value == null ||
-    rowSize.value <= 0 ||
-    rowSize.value > maxRowSize ||
-    rowSize.value == lowestNumberOfRowsOverAllWahldaten.value + 1
-  );
-});
+function changeRowCountOrOpenDialog(newRowCount: number | null) {
+  rowSize.value = newRowCount;
 
-function changeRowCountOrOpenDialog() {
   if (
     lowestNumberOfRowsOverAllWahldaten.value != null &&
     rowSize.value != null

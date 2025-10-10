@@ -119,17 +119,17 @@ const routes = [
     component: ErfassungStimmzettelView,
   },
   {
-    path: "/stapelA/:wahlId",
+    path: "/obw/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",
     name: ROUTE_STAPEL_A,
     component: OWBStapelAView,
   },
   {
-    path: "/stapelB/:wahlId",
+    path: "/obw/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
     component: ObwStapelBView,
   },
   {
-    path: "/stapelC/:wahlId",
+    path: "/obw/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",
     name: ROUTE_STAPEL_C,
     component: StapelCView,
   },

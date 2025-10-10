@@ -296,7 +296,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       );
       if (ereignisStore.wahlbezirkEreignisse.ereigniseintraege) {
         expect(
-          ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0].beschreibung
+          ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0]?.beschreibung
         ).toBe(expectedBegruendung);
       }
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();

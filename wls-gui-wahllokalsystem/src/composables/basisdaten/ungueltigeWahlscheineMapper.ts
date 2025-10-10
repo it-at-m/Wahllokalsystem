@@ -27,9 +27,9 @@ export function useUngueltigeWahlscheineMapper() {
     const cleanedValues = values.map(removeSpacesAndQuotationsCallback);
     return cleanedValues.length > 2
       ? {
-          familienname: cleanedValues[0],
-          vorname: cleanedValues[1],
-          wahlscheinnummer: cleanedValues[2],
+          familienname: cleanedValues[0] ?? "",
+          vorname: cleanedValues[1] ?? "",
+          wahlscheinnummer: cleanedValues[2] ?? "",
         }
       : undefined;
   }

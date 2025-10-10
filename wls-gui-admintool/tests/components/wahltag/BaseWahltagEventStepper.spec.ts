@@ -111,11 +111,11 @@ describe("BaseWahltagEventStepper", () => {
         wrapper.findAllComponents(BaseStepWahltagInit);
 
       expect(
-        baseStepWahltagInitComponents[0].props("wahltagEvent").nummer
-      ).toStrictEqual(props.wahltagEvents[0].nummer);
+        baseStepWahltagInitComponents[0]?.props("wahltagEvent").nummer
+      ).toStrictEqual(props.wahltagEvents[0]?.nummer);
       expect(
-        baseStepWahltagInitComponents[1].props("wahltagEvent").nummer
-      ).toStrictEqual(props.wahltagEvents[1].nummer);
+        baseStepWahltagInitComponents[1]?.props("wahltagEvent").nummer
+      ).toStrictEqual(props.wahltagEvents[1]?.nummer);
     });
   });
 

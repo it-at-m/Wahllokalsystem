@@ -39,7 +39,7 @@ describe("begruendungTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(1);
 
-      result[0].callback();
+      result[0]?.callback();
       expect(mockDefinitions.loadBegruendungForWahl).toHaveBeenCalledOnce();
     });
   });

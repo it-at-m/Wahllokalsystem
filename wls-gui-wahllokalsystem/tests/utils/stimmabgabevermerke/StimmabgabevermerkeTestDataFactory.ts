@@ -17,7 +17,7 @@ import { StimmzettelDTOStimmzettelartEnum } from "@/api/wls-clients/generated-er
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 
-const { generateRandomString, generateRandomNumber } =
+const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();
 
 export function useStimmabgabevermerkeTestDataFactory() {
@@ -25,7 +25,10 @@ export function useStimmabgabevermerkeTestDataFactory() {
     return {
       wahlbezirkID: generateRandomString(2),
       eingenommeneWahlscheine: new Map([
-        [_getRandomEnumValue(), generateRandomNumber(4)],
+        [
+          getRandomItem(Object.values(StimmzettelStimmzettelartEnum)),
+          generateRandomNumber(4),
+        ],
       ]),
       vermerke: [
         prepareVermerk().blattnummer(2).build(),
@@ -42,7 +45,9 @@ export function useStimmabgabevermerkeTestDataFactory() {
       wahlbezirkID: generateRandomString(2),
       eingenommeneWahlscheine: [
         {
-          stimmzettelart: _getRandomEnumValueDTO(),
+          stimmzettelart: getRandomItem(
+            Object.values(StimmzettelDTOStimmzettelartEnum)
+          ),
           anzahl: generateRandomNumber(4),
         },
       ],
@@ -69,12 +74,22 @@ export function useStimmabgabevermerkeTestDataFactory() {
       .build();
     const wahldatenTwo = prepareWahldaten()
       .eingenommeneWahlscheine(
-        new Map([[_getRandomEnumValue(), generateRandomNumber(2)]])
+        new Map([
+          [
+            getRandomItem(Object.values(StimmzettelStimmzettelartEnum)),
+            generateRandomNumber(2),
+          ],
+        ])
       )
       .build();
     const wahldatenThree = prepareWahldaten()
       .eingenommeneWahlscheine(
-        new Map([[_getRandomEnumValue(), generateRandomNumber(2)]])
+        new Map([
+          [
+            getRandomItem(Object.values(StimmzettelStimmzettelartEnum)),
+            generateRandomNumber(2),
+          ],
+        ])
       )
       .build();
     const wahldaten = [wahldatenOne, wahldatenTwo, wahldatenThree];
@@ -180,18 +195,6 @@ export function useStimmabgabevermerkeTestDataFactory() {
 
   function prepareStimmzettelDTO(): Builder<StimmzettelDTO> {
     return proxyBuilder<StimmzettelDTO>(createStimmzettelDTO());
-  }
-
-  function _getRandomEnumValueDTO() {
-    const enumValues = Object.values(StimmzettelDTOStimmzettelartEnum);
-    const randomIndex = Math.floor(Math.random() * enumValues.length);
-    return enumValues[randomIndex];
-  }
-
-  function _getRandomEnumValue() {
-    const enumValues = Object.values(StimmzettelStimmzettelartEnum);
-    const randomIndex = Math.floor(Math.random() * enumValues.length);
-    return enumValues[randomIndex];
   }
 
   return {

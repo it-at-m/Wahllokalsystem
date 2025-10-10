@@ -319,13 +319,13 @@ describe("wahlenStore.ts", () => {
       ];
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual([]);
 
       await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["ZUGELASSEN"]);
     });
 
@@ -354,19 +354,19 @@ describe("wahlenStore.ts", () => {
       ];
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
       expect(
-        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[1]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
 
       unitUnderTest.beanstandeteWahlbriefeActions.addBeanstandeterWahlbriefEntry();
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", null]);
       expect(
-        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[1]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", null]);
     });
   });
@@ -387,10 +387,10 @@ describe("wahlenStore.ts", () => {
       ];
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", "ZUGELASSEN"]);
       expect(
-        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[1]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG", "ZUGELASSEN"]);
 
       unitUnderTest.beanstandeteWahlbriefeActions.deleteBeanstandeterWahlbriefEntry(
@@ -398,10 +398,10 @@ describe("wahlenStore.ts", () => {
       );
 
       expect(
-        unitUnderTest.wahlenState.wahlen[0].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
       expect(
-        unitUnderTest.wahlenState.wahlen[1].beanstandeteWahlbriefe
+        unitUnderTest.wahlenState.wahlen[1]?.beanstandeteWahlbriefe
       ).toStrictEqual(["GEGENSTAND_IM_UMSCHLAG"]);
     });
   });
@@ -626,9 +626,9 @@ describe("wahlenStore.ts", () => {
         wahlID
       );
 
-      expect(unitUnderTest.wahlenState.wahlen[0].wahlID).toStrictEqual(wahlID);
+      expect(unitUnderTest.wahlenState.wahlen[0]?.wahlID).toStrictEqual(wahlID);
       expect(
-        unitUnderTest.wahlenState.wahlen[0].stimmzettelumschlaege
+        unitUnderTest.wahlenState.wahlen[0]?.stimmzettelumschlaege
       ).toStrictEqual(mockedStimmzettelumschlaege);
     });
 
@@ -647,9 +647,9 @@ describe("wahlenStore.ts", () => {
         wahlID
       );
 
-      expect(unitUnderTest.wahlenState.wahlen[0].wahlID).toStrictEqual(wahlID);
+      expect(unitUnderTest.wahlenState.wahlen[0]?.wahlID).toStrictEqual(wahlID);
       expect(
-        unitUnderTest.wahlenState.wahlen[0].stimmzettelumschlaege
+        unitUnderTest.wahlenState.wahlen[0]?.stimmzettelumschlaege
       ).toStrictEqual({ anzahlWaehler: null });
     });
   });

@@ -39,7 +39,7 @@ describe("ereignisseTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(1);
 
-      result[0].callback();
+      result[0]?.callback();
       expect(mockDefinitions.loadEreignisse).toHaveBeenCalledOnce();
     });
   });

@@ -74,7 +74,7 @@ describe("aWerteService.ts", () => {
         useAWerteService();
 
         const configurationConstructorParameter =
-          mockDefinitions.configurationConstructor.mock.calls[0][0];
+          mockDefinitions.configurationConstructor.mock.calls[0]?.[0];
 
         expect(configurationConstructorParameter["basePath"]).toStrictEqual(
           "/api/ergebnismeldung-service"

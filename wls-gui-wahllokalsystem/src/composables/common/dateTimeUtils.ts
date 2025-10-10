@@ -11,7 +11,8 @@ export function useDateTimeUtils() {
 
     const timeParts = timeString.split(":").map(Number);
 
-    const [hours, minutes] = timeParts;
+    const hours: number = timeParts[0] ?? 0;
+    const minutes: number = timeParts[1] ?? 0;
     if (
       isNaN(hours) ||
       isNaN(minutes) ||
@@ -23,7 +24,7 @@ export function useDateTimeUtils() {
       return new Date(NaN); // Return invalid date for invalid time values
     }
 
-    const seconds = timeParts.length === 3 ? timeParts[2] : 0;
+    const seconds: number = timeParts[2] ?? 0;
     if (!isNaN(seconds) && (seconds < 0 || seconds > 59)) {
       return new Date(NaN);
     }

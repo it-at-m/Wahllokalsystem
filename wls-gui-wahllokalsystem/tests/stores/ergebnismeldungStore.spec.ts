@@ -93,7 +93,7 @@ describe("ergebnismeldungStore.ts", () => {
         stapelArt,
         maxAllowedNumIndex
       );
-      expect(unitUnderTest.ergebnisse[0].ergebnisse).toStrictEqual([
+      expect(unitUnderTest.ergebnisse[0]?.ergebnisse).toStrictEqual([
         itemToKeep1,
         itemToKeep2,
       ]);
@@ -141,7 +141,7 @@ describe("ergebnismeldungStore.ts", () => {
         stapelArt,
         maxAllowedNumIndex
       );
-      expect(unitUnderTest.ergebnisse[0].ergebnisse).toStrictEqual([
+      expect(unitUnderTest.ergebnisse[0]?.ergebnisse).toStrictEqual([
         itemToKeep1,
         itemToKeep2,
       ]);
@@ -432,9 +432,9 @@ describe("ergebnismeldungStore.ts", () => {
           .build(),
       ];
 
-      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
-        ergebnisBeforeUpdating
-      );
+      expect(
+        unitUnderTest.ergebnisse[0]?.ergebnisse[0]?.ergebnis
+      ).toStrictEqual(ergebnisBeforeUpdating);
 
       unitUnderTest.findAndUpdateErgebnisseByWahlIdAndStapelArt(
         wahlID,
@@ -442,9 +442,9 @@ describe("ergebnismeldungStore.ts", () => {
         [prepareErgebnis().ergebnis(ergebnisAfterUpdating).build()]
       );
 
-      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
-        ergebnisAfterUpdating
-      );
+      expect(
+        unitUnderTest.ergebnisse[0]?.ergebnisse[0]?.ergebnis
+      ).toStrictEqual(ergebnisAfterUpdating);
     });
 
     it("should_createNewErgebnisseForStapelB_when_noExistingErgebnisseFound", () => {
@@ -488,9 +488,9 @@ describe("ergebnismeldungStore.ts", () => {
           },
         ],
       });
-      expect(unitUnderTest.ergebnisse[0].ergebnisse[0].ergebnis).toStrictEqual(
-        ergebnisAfterUpdating
-      );
+      expect(
+        unitUnderTest.ergebnisse[0]?.ergebnisse[0]?.ergebnis
+      ).toStrictEqual(ergebnisAfterUpdating);
     });
   });
 

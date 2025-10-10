@@ -106,7 +106,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
           | [InfomanagementConfigParameter][]
           | undefined;
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0].wert).toBe("Mock Wert");
+        expect(emitted?.[0]?.[0].wert).toBe("Mock Wert");
       });
 
       it("should_showDefaultValue_when_resetButtonIsClicked_And_emitCommitEditConfigParameterValue_when_CommitButtonIsClicked", async () => {
@@ -137,7 +137,7 @@ describe("BaseDialogConfigParameterDisplay.vue", () => {
           | [InfomanagementConfigParameter][]
           | undefined;
         expect(emitted).toBeTruthy();
-        expect(emitted?.[0][0].wert).toBe(configParameter.defaultValue);
+        expect(emitted?.[0]?.[0].wert).toBe(configParameter.defaultValue);
       });
     });
   });

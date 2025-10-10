@@ -25,7 +25,7 @@
         :to="routeWithName(ROUTE_EREIGNISSE)"
       />
     </v-list-group>
-    <the-kommunalwahlen-scores-list-group />
+    <the-scores-list-group />
   </v-list>
 </template>
 
@@ -33,7 +33,7 @@
 import { storeToRefs } from "pinia";
 
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
-import TheKommunalwahlenScoresListGroup from "@/components/navigation/TheKommunalwahlenScoresListGroup.vue";
+import TheScoresListGroup from "@/components/navigation/TheScoresListGroup.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {

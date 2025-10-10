@@ -5,23 +5,32 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
-      @delete="() => onDeleteIconClicked(index)"
+      @delete="(ereignisPayload) => onDeleteIcon(index, ereignisPayload)"
     />
-    <yes-no-dialog
-      v-model="deleteDialog"
+    <base-dialog
+      :visible="deleteDialog"
       dialogtitle="Ereignis löschen"
-      dialogtext="Möchten Sie dieses Ereignis wirklich löschen?"
-      @no="onYesNoDialogNoClicked"
-      @yes="onYesNoDialogYesClicked"
-    />
+      confirmtext="Ja"
+      canceltext="Nein"
+      icon="$information"
+      @confirm="onConfirmDelete"
+      @cancel="onCancelDelete"
+    >
+      <div class="mb-3">Möchten Sie das Ereignis wirklich löschen?</div>
+      <div>Datum: {{ dialogDate }}</div>
+      <div>Uhrzeit: {{ dialogTime }}</div>
+      <div>Beschreibung: {{ dialogBeschreibung }}</div>
+    </base-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { EreignisPayload } from "@/types/vorfaelleundvorkommnisse/EreignisPayload.ts";
+
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import YesNoDialog from "@/components/common/YesNoDialog.vue";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
@@ -29,29 +38,42 @@ const ereignisStore = useEreignisStore();
 const { wahlbezirkEreignisse } = storeToRefs(ereignisStore);
 const deleteDialog = ref(false);
 const deleteIndex = ref<number | null>(null);
+const dialogTime = ref("");
+const dialogDate = ref("");
+const dialogBeschreibung = ref("");
 
-function closeYesNoDialog() {
+function closeDeleteDialog() {
   deleteDialog.value = false;
 }
 
-function showYesNoDialogForItem(index: number) {
+function showDeleteDialog(index: number) {
   deleteIndex.value = index;
   deleteDialog.value = true;
 }
 
-function onDeleteIconClicked(index: number) {
-  showYesNoDialogForItem(index);
+function onDeleteIcon(index: number, ereignisPayload: EreignisPayload) {
+  const { dateStr, timeStr, beschreibung } = ereignisPayload;
+  dialogTime.value = timeStr ?? "";
+  dialogDate.value = dateStr ?? "";
+  dialogBeschreibung.value = beschreibung ?? "";
+
+  if (!dateStr && !timeStr && !beschreibung) {
+    deleteIndex.value = index;
+    onConfirmDelete();
+  } else {
+    showDeleteDialog(index);
+  }
 }
 
-function onYesNoDialogNoClicked() {
-  closeYesNoDialog();
+function onCancelDelete() {
+  closeDeleteDialog();
 }
 
-function onYesNoDialogYesClicked() {
+function onConfirmDelete() {
   if (deleteIndex.value !== null) {
     ereignisStore.deleteEreignisByIndex(deleteIndex.value);
     deleteIndex.value = null;
   }
-  closeYesNoDialog();
+  closeDeleteDialog();
 }
 </script>

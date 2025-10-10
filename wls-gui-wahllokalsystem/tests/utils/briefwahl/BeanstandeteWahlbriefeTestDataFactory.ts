@@ -10,7 +10,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
-const { generateRandomString, generateRandomNumber } =
+const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();
 
 export function useBeanstandeteWahlbriefeTestDataFactory() {
@@ -56,12 +56,10 @@ export function useBeanstandeteWahlbriefeTestDataFactory() {
     length?: number
   ): ZurueckweisungsgrundEnum[] {
     const counter = length ?? 3;
-    const enumValues = Object.values(ZurueckweisungsgrundEnum);
     const result: ZurueckweisungsgrundEnum[] = [];
 
     for (let i = 0; i < counter; i++) {
-      const randomIndex = Math.floor(Math.random() * enumValues.length);
-      result.push(enumValues[randomIndex]);
+      result.push(getRandomItem(Object.values(ZurueckweisungsgrundEnum)));
     }
     return result;
   }

@@ -52,7 +52,7 @@
             <v-autocomplete
               :model-value="
                 zurueckweisungsgrundEnumToDisplayString(
-                  wahl.beanstandeteWahlbriefe[index - 1]
+                  wahl.beanstandeteWahlbriefe[index - 1] ?? null
                 )
               "
               label="Beschlussergebnis"

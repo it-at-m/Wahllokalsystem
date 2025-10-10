@@ -156,7 +156,7 @@ describe("wahltagService.ts", () => {
       useWahltagService();
 
       const configurationConstructorParameter =
-        mockDefinitions.adminApiConfigurationConstructor.mock.calls[0][0];
+        mockDefinitions.adminApiConfigurationConstructor.mock.calls[0]?.[0];
 
       expect(configurationConstructorParameter["basePath"]).toStrictEqual(
         "/api/admin-service"
@@ -230,7 +230,7 @@ describe("wahltagService.ts", () => {
 
       expect(
         mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData
-          .mock.calls[0][0]
+          .mock.calls[0]?.[0]
       ).toStrictEqual(mockedAxiosResponse);
     });
   });

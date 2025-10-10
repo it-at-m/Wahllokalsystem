@@ -45,10 +45,10 @@ describe("waehlerTaskFactory.ts", () => {
         .build();
 
       const result = unitUnderTest.createTasks(taskFactoryContext);
-      await result[0].callback();
+      await result[0]?.callback();
 
       expect(result.length).toStrictEqual(1);
-      expect(result[0].name).toStrictEqual("Wahlbeteiligung");
+      expect(result[0]?.name).toStrictEqual("Wahlbeteiligung");
       expect(mockDefinitions.loadWaehler.mock.calls).toStrictEqual([[]]);
     });
 

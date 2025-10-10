@@ -3,14 +3,20 @@
     <the-o-b-w-scores-list-group
       v-if="wahl.wahlart === WahlWahlartEnum.Obw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-s-r-w-scores-list-group
       v-if="wahl.wahlart === WahlWahlartEnum.Srw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
     />
     <the-b-a-w-scores-list-group
       v-if="wahl.wahlart === WahlWahlartEnum.Baw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
     />
   </div>
 </template>
@@ -28,7 +34,7 @@ import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-defineProps({
+const props = defineProps({
   wahl: {
     type: Object as PropType<Wahl>,
     required: true,
@@ -42,4 +48,10 @@ const titleStimmenZaehlen = computed(() => {
     ? "Zählen der Stimmzettelumschläge"
     : "Zählen der Stimmzettel";
 });
+
+const wahlbezirkIdForWahl = computed(
+  () =>
+    useUserStore().getWahlbezirkIdFromWahlMetaDataByWahlId(props.wahl.wahlID) ??
+    ""
+);
 </script>

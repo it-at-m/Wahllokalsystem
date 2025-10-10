@@ -4,7 +4,7 @@
       <div class="d-flex">
         <base-number-input
           v-model="newRowCount"
-          :rules="validationRules"
+          :rules="[required, ...rules]"
           max-width="15rem"
           :label="inputFieldLabel"
         />
@@ -67,10 +67,6 @@ const isApplyRowCountDisabled = computed(
     isChangeRowCountFormValid.value !== true ||
     newRowCount.value === props.currentRowCount
 );
-
-const validationRules = computed(() => {
-  return props.rules ? [required, ...props.rules] : [required];
-});
 
 function onChangeRowCountClicked() {
   emit("changeRowCountClicked", newRowCount.value);

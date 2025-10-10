@@ -8,7 +8,7 @@
 
 Es gibt zwei verschiedene Templates der städtischen Referenzarchitektur.
 Einmal den internen maven-Archetype, bei welchem das Frontend Teil des ApiGateway ist und zum Anderen
-das [Github-Template](https://github.com/it-at-m/refarch-templates/tree/main), bei welchem das Frontend eigenständig 
+das [Github-Template](https://github.com/it-at-m/refarch-templates/tree/main), bei welchem das Frontend eigenständig
 ist und das ApiGateway als Podman-Image bereitgestellt wird.
 
 In Bezug auf die Wartbarkeit und Komplexität sollte entschieden werden, welches Template für das WLS-Projekt besser geeignet ist.

@@ -16,6 +16,7 @@ const {
   generateRandomNumber,
   generateRandomString,
   generateRandomBoolean,
+  getRandomItem,
 } = useCommonTestDataFactory();
 
 export function useVorfaelleundvorkommnisseTestDataFactory() {
@@ -23,7 +24,7 @@ export function useVorfaelleundvorkommnisseTestDataFactory() {
     return {
       beschreibung: `beschreibung${generateRandomNumber(4)}`,
       uhrzeit: generateRandomDate(),
-      ereignisart: _generateRandomEreignisart(),
+      ereignisart: getRandomItem(Object.values(EreignisartEnum)),
     };
   }
 
@@ -31,7 +32,7 @@ export function useVorfaelleundvorkommnisseTestDataFactory() {
     return {
       beschreibung: `beschreibung${generateRandomNumber(4)}`,
       uhrzeit: generateRandomDate().toISOString(),
-      ereignisart: _generateRandomEreignisart(),
+      ereignisart: getRandomItem(Object.values(EreignisartEnum)),
     };
   }
 
@@ -81,12 +82,6 @@ export function useVorfaelleundvorkommnisseTestDataFactory() {
     return proxyBuilder<WahlbezirkEreignisseDTO>(
       createWahlbezirkEreignisseDTO()
     );
-  }
-
-  function _generateRandomEreignisart(): EreignisartEnum {
-    const ereignisarten = Object.values(EreignisartEnum);
-    const zufaelligerIndex = Math.floor(Math.random() * ereignisarten.length);
-    return ereignisarten[zufaelligerIndex];
   }
 
   return {

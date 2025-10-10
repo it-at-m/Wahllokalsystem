@@ -236,16 +236,17 @@ describe("wahlvorschlaegeStore.ts", () => {
       await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID);
 
       const sortedWahlvorschlaegeAfterLoading = Array.from(
-        unitUnderTest.wahlvorschlaege[0].wahlvorschlaege
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        unitUnderTest.wahlvorschlaege[0]!.wahlvorschlaege
       );
 
       expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID],
       ]);
       expect(unitUnderTest.wahlvorschlaege.length).toBe(1);
-      expect(sortedWahlvorschlaegeAfterLoading[0].ordnungszahl).toBe(2);
-      expect(sortedWahlvorschlaegeAfterLoading[1].ordnungszahl).toBe(4);
-      expect(sortedWahlvorschlaegeAfterLoading[2].ordnungszahl).toBe(7);
+      expect(sortedWahlvorschlaegeAfterLoading[0]?.ordnungszahl).toBe(2);
+      expect(sortedWahlvorschlaegeAfterLoading[1]?.ordnungszahl).toBe(4);
+      expect(sortedWahlvorschlaegeAfterLoading[2]?.ordnungszahl).toBe(7);
     });
   });
 });

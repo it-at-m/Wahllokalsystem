@@ -14,7 +14,7 @@ export function useOBWStapelBUtils(wahlID: ComputedRef<string>) {
       wahlID.value,
       StapelArtEnum.ObwBLeer
     );
-    return ergebnisseFound?.ergebnisse[0].ergebnis;
+    return ergebnisseFound?.ergebnisse[0]?.ergebnis;
   });
 
   const ergebnisseStapelBUngekennzeichnet = computed(() => {
@@ -22,7 +22,7 @@ export function useOBWStapelBUtils(wahlID: ComputedRef<string>) {
       wahlID.value,
       StapelArtEnum.ObwBUngekennzeichnet
     );
-    return ergebnisseFound?.ergebnisse[0].ergebnis;
+    return ergebnisseFound?.ergebnisse[0]?.ergebnis;
   });
 
   const sumStapelB = computed(

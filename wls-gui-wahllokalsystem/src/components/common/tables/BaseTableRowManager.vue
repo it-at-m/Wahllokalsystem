@@ -22,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from "vue";
+
 import { computed, ref } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -37,9 +39,9 @@ const props = defineProps({
     required: true,
   },
   rules: {
-    type: Array<(value: number) => string | boolean>,
+    type: Array as PropType<((value: number) => string | boolean)[]>,
     required: false,
-    default: [],
+    default: () => [],
   },
   applyBtnLabel: {
     type: String,

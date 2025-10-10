@@ -25,7 +25,6 @@ import {
 import { nextTick } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-//import YesNoDialog from "@/components/common/YesNoDialog.vue";
 import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisRow.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import vuetify from "@/plugins/vuetify";

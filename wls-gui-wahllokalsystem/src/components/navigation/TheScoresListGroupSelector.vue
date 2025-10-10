@@ -1,16 +1,18 @@
 <template>
-  <the-o-b-w-scores-list-group
-    v-if="wahl.wahlart === WahlWahlartEnum.Obw"
-    :title-stimmen-zaehlen="titleStimmenZaehlen"
-  />
-  <the-s-r-w-scores-list-group
-    v-if="wahl.wahlart === WahlWahlartEnum.Srw"
-    :title-stimmen-zaehlen="titleStimmenZaehlen"
-  />
-  <the-b-a-w-scores-list-group
-    v-if="wahl.wahlart === WahlWahlartEnum.Baw"
-    :title-stimmen-zaehlen="titleStimmenZaehlen"
-  />
+  <div>
+    <the-o-b-w-scores-list-group
+      v-if="wahl.wahlart === WahlWahlartEnum.Obw"
+      :title-stimmen-zaehlen="titleStimmenZaehlen"
+    />
+    <the-s-r-w-scores-list-group
+      v-if="wahl.wahlart === WahlWahlartEnum.Srw"
+      :title-stimmen-zaehlen="titleStimmenZaehlen"
+    />
+    <the-b-a-w-scores-list-group
+      v-if="wahl.wahlart === WahlWahlartEnum.Baw"
+      :title-stimmen-zaehlen="titleStimmenZaehlen"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,5 +43,3 @@ const titleStimmenZaehlen = computed(() => {
     : "Zählen der Stimmzettel";
 });
 </script>
-
-<style scoped></style>

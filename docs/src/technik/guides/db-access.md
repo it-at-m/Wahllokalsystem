@@ -1,7 +1,7 @@
 # Zugriff auf Datenbanktabellen aller Services in einer Verbindung
 
-Für jeden Service gibt es einen separaten User für die Oracle Datenbank die in Docker läuft. Diese User können
-nur die Tabellen sehen, die im jeweiligen Schema sind. Der User `wls_basisdaten_service` kann
+Für jeden Service gibt es einen separaten User für die Oracle Datenbank die in Podman läuft. 
+Diese User können nur die Tabellen sehen, die im jeweiligen Schema sind. Der User `wls_basisdaten_service` kann
 z.B. nur die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` sehen.
 
 <details>

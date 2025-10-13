@@ -124,7 +124,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
       const errorMessages = wrapper.findAll(".v-messages__message");
 
       expect(errorMessages.length).toBe(1);
-      expect(errorMessages[0].text()).toBe("Feld darf nicht leer sein.");
+      expect(errorMessages[0]?.text()).toBe("Feld darf nicht leer sein.");
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)

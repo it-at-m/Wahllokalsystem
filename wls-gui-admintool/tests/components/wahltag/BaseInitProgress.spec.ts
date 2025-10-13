@@ -32,13 +32,13 @@ describe("BaseInitProgress.vue", () => {
       await wrapper.setProps(props);
 
       const rowsInitProgress = wrapper.findAllComponents(BaseRowInitProgress);
-      expect(rowsInitProgress[0].props()["progress"]).toStrictEqual(
+      expect(rowsInitProgress[0]?.props()["progress"]).toStrictEqual(
         props.wahlvorschlaege
       );
-      expect(rowsInitProgress[1].props()["progress"]).toStrictEqual(
+      expect(rowsInitProgress[1]?.props()["progress"]).toStrictEqual(
         props.referendumvorschlaege
       );
-      expect(rowsInitProgress[2].props()["progress"]).toStrictEqual(
+      expect(rowsInitProgress[2]?.props()["progress"]).toStrictEqual(
         props.awerte
       );
     });

@@ -293,7 +293,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(2);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(1);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(1);
       });
     });
 
@@ -303,7 +303,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(5);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(4);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(4);
       });
     });
 
@@ -313,7 +313,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(3);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(2);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(2);
       });
     });
   });

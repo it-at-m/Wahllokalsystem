@@ -1,14 +1,18 @@
+import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 
@@ -16,10 +20,16 @@ const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
+  const { isUWB } = storeToRefs(useUserStore());
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
+  const { getBegruendungStimmzettelumschlaege } =
+    useErgebnisermittlungService();
+  const { wahlenActions } = useWahlenStore();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
   const isErgebnisseSaving = ref<boolean>(false);
+
+  const begruendungen = ref<Begruendung[]>([]);
 
   function deleteErgebnisseWithNumIndexAbove(
     ergebnisseWahlID: string,
@@ -176,8 +186,46 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     return ergebnisseForKey;
   }
 
+  async function loadBegruendungForWahl(
+    wahlID: string,
+    sendNotification = true
+  ) {
+    const wahlName = wahlenActions.getWahlNameOrBlankStringById(wahlID);
+
+    try {
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+      const wahlbezirksArt = isUWB.value
+        ? WahlbezirksArtEnum.UWB
+        : WahlbezirksArtEnum.BWB;
+
+      if (wahlbezirkID) {
+        const loadedBegruendung = await getBegruendungStimmzettelumschlaege(
+          wahlID,
+          wahlbezirkID,
+          wahlbezirksArt,
+          wahlName,
+          sendNotification
+        );
+        if (loadedBegruendung) {
+          const existingBegruendungIndexForWahl = begruendungen.value.findIndex(
+            (begruendung) => begruendung.wahlID === wahlID
+          );
+          if (existingBegruendungIndexForWahl >= 0) {
+            begruendungen.value[existingBegruendungIndexForWahl] =
+              loadedBegruendung;
+          } else {
+            begruendungen.value.push(loadedBegruendung);
+          }
+        }
+      }
+    } catch (e) {
+      throw new Error(`Fehler beim Laden der Begründung für ${wahlName}. ` + e);
+    }
+  }
+
   return {
     ergebnisse,
+    begruendungen,
     deleteErgebnisseWithNumIndexAbove,
     isErgebnisseSaving,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
@@ -186,6 +234,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     loadErgebnisseByStapelArt,
     sendErgebnisseByStapelArt,
     switchStapelOfErgebnis,
+    loadBegruendungForWahl,
   };
 });
 

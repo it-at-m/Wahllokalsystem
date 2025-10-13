@@ -295,7 +295,7 @@ describe("ereignisStore.ts", () => {
         1
       );
       expect(
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0].ereignisart
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege[0]?.ereignisart
       ).toStrictEqual(mockedEreignisartOfNewEreignis);
 
       spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();

@@ -18,15 +18,13 @@ const {
   generateRandomDateTimeAsString,
   generateRandomString,
   generateRandomNumberInRange,
+  getRandomItem,
 } = useCommonTestDataFactory();
 const { createRandomBeanstandeteWahlbriefeValues } =
   useBeanstandeteWahlbriefeTestDataFactory();
 
 const { createStimmzettelumschlaege } =
   useStimmzettelumschlaegeTestDataFactory();
-
-const wahlWahlartEnumValues = Object.values(WahlWahlartEnum);
-const wahlDTOWahlartEnumValues = Object.values(WahlDTOWahlartEnum);
 
 export function useWahlTestDataFactory() {
   function createWahlDTO(): WahlDTO {
@@ -36,10 +34,7 @@ export function useWahlTestDataFactory() {
       reihenfolge: generateRandomNumberInRange(0, 100),
       waehlerverzeichnisNummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
-      wahlart:
-        wahlDTOWahlartEnumValues[
-          generateRandomNumberInRange(0, wahlDTOWahlartEnumValues.length - 1)
-        ],
+      wahlart: getRandomItem(Object.values(WahlDTOWahlartEnum)),
       farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
     };
@@ -52,10 +47,7 @@ export function useWahlTestDataFactory() {
       reihenfolge: generateRandomNumberInRange(0, 100),
       waehlerverzeichnisNummer: generateRandomNumberInRange(0, 100),
       wahltag: generateRandomDateTimeAsString(),
-      wahlart:
-        wahlWahlartEnumValues[
-          generateRandomNumberInRange(0, wahlWahlartEnumValues.length - 1)
-        ],
+      wahlart: getRandomItem(Object.values(WahlWahlartEnum)),
       farbe: _createRandomFarbe(), // Randomly generated Farbe
       nummer: generateRandomString(5),
       beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),

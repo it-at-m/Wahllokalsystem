@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+import type { EreignisPayload } from "@/types/vorfaelleundvorkommnisse/EreignisPayload.ts";
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -52,6 +53,7 @@ import { computed, watch } from "vue";
 
 import BaseDateInput from "@/components/common/inputs/BaseDateInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
@@ -60,6 +62,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 const { required, maxLength, minLength, dateNotInFuture, dateGreaterOrEqual } =
   useRules();
 const { currentUserWahltag } = storeToRefs(useUserStore());
+const { toHhMm, toGermanDate } = useDateTimeFormatter();
 
 const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;
 
@@ -86,9 +89,16 @@ watch(dateAndTimeCombined, (newValue) => {
   }
 });
 
-const emit = defineEmits<{ delete: [] }>();
+const emit = defineEmits<{
+  delete: [erreignisPayload: EreignisPayload];
+}>();
 
 function onDeleteIconClicked() {
-  emit("delete");
+  const ereignisPayload = {
+    dateStr: toGermanDate(dateOnly.value),
+    timeStr: toHhMm(timeOnly.value),
+    beschreibung: ereignisModel.value.beschreibung,
+  };
+  emit("delete", ereignisPayload);
 }
 </script>

@@ -64,7 +64,7 @@ describe("kopfdatenTaskFactory.ts", () => {
       const result = createTasks(taskFactoryContext);
 
       expect(result.length).toStrictEqual(1);
-      expect(result[0].name).toStrictEqual(
+      expect(result[0]?.name).toStrictEqual(
         kopfdatenNamePrefix + extendedWahlMetaDataOne.wahlName
       );
     });

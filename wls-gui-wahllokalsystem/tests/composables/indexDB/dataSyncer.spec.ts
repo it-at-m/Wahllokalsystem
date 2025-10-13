@@ -81,7 +81,7 @@ describe("dataSyncer.ts", () => {
       ]);
 
       const result = await unitUnderTest.getSyncTasks();
-      await result[0].callback();
+      await result[0]?.callback();
 
       expect(mockDefinitions.basicPostConfig.mock.calls).toStrictEqual([
         [key, FetchStrategiesEnum.STRATEGY_ONLINE_FIRST, data],

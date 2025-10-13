@@ -219,7 +219,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       await anzahlWaehler.setValue(33);
 
       expect(
-        wahlenStore.wahlenState.wahlen[0].stimmzettelumschlaege.anzahlWaehler
+        wahlenStore.wahlenState.wahlen[0]?.stimmzettelumschlaege.anzahlWaehler
       ).toBe(33);
     });
 

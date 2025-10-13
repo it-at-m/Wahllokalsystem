@@ -49,10 +49,10 @@ describe("waehlverzeichnisTaskFactory.ts", () => {
         .build();
 
       const result = unitUnderTest.createTasks(taskFactoryContext);
-      await result[0].callback();
+      await result[0]?.callback();
 
       expect(result.length).toStrictEqual(1);
-      expect(result[0].name).toStrictEqual("Wählerverzeichnis");
+      expect(result[0]?.name).toStrictEqual("Wählerverzeichnis");
       expect(
         mockDefinitions.loadPflegeWaehlerverzeichnis.mock.calls
       ).toStrictEqual([[false]]);

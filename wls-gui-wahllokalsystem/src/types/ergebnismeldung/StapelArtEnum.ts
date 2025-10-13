@@ -14,6 +14,7 @@ export const StapelArtEnum = {
   MbwB: "MBW_B",
   MbwAB: "MBW_A_B",
   MbwBC: "MBW_B_C",
+  StimmzettelUmschlaege: "STIMMZETTEL_UMSCHLAEGE",
 } as const;
 
 export type StapelArtEnum = (typeof StapelArtEnum)[keyof typeof StapelArtEnum];

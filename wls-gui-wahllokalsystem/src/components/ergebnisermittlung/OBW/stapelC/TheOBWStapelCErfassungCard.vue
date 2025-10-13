@@ -5,22 +5,12 @@
         Stapel c - Stimmzettel, die Anlass zu Bedenken geben
       </v-card-title>
       <v-card-text>
-        <v-form v-model="isChangeRowCountFormValid">
-          <div class="d-flex">
-            <base-number-input
-              v-model="countRows"
-              :rules="[minNumber(0), maxNumber(9999), required]"
-              max-width="15rem"
-            />
-            <v-btn
-              active
-              :disabled="isApplyRowCountDisabled"
-              class="ml-4 mt-3"
-              @click="onApplyRowCountClicked"
-              >Übernehmen</v-btn
-            >
-          </div>
-        </v-form>
+        <base-table-row-manager
+          :current-row-count="stapelCErgebnisseOrdereByNumIndex.length"
+          :model-value="countRows"
+          :rules="[minNumber(0), maxNumber(9999)]"
+          @change-row-count-clicked="onApplyRowCountClicked"
+        />
         <v-form v-model="isRowsFormValid">
           <v-table>
             <thead>
@@ -74,7 +64,7 @@ import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import { computed, onMounted, ref, useTemplateRef } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.vue";
 import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
 import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
@@ -82,7 +72,7 @@ import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCU
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
 
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
-const { minNumber, maxNumber, required } = useRules();
+const { minNumber, maxNumber } = useRules();
 
 const REF_DELETION_DENIED_DIALOG = "refDeletionDeniedDialog";
 
@@ -122,7 +112,6 @@ const stapelCErgebnisseOrdereByNumIndex = computed(() => {
 });
 
 const isRowsFormValid = ref<boolean | null>(null);
-const isChangeRowCountFormValid = ref<boolean | null>(null);
 const countRows = ref<number | null>(null);
 const templateRefDeletionDeniedDialog = useTemplateRef<
   typeof TheOBWStapelCDeletionDeniedDialog
@@ -133,12 +122,7 @@ const areStapelCGueltigeErgebnisseValid = computed(() =>
     (value) => value.ergebnis.wahlvorschlagID !== null
   )
 );
-const isApplyRowCountDisabled = computed(
-  () =>
-    isNewRowCountSameAsActualRowCount.value ||
-    countRows.value === null ||
-    isChangeRowCountFormValid.value !== true
-);
+
 const isNewRowCountSameAsActualRowCount = computed(
   () => stapelCErgebnisseOrdereByNumIndex.value.length === countRows.value
 );
@@ -154,7 +138,9 @@ function isTryingToRemoveNonEmptyValues() {
   );
 }
 
-function onApplyRowCountClicked() {
+function onApplyRowCountClicked(newRowCount: number | null) {
+  countRows.value = newRowCount;
+
   if (countRows.value === null || countRows.value === undefined) {
     return;
   }

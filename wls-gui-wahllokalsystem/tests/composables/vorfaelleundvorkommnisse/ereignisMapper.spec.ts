@@ -114,7 +114,7 @@ describe("ereignisMapper.ts", () => {
     const dto = toDto(model);
 
     // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-    expect(dto.ereigniseintraege![0].uhrzeit).toStrictEqual(uhrzeit);
+    expect(dto.ereigniseintraege![0]?.uhrzeit).toStrictEqual(uhrzeit);
   });
 });
 

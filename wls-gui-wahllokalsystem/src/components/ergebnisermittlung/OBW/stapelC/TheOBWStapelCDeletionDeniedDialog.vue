@@ -12,27 +12,13 @@
       erfasst wurde.
     </div>
     <div>
-      {{ stimmzettelThatPreventDeletion.length }}
-      {{
-        stimmzettelThatPreventDeletion.length === 1
-          ? "Element verhindert"
-          : "Elemente verhindern"
-      }}
-      das Löschen: Für
-      {{ stimmzettelThatPreventDeletion.length === 1 ? "den" : "die" }}
-      Stimmzettel {{ stimmzettelThatPreventDeletion.join(", ") }}
-      {{
-        stimmzettelThatPreventDeletion.length === 1
-          ? "wurde bereits ein Beschluss"
-          : "wurden bereits Beschlüsse"
-      }}
-      erfasst.
+      {{ contextThatPreventDeletion }}
     </div>
   </base-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 
@@ -41,6 +27,19 @@ const stimmzettelThatPreventDeletion = ref<number[]>([]);
 
 defineExpose({
   showDialog,
+});
+
+const contextThatPreventDeletion = computed(() => {
+  return (
+    stimmzettelThatPreventDeletion.value.length +
+    (stimmzettelThatPreventDeletion.value.length === 1
+      ? " Element verhindert das Löschen: Für den Stimmzettel "
+      : " Elemente verhindern das Löschen: Für die Stimmzettel ") +
+    stimmzettelThatPreventDeletion.value.join(", ") +
+    (stimmzettelThatPreventDeletion.value.length === 1
+      ? " wurde bereits ein Beschluss erfasst."
+      : " wurden bereits Beschlüsse erfasst.")
+  );
 });
 
 function onConfirmDialogConfirmClicked() {

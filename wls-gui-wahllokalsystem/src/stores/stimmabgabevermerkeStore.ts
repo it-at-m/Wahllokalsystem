@@ -178,7 +178,7 @@ export const useStimmabgabevermerkeStore = defineStore(
             const vermerke = stimmabgabevermerk.wahldaten[0].vermerke;
             for (let i = removeRows; i < 0; i++) {
               const vermerk = vermerke[vermerke.length + i];
-              if ( 
+              if (
                 vermerk &&
                 vermerk.stimmzettel.some(
                   (stimmzettel) =>

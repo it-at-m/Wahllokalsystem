@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="wahlbezirkIdForWahl">
     <the-o-b-w-scores-list-group
       v-if="wahl.wahlart === WahlWahlartEnum.Obw"
       :title-stimmen-zaehlen="titleStimmenZaehlen"
@@ -49,9 +49,7 @@ const titleStimmenZaehlen = computed(() => {
     : "Zählen der Stimmzettel";
 });
 
-const wahlbezirkIdForWahl = computed(
-  () =>
-    useUserStore().getWahlbezirkIdFromWahlMetaDataByWahlId(props.wahl.wahlID) ??
-    ""
+const wahlbezirkIdForWahl = computed(() =>
+  useUserStore().getWahlbezirkIdFromWahlMetaDataByWahlId(props.wahl.wahlID)
 );
 </script>

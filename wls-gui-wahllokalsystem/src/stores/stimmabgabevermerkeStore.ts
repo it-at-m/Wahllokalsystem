@@ -178,14 +178,13 @@ export const useStimmabgabevermerkeStore = defineStore(
             const vermerke = stimmabgabevermerk.wahldaten[0].vermerke;
             for (let i = removeRows; i < 0; i++) {
               const vermerk = vermerke[vermerke.length + i];
-              if (
-                // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+              if ( 
+                vermerk &&
                 vermerk.stimmzettel.some(
                   (stimmzettel) =>
                     stimmzettel.anzahl != null && stimmzettel.anzahl != 0
                 )
               ) {
-                // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
                 numbers.add(vermerk.blattnummer);
               }
             }

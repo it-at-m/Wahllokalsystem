@@ -12,7 +12,7 @@
         routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
           wahlId: wahlId,
           wahlbezirkId: wahlbezirkId,
-          wahlart: WahlWahlartEnum.Baw,
+          wahlart: WahlWahlartEnum.Obw,
         })
       "
     />

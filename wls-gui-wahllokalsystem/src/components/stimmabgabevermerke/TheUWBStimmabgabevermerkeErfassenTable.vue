@@ -103,23 +103,24 @@
     <base-dialog
       :visible="isDeleteDialogVisible"
       dialogtitle="Reduzierung der Blätteranzahl des Wählerverzeichnisses"
-      confirmtext="Trotzdem Löschen"
-      canceltext="Abbrechen"
+      confirmtext="Hinweis schließen"
       icon="$information"
-      @cancel="isDeleteDialogVisible = false"
-      @confirm="onDialogConfirmDeletingRows"
-      ><div>
-        Sie wollen Blätter löschen, für die Sie Stimmabgabevermerke eingetragen
-        haben. Wenn Sie diese löschen, werden dadurch auch die Werte für die
-        Stimmabgabevermerke gelöscht.
-      </div></base-dialog
-    >
+      @confirm="isDeleteDialogVisible = false"
+      ><div class="mb-4">
+        Sie haben die Blätteranzahl des Wählerverzeichnisses verändert. Zeilen
+        können nur gelöscht werden, wenn noch keine Stimmabgabevermerke erfasst
+        wurden.
+      </div>
+      <div>
+        {{ contextThatPreventDeletion }}
+      </div>
+    </base-dialog>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -136,8 +137,11 @@ const {
   stimmabgabevermerkeTableTotalEachWahldaten,
   lowestNumberOfRowsOverAllWahldaten,
 } = storeToRefs(useStimmabgabevermerkeStore());
-const { isAnyRowThatShouldBeDeletedFilled, changeRowCount } =
-  useStimmabgabevermerkeStore();
+const {
+  isAnyRowThatShouldBeDeletedFilled,
+  changeRowCount,
+  getBlattnummernThatPreventDeletion,
+} = useStimmabgabevermerkeStore();
 const { wahlenActions } = useWahlenStore();
 
 onMounted(() => {
@@ -148,9 +152,26 @@ const isDeleteDialogVisible = ref(false);
 const rowSize = ref<number | null>(null);
 const maxRowSize = 999;
 
+const contextThatPreventDeletion = computed(() => {
+  let blattnummern: number[] = [];
+  if (
+    rowSize.value != null &&
+    isAnyRowThatShouldBeDeletedFilled(rowSize.value)
+  ) {
+    blattnummern = getBlattnummernThatPreventDeletion(rowSize.value);
+  }
+  return (
+    blattnummern.length +
+    (blattnummern.length === 1
+      ? " Element verhindert das Löschen: Für die Blattnummer "
+      : " Elemente verhindern das Löschen: Für die Blattnummern ") +
+    blattnummern.join(", ") +
+    " wurden bereits Stimmabgabevermerke erfasst."
+  );
+});
+
 function changeRowCountOrOpenDialog(newRowCount: number | null) {
   rowSize.value = newRowCount;
-
   if (
     lowestNumberOfRowsOverAllWahldaten.value != null &&
     rowSize.value != null
@@ -163,13 +184,6 @@ function changeRowCountOrOpenDialog(newRowCount: number | null) {
     } else {
       changeRowCount(rowSize.value);
     }
-  }
-}
-
-function onDialogConfirmDeletingRows() {
-  if (rowSize.value != null) {
-    changeRowCount(rowSize.value);
-    isDeleteDialogVisible.value = false;
   }
 }
 </script>

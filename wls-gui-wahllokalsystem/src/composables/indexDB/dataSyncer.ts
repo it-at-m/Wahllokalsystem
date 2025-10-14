@@ -37,9 +37,9 @@ export function useDataSyncer() {
   function _parseDataBasedOnContentType(
     data: string | ArrayBuffer | null
   ): object | undefined {
-    if (typeof data === "string") {
+    if (data && typeof data === "string") {
       return JSON.parse(data);
-    } else if (data instanceof ArrayBuffer) {
+    } else if (data && data instanceof ArrayBuffer) {
       return data;
     } else {
       return undefined;

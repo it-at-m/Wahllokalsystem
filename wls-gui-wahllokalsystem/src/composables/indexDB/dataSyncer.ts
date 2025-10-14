@@ -21,7 +21,9 @@ export function useDataSyncer() {
           basicPostConfig(
             item.key,
             FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
-            item.item.data ? JSON.parse(item.item.data) : undefined
+            item.item.data
+              ? _parseDataBasedOnContentType(item.item.data)
+              : undefined
           )
         ),
     }));
@@ -32,6 +34,16 @@ export function useDataSyncer() {
     b: { item: IndexDBValue }
   ) {
     return compareByTimestamp(a.item, b.item);
+  }
+
+  function _parseDataBasedOnContentType(data: string | ArrayBuffer | null) {
+    let convertedData;
+    if (typeof data === "string") {
+      convertedData = JSON.parse(data);
+    } else if (data instanceof ArrayBuffer) {
+      convertedData = data;
+    }
+    return convertedData;
   }
 
   return {

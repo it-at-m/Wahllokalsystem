@@ -122,7 +122,7 @@ export function useRequestStrategies() {
     const responseBody = await clonedResponse.arrayBuffer();
     const contentType = response.headers.get(HTTP_HEADER_CONTENT_TYPE);
     const responseToStore: IndexDBValue = {
-      data: await _convertDataBasedOnContentType(responseBody, contentType),
+      data: _convertDataBasedOnContentType(responseBody, contentType),
       contentType: contentType,
       httpStatus: clonedResponse.status,
     };
@@ -138,10 +138,10 @@ export function useRequestStrategies() {
     return arrayBuffer.byteLength > 0 ? textDecoder.decode(arrayBuffer) : null;
   }
 
-  async function _convertDataBasedOnContentType(
+  function _convertDataBasedOnContentType(
     responseBody: ArrayBuffer,
     contentType: string | null
-  ): Promise<ArrayBuffer | string | null> {
+  ): ArrayBuffer | string | null {
     let dataToStore: ArrayBuffer | string | null = null;
     if (contentType?.includes("application/pdf")) {
       dataToStore = responseBody;

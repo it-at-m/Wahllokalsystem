@@ -150,6 +150,10 @@ export function useRequestStrategies() {
       contentType?.includes("text/")
     ) {
       dataToStore = _arrayBufferToString(responseBody);
+    } else {
+      logDebug(
+        `unrecognized content type "${contentType}" – skipping idb storage)`
+      );
     }
     return dataToStore;
   }

@@ -43,12 +43,14 @@
       class="mt-4"
     >
       <base-button-refresh
+        data-test="refresh-button"
         class="ma-4"
         :disabled="isLoading || numberOfTasksFailed === 0"
         @click="onRefreshClicked"
         >Fehlgeschlagene wiederholen</base-button-refresh
       >
       <v-btn
+        data-test="weiter-button"
         class="ma-4"
         prepend-icon="$arrowRight"
         :disabled="isLoading"

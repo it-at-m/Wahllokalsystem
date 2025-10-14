@@ -32,6 +32,8 @@ import {
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
 
+import { PRIMARY_COLOR } from "@/constants.ts";
+
 export default createVuetify({
   icons: {
     defaultSet: "mdi",
@@ -73,7 +75,7 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#546e7a",
+          primary: PRIMARY_COLOR,
           secondary: "#FFCC00",
           accent: "#7BA4D9",
           info: "#0000f0",
@@ -95,11 +97,17 @@ export default createVuetify({
     VBtn: {
       variant: "elevated",
       activeColor: "primary",
+      style: {
+        border: `1px solid ${PRIMARY_COLOR}`,
+      },
     },
     VCardActions: {
       VBtn: {
         variant: "elevated",
         activeColor: "primary",
+        style: {
+          border: `1px solid ${PRIMARY_COLOR}`,
+        },
       },
     },
   },

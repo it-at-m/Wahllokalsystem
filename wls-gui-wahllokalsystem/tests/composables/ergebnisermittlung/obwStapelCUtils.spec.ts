@@ -1155,6 +1155,102 @@ describe("obwStapelCUtils", () => {
     });
   });
 
+  describe("getStimmzettelNumIndexThatPreventDeletion", () => {
+    it.each([
+      {
+        description:
+          "should_returnEmptyArray_when_noErgebnisseHaveNumIndexAboveNewRowSize",
+        gueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+          ])
+          .build(),
+        ungueltige: createErgebnisseWithNoErgebnisse(),
+        expectedSize: 0,
+        expectedStimmzettel: [],
+      },
+      {
+        description:
+          "should_returnEmptyArray_when_gueltigeErgebnisseWithoutWahlvorschlagIdHaveNumIndexAboveNewRowSize",
+        gueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+            prepareErgebnis().numIndex(2).wahlvorschlagID(null).build(),
+          ])
+          .build(),
+        ungueltige: createErgebnisseWithNoErgebnisse(),
+        expectedSize: 0,
+        expectedStimmzettel: [],
+      },
+      {
+        description:
+          "should_returnStimmzettelNumIndex_when_gueltigeErgebnisseHaveNumIndexAboveNewRowSize",
+        gueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+            prepareErgebnis()
+              .numIndex(2)
+              .wahlvorschlagID("wahlvorschlag1")
+              .build(),
+          ])
+          .build(),
+        ungueltige: createErgebnisseWithNoErgebnisse(),
+        expectedSize: 1,
+        expectedStimmzettel: [2],
+      },
+      {
+        description:
+          "should_returnStimmzettelNumIndex_when_ungueltigeErgebnisseHaveNumIndexAboveNewRowSize",
+        gueltige: createErgebnisseWithNoErgebnisse(),
+        ungueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+            prepareErgebnis().numIndex(2).wahlvorschlagID(null).build(),
+            prepareErgebnis().numIndex(3).wahlvorschlagID(null).build(),
+          ])
+          .build(),
+        expectedSize: 2,
+        expectedStimmzettel: [2, 3],
+      },
+      {
+        description:
+          "should_returnStimmzettelNumIndex_when_gueltigeAndUngueltigeErgebnisseHaveNumIndexAboveNewRowSize",
+        gueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(1).wahlvorschlagID(null).build(),
+            prepareErgebnis()
+              .numIndex(3)
+              .wahlvorschlagID("wahlvorschlag1")
+              .build(),
+            prepareErgebnis().numIndex(4).wahlvorschlagID(null).build(),
+          ])
+          .build(),
+        ungueltige: prepareErgebnisse()
+          .ergebnisse([
+            prepareErgebnis().numIndex(2).wahlvorschlagID(null).build(),
+            prepareErgebnis().numIndex(5).wahlvorschlagID(null).build(),
+          ])
+          .build(),
+        expectedSize: 3,
+        expectedStimmzettel: [2, 3, 5],
+      },
+    ])("$description", (testCaseParameter) => {
+      mockDefinitions.getErgebnisseAndCreateIfMissing.mockImplementation(
+        createMockImplementationForGetErgebnisseAndCreateIfMissingWithErgebnisseForStapelArt(
+          new Map([
+            [StapelArtEnum.ObwCGueltig, testCaseParameter.gueltige],
+            [StapelArtEnum.ObwCUngueltig, testCaseParameter.ungueltige],
+          ])
+        )
+      );
+
+      const result = unitUnderTest.getStimmzettelNumIndexThatPreventDeletion(1);
+
+      expect(result.length).toBe(testCaseParameter.expectedSize);
+      expect(result).toEqual(testCaseParameter.expectedStimmzettel);
+    });
+  });
+
   function createErgebnisseWithNoErgebnisse() {
     return prepareErgebnisse().ergebnisse([]).build();
   }

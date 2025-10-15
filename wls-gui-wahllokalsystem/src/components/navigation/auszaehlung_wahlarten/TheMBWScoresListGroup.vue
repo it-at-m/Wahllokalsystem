@@ -1,0 +1,34 @@
+<template>
+  <v-list-group value="MBW_Scores">
+    <template #activator="{ props }">
+      <v-list-item
+        v-bind="props"
+        title="🚧 Wahl des Migrationsbeirats"
+      />
+    </template>
+    <v-list-item
+      :title="titleStimmenZaehlen"
+      :to="
+        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+          wahlart: WahlWahlartEnum.Mbw,
+        })
+      "
+    />
+  </v-list-group>
+</template>
+
+<script setup lang="ts">
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+
+const { routeWithNameAndParams } = useNavigationUtils();
+
+defineProps<{
+  titleStimmenZaehlen: string;
+  wahlId: string;
+  wahlbezirkId: string;
+}>();
+</script>

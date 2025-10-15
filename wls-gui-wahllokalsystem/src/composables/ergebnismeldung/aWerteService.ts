@@ -19,7 +19,10 @@ export function useAWerteService() {
     try {
       const response = await aWerteController.getAWerte(wahlbezirkId);
       if (sendNotification) {
-        addNotification(`AWerte erfolgreich geladen`, UserNotificationCategoryEnum.SUCCESS);
+        addNotification(
+          `AWerte erfolgreich geladen`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
       }
       return response.data.map((aWerteDto) => toModel(aWerteDto));
     } catch {

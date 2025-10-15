@@ -67,7 +67,7 @@ export default createVuetify({
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
       alert: mdiAlert,
-      arrowRight: mdiArrowRightBold,
+      continue: mdiArrowRightBold,
     },
     sets: {
       mdi,

@@ -6,7 +6,10 @@
           cols="4"
           class="d-flex align-center justify-start"
         >
-          <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
+          <v-app-bar-nav-icon
+            v-if="hasAllTasksRun"
+            @click.stop="toggleDrawer()"
+          />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
           <base-icon-wahlbezirksart class="mx-2" />
           <span
@@ -89,6 +92,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
@@ -98,6 +102,7 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
 const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
   storeToRefs(useUserStore());
+const { hasAllTasksRun } = storeToRefs(useTaskManagerStore());
 const { routeWithName } = useNavigationUtils();
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>

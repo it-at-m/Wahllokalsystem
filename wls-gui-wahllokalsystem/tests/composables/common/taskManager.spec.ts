@@ -1,6 +1,7 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
+import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
@@ -320,7 +321,7 @@ describe("taskManager.ts", () => {
       expect(unitUnderTest.numberOfTasksFinished.value).toStrictEqual(1);
 
       vi.advanceTimersByTime(timeout);
-      await nextTick(); //wait to reevaluate computed props
+      await flushPromises(); //wait to reevaluate computed props
       expect(unitUnderTest.numberOfTasksFinished.value).toStrictEqual(2);
 
       await runAllTasksPromise;
@@ -413,6 +414,28 @@ describe("taskManager.ts", () => {
 
       expect(unitUnderTest.successfullyTasks.value).toStrictEqual([task2]);
       expect(unitUnderTest.failedTasks.value).toStrictEqual([task1, task3]);
+    });
+  });
+
+  describe("rerunFailedTasks", () => {
+    it("should_runFailedTasks_when_failedTasksAreSet", async () => {
+      const task1 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      const task2 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      const task3 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      unitUnderTest.successfullyTasks.value = [task1];
+      unitUnderTest.failedTasks.value = [task2, task3];
+
+      await unitUnderTest.rerunFailedTasks();
+
+      expect(task1.callback).not.toHaveBeenCalled();
+      expect(task2.callback).toHaveBeenCalled();
+      expect(task3.callback).toHaveBeenCalled();
     });
   });
 });

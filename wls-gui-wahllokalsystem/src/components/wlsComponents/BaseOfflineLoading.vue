@@ -52,7 +52,7 @@
       <v-btn
         data-test="weiter-button"
         class="ma-4"
-        prepend-icon="$arrowRight"
+        prepend-icon="$continue"
         :disabled="isLoading"
         active
         :to="routeWithName(ROUTE_WAHLVORSTAND)"
@@ -86,7 +86,7 @@ const {
   hasAllTasksRunSuccessfully,
 } = storeToRefs(useTaskManagerStore());
 
-const { setTasks, runAllTasks } = useTaskManagerStore();
+const { rerunFailedTasks } = useTaskManagerStore();
 
 const isLoading = computed(() => {
   return (
@@ -102,7 +102,6 @@ watch(hasAllTasksRunSuccessfully, () => {
 });
 
 async function onRefreshClicked() {
-  setTasks(failedTasks.value);
-  await runAllTasks();
+  await rerunFailedTasks();
 }
 </script>

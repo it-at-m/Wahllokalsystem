@@ -222,8 +222,7 @@ describe("BaseOfflineLoading.vue", () => {
       const refreshButton = wrapper.find('[data-test="refresh-button"]');
       await refreshButton.trigger("click");
 
-      expect(taskManagerStore.setTasks).toHaveBeenCalled();
-      expect(taskManagerStore.runAllTasks).toHaveBeenCalled();
+      expect(taskManagerStore.rerunFailedTasks).toHaveBeenCalled();
     });
   });
 });

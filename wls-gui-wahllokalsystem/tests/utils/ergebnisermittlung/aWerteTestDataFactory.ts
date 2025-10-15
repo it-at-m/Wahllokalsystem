@@ -10,7 +10,7 @@ const { generateRandomString, generateRandomNumber } =
 export function useAWerteTestDataFactory() {
   function createAWerte(): AWerte {
     return {
-      bezirkUndWahlId: {
+      bezirkUndWahlID: {
         wahlID: generateRandomString(10),
         wahlbezirkID: generateRandomString(10),
       },

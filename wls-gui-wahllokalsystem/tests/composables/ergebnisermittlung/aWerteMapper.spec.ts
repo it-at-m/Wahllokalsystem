@@ -24,7 +24,7 @@ describe("aWerteMapper.ts", () => {
       const result = unitUnderTest.toModel(aWerteDto);
 
       const expectedResult: AWerte = {
-        bezirkUndWahlId: {
+        bezirkUndWahlID: {
           wahlID: aWerteDto.bezirkUndWahlID.wahlID,
           wahlbezirkID: aWerteDto.bezirkUndWahlID.wahlbezirkID,
         },
@@ -40,7 +40,7 @@ describe("aWerteMapper.ts", () => {
       const result = unitUnderTest.toModel(aWerteDto);
 
       const expectedResult: AWerte = {
-        bezirkUndWahlId: {
+        bezirkUndWahlID: {
           wahlID: aWerteDto.bezirkUndWahlID.wahlID,
           wahlbezirkID: aWerteDto.bezirkUndWahlID.wahlbezirkID,
         },

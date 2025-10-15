@@ -4,7 +4,7 @@ import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 export function useAWerteMapper() {
   function toModel(aWerteDto: AWerteDTO): AWerte {
     return {
-      bezirkUndWahlId: {
+      bezirkUndWahlID: {
         wahlID: aWerteDto.bezirkUndWahlID.wahlID,
         wahlbezirkID: aWerteDto.bezirkUndWahlID.wahlbezirkID,
       },

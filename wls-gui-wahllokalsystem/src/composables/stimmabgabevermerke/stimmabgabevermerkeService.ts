@@ -57,6 +57,7 @@ export function useStimmabgabevermerkeService() {
     const { wahlenActions } = useWahlenStore();
     const wahlname =
       wahlenActions.getWahlNameOrBlankStringById(
+        // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
         stimmabgabevermerke.wahldaten?.[0].wahlID
       ) || "";
     try {

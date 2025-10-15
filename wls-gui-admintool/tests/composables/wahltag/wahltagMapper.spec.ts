@@ -61,14 +61,14 @@ function getExpectedWahltage(
     wahltag: new Date(wahltag1Key),
     events: [
       {
-        wahltagID: mapWithDtosToMap.get(wahltag1Key)![0].wahltagID,
-        beschreibung: mapWithDtosToMap.get(wahltag1Key)![0].beschreibung,
-        nummer: mapWithDtosToMap.get(wahltag1Key)![0].nummer,
+        wahltagID: mapWithDtosToMap.get(wahltag1Key)![0]!.wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag1Key)![0]!.beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag1Key)![0]!.nummer,
       },
       {
-        wahltagID: mapWithDtosToMap.get(wahltag1Key)![1].wahltagID,
-        beschreibung: mapWithDtosToMap.get(wahltag1Key)![1].beschreibung,
-        nummer: mapWithDtosToMap.get(wahltag1Key)![1].nummer,
+        wahltagID: mapWithDtosToMap.get(wahltag1Key)![1]!.wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag1Key)![1]!.beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag1Key)![1]!.nummer,
       },
     ],
   };
@@ -76,19 +76,19 @@ function getExpectedWahltage(
     wahltag: new Date(wahltag2Key),
     events: [
       {
-        wahltagID: mapWithDtosToMap.get(wahltag2Key)![0].wahltagID,
-        beschreibung: mapWithDtosToMap.get(wahltag2Key)![0].beschreibung,
-        nummer: mapWithDtosToMap.get(wahltag2Key)![0].nummer,
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![0]!.wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![0]!.beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![0]!.nummer,
       },
       {
-        wahltagID: mapWithDtosToMap.get(wahltag2Key)![1].wahltagID,
-        beschreibung: mapWithDtosToMap.get(wahltag2Key)![1].beschreibung,
-        nummer: mapWithDtosToMap.get(wahltag2Key)![1].nummer,
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![1]!.wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![1]!.beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![1]!.nummer,
       },
       {
-        wahltagID: mapWithDtosToMap.get(wahltag2Key)![2].wahltagID,
-        beschreibung: mapWithDtosToMap.get(wahltag2Key)![2].beschreibung,
-        nummer: mapWithDtosToMap.get(wahltag2Key)![2].nummer,
+        wahltagID: mapWithDtosToMap.get(wahltag2Key)![2]!.wahltagID,
+        beschreibung: mapWithDtosToMap.get(wahltag2Key)![2]!.beschreibung,
+        nummer: mapWithDtosToMap.get(wahltag2Key)![2]!.nummer,
       },
     ],
   };

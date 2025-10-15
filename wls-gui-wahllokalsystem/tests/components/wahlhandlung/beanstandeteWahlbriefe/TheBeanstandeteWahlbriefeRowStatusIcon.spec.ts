@@ -121,7 +121,8 @@ describe("TheBeanstandeteWahlbriefeRowStatusIcon", () => {
       expect(iconRow0.props("icon")).toBe("$valid");
       expect(iconRow0.props("color")).toBe("success");
 
-      wahlenStore.wahlenState.wahlen[0].beanstandeteWahlbriefe[0] = null;
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      wahlenStore.wahlenState.wahlen[0]!.beanstandeteWahlbriefe[0] = null;
       await nextTick();
 
       expect(iconRow0.props("icon")).toBe("$edit");

@@ -92,7 +92,7 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
 
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
         WahlvorstandsmitgliedFunktionEnum.Sb
       );
     });
@@ -113,10 +113,10 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
 
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
         WahlvorstandsmitgliedFunktionEnum.Sb
       );
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1]?.[0]).toStrictEqual(
         WahlvorstandsmitgliedFunktionEnum.W
       );
     });
@@ -135,10 +135,10 @@ describe("wahlvorstandStore.ts", () => {
           .build(),
       ];
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
         WahlvorstandsmitgliedFunktionEnum.Sb
       );
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1]?.[0]).toStrictEqual(
         WahlvorstandsmitgliedFunktionEnum.W
       );
     });
@@ -179,9 +179,9 @@ describe("wahlvorstandStore.ts", () => {
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
-        expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
-          funktion
-        );
+        expect(
+          mockDefinitions.isWahlvorsteher.mock.calls[0]?.[0]
+        ).toStrictEqual(funktion);
       }
     );
 
@@ -202,9 +202,9 @@ describe("wahlvorstandStore.ts", () => {
         ];
 
         expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
-        expect(mockDefinitions.isWahlvorsteher.mock.calls[0][0]).toStrictEqual(
-          funktion
-        );
+        expect(
+          mockDefinitions.isWahlvorsteher.mock.calls[0]?.[0]
+        ).toStrictEqual(funktion);
       }
     );
   });

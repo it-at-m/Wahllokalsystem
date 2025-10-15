@@ -188,6 +188,104 @@ describe("stimmabgabevermerkeStore.ts", () => {
     });
   });
 
+  describe("getBlattnummernThatPreventDeletion", () => {
+    it.each([
+      {
+        description: "should_returnEmptyArray_when_rowsToDeleteAreEmpty",
+        wahldaten: prepareWahldaten()
+          .vermerke([
+            prepareVermerk().blattnummer(2).build(),
+            prepareVermerk()
+              .blattnummer(3)
+              .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+              .build(),
+            prepareVermerk()
+              .blattnummer(4)
+              .stimmzettel([prepareStimmzettel().anzahl(0).build()])
+              .build(),
+          ])
+          .build(),
+        expectedSize: 0,
+        expectedBlattnummern: [],
+      },
+      {
+        description: "should_returnBlattnummern_when_allRowsToDeleteAreFilled",
+        wahldaten: prepareWahldaten()
+          .vermerke([
+            prepareVermerk().blattnummer(2).build(),
+            prepareVermerk().blattnummer(3).build(),
+            prepareVermerk().blattnummer(4).build(),
+          ])
+          .build(),
+        expectedSize: 2,
+        expectedBlattnummern: [3, 4],
+      },
+      {
+        description: "should_returnBlattnummern_when_someRowsToDeleteAreFilled",
+        wahldaten: prepareWahldaten()
+          .vermerke([
+            prepareVermerk().blattnummer(2).build(),
+            prepareVermerk()
+              .blattnummer(3)
+              .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+              .build(),
+            prepareVermerk().blattnummer(4).build(),
+          ])
+          .build(),
+        expectedSize: 1,
+        expectedBlattnummern: [4],
+      },
+    ])("$description", (testCaseParameter) => {
+      const stimmabgabevermerk = prepareStimmabgabevermerke()
+        .wahldaten([testCaseParameter.wahldaten])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [stimmabgabevermerk];
+
+      const result = unitUnderTest.getBlattnummernThatPreventDeletion(2);
+
+      expect(result.length).toBe(testCaseParameter.expectedSize);
+      expect(result).toEqual(testCaseParameter.expectedBlattnummern);
+    });
+
+    it("should_returnBlattnummern_when_someRowsToDeleteAreFilledInDifferentStimmabgabevermerke", () => {
+      const wahldatenOne = prepareWahldaten()
+        .vermerke([
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk()
+            .blattnummer(3)
+            .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+            .build(),
+          prepareVermerk().blattnummer(4).build(),
+        ])
+        .build();
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenOne])
+        .build();
+      const wahldatenTwo = prepareWahldaten()
+        .vermerke([
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk().blattnummer(3).build(),
+          prepareVermerk()
+            .blattnummer(4)
+            .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+            .build(),
+        ])
+        .build();
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
+        .wahldaten([wahldatenTwo])
+        .build();
+      unitUnderTest.stimmabgabevermerke = [
+        stimmabgabevermerkeOne,
+        stimmabgabevermerkeTwo,
+      ];
+
+      const result = unitUnderTest.getBlattnummernThatPreventDeletion(2);
+
+      expect(result.length).toBe(2);
+      expect(result).toEqual([3, 4]);
+    });
+  });
+
   describe("changeRowCount", () => {
     it("should_decreaseRowCount_when_enteredNumberIsLowerThanActual", () => {
       unitUnderTest.stimmabgabevermerke = [createStimmabgabevermerke()];
@@ -195,7 +293,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(2);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(1);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(1);
       });
     });
 
@@ -205,7 +303,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(5);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(4);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(4);
       });
     });
 
@@ -215,7 +313,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(3);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0].vermerke.length).toBe(2);
+        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(2);
       });
     });
   });

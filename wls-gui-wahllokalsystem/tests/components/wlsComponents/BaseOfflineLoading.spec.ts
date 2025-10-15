@@ -1,6 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
 import {
+  COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
@@ -16,10 +17,14 @@ import {
   vi,
 } from "vitest";
 import { nextTick } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
 
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
+import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import HomeView from "@/views/HomeView.vue";
+import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 describe("BaseOfflineLoading.vue", () => {
   let wrapper: VueWrapper;
@@ -30,6 +35,24 @@ describe("BaseOfflineLoading.vue", () => {
     createPinia();
   });
 
+  const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+      {
+        path: "/",
+        name: ROUTES_HOME,
+        component: HomeView,
+        meta: {},
+      },
+      {
+        path: "/wahlvorstand",
+        name: ROUTE_WAHLVORSTAND,
+        component: WahlvorstandAnwesenheitView,
+        meta: {},
+      },
+    ],
+  });
+
   beforeEach(() => {
     wrapper = mount(BaseOfflineLoading, {
       global: {
@@ -38,6 +61,7 @@ describe("BaseOfflineLoading.vue", () => {
             createSpy: vi.fn,
           }),
           vuetify,
+          router,
         ],
       },
     });
@@ -138,6 +162,67 @@ describe("BaseOfflineLoading.vue", () => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
+    });
+
+    it("should_showEnabledRefreshButton_when_tasksFailed", async () => {
+      const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.numberOfTasksFailed = 1;
+
+      await nextTick();
+
+      const refreshButton = wrapper.find('[data-test="refresh-button"]');
+      expect(refreshButton.element.hasAttribute("disabled")).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_showDisabledRefreshButton_when_noTasksFailed", async () => {
+      const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.numberOfTasksFailed = 0;
+
+      await nextTick();
+
+      const refreshButton = wrapper.find('[data-test="refresh-button"]');
+      expect(refreshButton.element.hasAttribute("disabled")).toStrictEqual(
+        true
+      );
+    });
+  });
+
+  describe(COMPONENT_EVENT_TESTS, () => {
+    it("should_triggerRouting_when_allTasksRunSuccessfully", async () => {
+      const pushMock = vi.fn();
+      vi.spyOn(router, "push").mockImplementation(pushMock);
+
+      const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasAllTasksRunSuccessfully = false;
+
+      await nextTick();
+
+      expect(pushMock).not.toHaveBeenCalledOnce();
+
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasAllTasksRunSuccessfully = true;
+
+      await nextTick();
+
+      expect(pushMock).toHaveBeenCalledWith(ROUTE_WAHLVORSTAND);
+    });
+
+    it("should_callOnRefreshClicked_when_refreshButtonIsClicked", async () => {
+      const taskManagerStore = useTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.numberOfTasksFailed = 1;
+
+      await nextTick();
+
+      const refreshButton = wrapper.find('[data-test="refresh-button"]');
+      await refreshButton.trigger("click");
+
+      expect(taskManagerStore.rerunFailedTasks).toHaveBeenCalled();
     });
   });
 });

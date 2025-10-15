@@ -7,7 +7,7 @@
           class="d-flex align-center justify-start"
         >
           <v-app-bar-nav-icon
-            v-if="hasAllTasksRunSuccessfully && hasTasksToRun"
+            v-if="hasAllTasksRun"
             @click.stop="toggleDrawer()"
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
@@ -67,9 +67,8 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
 const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
   storeToRefs(useUserStore());
-const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
-  useTaskManagerStore()
-);
+const { hasAllTasksRun } = storeToRefs(useTaskManagerStore());
+
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""

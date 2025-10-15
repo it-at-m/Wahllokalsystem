@@ -436,6 +436,8 @@ describe("taskManager.ts", () => {
       expect(task1.callback).not.toHaveBeenCalled();
       expect(task2.callback).toHaveBeenCalled();
       expect(task3.callback).toHaveBeenCalled();
+      expect(unitUnderTest.successfullyTasks.value.length).toBe(3);
+      expect(unitUnderTest.failedTasks.value.length).toBe(0);
     });
   });
 });

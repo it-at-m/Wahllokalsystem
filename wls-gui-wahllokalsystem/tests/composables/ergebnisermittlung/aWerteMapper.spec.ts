@@ -34,7 +34,7 @@ describe("aWerteMapper.ts", () => {
       expect(result).toStrictEqual(expectedResult);
     });
 
-    it("should_returnModelA2Null_when_dtoWithoutA2IsGiven", () => {
+    it("should_returnModelWithA2Null_when_dtoWithA2UndefinedIsGiven", () => {
       const aWerteDto = prepareAWerteDTO().a2(undefined).build();
 
       const result = unitUnderTest.toModel(aWerteDto);

@@ -18,6 +18,12 @@
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />
+    <the-m-b-w-scores-list-group
+      v-if="wahl.wahlart === WahlWahlartEnum.Mbw"
+      :title-stimmen-zaehlen="titleStimmenZaehlen"
+      :wahl-id="wahl.wahlID"
+      :wahlbezirk-id="wahlbezirkIdForWahl"
+    />
   </div>
 </template>
 
@@ -29,6 +35,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheBAWScoresListGroup.vue";
+import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheMBWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useUserStore } from "@/stores/userStore.ts";

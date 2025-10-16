@@ -1,12 +1,12 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/begruendungTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
@@ -36,6 +36,18 @@ vi.mock(
     };
   }
 );
+/*
+vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
+  StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
+    postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+  })),
+  BegruendungControllerApi: vi.fn().mockImplementation(() => ({
+    getBegruendung: mockDefinitions.getBegruendung,
+  })),
+  Configuration: mockDefinitions.configurationConstructor,
+}));
+ */
 vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
   useErgebnisermittlungMapper: () => ({
     toDto: mockDefinitions.toDto,
@@ -64,6 +76,7 @@ const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
 const { createBegruendungDTO, prepareBegruendung } =
   useBegruendungTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
+const { createWahl } = useWahlTestDataFactory();
 
 describe("ergebnisermittlungService", () => {
   beforeEach(() => {
@@ -73,16 +86,15 @@ describe("ergebnisermittlungService", () => {
 
   describe("postStimmzettelumschlaege", () => {
     it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       const stimmzettelumschlaege = createStimmzettelumschlaege();
 
       await postStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
         stimmzettelumschlaege,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         false
       );
 
@@ -90,21 +102,20 @@ describe("ergebnisermittlungService", () => {
         0
       );
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahlID, wahlbezirkID],
+        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
       ]);
     });
 
     it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       const stimmzettelumschlaege = createStimmzettelumschlaege();
 
       await postStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
         stimmzettelumschlaege,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         true
       );
 
@@ -112,12 +123,12 @@ describe("ergebnisermittlungService", () => {
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahlID, wahlbezirkID],
+        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
       ]);
     });
 
     it("should_callNotificationServiceAfterFailure_when_sendNotificationParameterIsTrue", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       const stimmzettelumschlaege = createStimmzettelumschlaege();
 
@@ -127,11 +138,10 @@ describe("ergebnisermittlungService", () => {
 
       await expect(
         postStimmzettelumschlaege(
-          wahlID,
+          wahl,
           wahlbezirkID,
           stimmzettelumschlaege,
-          WahlbezirksArtEnum.UWB,
-          "wahlname",
+          "Stimmzettel",
           true
         )
       ).rejects.toThrow("mocked api call failed");
@@ -140,14 +150,14 @@ describe("ergebnisermittlungService", () => {
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
       expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahlID, wahlbezirkID],
+        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
       ]);
     });
   });
 
   describe("getStimmzettelumschlaege", () => {
     it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       const dto = createStimmzettelumschlaegeDto();
       mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
@@ -158,10 +168,9 @@ describe("ergebnisermittlungService", () => {
       mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
 
       const result = await getStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         false
       );
 
@@ -173,7 +182,7 @@ describe("ergebnisermittlungService", () => {
     });
 
     it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       const dto = createStimmzettelumschlaegeDto();
       mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
@@ -184,10 +193,9 @@ describe("ergebnisermittlungService", () => {
       mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
 
       const result = await getStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         true
       );
 
@@ -199,7 +207,7 @@ describe("ergebnisermittlungService", () => {
     });
 
     it("should_callNotificationServiceAfterFailure_when_sendNotificationParameterIsTrue", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
 
       mockDefinitions.getStimmzettelumschlaege.mockRejectedValue(
@@ -207,13 +215,7 @@ describe("ergebnisermittlungService", () => {
       );
 
       await expect(
-        getStimmzettelumschlaege(
-          wahlID,
-          wahlbezirkID,
-          WahlbezirksArtEnum.UWB,
-          "wahlname",
-          true
-        )
+        getStimmzettelumschlaege(wahl, wahlbezirkID, "Stimmzettel", true)
       ).rejects.toThrow("mocked api call failed");
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
@@ -222,7 +224,7 @@ describe("ergebnisermittlungService", () => {
     });
 
     it("should_notMapAndReturnNull_when_apiReturns204", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
       mockDefinitions.getStimmzettelumschlaege.mockResolvedValue({
         status: 204,
@@ -230,10 +232,9 @@ describe("ergebnisermittlungService", () => {
       });
 
       const result = await getStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         false
       );
 
@@ -245,12 +246,12 @@ describe("ergebnisermittlungService", () => {
 
   describe("getBegruendungStimmzettelumschlaege", () => {
     it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
 
       const dto = createBegruendungDTO();
       const mockedBegruendungModel = prepareBegruendung()
-        .wahlID(wahlID)
+        .wahlID(wahl.wahlID)
         .stapelart(StapelArtEnum.StimmzettelUmschlaege)
         .grund("grund")
         .build();
@@ -264,16 +265,15 @@ describe("ergebnisermittlungService", () => {
       );
 
       const result = await getBegruendungStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         false
       );
 
       expect(mockDefinitions.getBegruendung).toHaveBeenCalledWith(
         wahlbezirkID,
-        wahlID,
+        wahl.wahlID,
         StapelArtEnum.StimmzettelUmschlaege
       );
       expect(mockDefinitions.toBegruendungModel.mock.calls).toStrictEqual([
@@ -286,12 +286,12 @@ describe("ergebnisermittlungService", () => {
     });
 
     it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
-      const wahlID = generateRandomString(10);
+      const wahl = createWahl();
       const wahlbezirkID = generateRandomString(10);
 
       const dto = createBegruendungDTO();
       const mockedBegruendungModel = prepareBegruendung()
-        .wahlID(wahlID)
+        .wahlID(wahl.wahlID)
         .stapelart(StapelArtEnum.StimmzettelUmschlaege)
         .grund("grund")
         .build();
@@ -305,16 +305,15 @@ describe("ergebnisermittlungService", () => {
       );
 
       const result = await getBegruendungStimmzettelumschlaege(
-        wahlID,
+        wahl,
         wahlbezirkID,
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         true
       );
 
       expect(mockDefinitions.getBegruendung).toHaveBeenCalledWith(
         wahlbezirkID,
-        wahlID,
+        wahl.wahlID,
         StapelArtEnum.StimmzettelUmschlaege
       );
       expect(mockDefinitions.toBegruendungModel.mock.calls).toStrictEqual([
@@ -333,10 +332,9 @@ describe("ergebnisermittlungService", () => {
       });
 
       const result = await getBegruendungStimmzettelumschlaege(
-        "wahlID",
+        createWahl(),
         "wahlbezirkID",
-        WahlbezirksArtEnum.UWB,
-        "wahlname",
+        "Stimmzettel",
         false
       );
 
@@ -352,10 +350,9 @@ describe("ergebnisermittlungService", () => {
 
       await expect(
         getBegruendungStimmzettelumschlaege(
-          "wahlID",
+          createWahl(),
           "wahlbezirkID",
-          WahlbezirksArtEnum.UWB,
-          "wahlname",
+          "Stimmzettel",
           true
         )
       ).rejects.toThrow("mocked api call failed");

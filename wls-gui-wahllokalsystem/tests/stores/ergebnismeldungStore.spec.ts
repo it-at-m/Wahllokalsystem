@@ -625,7 +625,9 @@ describe("ergebnismeldungStore.ts", () => {
 
       expect(
         mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      ).toStrictEqual([
+        [wahlenStore.wahlenState.wahlen[0], wahlbezirkID, "Stimmzettel", true],
+      ]);
       expect(unitUnderTest.begruendungen).toStrictEqual([]);
     });
 
@@ -660,7 +662,9 @@ describe("ergebnismeldungStore.ts", () => {
 
       expect(
         mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      ).toStrictEqual([
+        [wahlenStore.wahlenState.wahlen[0], wahlbezirkID, "Stimmzettel", true],
+      ]);
       expect(unitUnderTest.begruendungen).toStrictEqual([mockedBegruendung]);
     });
 

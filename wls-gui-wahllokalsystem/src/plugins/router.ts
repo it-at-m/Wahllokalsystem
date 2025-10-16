@@ -19,7 +19,6 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
@@ -149,19 +148,6 @@ const router = createRouter({
       left: 0,
     };
   },
-});
-
-router.beforeEach((to) => {
-  const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
-    useTaskManagerStore()
-  );
-
-  if (
-    to.name != ROUTES_HOME &&
-    (!hasAllTasksRunSuccessfully.value || !hasTasksToRun.value)
-  ) {
-    return { name: ROUTES_HOME };
-  }
 });
 
 export default router;

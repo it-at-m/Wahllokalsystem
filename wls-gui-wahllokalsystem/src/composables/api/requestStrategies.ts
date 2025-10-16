@@ -11,6 +11,8 @@ const {
   createResponseOkWithoutResponseBody,
   createResponseNotFoundWithoutResponseBody,
   createResponseOfIndexDBValue,
+  isPdfContext,
+  isTextContext,
 } = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
@@ -143,12 +145,9 @@ export function useRequestStrategies() {
     contentType: string | null
   ): ArrayBuffer | string | null {
     let dataToStore: ArrayBuffer | string | null = null;
-    if (contentType?.includes("application/pdf")) {
+    if (contentType && isPdfContext(contentType)) {
       dataToStore = responseBody;
-    } else if (
-      contentType?.includes("application/json") ||
-      contentType?.includes("text/")
-    ) {
+    } else if (contentType && isTextContext(contentType)) {
       dataToStore = _arrayBufferToString(responseBody);
     } else {
       logDebug(

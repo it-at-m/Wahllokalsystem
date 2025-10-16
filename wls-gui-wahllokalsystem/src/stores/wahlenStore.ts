@@ -70,6 +70,14 @@ export const useWahlenStore = defineStore(storeID, () => {
         return wahl ? wahl.wahlID : undefined;
       }
     },
+    isWahlWithSmallestWahlnummer: function isWahlWithSmallestWahlnummer(
+      wahl: Wahl
+    ): boolean {
+      if (wahlenState.value.wahlen && wahlenState.value.wahlen[0]) {
+        return wahl.nummer == wahlenState.value.wahlen[0].nummer;
+      }
+      return false;
+    },
   };
 
   /* --- beanstandeteWahlbriefe --- */

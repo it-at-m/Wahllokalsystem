@@ -39,19 +39,34 @@ export function useTaskManager(tasksToManage: Task[] = []) {
     _resetTaskRunResults();
 
     for (const task of managedTasks.value) {
-      currentlyRunningTask.value = task;
-      try {
-        logDebug(`running task ${task.name}`);
-        await task.callback();
-        successfullyTasks.value.push(task);
-      } catch {
-        logError(`failed to run task "${task.name}"`);
-        failedTasks.value.push(task);
-      }
+      await _runTask(task);
     }
 
     logDebug(`all tasks completed`);
     currentlyRunningTask.value = null;
+  }
+
+  async function rerunFailedTasks() {
+    const failedTasksToRerun = failedTasks.value;
+    failedTasks.value = [];
+    for (const task of failedTasksToRerun) {
+      await _runTask(task);
+    }
+
+    logDebug(`rerun with failed tasks completed`);
+    currentlyRunningTask.value = null;
+  }
+
+  async function _runTask(task: Task) {
+    currentlyRunningTask.value = task;
+    try {
+      logDebug(`running task ${task.name}`);
+      await task.callback();
+      successfullyTasks.value.push(task);
+    } catch {
+      logError(`failed to run task "${task.name}"`);
+      failedTasks.value.push(task);
+    }
   }
 
   function _resetTaskRunResults() {
@@ -72,5 +87,6 @@ export function useTaskManager(tasksToManage: Task[] = []) {
     numberOfTasksToRun,
     runAllTasks,
     setTasks,
+    rerunFailedTasks,
   };
 }

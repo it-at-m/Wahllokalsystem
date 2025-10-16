@@ -2,6 +2,7 @@ import "vuetify/styles";
 
 import {
   mdiAlert,
+  mdiArrowRightBold,
   mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
@@ -66,6 +67,7 @@ export default createVuetify({
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
       alert: mdiAlert,
+      continue: mdiArrowRightBold,
     },
     sets: {
       mdi,

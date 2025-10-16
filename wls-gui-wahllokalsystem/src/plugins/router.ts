@@ -19,7 +19,6 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
@@ -114,22 +113,22 @@ const routes = [
     beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
-    path: "/auszaehlungStimmzettel/:wahlId",
+    path: "/:wahlart/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
     name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
     component: ErfassungStimmzettelView,
   },
   {
-    path: "/stapelA/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",
     name: ROUTE_STAPEL_A,
     component: OWBStapelAView,
   },
   {
-    path: "/stapelB/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
     component: ObwStapelBView,
   },
   {
-    path: "/stapelC/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",
     name: ROUTE_STAPEL_C,
     component: StapelCView,
   },
@@ -149,19 +148,6 @@ const router = createRouter({
       left: 0,
     };
   },
-});
-
-router.beforeEach((to) => {
-  const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
-    useTaskManagerStore()
-  );
-
-  if (
-    to.name != ROUTES_HOME &&
-    (!hasAllTasksRunSuccessfully.value || !hasTasksToRun.value)
-  ) {
-    return { name: ROUTES_HOME };
-  }
 });
 
 export default router;

@@ -14,7 +14,7 @@ export function useTextFormatter() {
 
     if (wahl) {
       return isBWB.value && wahlenActions.isWahlWithSmallestWahlnummer(wahl)
-        ? "Stimmzettelumschläge "
+        ? "Stimmzettelumschläge"
         : "Stimmzettel";
     } else {
       logDebug("Wahl not found");

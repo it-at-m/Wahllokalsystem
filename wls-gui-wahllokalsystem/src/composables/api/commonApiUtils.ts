@@ -35,7 +35,19 @@ export function useCommonApiUtils() {
     return new Response(null, { status: HttpStatusCode.NotFound });
   }
 
+  function isTextContext(contentType: string): boolean {
+    return (
+      contentType.includes("application/json") || contentType.includes("text/")
+    );
+  }
+
+  function isPdfContext(contentType: string): boolean {
+    return contentType.includes("application/pdf");
+  }
+
   return {
+    isTextContext,
+    isPdfContext,
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
     createResponseNotFoundWithoutResponseBody,

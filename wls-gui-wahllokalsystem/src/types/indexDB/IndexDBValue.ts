@@ -1,5 +1,5 @@
 export interface IndexDBValue {
-  data: string | null;
+  data: ArrayBuffer | string | null;
   contentType: string | null;
   httpStatus?: number;
   dirty?: boolean;

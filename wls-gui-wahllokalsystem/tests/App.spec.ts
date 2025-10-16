@@ -11,13 +11,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
-import { ROUTES_HOME } from "@/constants.ts";
+import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import HomeView from "@/views/HomeView.vue";
+import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
@@ -81,6 +82,12 @@ describe("App", () => {
         component: HomeView,
         meta: {},
       },
+      {
+        path: "/wahlvorstand",
+        name: ROUTE_WAHLVORSTAND,
+        component: WahlvorstandAnwesenheitView,
+        meta: {},
+      },
     ],
   });
 
@@ -113,6 +120,8 @@ describe("App", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtUWB", async (context) => {
+      router.push = vi.fn();
+
       const store = useUserStore();
       store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
 
@@ -132,6 +141,8 @@ describe("App", () => {
     });
 
     it("should_notRenderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtBWB", async (context) => {
+      router.push = vi.fn();
+
       const store = useUserStore();
       store.user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
 

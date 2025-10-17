@@ -36,18 +36,6 @@ vi.mock(
     };
   }
 );
-/*
-vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
-    postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-  })),
-  BegruendungControllerApi: vi.fn().mockImplementation(() => ({
-    getBegruendung: mockDefinitions.getBegruendung,
-  })),
-  Configuration: mockDefinitions.configurationConstructor,
-}));
- */
 vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
   useErgebnisermittlungMapper: () => ({
     toDto: mockDefinitions.toDto,

@@ -210,7 +210,7 @@ describe("taskListService.ts", () => {
       ]);
       mockDefinitions.createTasksStimmzettelumschlaege.mockReturnValue([
         {
-          name: `Stimmzettel für ${mockedWahl.name}`,
+          name: `Stimmzettel ${mockedWahl.name}`,
           callback: () => Promise.resolve(),
         },
       ]);
@@ -251,7 +251,7 @@ describe("taskListService.ts", () => {
         "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
         `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
-        "Stimmzettel für " + mockedWahl.name,
+        "Stimmzettel " + mockedWahl.name,
         "Wahlbeteiligung",
         "Ereignisse",
         "Begruendung Stimmzettel für " + mockedWahl.name,

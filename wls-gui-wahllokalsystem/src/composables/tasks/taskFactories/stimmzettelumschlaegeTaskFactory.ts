@@ -30,7 +30,8 @@ export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
             taskFactoryMetaData.wahlID,
             false
           ),
-        name: getStimmzettelTermForWahl(wahl) + taskFactoryMetaData.wahlName,
+        name:
+          getStimmzettelTermForWahl(wahl) + " " + taskFactoryMetaData.wahlName,
       };
     }
   }

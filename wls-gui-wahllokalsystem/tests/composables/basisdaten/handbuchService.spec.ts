@@ -1,7 +1,7 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -37,11 +37,14 @@ describe("handbuchService.ts", () => {
     unitUnderTest = useHandbuchService();
     globalThis.URL.createObjectURL = vi.fn();
     globalThis.URL.revokeObjectURL = vi.fn();
-    vi.resetAllMocks();
     vi.clearAllMocks();
   });
 
-  describe("getHandbuch", () => {
+  afterAll(() => {
+    vi.resetAllMocks();
+  });
+
+  describe("downloadHandbuch", () => {
     it("should_triggerDownloadHandbuch_when_calledFromApi", async () => {
       const wahltagID = generateRandomString(10);
       const wahlbezirksArt = WahlbezirksArtEnum.BWB;
@@ -61,7 +64,7 @@ describe("handbuchService.ts", () => {
       const createObjectURLMock = vi.spyOn(URL, "createObjectURL");
       const createElementMock = vi.spyOn(document, "createElement");
 
-      await unitUnderTest.getHandbuch(false);
+      await unitUnderTest.downloadHandbuch(false);
 
       expect(mockDefinitions.getHandbuch).toHaveBeenCalledWith(
         wahltagID,
@@ -70,6 +73,30 @@ describe("handbuchService.ts", () => {
       );
       expect(createObjectURLMock).toHaveBeenCalled();
       expect(createElementMock).toHaveBeenCalledWith("a");
+    });
+  });
+
+  describe("getHandbuch", () => {
+    it("should_returnApiResponse_when_apiCallWasSuccessful", async () => {
+      const wahltagID = generateRandomString(10);
+      const wahlbezirksArt = WahlbezirksArtEnum.BWB;
+      const mockedHandbuchBlob = new Blob(["PDF-Inhalt"]);
+      const { setUser } = useUserStore();
+      setUser(
+        prepareUser()
+          .wahltagID(wahltagID)
+          .wahlbezirksArt(wahlbezirksArt)
+          .build()
+      );
+
+      mockDefinitions.getHandbuch.mockReturnValue({
+        status: 200,
+        data: mockedHandbuchBlob,
+      });
+
+      const result = await unitUnderTest.getHandbuch(false);
+      expect(result.status).toStrictEqual(200);
+      expect(result.data).toStrictEqual(mockedHandbuchBlob);
     });
 
     it("should_showToasty_when_sendNotificationIsTrueAndApiCallFailed", async () => {

@@ -2,6 +2,7 @@ import "vuetify/styles";
 
 import {
   mdiAlert,
+  mdiArrowRightBold,
   mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
@@ -66,6 +67,7 @@ export default createVuetify({
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
       alert: mdiAlert,
+      continue: mdiArrowRightBold,
     },
     sets: {
       mdi,
@@ -96,19 +98,6 @@ export default createVuetify({
     },
     VBtn: {
       variant: "elevated",
-      activeColor: "primary",
-      style: {
-        border: `1px solid ${PRIMARY_COLOR}`,
-      },
-    },
-    VCardActions: {
-      VBtn: {
-        variant: "elevated",
-        activeColor: "primary",
-        style: {
-          border: `1px solid ${PRIMARY_COLOR}`,
-        },
-      },
     },
   },
 });

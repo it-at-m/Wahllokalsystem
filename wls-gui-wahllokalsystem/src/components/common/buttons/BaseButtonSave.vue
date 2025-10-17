@@ -1,15 +1,17 @@
 <template>
-  <v-btn
+  <base-text-button
     prepend-icon="$save"
     :disabled="disabled"
     data-test="buttonSave"
     active
   >
     {{ saveText }}
-  </v-btn>
+  </base-text-button>
 </template>
 
 <script setup lang="ts">
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+
 defineProps({
   /**
    * Is the Button interactable

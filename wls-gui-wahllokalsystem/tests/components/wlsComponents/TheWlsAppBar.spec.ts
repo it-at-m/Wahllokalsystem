@@ -75,7 +75,7 @@ describe("TheWlsAppBar.vue", () => {
       );
     });
 
-    it("should_notRenderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
+    it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;

@@ -12,11 +12,22 @@ const { createIndexDBValue, prepareIndexDBValue } =
 describe("commonApiUtils.ts", () => {
   const { createAxiosResponse } = useAxiosTestDataFactory();
   const {
+    isTextContext,
+    isPdfContext,
     getNullOn204OrElseResponseData,
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
     createResponseNotFoundWithoutResponseBody,
   } = useCommonApiUtils();
+
+  const alwaysInvalidContentTypes = [
+    "application/msword",
+    "application/xml",
+    "application/zip",
+    "image/",
+    "audio/",
+    "video/",
+  ];
 
   describe("getNullOn204OrElseResponseData", () => {
     it.each([205, 203])(
@@ -111,5 +122,37 @@ describe("commonApiUtils.ts", () => {
         new Response(null, { status: HttpStatusCode.NotFound })
       );
     });
+  });
+
+  describe("isTextContext", () => {
+    it.each(["application/json", "text/"])(
+      "should_returnTrue_whenGivenValidContentType'%s'",
+      (contentType) => {
+        expect(isTextContext(contentType)).toStrictEqual(true);
+      }
+    );
+
+    it.each(["application/pdf", ...alwaysInvalidContentTypes])(
+      "should_returnFalse_whenGivenInvalidContentType'%s'",
+      (contentType) => {
+        expect(isTextContext(contentType)).toStrictEqual(false);
+      }
+    );
+  });
+
+  describe("isPdfContext", () => {
+    it.each(["application/pdf"])(
+      "should_returnTrue_whenGivenValidContentType'%s'",
+      (contentType) => {
+        expect(isPdfContext(contentType)).toStrictEqual(true);
+      }
+    );
+
+    it.each(["application/json", "text/", ...alwaysInvalidContentTypes])(
+      "should_returnFalse_whenGivenInvalidContentType'%s'",
+      (contentType) => {
+        expect(isPdfContext(contentType)).toStrictEqual(false);
+      }
+    );
   });
 });

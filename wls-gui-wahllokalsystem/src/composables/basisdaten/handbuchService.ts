@@ -25,15 +25,18 @@ export function useHandbuchService() {
   const { currentUserWahltagID, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
 
+  async function downloadHandbuch(sendNotification = true) {
+    const response = await getHandbuch(sendNotification);
+    _downloadPdf(response);
+  }
+
   async function getHandbuch(sendNotification = true) {
     try {
-      const response = await handbuchControllerApi.getHandbuch(
+      return await handbuchControllerApi.getHandbuch(
         currentUserWahltagID.value,
         currentUserWahlbezirksArt.value,
         { responseType: "blob" }
       );
-
-      _downloadPdf(response);
     } catch (e) {
       const errorMessage = "Fehler beim Laden des Handbuchs";
       if (sendNotification) {
@@ -65,5 +68,5 @@ export function useHandbuchService() {
     }
   }
 
-  return { getHandbuch };
+  return { downloadHandbuch, getHandbuch };
 }

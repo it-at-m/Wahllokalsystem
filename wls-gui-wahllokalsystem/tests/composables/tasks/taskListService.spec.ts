@@ -22,6 +22,8 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksWaehler: vi.fn(),
   createTasksEreignisse: vi.fn(),
   createTasksBegruendung: vi.fn(),
+  createTasksAWerte: vi.fn(),
+  createTasksHandbuch: vi.fn(),
 }));
 
 vi.mock(
@@ -116,6 +118,19 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
     },
   }),
 }));
+
+vi.mock("@/composables/tasks/taskFactories/aWerteTaskFactory.ts", () => ({
+  useAWerteTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksAWerte,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
+  useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksHandbuch,
+  })),
+}));
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -211,6 +226,18 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksAWerte.mockReturnValue([
+        {
+          name: "AWerte",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksHandbuch.mockReturnValue([
+        {
+          name: "Handbuch",
+          callback: () => Promise.resolve(),
+        },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -228,6 +255,8 @@ describe("taskListService.ts", () => {
         "Wahlbeteiligung",
         "Ereignisse",
         "Begruendung Stimmzettel für " + mockedWahl.name,
+        "AWerte",
+        "Handbuch",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -249,6 +278,8 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
       expect(mockDefinitions.createTasksEreignisse).toHaveBeenCalled();
       expect(mockDefinitions.createTasksBegruendung).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
     });
   });
 });

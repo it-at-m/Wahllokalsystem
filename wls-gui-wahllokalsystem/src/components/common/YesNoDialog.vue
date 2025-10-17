@@ -6,22 +6,22 @@
   >
     <template #activator="{ props: open }">
       <template v-if="buttontext">
-        <v-btn
+        <base-text-button
           color="primary"
           v-bind="open"
         >
           {{ buttontext }}
-        </v-btn>
+        </base-text-button>
       </template>
       <template v-else-if="icontext">
-        <v-btn
+        <base-text-button
           color="primary"
           v-bind="open"
         >
           <v-icon size="large">
             {{ icontext }}
           </v-icon>
-        </v-btn>
+        </base-text-button>
       </template>
     </template>
     <v-card>
@@ -33,19 +33,19 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
+        <base-text-button
           id="yesnodialog-btn-no"
           @click="no"
         >
           Nein
-        </v-btn>
-        <v-btn
+        </base-text-button>
+        <base-text-button
           id="yesnodialog-btn-yes"
           color="primary"
           @click="yes"
         >
           Ja
-        </v-btn>
+        </base-text-button>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -72,6 +72,8 @@
  *    @no="deleteDialog = false"
  *    @yes="deleteSome"></yes-no-dialog>
  */
+
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 
 defineProps<{
   /**

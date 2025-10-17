@@ -11,10 +11,10 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <base-text-button
         prepend-icon="$add"
         @click="onAddEreignisClicked()"
-        >Ereignis hinzufügen</v-btn
+        >Ereignis hinzufügen</base-text-button
       >
       <base-button-save
         :loading="isSaving"
@@ -32,6 +32,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";

@@ -1,5 +1,8 @@
 <template>
-  <v-btn prepend-icon="$updateTime">
-    <slot name="default">Aktualisieren</slot>
-  </v-btn>
+  <base-text-button prepend-icon="$updateTime">
+    <slot>Aktualisieren</slot>
+  </base-text-button>
 </template>
+<script setup lang="ts">
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+</script>

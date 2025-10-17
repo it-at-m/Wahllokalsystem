@@ -8,7 +8,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-describe("dateTimeFormatter.ts", () => {
+describe("textFormatter.ts", () => {
   const { getStimmzettelTermForWahl } = useTextFormatter();
   const { prepareUser } = useUserTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();

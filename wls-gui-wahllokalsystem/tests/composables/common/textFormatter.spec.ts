@@ -90,7 +90,7 @@ describe("dateTimeFormatter.ts", () => {
       );
       wahlenStore.wahlenState.wahlen = [wahl1, wahl2, wahl3];
 
-      for (let i = 0; i++; i <= wahlenStore.wahlenState.wahlen.length) {
+      for (let i = 0; i < wahlenStore.wahlenState.wahlen.length; i++) {
         if (i == 0) {
           expect(
             getStimmzettelTermForWahl(wahlenStore.wahlenState.wahlen[i])

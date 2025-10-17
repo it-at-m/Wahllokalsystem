@@ -153,7 +153,7 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const { hasTasksToRun } = storeToRefs(useTaskManagerStore());
-  if (to.name != ROUTES_HOME && !hasTasksToRun.value) {
+  if (to.name !== ROUTES_HOME && !hasTasksToRun.value) {
     return { name: ROUTES_HOME };
   }
 });

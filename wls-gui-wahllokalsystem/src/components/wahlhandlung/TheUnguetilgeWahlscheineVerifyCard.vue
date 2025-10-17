@@ -108,12 +108,12 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <base-text-button
         active
         :disabled="isSearchButtonDisabled"
         data-test="button-search"
         @click="onSearchClicked"
-        >{{ searchButtonLabel }}</v-btn
+        >{{ searchButtonLabel }}</base-text-button
       >
       <base-button-refresh
         :loading="ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading"
@@ -134,6 +134,7 @@ import { computed, ref, useTemplateRef } from "vue";
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";

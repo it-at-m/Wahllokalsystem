@@ -98,19 +98,6 @@ export default createVuetify({
     },
     VBtn: {
       variant: "elevated",
-      activeColor: "primary",
-      style: {
-        border: `1px solid ${PRIMARY_COLOR}`,
-      },
-    },
-    VCardActions: {
-      VBtn: {
-        variant: "elevated",
-        activeColor: "primary",
-        style: {
-          border: `1px solid ${PRIMARY_COLOR}`,
-        },
-      },
     },
   },
 });

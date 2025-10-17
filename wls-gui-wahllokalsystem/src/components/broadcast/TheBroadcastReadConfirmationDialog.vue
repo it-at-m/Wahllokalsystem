@@ -24,12 +24,12 @@
       </v-card-text>
       <v-card-actions>
         <div class="ml-2 mb-2">
-          <v-btn
+          <base-text-button
             :disabled="!isMessageMarkedAsRead"
             active
             data-test="button-ok"
             @click="onOkClicked"
-            >Ok</v-btn
+            >Ok</base-text-button
           >
         </div>
       </v-card-actions>
@@ -41,6 +41,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useBroadcastStore } from "@/stores/broadcastStore.ts";
 
 const broadcastStore = useBroadcastStore();

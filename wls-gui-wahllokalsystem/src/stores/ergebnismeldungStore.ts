@@ -2,21 +2,19 @@ import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useLogging } from "@/composables/common/logging.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
-const { logDebug } = useLogging("ergebnismeldungStore");
 
 const storeID = "ergebnismeldung";
 
@@ -25,7 +23,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
   const { getBegruendungStimmzettelumschlaege } =
     useErgebnisermittlungService();
-  const { wahlenActions } = useWahlenStore();
   const { getStimmzettelTermForWahl } = useTextFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
@@ -188,42 +185,33 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     return ergebnisseForKey;
   }
 
-  async function loadBegruendungForWahl(
-    wahlID: string,
-    sendNotification = true
-  ) {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-    if (!wahl) {
-      logDebug("Wahl not found");
-    } else {
-      try {
-        const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+  async function loadBegruendungForWahl(wahl: Wahl, sendNotification = true) {
+    try {
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
 
-        if (wahlbezirkID) {
-          const loadedBegruendung = await getBegruendungStimmzettelumschlaege(
-            wahl,
-            wahlbezirkID,
-            getStimmzettelTermForWahl(wahl),
-            sendNotification
+      if (wahlbezirkID) {
+        const loadedBegruendung = await getBegruendungStimmzettelumschlaege(
+          wahl,
+          wahlbezirkID,
+          getStimmzettelTermForWahl(wahl),
+          sendNotification
+        );
+        if (loadedBegruendung) {
+          const existingBegruendungIndexForWahl = begruendungen.value.findIndex(
+            (begruendung) => begruendung.wahlID === wahl.wahlID
           );
-          if (loadedBegruendung) {
-            const existingBegruendungIndexForWahl =
-              begruendungen.value.findIndex(
-                (begruendung) => begruendung.wahlID === wahlID
-              );
-            if (existingBegruendungIndexForWahl >= 0) {
-              begruendungen.value[existingBegruendungIndexForWahl] =
-                loadedBegruendung;
-            } else {
-              begruendungen.value.push(loadedBegruendung);
-            }
+          if (existingBegruendungIndexForWahl >= 0) {
+            begruendungen.value[existingBegruendungIndexForWahl] =
+              loadedBegruendung;
+          } else {
+            begruendungen.value.push(loadedBegruendung);
           }
         }
-      } catch (e) {
-        throw new Error(
-          `Fehler beim Laden der Begründung für ${wahl.name}. ` + e
-        );
       }
+    } catch (e) {
+      throw new Error(
+        `Fehler beim Laden der Begründung für ${wahl.name}. ` + e
+      );
     }
   }
 

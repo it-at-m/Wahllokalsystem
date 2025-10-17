@@ -1,6 +1,6 @@
 <template>
   <base-text-button prepend-icon="$updateTime">
-    <slot name="default">Aktualisieren</slot>
+    <slot>Aktualisieren</slot>
   </base-text-button>
 </template>
 <script setup lang="ts">

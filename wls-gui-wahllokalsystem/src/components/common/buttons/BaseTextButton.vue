@@ -4,7 +4,7 @@
     active-color="primary"
     variant="elevated"
   >
-    <slot name="default">Aktualisieren</slot>
+    <slot />
   </v-btn>
 </template>
 

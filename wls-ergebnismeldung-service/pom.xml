@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.4.5-SNAPSHOT</version>
+    <version>0.4.6-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>

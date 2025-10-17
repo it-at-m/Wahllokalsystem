@@ -61,6 +61,7 @@ describe("begruendungTaskFactory.ts", () => {
 
       result[0]?.callback();
       expect(mockDefinitions.loadBegruendungForWahl).toHaveBeenCalledOnce();
+      expect(result[0]?.name).toContain("Stimmzettel");
     });
   });
 });

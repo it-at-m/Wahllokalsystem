@@ -7,7 +7,7 @@ import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
-  const { stimmzettelumschlaegeActions } = useWahlenStore();
+  const { stimmzettelumschlaegeActions, wahlenActions } = useWahlenStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.extendedWahlMetaData.map(_createTask);
@@ -15,7 +15,6 @@ export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
 
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
     const { getStimmzettelTermForWahl } = useTextFormatter();
-    const { wahlenActions } = useWahlenStore();
 
     const wahl = wahlenActions.getWahlOrUndefinedById(
       taskFactoryMetaData.wahlID

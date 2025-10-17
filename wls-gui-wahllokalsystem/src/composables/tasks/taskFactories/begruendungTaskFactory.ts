@@ -8,15 +8,14 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useBegruendungTaskFactory(): TaskFactory {
+  const { loadBegruendungForWahl } = useErgebnismeldungStore();
+  const { getStimmzettelTermForWahl } = useTextFormatter();
+  const { wahlenActions } = useWahlenStore();
+
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.extendedWahlMetaData.map(_createTask);
   }
-
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
-    const { loadBegruendungForWahl } = useErgebnismeldungStore();
-    const { getStimmzettelTermForWahl } = useTextFormatter();
-    const { wahlenActions } = useWahlenStore();
-
     const wahl = wahlenActions.getWahlOrUndefinedById(
       taskFactoryMetaData.wahlID
     );

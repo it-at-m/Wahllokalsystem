@@ -1,6 +1,7 @@
 <template>
   <v-btn
     class="base-text-button"
+    active-color="primary"
     variant="elevated"
   >
     <slot name="default">Aktualisieren</slot>

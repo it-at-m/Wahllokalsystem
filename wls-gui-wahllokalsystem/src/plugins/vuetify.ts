@@ -98,7 +98,6 @@ export default createVuetify({
     },
     VBtn: {
       variant: "elevated",
-      activeColor: "primary",
     },
   },
 });

@@ -291,46 +291,6 @@ describe("wahlenStore.ts", () => {
     });
   });
 
-  describe("isWahlWithSmallestWahlnummer", () => {
-    it("should_returnTrue_when_givenWahlHasSmallestWahlnummer", () => {
-      const wahl1 = prepareWahl().nummer("1").build();
-      const wahl2 = prepareWahl().nummer("2").build();
-      const wahl3 = prepareWahl().nummer("3").build();
-
-      unitUnderTest.wahlenState.wahlen = [wahl1, wahl2, wahl3];
-
-      expect(
-        unitUnderTest.wahlenActions.isWahlWithSmallestWahlnummer(wahl1)
-      ).toStrictEqual(true);
-    });
-
-    it("should_returnFalse_when_givenWahlDoesNotHaveSmallestWahlnummer", () => {
-      const wahl1 = prepareWahl().nummer("1").build();
-      const wahl2 = prepareWahl().nummer("2").build();
-      const wahl3 = prepareWahl().nummer("3").build();
-
-      unitUnderTest.wahlenState.wahlen = [wahl1, wahl2, wahl3];
-
-      expect(
-        unitUnderTest.wahlenActions.isWahlWithSmallestWahlnummer(wahl2)
-      ).toStrictEqual(false);
-    });
-
-    it("should_returnFalse_when_givenWahlDoesNotExistInWahlenEvenIfWahlnummerIsSmallest", () => {
-      const wahl1 = prepareWahl().nummer("1").build();
-      const wahl2 = prepareWahl().nummer("2").build();
-      const wahl3 = prepareWahl().nummer("3").build();
-
-      unitUnderTest.wahlenState.wahlen = [wahl1, wahl2, wahl3];
-
-      const wahl4 = prepareWahl().nummer("0").build();
-
-      expect(
-        unitUnderTest.wahlenActions.isWahlWithSmallestWahlnummer(wahl4)
-      ).toStrictEqual(false);
-    });
-  });
-
   describe("initBeanstandeteWahlbriefe", () => {
     it("should_loadBeanstandeteWahlbriefeAndAddThemToCorrespondingWahlen_when_called", async () => {
       const wahlbezirkID = "wahlbezirkId";

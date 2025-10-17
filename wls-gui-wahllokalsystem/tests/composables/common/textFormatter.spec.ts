@@ -38,11 +38,20 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStimmzettelumschlaege_when_usersWahlbezirkArtIsBWBAndOnlyOneWahlExists", () => {
       const userStore = useUserStore();
       const wahlenStore = useWahlenStore();
-      userStore.setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
-      );
       const wahl = prepareWahl().nummer("1").build();
 
+      userStore.setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID",
+              wahlID: wahl.wahlID,
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
       wahlenStore.wahlenState.wahlen = [wahl];
 
       expect(getStimmzettelTermForWahl(wahl)).toStrictEqual(
@@ -53,13 +62,32 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStimmzettelumschlaegeForFirstWahlAndStimmzettelForAllOtherWahlen_when_usersWahlbezirkArtIsBWBAndMultipleWahlenExists", () => {
       const userStore = useUserStore();
       const wahlenStore = useWahlenStore();
-      userStore.setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
-      );
       const wahl1 = prepareWahl().nummer("1").build();
       const wahl2 = prepareWahl().nummer("2").build();
       const wahl3 = prepareWahl().nummer("3").build();
 
+      userStore.setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID1",
+              wahlID: wahl1.wahlID,
+              wahlnummer: "0",
+            },
+            {
+              wahlbezirkID: "wahlbezirkID2",
+              wahlID: wahl2.wahlID,
+              wahlnummer: "1",
+            },
+            {
+              wahlbezirkID: "wahlbezirkID3",
+              wahlID: wahl3.wahlID,
+              wahlnummer: "2",
+            },
+          ])
+          .build()
+      );
       wahlenStore.wahlenState.wahlen = [wahl1, wahl2, wahl3];
 
       for (let i = 0; i++; i <= wahlenStore.wahlenState.wahlen.length) {

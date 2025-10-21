@@ -10,6 +10,7 @@ import {
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_B,
   ROUTE_STAPEL_C,
+  ROUTE_STAPEL_D,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -21,6 +22,7 @@ import {
 } from "@/constants";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
+import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
 import ObwStapelBView from "@/views/auszaehlung/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
@@ -131,6 +133,11 @@ const routes = [
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",
     name: ROUTE_STAPEL_C,
     component: StapelCView,
+  },
+  {
+    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",
+    name: ROUTE_STAPEL_D,
+    component: MBWStapelDView,
   },
   {
     path: "/:catchAll(.*)*",

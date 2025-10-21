@@ -2,6 +2,7 @@ import "vuetify/styles";
 
 import {
   mdiAlert,
+  mdiArrowRightBold,
   mdiCheckCircle,
   mdiContentSave,
   mdiDelete,
@@ -31,6 +32,8 @@ import {
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+
+import { PRIMARY_COLOR } from "@/constants.ts";
 
 export default createVuetify({
   icons: {
@@ -64,6 +67,7 @@ export default createVuetify({
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
       alert: mdiAlert,
+      continue: mdiArrowRightBold,
     },
     sets: {
       mdi,
@@ -73,7 +77,7 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#546e7a",
+          primary: PRIMARY_COLOR,
           secondary: "#FFCC00",
           accent: "#7BA4D9",
           info: "#0000f0",
@@ -94,13 +98,6 @@ export default createVuetify({
     },
     VBtn: {
       variant: "elevated",
-      activeColor: "primary",
-    },
-    VCardActions: {
-      VBtn: {
-        variant: "elevated",
-        activeColor: "primary",
-      },
     },
   },
 });

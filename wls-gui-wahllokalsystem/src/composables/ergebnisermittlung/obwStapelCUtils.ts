@@ -160,6 +160,28 @@ export function useOBWStapelCUtils(
     ]);
   }
 
+  function getStimmzettelNumIndexThatPreventDeletion(newRowSize: number) {
+    return [
+      ...stapelCGueltigErgebnisse.value
+        .filter(
+          (ergebnisAndStapelArt) =>
+            ergebnisAndStapelArt.ergebnis.numIndex !== null &&
+            ergebnisAndStapelArt.ergebnis.numIndex > newRowSize &&
+            ergebnisAndStapelArt.ergebnis.wahlvorschlagID !== null
+        )
+        .map((ergebnisAndStapelArt) => ergebnisAndStapelArt.ergebnis.numIndex),
+      ...stapelCUngueltigErgebnisse.value
+        .filter(
+          (ergebnisAndStapelArt) =>
+            ergebnisAndStapelArt.ergebnis.numIndex !== null &&
+            ergebnisAndStapelArt.ergebnis.numIndex > newRowSize
+        )
+        .map((ergebnisAndStapelArt) => ergebnisAndStapelArt.ergebnis.numIndex),
+    ]
+      .filter((numIndex) => numIndex !== null)
+      .sort((a, b) => a - b);
+  }
+
   async function saveErgebnisse() {
     isSaving.value = true;
 
@@ -267,6 +289,7 @@ export function useOBWStapelCUtils(
     totalSum,
     addGueltigErgebnisse,
     removeErgebnisseWithNumIndexAbove,
+    getStimmzettelNumIndexThatPreventDeletion,
     saveErgebnisse,
     getMaxNumIndex,
     getMaxNumIndexWithValueSet,

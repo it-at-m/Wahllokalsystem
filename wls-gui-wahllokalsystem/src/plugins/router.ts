@@ -114,22 +114,22 @@ const routes = [
     beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
-    path: "/auszaehlungStimmzettel/:wahlId",
+    path: "/:wahlart/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
     name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
     component: ErfassungStimmzettelView,
   },
   {
-    path: "/stapelA/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",
     name: ROUTE_STAPEL_A,
     component: OWBStapelAView,
   },
   {
-    path: "/stapelB/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
     component: ObwStapelBView,
   },
   {
-    path: "/stapelC/:wahlId",
+    path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",
     name: ROUTE_STAPEL_C,
     component: StapelCView,
   },
@@ -152,13 +152,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { hasAllTasksRunSuccessfully, hasTasksToRun } = storeToRefs(
-    useTaskManagerStore()
-  );
-
+  const { hasTasksToRun, hasAllTasksRun } = storeToRefs(useTaskManagerStore());
   if (
-    to.name != ROUTES_HOME &&
-    (!hasAllTasksRunSuccessfully.value || !hasTasksToRun.value)
+    to.name !== ROUTES_HOME &&
+    (!hasTasksToRun.value || !hasAllTasksRun.value)
   ) {
     return { name: ROUTES_HOME };
   }

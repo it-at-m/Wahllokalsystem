@@ -165,6 +165,35 @@ export const useStimmabgabevermerkeStore = defineStore(
       );
     }
 
+    function getBlattnummernThatPreventDeletion(newRowSize: number) {
+      const numbers: Set<number> = new Set<number>();
+      const currentLowestNumberOfRowsOverAllWahldaten =
+        lowestNumberOfRowsOverAllWahldaten.value;
+      if (newRowSize > 0 && currentLowestNumberOfRowsOverAllWahldaten) {
+        const removeRows =
+          newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
+        stimmabgabevermerke.value.forEach(
+          (stimmabgabevermerk: Stimmabgabevermerke) => {
+            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+            const vermerke = stimmabgabevermerk.wahldaten[0].vermerke;
+            for (let i = removeRows; i < 0; i++) {
+              const vermerk = vermerke[vermerke.length + i];
+              if (
+                vermerk &&
+                vermerk.stimmzettel.some(
+                  (stimmzettel) =>
+                    stimmzettel.anzahl != null && stimmzettel.anzahl != 0
+                )
+              ) {
+                numbers.add(vermerk.blattnummer);
+              }
+            }
+          }
+        );
+      }
+      return Array.from(numbers).sort((a, b) => a - b);
+    }
+
     function changeRowCount(newRowSize: number) {
       if (lowestNumberOfRowsOverAllWahldaten.value != null) {
         if (newRowSize - 1 > lowestNumberOfRowsOverAllWahldaten.value) {
@@ -206,6 +235,7 @@ export const useStimmabgabevermerkeStore = defineStore(
             ) {
               // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
               stimmabgabevermerk.wahldaten[0].vermerke.push({
+                //TODO Die Vergabe der Blattnummer anhand des Indizes könnte im Widerspruch zur Beurkundung als Blatt 1 stehen => Issue 2007
                 blattnummer: rowIndex + 1,
                 stimmzettel: [
                   {
@@ -243,6 +273,7 @@ export const useStimmabgabevermerkeStore = defineStore(
       isAnyRowThatShouldBeDeletedFilled,
       stimmabgabevermerkeTableTotalEachWahldaten,
       lowestNumberOfRowsOverAllWahldaten,
+      getBlattnummernThatPreventDeletion,
       changeRowCount,
       sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl,
       loadStimmabgabevermerke,

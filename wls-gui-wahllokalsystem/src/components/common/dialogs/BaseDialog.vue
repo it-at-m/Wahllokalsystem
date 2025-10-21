@@ -17,26 +17,28 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
+        <base-text-button
           v-if="canceltext"
           data-test="basedialog-btn-cancel"
           @click="onCancelClicked"
         >
           {{ canceltext }}
-        </v-btn>
-        <v-btn
+        </base-text-button>
+        <base-text-button
           data-test="basedialog-btn-confirm"
           active
           @click="onConfirmClicked"
         >
           {{ confirmtext }}
-        </v-btn>
+        </base-text-button>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+
 defineProps<{
   visible: boolean;
   dialogtitle: string;

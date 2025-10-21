@@ -13,7 +13,9 @@
       :title="titleStimmenZaehlen"
       :to="
         routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
-          wahlId: String(srwWahlID),
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+          wahlart: WahlWahlartEnum.Srw,
         })
       "
     />
@@ -26,21 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-const { wahlenActions } = useWahlenStore();
 const { routeWithNameAndParams } = useNavigationUtils();
 
 defineProps<{
   titleStimmenZaehlen: string;
+  wahlId: string;
+  wahlbezirkId: string;
 }>();
-
-const srwWahlID = computed<string | undefined>(() => {
-  return wahlenActions.getWahlIdOrUndefinedByWahlart(WahlWahlartEnum.Srw);
-});
 </script>

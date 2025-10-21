@@ -1,6 +1,6 @@
 <template>
   <the-ergebnisermittlung-stimmzettelumschlaege-card
-    :title="title"
+    :title="`Wahlurne öffnen und ${getStimmzettelTermForWahl(wahl)} zählen`"
     :wahl-id="wahlID"
     :use-time="!isUWB"
   />
@@ -12,6 +12,7 @@ import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnisermittlung/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -20,21 +21,21 @@ const route = useRoute();
 const router = useRouter();
 const { isUWB } = storeToRefs(useUserStore());
 const { wahlenActions } = useWahlenStore();
+const { getStimmzettelTermForWahl } = useTextFormatter();
 
 const wahlID = computed(() => route.params.wahlId as string);
-
-const title = computed(() => {
-  return isUWB.value
-    ? "Wahlurne öffnen und Stimmzettel zählen"
-    : "Wahlurne öffnen und Stimmzettelumschläge zählen";
+const wahl = computed(() => {
+  if (wahlID.value) {
+    return wahlenActions.getWahlOrUndefinedById(wahlID.value);
+  } else {
+    return undefined;
+  }
 });
 
 watch(
   () => wahlID.value,
-  (wahlID) => {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-
-    if (!wahl) {
+  () => {
+    if (!wahl.value) {
       router.push({
         name: EXAMPLE_ROUTES_NOTFOUND,
       });

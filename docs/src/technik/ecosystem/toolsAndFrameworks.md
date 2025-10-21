@@ -8,7 +8,7 @@
   - Imageregistry
 - Zenhub
   - Projektmanagement
-- Docker
+- ~~Docker~~ (deprecated) -> Podman
 - SoapUI
   - Beispielrequests
 

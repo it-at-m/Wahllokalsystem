@@ -1,5 +1,5 @@
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
-import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import {
   BegruendungControllerApi,
@@ -32,29 +32,28 @@ export function useErgebnisermittlungService() {
   );
 
   async function postStimmzettelumschlaege(
-    wahlID: string,
+    wahl: Wahl,
     wahlbezirkID: string,
     stimmzettelumschlaege: Stimmzettelumschlaege,
-    wahlbezirksArt: WahlbezirksArtEnum,
-    wahlName: string,
+    stimmzettelTermForWahl: string,
     sendNotification = true
   ): Promise<void> {
     try {
       await stimmzettelumschlaegeControllerAPI.postStimmzettelumschlaege(
-        wahlID,
+        wahl.wahlID,
         wahlbezirkID,
-        toDto(stimmzettelumschlaege, wahlID, wahlbezirkID)
+        toDto(stimmzettelumschlaege, wahl.wahlID, wahlbezirkID)
       );
       if (sendNotification) {
         addNotification(
-          `${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} erfolgreich gespeichert.`,
+          `${stimmzettelTermForWahl} für ${wahl.name} erfolgreich gespeichert.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
     } catch (error) {
       if (sendNotification) {
         addNotification(
-          `Speichern der ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} fehlgeschlagen.`,
+          `Speichern der ${stimmzettelTermForWahl} für ${wahl.name} fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
@@ -63,21 +62,20 @@ export function useErgebnisermittlungService() {
   }
 
   async function getStimmzettelumschlaege(
-    wahlID: string,
+    wahl: Wahl,
     wahlbezirkID: string,
-    wahlbezirksArt: WahlbezirksArtEnum,
-    wahlName: string,
+    stimmzettelTermForWahl: string,
     sendNotification = true
   ) {
     try {
       const response =
         await stimmzettelumschlaegeControllerAPI.getStimmzettelumschlaege(
-          wahlID,
+          wahl.wahlID,
           wahlbezirkID
         );
       if (sendNotification) {
         addNotification(
-          `${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} erfolgreich geladen.`,
+          `${stimmzettelTermForWahl} für ${wahl.name} erfolgreich geladen.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
@@ -86,7 +84,7 @@ export function useErgebnisermittlungService() {
     } catch (e) {
       if (sendNotification) {
         addNotification(
-          `Laden der ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} fehlgeschlagen.`,
+          `Laden der ${stimmzettelTermForWahl} für ${wahl.name} fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
@@ -95,21 +93,20 @@ export function useErgebnisermittlungService() {
   }
 
   async function getBegruendungStimmzettelumschlaege(
-    wahlID: string,
+    wahl: Wahl,
     wahlbezirkID: string,
-    wahlbezirksArt: WahlbezirksArtEnum,
-    wahlName: string,
+    stimmzettelTermForWahl: string,
     sendNotification = true
   ) {
     try {
       const response = await begruendungControllerApi.getBegruendung(
         wahlbezirkID,
-        wahlID,
+        wahl.wahlID,
         StapelArtEnum.StimmzettelUmschlaege
       );
       if (sendNotification) {
         addNotification(
-          `Begründung ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} erfolgreich geladen.`,
+          `Begründung ${stimmzettelTermForWahl} für ${wahl.name} erfolgreich geladen.`,
           UserNotificationCategoryEnum.SUCCESS
         );
       }
@@ -118,22 +115,11 @@ export function useErgebnisermittlungService() {
     } catch (e) {
       if (sendNotification) {
         addNotification(
-          `Laden der Begründung ${_getStimmzettelTermBasedOnWahlbezirkArt(wahlbezirksArt)} für ${wahlName} fehlgeschlagen.`,
+          `Laden der Begründung ${stimmzettelTermForWahl} für ${wahl.name} fehlgeschlagen.`,
           UserNotificationCategoryEnum.ERROR
         );
       }
       throw e;
-    }
-  }
-
-  function _getStimmzettelTermBasedOnWahlbezirkArt(
-    wahlbezirksArt: WahlbezirksArtEnum
-  ) {
-    switch (wahlbezirksArt) {
-      case "UWB":
-        return "Stimmzettel";
-      case "BWB":
-        return "Stimmzettelumschläge";
     }
   }
 

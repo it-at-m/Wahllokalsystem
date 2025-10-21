@@ -11,6 +11,8 @@ const {
   createResponseOkWithoutResponseBody,
   createResponseNotFoundWithoutResponseBody,
   createResponseOfIndexDBValue,
+  isPdfContext,
+  isTextContext,
 } = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
@@ -120,9 +122,10 @@ export function useRequestStrategies() {
   async function _storeResponse(response: Response, dbKey: string) {
     const clonedResponse = response.clone();
     const responseBody = await clonedResponse.arrayBuffer();
+    const contentType = response.headers.get(HTTP_HEADER_CONTENT_TYPE);
     const responseToStore: IndexDBValue = {
-      data: _arrayBufferToString(responseBody),
-      contentType: clonedResponse.headers.get(HTTP_HEADER_CONTENT_TYPE),
+      data: _convertDataBasedOnContentType(responseBody, contentType),
+      contentType: contentType,
       httpStatus: clonedResponse.status,
     };
     try {
@@ -135,6 +138,23 @@ export function useRequestStrategies() {
 
   function _arrayBufferToString(arrayBuffer: ArrayBuffer) {
     return arrayBuffer.byteLength > 0 ? textDecoder.decode(arrayBuffer) : null;
+  }
+
+  function _convertDataBasedOnContentType(
+    responseBody: ArrayBuffer,
+    contentType: string | null
+  ): ArrayBuffer | string | null {
+    let dataToStore: ArrayBuffer | string | null = null;
+    if (contentType && isPdfContext(contentType)) {
+      dataToStore = responseBody;
+    } else if (contentType && isTextContext(contentType)) {
+      dataToStore = _arrayBufferToString(responseBody);
+    } else {
+      logDebug(
+        `unrecognized content type "${contentType}" – skipping idb storage)`
+      );
+    }
+    return dataToStore;
   }
 
   async function _storedResponseOrNotFound(dbKey: string) {

@@ -57,7 +57,7 @@ function onDeleteIcon(index: number, ereignisPayload: EreignisPayload) {
   dialogDate.value = dateStr ?? "";
   dialogBeschreibung.value = beschreibung ?? "";
 
-  if (!dateStr && !timeStr && !beschreibung) {
+  if (!beschreibung) {
     deleteIndex.value = index;
     onConfirmDelete();
   } else {

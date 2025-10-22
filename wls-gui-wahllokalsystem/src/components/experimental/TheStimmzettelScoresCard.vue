@@ -7,46 +7,7 @@
           v-for="(wahlvorschlag, index) in wahlvorschlaege.wahlvorschlaege"
           :key="index"
         >
-          <v-card>
-            <v-card-title
-              >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</v-card-title
-            >
-            <v-card-subtitle>
-              <v-checkbox>
-                <template #label>
-                  {{ wahlvorschlag.kurzname }}
-                </template>
-              </v-checkbox>
-            </v-card-subtitle>
-            <div
-              v-for="(kandidat, index) in wahlvorschlag.kandidaten"
-              :key="index"
-              class="mb-2"
-            >
-              <v-btn
-                @click="
-                  addStimme(wahlvorschlag.identifikator, kandidat.identifikator)
-                "
-                >+</v-btn
-              ><v-btn
-                class="ml-2"
-                @click="
-                  removeStimme(
-                    wahlvorschlag.identifikator,
-                    kandidat.identifikator
-                  )
-                "
-                >-</v-btn
-              >
-              {{ kandidat.listenposition }}
-              {{ kandidat.name }}
-              Stimmen:
-              {{
-                getErgebnis(wahlvorschlag.identifikator, kandidat.identifikator)
-                  .ergebnis
-              }}
-            </div>
-          </v-card>
+          <base-wahlvorschlag-scores-card :wahlvorschlag="wahlvorschlag" />
         </v-col>
       </v-row>
     </v-card-text>
@@ -59,6 +20,8 @@ import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts
 import type { PropType } from "vue";
 
 import { ref } from "vue";
+
+import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 
 defineProps({
   wahlvorschlaege: {

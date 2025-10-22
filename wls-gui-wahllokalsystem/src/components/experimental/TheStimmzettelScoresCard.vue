@@ -31,49 +31,6 @@ defineProps({
 });
 
 const ergebnisse = ref<Ergebnis[]>([]);
-
-function addStimme(
-  wahlvorschlagIdentifikator: string,
-  kandidatIdentifikator: string
-) {
-  const ergebnis = getErgebnis(
-    wahlvorschlagIdentifikator,
-    kandidatIdentifikator
-  );
-  ergebnis.ergebnis = (ergebnis.ergebnis ?? 0) + 1;
-}
-function removeStimme(
-  wahlvorschlagIdentifikator: string,
-  kandidatIdentifikator: string
-) {
-  const ergebnis = getErgebnis(
-    wahlvorschlagIdentifikator,
-    kandidatIdentifikator
-  );
-  ergebnis.ergebnis = (ergebnis.ergebnis ?? 0) - 1;
-}
-
-function getErgebnis(
-  wahlvorschlagIdentifikator: string,
-  kandidatIdentifikator: string
-) {
-  let ergebnisFound = ergebnisse.value.find(
-    (ergebnis) =>
-      ergebnis.wahlvorschlagID === wahlvorschlagIdentifikator &&
-      ergebnis.kandidatID === kandidatIdentifikator
-  );
-  if (!ergebnisFound) {
-    ergebnisFound = {
-      kandidatID: kandidatIdentifikator,
-      wahlvorschlagID: wahlvorschlagIdentifikator,
-      ergebnis: null,
-      wahlvorschlagsOrdnungszahl: null,
-      numIndex: null,
-    };
-    ergebnisse.value.push(ergebnisFound);
-  }
-  return ergebnisFound;
-}
 </script>
 
 <style scoped></style>

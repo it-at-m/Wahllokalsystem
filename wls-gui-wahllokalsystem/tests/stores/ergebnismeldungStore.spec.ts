@@ -613,19 +613,18 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl().wahlID(wahlID).name(wahlname).build(),
-      ];
+      const wahl = prepareWahl().wahlID(wahlID).name(wahlname).build();
+      wahlenStore.wahlenState.wahlen = [wahl];
 
       mockDefinitions.getBegruendungStimmzettelumschlaege.mockResolvedValue(
         null
       );
 
-      await unitUnderTest.loadBegruendungForWahl(wahlID);
+      await unitUnderTest.loadBegruendungForWahl(wahl);
 
       expect(
         mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      ).toStrictEqual([[wahl, wahlbezirkID, "Stimmzettel", true]]);
       expect(unitUnderTest.begruendungen).toStrictEqual([]);
     });
 
@@ -646,9 +645,8 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl().wahlID(wahlID).name(wahlname).build(),
-      ];
+      const wahl = prepareWahl().wahlID(wahlID).name(wahlname).build();
+      wahlenStore.wahlenState.wahlen = [wahl];
 
       const mockedBegruendung = createBegruendung();
 
@@ -656,11 +654,11 @@ describe("ergebnismeldungStore.ts", () => {
         mockedBegruendung
       );
 
-      await unitUnderTest.loadBegruendungForWahl(wahlID);
+      await unitUnderTest.loadBegruendungForWahl(wahl);
 
       expect(
         mockDefinitions.getBegruendungStimmzettelumschlaege.mock.calls
-      ).toStrictEqual([[wahlID, wahlbezirkID, wahlbezirksArt, wahlname, true]]);
+      ).toStrictEqual([[wahl, wahlbezirkID, "Stimmzettel", true]]);
       expect(unitUnderTest.begruendungen).toStrictEqual([mockedBegruendung]);
     });
 
@@ -678,16 +676,15 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl().wahlID(wahlID).name("wahlname").build(),
-      ];
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      wahlenStore.wahlenState.wahlen = [wahl];
 
       mockDefinitions.getBegruendungStimmzettelumschlaege.mockRejectedValue(
         new Error("service call failed")
       );
 
       await expect(
-        unitUnderTest.loadBegruendungForWahl(wahlID)
+        unitUnderTest.loadBegruendungForWahl(wahl)
       ).rejects.toThrow();
     });
   });

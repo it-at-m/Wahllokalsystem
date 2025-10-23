@@ -8,14 +8,14 @@
           max-width="15rem"
           :label="inputFieldLabel"
         />
-        <v-btn
+        <base-text-button
           active
           :disabled="isApplyRowCountDisabled"
           class="ml-4 mt-3"
           @click="onChangeRowCountClicked"
         >
           {{ applyBtnLabel }}
-        </v-btn>
+        </base-text-button>
       </div>
     </v-form>
   </v-container>
@@ -26,6 +26,7 @@ import type { PropType } from "vue";
 
 import { computed, ref } from "vue";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 

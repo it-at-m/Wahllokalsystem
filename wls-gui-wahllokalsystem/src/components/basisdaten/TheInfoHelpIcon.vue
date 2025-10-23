@@ -40,7 +40,7 @@ import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts"
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
 import { WAHLHOTLINE } from "@/constants.ts";
 
-const { getHandbuch } = useHandbuchService();
+const { downloadHandbuch } = useHandbuchService();
 
 const { openWahlraumfinder, startFernzugriff, printTestdruck } =
   useHelpIconCallbacks();
@@ -50,7 +50,7 @@ const infoHelpData = [
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",
-    callback: getHandbuch,
+    callback: downloadHandbuch,
   },
   {
     icon: "$mapSearch",

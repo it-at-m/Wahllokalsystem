@@ -1,11 +1,11 @@
 <template>
-  <v-btn
+  <base-text-button
     v-if="isBWB"
     prepend-icon="$printer"
     @click="onNachbesetzungDruckenClicked"
   >
     Nachbesetzung drucken
-  </v-btn>
+  </base-text-button>
 </template>
 
 <script setup lang="ts">
@@ -13,6 +13,7 @@ import type { NachbesetzungsDruckInput } from "@/types/wahlvorstand/Nachbesetzun
 
 import { storeToRefs } from "pinia";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
 import { useUserStore } from "@/stores/userStore.ts";

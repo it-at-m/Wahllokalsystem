@@ -31,13 +31,13 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { PropType } from "vue";
 
-import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheBAWScoresListGroup.vue";
 import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheMBWScoresListGroup.vue";
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
@@ -48,13 +48,11 @@ const props = defineProps({
   },
 });
 
-const { isBWB } = storeToRefs(useUserStore());
+const { getStimmzettelTermForWahl } = useTextFormatter();
 
-const titleStimmenZaehlen = computed(() => {
-  return isBWB.value
-    ? "Zählen der Stimmzettelumschläge"
-    : "Zählen der Stimmzettel";
-});
+const titleStimmenZaehlen = computed(
+  () => `Zählen der ${getStimmzettelTermForWahl(props.wahl)}`
+);
 
 const wahlbezirkIdForWahl = computed(() =>
   useUserStore().getWahlbezirkIdFromWahlMetaDataByWahlId(props.wahl.wahlID)

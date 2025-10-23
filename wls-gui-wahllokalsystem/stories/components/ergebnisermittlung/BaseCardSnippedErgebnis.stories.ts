@@ -1,15 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 
-const wahlId = "wahlID";
+import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
+
+const { prepareErgebnis } = useErgebnisseTestDataFactory();
 
 const meta = {
   component: BaseCardSnippedErgebnis,
-  args: {
-    wahlId,
-  },
+  args: {},
   decorators: [
     (story) => {
       return {
@@ -25,16 +24,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
-    wahlId: wahlId,
-    stapelArt: StapelArtEnum.MbwD,
+    modelValue: prepareErgebnis().build(),
     snippedTitle: "Ungültige Stimmzettel",
   },
 };
 
 export const MinMaxValue: Story = {
   args: {
-    wahlId: wahlId,
-    stapelArt: StapelArtEnum.MbwD,
+    modelValue: prepareErgebnis().build(),
     snippedTitle: "Ungültige Stimmzettel",
     minValue: 5,
     maxValue: 20,

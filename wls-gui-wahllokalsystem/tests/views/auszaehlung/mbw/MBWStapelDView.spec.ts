@@ -48,7 +48,7 @@ describe("MBWStapelDView", () => {
         meta: {},
       },
       {
-        path: "/:wahlId",
+        path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",
         component: MBWStapelDView,
       },
     ],

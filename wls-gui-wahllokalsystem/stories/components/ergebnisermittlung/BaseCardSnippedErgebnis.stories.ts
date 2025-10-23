@@ -9,7 +9,6 @@ const { prepareErgebnis } = useErgebnisseTestDataFactory();
 
 const meta = {
   component: BaseCardSnippedErgebnis,
-
   args: {
     onSave: fn(),
   },

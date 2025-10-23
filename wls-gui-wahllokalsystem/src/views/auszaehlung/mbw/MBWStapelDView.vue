@@ -20,12 +20,14 @@ import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import {useLogging} from "@/composables/common/logging.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
+const { logError } = useLogging("requestStrategies");
 
 const wahlID = computed(() => route.params.wahlId as string);
 const wahlbezirkID = computed(() =>
@@ -43,14 +45,19 @@ const ergebnis = ref<Ergebnis>({
 
 onMounted(async () => {
   if (wahlbezirkID.value) {
-    const loadedErgebnisse = await getErgebnisse(
-      wahlbezirkID.value,
-      wahlID.value,
-      stapelArt,
-      false
-    );
-    if (loadedErgebnisse?.ergebnisse[0]) {
-      ergebnis.value = loadedErgebnisse?.ergebnisse[0];
+    try {
+      const loadedErgebnisse = await getErgebnisse(
+        wahlbezirkID.value,
+        wahlID.value,
+        stapelArt,
+        false
+      );
+      if (loadedErgebnisse?.ergebnisse[0]) {
+        ergebnis.value = loadedErgebnisse?.ergebnisse[0];
+      }
+    } catch(error) {
+      logError("Fehler beim Laden der Ergebnisse: ", error)
+      throw error;
     }
   }
 });
@@ -89,8 +96,9 @@ async function onSave() {
         true
       );
     }
-  } catch {
-    throw new Error("Fehler beim Speichern der Ergebnisse");
+  } catch(error) {
+    logError("Fehler beim Speichern der Ergebnisse: ", error)
+    throw error;
   } finally {
     isErgebnisSaving.value = false;
   }

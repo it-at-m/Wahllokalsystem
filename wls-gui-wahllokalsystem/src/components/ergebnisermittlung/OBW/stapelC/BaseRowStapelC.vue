@@ -15,8 +15,6 @@
         :item-title="getWahlvorschlagTitle"
         item-value="identifikator"
         :disabled="isWahlvorschlagSelectionDisabled"
-        clearable
-        persistent-clear
         label="Wahlvorschlag"
       />
     </td>

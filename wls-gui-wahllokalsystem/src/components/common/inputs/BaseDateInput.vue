@@ -4,7 +4,6 @@
     type="date"
     :rules="[required]"
     label="Datum"
-    clearable
     @update:model-value="onModelValueChanged"
   />
 </template>

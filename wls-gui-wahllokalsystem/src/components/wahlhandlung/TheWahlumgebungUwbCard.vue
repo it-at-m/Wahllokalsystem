@@ -39,7 +39,6 @@
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
-                clearable
               />
             </div>
             <div>
@@ -53,7 +52,6 @@
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
-                clearable
               />
             </div>
             <div>
@@ -67,7 +65,6 @@
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
-                clearable
               />
             </div>
           </div>

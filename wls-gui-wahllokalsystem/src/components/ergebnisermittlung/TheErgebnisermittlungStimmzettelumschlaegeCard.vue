@@ -19,7 +19,6 @@
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
             :label="`Anzahl der ${getStimmzettelTermForWahl(wahl)}`"
-            clearable
           />
         </v-form>
       </v-card-text>

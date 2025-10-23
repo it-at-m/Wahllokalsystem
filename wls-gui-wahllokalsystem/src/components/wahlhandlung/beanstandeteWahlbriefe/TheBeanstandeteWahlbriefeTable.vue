@@ -105,7 +105,9 @@
           v-for="context in contextForDeletion"
           :key="context"
         >
-          {{ context }}
+          <ul>
+            <li>Nummer {{ rowIndexToDelete + 1 }} - {{ context }}</li>
+          </ul>
         </div>
       </div></base-dialog
     >
@@ -148,9 +150,10 @@ const contextForDeletion = computed(() => {
   const contextLines = [];
   if (rowIndexToDelete.value !== null) {
     contextLines.push(
-      zurueckweisungsgrundEnumToDisplayString(
-        wahlscheinGruende.value[rowIndexToDelete.value]
-      ) + " (Wahlschein)"
+      `Wahlschein: ` +
+        zurueckweisungsgrundEnumToDisplayString(
+          wahlscheinGruende.value[rowIndexToDelete.value]
+        )
     );
     wahlenState.value.wahlen?.map((wahl) => {
       if (rowIndexToDelete.value !== null) {
@@ -161,8 +164,8 @@ const contextForDeletion = computed(() => {
           );
         if (beanstandeterWahlbrief != null) {
           contextLines.push(
-            zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
-              ` (Stimmzettelumschlag für ${wahl.name})`
+            `Stimmzettelumschlag für ${wahl.name}: ` +
+              zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief)
           );
         }
       }

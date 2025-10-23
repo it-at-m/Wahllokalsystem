@@ -101,12 +101,14 @@
           haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende
           Werte gelöscht:
         </div>
-        <div
-          v-for="context in contextForDeletion"
-          :key="context"
-        >
+        <div>
           <ul>
-            <li>Nummer {{ rowIndexToDelete + 1 }} - {{ context }}</li>
+            <li
+              v-for="context in contextForDeletion"
+              :key="context"
+            >
+              Nummer {{ rowIndexToDelete + 1 }} - {{ context }}
+            </li>
           </ul>
         </div>
       </div></base-dialog

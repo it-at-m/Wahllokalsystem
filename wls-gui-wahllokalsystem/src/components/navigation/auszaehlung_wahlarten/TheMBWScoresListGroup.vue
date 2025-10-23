@@ -17,7 +17,7 @@
       "
     />
     <v-list-item
-      title="Stapel D"
+      title="Stapel d"
       :to="
         routeWithNameAndParams(ROUTE_STAPEL_D, {
           wahlId: wahlId,

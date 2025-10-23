@@ -42,18 +42,15 @@ const ergebnis = ref<Ergebnis>({
 });
 
 onMounted(async () => {
-  if (wahlbezirkID.value) {
-    const loadedErgebnisse = await getErgebnisse(
-      wahlbezirkID.value,
-      wahlID.value,
-      stapelArt,
-      false
-    );
-    if (loadedErgebnisse?.ergebnisse[0]) {
-      ergebnis.value = loadedErgebnisse?.ergebnisse[0];
-    }
-  }
+  await _loadErgebnis();
 });
+
+watch(
+  () => wahlbezirkID.value,
+  async () => {
+    await _loadErgebnis();
+  }
+);
 
 watch(
   () => wahlID.value,
@@ -93,6 +90,20 @@ async function onSave() {
     throw new Error("Fehler beim Speichern der Ergebnisse");
   } finally {
     isErgebnisSaving.value = false;
+  }
+}
+
+async function _loadErgebnis() {
+  if (wahlbezirkID.value) {
+    const loadedErgebnisse = await getErgebnisse(
+      wahlbezirkID.value,
+      wahlID.value,
+      stapelArt,
+      false
+    );
+    if (loadedErgebnisse?.ergebnisse[0]) {
+      ergebnis.value = loadedErgebnisse?.ergebnisse[0];
+    }
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <v-card-title>{{ snippedTitle }}</v-card-title>
       <v-card-text>
         <base-number-input
-          v-model="modelValue.ergebnis"
+          v-model="ergebnisValue"
           :rules="[required, minNumber(minValue), maxNumber(maxValue)]"
           min-width="20rem"
         />
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -32,6 +32,13 @@ import { useRules } from "@/composables/common/rules.ts";
 const { maxNumber, minNumber, required } = useRules();
 
 const modelValue = defineModel<Ergebnis>({ required: true });
+
+const ergebnisValue = computed({
+  get: () => modelValue.value.ergebnis,
+  set: (value) => {
+    modelValue.value = { ...modelValue.value, ergebnis: value };
+  },
+});
 
 defineProps({
   snippedTitle: {

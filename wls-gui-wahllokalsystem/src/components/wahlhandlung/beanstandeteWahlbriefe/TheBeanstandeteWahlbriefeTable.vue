@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-table>
       <thead>
         <tr>
@@ -19,12 +19,8 @@
           :key="index"
         >
           <td>
-            <v-row
-              align="center"
-              class="my-2"
-              style="min-width: 350px"
-            >
-              {{ index }}
+            <div class="d-flex align-center">
+              <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
                   zurueckweisungsgrundEnumToDisplayString(
@@ -34,7 +30,6 @@
                 label="Beschlussergebnis"
                 class="ml-5"
                 :items="gruendeWahlscheine"
-                hide-details
                 auto-select-first
                 :rules="[required]"
                 :data-test="`wahlscheingruende-input-${index - 1}`"
@@ -42,8 +37,12 @@
                   (value) =>
                     onZulassungsgrundWahlscheinChanged(value, index - 1)
                 "
-              />
-            </v-row>
+              >
+                <template #selection="{ item }">
+                  <div>{{ item.title }}</div>
+                </template>
+              </v-autocomplete>
+            </div>
           </td>
           <td
             v-for="wahl in wahlenState.wahlen"
@@ -57,7 +56,6 @@
               "
               label="Beschlussergebnis"
               :items="gruendeStimmzettel"
-              hide-details
               auto-select-first
               :rules="[required]"
               :disabled="_isInputDisabled(index - 1)"
@@ -66,7 +64,11 @@
                 (value) =>
                   onZulassungsgrundStimmzettelChanged(value, index - 1, wahl)
               "
-            />
+            >
+              <template #selection="{ item }">
+                {{ item.title }}
+              </template>
+            </v-autocomplete>
           </td>
           <td>
             <v-row
@@ -109,7 +111,7 @@
         </div>
       </div></base-dialog
     >
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -303,6 +305,6 @@ function _isInputDisabled(rowIndex: number) {
 
 <style scoped>
 td {
-  text-align: center;
+  text-align: start;
 }
 </style>

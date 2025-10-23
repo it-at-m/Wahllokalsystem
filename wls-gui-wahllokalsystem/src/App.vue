@@ -67,4 +67,9 @@ onUnmounted(() => {
 .main {
   background-color: white;
 }
+
+/* #2085 */
+.v-autocomplete__selection {
+  height: auto;
+}
 </style>

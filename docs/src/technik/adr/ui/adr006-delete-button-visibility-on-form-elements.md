@@ -1,4 +1,4 @@
-# Der Löschen-Button für Eingabewerte ist immer sichtbar
+# Sichtbarkeit des Löschen-Buttons bei Formelementen
 
 ## Status
 

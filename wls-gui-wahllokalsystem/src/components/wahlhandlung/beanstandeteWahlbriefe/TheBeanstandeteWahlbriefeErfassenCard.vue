@@ -8,13 +8,13 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <base-text-button
         prepend-icon="$add"
         data-test="addBedenklicherWahlbriefRow"
         @click="onAddBeanstandeterWahlbriefClicked()"
       >
         Neuen Beschluss erfassen
-      </v-btn>
+      </base-text-button>
       <base-button-save
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
@@ -28,6 +28,7 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

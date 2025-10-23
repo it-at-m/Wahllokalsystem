@@ -49,14 +49,14 @@
         @click="onRefreshClicked"
         >Fehlgeschlagene wiederholen</base-button-refresh
       >
-      <v-btn
+      <base-text-button
         data-test="weiter-button"
         class="ma-4"
         prepend-icon="$continue"
         :disabled="isLoading"
         active
         :to="routeWithName(ROUTE_WAHLVORSTAND)"
-        >Weiter</v-btn
+        >Weiter</base-text-button
       >
     </v-row>
   </v-container>
@@ -67,6 +67,7 @@ import { computed, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";

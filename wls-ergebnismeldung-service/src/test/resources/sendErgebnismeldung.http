@@ -144,7 +144,7 @@ Content-Type: application/json
       ],
       "vermerke": [
         {
-          "blattnummer": 1,
+          "blattnummer": 2,
           "stimmzettel": [
             {
               "anzahl": 1,
@@ -263,7 +263,7 @@ Content-Type: application/json
       ],
       "vermerke": [
         {
-          "blattnummer": 1,
+          "blattnummer": 2,
           "stimmzettel": [
             {
               "anzahl": 1,

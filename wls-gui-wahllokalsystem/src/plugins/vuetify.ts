@@ -96,8 +96,5 @@ export default createVuetify({
       height: 50,
       color: "primary",
     },
-    VBtn: {
-      variant: "elevated",
-    },
   },
 });

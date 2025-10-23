@@ -304,6 +304,14 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
         expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(4);
+
+        const expectedBlattnummern = [2, 3, 4, 5];
+
+        stimmabgabevermerke.wahldaten[0]?.vermerke?.forEach(
+          (vermerk, index) => {
+            expect(vermerk.blattnummer).toBe(expectedBlattnummern[index]);
+          }
+        );
       });
     });
 

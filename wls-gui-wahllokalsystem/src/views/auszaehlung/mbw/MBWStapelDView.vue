@@ -15,12 +15,12 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
-import {useLogging} from "@/composables/common/logging.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -55,8 +55,8 @@ onMounted(async () => {
       if (loadedErgebnisse?.ergebnisse[0]) {
         ergebnis.value = loadedErgebnisse?.ergebnisse[0];
       }
-    } catch(error) {
-      logError("Fehler beim Laden der Ergebnisse: ", error)
+    } catch (error) {
+      logError("Fehler beim Laden der Ergebnisse: ", error);
       throw error;
     }
   }
@@ -96,8 +96,8 @@ async function onSave() {
         true
       );
     }
-  } catch(error) {
-    logError("Fehler beim Speichern der Ergebnisse: ", error)
+  } catch (error) {
+    logError("Fehler beim Speichern der Ergebnisse: ", error);
     throw error;
   } finally {
     isErgebnisSaving.value = false;

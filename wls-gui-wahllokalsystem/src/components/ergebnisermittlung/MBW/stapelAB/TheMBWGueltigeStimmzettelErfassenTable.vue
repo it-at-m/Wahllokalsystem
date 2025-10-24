@@ -37,7 +37,7 @@
               :rules="[required]"
             />
           </td>
-          <td>
+          <td class="text-right">
             {{
               (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
               (vorschlag.ergebnisStapelB.ergebnis ?? 0)
@@ -47,11 +47,13 @@
       </tbody>
       <tfoot>
         <tr>
-          <td />
-          <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
-          <td />
-          <td />
-          <td class="font-weight-bold">{{ totalSum }}</td>
+          <td
+            colspan="4"
+            class="font-weight-bold"
+          >
+            Gültige Stimmen insgesamt
+          </td>
+          <td class="font-weight-bold text-right">{{ totalSum }}</td>
         </tr>
       </tfoot>
     </v-table>

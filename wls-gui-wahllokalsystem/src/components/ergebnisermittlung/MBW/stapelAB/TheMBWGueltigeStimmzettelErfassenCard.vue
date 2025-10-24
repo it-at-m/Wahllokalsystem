@@ -18,6 +18,7 @@
     <v-card-actions>
       <base-button-save
         :disabled="!isGueltigeStimmzettelErfassenTableValid"
+        :tabindex="modelValue.length * 2 + 1"
         @click="saveGueltigeErgebnisse"
       />
     </v-card-actions>

@@ -14,7 +14,6 @@
           <th class="font-weight-bold text-center">Insgesamt</th>
         </tr>
       </thead>
-      <!-- todo: taborder -->
       <tbody>
         <tr
           v-for="(vorschlag, index) in modelValue"
@@ -27,12 +26,14 @@
           <td>
             <base-number-input
               v-model="vorschlag.ergebnisStapelA.ergebnis"
+              :tabindex="index + 1"
               :rules="[required]"
             />
           </td>
           <td>
             <base-number-input
               v-model="vorschlag.ergebnisStapelB.ergebnis"
+              :tabindex="modelValue.length + index + 1"
               :rules="[required]"
             />
           </td>

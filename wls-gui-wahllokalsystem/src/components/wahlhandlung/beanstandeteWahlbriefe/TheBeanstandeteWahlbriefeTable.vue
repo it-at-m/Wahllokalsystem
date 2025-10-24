@@ -102,14 +102,28 @@
           Werte gelöscht:
         </div>
         <div>
-          <ul>
-            <li
-              v-for="context in contextForDeletion"
-              :key="context"
-            >
-              Nummer {{ rowIndexToDelete + 1 }} - {{ context }}
-            </li>
-          </ul>
+          Zu löschende Zeile: Wahlschein Nummer {{ rowIndexToDelete + 1 }}
+        </div>
+        <div>
+          <v-card
+            class="mt-5"
+            variant="outlined"
+            color="primary"
+          >
+            <v-table striped="even">
+              <tbody>
+                <tr
+                  v-for="(context, index) in contextForDeletion"
+                  :key="index"
+                >
+                  <td style="text-align: left; width: 300px; font-weight: bold">
+                    {{ context.category }}
+                  </td>
+                  <td style="text-align: left">{{ context.beschluss }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card>
         </div>
       </div></base-dialog
     >
@@ -149,14 +163,14 @@ const maxRows = computed(() => {
 });
 
 const contextForDeletion = computed(() => {
-  const contextLines = [];
+  const contextLines: { category: string; beschluss: string }[] = [];
   if (rowIndexToDelete.value !== null) {
-    contextLines.push(
-      `Wahlschein: ` +
-        zurueckweisungsgrundEnumToDisplayString(
-          wahlscheinGruende.value[rowIndexToDelete.value]
-        )
-    );
+    contextLines.push({
+      category: "Wahlschein",
+      beschluss: zurueckweisungsgrundEnumToDisplayString(
+        wahlscheinGruende.value[rowIndexToDelete.value]
+      ),
+    });
     wahlenState.value.wahlen?.map((wahl) => {
       if (rowIndexToDelete.value !== null) {
         const beanstandeterWahlbrief =
@@ -165,10 +179,12 @@ const contextForDeletion = computed(() => {
             wahl.wahlID
           );
         if (beanstandeterWahlbrief != null) {
-          contextLines.push(
-            `Stimmzettelumschlag für ${wahl.name}: ` +
-              zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief)
-          );
+          contextLines.push({
+            category: `Stimmzettelumschlag für ${wahl.name}`,
+            beschluss: zurueckweisungsgrundEnumToDisplayString(
+              beanstandeterWahlbrief
+            ),
+          });
         }
       }
     });

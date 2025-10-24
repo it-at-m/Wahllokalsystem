@@ -11,16 +11,16 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <base-text-button
-        prepend-icon="$add"
-        @click="onAddEreignisClicked()"
-        >Ereignis hinzufügen</base-text-button
-      >
       <base-button-save
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveClicked"
       />
+      <base-text-button
+        prepend-icon="$add"
+        @click="onAddEreignisClicked()"
+        >Ereignis hinzufügen</base-text-button
+      >
     </v-card-actions>
   </v-card>
 </template>

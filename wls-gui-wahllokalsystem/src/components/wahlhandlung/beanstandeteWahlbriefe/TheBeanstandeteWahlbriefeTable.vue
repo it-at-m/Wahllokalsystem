@@ -17,9 +17,10 @@
         <tr
           v-for="index in maxRows"
           :key="index"
+          class="pseudoHeightThatAllowsCellsToGrowInHeight"
         >
-          <td>
-            <div class="d-flex align-center">
+          <td class="fill-height">
+            <div class="d-flex align-center fill-height">
               <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
@@ -28,7 +29,7 @@
                   )
                 "
                 label="Beschlussergebnis"
-                class="ml-5"
+                class="ml-5 fill-height"
                 :items="gruendeWahlscheine"
                 auto-select-first
                 :rules="[required]"
@@ -43,6 +44,7 @@
           <td
             v-for="wahl in wahlenState.wahlen"
             :key="`${wahl.wahlID}-${index - 1}`"
+            class="fill-height"
           >
             <v-autocomplete
               :model-value="
@@ -50,6 +52,7 @@
                   wahl.beanstandeteWahlbriefe[index - 1] ?? null
                 )
               "
+              class="fill-height"
               label="Beschlussergebnis"
               :items="gruendeStimmzettel"
               auto-select-first
@@ -298,5 +301,9 @@ function _isInputDisabled(rowIndex: number) {
 <style scoped>
 td {
   text-align: start;
+}
+
+.pseudoHeightThatAllowsCellsToGrowInHeight {
+  height: 1px; /* see 2085 */
 }
 </style>

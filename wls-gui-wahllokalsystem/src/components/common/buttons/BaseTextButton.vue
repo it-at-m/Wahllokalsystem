@@ -2,7 +2,7 @@
   <v-btn
     class="base-text-button"
     active-color="primary"
-    variant="elevated"
+    variant="flat"
   >
     <slot />
   </v-btn>

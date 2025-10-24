@@ -17,7 +17,7 @@
       <tbody>
         <tr
           v-for="(vorschlag, index) in modelValue"
-          :key="index"
+          :key="vorschlag.wahlvorschlag.identifikator"
         >
           <td>
             {{ vorschlag.wahlvorschlag.identifikator }}

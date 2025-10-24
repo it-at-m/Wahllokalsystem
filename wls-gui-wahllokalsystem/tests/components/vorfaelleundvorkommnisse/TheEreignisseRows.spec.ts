@@ -235,5 +235,40 @@ describe("TheEreignisseRows.vue", () => {
         0
       );
     });
+
+    it("should_notOpenDialogButDelete_when_deleteWasEmittedByARowWithOnlyBeschreibungEmpty", async () => {
+      const ereignisStore = useEreignisStore();
+      const ereigniseintraege = [] as Ereignis[];
+
+      const date = new Date();
+      date.setHours(12, 0);
+      ereigniseintraege.push(
+        EreignisBuilder.createComplete()
+          .withUhrzeit(date)
+          .withBeschreibung(`Beschreibung`)
+      );
+
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
+
+      await nextTick();
+
+      const baseEreignisRow = wrapper.findComponent(BaseEreignisRow);
+      const payload = {
+        dateOnly: date,
+        timeOnly: date,
+        beschreibung: "",
+      };
+      baseEreignisRow.vm.$emit("delete", payload);
+
+      await flushPromises();
+
+      const deleteDialog = wrapper.findComponent(BaseDialog);
+      expect(deleteDialog.exists()).toBe(true);
+      expect(deleteDialog.vm.visible).toBe(false);
+
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege).toHaveLength(
+        0
+      );
+    });
   });
 });

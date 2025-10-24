@@ -225,6 +225,16 @@ export function useErgebnisMapper() {
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawDUngueltig;
       case StapelArtEnum.SrwBawBC:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.SrwBawBC;
+      case StapelArtEnum.MbwA:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwA;
+      case StapelArtEnum.MbwAB:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwAB;
+      case StapelArtEnum.MbwB:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwB;
+      case StapelArtEnum.MbwBC:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwBC;
+      case StapelArtEnum.MbwD:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD;
       case StapelArtEnum.StimmzettelUmschlaege:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege;
       default:

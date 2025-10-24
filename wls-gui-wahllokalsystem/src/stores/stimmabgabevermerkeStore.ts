@@ -235,8 +235,7 @@ export const useStimmabgabevermerkeStore = defineStore(
             ) {
               // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
               stimmabgabevermerk.wahldaten[0].vermerke.push({
-                //TODO Die Vergabe der Blattnummer anhand des Indizes könnte im Widerspruch zur Beurkundung als Blatt 1 stehen => Issue 2007
-                blattnummer: rowIndex + 1,
+                blattnummer: rowIndex + 2, //Vermerke starten mit der Blattnummer 2 und von da an weiter, da das erste Blatt die Beurkundung ist
                 stimmzettel: [
                   {
                     anzahl: null,

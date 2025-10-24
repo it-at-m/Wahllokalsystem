@@ -16,9 +16,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       ergebnisse: [],
     };
     for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelA.ergebnisse.push(
-        ergebnisseAndWahlvorschlag.ergebnisStapelA
-      );
+      ergebnisseStapelA.ergebnisse.push({
+        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
+        kandidatID: null,
+        wahlvorschlagsOrdnungszahl:
+          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
+        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis,
+        numIndex: null,
+      });
     }
     return ergebnisseStapelA;
   }
@@ -35,9 +40,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       ergebnisse: [],
     };
     for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelB.ergebnisse.push(
-        ergebnisseAndWahlvorschlag.ergebnisStapelB
-      );
+      ergebnisseStapelB.ergebnisse.push({
+        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
+        kandidatID: null,
+        wahlvorschlagsOrdnungszahl:
+          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
+        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis,
+        numIndex: null,
+      });
     }
     return ergebnisseStapelB;
   }

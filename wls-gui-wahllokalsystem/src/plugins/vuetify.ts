@@ -112,8 +112,5 @@ export default createVuetify({
       persistentClear: true,
       clearable: true,
     },
-    VBtn: {
-      variant: "elevated",
-    },
   },
 });

@@ -11,10 +11,6 @@
         />
       </v-form>
     </v-card-text>
-    <v-card-title>
-      Ungültige Stimmzettel
-      <!-- todo: ergebnis importieren wenn thomas ticket fertig ist -->
-    </v-card-title>
     <v-card-actions>
       <base-button-save
         :disabled="!isGueltigeStimmzettelErfassenTableValid"

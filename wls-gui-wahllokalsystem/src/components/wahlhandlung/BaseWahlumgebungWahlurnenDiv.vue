@@ -11,7 +11,6 @@
         :data-test="`textFieldUrnenAnzahl_${index}`"
         :label="`Anzahl der Wahlurnen ${wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)}`"
         min-width="30rem"
-        clearable
       />
     </div>
   </div>

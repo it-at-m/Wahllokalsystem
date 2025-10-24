@@ -77,10 +77,9 @@ describe("mbwUtils", () => {
       ).toStrictEqual(expectedErgebnisseStapelA);
     });
 
-    it("should_retunrErgebnisseWithEmptyErgebnisse_when_givenEmptyErgebnisseWithWahlvorschlagList", () => {
+    it("should_returnErgebnisseWithEmptyErgebnisse_when_givenEmptyErgebnisseWithWahlvorschlagList", () => {
       const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
         [];
-
       const expectedErgebnisseStapelA: Ergebnisse = {
         bezirkUndWahlIDStapelart: {
           stapelArt: StapelArtEnum.MbwA,

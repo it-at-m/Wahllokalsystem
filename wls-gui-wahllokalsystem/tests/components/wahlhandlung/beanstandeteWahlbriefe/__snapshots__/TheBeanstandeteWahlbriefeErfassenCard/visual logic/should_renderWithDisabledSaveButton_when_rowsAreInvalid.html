@@ -38,7 +38,7 @@
                       <div data-v-f1835dbc="" class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field v-autocomplete v-autocomplete--single ml-5 fill-height" data-test="wahlscheingruende-input-0">
                         <!---->
                         <div class="v-input__control">
-                          <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-0">
+                          <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-0">
                             <div class="v-field__overlay"></div>
                             <div class="v-field__loader">
                               <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
@@ -68,7 +68,11 @@
                               </div>
                               <!---->
                             </div>
-                            <!---->
+                            <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
+                              <div class="v-field__clearable"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Clear Beschlussergebnis"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                                    <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
+                                  </svg></i></div>
+                            </transition-stub>
                             <div class="v-field__append-inner">
                               <!----><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable v-autocomplete__menu-icon" role="button" aria-hidden="false" tabindex="-1" aria-label="Open" title="Open"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                                   <path d="M7,10L12,15L17,10H7Z"></path>
@@ -95,7 +99,7 @@
                     <div data-v-f1835dbc="" class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-input--disabled v-text-field v-autocomplete v-autocomplete--single fill-height" data-test="stimmzettelgruende-input-id1-0">
                       <!---->
                       <div class="v-input__control">
-                        <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--disabled v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-5">
+                        <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--disabled v-field--dirty v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-5">
                           <div class="v-field__overlay"></div>
                           <div class="v-field__loader">
                             <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
@@ -151,7 +155,7 @@
                     <div data-v-f1835dbc="" class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--disabled v-text-field v-autocomplete v-autocomplete--single fill-height" data-test="stimmzettelgruende-input-id2-0">
                       <!---->
                       <div class="v-input__control">
-                        <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--disabled v-field--dirty v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-10">
+                        <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--disabled v-field--dirty v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr" role="combobox" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-v-10">
                           <div class="v-field__overlay"></div>
                           <div class="v-field__loader">
                             <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
@@ -223,10 +227,10 @@
       </div>
     </form>
   </div>
-  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--elevated v-btn--slim v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-elevated base-text-button" data-test="addBedenklicherWahlbriefRow"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Neuen Beschluss erfassen </span>
+  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--slim v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="addBedenklicherWahlbriefRow"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path></svg></i></span><span class="v-btn__content" data-no-activator=""> Neuen Beschluss erfassen </span>
       <!---->
       <!---->
-    </button><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-elevated base-text-button" data-test="buttonSave" disabled=""><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern</span>
+    </button><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="buttonSave" disabled=""><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern</span>
       <!---->
       <!---->
     </button></div>

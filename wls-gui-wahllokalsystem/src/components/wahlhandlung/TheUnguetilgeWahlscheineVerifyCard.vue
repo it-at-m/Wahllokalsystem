@@ -65,7 +65,6 @@
                     ]"
                     persistent-counter
                     :counter="maxLengthForAbstimmungsergebnis"
-                    clearable
                     rows="1"
                     auto-grow
                     data-test="text-input-abstimmungsergebnis"

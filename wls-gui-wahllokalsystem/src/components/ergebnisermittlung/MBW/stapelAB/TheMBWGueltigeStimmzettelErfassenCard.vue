@@ -2,26 +2,32 @@
   <v-card>
     <v-card-title> Gültige Stimmzettel </v-card-title>
     <v-card-text>
-      <!-- todo: form ergänzen -->
-      <the-m-b-w-gueltige-stimmzettel-erfassen-table
-        v-if="wahlbezirkID && wahlID"
-        v-model="modelValue"
-        :wahl-i-d="wahlID"
-        :wahlbezirk-i-d="wahlbezirkID"
-      />
+      <v-form v-model="isGueltigeStimmzettelErfassenTableValid">
+        <the-m-b-w-gueltige-stimmzettel-erfassen-table
+          v-if="wahlbezirkID && wahlID"
+          v-model="modelValue"
+          :wahl-i-d="wahlID"
+          :wahlbezirk-i-d="wahlbezirkID"
+        />
+      </v-form>
     </v-card-text>
     <v-card-title>
       Ungültige Stimmzettel
       <!-- todo: ergebnis importieren wenn thomas ticket fertig ist -->
     </v-card-title>
     <v-card-actions>
-      <base-button-save @click="saveGueltigeErgebnisse" />
+      <base-button-save
+        :disabled="!isGueltigeStimmzettelErfassenTableValid"
+        @click="saveGueltigeErgebnisse"
+      />
     </v-card-actions>
   </v-card>
 </template>
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { PropType } from "vue";
+
+import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
@@ -41,6 +47,8 @@ defineProps({
     required: true,
   },
 });
+
+const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
 
 function saveGueltigeErgebnisse() {
   // todo: add functionality

@@ -25,10 +25,16 @@
           </td>
           <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
           <td>
-            <base-number-input v-model="vorschlag.ergebnisStapelA.ergebnis" />
+            <base-number-input
+              v-model="vorschlag.ergebnisStapelA.ergebnis"
+              :rules="[required]"
+            />
           </td>
           <td>
-            <base-number-input v-model="vorschlag.ergebnisStapelB.ergebnis" />
+            <base-number-input
+              v-model="vorschlag.ergebnisStapelB.ergebnis"
+              :rules="[required]"
+            />
           </td>
           <td>
             {{
@@ -57,6 +63,9 @@ import type { PropType } from "vue";
 import { computed } from "vue";
 
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import { useRules } from "@/composables/common/rules.ts";
+
+const { required } = useRules();
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,

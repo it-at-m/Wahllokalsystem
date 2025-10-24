@@ -168,6 +168,11 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.SrwBawAB, DtoStapelArtEnum.SrwBawAB],
       [StapelArtEnum.SrwBawDUngueltig, DtoStapelArtEnum.SrwBawDUngueltig],
       [StapelArtEnum.SrwBawBC, DtoStapelArtEnum.SrwBawBC],
+      [StapelArtEnum.MbwA, DtoStapelArtEnum.MbwA],
+      [StapelArtEnum.MbwAB, DtoStapelArtEnum.MbwAB],
+      [StapelArtEnum.MbwB, DtoStapelArtEnum.MbwB],
+      [StapelArtEnum.MbwBC, DtoStapelArtEnum.MbwBC],
+      [StapelArtEnum.MbwD, DtoStapelArtEnum.MbwD],
     ])(
       "should_mapDtoStapelart%s_when_givenModelStapelart%s",
       (modelStapelart, dtoStapelart) => {

@@ -92,9 +92,25 @@ export default createVuetify({
     VCardTitle: {
       class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
     },
+    VNumberInput: {
+      persistentClear: true,
+      clearable: true,
+    },
     VProgressLinear: {
       height: 50,
       color: "primary",
+    },
+    VAutocomplete: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VTextField: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VTextarea: {
+      persistentClear: true,
+      clearable: true,
     },
   },
 });

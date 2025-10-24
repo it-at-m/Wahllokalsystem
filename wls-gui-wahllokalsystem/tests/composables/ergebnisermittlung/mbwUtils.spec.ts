@@ -156,7 +156,7 @@ describe("mbwUtils", () => {
       const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
         [];
 
-      const expectedErgebnisseStapelA: Ergebnisse = {
+      const expectedErgebnisseStapelB: Ergebnisse = {
         bezirkUndWahlIDStapelart: {
           stapelArt: StapelArtEnum.MbwB,
           wahlID: wahlID,
@@ -169,7 +169,7 @@ describe("mbwUtils", () => {
         unitUnderTest.getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(
           mockedErgebnisseWithWahlvorschlag
         )
-      ).toStrictEqual(expectedErgebnisseStapelA);
+      ).toStrictEqual(expectedErgebnisseStapelB);
     });
   });
 });

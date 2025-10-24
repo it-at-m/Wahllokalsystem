@@ -37,11 +37,7 @@
                   (value) =>
                     onZulassungsgrundWahlscheinChanged(value, index - 1)
                 "
-              >
-                <template #selection="{ item }">
-                  <div>{{ item.title }}</div>
-                </template>
-              </v-autocomplete>
+              />
             </div>
           </td>
           <td
@@ -64,11 +60,7 @@
                 (value) =>
                   onZulassungsgrundStimmzettelChanged(value, index - 1, wahl)
               "
-            >
-              <template #selection="{ item }">
-                {{ item.title }}
-              </template>
-            </v-autocomplete>
+            />
           </td>
           <td>
             <v-row

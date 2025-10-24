@@ -69,7 +69,10 @@ onUnmounted(() => {
 }
 
 /* #2085 */
-.v-autocomplete__selection {
+.v-autocomplete__selection,
+.v-autocomplete .v-autocomplete__selection-text {
+  white-space: wrap;
   height: auto;
+  word-break: break-word;
 }
 </style>

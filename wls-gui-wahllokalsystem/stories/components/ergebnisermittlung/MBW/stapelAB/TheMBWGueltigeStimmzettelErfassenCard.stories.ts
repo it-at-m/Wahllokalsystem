@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { delay, http, HttpResponse } from "msw";
 
 import TheMBWGueltigeStimmzettelErfassenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenCard.vue";
 
@@ -17,6 +18,18 @@ const meta = {
   args: {
     wahlID,
     wahlbezirkID,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.all("/api/*", async () => {
+          await delay(1000);
+          return new HttpResponse(null, {
+            status: 200,
+          });
+        }),
+      ],
+    },
   },
   decorators: [
     (story) => {

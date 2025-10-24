@@ -6,8 +6,6 @@
         <the-m-b-w-gueltige-stimmzettel-erfassen-table
           v-if="wahlbezirkID && wahlID"
           v-model="modelValue"
-          :wahl-i-d="wahlID"
-          :wahlbezirk-i-d="wahlbezirkID"
         />
       </v-form>
     </v-card-text>

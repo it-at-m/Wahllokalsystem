@@ -75,17 +75,6 @@ const modelValue = defineModel({
   required: true,
 });
 
-defineProps({
-  wahlID: {
-    type: String,
-    required: true,
-  },
-  wahlbezirkID: {
-    type: String,
-    required: true,
-  },
-});
-
 const totalSum = computed(() => {
   let total = 0;
   for (const vorschlag of modelValue.value) {

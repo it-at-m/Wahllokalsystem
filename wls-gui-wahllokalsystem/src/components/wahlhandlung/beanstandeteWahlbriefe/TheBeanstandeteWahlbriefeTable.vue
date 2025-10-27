@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-table>
       <thead>
         <tr>
@@ -17,14 +17,11 @@
         <tr
           v-for="index in maxRows"
           :key="index"
+          class="pseudoHeightThatAllowsCellsToGrowInHeight"
         >
-          <td>
-            <v-row
-              align="center"
-              class="my-2"
-              style="min-width: 350px"
-            >
-              {{ index }}
+          <td class="fill-height columnStyling">
+            <div class="d-flex align-center fill-height">
+              <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
                   zurueckweisungsgrundEnumToDisplayString(
@@ -32,9 +29,8 @@
                   )
                 "
                 label="Beschlussergebnis"
-                class="ml-5"
+                class="ml-5 fill-height"
                 :items="gruendeWahlscheine"
-                hide-details
                 auto-select-first
                 :rules="[required]"
                 :data-test="`wahlscheingruende-input-${index - 1}`"
@@ -43,11 +39,12 @@
                     onZulassungsgrundWahlscheinChanged(value, index - 1)
                 "
               />
-            </v-row>
+            </div>
           </td>
           <td
             v-for="wahl in wahlenState.wahlen"
             :key="`${wahl.wahlID}-${index - 1}`"
+            class="fill-height columnStyling"
           >
             <v-autocomplete
               :model-value="
@@ -55,9 +52,9 @@
                   wahl.beanstandeteWahlbriefe[index - 1] ?? null
                 )
               "
+              class="fill-height"
               label="Beschlussergebnis"
               :items="gruendeStimmzettel"
-              hide-details
               auto-select-first
               :rules="[required]"
               :disabled="_isInputDisabled(index - 1)"
@@ -121,7 +118,7 @@
         </div>
       </div></base-dialog
     >
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -318,7 +315,15 @@ function _isInputDisabled(rowIndex: number) {
 
 <style scoped>
 td {
-  text-align: center;
+  text-align: start;
+}
+
+.pseudoHeightThatAllowsCellsToGrowInHeight {
+  height: 1px; /* see #2085 */
+}
+
+.columnStyling {
+  min-width: 230px;
 }
 
 .context-category {

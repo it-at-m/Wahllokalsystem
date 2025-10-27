@@ -19,10 +19,8 @@
           :key="index"
           class="pseudoHeightThatAllowsCellsToGrowInHeight"
         >
-          <td class="fill-height">
-            <div
-              class="d-flex align-center fill-height wahlscheinReasonStyling"
-            >
+          <td class="fill-height columnStyling">
+            <div class="d-flex align-center fill-height">
               <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
@@ -46,7 +44,7 @@
           <td
             v-for="wahl in wahlenState.wahlen"
             :key="`${wahl.wahlID}-${index - 1}`"
-            class="fill-height"
+            class="fill-height columnStyling"
           >
             <v-autocomplete
               :model-value="
@@ -309,7 +307,7 @@ td {
   height: 1px; /* see #2085 */
 }
 
-.wahlscheinReasonStyling {
+.columnStyling {
   min-width: 230px;
 }
 </style>

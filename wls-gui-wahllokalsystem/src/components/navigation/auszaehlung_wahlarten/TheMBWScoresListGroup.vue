@@ -17,12 +17,11 @@
       "
     />
     <v-list-item
-      title="Stapel d"
+      title="Ungültige Stimmzettel"
       :to="
         routeWithNameAndParams(ROUTE_STAPEL_D, {
           wahlId: wahlId,
           wahlbezirkId: wahlbezirkId,
-          wahlart: WahlWahlartEnum.Mbw,
         })
       "
     />

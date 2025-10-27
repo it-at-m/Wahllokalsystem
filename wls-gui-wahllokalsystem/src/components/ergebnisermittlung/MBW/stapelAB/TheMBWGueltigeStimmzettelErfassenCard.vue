@@ -14,7 +14,7 @@
         :disabled="!isGueltigeStimmzettelErfassenTableValid"
         :loading="isErgebnisseSaving"
         :tabindex="modelValue.length * 2 + 1"
-        @click="saveGueltigeErgebnisse"
+        @click="onSaveClicked"
       />
     </v-card-actions>
   </v-card>
@@ -27,9 +27,7 @@ import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
-import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,
@@ -47,42 +45,17 @@ const props = defineProps({
   },
 });
 
-const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
-  useMbwErgebnisAndWahlvorschlagMapper(props.wahlID, props.wahlbezirkID);
-const { postErgebnisse } = useErgebnisService();
+const { saveGueltigeErgebnisse } = useMbwUtils(
+  props.wahlID,
+  props.wahlbezirkID
+);
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
 const isErgebnisseSaving = ref<boolean>(false);
 
-async function saveGueltigeErgebnisse() {
-  try {
-    isErgebnisseSaving.value = true;
-
-    await postErgebnisse(
-      props.wahlbezirkID,
-      props.wahlID,
-      StapelArtEnum.MbwA,
-      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
-        StapelArtEnum.MbwA,
-        modelValue.value
-      ),
-      true
-    );
-
-    await postErgebnisse(
-      props.wahlbezirkID,
-      props.wahlID,
-      StapelArtEnum.MbwB,
-      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
-        StapelArtEnum.MbwB,
-        modelValue.value
-      ),
-      true
-    );
-  } catch {
-    throw new Error("Fehler beim Speichern der Ergebnisse");
-  } finally {
-    isErgebnisseSaving.value = false;
-  }
+async function onSaveClicked() {
+  isErgebnisseSaving.value = true;
+  await saveGueltigeErgebnisse(modelValue.value);
+  isErgebnisseSaving.value = false;
 }
 </script>

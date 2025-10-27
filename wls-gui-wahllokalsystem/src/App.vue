@@ -5,7 +5,9 @@
       <v-container fluid>
         <router-view v-slot="{ Component }">
           <v-fade-transition mode="out-in">
-            <component :is="Component" />
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
           </v-fade-transition>
         </router-view>
       </v-container>

@@ -304,6 +304,6 @@ td {
 }
 
 .pseudoHeightThatAllowsCellsToGrowInHeight {
-  height: 1px; /* see 2085 */
+  height: 1px; /* see #2085 */
 }
 </style>

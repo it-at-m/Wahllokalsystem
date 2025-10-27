@@ -105,25 +105,19 @@
           Zu löschende Zeile: Wahlschein Nummer {{ rowIndexToDelete + 1 }}
         </div>
         <div>
-          <v-card
-            class="mt-5"
-            variant="outlined"
-            color="primary"
-          >
-            <v-table striped="even">
-              <tbody>
-                <tr
-                  v-for="(context, index) in contextForDeletion"
-                  :key="index"
-                >
-                  <td style="text-align: left; width: 300px; font-weight: bold">
-                    {{ context.category }}
-                  </td>
-                  <td style="text-align: left">{{ context.beschluss }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-card>
+          <v-table striped="even">
+            <tbody>
+              <tr
+                v-for="(context, index) in contextForDeletion"
+                :key="index"
+              >
+                <td class="context-category">
+                  {{ context.category }}
+                </td>
+                <td class="text-left">{{ context.beschluss }}</td>
+              </tr>
+            </tbody>
+          </v-table>
         </div>
       </div></base-dialog
     >
@@ -325,5 +319,11 @@ function _isInputDisabled(rowIndex: number) {
 <style scoped>
 td {
   text-align: center;
+}
+
+.context-category {
+  text-align: left;
+  width: 300px;
+  font-weight: bold;
 }
 </style>

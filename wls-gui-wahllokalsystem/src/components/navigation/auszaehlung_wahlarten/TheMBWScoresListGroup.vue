@@ -16,12 +16,21 @@
         })
       "
     />
+    <v-list-item
+      title="Ungültige Stimmzettel"
+      :to="
+        routeWithNameAndParams(ROUTE_STAPEL_D, {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        })
+      "
+    />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
+import { ROUTE_AUSZAEHLUNG_STIMMZETTEL, ROUTE_STAPEL_D } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { routeWithNameAndParams } = useNavigationUtils();

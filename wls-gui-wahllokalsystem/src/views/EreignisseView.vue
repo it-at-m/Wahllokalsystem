@@ -13,10 +13,12 @@
     <v-card-actions>
       <base-text-button
         prepend-icon="$add"
+        active
         @click="onAddEreignisClicked()"
         >Ereignis hinzufügen</base-text-button
       >
       <base-button-save
+        :active="false"
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
         @click="onSaveClicked"

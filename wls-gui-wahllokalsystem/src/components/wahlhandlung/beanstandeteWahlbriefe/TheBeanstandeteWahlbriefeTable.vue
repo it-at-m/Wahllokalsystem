@@ -101,11 +101,23 @@
           haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende
           Werte gelöscht:
         </div>
-        <div
-          v-for="context in contextForDeletion"
-          :key="context"
-        >
-          {{ context }}
+        <div>
+          Zu löschende Zeile: Wahlschein Nummer {{ rowIndexToDelete + 1 }}
+        </div>
+        <div>
+          <v-table striped="even">
+            <tbody>
+              <tr
+                v-for="(context, index) in contextForDeletion"
+                :key="index"
+              >
+                <td class="context-category">
+                  {{ context.category }}
+                </td>
+                <td class="text-left">{{ context.beschluss }}</td>
+              </tr>
+            </tbody>
+          </v-table>
         </div>
       </div></base-dialog
     >
@@ -145,13 +157,14 @@ const maxRows = computed(() => {
 });
 
 const contextForDeletion = computed(() => {
-  const contextLines = [];
+  const contextLines: { category: string; beschluss: string }[] = [];
   if (rowIndexToDelete.value !== null) {
-    contextLines.push(
-      zurueckweisungsgrundEnumToDisplayString(
+    contextLines.push({
+      category: "Wahlschein",
+      beschluss: zurueckweisungsgrundEnumToDisplayString(
         wahlscheinGruende.value[rowIndexToDelete.value]
-      ) + " (Wahlschein)"
-    );
+      ),
+    });
     wahlenState.value.wahlen?.map((wahl) => {
       if (rowIndexToDelete.value !== null) {
         const beanstandeterWahlbrief =
@@ -160,10 +173,12 @@ const contextForDeletion = computed(() => {
             wahl.wahlID
           );
         if (beanstandeterWahlbrief != null) {
-          contextLines.push(
-            zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
-              ` (Stimmzettelumschlag für ${wahl.name})`
-          );
+          contextLines.push({
+            category: `Stimmzettelumschlag für ${wahl.name}`,
+            beschluss: zurueckweisungsgrundEnumToDisplayString(
+              beanstandeterWahlbrief
+            ),
+          });
         }
       }
     });
@@ -304,5 +319,11 @@ function _isInputDisabled(rowIndex: number) {
 <style scoped>
 td {
   text-align: center;
+}
+
+.context-category {
+  text-align: left;
+  width: 300px;
+  font-weight: bold;
 }
 </style>

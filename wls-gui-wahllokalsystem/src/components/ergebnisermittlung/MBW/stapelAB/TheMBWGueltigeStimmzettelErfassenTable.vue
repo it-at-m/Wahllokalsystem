@@ -20,7 +20,7 @@
           :key="vorschlag.wahlvorschlag.identifikator"
         >
           <td>
-            {{ vorschlag.wahlvorschlag.identifikator }}
+            D{{ vorschlag.wahlvorschlag.ordnungszahl }}
           </td>
           <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
           <td>

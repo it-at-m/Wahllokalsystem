@@ -20,14 +20,14 @@
       />
     </v-card-text>
     <v-card-actions>
-      <base-button-refresh
-        :loading="isLoading"
-        @click="forceLoadWahlvorstand()"
-      />
       <base-button-save
         :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
         @click="sendWahlvorstand()"
+      />
+      <base-button-refresh
+        :loading="isLoading"
+        @click="forceLoadWahlvorstand()"
       />
       <the-nachbesetzung-drucken-button />
     </v-card-actions>

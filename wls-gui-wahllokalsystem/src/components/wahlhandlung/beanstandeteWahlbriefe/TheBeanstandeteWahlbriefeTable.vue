@@ -310,6 +310,6 @@ td {
 }
 
 .wahlscheinReasonStyling {
-  min-width: 175px;
+  min-width: 230px;
 }
 </style>

@@ -3,8 +3,6 @@
     v-model="modelValue"
     :label="props.label"
     :rules="props.rules"
-    clearable
-    persistent-clear
     control-variant="hidden"
     @keydown.capture="onKeyDownCapture"
   />

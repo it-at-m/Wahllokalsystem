@@ -144,6 +144,14 @@ export default withMermaid({
                   text: "Löschen von Werten in Tabellen",
                   link: `${PATH_ADR_UI}adr005-delete-table-values.md`,
                 },
+                {
+                  text: "Sichtbarkeit des Löschen-Buttons bei Formelementen",
+                  link: `${PATH_ADR_UI}adr006-delete-button-visibility-on-form-elements.md`,
+                },
+                {
+                  text: "Anordnung des active Button",
+                  link: `${PATH_ADR_UI}adr007-active-button-positioning.md`,
+                },
               ],
             },
           ],

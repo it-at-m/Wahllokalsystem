@@ -23,32 +23,33 @@ describe("mbwUtils", () => {
     unitUnderTest = useMbwErgebnisAndWahlvorschlagMapper(wahlID, wahlbezirkID);
   });
 
-  describe("mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse", () => {
-    it("should_returnErgebnisse_when_givenErgebnisseWithWahlvorschlagList", () => {
-      const ergebnisA1 = createErgebnis();
-      const ergebnisA2 = createErgebnis();
-      const ergebnisB1 = createErgebnis();
-      const ergebnisB2 = createErgebnis();
-      const wahlvorschlag1 = createWahlvorschlag();
-      const wahlvorschlag2 = createWahlvorschlag();
+  describe("mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse", () => {
+    const ergebnisA1 = createErgebnis();
+    const ergebnisA2 = createErgebnis();
+    const ergebnisB1 = createErgebnis();
+    const ergebnisB2 = createErgebnis();
+    const wahlvorschlag1 = createWahlvorschlag();
+    const wahlvorschlag2 = createWahlvorschlag();
 
-      const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
-        [
-          {
-            ergebnisStapelA: ergebnisA1,
-            ergebnisStapelB: ergebnisB1,
-            wahlvorschlag: wahlvorschlag1,
-          },
-          {
-            ergebnisStapelA: ergebnisA2,
-            ergebnisStapelB: ergebnisB2,
-            wahlvorschlag: wahlvorschlag2,
-          },
-        ];
+    const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] = [
+      {
+        ergebnisStapelA: ergebnisA1,
+        ergebnisStapelB: ergebnisB1,
+        wahlvorschlag: wahlvorschlag1,
+      },
+      {
+        ergebnisStapelA: ergebnisA2,
+        ergebnisStapelB: ergebnisB2,
+        wahlvorschlag: wahlvorschlag2,
+      },
+    ];
+
+    it("should_returnErgebnisseForStapelA_when_givenErgebnisseWithWahlvorschlagList", () => {
+      const stapelArt = StapelArtEnum.MbwA;
 
       const expectedErgebnisseStapelA: Ergebnisse = {
         bezirkUndWahlIDStapelart: {
-          stapelArt: StapelArtEnum.MbwA,
+          stapelArt: stapelArt,
           wahlID: wahlID,
           wahlbezirkID: wahlbezirkID,
         },
@@ -71,54 +72,15 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        unitUnderTest.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+          stapelArt,
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelA);
     });
 
-    it("should_returnErgebnisseWithEmptyErgebnisse_when_givenEmptyErgebnisseWithWahlvorschlagList", () => {
-      const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
-        [];
-      const expectedErgebnisseStapelA: Ergebnisse = {
-        bezirkUndWahlIDStapelart: {
-          stapelArt: StapelArtEnum.MbwA,
-          wahlID: wahlID,
-          wahlbezirkID: wahlbezirkID,
-        },
-        ergebnisse: [],
-      };
-
-      expect(
-        unitUnderTest.mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
-          mockedErgebnisseWithWahlvorschlag
-        )
-      ).toStrictEqual(expectedErgebnisseStapelA);
-    });
-  });
-
-  describe("mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse", () => {
-    it("should_returnErgebnisse_when_givenErgebnisseWithWahlvorschlagList", () => {
-      const ergebnisA1 = createErgebnis();
-      const ergebnisA2 = createErgebnis();
-      const ergebnisB1 = createErgebnis();
-      const ergebnisB2 = createErgebnis();
-      const wahlvorschlag1 = createWahlvorschlag();
-      const wahlvorschlag2 = createWahlvorschlag();
-
-      const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
-        [
-          {
-            ergebnisStapelA: ergebnisA1,
-            ergebnisStapelB: ergebnisB1,
-            wahlvorschlag: wahlvorschlag1,
-          },
-          {
-            ergebnisStapelA: ergebnisA2,
-            ergebnisStapelB: ergebnisB2,
-            wahlvorschlag: wahlvorschlag2,
-          },
-        ];
+    it("should_returnErgebnisseForStapelB_when_givenErgebnisseWithWahlvorschlagList", () => {
+      const stapelArt = StapelArtEnum.MbwB;
 
       const expectedErgebnisseStapelB: Ergebnisse = {
         bezirkUndWahlIDStapelart: {
@@ -145,19 +107,17 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        unitUnderTest.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+          stapelArt,
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelB);
     });
 
-    it("should_retunrErgebnisseWithEmptyErgebnisse_when_givenEmptyErgebnisseWithWahlvorschlagList", () => {
-      const mockedErgebnisseWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag[] =
-        [];
-
-      const expectedErgebnisseStapelB: Ergebnisse = {
+    it("should_returnErgebnisseWithEmptyErgebnisse_when_givenEmptyErgebnisseWithWahlvorschlagList", () => {
+      const expectedErgebnisseStapelA: Ergebnisse = {
         bezirkUndWahlIDStapelart: {
-          stapelArt: StapelArtEnum.MbwB,
+          stapelArt: StapelArtEnum.MbwA,
           wahlID: wahlID,
           wahlbezirkID: wahlbezirkID,
         },
@@ -165,10 +125,27 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
-          mockedErgebnisseWithWahlvorschlag
+        unitUnderTest.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+          StapelArtEnum.MbwA,
+          []
         )
-      ).toStrictEqual(expectedErgebnisseStapelB);
+      ).toStrictEqual(expectedErgebnisseStapelA);
+    });
+
+    it("should_throwError_when_givenInvalidStapelart", () => {
+      Object.values(StapelArtEnum).forEach((stapelArt) => {
+        if (
+          stapelArt !== StapelArtEnum.MbwA &&
+          stapelArt !== StapelArtEnum.MbwB
+        ) {
+          expect(() =>
+            unitUnderTest.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+              stapelArt,
+              mockedErgebnisseWithWahlvorschlag
+            )
+          ).toThrowError();
+        }
+      });
     });
   });
 });

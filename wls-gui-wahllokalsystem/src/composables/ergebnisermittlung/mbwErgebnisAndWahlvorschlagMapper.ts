@@ -7,7 +7,8 @@ export function useMbwErgebnisAndWahlvorschlagMapper(
   wahlID: string,
   wahlbezirkID: string
 ) {
-  function mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
+  function mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+    stapelArt: StapelArtEnum,
     list: MbwErgebnisseAndWahlvorschlag[]
   ) {
     const ergebnisse: Ergebnis[] = list.map((ergebnisseAndWahlvorschlag) => ({
@@ -15,13 +16,13 @@ export function useMbwErgebnisAndWahlvorschlagMapper(
       kandidatID: null,
       wahlvorschlagsOrdnungszahl:
         ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-      ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis,
+      ergebnis: _getErgebnisByStapelart(stapelArt, ergebnisseAndWahlvorschlag),
       numIndex: null,
     }));
 
     return {
       bezirkUndWahlIDStapelart: {
-        stapelArt: StapelArtEnum.MbwA,
+        stapelArt: stapelArt,
         wahlID: wahlID,
         wahlbezirkID: wahlbezirkID,
       },
@@ -29,30 +30,22 @@ export function useMbwErgebnisAndWahlvorschlagMapper(
     };
   }
 
-  function mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
-    list: MbwErgebnisseAndWahlvorschlag[]
+  function _getErgebnisByStapelart(
+    stapelArt: StapelArtEnum,
+    ergebnisseAndWahlvorschlag: MbwErgebnisseAndWahlvorschlag
   ) {
-    const ergebnisse: Ergebnis[] = list.map((ergebnisseAndWahlvorschlag) => ({
-      wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
-      kandidatID: null,
-      wahlvorschlagsOrdnungszahl:
-        ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-      ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis,
-      numIndex: null,
-    }));
-
-    return {
-      bezirkUndWahlIDStapelart: {
-        stapelArt: StapelArtEnum.MbwB,
-        wahlID: wahlID,
-        wahlbezirkID: wahlbezirkID,
-      },
-      ergebnisse: ergebnisse,
-    };
+    if (stapelArt == StapelArtEnum.MbwA) {
+      return ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis;
+    } else if (stapelArt == StapelArtEnum.MbwB) {
+      return ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis;
+    } else {
+      throw new Error(
+        `Für die Stapelart ${stapelArt} können keine Ergebnisse geliefert werden.`
+      );
+    }
   }
 
   return {
-    mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse,
-    mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse,
+    mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse,
   };
 }

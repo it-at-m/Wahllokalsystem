@@ -47,10 +47,8 @@ const props = defineProps({
   },
 });
 
-const {
-  mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse,
-  mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse,
-} = useMbwErgebnisAndWahlvorschlagMapper(props.wahlID, props.wahlbezirkID);
+const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
+  useMbwErgebnisAndWahlvorschlagMapper(props.wahlID, props.wahlbezirkID);
 const { postErgebnisse } = useErgebnisService();
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
@@ -64,7 +62,8 @@ async function saveGueltigeErgebnisse() {
       props.wahlbezirkID,
       props.wahlID,
       StapelArtEnum.MbwA,
-      mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
+      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        StapelArtEnum.MbwA,
         modelValue.value
       ),
       true
@@ -74,7 +73,8 @@ async function saveGueltigeErgebnisse() {
       props.wahlbezirkID,
       props.wahlID,
       StapelArtEnum.MbwB,
-      mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
+      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        StapelArtEnum.MbwB,
         modelValue.value
       ),
       true

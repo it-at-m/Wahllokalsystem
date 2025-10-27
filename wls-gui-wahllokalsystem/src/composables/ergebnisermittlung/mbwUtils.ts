@@ -1,5 +1,7 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -52,8 +54,28 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return ergebnisseStapelB;
   }
 
+  function createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    return {
+      wahlvorschlagID: wahlvorschlag.identifikator,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+      ergebnis: null,
+      numIndex: null,
+    };
+  }
+
+  function sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege: Wahlvorschlaege) {
+    const sortedArray = Array.from(wahlvorschlaege.wahlvorschlaege).sort(
+      (vorschlagA, vorschlagB) =>
+        vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
+    );
+    return new Set(sortedArray);
+  }
+
   return {
     getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList,
     getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList,
+    createEmptyErgebnisForWahlvorschlag,
+    sortWahlvorschlaegeByOrdnungszahl,
   };
 }

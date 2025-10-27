@@ -15,9 +15,9 @@
 
 .v-autocomplete__selection,
 .v-autocomplete .v-autocomplete__selection-text {
-    white-space: normal ;
-    height: auto ;
-    word-break: break-word;
+  white-space: normal;
+  height: auto;
+  word-break: break-word;
 }
 
 .v-btn.v-btn--active:hover > .v-btn__overlay,

@@ -1,5 +1,5 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -10,49 +10,45 @@ export function useMbwErgebnisAndWahlvorschlagMapper(
   function mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
     list: MbwErgebnisseAndWahlvorschlag[]
   ) {
-    const ergebnisseStapelA: Ergebnisse = {
+    const ergebnisse: Ergebnis[] = list.map((ergebnisseAndWahlvorschlag) => ({
+      wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl:
+        ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
+      ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis,
+      numIndex: null,
+    }));
+
+    return {
       bezirkUndWahlIDStapelart: {
         stapelArt: StapelArtEnum.MbwA,
         wahlID: wahlID,
         wahlbezirkID: wahlbezirkID,
       },
-      ergebnisse: [],
+      ergebnisse: ergebnisse,
     };
-    for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelA.ergebnisse.push({
-        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl:
-          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis,
-        numIndex: null,
-      });
-    }
-    return ergebnisseStapelA;
   }
 
   function mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
     list: MbwErgebnisseAndWahlvorschlag[]
   ) {
-    const ergebnisseStapelB: Ergebnisse = {
+    const ergebnisse: Ergebnis[] = list.map((ergebnisseAndWahlvorschlag) => ({
+      wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl:
+        ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
+      ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis,
+      numIndex: null,
+    }));
+
+    return {
       bezirkUndWahlIDStapelart: {
         stapelArt: StapelArtEnum.MbwB,
         wahlID: wahlID,
         wahlbezirkID: wahlbezirkID,
       },
-      ergebnisse: [],
+      ergebnisse: ergebnisse,
     };
-    for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelB.ergebnisse.push({
-        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl:
-          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis,
-        numIndex: null,
-      });
-    }
-    return ergebnisseStapelB;
   }
 
   return {

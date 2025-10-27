@@ -20,7 +20,9 @@
           class="pseudoHeightThatAllowsCellsToGrowInHeight"
         >
           <td class="fill-height">
-            <div class="d-flex align-center fill-height">
+            <div
+              class="d-flex align-center fill-height wahlscheinReasonStyling"
+            >
               <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
@@ -305,5 +307,9 @@ td {
 
 .pseudoHeightThatAllowsCellsToGrowInHeight {
   height: 1px; /* see #2085 */
+}
+
+.wahlscheinReasonStyling {
+  min-width: 175px;
 }
 </style>

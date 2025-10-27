@@ -3,8 +3,11 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
-  function getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList(
+export function useMbwErgebnisAndWahlvorschlagMapper(
+  wahlID: string,
+  wahlbezirkID: string
+) {
+  function mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
     list: MbwErgebnisseAndWahlvorschlag[]
   ) {
     const ergebnisseStapelA: Ergebnisse = {
@@ -28,7 +31,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return ergebnisseStapelA;
   }
 
-  function getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(
+  function mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
     list: MbwErgebnisseAndWahlvorschlag[]
   ) {
     const ergebnisseStapelB: Ergebnisse = {
@@ -53,7 +56,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   return {
-    getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList,
-    getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList,
+    mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse,
+    mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse,
   };
 }

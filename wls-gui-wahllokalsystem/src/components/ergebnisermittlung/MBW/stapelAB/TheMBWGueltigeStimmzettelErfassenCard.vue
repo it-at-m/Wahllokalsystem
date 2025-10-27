@@ -27,7 +27,7 @@ import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -48,9 +48,9 @@ const props = defineProps({
 });
 
 const {
-  getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList,
-  getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList,
-} = useMbwUtils(props.wahlID, props.wahlbezirkID);
+  mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse,
+  mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse,
+} = useMbwErgebnisAndWahlvorschlagMapper(props.wahlID, props.wahlbezirkID);
 const { postErgebnisse } = useErgebnisService();
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
@@ -64,7 +64,9 @@ async function saveGueltigeErgebnisse() {
       props.wahlbezirkID,
       props.wahlID,
       StapelArtEnum.MbwA,
-      getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList(modelValue.value),
+      mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        modelValue.value
+      ),
       true
     );
 
@@ -72,7 +74,9 @@ async function saveGueltigeErgebnisse() {
       props.wahlbezirkID,
       props.wahlID,
       StapelArtEnum.MbwB,
-      getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(modelValue.value),
+      mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
+        modelValue.value
+      ),
       true
     );
   } catch {

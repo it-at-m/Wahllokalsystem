@@ -6,7 +6,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
@@ -17,13 +17,13 @@ describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);
 
-  let unitUnderTest: ReturnType<typeof useMbwUtils>;
+  let unitUnderTest: ReturnType<typeof useMbwErgebnisAndWahlvorschlagMapper>;
 
   beforeEach(() => {
-    unitUnderTest = useMbwUtils(wahlID, wahlbezirkID);
+    unitUnderTest = useMbwErgebnisAndWahlvorschlagMapper(wahlID, wahlbezirkID);
   });
 
-  describe("getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList", () => {
+  describe("mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse", () => {
     it("should_returnErgebnisse_when_givenErgebnisseWithWahlvorschlagList", () => {
       const ergebnisA1 = createErgebnis();
       const ergebnisA2 = createErgebnis();
@@ -71,7 +71,7 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList(
+        unitUnderTest.mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelA);
@@ -90,14 +90,14 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList(
+        unitUnderTest.mapStapelAFromErgebnisseAndWahlvorschlagListToErgebnisse(
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelA);
     });
   });
 
-  describe("getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList", () => {
+  describe("mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse", () => {
     it("should_returnErgebnisse_when_givenErgebnisseWithWahlvorschlagList", () => {
       const ergebnisA1 = createErgebnis();
       const ergebnisA2 = createErgebnis();
@@ -145,7 +145,7 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(
+        unitUnderTest.mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelB);
@@ -165,7 +165,7 @@ describe("mbwUtils", () => {
       };
 
       expect(
-        unitUnderTest.getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(
+        unitUnderTest.mapStapelBFromErgebnisseAndWahlvorschlagListToErgebnisse(
           mockedErgebnisseWithWahlvorschlag
         )
       ).toStrictEqual(expectedErgebnisseStapelB);

@@ -19,9 +19,7 @@
           v-for="(vorschlag, index) in modelValue"
           :key="vorschlag.wahlvorschlag.identifikator"
         >
-          <td>
-            D{{ vorschlag.wahlvorschlag.ordnungszahl }}
-          </td>
+          <td>D{{ vorschlag.wahlvorschlag.ordnungszahl }}</td>
           <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
           <td>
             <base-number-input

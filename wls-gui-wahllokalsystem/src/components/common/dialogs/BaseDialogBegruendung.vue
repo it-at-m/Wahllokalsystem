@@ -27,7 +27,6 @@
           rows="1"
           :label="label"
           auto-grow
-          clearable
           autofocus
           persistent-counter
           :counter="maxLengthForBegruendung"

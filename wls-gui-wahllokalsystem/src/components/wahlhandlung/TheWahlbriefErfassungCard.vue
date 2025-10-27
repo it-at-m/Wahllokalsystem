@@ -14,7 +14,6 @@
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
           :max-width="WIDTH"
-          clearable
         />
       </v-form>
     </v-card-text>
@@ -31,7 +30,6 @@
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
           :max-width="WIDTH"
-          clearable
         />
       </v-form>
     </v-card-text>
@@ -45,7 +43,6 @@
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
           :max-width="WIDTH"
-          clearable
         />
       </v-form>
     </v-card-text>
@@ -72,7 +69,6 @@
               label="Anzahl Wahlbriefe"
               :min-width="WIDTH"
               :max-width="WIDTH"
-              clearable
               :disabled="isAnzahlNachtraeglichUeberbrachteInputDisabled"
             />
           </div>

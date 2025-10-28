@@ -1,3 +1,4 @@
+import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 export function useWahlvorschlagUtils() {
@@ -17,8 +18,19 @@ export function useWahlvorschlagUtils() {
       return "";
     }
   }
+
+  function sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege: Wahlvorschlaege) {
+    const sortedArray = Array.from(wahlvorschlaege.wahlvorschlaege).sort(
+      (vorschlagA, vorschlagB) =>
+        vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
+    );
+    wahlvorschlaege.wahlvorschlaege = new Set(sortedArray);
+    return wahlvorschlaege;
+  }
+
   return {
     getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
+    sortWahlvorschlaegeByOrdnungszahl,
   };
 }

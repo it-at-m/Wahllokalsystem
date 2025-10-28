@@ -6,9 +6,11 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
+const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 
 const storeID = "wahlvorschlaege";
 
@@ -26,7 +28,10 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
     } catch {
       throw new Error("Fehler beim Laden der Wahlvorschläge");
     }
-    _sortWahlvorschlaegeByOrdnungszahl();
+
+    wahlvorschlaege.value.forEach((wahlvorschlaege) =>
+      sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege)
+    );
   }
 
   function getWahlvorschlaegeByWahlIDAndWahlbezirkID(
@@ -57,19 +62,6 @@ export const useWahlvorschlaegeStore = defineStore(storeID, () => {
     return [...wahlvorschlaege].find(
       (wahlvorschlag) => wahlvorschlag.identifikator === wahlvorschlagID
     );
-  }
-
-  function _sortWahlvorschlaegeByOrdnungszahl() {
-    wahlvorschlaege.value.forEach((wahlvorschlag) => {
-      const vorschlaegeSet = wahlvorschlag.wahlvorschlaege;
-
-      const sortedArray = Array.from(vorschlaegeSet).sort(
-        (vorschlagA, vorschlagB) =>
-          vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
-      );
-
-      wahlvorschlag.wahlvorschlaege = new Set(sortedArray);
-    });
   }
 
   return {

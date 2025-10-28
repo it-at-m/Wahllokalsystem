@@ -1,12 +1,17 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { ref } from "vue";
 
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { postErgebnisse } = useErgebnisService();
+const { postErgebnisse, getErgebnisse } = useErgebnisService();
+const { getWahlvorschlaege } = useWahlvorschlaegeService();
+const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -48,5 +53,73 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  return { isErgebnisseSaving, saveGueltigeErgebnisse };
+  async function loadAndCombineErgebnisseAndWahlvorschlaege() {
+    const ergebnisse: MbwErgebnisseAndWahlvorschlag[] = [];
+
+    const wahlvorschlaege = await _loadWahlvorschlaege();
+    const ergebnisseStapelA = await _loadGueltigeErgebnisseByStapelArt(
+      StapelArtEnum.MbwA
+    );
+    const ergebnisseStapelB = await _loadGueltigeErgebnisseByStapelArt(
+      StapelArtEnum.MbwB
+    );
+
+    for (const wahlvorschlag of wahlvorschlaege.wahlvorschlaege) {
+      const ergebnisStapelAForWahlvorschlag =
+        ergebnisseStapelA?.ergebnisse.find(
+          (ergebnis) => ergebnis.wahlvorschlagID === wahlvorschlag.identifikator
+        );
+      const ergebnisStapelBForWahlvorschlag =
+        ergebnisseStapelB?.ergebnisse.find(
+          (ergebnis) => ergebnis.wahlvorschlagID === wahlvorschlag.identifikator
+        );
+
+      ergebnisse.push({
+        wahlvorschlag: wahlvorschlag,
+        ergebnisStapelA:
+          ergebnisStapelAForWahlvorschlag ??
+          _createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
+        ergebnisStapelB:
+          ergebnisStapelBForWahlvorschlag ??
+          _createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
+      });
+    }
+    return ergebnisse;
+  }
+
+  async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
+    try {
+      return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
+    } catch {
+      throw new Error("Fehler beim Laden der Ergebnisse");
+    }
+  }
+
+  async function _loadWahlvorschlaege() {
+    try {
+      const loadedWahlvorschlaege = await getWahlvorschlaege(
+        wahlID,
+        wahlbezirkID
+      );
+      return sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
+    } catch {
+      throw new Error("Fehler beim Laden der Wahlvorschläge");
+    }
+  }
+
+  function _createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    return {
+      wahlvorschlagID: wahlvorschlag.identifikator,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+      ergebnis: null,
+      numIndex: null,
+    };
+  }
+
+  return {
+    isErgebnisseSaving,
+    saveGueltigeErgebnisse,
+    loadAndCombineErgebnisseAndWahlvorschlaege,
+  };
 }

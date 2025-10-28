@@ -14,15 +14,11 @@ import { useRoute } from "vue-router";
 
 import TheMBWGueltigeStimmzettelErfassenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenCard.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const route = useRoute();
-const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const wahlID = computed(() => route.params.wahlId as string);
 
-const wahlbezirkID = computed(() =>
-  getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID.value)
-);
+const wahlID = computed(() => route.params.wahlId as string);
+const wahlbezirkID = computed(() => route.params.wahlbezirkId as string);
 
 const ergebnisse = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
 

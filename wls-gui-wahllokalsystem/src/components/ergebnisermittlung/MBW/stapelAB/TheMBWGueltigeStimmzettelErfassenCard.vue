@@ -45,17 +45,14 @@ const props = defineProps({
   },
 });
 
-const { saveGueltigeErgebnisse } = useMbwUtils(
+const { isErgebnisseSaving, saveGueltigeErgebnisse } = useMbwUtils(
   props.wahlID,
   props.wahlbezirkID
 );
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
-const isErgebnisseSaving = ref<boolean>(false);
 
 async function onSaveClicked() {
-  isErgebnisseSaving.value = true;
   await saveGueltigeErgebnisse(modelValue.value);
-  isErgebnisseSaving.value = false;
 }
 </script>

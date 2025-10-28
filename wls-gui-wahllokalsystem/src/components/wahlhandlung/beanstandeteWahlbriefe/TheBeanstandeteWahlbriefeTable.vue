@@ -324,7 +324,7 @@ td {
 }
 
 .columnStyling {
-  min-width: 230px;
+  min-width: 350px;
 }
 
 .context-category {

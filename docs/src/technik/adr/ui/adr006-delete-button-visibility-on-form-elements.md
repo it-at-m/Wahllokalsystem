@@ -34,6 +34,6 @@ bei Bedarf weiterhin eine individuelle Konfiguration erfolgen kann.
 ## Ausnahmen
 
 Bei der Zulassung der Wahlbriefe gibt es verschiedene Querbezüge zwischen den Feldern. Ein Löschbutton in jedem
-einzelnen Feld würde eine komplexe Löschlogik erfordern. Zusätzlich wurde die Tabelle mit den vielen Löschbuttons als 
-unübersichtlich empfunden.   
+einzelnen Feld würde eine komplexe Löschlogik erfordern. Zusätzlich wurde die Tabelle mit den vielen Löschbuttons als
+unübersichtlich empfunden.
 Nach fachlicher Abstimmung wird hier deshalb auf die Löschbuttons verzichtet.  

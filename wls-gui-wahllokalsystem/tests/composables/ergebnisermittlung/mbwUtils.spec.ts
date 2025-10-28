@@ -1,4 +1,5 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -31,7 +32,8 @@ vi.mock(
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
-const { createWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
+const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
+  useWahlvorschlaegeTestDataFactory();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -181,6 +183,61 @@ describe("mbwUtils", () => {
       await expect(
         unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
       ).rejects.toThrow();
+    });
+  });
+
+  describe("createEmptyErgebnisForWahlvorschlag", () => {
+    it("should_returnErgebnisWithEmptyErgebnisse_when_givenWahlvorschlag", () => {
+      const wahlvorschlag = createWahlvorschlag();
+
+      const expectedErgebnis: Ergebnis = {
+        wahlvorschlagID: wahlvorschlag.identifikator,
+        kandidatID: null,
+        wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+        ergebnis: null,
+        numIndex: null,
+      };
+
+      expect(
+        unitUnderTest.createEmptyErgebnisForWahlvorschlag(wahlvorschlag)
+      ).toStrictEqual(expectedErgebnis);
+    });
+  });
+
+  describe("sortWahlvorschlaegeByOrdnungszahl", () => {
+    it("should_returnSetOfSortedWahlvorschlaege_when_givenWahlvorschlaege", () => {
+      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
+      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
+      const wahlvorschlag3 = prepareWahlvorschlag().ordnungszahl(3).build();
+      const wahlvorschlag4 = prepareWahlvorschlag().ordnungszahl(4).build();
+
+      const unsortedWahlvorschlaege = prepareWahlvorschlaege()
+        .wahlvorschlaege(
+          new Set([
+            wahlvorschlag4,
+            wahlvorschlag2,
+            wahlvorschlag1,
+            wahlvorschlag3,
+          ])
+        )
+        .build();
+
+      const sortedWahlvorschlaege =
+        unitUnderTest.sortWahlvorschlaegeByOrdnungszahl(
+          unsortedWahlvorschlaege
+        );
+
+      let expectedOrdnungszahl = 1;
+      sortedWahlvorschlaege.forEach((wahlvorschlag) => {
+        expect(wahlvorschlag.ordnungszahl).toBe(expectedOrdnungszahl);
+        expectedOrdnungszahl++;
+      });
+      expect(Array.from(sortedWahlvorschlaege)).toEqual([
+        wahlvorschlag1,
+        wahlvorschlag2,
+        wahlvorschlag3,
+        wahlvorschlag4,
+      ]);
     });
   });
 });

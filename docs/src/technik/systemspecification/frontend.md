@@ -1,6 +1,6 @@
 # Frontend
 
-## Struktur
+## Dateistruktur
 
 ::: details Grafische Darstellung
 
@@ -97,10 +97,78 @@ in `tests/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.spec
 Bei den Tests zu Komponenten gibt es zusätzlich, parallel zu den Testfiles, einen Ordner `__snapshots__`.
 Dieser enthält die Referenzen für die Darstellung für [Komponententest](#komponententests).
 
-## Komponenten
+## UI-Struktur
 
 Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/scaling-up/sfc.html) zusammengesetzt. Dabei verwenden wir Typescript und die
 [Composition-API](https://vuejs.org/guide/introduction.html#composition-api).
+
+### Layout
+
+![Grundlayout der WLS-Gui](/wlsGuiBaseLayout.drawio.png)  
+*Die Grundelemente des Wahllokalsystem UI*
+
+Das Wahllokalsystem UI besteht im Wesentlichen aus 3 Komponenten.
+
+Die `app-bar` stellt dem Nutzer grundlegende Informationen zu seinem Wahlbezirk bereit. Die `navigation` umfasst die
+Navigationselemente der Seite. Und die `router-view` stellt den jeweils angeforderten Inhalt dar.
+
+### router-view
+
+![Grundlayout der WLS-Gui](/structureOfRouterView.drawio.png)
+
+Die `router-view` ist eine Komponente von [vueRouter](https://router.vuejs.org/) um die Darstellung je nach URL zu variieren.
+Meistens wird als dessen Inhalt das `componente`-Element von vueJS verwendet.
+
+> [!IMPORTANT]
+> Wir verwenden `keep-alive` um Daten einer View über den Wechsel hinaus zu behalten.
+
+Im UI kann mann zwischen den einzelnen Views relativ frei navigieren. Die Arbeit auf einer View muss nicht beendet sein.
+Kehrt man später zu der View zurück, soll noch der Zustand vorhanden sein, der vorlag als man die View verlassen hat.
+
+Das lässt sich über zwei Wege erreichen. Zum einen kann man mit Stores arbeiten. Stores stellen einen anwendungsweiten Zustand dar.
+
+Alternativ kann man eine View cachen, sodass beim Wechsel der View die alte nicht abgebaut wird. Wird eine View bei mehreren
+URLs verwendet, muss ein zusätzlicher Key definiert werden die unterschiedlichen URLs unterschiedliche gedachte Views bekommen.
+Wir verwenden dafür den kompletten Pfad.
+
+> [!NOTE]
+> Der zusätzliche Key wird im `keep-alive`-Element über das Attribut `key` realisiert.
+
+> [!NOTE] Beispiel eines Cachings
+> 
+> Für jede Wahl ist zu Erfassen wie viel Stimmzettel in der Wahlurne vorliegen. Dafür wurde eine View erstellt. Im Router
+> wurde eine Route definiert, die unter anderem, als Parameter die `wahlID` enthält. Nur durch diesen Parameter als Teil
+> des Pfades ist es möglich das für Wahl mit der ID-A eine andere gecachte Komponente verwendete wird als bei der Wahl mit ID-B.
+
+Durch die Verwendung der gedachten Komponenten erreichen wir, dass der letzte Bearbeitungszustand erhalten bleibt, können 
+aber im Gegensatz zu Stores die View autonomer und weniger komplex entwickeln.
+
+### Aufbau von Views
+
+![Aaufbau einer View](/newFrontendArchitecture.drawio.png)
+*Übersicht der Arten an Elementen die zur Erstellung einer View verwendet werden*
+
+Eine View stellt Informationen und Aktionen zu einem Thema bereit.
+
+Dazu werden `SingelUse`-Komponenten, also Komponenten die nur einmal je View vorkommen sollen, verwendet. Diese wiederrum
+setzen sich wiederum aus `SingleUse`- oder `Basis`-Komponenten zusammen.
+
+`Views` und `SingleUse`-Komponenten können auf Stores zugreifen. `Basis`-Komponenten soll das nicht. Die `Views` und die
+Komponenten können Composables verwenden.
+
+> [!IMPORTANT]
+> Dadurch das alle Komponenten Composables nutzen dürfen, wäre es auch denkbar das eine `Basis`-Komponente, ein Speichern
+> ausführt. Das ist aber aufgabe einer `SingleUse`-Komponente. `Basis`-Komponenten verwenden Composables primär zur
+> Validierung oder Formatierung, aber keine komplexere Logik.
+
+> [!Note] Beispiel: Zählen der Stimmzettel
+> Diese View besteht nur einer SingleUse-Komponente zur Erfassung der Daten. Diese SingleUse-Komponente verwenden als
+> Basiskomponenten unser NumberInput zur Eingabe von Zahlen, und TimeInput zur Erfassung der Uhrzeit.
+> 
+> Die Property, über die die SingleUse-Komponente bestimmt, ob eine Uhrzeit zu erfassen ist, wird durch die View unter
+> Verwendung des UserStores befüllt.
+> 
+> Die SingleUse-Komponente verwendete ein Composable zur Formatierung von Text.
 
 ## Kommunikation
 

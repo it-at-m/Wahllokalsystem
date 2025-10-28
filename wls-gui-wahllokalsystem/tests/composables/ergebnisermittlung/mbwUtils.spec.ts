@@ -361,14 +361,17 @@ describe("mbwUtils", () => {
       const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
       const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
 
-      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+      const sortedWahlvorschlaege = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(new Set([wahlvorschlag2, wahlvorschlag1]))
+        .wahlvorschlaege(new Set([wahlvorschlag1, wahlvorschlag2]))
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        mockedWahlvorschlaegeModel
+        createWahlvorschlaege()
+      );
+      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
+        sortedWahlvorschlaege
       );
       mockDefinitions.getErgebnisse.mockResolvedValueOnce(null);
       mockDefinitions.getErgebnisse.mockResolvedValueOnce(null);

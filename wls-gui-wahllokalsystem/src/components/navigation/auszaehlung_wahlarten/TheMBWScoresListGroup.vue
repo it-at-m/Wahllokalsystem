@@ -42,7 +42,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_STAPEL_A_AND_B,
-  ROUTE_STAPEL_D
+  ROUTE_STAPEL_D,
 } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 

@@ -72,6 +72,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     isErgebnisseSaving,
     saveGueltigeErgebnisse,
     createEmptyErgebnisForWahlvorschlag,
-    sortWahlvorschlaegeByOrdnungszahl
+    sortWahlvorschlaegeByOrdnungszahl,
   };
 }

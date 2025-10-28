@@ -11,6 +11,7 @@
           >
             Stimmzettelumschlag für {{ wahl.name }}
           </th>
+          <th />
         </tr>
       </thead>
       <tbody>

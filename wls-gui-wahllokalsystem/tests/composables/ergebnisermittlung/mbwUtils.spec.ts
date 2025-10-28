@@ -20,7 +20,7 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   }),
 }));
 vi.mock(
-  "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschalgMapper.ts",
+  "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts",
   () => ({
     useMbwErgebnisAndWahlvorschlagMapper: () => ({
       mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse:
@@ -117,13 +117,11 @@ describe("mbwUtils", () => {
       .build();
 
     it("should_saveErgebnisseForStapelA_when_givenValidErgebnisse", async () => {
-      const mockedErgebnisse: Ergebnisse[] = [
-        ergebnisseStaplA,
-        ergebnisseStaplB,
-      ];
-
-      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValue(
-        mockedErgebnisse
+      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValueOnce(
+        ergebnisseStaplA
+      );
+      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValueOnce(
+        ergebnisseStaplB
       );
 
       expect(unitUnderTest.isErgebnisseSaving.value).toStrictEqual(false);
@@ -135,6 +133,17 @@ describe("mbwUtils", () => {
       await saveErgebnissePromise;
 
       expect(unitUnderTest.isErgebnisseSaving.value).toStrictEqual(false);
+      expect(
+        mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse
+      ).toHaveBeenCalledTimes(2);
+      expect(
+        mockDefinitions
+          .mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mock
+          .calls
+      ).toStrictEqual([
+        [StapelArtEnum.MbwA, mockedErgebnisseWithWahlvorschlag],
+        [StapelArtEnum.MbwB, mockedErgebnisseWithWahlvorschlag],
+      ]);
       expect(mockDefinitions.postErgebnisse).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, StapelArtEnum.MbwA, ergebnisseStaplA, true],
@@ -148,13 +157,11 @@ describe("mbwUtils", () => {
       ergebnisseStaplA.ergebnisse = [];
       ergebnisseStaplB.ergebnisse = [];
 
-      const mockedErgebnisse: Ergebnisse[] = [
-        ergebnisseStaplA,
-        ergebnisseStaplB,
-      ];
-
-      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValue(
-        mockedErgebnisse
+      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValueOnce(
+        ergebnisseStaplA
+      );
+      mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mockReturnValueOnce(
+        ergebnisseStaplB
       );
 
       expect(unitUnderTest.isErgebnisseSaving.value).toStrictEqual(false);
@@ -166,6 +173,17 @@ describe("mbwUtils", () => {
       await saveErgebnissePromise;
 
       expect(unitUnderTest.isErgebnisseSaving.value).toStrictEqual(false);
+      expect(
+        mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse
+      ).toHaveBeenCalledTimes(2);
+      expect(
+        mockDefinitions
+          .mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse.mock
+          .calls
+      ).toStrictEqual([
+        [StapelArtEnum.MbwA, ergebnisseAndWahlvorschlag],
+        [StapelArtEnum.MbwB, ergebnisseAndWahlvorschlag],
+      ]);
       expect(mockDefinitions.postErgebnisse).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.postErgebnisse.mock.calls).toStrictEqual([
         [wahlbezirkID, wahlID, StapelArtEnum.MbwA, ergebnisseStaplA, true],

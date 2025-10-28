@@ -52,22 +52,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function loadWahlvorschlaege(wahlID: string, wahlbezirkID: string) {
-    try {
-      const loadedWahlvorschlaege = await getWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
-      return _sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
-    } catch {
-      throw new Error("Fehler beim Laden der Wahlvorschläge");
-    }
-  }
-
   async function loadAndCombineErgebnisseAndWahlvorschlaege() {
     const ergebnisse: MbwErgebnisseAndWahlvorschlag[] = [];
 
-    const wahlvorschlaege = await loadWahlvorschlaege(wahlID, wahlbezirkID);
+    const wahlvorschlaege = await _loadWahlvorschlaege();
     const ergebnisseStapelA = await _loadGueltigeErgebnisseByStapelArt(
       wahlID,
       wahlbezirkID,
@@ -114,6 +102,18 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  async function _loadWahlvorschlaege() {
+    try {
+      const loadedWahlvorschlaege = await getWahlvorschlaege(
+        wahlID,
+        wahlbezirkID
+      );
+      return _sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
+    } catch {
+      throw new Error("Fehler beim Laden der Wahlvorschläge");
+    }
+  }
+
   function _sortWahlvorschlaegeByOrdnungszahl(
     wahlvorschlaege: Wahlvorschlaege
   ) {
@@ -137,7 +137,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   return {
     isErgebnisseSaving,
     saveGueltigeErgebnisse,
-    loadWahlvorschlaege,
     loadAndCombineErgebnisseAndWahlvorschlaege,
   };
 }

@@ -40,12 +40,8 @@ vi.mock(
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
   useErgebnisseTestDataFactory();
-const {
-  createWahlvorschlaege,
-  createWahlvorschlag,
-  prepareWahlvorschlag,
-  prepareWahlvorschlaege,
-} = useWahlvorschlaegeTestDataFactory();
+const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
+  useWahlvorschlaegeTestDataFactory();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -216,87 +212,8 @@ describe("mbwUtils", () => {
     });
   });
 
-  describe("loadWahlvorschlaege", () => {
-    it("should_loadAndSortWahlvorschlaege_when_givenWahlIdAndWahlbezirkId", async () => {
-      const mockedWahlvorschlaegeModel = createWahlvorschlaege();
-
-      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        mockedWahlvorschlaegeModel
-      );
-
-      const result = await unitUnderTest.loadWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
-
-      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID],
-      ]);
-      expect(result.size).toBe(1);
-    });
-
-    it("should_throwError_when_calledServiceThrowsError", async () => {
-      mockDefinitions.getWahlvorschlaege.mockRejectedValue(
-        new Error("service call failed")
-      );
-
-      await expect(
-        async () =>
-          await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
-      ).rejects.toThrow();
-    });
-
-    it("should_returnWahlvorschlaegeSortedByOrdnungszahl_when_loaded", async () => {
-      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
-      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
-      const wahlvorschlag3 = prepareWahlvorschlag().ordnungszahl(3).build();
-      const wahlvorschlag4 = prepareWahlvorschlag().ordnungszahl(4).build();
-
-      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
-        .wahlID(wahlID)
-        .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(
-          new Set([
-            wahlvorschlag4,
-            wahlvorschlag2,
-            wahlvorschlag1,
-            wahlvorschlag3,
-          ])
-        )
-        .build();
-
-      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        mockedWahlvorschlaegeModel
-      );
-
-      const result = await unitUnderTest.loadWahlvorschlaege(
-        wahlID,
-        wahlbezirkID
-      );
-
-      const sortedWahlvorschlaegeAfterLoading = Array.from(result);
-
-      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID],
-      ]);
-      expect(result.size).toBe(4);
-
-      let expectedOrdnungszahl = 1;
-      sortedWahlvorschlaegeAfterLoading.forEach((wahlvorschlag) => {
-        expect(wahlvorschlag.ordnungszahl).toBe(expectedOrdnungszahl);
-        expectedOrdnungszahl++;
-      });
-      expect(sortedWahlvorschlaegeAfterLoading).toEqual([
-        wahlvorschlag1,
-        wahlvorschlag2,
-        wahlvorschlag3,
-        wahlvorschlag4,
-      ]);
-    });
-  });
-
   describe("loadAndCombineErgebnisseAndWahlvorschlaege", () => {
-    it("should_returnMbwErgebnisseAndWahlvorschlaegeList_when_called", async () => {
+    it("should_loadErgebnisseAndWahlvorschlaegeAndSortAndReturnMbwErgebnisseAndWahlvorschlaegeList_when_called", async () => {
       const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
       const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
 
@@ -401,10 +318,29 @@ describe("mbwUtils", () => {
       const result =
         await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege();
 
+      let expectedOrdnungszahl = 1;
+
+      result.forEach((ergebnisseAndwWahlvorschlag) => {
+        expect(ergebnisseAndwWahlvorschlag.wahlvorschlag.ordnungszahl).toBe(
+          expectedOrdnungszahl
+        );
+        expectedOrdnungszahl++;
+      });
       expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID],
       ]);
       expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_throwError_when_calledServiceThrowsError", async () => {
+      mockDefinitions.getWahlvorschlaege.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(
+        async () =>
+          await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
+      ).rejects.toThrow();
     });
 
     it("should_returnErgebnisseWithEmptyErgebnisse_when_noDataFromApiCallGiven", async () => {

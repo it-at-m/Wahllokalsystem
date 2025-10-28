@@ -12,12 +12,20 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),
+  getErgebnisse: vi.fn(),
+  getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
+    getErgebnisse: mockDefinitions.getErgebnisse,
+  }),
+}));
+vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
+  useWahlvorschlaegeService: () => ({
+    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
   }),
 }));
 vi.mock(
@@ -31,9 +39,14 @@ vi.mock(
 );
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { createErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
-const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
-  useWahlvorschlaegeTestDataFactory();
+const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
+  useErgebnisseTestDataFactory();
+const {
+  createWahlvorschlaege,
+  createWahlvorschlag,
+  prepareWahlvorschlag,
+  prepareWahlvorschlaege,
+} = useWahlvorschlaegeTestDataFactory();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -222,14 +235,45 @@ describe("mbwUtils", () => {
     });
   });
 
-  describe("sortWahlvorschlaegeByOrdnungszahl", () => {
-    it("should_returnSetOfSortedWahlvorschlaege_when_givenWahlvorschlaege", () => {
+  describe("loadWahlvorschlaege", () => {
+    it("should_loadAndSortWahlvorschlaege_when_givenWahlIdAndWahlbezirkId", async () => {
+      const mockedWahlvorschlaegeModel = createWahlvorschlaege();
+
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+
+      const result = await unitUnderTest.loadWahlvorschlaege(
+        wahlID,
+        wahlbezirkID
+      );
+
+      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID],
+      ]);
+      expect(result.size).toBe(1);
+    });
+
+    it("should_throwError_when_calledServiceThrowsError", async () => {
+      mockDefinitions.getWahlvorschlaege.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(
+        async () =>
+          await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
+      ).rejects.toThrow();
+    });
+
+    it("should_returnWahlvorschlaegeSortedByOrdnungszahl_when_loaded", async () => {
       const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
       const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
       const wahlvorschlag3 = prepareWahlvorschlag().ordnungszahl(3).build();
       const wahlvorschlag4 = prepareWahlvorschlag().ordnungszahl(4).build();
 
-      const unsortedWahlvorschlaege = prepareWahlvorschlaege()
+      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
         .wahlvorschlaege(
           new Set([
             wahlvorschlag4,
@@ -240,22 +284,146 @@ describe("mbwUtils", () => {
         )
         .build();
 
-      const sortedWahlvorschlaege =
-        unitUnderTest.sortWahlvorschlaegeByOrdnungszahl(
-          unsortedWahlvorschlaege
-        );
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+
+      const result = await unitUnderTest.loadWahlvorschlaege(
+        wahlID,
+        wahlbezirkID
+      );
+
+      const sortedWahlvorschlaegeAfterLoading = Array.from(result);
+
+      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID],
+      ]);
+      expect(result.size).toBe(4);
 
       let expectedOrdnungszahl = 1;
-      sortedWahlvorschlaege.forEach((wahlvorschlag) => {
+      sortedWahlvorschlaegeAfterLoading.forEach((wahlvorschlag) => {
         expect(wahlvorschlag.ordnungszahl).toBe(expectedOrdnungszahl);
         expectedOrdnungszahl++;
       });
-      expect(Array.from(sortedWahlvorschlaege)).toEqual([
+      expect(sortedWahlvorschlaegeAfterLoading).toEqual([
         wahlvorschlag1,
         wahlvorschlag2,
         wahlvorschlag3,
         wahlvorschlag4,
       ]);
+    });
+  });
+
+  describe("loadAndCombineErgebnisseAndWahlvorschlaege", () => {
+    it("should_returnMbwErgebnisseAndWahlvorschlaegeList_when_called", async () => {
+      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
+      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
+
+      const ergebnisA1 = createErgebnis();
+      const ergebnisA2 = createErgebnis();
+      const ergebnisB1 = createErgebnis();
+      const ergebnisB2 = createErgebnis();
+
+      const mockedErgebnisseStaplA: Ergebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwA,
+        })
+        .ergebnisse([
+          {
+            wahlvorschlagID: wahlvorschlag1.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
+            ergebnis: ergebnisA1.ergebnis,
+            numIndex: null,
+          },
+          {
+            wahlvorschlagID: wahlvorschlag2.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag2.ordnungszahl,
+            ergebnis: ergebnisA2.ergebnis,
+            numIndex: null,
+          },
+        ])
+        .build();
+
+      const mockedErgebnisseStaplB = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwB,
+        })
+        .ergebnisse([
+          {
+            wahlvorschlagID: wahlvorschlag1.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
+            ergebnis: ergebnisB1.ergebnis,
+            numIndex: null,
+          },
+          {
+            wahlvorschlagID: wahlvorschlag2.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag2.ordnungszahl,
+            ergebnis: ergebnisB2.ergebnis,
+            numIndex: null,
+          },
+        ])
+        .build();
+
+      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .wahlvorschlaege(new Set([wahlvorschlag2, wahlvorschlag1]))
+        .build();
+
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(
+        mockedErgebnisseStaplA
+      );
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(
+        mockedErgebnisseStaplB
+      );
+
+      const expectedResult: MbwErgebnisseAndWahlvorschlag[] = [
+        {
+          ergebnisStapelA: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag1.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+            .ergebnis(ergebnisA1.ergebnis)
+            .build(),
+          ergebnisStapelB: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag1.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+            .ergebnis(ergebnisB1.ergebnis)
+            .build(),
+          wahlvorschlag: wahlvorschlag1,
+        },
+        {
+          ergebnisStapelA: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag2.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+            .ergebnis(ergebnisA2.ergebnis)
+            .build(),
+          ergebnisStapelB: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag2.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+            .ergebnis(ergebnisB2.ergebnis)
+            .build(),
+          wahlvorschlag: wahlvorschlag2,
+        },
+      ];
+
+      const result =
+        await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege();
+
+      expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
+        [wahlID, wahlbezirkID],
+      ]);
+      expect(result).toStrictEqual(expectedResult);
     });
   });
 });

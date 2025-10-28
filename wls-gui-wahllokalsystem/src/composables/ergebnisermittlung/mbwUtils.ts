@@ -57,13 +57,9 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const wahlvorschlaege = await _loadWahlvorschlaege();
     const ergebnisseStapelA = await _loadGueltigeErgebnisseByStapelArt(
-      wahlID,
-      wahlbezirkID,
       StapelArtEnum.MbwA
     );
     const ergebnisseStapelB = await _loadGueltigeErgebnisseByStapelArt(
-      wahlID,
-      wahlbezirkID,
       StapelArtEnum.MbwB
     );
 
@@ -90,11 +86,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return ergebnisse;
   }
 
-  async function _loadGueltigeErgebnisseByStapelArt(
-    wahlID: string,
-    wahlbezirkID: string,
-    stapelArt: StapelArtEnum
-  ) {
+  async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
     } catch {

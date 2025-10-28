@@ -1,57 +1,53 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { ref } from "vue";
+
+import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
-  function getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList(
-    list: MbwErgebnisseAndWahlvorschlag[]
-  ) {
-    const ergebnisseStapelA: Ergebnisse = {
-      bezirkUndWahlIDStapelart: {
-        stapelArt: StapelArtEnum.MbwA,
-        wahlID: wahlID,
-        wahlbezirkID: wahlbezirkID,
-      },
-      ergebnisse: [],
-    };
-    for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelA.ergebnisse.push({
-        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl:
-          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelA.ergebnis,
-        numIndex: null,
-      });
-    }
-    return ergebnisseStapelA;
-  }
+const { postErgebnisse } = useErgebnisService();
 
-  function getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList(
-    list: MbwErgebnisseAndWahlvorschlag[]
+export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
+  const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
+    useMbwErgebnisAndWahlvorschlagMapper(wahlID, wahlbezirkID);
+
+  const isErgebnisseSaving = ref<boolean>(false);
+
+  async function saveGueltigeErgebnisse(
+    ergebnisse: MbwErgebnisseAndWahlvorschlag[]
   ) {
-    const ergebnisseStapelB: Ergebnisse = {
-      bezirkUndWahlIDStapelart: {
-        stapelArt: StapelArtEnum.MbwB,
-        wahlID: wahlID,
-        wahlbezirkID: wahlbezirkID,
-      },
-      ergebnisse: [],
-    };
-    for (const ergebnisseAndWahlvorschlag of list) {
-      ergebnisseStapelB.ergebnisse.push({
-        wahlvorschlagID: ergebnisseAndWahlvorschlag.wahlvorschlag.identifikator,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl:
-          ergebnisseAndWahlvorschlag.wahlvorschlag.ordnungszahl,
-        ergebnis: ergebnisseAndWahlvorschlag.ergebnisStapelB.ergebnis,
-        numIndex: null,
-      });
+    isErgebnisseSaving.value = true;
+
+    try {
+      await postErgebnisse(
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwA,
+        mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+          StapelArtEnum.MbwA,
+          ergebnisse
+        ),
+        true
+      );
+
+      await postErgebnisse(
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwB,
+        mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse(
+          StapelArtEnum.MbwB,
+          ergebnisse
+        ),
+        true
+      );
+    } catch {
+      throw new Error("Fehler beim Speichern der Ergebnisse");
+    } finally {
+      isErgebnisseSaving.value = false;
     }
-    return ergebnisseStapelB;
   }
 
   function createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
@@ -73,9 +69,9 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   return {
-    getErgebnisseStapelAFromErgebnisseAndWahlvorschlagList,
-    getErgebnisseStapelBFromErgebnisseAndWahlvorschlagList,
+    isErgebnisseSaving,
+    saveGueltigeErgebnisse,
     createEmptyErgebnisForWahlvorschlag,
-    sortWahlvorschlaegeByOrdnungszahl,
+    sortWahlvorschlaegeByOrdnungszahl
   };
 }

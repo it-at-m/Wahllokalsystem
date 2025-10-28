@@ -13,7 +13,7 @@ const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis } = useErgebnisseTestDataFactory();
 const { createWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
 
-describe("mbwUtils", () => {
+describe("mbwErgebnisAndWahlvorschalgMapper", () => {
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);
 

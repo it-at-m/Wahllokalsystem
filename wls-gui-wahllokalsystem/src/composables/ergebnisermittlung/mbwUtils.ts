@@ -52,16 +52,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  function createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
-    return {
-      wahlvorschlagID: wahlvorschlag.identifikator,
-      kandidatID: null,
-      wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
-      ergebnis: null,
-      numIndex: null,
-    };
-  }
-
   async function loadWahlvorschlaege(wahlID: string, wahlbezirkID: string) {
     try {
       const loadedWahlvorschlaege = await getWahlvorschlaege(
@@ -103,10 +93,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         wahlvorschlag: wahlvorschlag,
         ergebnisStapelA:
           ergebnisStapelAForWahlvorschlag ??
-          createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
+          _createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
         ergebnisStapelB:
           ergebnisStapelBForWahlvorschlag ??
-          createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
+          _createEmptyErgebnisForWahlvorschlag(wahlvorschlag),
       });
     }
     return ergebnisse;
@@ -134,10 +124,19 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return new Set(sortedArray);
   }
 
+  function _createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {
+    return {
+      wahlvorschlagID: wahlvorschlag.identifikator,
+      kandidatID: null,
+      wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
+      ergebnis: null,
+      numIndex: null,
+    };
+  }
+
   return {
     isErgebnisseSaving,
     saveGueltigeErgebnisse,
-    createEmptyErgebnisForWahlvorschlag,
     loadWahlvorschlaege,
     loadAndCombineErgebnisseAndWahlvorschlaege,
   };

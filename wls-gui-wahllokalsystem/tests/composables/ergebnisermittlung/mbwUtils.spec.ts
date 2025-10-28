@@ -1,5 +1,4 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -217,24 +216,6 @@ describe("mbwUtils", () => {
     });
   });
 
-  describe("createEmptyErgebnisForWahlvorschlag", () => {
-    it("should_returnErgebnisWithEmptyErgebnisse_when_givenWahlvorschlag", () => {
-      const wahlvorschlag = createWahlvorschlag();
-
-      const expectedErgebnis: Ergebnis = {
-        wahlvorschlagID: wahlvorschlag.identifikator,
-        kandidatID: null,
-        wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
-        ergebnis: null,
-        numIndex: null,
-      };
-
-      expect(
-        unitUnderTest.createEmptyErgebnisForWahlvorschlag(wahlvorschlag)
-      ).toStrictEqual(expectedErgebnis);
-    });
-  });
-
   describe("loadWahlvorschlaege", () => {
     it("should_loadAndSortWahlvorschlaege_when_givenWahlIdAndWahlbezirkId", async () => {
       const mockedWahlvorschlaegeModel = createWahlvorschlaege();
@@ -423,6 +404,57 @@ describe("mbwUtils", () => {
       expect(mockDefinitions.getWahlvorschlaege.mock.calls).toStrictEqual([
         [wahlID, wahlbezirkID],
       ]);
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_returnErgebnisseWithEmptyErgebnisse_when_noDataFromApiCallGiven", async () => {
+      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
+      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
+
+      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .wahlvorschlaege(new Set([wahlvorschlag2, wahlvorschlag1]))
+        .build();
+
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        mockedWahlvorschlaegeModel
+      );
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(null);
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(null);
+
+      const expectedResult: MbwErgebnisseAndWahlvorschlag[] = [
+        {
+          ergebnisStapelA: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag1.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+            .ergebnis(null)
+            .build(),
+          ergebnisStapelB: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag1.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+            .ergebnis(null)
+            .build(),
+          wahlvorschlag: wahlvorschlag1,
+        },
+        {
+          ergebnisStapelA: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag2.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+            .ergebnis(null)
+            .build(),
+          ergebnisStapelB: prepareErgebnis()
+            .wahlvorschlagID(wahlvorschlag2.identifikator)
+            .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+            .ergebnis(null)
+            .build(),
+          wahlvorschlag: wahlvorschlag2,
+        },
+      ];
+
+      const result =
+        await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege();
+
       expect(result).toStrictEqual(expectedResult);
     });
   });

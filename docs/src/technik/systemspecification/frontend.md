@@ -132,7 +132,7 @@ URLs verwendet, muss ein zusätzlicher Key definiert werden, damit unterschiedli
 Wir verwenden dafür den kompletten Pfad.
 
 > [!NOTE]
-> Der zusätzliche Key wird im `keep-alive`-Element über das Attribut `key` realisiert.
+> Der zusätzliche Key wird auf der Komponente innerhalb von `keep-alive` über das Attribut `key` realisiert.
 
 > [!NOTE] Beispiel eines Cachings
 >

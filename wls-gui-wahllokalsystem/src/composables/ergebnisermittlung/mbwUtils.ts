@@ -1,5 +1,4 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { ref } from "vue";
@@ -7,10 +6,12 @@ import { ref } from "vue";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { postErgebnisse, getErgebnisse } = useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
+const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -63,7 +64,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       StapelArtEnum.MbwB
     );
 
-    for (const wahlvorschlag of wahlvorschlaege) {
+    for (const wahlvorschlag of wahlvorschlaege.wahlvorschlaege) {
       const ergebnisStapelAForWahlvorschlag =
         ergebnisseStapelA?.ergebnisse.find(
           (ergebnis) => ergebnis.wahlvorschlagID === wahlvorschlag.identifikator
@@ -100,20 +101,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         wahlID,
         wahlbezirkID
       );
-      return _sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
+      return sortWahlvorschlaegeByOrdnungszahl(loadedWahlvorschlaege);
     } catch {
       throw new Error("Fehler beim Laden der Wahlvorschläge");
     }
-  }
-
-  function _sortWahlvorschlaegeByOrdnungszahl(
-    wahlvorschlaege: Wahlvorschlaege
-  ) {
-    const sortedArray = Array.from(wahlvorschlaege.wahlvorschlaege).sort(
-      (vorschlagA, vorschlagB) =>
-        vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
-    );
-    return new Set(sortedArray);
   }
 
   function _createEmptyErgebnisForWahlvorschlag(wahlvorschlag: Wahlvorschlag) {

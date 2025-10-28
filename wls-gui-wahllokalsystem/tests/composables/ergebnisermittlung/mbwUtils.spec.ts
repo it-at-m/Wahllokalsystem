@@ -14,6 +14,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
+  sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
@@ -25,6 +26,12 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
   useWahlvorschlaegeService: () => ({
     getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+  }),
+}));
+vi.mock("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts", () => ({
+  useWahlvorschlagUtils: () => ({
+    sortWahlvorschlaegeByOrdnungszahl:
+      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
   }),
 }));
 vi.mock(
@@ -40,8 +47,12 @@ vi.mock(
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
   useErgebnisseTestDataFactory();
-const { createWahlvorschlag, prepareWahlvorschlag, prepareWahlvorschlaege } =
-  useWahlvorschlaegeTestDataFactory();
+const {
+  createWahlvorschlag,
+  createWahlvorschlaege,
+  prepareWahlvorschlag,
+  prepareWahlvorschlaege,
+} = useWahlvorschlaegeTestDataFactory();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -270,14 +281,17 @@ describe("mbwUtils", () => {
         ])
         .build();
 
-      const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
+      const sortedWahlvorschlaege = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(new Set([wahlvorschlag2, wahlvorschlag1]))
+        .wahlvorschlaege(new Set([wahlvorschlag1, wahlvorschlag2]))
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
-        mockedWahlvorschlaegeModel
+        createWahlvorschlaege()
+      );
+      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
+        sortedWahlvorschlaege
       );
       mockDefinitions.getErgebnisse.mockResolvedValueOnce(
         mockedErgebnisseStaplA

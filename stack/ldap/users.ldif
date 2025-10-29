@@ -28,9 +28,53 @@ sn: bwb
 uid: wls_all_bwb
 userPassword: test
 
+dn: uid=wls_kommw_uwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_kommw_uwb
+sn: uwb
+uid: wls_kommw_uwb
+userPassword: test
+
+dn: uid=wls_kommw_bwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_kommw_bwb
+sn: bwb
+uid: wls_kommw_bwb
+userPassword: test
+
+dn: uid=wls_mbw_uwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_mbw_uwb
+sn: uwb
+uid: wls_mbw_uwb
+userPassword: test
+
+dn: uid=wls_mbw_bwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_mbw_bwb
+sn: bwb
+uid: wls_mbw_bwb
+userPassword: test
+
 dn: cn=user,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
 cn: user
 member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
+member: uid=wls_kommw_uwb,ou=people,dc=springframework,dc=org
+member: uid=wls_kommw_bwb,ou=people,dc=springframework,dc=org
+member: uid=wls_mbw_uwb,ou=people,dc=springframework,dc=org
+member: uid=wls_mbw_bwb,ou=people,dc=springframework,dc=org

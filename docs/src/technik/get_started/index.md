@@ -156,4 +156,3 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
    (siehe [Punkt 1](#start-via-gateway): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
 5. die Services `basisdaten-service`, `eai-service`, `ergebnismeldung-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
    http-requests aus dem File für die gewünschte Wahl ausführen (Kommunalwahl mit OBW und SRW: [`initOracleDB_KomW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_Komw.http) oder Migrationsbeiratswahl: [`initOracleDB_MBW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_MBW.http))
-   

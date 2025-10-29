@@ -1,7 +1,7 @@
 INSERT INTO Wahlbezirk (id, wahlbezirkart, nummer, a1, a2, a3, stimmzettelgebietid)
-VALUES ('9899cae4-df9a-4ffc-a940-f20cf2280172', 'UWB', 'komm_uwb', 30, 5, 1,
+VALUES ('9899cae4-df9a-4ffc-a940-f20cf2280172', 'UWB', 'kommw_uwb', 30, 5, 1,
         '00000000-0000-0000-0000-000000000001');
 
 INSERT INTO Wahlbezirk (id, wahlbezirkart, nummer, a1, a2, a3, stimmzettelgebietid)
-VALUES ('9081145c-dc16-4a9b-8255-5c49ddb98c15', 'BWB', 'komm_bwb', 42, 5, 3,
+VALUES ('9081145c-dc16-4a9b-8255-5c49ddb98c15', 'BWB', 'kommw_bwb', 42, 5, 3,
         '00000000-0000-0000-0000-000000000001');

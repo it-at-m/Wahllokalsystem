@@ -78,10 +78,14 @@ flowchart LR
 
 ## Benutzer
 
-| Name        | Passwort | Beschreibung                                                          |
-|-------------|----------|-----------------------------------------------------------------------|
-| wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
-| wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
+| Name          | Passwort | Beschreibung                                                                                                           |
+|---------------|----------|------------------------------------------------------------------------------------------------------------------------|
+| wls_all_bwb   | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_all_uwb   | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_kommw_bwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
+| wls_kommw_uwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
+| wls_mbw_bwb   | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
+| wls_mbw_uwb   | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
 
 > [!CAUTION]
 > Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.
@@ -150,6 +154,6 @@ Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet wer
 3. `refarch-gateway-wls`-Service in Podman oder über das `docker-compose.yml` starten
 4. Das Wahllokalsystem-Frontend in Podman oder über `npm run dev` starten
    (siehe [Punkt 1](#start-via-gateway): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
-5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
-   http-requests aus dem File [`initOracleDB.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB.http)
-   ausführen
+5. die Services `basisdaten-service`, `eai-service`, `ergebnismeldung-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
+   http-requests aus dem File für die gewünschte Wahl ausführen (Kommunalwahl mit OBW und SRW: [`initOracleDB_KommW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_Kommw.http) oder Migrationsbeiratswahl: [`initOracleDB_MBW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_MBW.http))
+   

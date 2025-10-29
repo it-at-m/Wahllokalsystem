@@ -1,4 +1,4 @@
--- update for user wls_kommw_bwb
+-- update for user wls_komw_bwb
 UPDATE Wlsuser
 SET wahlbezirkID     = '9081145c-dc16-4a9b-8255-5c49ddb98c14',
     email            = 'dummy@email.de',
@@ -9,7 +9,7 @@ SET wahlbezirkID     = '9081145c-dc16-4a9b-8255-5c49ddb98c14',
     wbid_wahlnummer  = '{"wbid_wahlnummer": [{"wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14", "wahlnummer": "0", "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409"}, {"wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c15", "wahlnummer": "1", "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1"}]}'
 WHERE id in ('00000000-0000-0000-0000-000000000006');
 
--- update for user wls_kommw_uwb
+-- update for user wls_komw_uwb
 UPDATE Wlsuser
 SET wahlbezirkID     = '9899cae4-df9a-4ffc-a940-f20cf2280171',
     email            = 'dummy@email.de',

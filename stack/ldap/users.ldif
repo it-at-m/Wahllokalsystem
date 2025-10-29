@@ -28,24 +28,24 @@ sn: bwb
 uid: wls_all_bwb
 userPassword: test
 
-dn: uid=wls_kommw_uwb,ou=people,dc=springframework,dc=org
+dn: uid=wls_komw_uwb,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: wls_kommw_uwb
+cn: wls_komw_uwb
 sn: uwb
-uid: wls_kommw_uwb
+uid: wls_komw_uwb
 userPassword: test
 
-dn: uid=wls_kommw_bwb,ou=people,dc=springframework,dc=org
+dn: uid=wls_komw_bwb,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: wls_kommw_bwb
+cn: wls_komw_bwb
 sn: bwb
-uid: wls_kommw_bwb
+uid: wls_komw_bwb
 userPassword: test
 
 dn: uid=wls_mbw_uwb,ou=people,dc=springframework,dc=org
@@ -74,7 +74,7 @@ objectclass: groupOfNames
 cn: user
 member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
-member: uid=wls_kommw_uwb,ou=people,dc=springframework,dc=org
-member: uid=wls_kommw_bwb,ou=people,dc=springframework,dc=org
+member: uid=wls_komw_uwb,ou=people,dc=springframework,dc=org
+member: uid=wls_komw_bwb,ou=people,dc=springframework,dc=org
 member: uid=wls_mbw_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_mbw_bwb,ou=people,dc=springframework,dc=org

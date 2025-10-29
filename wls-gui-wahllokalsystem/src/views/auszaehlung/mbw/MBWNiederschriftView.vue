@@ -4,10 +4,12 @@
     <v-card-subtitle
       >Kontrolle, Übermittlung und Druck der Niederschrift</v-card-subtitle
     >
-    <v-card-actions>
+    <v-card-text>
       <v-form v-model="isFormValid">
         <!-- TBD: Platzhalter für Niederschrift-Komponenten -->
       </v-form>
+    </v-card-text>
+    <v-card-actions>
       <base-button-save
         save-text="Niederschrift senden"
         prepend-icon="$cloudUpload"

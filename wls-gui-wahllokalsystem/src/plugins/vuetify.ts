@@ -4,6 +4,7 @@ import {
   mdiAlert,
   mdiArrowRightBold,
   mdiCheckCircle,
+  mdiCloudUpload,
   mdiContentSave,
   mdiDelete,
   mdiDiameterVariant,
@@ -68,6 +69,7 @@ export default createVuetify({
       summary: mdiTextBoxOutline,
       alert: mdiAlert,
       continue: mdiArrowRightBold,
+      cloudUpload: mdiCloudUpload,
     },
     sets: {
       mdi,

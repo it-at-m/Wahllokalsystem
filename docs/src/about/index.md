@@ -286,3 +286,12 @@ Stapel für die **Oberbürgermeisterwahl**:
   | `B_Ungekennzeichnet` | Zweifelsfrei ungültige Stimmen: Ungekennzeichnete Stimmzettel |           |
   | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
   | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |
+
+#### Nach der Auszählung
+
+📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
+
+Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer eine Wahlniederschrift über die Wahlhandlung sowie die
+Ermittlung und Feststellung des Wahlergebnisses erstellt.
+
+Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.

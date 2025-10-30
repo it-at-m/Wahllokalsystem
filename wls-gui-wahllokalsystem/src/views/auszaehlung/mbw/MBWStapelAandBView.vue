@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import TheMBWGueltigeStimmzettelErfassenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenCard.vue";
@@ -17,16 +17,16 @@ import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
 
 const route = useRoute();
 
-const wahlID = computed(() => route.params.wahlId as string);
-const wahlbezirkID = computed(() => route.params.wahlbezirkId as string);
+const wahlID = route.params.wahlId as string;
+const wahlbezirkID = route.params.wahlbezirkId as string;
 
 const ergebnisse = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
 
 onMounted(async () => {
-  if (wahlID.value && wahlbezirkID.value) {
+  if (wahlID && wahlbezirkID) {
     const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
-      wahlID.value,
-      wahlbezirkID.value
+      wahlID,
+      wahlbezirkID
     );
 
     ergebnisse.value = await loadAndCombineErgebnisseAndWahlvorschlaege();

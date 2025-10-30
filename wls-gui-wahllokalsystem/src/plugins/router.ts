@@ -148,8 +148,12 @@ const routes = [
     component: MBWStapelDView,
   },
   {
-    path: "/:catchAll(.*)*",
+    path: "/notFound",
     name: EXAMPLE_ROUTES_NOTFOUND,
+    component: ExampleError404View,
+  },
+  {
+    path: "/:catchAll(.*)*", //dont call that inside a cached component, it will cause trouble while unmounting
     component: ExampleError404View,
   }, // CatchAll route
 ];

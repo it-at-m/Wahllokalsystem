@@ -6,7 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import TheOWBStapelACard from "@/components/ergebnisermittlung/OBW/stapelA/TheOBWStapelACard.vue";
@@ -20,17 +19,11 @@ const { wahlenActions } = useWahlenStore();
 
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 
-const wahlID = computed(() => route.params.wahlId as string);
-
-watch(
-  () => wahlID.value,
-  (wahlID) => {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-    if (!wahl) {
-      router.push({
-        name: EXAMPLE_ROUTES_NOTFOUND,
-      });
-    }
-  }
-);
+const wahlID = route.params.wahlId as string;
+const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+if (!wahl) {
+  router.push({
+    name: EXAMPLE_ROUTES_NOTFOUND,
+  });
+}
 </script>

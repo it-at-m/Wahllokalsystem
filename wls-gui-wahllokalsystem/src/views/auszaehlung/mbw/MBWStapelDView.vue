@@ -11,7 +11,7 @@
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
@@ -29,10 +29,10 @@ const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { logError } = useLogging("requestStrategies");
 
-const wahlID = computed(() => route.params.wahlId as string);
-const wahlbezirkID = computed(() =>
-  getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID.value)
-);
+const wahlID = route.params.wahlId as string;
+const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+
 const stapelArt = StapelArtEnum.MbwD;
 const isErgebnisSaving = ref(false);
 const ergebnis = ref<Ergebnis>({
@@ -43,12 +43,18 @@ const ergebnis = ref<Ergebnis>({
   numIndex: null,
 });
 
+if (!wahl) {
+  router.push({
+    name: EXAMPLE_ROUTES_NOTFOUND,
+  });
+}
+
 onMounted(async () => {
-  if (wahlbezirkID.value) {
+  if (wahlbezirkID) {
     try {
       const loadedErgebnisse = await getErgebnisse(
-        wahlbezirkID.value,
-        wahlID.value,
+        wahlbezirkID,
+        wahlID,
         stapelArt,
         false
       );
@@ -62,35 +68,22 @@ onMounted(async () => {
   }
 });
 
-watch(
-  () => wahlID.value,
-  (wahlID) => {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-
-    if (!wahl) {
-      router.push({
-        name: EXAMPLE_ROUTES_NOTFOUND,
-      });
-    }
-  }
-);
-
 async function onSave() {
   try {
     isErgebnisSaving.value = true;
     const ergebnisseToSend = {
       bezirkUndWahlIDStapelart: {
         stapelArt,
-        wahlID: wahlID.value,
-        wahlbezirkID: wahlbezirkID.value,
+        wahlID: wahlID,
+        wahlbezirkID: wahlbezirkID,
       },
       ergebnisse: [ergebnis.value],
     } as Ergebnisse;
 
-    if (wahlbezirkID.value && ergebnisseToSend) {
+    if (wahlbezirkID && ergebnisseToSend) {
       await postErgebnisse(
-        wahlbezirkID.value,
-        wahlID.value,
+        wahlbezirkID,
+        wahlID,
         stapelArt,
         ergebnisseToSend,
         true

@@ -155,8 +155,12 @@ const routes = [
     component: MBWNiederschriftView,
   },
   {
-    path: "/:catchAll(.*)*",
+    path: "/notFound",
     name: EXAMPLE_ROUTES_NOTFOUND,
+    component: ExampleError404View,
+  },
+  {
+    path: "/:catchAll(.*)*", //don't call that inside a cached component, it will cause trouble while unmounting
     component: ExampleError404View,
   }, // CatchAll route
 ];

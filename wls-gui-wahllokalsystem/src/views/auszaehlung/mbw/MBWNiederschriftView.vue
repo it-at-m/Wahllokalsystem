@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> Niederschrift für {{ wahlName }}</v-card-title>
+    <v-card-title>Niederschrift</v-card-title>
     <v-card-subtitle
       >Kontrolle, Übermittlung und Druck der Niederschrift</v-card-subtitle
     >
@@ -45,9 +45,6 @@ const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 
 const wahlID = computed(() => route.params.wahlId as string);
-const wahlName = computed(() =>
-  wahlenActions.getWahlNameOrBlankStringById(wahlID.value)
-);
 const isFormValid = ref<null | boolean>(null);
 watch(
   () => wahlID.value,

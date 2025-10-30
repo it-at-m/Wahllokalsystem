@@ -75,12 +75,14 @@ export const useStimmabgabevermerkeStore = defineStore(
 
     async function loadStimmabgabevermerke(
       wahlbezirkID: string,
-      waehlerverzeichnisNummer: number
+      waehlerverzeichnisNummer: number,
+      sendNotification = true
     ) {
       try {
         const loadedStimmabgabevermerke = await getStimmabgabevermerke(
           wahlbezirkID,
-          waehlerverzeichnisNummer
+          waehlerverzeichnisNummer,
+          sendNotification
         );
 
         if (loadedStimmabgabevermerke) {

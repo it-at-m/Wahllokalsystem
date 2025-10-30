@@ -20,7 +20,8 @@ export function useStimmabgabevermerkeTaskFactory(): TaskFactory {
       callback: () =>
         loadStimmabgabevermerke(
           extendedWahlMetaData.wahlbezirkID,
-          extendedWahlMetaData.waehlerverzeichnisNummer
+          extendedWahlMetaData.waehlerverzeichnisNummer,
+          false
         ),
       name: `Stimmabgabevermerke-${extendedWahlMetaData.wahlArt}-WVZ-${extendedWahlMetaData.waehlerverzeichnisNummer}-${extendedWahlMetaData.wahlnummer}`,
     };

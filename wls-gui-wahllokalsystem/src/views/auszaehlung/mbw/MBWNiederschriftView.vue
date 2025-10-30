@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -44,20 +44,16 @@ const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 
-const wahlID = computed(() => route.params.wahlId as string);
 const isFormValid = ref<null | boolean>(null);
-watch(
-  () => wahlID.value,
-  (wahlID) => {
-    const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
-    if (!wahl) {
-      router.push({
-        name: EXAMPLE_ROUTES_NOTFOUND,
-      });
-    }
-  }
-);
+const wahlID = route.params.wahlId as string;
+const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+
+if (!wahl) {
+  router.push({
+    name: EXAMPLE_ROUTES_NOTFOUND,
+  });
+}
 
 function onSendenClicked() {
   // to be implemented

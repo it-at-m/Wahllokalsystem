@@ -24,7 +24,7 @@ const { wahlenActions } = useWahlenStore();
 const { getStimmzettelTermForWahl } = useTextFormatter();
 
 const wahlID = route.params.wahlId as string;
-const wahl = wahlID ? wahlenActions.getWahlOrUndefinedById(wahlID) : undefined;
+const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
 if (!wahl) {
   router.push({

@@ -7,6 +7,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_NIEDERSCHRIFT,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_B,
@@ -24,6 +25,7 @@ import {
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
+import MBWNiederschriftView from "@/views/auszaehlung/mbw/MBWNiederschriftView.vue";
 import MBWStapelAandBView from "@/views/auszaehlung/mbw/MBWStapelAandBView.vue";
 import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
@@ -148,12 +150,17 @@ const routes = [
     component: MBWStapelDView,
   },
   {
+    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",
+    name: ROUTE_NIEDERSCHRIFT,
+    component: MBWNiederschriftView,
+  },
+  {
     path: "/notFound",
     name: EXAMPLE_ROUTES_NOTFOUND,
     component: ExampleError404View,
   },
   {
-    path: "/:catchAll(.*)*", //dont call that inside a cached component, it will cause trouble while unmounting
+    path: "/:catchAll(.*)*", //don't call that inside a cached component, it will cause trouble while unmounting
     component: ExampleError404View,
   }, // CatchAll route
 ];

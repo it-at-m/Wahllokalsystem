@@ -34,6 +34,15 @@
         })
       "
     />
+    <v-list-item
+      title="Niederschrift"
+      :to="
+        routeWithNameAndParams(ROUTE_NIEDERSCHRIFT, {
+          wahlId: wahlId,
+          wahlbezirkId: wahlbezirkId,
+        })
+      "
+    />
   </v-list-group>
 </template>
 
@@ -41,6 +50,7 @@
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+  ROUTE_NIEDERSCHRIFT,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_D,
 } from "@/constants.ts";

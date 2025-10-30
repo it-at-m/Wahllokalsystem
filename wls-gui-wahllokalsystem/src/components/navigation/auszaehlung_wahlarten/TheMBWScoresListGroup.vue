@@ -34,6 +34,7 @@
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
+  ROUTE_NIEDERSCHRIFT,
   ROUTE_SCHNELLMELDUNG,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_D,
@@ -52,5 +53,6 @@ const listItems = [
   { title: "Ungültige Stimmzettel", routeName: ROUTE_STAPEL_D },
   { title: "Gültige Stimmzettel", routeName: ROUTE_STAPEL_A_AND_B },
   { title: "Schnellmeldung", routeName: ROUTE_SCHNELLMELDUNG },
+  { title: "Niederschrift", routeName: ROUTE_NIEDERSCHRIFT },
 ];
 </script>

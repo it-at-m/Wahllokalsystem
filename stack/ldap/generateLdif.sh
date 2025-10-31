@@ -15,7 +15,8 @@ usernames=()
 # Benutzer aus der Eingabedatei lesen und in das Array einfügen
 while IFS= read -r username || [[ -n "$username" ]]; do
     # Entfernen von führenden und nachfolgenden Leerzeichen
-    username=$(echo "$username" | xargs)
+    username="${username#"${username%%[![:space:]]*}"}" # leading whitespace
+    username="${username%"${username##*[![:space:]]}"}" # trailing whitespace
     if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
         usernames+=("$username")
     fi

@@ -9,6 +9,18 @@ fi
 input_file="$1"
 output_file="output.ldif"
 
+# Array für Benutzernamen initialisieren
+usernames=()
+
+# Benutzer aus der Eingabedatei lesen und in das Array einfügen
+while IFS= read -r username || [[ -n "$username" ]]; do
+    # Entfernen von führenden und nachfolgenden Leerzeichen
+    username=$(echo "$username" | xargs)
+    if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
+        usernames+=("$username")
+    fi
+done < "$input_file"
+
 # Erstellen einer neuen LDIF-Datei
 {
     # Gruppen definieren
@@ -24,37 +36,29 @@ output_file="output.ldif"
     echo ""
 
     # Benutzer erstellen
-    while IFS= read -r username || [[ -n "$username" ]]; do # Jede Zeile lesen auch wenn sie nicht mit \n enden
-        # Entfernen von führenden und nachfolgenden Leerzeichen
-        username=$(echo "$username" | xargs)
-        if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
-            echo "dn: uid=${username},ou=people,dc=springframework,dc=org"
-            echo "objectclass: top"
-            echo "objectclass: person"
-            echo "objectclass: organizationalPerson"
-            echo "objectclass: inetOrgPerson"
-            echo "cn: ${username}"
-            echo "sn: ${username}"
-            echo "uid: ${username}"
-            echo "userPassword: test"
-            echo ""
-        fi
-    done < "$input_file"
+    for username in "${usernames[@]}"; do
+        echo "dn: uid=${username},ou=people,dc=springframework,dc=org"
+        echo "objectclass: top"
+        echo "objectclass: person"
+        echo "objectclass: organizationalPerson"
+        echo "objectclass: inetOrgPerson"
+        echo "cn: ${username}"
+        echo "sn: ${username}"
+        echo "uid: ${username}"
+        echo "userPassword: test"
+        echo ""
+    done
 
-    # User der Gruppe zuordnen
+    # Userzuordnung erstellen
     echo "dn: cn=user,ou=groups,dc=springframework,dc=org"
     echo "objectclass: top"
     echo "objectclass: groupOfNames"
     echo "cn: user"
 
-    # Mitglieder hinzufügen
-    while IFS= read -r username || [[ -n "$username" ]]; do # Jede Zeile lesen auch wenn sie nicht mit \n enden
-        # Entfernen von führenden und nachfolgenden Leerzeichen
-        username=$(echo "$username" | xargs)
-        if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
-            echo "member: uid=${username},ou=people,dc=springframework,dc=org"
-        fi
-    done < "$input_file"
+    # Mitglieder der Userzuordnung hinzufügen
+    for username in "${usernames[@]}"; do
+        echo "member: uid=${username},ou=people,dc=springframework,dc=org"
+    done
 
 } > "$output_file"
 

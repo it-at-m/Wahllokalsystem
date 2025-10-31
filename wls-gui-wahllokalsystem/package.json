@@ -29,7 +29,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@vueuse/core": "13.9.0",
+    "@vueuse/core": "14.0.0",
     "localforage": "1.10.0",
     "pinia": "3.0.3",
     "@fontsource/roboto": "5.2.6",

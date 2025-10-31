@@ -77,17 +77,9 @@ onMounted(async () => {
         waehlerverzeichnisNummer
       );
       // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-      b1.value = loadedStimmabgabevermerke.wahldaten[0].vermerke.reduce(
-        (summe, vermerk) => {
-          return (
-            summe +
-            vermerk.stimmzettel.reduce((stimmSumme, stimmzettel) => {
-              return stimmSumme + (stimmzettel.anzahl || 0);
-            }, 0)
-          );
-        },
-        0
-      );
+      b1.value = loadedStimmabgabevermerke.wahldaten[0].vermerke
+        .flatMap((vermerk) => vermerk.stimmzettel)
+        .reduce((summe, stimmzettel) => summe + (stimmzettel.anzahl || 0), 0);
       b2.value = Array.from(
         // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
         loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()

@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 
 const wahlID = "wahlID";
+const wahlbezirkID = "wahlbezirkID";
 
 const meta = {
   component: BaseTableWaehler,
@@ -16,18 +17,18 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 export const WahlbezirksartIsUWB: Story = {
-  async beforeEach() {
+  beforeEach() {
     const userStore = useUserStore(pinia);
     userStore.setUser(createUserLocalDevelopment());
   },
   args: {
     wahlId: wahlID,
-    wahlbezirkId: "wahlbezirkID",
+    wahlbezirkId: wahlbezirkID,
   },
 };
 
 export const WahlbezirksartIsBWB: Story = {
-  async beforeEach() {
+  beforeEach() {
     const userStore = useUserStore(pinia);
     const user = createUserLocalDevelopment();
     user.wahlbezirksArt = "BWB";
@@ -35,6 +36,6 @@ export const WahlbezirksartIsBWB: Story = {
   },
   args: {
     wahlId: wahlID,
-    wahlbezirkId: "wahlbezirkID",
+    wahlbezirkId: wahlbezirkID,
   },
 };

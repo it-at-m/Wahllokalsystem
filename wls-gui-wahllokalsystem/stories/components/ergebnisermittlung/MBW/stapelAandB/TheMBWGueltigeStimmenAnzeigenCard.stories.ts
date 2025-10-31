@@ -48,7 +48,7 @@ export const Default: Story = {
   args: {
     modelValue: _getWahlvorschlaegeAndErgebnisseMbw(),
     wahlID: wahlID,
-    wahlbezirkID: "wahlbezirkID",
+    wahlbezirkID: wahlbezirkID,
   },
 };
 

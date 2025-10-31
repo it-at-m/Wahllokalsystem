@@ -11,7 +11,7 @@ output_file="output.ldif"
 
 # Erstellen einer neuen LDIF-Datei
 {
-    # Fester Teil
+    # Gruppen definieren
     echo "dn: ou=groups,dc=springframework,dc=org"
     echo "objectclass: top"
     echo "objectclass: organizationalUnit"
@@ -23,29 +23,37 @@ output_file="output.ldif"
     echo "ou: people"
     echo ""
 
-    # Benutzer hinzufügen
-    while IFS= read -r username; do
-        echo "dn: uid=${username},ou=people,dc=springframework,dc=org"
-        echo "objectclass: top"
-        echo "objectclass: person"
-        echo "objectclass: organizationalPerson"
-        echo "objectclass: inetOrgPerson"
-        echo "cn: ${username}"
-        echo "sn: ${username}"
-        echo "uid: ${username}"
-        echo "userPassword: test"
-        echo ""
+    # Benutzer erstellen
+    while IFS= read -r username || [[ -n "$username" ]]; do # Jede Zeile lesen auch wenn sie nicht mit \n enden
+        # Entfernen von führenden und nachfolgenden Leerzeichen
+        username=$(echo "$username" | xargs)
+        if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
+            echo "dn: uid=${username},ou=people,dc=springframework,dc=org"
+            echo "objectclass: top"
+            echo "objectclass: person"
+            echo "objectclass: organizationalPerson"
+            echo "objectclass: inetOrgPerson"
+            echo "cn: ${username}"
+            echo "sn: ${username}"
+            echo "uid: ${username}"
+            echo "userPassword: test"
+            echo ""
+        fi
     done < "$input_file"
 
-    # Letzter Teil
+    # User der Gruppe zuordnen
     echo "dn: cn=user,ou=groups,dc=springframework,dc=org"
     echo "objectclass: top"
     echo "objectclass: groupOfNames"
     echo "cn: user"
 
     # Mitglieder hinzufügen
-    while IFS= read -r username; do
-        echo "member: uid=${username},ou=people,dc=springframework,dc=org"
+    while IFS= read -r username || [[ -n "$username" ]]; do # Jede Zeile lesen auch wenn sie nicht mit \n enden
+        # Entfernen von führenden und nachfolgenden Leerzeichen
+        username=$(echo "$username" | xargs)
+        if [ -n "$username" ]; then  # Nur wenn der Benutzername nicht leer ist
+            echo "member: uid=${username},ou=people,dc=springframework,dc=org"
+        fi
     done < "$input_file"
 
 } > "$output_file"

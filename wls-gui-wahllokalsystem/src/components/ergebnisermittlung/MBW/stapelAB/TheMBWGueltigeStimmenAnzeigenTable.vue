@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="vorschlag in modelValue"
+          v-for="vorschlag in sortedModelValue"
           :key="vorschlag.wahlvorschlag.identifikator"
         >
           <td>D {{ vorschlag.wahlvorschlag.ordnungszahl }}</td>
@@ -38,6 +38,12 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/M
 import type { PropType } from "vue";
 
 import { computed } from "vue";
+
+const sortedModelValue = computed(() => {
+  return [...modelValue.value].sort((a, b) => {
+    return a.wahlvorschlag.ordnungszahl - b.wahlvorschlag.ordnungszahl;
+  });
+});
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,

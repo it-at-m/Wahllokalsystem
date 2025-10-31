@@ -55,7 +55,7 @@ export const Default: Story = {
 function _getWahlvorschlaegeAndErgebnisseMbw() {
   const ergebnisse: MbwErgebnisseAndWahlvorschlag[] = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     const ergebnisA = prepareErgebnis()
       .wahlvorschlagID(`D${i}`)
       .ergebnis(i * 2)
@@ -67,7 +67,10 @@ function _getWahlvorschlaegeAndErgebnisseMbw() {
     ergebnisse[i] = {
       ergebnisStapelA: ergebnisA,
       ergebnisStapelB: ergebnisB,
-      wahlvorschlag: prepareWahlvorschlag().identifikator(`D${i}`).build(),
+      wahlvorschlag: prepareWahlvorschlag()
+        .identifikator(`D${i}`)
+        .ordnungszahl(i)
+        .build(),
     };
   }
   return ergebnisse;

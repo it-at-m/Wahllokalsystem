@@ -1,7 +1,7 @@
 -- update for user wls_komw_bwb
 UPDATE Wlsuser
 SET wahlbezirkID     = '9081145c-dc16-4a9b-8255-5c49ddb98c14',
-    email            = 'dummy@email.de',
+    email            = 'wls_komw_bwb@email.de',
     wahltagID        = '827e9e6a-ebe9-483f-a9cd-162b26f348e8',
     wahltag          = '2026-01-01',
     wahlbezirkNummer = '5678',
@@ -12,7 +12,7 @@ WHERE id in ('00000000-0000-0000-0000-000000000006');
 -- update for user wls_komw_uwb
 UPDATE Wlsuser
 SET wahlbezirkID     = '9899cae4-df9a-4ffc-a940-f20cf2280171',
-    email            = 'dummy@email.de',
+    email            = 'wls_komw_uwb@email.de',
     wahltagID        = '827e9e6a-ebe9-483f-a9cd-162b26f348e8',
     wahltag          = '2026-01-01',
     wahlbezirkNummer = '9012',
@@ -23,7 +23,7 @@ WHERE id in ('00000000-0000-0000-0000-000000000007');
 -- update for user wls_mbw_bwb
 UPDATE Wlsuser
 SET wahlbezirkID     = 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b',
-    email            = 'dummy@email.de',
+    email            = 'wls_mbw_bwb@email.de',
     wahltagID        = '5f10d96a-855e-44ec-afdb-7e95484c8e2f',
     wahltag          = '2026-10-10',
     wahlbezirkNummer = '5678',
@@ -34,7 +34,7 @@ WHERE id in ('00000000-0000-0000-0000-000000000004');
 -- update for user wls_mbw_uwb
 UPDATE Wlsuser
 SET wahlbezirkID     = 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a',
-    email            = 'dummy@email.de',
+    email            = 'wls_mbw_uwb@email.de',
     wahltagID        = '5f10d96a-855e-44ec-afdb-7e95484c8e2f',
     wahltag          = '2026-10-10',
     wahlbezirkNummer = '9012',

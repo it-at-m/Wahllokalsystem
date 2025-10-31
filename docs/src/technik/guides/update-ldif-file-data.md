@@ -4,14 +4,14 @@
 
 Der [Auth-Service](/services/backend-services/auth-service) verwendet einen embedded LDAP-Server,
 wenn keine LDAP-Verbindung konfiguriert ist. Die Daten dieses Servers werden über ein ldif-File
-definiert. Ergeben sich dem Anlegen von Wahltermindaten, und damit verbunden die Erstellung von Usern, neue User
-müssen diese im ldif-File nachgetragen werden.
+definiert. Ergibt sich beim Anlegen von Wahltermindaten und damit verbunden bei der Erstellung von Usern, dass neue
+User hinzukommen, müssen diese im LDIF-File nachgetragen werden.
 
 ## Kurzbeschreibung des Vorgehens
 
-Über das Skript `generateLdif.sh` im Ordner `stack/ldap` des Repositories kann ein ldif-File erstellt werden. Als
-Input benötigt das Skript eine Datei, welche zeilenweise die Benutzer enthält. Nach dem Ausführen des Skriptes sind
-die neuen Benutzer und die Zuordnung der Nutzer zu einer Gruppe aus dem erzeugten File zu kopieren und in das
+Über das Skript `generateLdif.sh` im Ordner `stack/ldap` des Repositories kann eine ldif-Datei erstellt werden. Als
+Input benötigt das Skript eine Datei, die zeilenweise die Benutzer enthält. Nach dem Ausführen des Skriptes sind
+die neuen Benutzer und die Zuordnung der Nutzer zu einer Gruppe aus der erzeugten Datei zu kopieren und in das
 bestehende Skript zu integrieren. Danach kann man sich zusätzlich mit den generierten Usern einloggen.
 
 ## Beschreibung im Detail
@@ -65,7 +65,7 @@ Login möglich.
 ### Generierung eines neuen Wahltermins
 
 Wenn ein neuer Wahltermin durch das Wahllokalsystem unterstützt werden soll, muss dieser Wahltermin initialisiert werden.
-Das erfolgt über die Admin-Gui. Im Rahmen des Initialisierungsprozess werden auch Benutzer generiert.
+Das erfolgt über die Admin-GUI. Im Rahmen des Initialisierungsprozesses werden auch Benutzer generiert.
 Für das Beispiel gehen wir davon aus, dass folgende Benutzer generiert wurden:
 
 ```
@@ -76,7 +76,7 @@ ujt9a-wahlbezirk0002
 
 ### Erzeugung des neuen ldif-Files
 
-Die Benutzer sollten in einer Datei vorliegen. Im Beispiel gehen wird davon aus die Datei den namen `exportusers.csv`
+Die Benutzer sollten in einer Datei vorliegen. Im Beispiel gehen wir davon aus, dass die Datei den Namen `exportusers.csv`
 hat und im selben Ordner wie das Skript liegt.
 
 ```bash
@@ -84,7 +84,7 @@ hat und im selben Ordner wie das Skript liegt.
 ```
 *Befehl zum Ausführen des Bash-Skriptes zur Erzeugung des ldif-Files*
 
-Nach erfolgreicher Beendigung des Skripts mit der Datei `ouput.ldif` das generierte ldif-File vor.
+Nach erfolgreicher Beendigung des Skripts liegt die Datei `output.ldif` mit dem generierten ldif-File vor.
 
 ### Zusammenführen der LDIF
 
@@ -138,10 +138,10 @@ member: uid=ujt9a-wahlbezirk0002,ou=people,dc=springframework,dc=org
 member: uid=78nmr-wahlbezirk0003,ou=people,dc=springframework,dc=org
 ```
 
-Aus dem erzeugten File müssen die erzeugten User und die Zuordnung zur Gruppe (siehe der hervorgehobene Bereich)
+Aus dem erzeugten File müssen die erzeugten User und die Zuordnung zur Gruppe (siehe den hervorgehobenen Bereich)
 in das bestehende ldif-File übertragen werden.
 
-Nach einem Neustart des Auth-Service ist, kann zusätzlich ein Login mit den neuen Usern erfolgen.
+Nach einem Neustart des Auth-Service kann zusätzlich ein Login mit den neuen Usern erfolgen.
 
 ### Das finale ldif-File
 

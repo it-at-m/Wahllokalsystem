@@ -2,7 +2,7 @@
 
 ## Kontext
 
-Der [Auth-Service](/services/backend-services/auth-service) verwendet einen embedded LDAP-Server,
+Der [Auth-Service](/services/backend-services/auth-service/index.md) verwendet einen embedded LDAP-Server,
 wenn keine LDAP-Verbindung konfiguriert ist. Die Daten dieses Servers werden über ein ldif-File
 definiert. Ergibt sich beim Anlegen von Wahltermindaten und damit verbunden bei der Erstellung von Usern, dass neue
 User hinzukommen, müssen diese im LDIF-File nachgetragen werden.
@@ -20,7 +20,7 @@ bestehende Skript zu integrieren. Danach kann man sich zusätzlich mit den gener
 
 Gehen wir davon aus, es gibt folgendes ldif-File:
 
-```ldif
+```text
 dn: ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit
@@ -68,7 +68,7 @@ Wenn ein neuer Wahltermin durch das Wahllokalsystem unterstützt werden soll, mu
 Das erfolgt über die Admin-GUI. Im Rahmen des Initialisierungsprozesses werden auch Benutzer generiert.
 Für das Beispiel gehen wir davon aus, dass folgende Benutzer generiert wurden:
 
-```
+```text
 fzh56-wahlbezirk0001
 ujt9a-wahlbezirk0002
 78nmr-wahlbezirk0003
@@ -82,13 +82,14 @@ hat und im selben Ordner wie das Skript liegt.
 ```bash
 ./generateLdif.sh exportusers.csv
 ```
-*Befehl zum Ausführen des Bash-Skriptes zur Erzeugung des ldif-Files*
+
+<em>Befehl zum Ausführen des Bash-Skriptes zur Erzeugung des ldif-Files</em>
 
 Nach erfolgreicher Beendigung des Skripts liegt die Datei `output.ldif` mit dem generierten ldif-File vor.
 
 ### Zusammenführen der LDIF
 
-```ldif:line-numbers {11-19,21-29,31-39,45-47}
+```text:line-numbers {11-19,21-29,31-39,45-47}
 dn: ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit
@@ -145,7 +146,7 @@ Nach einem Neustart des Auth-Service kann zusätzlich ein Login mit den neuen Us
 
 ### Das finale ldif-File
 
-```ldif
+```text
 dn: ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit

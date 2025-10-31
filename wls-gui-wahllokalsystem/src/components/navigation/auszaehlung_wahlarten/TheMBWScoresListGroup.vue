@@ -17,27 +17,11 @@
       "
     />
     <v-list-item
-      title="Ungültige Stimmzettel"
+      v-for="(route, index) in listItems"
+      :key="index"
+      :title="route.title"
       :to="
-        routeWithNameAndParams(ROUTE_STAPEL_D, {
-          wahlId: wahlId,
-          wahlbezirkId: wahlbezirkId,
-        })
-      "
-    />
-    <v-list-item
-      title="Gültige Stimmzettel"
-      :to="
-        routeWithNameAndParams(ROUTE_STAPEL_A_AND_B, {
-          wahlId: wahlId,
-          wahlbezirkId: wahlbezirkId,
-        })
-      "
-    />
-    <v-list-item
-      title="Niederschrift"
-      :to="
-        routeWithNameAndParams(ROUTE_NIEDERSCHRIFT, {
+        routeWithNameAndParams(route.routeName, {
           wahlId: wahlId,
           wahlbezirkId: wahlbezirkId,
         })
@@ -51,6 +35,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_NIEDERSCHRIFT,
+  ROUTE_SCHNELLMELDUNG,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_D,
 } from "@/constants.ts";
@@ -63,4 +48,11 @@ defineProps<{
   wahlId: string;
   wahlbezirkId: string;
 }>();
+
+const listItems = [
+  { title: "Ungültige Stimmzettel", routeName: ROUTE_STAPEL_D },
+  { title: "Gültige Stimmzettel", routeName: ROUTE_STAPEL_A_AND_B },
+  { title: "Schnellmeldung", routeName: ROUTE_SCHNELLMELDUNG },
+  { title: "Niederschrift", routeName: ROUTE_NIEDERSCHRIFT },
+];
 </script>

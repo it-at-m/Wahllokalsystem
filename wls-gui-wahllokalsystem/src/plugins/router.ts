@@ -8,6 +8,7 @@ import {
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_NIEDERSCHRIFT,
+  ROUTE_SCHNELLMELDUNG,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_B,
@@ -26,6 +27,7 @@ import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
 import MBWNiederschriftView from "@/views/auszaehlung/mbw/MBWNiederschriftView.vue";
+import MBWSchnellmeldungView from "@/views/auszaehlung/mbw/MBWSchnellmeldungView.vue";
 import MBWStapelAandBView from "@/views/auszaehlung/mbw/MBWStapelAandBView.vue";
 import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
@@ -148,6 +150,11 @@ const routes = [
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",
     name: ROUTE_STAPEL_D,
     component: MBWStapelDView,
+  },
+  {
+    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/schnellmeldung",
+    name: ROUTE_SCHNELLMELDUNG,
+    component: MBWSchnellmeldungView,
   },
   {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",

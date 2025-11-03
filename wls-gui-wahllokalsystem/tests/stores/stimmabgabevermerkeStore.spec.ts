@@ -2,7 +2,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -53,6 +53,10 @@ describe("stimmabgabevermerkeStore.ts", () => {
       createSpy: vi.fn,
     });
     unitUnderTest = useStimmabgabevermerkeStore(testPinia);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe("loadStimmabgabevermerke", () => {
@@ -149,6 +153,24 @@ describe("stimmabgabevermerkeStore.ts", () => {
         existingStimmabgabevermerke,
       ]);
     });
+
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      'should_callServiceWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      async (argument) => {
+        const wahlbezirkID = "wahlbezirkID";
+        const waehlerverzeichnisNummer = 1;
+
+        await unitUnderTest.loadStimmabgabevermerke(
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
+          argument.sendNotification
+        );
+
+        expect(mockDefinitions.getStimmabgabevermerke.mock.calls).toStrictEqual(
+          [[wahlbezirkID, waehlerverzeichnisNummer, argument.sendNotification]]
+        );
+      }
+    );
   });
 
   describe("isAnyRowThatShouldBeDeletedFilled", () => {

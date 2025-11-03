@@ -1,5 +1,6 @@
 <template>
   <the-ergebnisermittlung-stimmzettelumschlaege-card
+    v-if="wahl"
     :title="`Wahlurne öffnen und ${getStimmzettelTermForWahl(wahl)} zählen`"
     :wahl-id="wahlID"
     :use-time="!isUWB"
@@ -8,7 +9,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnisermittlung/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
@@ -23,23 +23,12 @@ const { isUWB } = storeToRefs(useUserStore());
 const { wahlenActions } = useWahlenStore();
 const { getStimmzettelTermForWahl } = useTextFormatter();
 
-const wahlID = computed(() => route.params.wahlId as string);
-const wahl = computed(() => {
-  if (wahlID.value) {
-    return wahlenActions.getWahlOrUndefinedById(wahlID.value);
-  } else {
-    return undefined;
-  }
-});
+const wahlID = route.params.wahlId as string;
+const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
-watch(
-  () => wahlID.value,
-  () => {
-    if (!wahl.value) {
-      router.push({
-        name: EXAMPLE_ROUTES_NOTFOUND,
-      });
-    }
-  }
-);
+if (!wahl) {
+  router.push({
+    name: EXAMPLE_ROUTES_NOTFOUND,
+  });
+}
 </script>

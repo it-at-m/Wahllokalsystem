@@ -32,13 +32,14 @@ const { params: routeParams } = useRoute();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { smAndDown } = useDisplay();
 
-const wahlID = computed(() => routeParams.wahlId as string);
-const wahlbezirkID = computed(
-  () => getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID.value) ?? ""
-);
+const wahlID = routeParams.wahlId as string;
+const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID) ?? "";
 
 const { wahlvorschlaegeAndSumAboveZero, stapelCUngueltigErgebnisseSum } =
-  useOBWStapelCUtils(wahlID, wahlbezirkID);
+  useOBWStapelCUtils(
+    computed(() => wahlID),
+    computed(() => wahlbezirkID)
+  );
 
 const colsErfassungsCard = computed(() =>
   hasResultsToShow.value ? (smAndDown.value ? 12 : 8) : 12

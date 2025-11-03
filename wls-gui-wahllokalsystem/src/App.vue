@@ -3,10 +3,16 @@
     <the-wls-app-bar />
     <v-main>
       <v-container fluid>
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ route, Component }">
           <v-fade-transition mode="out-in">
+            <!-- Keep alive is fundamental for our app, to work correctly - see doc for frontend architecture -->
             <keep-alive>
-              <component :is="Component" />
+              <component
+                :is="Component"
+                :key="route.fullPath"
+              >
+                <!-- :key attribute is fundamental for our app, to work correctly with keep alive - see doc for frontend architecture -->
+              </component>
             </keep-alive>
           </v-fade-transition>
         </router-view>

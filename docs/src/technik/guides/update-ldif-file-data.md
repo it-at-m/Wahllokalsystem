@@ -10,7 +10,7 @@ User hinzukommen, müssen diese im LDIF-File nachgetragen werden.
 
 ## Kurzbeschreibung des Vorgehens
 
-Über das Skript `generateLdif.sh` im Ordner `stack/ldap` des Repositories kann eine ldif-Datei erstellt werden. Als
+Über das Skript `generateLdif.sh` im Ordner `stack/ldap` des Repositories kann eine LDIF-Datei erstellt werden. Als
 Input benötigt das Skript eine Datei, die zeilenweise die Benutzer enthält. Nach dem Ausführen des Skriptes sind
 die neuen Benutzer und die Zuordnung der Nutzer zu einer Gruppe aus der erzeugten Datei zu kopieren und in das
 bestehende Skript zu integrieren. Danach kann man sich zusätzlich mit den generierten Usern einloggen.
@@ -19,7 +19,7 @@ bestehende Skript zu integrieren. Danach kann man sich zusätzlich mit den gener
 
 ### Ausgangslage
 
-Gehen wir davon aus, es gibt folgendes ldif-File:
+Gehen wir davon aus, es gibt folgendes LDIF-File:
 
 ```text
 dn: ou=groups,dc=springframework,dc=org
@@ -75,7 +75,7 @@ ujt9a-wahlbezirk0002
 78nmr-wahlbezirk0003
 ```
 
-### Erzeugung des neuen ldif-Files
+### Erzeugung des neuen LDIF-Files
 
 Die Benutzer sollten in einer Datei vorliegen. Im Beispiel gehen wir davon aus, dass die Datei den Namen `exportusers.csv`
 hat und im selben Ordner wie das Skript liegt.
@@ -84,9 +84,9 @@ hat und im selben Ordner wie das Skript liegt.
 ./generateLdif.sh exportusers.csv
 ```
 
-<em>Befehl zum Ausführen des Bash-Skriptes zur Erzeugung des ldif-Files</em>
+<em>Befehl zum Ausführen des Bash-Skriptes zur Erzeugung des LDIF-Files</em>
 
-Nach erfolgreicher Beendigung des Skripts liegt die Datei `output.ldif` mit dem generierten ldif-File vor.
+Nach erfolgreicher Beendigung des Skripts liegt die Datei `output.ldif` mit dem generierten LDIF-File vor.
 
 ### Zusammenführen der LDIF
 
@@ -141,11 +141,11 @@ member: uid=78nmr-wahlbezirk0003,ou=people,dc=springframework,dc=org
 ```
 
 Aus dem erzeugten File müssen die erzeugten User und die Zuordnung zur Gruppe (siehe den hervorgehobenen Bereich)
-in das bestehende ldif-File übertragen werden.
+in das bestehende LDIF-File übertragen werden.
 
 Nach einem Neustart des Auth-Service kann zusätzlich ein Login mit den neuen Usern erfolgen.
 
-### Das finale ldif-File
+### Das finale LDIF-File
 
 ```text
 dn: ou=groups,dc=springframework,dc=org

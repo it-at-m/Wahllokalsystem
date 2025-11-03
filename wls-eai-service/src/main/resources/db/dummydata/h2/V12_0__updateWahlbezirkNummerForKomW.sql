@@ -1,6 +1,6 @@
 UPDATE Wahlbezirk
 SET nummer = 'komw_uwb'
-WHERE id in ('9899cae4-df9a-4ffc-a940-f20cf2280171') OR id in ('9899cae4-df9a-4ffc-a940-f20cf2280172');
+WHERE id in ('9899cae4-df9a-4ffc-a940-f20cf2280171', '9899cae4-df9a-4ffc-a940-f20cf2280172');
 
 UPDATE Wahlbezirk
 SET nummer = 'komw_bwb'

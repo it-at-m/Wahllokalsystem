@@ -1,3 +1,4 @@
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -28,9 +29,18 @@ export function useWahlvorschlagUtils() {
     return wahlvorschlaege;
   }
 
+  function sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
+    mbwErgebnisse: MbwErgebnisseAndWahlvorschlag[]
+  ) {
+    return mbwErgebnisse.sort(
+      (a, b) => a.wahlvorschlag.ordnungszahl - b.wahlvorschlag.ordnungszahl
+    );
+  }
+
   return {
     getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
     sortWahlvorschlaegeByOrdnungszahl,
+    sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl,
   };
 }

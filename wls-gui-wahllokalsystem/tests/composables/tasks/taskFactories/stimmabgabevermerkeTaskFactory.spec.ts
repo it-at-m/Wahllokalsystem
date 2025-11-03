@@ -101,11 +101,13 @@ describe("stimmabgabevermerkeFactory.ts", () => {
       expect(mockDefinitions.loadStimmabgabevermerke).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.loadStimmabgabevermerke).toHaveBeenCalledWith(
         extendedWahlMetaDataOne.wahlbezirkID,
-        extendedWahlMetaDataOne.waehlerverzeichnisNummer
+        extendedWahlMetaDataOne.waehlerverzeichnisNummer,
+        false
       );
       expect(mockDefinitions.loadStimmabgabevermerke).toHaveBeenCalledWith(
         extendedWahlMetaDataTwo.wahlbezirkID,
-        extendedWahlMetaDataTwo.waehlerverzeichnisNummer
+        extendedWahlMetaDataTwo.waehlerverzeichnisNummer,
+        false
       );
     });
   });

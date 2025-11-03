@@ -18,7 +18,10 @@ export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
 export const ROUTE_STAPEL_A = "stapelA";
 export const ROUTE_STAPEL_B = "stapelB";
 export const ROUTE_STAPEL_C = "stapelC";
+export const ROUTE_STAPEL_A_AND_B = "stapelAandB";
 export const ROUTE_STAPEL_D = "stapelD";
+export const ROUTE_SCHNELLMELDUNG = "schnellmeldung";
+export const ROUTE_NIEDERSCHRIFT = "niederschrift";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";

@@ -20,7 +20,7 @@ jobs:
       contents: write
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Setup git user
         uses: fregante/setup-git-user@024bc0b8e177d7e77203b48dab6fb45666854b35 # v2.0.2
       - name: Install Java and Maven
@@ -46,7 +46,7 @@ jobs:
       - run-mvn-release-prepare
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           ref: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
 
@@ -63,7 +63,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@6cbd405e2c4e67a21c47fa9e383d020e4e28b836 # v2.3.3
+        uses: softprops/action-gh-release@62c96d0c4e8a889135c1f3a25910db8dbe0e85f7 # v2.3.4
         with:
           files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
           tag_name: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}

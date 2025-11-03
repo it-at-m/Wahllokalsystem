@@ -7,6 +7,7 @@ import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschl
 const { prepareKandidat, prepareWahlvorschlag } =
   useWahlvorschlaegeTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
+const { prepareWahlvorschlaege } = useWahlvorschlaegeTestDataFactory();
 
 describe("wahlvorschlagUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorschlagUtils>;
@@ -89,6 +90,46 @@ describe("wahlvorschlagUtils.ts", () => {
         unitUnderTest.getFirstKandidatNameOrEmptyString(wahlvorschlag);
 
       expect(result).toStrictEqual(kandidatenNameToGet);
+    });
+  });
+
+  describe("sortWahlvorschlaegeByOrdnungszahl", () => {
+    it("should_returnWahlvorschlaegeWithSortedEntries_when_givenWahlvorschlaege", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
+      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
+      const wahlvorschlag3 = prepareWahlvorschlag().ordnungszahl(3).build();
+      const wahlvorschlag4 = prepareWahlvorschlag().ordnungszahl(4).build();
+
+      const mockedWahlvorschlaege = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .wahlvorschlaege(
+          new Set([
+            wahlvorschlag4,
+            wahlvorschlag2,
+            wahlvorschlag1,
+            wahlvorschlag3,
+          ])
+        )
+        .build();
+
+      const sortedWahlvorschlaege =
+        unitUnderTest.sortWahlvorschlaegeByOrdnungszahl(mockedWahlvorschlaege);
+
+      let expectedOrdnungszahl = 1;
+      sortedWahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
+        expect(wahlvorschlag.ordnungszahl).toBe(expectedOrdnungszahl);
+        expectedOrdnungszahl++;
+      });
+      expect(Array.from(sortedWahlvorschlaege.wahlvorschlaege)).toEqual([
+        wahlvorschlag1,
+        wahlvorschlag2,
+        wahlvorschlag3,
+        wahlvorschlag4,
+      ]);
     });
   });
 });

@@ -11,6 +11,7 @@
           >
             Stimmzettelumschlag für {{ wahl.name }}
           </th>
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
                 class="ml-5 fill-height"
                 :items="gruendeWahlscheine"
                 auto-select-first
+                :clearable="false"
                 :rules="[required]"
                 :data-test="`wahlscheingruende-input-${index - 1}`"
                 @update:model-value="
@@ -56,6 +58,7 @@
               label="Beschlussergebnis"
               :items="gruendeStimmzettel"
               auto-select-first
+              :clearable="false"
               :rules="[required]"
               :disabled="_isInputDisabled(index - 1)"
               :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
@@ -323,7 +326,7 @@ td {
 }
 
 .columnStyling {
-  min-width: 230px;
+  min-width: 350px;
 }
 
 .context-category {

@@ -3,7 +3,8 @@
 ## Kontext
 
 Der [Auth-Service](/services/backend-services/auth-service/index.md) verwendet einen embedded LDAP-Server,
-wenn keine LDAP-Verbindung konfiguriert ist. Die Daten dieses Servers werden über ein ldif-File
+wenn keine LDAP-Verbindung konfiguriert ist. Die Daten dieses Servers werden über ein
+[LDIF](https://de.wikipedia.org/wiki/LDAP_Data_Interchange_Format)-File
 definiert. Ergibt sich beim Anlegen von Wahltermindaten und damit verbunden bei der Erstellung von Usern, dass neue
 User hinzukommen, müssen diese im LDIF-File nachgetragen werden.
 

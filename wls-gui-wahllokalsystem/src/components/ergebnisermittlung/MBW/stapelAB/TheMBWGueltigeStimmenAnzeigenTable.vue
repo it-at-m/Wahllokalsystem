@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-table striped="odd">
+    <v-table>
       <thead>
         <tr>
           <th />
@@ -39,20 +39,25 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
-const sortedModelValue = computed(() => {
-  return [...modelValue.value].sort((a, b) => {
-    return a.wahlvorschlag.ordnungszahl - b.wahlvorschlag.ordnungszahl;
-  });
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
+
+const { sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl } =
+  useWahlvorschlagUtils();
+
+const props = defineProps({
+  ergebnisseAndWahlvorschlaege: {
+    type: Array as PropType<MbwErgebnisseAndWahlvorschlag[]>,
+    required: true,
+  },
 });
 
-const modelValue = defineModel({
-  type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,
-  required: true,
-});
+const sortedModelValue = sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
+  props.ergebnisseAndWahlvorschlaege
+);
 
 const totalSum = computed(() => {
   let total = 0;
-  for (const vorschlag of modelValue.value) {
+  for (const vorschlag of props.ergebnisseAndWahlvorschlaege) {
     total =
       total +
       (vorschlag.ergebnisStapelA.ergebnis ?? 0) +

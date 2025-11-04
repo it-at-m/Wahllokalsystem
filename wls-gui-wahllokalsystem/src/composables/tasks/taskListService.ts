@@ -12,6 +12,7 @@ import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfd
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";
 import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
 import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
@@ -27,6 +28,8 @@ export function useTaskListService() {
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
+  const { createTasks: createUrnenwahlSchliessungsuhrzeitTasks } =
+    useUrnenwahlSchliessungsuhrzeitTaskFactory();
   const { createTasks: createKonfigurationsparameterTasks } =
     useKonfigurationsparameterTaskFactory();
   const { createTasks: createUngueltigeWahlscheineTasks } =
@@ -54,6 +57,7 @@ export function useTaskListService() {
       ...createWaehlerverzeichnisTasks(taskFactoryData),
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),
+      ...createUrnenwahlSchliessungsuhrzeitTasks(taskFactoryData),
       ...createKonfigurationsparameterTasks(taskFactoryData),
       ...createWahlscheineTasks(taskFactoryData),
       ...createWahlvorschlaegeTasks(taskFactoryData),

@@ -14,6 +14,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
+  createTasksUrnenwahlSchliessungsuhrzeit: vi.fn(),
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createTasksStimmabgabevermerke: vi.fn(),
@@ -70,6 +71,17 @@ vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
   })),
 }));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts",
+  () => ({
+    useUrnenwahlSchliessungsuhrzeitTaskFactory: vi
+      .fn()
+      .mockImplementation(() => ({
+        createTasks: mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit,
+      })),
+  })
+);
 
 vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
   useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
@@ -196,6 +208,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue([
+        {
+          name: "Urnenwahl Schließungsuhrzeit",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlscheine.mockReturnValue([
         {
           name: "Wahlscheine - " + mockedWahl.name,
@@ -246,6 +264,7 @@ describe("taskListService.ts", () => {
       const expectedTaskNames = [
         "Konfigurationsparameter",
         "Wahlvorstand",
+        "Urnenwahl Schließungsuhrzeit",
         "UngültigeWahlscheine",
         "Waehlerverzeichnis",
         "Kopfdaten - " + mockedWahl.name,
@@ -270,6 +289,9 @@ describe("taskListService.ts", () => {
       ).toHaveBeenCalled();
       expect(mockDefinitions.createWaehlerverzeichnisTasks).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit
+      ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
       expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
       expect(

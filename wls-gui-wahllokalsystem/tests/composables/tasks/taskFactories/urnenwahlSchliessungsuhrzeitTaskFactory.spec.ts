@@ -54,7 +54,7 @@ describe("urnenwahlSchliessungsuhrzeitTaskFactory", () => {
       expect(result.length).toStrictEqual(1);
     });
 
-    it("should_create0ZeroTasks_when_wahlbezirkArtIsBWBW", () => {
+    it("should_createZeroTasks_when_wahlbezirkArtIsBWBW", () => {
       const result = unitUnderTest.createTasks(
         prepareTaskFactoryContext()
           .wahlbezirkArt(WahlbezirksArtEnum.BWB)

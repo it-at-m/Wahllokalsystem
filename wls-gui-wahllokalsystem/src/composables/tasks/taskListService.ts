@@ -47,7 +47,7 @@ export function useTaskListService() {
   const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
-  const { createTasks: createWahlvrobereitungTasks } =
+  const { createTasks: createWahlvorbereitungTasks } =
     useWahlvorbereitungTaskFactory();
 
   function initTasklist() {
@@ -68,7 +68,7 @@ export function useTaskListService() {
       ...createBegruendungTasks(taskFactoryData),
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
-      ...createWahlvrobereitungTasks(taskFactoryData),
+      ...createWahlvorbereitungTasks(taskFactoryData),
     ];
   }
 

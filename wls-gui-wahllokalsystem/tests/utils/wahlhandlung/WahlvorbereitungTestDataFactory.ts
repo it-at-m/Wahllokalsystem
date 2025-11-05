@@ -76,6 +76,10 @@ export function useWahlvorbereitungTestDataFactory() {
     return proxyBuilder<Urnenwahlvorbereitung>(createUrnenwahlvorbereitung());
   }
 
+  function prepareWahlvorbereitung(): Builder<Wahlvorbereitung> {
+    return proxyBuilder<Wahlvorbereitung>(createWahlvorbereitung());
+  }
+
   function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
@@ -103,5 +107,6 @@ export function useWahlvorbereitungTestDataFactory() {
     createWahlvorbereitung,
     createBriefwahlvorbereitungDTO,
     prepareUrnenwahlvorbereitung,
+    prepareWahlvorbereitung,
   };
 }

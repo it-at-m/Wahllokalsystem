@@ -69,7 +69,8 @@ const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
-const { prepareUrnenwahlvorbereitung } = useWahlvorbereitungTestDataFactory();
+const { prepareUrnenwahlvorbereitung, prepareWahlvorbereitung } =
+  useWahlvorbereitungTestDataFactory();
 const { prepareWahl } = useWahlTestDataFactory();
 
 describe("wahlbezirkStore.ts", () => {
@@ -860,7 +861,7 @@ describe("wahlbezirkStore.ts", () => {
         userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
         mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
-          prepareUrnenwahlvorbereitung().build()
+          prepareWahlvorbereitung().build()
         );
 
         unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung(
@@ -879,7 +880,7 @@ describe("wahlbezirkStore.ts", () => {
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
-        prepareUrnenwahlvorbereitung().urnenAnzahl([]).build()
+        prepareWahlvorbereitung().urnenAnzahl([]).build()
       );
 
       await unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung();
@@ -912,7 +913,7 @@ describe("wahlbezirkStore.ts", () => {
       ];
 
       mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
-        prepareUrnenwahlvorbereitung().urnenAnzahl(urnenAnzahl).build()
+        prepareWahlvorbereitung().urnenAnzahl(urnenAnzahl).build()
       );
 
       await unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung();

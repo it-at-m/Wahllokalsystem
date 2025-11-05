@@ -1,6 +1,8 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -18,6 +20,8 @@ const mockDefinitions = vi.hoisted(() => ({
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  getUrnenwahlvorbereitung: vi.fn(),
+  getBriefwahlvorbereitung: vi.fn(),
 }));
 
 const { createPflegeWaehlerverzeichnis } =
@@ -37,6 +41,8 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
     postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
     postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
+    getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
+    getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
   }),
 }));
 vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
@@ -50,7 +56,7 @@ vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenState: ref({
-      wahlen: [],
+      wahlen: [prepareWahl().wahlID("wahlID").build()],
     }),
     waehlerverzeichnisActions: {
       getWaehlerverzeichnisNummerOrUndefinedById:
@@ -63,6 +69,8 @@ const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
+const { prepareUrnenwahlvorbereitung } = useWahlvorbereitungTestDataFactory();
+const { prepareWahl } = useWahlTestDataFactory();
 
 describe("wahlbezirkStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlbezirkStore>;
@@ -683,6 +691,83 @@ describe("wahlbezirkStore.ts", () => {
     });
   });
 
+  describe("initUrnenwahlvorbereitung", () => {
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      'should_getUrnenwahlvorbereitungWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      async (argument) => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+        mockDefinitions.getUrnenwahlvorbereitung.mockReturnValue(
+          prepareUrnenwahlvorbereitung().build()
+        );
+
+        unitUnderTest.urnenwahlVorbereitungActions.initUrnenwahlvorbereitung(
+          argument.sendNotification
+        );
+
+        expect(
+          mockDefinitions.getUrnenwahlvorbereitung.mock.calls
+        ).toStrictEqual([[wahlbezirkID, argument.sendNotification]]);
+      }
+    );
+
+    it("should_initUrnenwahlvorbereitung_when_urnenAnzahlIsEmpty", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      mockDefinitions.getUrnenwahlvorbereitung.mockReturnValue(
+        prepareUrnenwahlvorbereitung().urnenAnzahl([]).build()
+      );
+
+      await unitUnderTest.urnenwahlVorbereitungActions.initUrnenwahlvorbereitung();
+
+      expect(
+        unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
+          .urnenAnzahl.length
+      ).toBeGreaterThan(0);
+      expect(
+        unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
+          .urnenAnzahl
+      ).toStrictEqual([
+        {
+          wahlID: "wahlID",
+          anzahl: null,
+        },
+      ]);
+    });
+
+    it("should_initUrnenwahlvorbereitung_when_urnenAnzahlIsNotEmpty", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const urnenAnzahl = [
+        {
+          wahlID: "wahlID",
+          anzahl: 5,
+        },
+      ];
+
+      mockDefinitions.getUrnenwahlvorbereitung.mockReturnValue(
+        prepareUrnenwahlvorbereitung().urnenAnzahl(urnenAnzahl).build()
+      );
+
+      await unitUnderTest.urnenwahlVorbereitungActions.initUrnenwahlvorbereitung();
+
+      expect(
+        unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
+          .urnenAnzahl.length
+      ).toBeGreaterThan(0);
+      expect(
+        unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
+          .urnenAnzahl
+      ).toStrictEqual(urnenAnzahl);
+    });
+  });
+
   describe("sendBriefwahlvorbereitung", () => {
     it("should_sendBriefwahlvorbereitungAndUpdateBriefwahlVorbereitung_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
@@ -763,6 +848,83 @@ describe("wahlbezirkStore.ts", () => {
           mockedBriefwahlvorbereitung
         );
       }
+    });
+  });
+
+  describe("initBriefwahlvorbereitung", () => {
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      'should_getBriefwahlvorbereitungWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      async (argument) => {
+        const userStore = useUserStore();
+        const wahlbezirkID = "wahlbezirkID";
+        userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+        mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
+          prepareUrnenwahlvorbereitung().build()
+        );
+
+        unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung(
+          argument.sendNotification
+        );
+
+        expect(
+          mockDefinitions.getBriefwahlvorbereitung.mock.calls
+        ).toStrictEqual([[wahlbezirkID, argument.sendNotification]]);
+      }
+    );
+
+    it("should_initBriefwahlvorbereitung_when_urnenAnzahlIsEmpty", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
+        prepareUrnenwahlvorbereitung().urnenAnzahl([]).build()
+      );
+
+      await unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung();
+
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urnenAnzahl.length
+      ).toBeGreaterThan(0);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urnenAnzahl
+      ).toStrictEqual([
+        {
+          wahlID: "wahlID",
+          anzahl: null,
+        },
+      ]);
+    });
+
+    it("should_initBriefwahlvorbereitung_when_urnenAnzahlIsNotEmpty", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const urnenAnzahl = [
+        {
+          wahlID: "wahlID",
+          anzahl: 5,
+        },
+      ];
+
+      mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
+        prepareUrnenwahlvorbereitung().urnenAnzahl(urnenAnzahl).build()
+      );
+
+      await unitUnderTest.briefwahlVorbereitungActions.initBriefwahlvorbereitung();
+
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urnenAnzahl.length
+      ).toBeGreaterThan(0);
+      expect(
+        unitUnderTest.briefwahlVorbereitungState.briefwahlVorbereitung
+          .urnenAnzahl
+      ).toStrictEqual(urnenAnzahl);
     });
   });
 });

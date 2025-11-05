@@ -8,7 +8,9 @@ import type {
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlhandlung/Wahlurne.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
+import type { Builder } from "@tests/utils/Builder.ts";
 
+import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const {
@@ -70,6 +72,10 @@ export function useWahlvorbereitungTestDataFactory() {
     };
   }
 
+  function prepareUrnenwahlvorbereitung(): Builder<Urnenwahlvorbereitung> {
+    return proxyBuilder<Urnenwahlvorbereitung>(createUrnenwahlvorbereitung());
+  }
+
   function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
@@ -96,5 +102,6 @@ export function useWahlvorbereitungTestDataFactory() {
     createUrnenwahlvorbereitungDTO,
     createWahlvorbereitung,
     createBriefwahlvorbereitungDTO,
+    prepareUrnenwahlvorbereitung,
   };
 }

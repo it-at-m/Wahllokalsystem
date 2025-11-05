@@ -126,7 +126,7 @@ describe("wahlvorbereitungService", () => {
   });
 
   describe("getEroeffnungsuhrzeit", () => {
-    it("should_returnEroeffnunguhrzeit_when_apiReturnsData", async () => {
+    it("should_returnEroeffnungsuhrzeit_when_apiReturnsData", async () => {
       const wahlbezirkID = generateRandomString(10);
 
       const mockedApiResponseData = createEroeffnungsUhrzeitDTO();

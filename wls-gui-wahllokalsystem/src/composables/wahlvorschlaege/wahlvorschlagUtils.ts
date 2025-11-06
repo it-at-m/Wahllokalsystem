@@ -20,6 +20,14 @@ export function useWahlvorschlagUtils() {
     }
   }
 
+  function getKandidatLaufendeNummer(
+    wahlvorschlagNummer: number,
+    kandidatListenPosition: number,
+    kandidatListenPositionPadLength = 2
+  ) {
+    return `${wahlvorschlagNummer}${kandidatListenPosition.toString().padStart(kandidatListenPositionPadLength, "0")}`;
+  }
+
   function sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege: Wahlvorschlaege) {
     const sortedArray = Array.from(wahlvorschlaege.wahlvorschlaege).sort(
       (vorschlagA, vorschlagB) =>
@@ -40,6 +48,7 @@ export function useWahlvorschlagUtils() {
   return {
     getWahlvorschlagTitle,
     getFirstKandidatNameOrEmptyString,
+    getKandidatLaufendeNummer,
     sortWahlvorschlaegeByOrdnungszahl,
     sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl,
   };

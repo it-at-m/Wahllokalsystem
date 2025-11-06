@@ -19,6 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  getWahlbriefdaten: vi.fn(),
 }));
 
 const { createPflegeWaehlerverzeichnis } =
@@ -58,6 +59,11 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
       getWaehlerverzeichnisNummerOrUndefinedById:
         mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
     },
+  }),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
   }),
 }));
 
@@ -127,6 +133,26 @@ describe("wahlbezirkStore.ts", () => {
 
       expect(result).toBeNull();
     });
+  });
+
+  describe("initWahlbriefdaten", () => {
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      'should_getWahlbriefdatenWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      async (argument) => {
+        const wahlbezirkID = "wahlbezirkID";
+        useUserStore().setUser(
+          prepareUser().wahlbezirkID(wahlbezirkID).build()
+        );
+
+        await unitUnderTest.wahlbriefDatenActions.initWahlbriefdaten(
+          argument.sendNotification
+        );
+
+        expect(mockDefinitions.getWahlbriefdaten.mock.calls).toStrictEqual([
+          [wahlbezirkID, argument.sendNotification],
+        ]);
+      }
+    );
   });
 
   describe("initUngueltigeWahlscheine", () => {

@@ -15,6 +15,7 @@ import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFac
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
 import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
 import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
+import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
@@ -49,6 +50,7 @@ export function useTaskListService() {
   const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
+  const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -69,6 +71,7 @@ export function useTaskListService() {
       ...createBegruendungTasks(taskFactoryData),
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
+      ...createWahlbriefeTasks(taskFactoryData),
     ];
   }
 

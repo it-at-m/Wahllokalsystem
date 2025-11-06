@@ -25,6 +25,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
   createTasksHandbuch: vi.fn(),
+  createTasksWahlbriefe: vi.fn(),
 }));
 
 vi.mock(
@@ -141,6 +142,12 @@ vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
   })),
 }));
 
+vi.mock("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts", () => ({
+  useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlbriefe,
+  })),
+}));
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -254,6 +261,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksWahlbriefe.mockReturnValue([
+        {
+          name: "Erfasste Wahlbriefe",
+          callback: () => Promise.resolve(),
+        },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -274,6 +287,7 @@ describe("taskListService.ts", () => {
         "Begruendung Stimmzettel für " + mockedWahl.name,
         "AWerte",
         "Handbuch",
+        "Erfasste Wahlbriefe",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -298,6 +312,7 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksBegruendung).toHaveBeenCalled();
       expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
       expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlbriefe).toHaveBeenCalled();
     });
   });
 });

@@ -9,6 +9,7 @@ import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/erge
 import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
+import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
@@ -46,6 +47,7 @@ export function useTaskListService() {
   const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
+  const { createTasks: createStatusTasks } = useStatusTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -65,6 +67,7 @@ export function useTaskListService() {
       ...createBegruendungTasks(taskFactoryData),
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
+      ...createStatusTasks(taskFactoryData),
     ];
   }
 

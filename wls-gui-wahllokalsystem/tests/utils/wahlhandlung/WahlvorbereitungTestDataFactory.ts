@@ -1,5 +1,6 @@
 import type {
   BriefwahlvorbereitungDTO,
+  EroeffnungsUhrzeitDTO,
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlvorbereitungDTO,
   UrnenwahlvorbereitungWriteDTO,
@@ -19,6 +20,13 @@ const {
 } = useCommonTestDataFactory();
 
 export function useWahlvorbereitungTestDataFactory() {
+  function createEroeffnungsUhrzeitDTO(): EroeffnungsUhrzeitDTO {
+    return {
+      wahlbezirkID: generateRandomString(10),
+      eroeffnungsuhrzeit: generateRandomDateTimeAsString(),
+    };
+  }
+
   function createEroeffnungsUhrzeitWriteDTO(): EroeffnungsUhrzeitWriteDTO {
     return {
       eroeffnungsuhrzeit: generateRandomDateTimeAsString(),
@@ -90,6 +98,7 @@ export function useWahlvorbereitungTestDataFactory() {
   }
 
   return {
+    createEroeffnungsUhrzeitDTO,
     createEroeffnungsUhrzeitWriteDTO,
     createUrnenwahlvorbereitungWriteDTO,
     createUrnenwahlvorbereitung,

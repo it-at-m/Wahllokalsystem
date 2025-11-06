@@ -6,6 +6,7 @@ import { useAWerteTaskFactory } from "@/composables/tasks/taskFactories/aWerteTa
 import { useBegruendungTaskFactory } from "@/composables/tasks/taskFactories/begruendungTaskFactory.ts";
 import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
 import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
+import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts";
 import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
@@ -28,6 +29,8 @@ export function useTaskListService() {
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
+  const { createTasks: createEroeffnungsuhrzeitTasks } =
+    useEroeffnungsuhrzeitTaskFactory();
   const { createTasks: createKonfigurationsparameterTasks } =
     useKonfigurationsparameterTaskFactory();
   const { createTasks: createUngueltigeWahlscheineTasks } =
@@ -56,6 +59,7 @@ export function useTaskListService() {
       ...createWaehlerverzeichnisTasks(taskFactoryData),
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),
+      ...createEroeffnungsuhrzeitTasks(taskFactoryData),
       ...createKonfigurationsparameterTasks(taskFactoryData),
       ...createWahlscheineTasks(taskFactoryData),
       ...createWahlvorschlaegeTasks(taskFactoryData),

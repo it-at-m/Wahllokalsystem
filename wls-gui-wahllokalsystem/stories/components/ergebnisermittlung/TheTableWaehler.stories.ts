@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseTableWaehler from "@/components/ergebnisermittlung/BaseTableWaehler.vue";
+import TheTableWaehler from "@/components/ergebnisermittlung/TheTableWaehler.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -9,9 +9,9 @@ const wahlID = "wahlID";
 const wahlbezirkID = "wahlbezirkID";
 
 const meta = {
-  component: BaseTableWaehler,
+  component: TheTableWaehler,
   args: {},
-} satisfies Meta<typeof BaseTableWaehler>;
+} satisfies Meta<typeof TheTableWaehler>;
 
 export default meta;
 

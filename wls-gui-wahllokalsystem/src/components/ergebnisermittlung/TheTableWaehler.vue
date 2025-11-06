@@ -1,41 +1,24 @@
 <template>
   <v-table>
     <tbody>
-      <tr v-if="isUWB">
-        <td>B1</td>
-        <td>Wähler mit Stimmabgabevermerken im Wählerverzeichnis</td>
-        <td>{{ b1 }}</td>
-      </tr>
-      <tr v-if="isUWB">
-        <td>B2</td>
-        <td>Wähler mit Wahlschein</td>
-        <td>{{ b2 }}</td>
+      <tr
+        v-for="(row, index) in rows"
+        :key="index"
+      >
+        <td
+          v-for="(value, idx) in row"
+          :key="idx"
+        >
+          {{ value }}
+        </td>
       </tr>
       <tr class="bg-grey-lighten-3">
         <td
-          v-if="isUWB"
+          v-for="(value, index) in resultRow"
+          :key="index"
           class="font-weight-bold"
         >
-          B1+B2
-        </td>
-        <td
-          v-if="isBWB"
-          class="font-weight-bold"
-        >
-          B
-        </td>
-        <td class="font-weight-bold">Wähler insgesamt</td>
-        <td
-          v-if="isUWB"
-          class="font-weight-bold"
-        >
-          {{ b1 + b2 }}
-        </td>
-        <td
-          v-if="isBWB"
-          class="font-weight-bold"
-        >
-          {{ b }}
+          {{ value }}
         </td>
       </tr>
     </tbody>
@@ -44,7 +27,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
@@ -64,6 +47,24 @@ const props = defineProps<{
 const b1 = ref(0);
 const b2 = ref(0);
 const b = ref(0);
+
+const rows = computed(() =>
+  isUWB.value
+    ? [
+        [
+          "B1",
+          "Wähler mit Stimmabgabevermerken im Wählerverzeichnis",
+          b1.value,
+        ],
+        ["B2", "Wähler mit Wahlschein", b2.value],
+      ]
+    : []
+);
+const resultRow = computed(() =>
+  isUWB.value
+    ? ["B1+B2", "Wähler insgesamt", b1.value + b2.value]
+    : ["B", "Wähler insgesamt", b.value]
+);
 
 onMounted(async () => {
   if (isUWB.value) {

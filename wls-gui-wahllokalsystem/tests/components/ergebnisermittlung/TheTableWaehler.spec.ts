@@ -8,7 +8,7 @@ import {
 } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import BaseTableWaehler from "@/components/ergebnisermittlung/BaseTableWaehler.vue";
+import TheTableWaehler from "@/components/ergebnisermittlung/TheTableWaehler.vue";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -58,7 +58,7 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 
-describe("BaseTableWaehler.vue", () => {
+describe("TheTableWaehler.vue", () => {
   const { prepareWahl } = useWahlTestDataFactory();
   const {
     prepareWahldaten,
@@ -67,7 +67,7 @@ describe("BaseTableWaehler.vue", () => {
     prepareStimmzettel,
   } = useStimmabgabevermerkeTestDataFactory();
 
-  let wrapper: VueWrapper<InstanceType<typeof BaseTableWaehler>>;
+  let wrapper: VueWrapper<InstanceType<typeof TheTableWaehler>>;
 
   const wahlId = "wahlId";
   const wahlbezirkId = "wahlbezirkId";
@@ -119,7 +119,7 @@ describe("BaseTableWaehler.vue", () => {
         .build()
     );
 
-    wrapper = mount(BaseTableWaehler, {
+    wrapper = mount(TheTableWaehler, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -153,7 +153,7 @@ describe("BaseTableWaehler.vue", () => {
       anzahlWaehler: 4,
     });
 
-    wrapper = mount(BaseTableWaehler, {
+    wrapper = mount(TheTableWaehler, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,

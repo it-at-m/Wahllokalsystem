@@ -19,7 +19,7 @@ describe("statusTaskFactory.ts", () => {
   const { prepareTaskFactoryContext, createExtendedWahlMetaData } =
     useTasksTestDataFactory();
   const { createTasks } = useStatusTaskFactory();
-  const wahlscheineNamePrefix = "Druckstatus - ";
+  const statusNamePrefix = "Druckstatus - ";
 
   describe("createTasks", () => {
     it("should_returnTaskListWithFourElements_when_calledWithFourWahldataElements", () => {
@@ -40,10 +40,10 @@ describe("statusTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(4);
       const expectedNames = [
-        wahlscheineNamePrefix + extendedWahlMetaDataOne.wahlName,
-        wahlscheineNamePrefix + extendedWahlMetaDataTwo.wahlName,
-        wahlscheineNamePrefix + extendedWahlMetaDataThree.wahlName,
-        wahlscheineNamePrefix + extendedWahlMetaDataFour.wahlName,
+        statusNamePrefix + extendedWahlMetaDataOne.wahlName,
+        statusNamePrefix + extendedWahlMetaDataTwo.wahlName,
+        statusNamePrefix + extendedWahlMetaDataThree.wahlName,
+        statusNamePrefix + extendedWahlMetaDataFour.wahlName,
       ];
       const resultNames = result.map((task) => task.name);
       expectedNames.forEach((name) => {
@@ -61,7 +61,7 @@ describe("statusTaskFactory.ts", () => {
 
       expect(result.length).toStrictEqual(1);
       expect(result[0]?.name).toStrictEqual(
-        wahlscheineNamePrefix + extendedWahlMetaDataOne.wahlName
+        statusNamePrefix + extendedWahlMetaDataOne.wahlName
       );
     });
 

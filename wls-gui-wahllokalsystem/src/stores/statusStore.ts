@@ -7,17 +7,18 @@ import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useStatusService } from "@/composables/ergebnismeldung/statusService.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
 
-const { registerStoreHMR } = useHmrUpdate();
-const { getStatus } = useStatusService();
-
 export const storeID = "status";
 
 export const useStatusStore = defineStore(storeID, () => {
+  const { getStatus } = useStatusService();
+
   const status = ref<Status[]>([]);
 
   const DEFAULT_MELDUNG = {
     validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
     gedruckt: false,
+    uebermittelt: undefined,
+    sendeuhrzeit: undefined,
   };
 
   async function loadStatus(
@@ -51,4 +52,5 @@ export const useStatusStore = defineStore(storeID, () => {
   };
 });
 
+const { registerStoreHMR } = useHmrUpdate();
 registerStoreHMR(useStatusStore);

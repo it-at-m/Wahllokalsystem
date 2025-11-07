@@ -68,7 +68,7 @@ describe("statusService.ts", () => {
       expect(result).toEqual(expectedResultModel);
     });
 
-    it("should_triggerNotification_when_anExceptionOccuredDuringApiCall", async () => {
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       mockDefinitions.getStatus.mockRejectedValue(
         new Error("api called failed")
       );
@@ -83,7 +83,7 @@ describe("statusService.ts", () => {
       ]);
     });
 
-    it("should_notTriggerNotification_when_anExceptionOccuredDuringApiCall", async () => {
+    it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       mockDefinitions.getStatus.mockRejectedValue(
         new Error("api called failed")
       );

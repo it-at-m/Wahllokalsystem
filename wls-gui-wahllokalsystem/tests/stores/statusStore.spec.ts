@@ -81,10 +81,14 @@ describe("statusStore.ts", () => {
         schnellmeldung: {
           validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
           gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
         },
         niederschrift: {
           validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
           gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
         },
       };
 
@@ -101,7 +105,7 @@ describe("statusStore.ts", () => {
     });
 
     it.each([{ sendNotification: true }, { sendNotification: false }])(
-      'should_callServiceWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      "should_callServiceWithSendNotification$sendNotification_when_notificationParameterIsUsed",
       async (argument) => {
         await unitUnderTest.loadStatus(
           wahlID,

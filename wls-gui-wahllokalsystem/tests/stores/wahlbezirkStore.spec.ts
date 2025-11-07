@@ -633,6 +633,11 @@ describe("wahlbezirkStore.ts", () => {
 
   describe("initSchliessungsuhrzeit", () => {
     it("should_setSchliessungsuhrzeitAndSchliessungsuhrzeitSent_when_schliessungsuhrzeitIsGiven", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
       const mockedServiceResponse = createUrnenwahlSchliessungsuhrzeit();
       mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockReturnValue(
         mockedServiceResponse
@@ -656,6 +661,9 @@ describe("wahlbezirkStore.ts", () => {
       ).not.toBe(
         unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent
       );
+      expect(
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+      ).toHaveBeenCalledWith(userWahlbezirkID, false);
     });
   });
 

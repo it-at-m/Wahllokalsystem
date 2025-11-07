@@ -1,4 +1,7 @@
-import type { UrnenwahlSchliessungsUhrzeitWriteDTO } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type {
+  UrnenwahlSchliessungsUhrzeitDTO,
+  UrnenwahlSchliessungsUhrzeitWriteDTO,
+} from "@/api/wls-clients/generated-wahlvorbereitung-api";
 
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -11,7 +14,9 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   toUrnenwahlSchliessungsuhrzeitDTO: vi.fn(),
+  toUrnenwahlSchliessungsuhrzeitModel: vi.fn(),
   toEroeffnungsuhrzeitWriteDTO: vi.fn(),
+  getUrnenwahlSchliessungsUhrzeit: vi.fn(),
   postUrnenwahlSchliessungsUhrzeit: vi.fn(),
   getEroeffnungsuhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
@@ -27,6 +32,8 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
   UrnenwahlSchliessungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
+    getUrnenwahlSchliessungsUhrzeit:
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
     postUrnenwahlSchliessungsUhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsUhrzeit,
   })),
@@ -53,6 +60,8 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 
 vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
   useWahlvorbereitungMapper: () => ({
+    toUrnenwahlSchliessungsuhrzeitModel:
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel,
     toUrnenwahlSchliessungsuhrzeitDTO:
       mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO,
     toEroeffnungsuhrzeitWriteDTO: mockDefinitions.toEroeffnungsuhrzeitWriteDTO,
@@ -66,6 +75,7 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
 }));
 
 const {
+  getUrnenwahlSchliessungsUhrzeit,
   postUrnenwahlSchliessungsuhrzeit,
   getEroeffnungsuhrzeit,
   postEroeffnungsuhrzeit,
@@ -76,19 +86,74 @@ const {
 const {
   createEroeffnungsUhrzeitDTO,
   createEroeffnungsUhrzeitWriteDTO,
+  creteUrnenwahlSchliessungsuhrzeit,
   createUrnenwahlvorbereitungWriteDTO,
   createUrnenwahlvorbereitung,
   createUrnenwahlvorbereitungDTO,
   createWahlvorbereitung,
   createBriefwahlvorbereitungDTO,
 } = useWahlvorbereitungTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomDateTimeAsString } =
+  useCommonTestDataFactory();
 const { createAxiosResponse } = useAxiosTestDataFactory();
 
 describe("wahlvorbereitungService", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
+  });
+
+  describe("getUrnenwahlSchliessungsUhrzeit", () => {
+    it("should_returnMappedApiResponse_when_apiCallWasSuccessful", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      const mockedApiResponseData: UrnenwahlSchliessungsUhrzeitDTO = {
+        wahlbezirkID,
+        schliessungsuhrzeit: generateRandomDateTimeAsString(),
+      };
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockResolvedValue(
+        createAxiosResponse({ status: 200, data: mockedApiResponseData })
+      );
+
+      const mockedMappingResult = creteUrnenwahlSchliessungsuhrzeit();
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel.mockResolvedValue(
+        mockedMappingResult
+      );
+
+      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+      expect(result).toBe(mockedMappingResult);
+
+      expect(
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+      ).toHaveBeenCalledWith(wahlbezirkID);
+      expect(
+        mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel
+      ).toHaveBeenCalledWith(mockedApiResponseData);
+    });
+
+    it.each([true, false])(
+      "should_throwErrorAndSendNotification=%b_when_apiCallFailedAndSendNotification",
+      async (sendNotificationParameter) => {
+        const wahlbezirkID = "wahlbezirkID";
+        const mockedApiError = new Error("mocked api call failed");
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockRejectedValue(
+          mockedApiError
+        );
+
+        await expect(
+          getUrnenwahlSchliessungsUhrzeit(
+            wahlbezirkID,
+            sendNotificationParameter
+          )
+        ).rejects.toThrow(mockedApiError);
+        expect(
+          mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+        ).toHaveBeenCalledWith(wahlbezirkID);
+        expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+          sendNotificationParameter ? 1 : 0
+        );
+      }
+    );
   });
 
   describe("postUrnenwahlSchliessungsuhrzeit", () => {

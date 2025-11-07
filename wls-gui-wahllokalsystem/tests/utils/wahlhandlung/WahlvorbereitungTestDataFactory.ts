@@ -6,6 +6,7 @@ import type {
   UrnenwahlvorbereitungWriteDTO,
   WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlhandlung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlhandlung/Wahlurne.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
@@ -30,6 +31,12 @@ export function useWahlvorbereitungTestDataFactory() {
   function createEroeffnungsUhrzeitWriteDTO(): EroeffnungsUhrzeitWriteDTO {
     return {
       eroeffnungsuhrzeit: generateRandomDateTimeAsString(),
+    };
+  }
+
+  function creteUrnenwahlSchliessungsuhrzeit(): UrnenwahlSchliessungsuhrzeit {
+    return {
+      schliessungsuhrzeit: generateRandomDateTimeAsString(),
     };
   }
 
@@ -100,6 +107,7 @@ export function useWahlvorbereitungTestDataFactory() {
   return {
     createEroeffnungsUhrzeitDTO,
     createEroeffnungsUhrzeitWriteDTO,
+    creteUrnenwahlSchliessungsuhrzeit,
     createUrnenwahlvorbereitungWriteDTO,
     createUrnenwahlvorbereitung,
     createUrnenwahlvorbereitungDTO,

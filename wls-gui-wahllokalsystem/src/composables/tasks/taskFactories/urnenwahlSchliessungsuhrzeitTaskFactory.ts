@@ -12,7 +12,7 @@ export function useUrnenwahlSchliessungsuhrzeitTaskFactory(): TaskFactory {
     return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
       ? [
           {
-            name: "Urnenwahl Schließungsuhrzeit",
+            name: "Schließungsuhrzeit",
             callback: () =>
               schliessungsuhrzeitActions.initSchliessungsuhrzeit(),
           },

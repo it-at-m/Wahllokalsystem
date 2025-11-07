@@ -102,7 +102,7 @@
           Werte gelöscht:
         </div>
         <div>
-          Zu löschende Zeile: Wahlschein Nummer {{ rowIndexToDelete + 1 }}
+          Zu löschende Zeile: Wahlbrief Nummer {{ rowIndexToDelete + 1 }}
         </div>
         <div>
           <v-table striped="even">

@@ -11,6 +11,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
+  getEroeffnungsuhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
   postUrnenwahlvorbereitung: vi.fn(),
   postBriefwahlvorbereitung: vi.fn(),
@@ -18,6 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  getWahlbriefdaten: vi.fn(),
 }));
 
 const { createPflegeWaehlerverzeichnis } =
@@ -32,6 +34,7 @@ vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
 }));
 vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
+    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
@@ -56,6 +59,11 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
       getWaehlerverzeichnisNummerOrUndefinedById:
         mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
     },
+  }),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
   }),
 }));
 
@@ -125,6 +133,26 @@ describe("wahlbezirkStore.ts", () => {
 
       expect(result).toBeNull();
     });
+  });
+
+  describe("initWahlbriefdaten", () => {
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      'should_getWahlbriefdatenWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
+      async (argument) => {
+        const wahlbezirkID = "wahlbezirkID";
+        useUserStore().setUser(
+          prepareUser().wahlbezirkID(wahlbezirkID).build()
+        );
+
+        await unitUnderTest.wahlbriefDatenActions.initWahlbriefdaten(
+          argument.sendNotification
+        );
+
+        expect(mockDefinitions.getWahlbriefdaten.mock.calls).toStrictEqual([
+          [wahlbezirkID, argument.sendNotification],
+        ]);
+      }
+    );
   });
 
   describe("initUngueltigeWahlscheine", () => {
@@ -367,6 +395,53 @@ describe("wahlbezirkStore.ts", () => {
         ).toStrictEqual(false);
       }
     );
+  });
+
+  describe("initEroeffnungsuhrzeit", () => {
+    it("should_setCurrentAndSavedEroeffnungsuhrzeitWithDate_when_serviceReturnsValue", async () => {
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent = undefined;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
+
+      const mockedServiceResponse = new Date();
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(
+        mockedServiceResponse
+      );
+
+      await unitUnderTest.eroeffnungsuhrzeitActions.initEroeffnungsuhrzeit();
+
+      expect(
+        (
+          unitUnderTest.eroeffnungsuhrzeitState
+            .eroeffnungsuhrzeit as unknown as Date
+        ).getTime()
+      ).toStrictEqual(mockedServiceResponse.getTime());
+      expect(
+        (
+          unitUnderTest.eroeffnungsuhrzeitState
+            .eroeffnungsuhrzeitSent as unknown as Date
+        ).getTime()
+      ).toStrictEqual(mockedServiceResponse.getTime());
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit,
+        "should not be same object cause both data are handled independently"
+      ).not.toBe(unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent);
+    });
+
+    it("should_setCurrentAndSavedEroeffnungsuhrzeitWithUndefined_when_serviceReturnsNull", async () => {
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent = new Date();
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date();
+
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(null);
+
+      await unitUnderTest.eroeffnungsuhrzeitActions.initEroeffnungsuhrzeit();
+
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit
+      ).toBeUndefined();
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent
+      ).toBeUndefined();
+    });
   });
 
   describe("sendEroeffnungsuhrzeit", () => {

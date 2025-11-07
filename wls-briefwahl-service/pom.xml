@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-briefwahl-service</artifactId>
-    <version>0.3.4-SNAPSHOT</version>
+    <version>0.3.5-SNAPSHOT</version>
     <name>wls_briefwahl_service</name>
 
 
@@ -14,13 +14,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.5.5</spring.boot.version>
+        <spring.boot.version>3.5.7</spring.boot.version>
         <spring.cloud.version>2025.0.0</spring.cloud.version>
         <logstash.encoder>8.1</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
         <apache.commons.csv>1.14.1</apache.commons.csv>
         <apache.commons.io>2.20.0</apache.commons.io>
-        <apache.commons.lang3>3.18.0</apache.commons.lang3>
+        <apache.commons.lang3>3.19.0</apache.commons.lang3>
         <apache.commons.text>1.14.0</apache.commons.text>
         <apache.commons.validator>1.10.0</apache.commons.validator>
         <!-- SonarQube -->
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.9.0.25.07</version>
+            <version>23.26.0.0.0</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>

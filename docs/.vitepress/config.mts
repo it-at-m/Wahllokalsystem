@@ -216,6 +216,10 @@ export default withMermaid({
               text: "Aktualisierung von Images",
               link: `${PATH_GUIDES}update-images.md`,
             },
+            {
+              text: "Update embedded LDAP User",
+              link: `${PATH_GUIDES}update-ldif-file-data.md`,
+            },
           ],
         },
         {

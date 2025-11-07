@@ -9,6 +9,8 @@ import {
   UrnenwahlvorbereitungControllerApi,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
 import { Configuration } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlhandlung/wahlvorbereitungMapper.ts";
 import { WAHLVORBEREITUNG_SERVICE_API_URL } from "@/constants.ts";
@@ -24,6 +26,8 @@ const {
   toBriefwahlvorbereitungWriteDto,
   toBriefwahlvorbereitungModel,
 } = useWahlvorbereitungMapper();
+const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { isValidDate } = useDateTimeUtils();
 
 export function useWahlvorbereitungService() {
   const wahlvorbereitungsServiceConfiguration = new Configuration({
@@ -46,17 +50,48 @@ export function useWahlvorbereitungService() {
     );
 
   async function getUrnenwahlSchliessungsUhrzeit(
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ): Promise<UrnenwahlSchliessungsuhrzeit> {
     try {
       return await urnenwahlSchliessungsUhrzeitControllerAPI
         .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
         .then((response) => toUrnenwahlSchliessungsuhrzeitModel(response.data));
     } catch (error) {
-      userNotificationService.addNotification(
-        "Fehler beim Laden der Schliessungsuhrzeit.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Fehler beim Laden der Schliessungsuhrzeit.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
+  async function getEroeffnungsuhrzeit(
+    wahlbezirkID: string,
+    sendNotification = true
+  ): Promise<Date | null> {
+    try {
+      const response =
+        await eroeffnungsuhrzeitControllerAPI.getEroeffnungsuhrzeit(
+          wahlbezirkID
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+
+      if (!responseData) {
+        return null;
+      }
+
+      const eroeffnungsuhrzeit = new Date(responseData.eroeffnungsuhrzeit);
+      return isValidDate(eroeffnungsuhrzeit) ? eroeffnungsuhrzeit : null;
+    } catch (error) {
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Eröffnungsuhrzeit konnte nicht geladen werden",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }
@@ -200,6 +235,7 @@ export function useWahlvorbereitungService() {
 
   return {
     getUrnenwahlSchliessungsUhrzeit,
+    getEroeffnungsuhrzeit,
     postEroeffnungsuhrzeit,
     postUrnenwahlSchliessungsuhrzeit,
     getUrnenwahlvorbereitung,

@@ -22,6 +22,8 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlbezirkStore = defineStore(storeID, () => {
   const {
+    getEroeffnungsuhrzeit,
+    getUrnenwahlSchliessungsUhrzeit,
     postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit,
     postUrnenwahlvorbereitung,
@@ -77,6 +79,18 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
         }
       }
     },
+    initEroeffnungsuhrzeit: async function initEroeffnungsuhrzeit() {
+      const eroeffnungsuhrzeit = await getEroeffnungsuhrzeit(
+        currentUserWahlbezirkID.value,
+        false
+      );
+      eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit = eroeffnungsuhrzeit
+        ? new Date(eroeffnungsuhrzeit)
+        : undefined;
+      eroeffnungsuhrzeitState.value.eroeffnungsuhrzeitSent = eroeffnungsuhrzeit
+        ? new Date(eroeffnungsuhrzeit)
+        : undefined;
+    },
   };
 
   /* --- schliessungsuhrzeit --- */
@@ -115,6 +129,20 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
           }
         }
       }
+    },
+
+    initSchliessungsuhrzeit: async function initSchliessungsuhrzeit() {
+      const urnenwahlSchliessungsuhrzeit =
+        await getUrnenwahlSchliessungsUhrzeit(
+          currentUserWahlbezirkID.value,
+          false
+        );
+      schliessungsuhrzeitState.value.schliessungsuhrzeit = new Date(
+        urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit
+      );
+      schliessungsuhrzeitState.value.schliessungsuhrzeitSent = new Date(
+        urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit
+      );
     },
   };
 

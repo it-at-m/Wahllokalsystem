@@ -405,6 +405,11 @@ describe("wahlbezirkStore.ts", () => {
 
   describe("initEroeffnungsuhrzeit", () => {
     it("should_setCurrentAndSavedEroeffnungsuhrzeitWithDate_when_serviceReturnsValue", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
       unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent = undefined;
       unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
 
@@ -431,6 +436,10 @@ describe("wahlbezirkStore.ts", () => {
         unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit,
         "should not be same object cause both data are handled independently"
       ).not.toBe(unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent);
+      expect(mockDefinitions.getEroeffnungsuhrzeit).toHaveBeenCalledWith(
+        userWahlbezirkID,
+        false
+      );
     });
 
     it("should_setCurrentAndSavedEroeffnungsuhrzeitWithUndefined_when_serviceReturnsNull", async () => {

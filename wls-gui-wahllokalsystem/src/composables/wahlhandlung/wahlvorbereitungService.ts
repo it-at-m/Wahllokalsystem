@@ -49,17 +49,20 @@ export function useWahlvorbereitungService() {
     );
 
   async function getUrnenwahlSchliessungsUhrzeit(
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ): Promise<UrnenwahlSchliessungsuhrzeit> {
     try {
       return await urnenwahlSchliessungsUhrzeitControllerAPI
         .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
         .then((response) => toUrnenwahlSchliessungsuhrzeitModel(response.data));
     } catch (error) {
-      userNotificationService.addNotification(
-        "Fehler beim Laden der Schliessungsuhrzeit.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Fehler beim Laden der Schliessungsuhrzeit.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }

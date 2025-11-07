@@ -78,7 +78,8 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
     },
     initEroeffnungsuhrzeit: async function initEroeffnungsuhrzeit() {
       const eroeffnungsuhrzeit = await getEroeffnungsuhrzeit(
-        currentUserWahlbezirkID.value
+        currentUserWahlbezirkID.value,
+        false
       );
       eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit = eroeffnungsuhrzeit
         ? new Date(eroeffnungsuhrzeit)

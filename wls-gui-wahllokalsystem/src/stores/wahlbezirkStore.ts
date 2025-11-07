@@ -135,12 +135,14 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
           currentUserWahlbezirkID.value,
           false
         );
-      schliessungsuhrzeitState.value.schliessungsuhrzeit = new Date(
-        urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit
-      );
-      schliessungsuhrzeitState.value.schliessungsuhrzeitSent = new Date(
-        urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit
-      );
+      schliessungsuhrzeitState.value.schliessungsuhrzeit =
+        urnenwahlSchliessungsuhrzeit
+          ? new Date(urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit)
+          : undefined;
+      schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
+        urnenwahlSchliessungsuhrzeit
+          ? new Date(urnenwahlSchliessungsuhrzeit.schliessungsuhrzeit)
+          : undefined;
     },
   };
 

@@ -14,6 +14,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
+  createTasksEroeffnungsuhrzeit: vi.fn(),
   createTasksUrnenwahlSchliessungsuhrzeit: vi.fn(),
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
@@ -25,6 +26,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
   createTasksHandbuch: vi.fn(),
+  createTasksWahlbriefe: vi.fn(),
 }));
 
 vi.mock(
@@ -71,6 +73,15 @@ vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
   })),
 }));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts",
+  () => ({
+    useEroeffnungsuhrzeitTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksEroeffnungsuhrzeit,
+    })),
+  })
+);
 
 vi.mock(
   "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts",
@@ -140,6 +151,12 @@ vi.mock("@/composables/tasks/taskFactories/aWerteTaskFactory.ts", () => ({
 vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
   useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksHandbuch,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts", () => ({
+  useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlbriefe,
   })),
 }));
 
@@ -214,6 +231,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksEroeffnungsuhrzeit.mockReturnValue([
+        {
+          name: "Eröffnungsuhrzeit",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlscheine.mockReturnValue([
         {
           name: "Wahlscheine - " + mockedWahl.name,
@@ -256,6 +279,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksWahlbriefe.mockReturnValue([
+        {
+          name: "Erfasste Wahlbriefe",
+          callback: () => Promise.resolve(),
+        },
+      ]);
 
       const result = unitUnderTest.initTasklist();
 
@@ -264,6 +293,7 @@ describe("taskListService.ts", () => {
       const expectedTaskNames = [
         "Konfigurationsparameter",
         "Wahlvorstand",
+        "Eröffnungsuhrzeit",
         "Urnenwahl Schließungsuhrzeit",
         "UngültigeWahlscheine",
         "Waehlerverzeichnis",
@@ -276,6 +306,7 @@ describe("taskListService.ts", () => {
         "Begruendung Stimmzettel für " + mockedWahl.name,
         "AWerte",
         "Handbuch",
+        "Erfasste Wahlbriefe",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -289,6 +320,7 @@ describe("taskListService.ts", () => {
       ).toHaveBeenCalled();
       expect(mockDefinitions.createWaehlerverzeichnisTasks).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksEroeffnungsuhrzeit).toHaveBeenCalled();
       expect(
         mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit
       ).toHaveBeenCalled();
@@ -302,6 +334,7 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksBegruendung).toHaveBeenCalled();
       expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
       expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlbriefe).toHaveBeenCalled();
     });
   });
 });

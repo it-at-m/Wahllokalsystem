@@ -118,3 +118,25 @@ Content-Type: application/json
     }
   ]
 }
+
+### POST Handbuch | wls_mbw_uwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/handbuch/5f10d96a-855e-44ec-afdb-7e95484c8e2f/UWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="helloWorld.pdf"
+
+< ./attachements/helloWorld.pdf
+--boundary
+
+### POST Handbuch | wls_mbw_bwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/handbuch/5f10d96a-855e-44ec-afdb-7e95484c8e2f/BWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="helloWorld.pdf"
+
+< ./attachements/helloWorld.pdf
+--boundary

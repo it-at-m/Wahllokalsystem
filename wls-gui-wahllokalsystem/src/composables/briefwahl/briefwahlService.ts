@@ -98,17 +98,20 @@ export function useBriefwahlService() {
   }
 
   async function getWahlbriefdaten(
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ): Promise<Wahlbriefdaten> {
     try {
       return await wahlbriefdatenControllerApi
         .getWahlbriefdaten(wahlbezirkID)
         .then((response) => toWahlbriefdatenModel(response.data));
     } catch (error) {
-      addNotification(
-        "Fehler beim Laden der Wahlbriefdaten.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        addNotification(
+          "Fehler beim Laden der Wahlbriefdaten.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }

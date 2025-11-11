@@ -17,12 +17,14 @@ import {
 } from "vitest";
 
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapToWahlvorschlagWithScorableKandidaten: vi.fn(),
+  mapToErgebnisse: vi.fn(),
 }));
 
 vi.mock(
@@ -31,6 +33,7 @@ vi.mock(
     useWahlvorschlagWithScorableKandidatenMapper: () => ({
       toWahlvorschlagWithScorableKandidaten:
         mockDefinitions.mapToWahlvorschlagWithScorableKandidaten,
+      toErgebnisse: mockDefinitions.mapToErgebnisse,
     }),
   })
 );
@@ -52,7 +55,7 @@ const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();
 const { createKandidat, prepareWahlvorschlag, prepareWahlvorschlaege } =
   useWahlvorschlaegeTestDataFactory();
-const { createErgebnis, createErgebnisse, prepareErgebnisse } =
+const { createErgebnis, createErgebnisse, prepareErgebnis, prepareErgebnisse } =
   useErgebnisseTestDataFactory();
 
 describe("mwbStapelBCUtils.ts", () => {
@@ -255,7 +258,96 @@ describe("mwbStapelBCUtils.ts", () => {
     });
   });
 
-  describe("saveErgebnisse", () => {});
+  describe("saveErgebnisse", () => {
+    it("should_sendErgebnisseWithValue_when_ergebnisseAreGiven", async () => {
+      const ergebnisToSave1 = createErgebnis();
+      const ergebnisToSave2 = createErgebnis();
+      const ergebnisToSave3 = createErgebnis();
+      const ergebnisToSave4 = createErgebnis();
+      unitUnderTest.scorableWahlvorschlaege.value = [
+        {
+          scorableKandidaten: [
+            { kandidat: createKandidat(), ergebnis: ergebnisToSave1 },
+            { kandidat: createKandidat(), ergebnis: ergebnisToSave2 },
+            {
+              kandidat: createKandidat(),
+              ergebnis: prepareErgebnis().ergebnis(null).build(),
+            },
+            { kandidat: createKandidat(), ergebnis: ergebnisToSave3 },
+          ],
+          ordnungszahl: generateRandomNumber(2),
+          identifikator: generateRandomString(10),
+          kurzname: generateRandomString(10),
+        },
+        {
+          scorableKandidaten: [
+            {
+              kandidat: createKandidat(),
+              ergebnis: prepareErgebnis().ergebnis(null).build(),
+            },
+            { kandidat: createKandidat(), ergebnis: ergebnisToSave4 },
+          ],
+          ordnungszahl: generateRandomNumber(2),
+          identifikator: generateRandomString(10),
+          kurzname: generateRandomString(10),
+        },
+      ];
+
+      const mockedMappedErgebnisse = createErgebnisse();
+      mockDefinitions.mapToErgebnisse.mockReturnValue(mockedMappedErgebnisse);
+
+      await unitUnderTest.saveErgebnisse();
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledWith(
+        [ergebnisToSave1, ergebnisToSave2, ergebnisToSave3, ergebnisToSave4],
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwBC
+      );
+    });
+
+    it("should_updateIsSaving_when_callIsSuccessful", async () => {
+      const spyOnIsSavingValueSetter = spyOn(
+        unitUnderTest.isSaving,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+      await unitUnderTest.saveErgebnisse();
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+      expect(spyOnIsSavingValueSetter.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsSavingValueSetter.mockRestore();
+    });
+
+    it("should_updateIsSaving_when_callFailed", async () => {
+      const spyOnIsSavingValueSetter = spyOn(
+        unitUnderTest.isSaving,
+        "value",
+        "set"
+      );
+
+      mockDefinitions.postErgebnisse.mockRejectedValue(
+        new Error("mocked post ergebnisse failed")
+      );
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+      await unitUnderTest.saveErgebnisse();
+
+      expect(unitUnderTest.isSaving.value).toStrictEqual(false);
+      expect(spyOnIsSavingValueSetter.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      spyOnIsSavingValueSetter.mockRestore();
+    });
+  });
 
   function createWahlvorschlaege() {
     return prepareWahlvorschlaege()

@@ -6,6 +6,7 @@ import { ref } from "vue";
 
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
+import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
@@ -13,6 +14,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
 
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
   const { getWahlvorschlaege } = useWahlvorschlaegeService();
+  const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -23,6 +25,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     isLoading.value = true;
     try {
       const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
+      sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege);
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,

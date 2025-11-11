@@ -1,5 +1,4 @@
 import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { Ref } from "vue";
 
 import { ref } from "vue";
@@ -19,7 +18,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     compareKandidatenByListenPosition,
     sortWahlvorschlaegeByOrdnungszahl,
   } = useWahlvorschlagUtils();
-  const { toWahlvorschlagWithScorableKandidaten } =
+  const { toErgebnisse, toWahlvorschlagWithScorableKandidaten } =
     useWahlvorschlagWithScorableKandidatenMapper();
 
   const isLoading = ref(false);
@@ -51,19 +50,12 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     isSaving.value = true;
 
     try {
-      const ergebnisValuesToSave = scorableWahlvorschlaege.value
-        .flatMap((x) => x.scorableKandidaten)
-        .map((x) => x.ergebnis)
-        .filter((ergebnis) => ergebnis.ergebnis != null);
-
-      const ergebnisse: Ergebnisse = {
-        bezirkUndWahlIDStapelart: {
-          wahlID,
-          wahlbezirkID,
-          stapelArt: StapelArt_BC,
-        },
-        ergebnisse: ergebnisValuesToSave,
-      };
+      const ergebnisse = toErgebnisse(
+        scorableWahlvorschlaege.value,
+        wahlbezirkID,
+        wahlID,
+        StapelArt_BC
+      );
       await postErgebnisse(wahlbezirkID, wahlID, StapelArt_BC, ergebnisse);
     } finally {
       isSaving.value = false;

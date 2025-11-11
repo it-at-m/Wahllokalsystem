@@ -1,6 +1,7 @@
 import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 
 export function useWahlvorschlagWithScorableKandidatenMapper() {
@@ -26,6 +27,27 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
 
       return wahlvorschlagWithScorableKandidaten;
     }
+  }
+
+  function toErgebnisse(
+    wahlvorschlagWithScorableKandidaten: WahlvorschlagWithScorableKandidaten[],
+    wahlbezirkID: string,
+    wahlID: string,
+    stapelArt: StapelArtEnum
+  ): Ergebnisse {
+    const ergebnisValuesToSave = wahlvorschlagWithScorableKandidaten
+      .flatMap((wahlvorschlag) => wahlvorschlag.scorableKandidaten)
+      .map((scorableKandidat) => scorableKandidat.ergebnis)
+      .filter((ergebnis) => ergebnis.ergebnis != null);
+
+    return {
+      bezirkUndWahlIDStapelart: {
+        wahlID,
+        wahlbezirkID,
+        stapelArt: stapelArt,
+      },
+      ergebnisse: ergebnisValuesToSave,
+    };
   }
 
   function _createEmptyErgebnis(
@@ -57,6 +79,7 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
   }
 
   return {
+    toErgebnisse,
     toWahlvorschlagWithScorableKandidaten,
   };
 }

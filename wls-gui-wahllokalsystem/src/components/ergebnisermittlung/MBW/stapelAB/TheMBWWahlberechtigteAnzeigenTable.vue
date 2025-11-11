@@ -22,7 +22,7 @@
           <td class="font-weight-bold">A1 + A2</td>
           <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
           <td class="font-weight-bold text-right">
-            {{ (wahlberechtigte.a1 ?? 0) + (wahlberechtigte.a2 ?? 0) }}
+            {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}
           </td>
         </tr>
       </tfoot>

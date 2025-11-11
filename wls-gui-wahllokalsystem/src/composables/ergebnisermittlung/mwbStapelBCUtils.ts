@@ -4,6 +4,7 @@ import type { Ref } from "vue";
 
 import { ref } from "vue";
 
+import { useWahlvorschlagWithScorableKandidatenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithScorableKandidatenMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
@@ -18,6 +19,8 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     compareKandidatenByListenPosition,
     sortWahlvorschlaegeByOrdnungszahl,
   } = useWahlvorschlagUtils();
+  const { toWahlvorschlagWithScorableKandidaten } =
+    useWahlvorschlagWithScorableKandidatenMapper();
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -27,13 +30,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   async function loadWahlvorschlaegeAndErgebnisse() {
     isLoading.value = true;
     try {
-      const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
-      sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege);
-      wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
-        wahlvorschlag.kandidaten = new Set(
-          [...wahlvorschlag.kandidaten].sort(compareKandidatenByListenPosition)
-        );
-      });
+      const wahlvorschlaege = await _loadAndSortWahlschlaege();
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -41,44 +38,10 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         false
       );
 
-      const result: WahlvorschlagWithScorableKandidaten[] = [];
-
-      for (const wahlvorschlag of wahlvorschlaege.wahlvorschlaege) {
-        const wahlvorschlagWithScorableKandidaten: WahlvorschlagWithScorableKandidaten =
-          {
-            identifikator: wahlvorschlag.identifikator,
-            scorableKandidaten: [],
-            kurzname: wahlvorschlag.kurzname,
-            ordnungszahl: wahlvorschlag.ordnungszahl,
-          };
-        result.push(wahlvorschlagWithScorableKandidaten);
-        if (wahlvorschlag.kandidaten) {
-          for (const kandidat of wahlvorschlag.kandidaten) {
-            const savedErgebnisForKandidat = ergebnisse?.ergebnisse.find(
-              (ergebnis) => ergebnis.kandidatID === kandidat.identifikator
-            );
-            if (savedErgebnisForKandidat) {
-              wahlvorschlagWithScorableKandidaten.scorableKandidaten.push({
-                ergebnis: savedErgebnisForKandidat,
-                kandidat,
-              });
-            } else {
-              wahlvorschlagWithScorableKandidaten.scorableKandidaten.push({
-                ergebnis: {
-                  wahlvorschlagID: wahlvorschlag.identifikator,
-                  kandidatID: kandidat.identifikator,
-                  wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
-                  ergebnis: null,
-                  numIndex: null,
-                },
-                kandidat,
-              });
-            }
-          }
-        }
-      }
-
-      scorableWahlvorschlaege.value = result;
+      scorableWahlvorschlaege.value = [...wahlvorschlaege.wahlvorschlaege].map(
+        (wahlvorschlag) =>
+          toWahlvorschlagWithScorableKandidaten(wahlvorschlag, ergebnisse)
+      );
     } finally {
       isLoading.value = false;
     }
@@ -104,6 +67,27 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
       await postErgebnisse(wahlbezirkID, wahlID, StapelArt_BC, ergebnisse);
     } finally {
       isSaving.value = false;
+    }
+  }
+
+  function _loadAndSortWahlschlaege() {
+    return getWahlvorschlaege(wahlID, wahlbezirkID)
+      .then((wahlvorschlaege) =>
+        sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege)
+      )
+      .then((wahlvorschlaege) => {
+        wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
+          _sortKandidatenByListenPosition(wahlvorschlag);
+        });
+        return wahlvorschlaege;
+      });
+  }
+
+  function _sortKandidatenByListenPosition(wahlvorschlag: Wahlvorschlag) {
+    if (wahlvorschlag.kandidaten) {
+      wahlvorschlag.kandidaten = new Set(
+        [...wahlvorschlag.kandidaten].sort(compareKandidatenByListenPosition)
+      );
     }
   }
 

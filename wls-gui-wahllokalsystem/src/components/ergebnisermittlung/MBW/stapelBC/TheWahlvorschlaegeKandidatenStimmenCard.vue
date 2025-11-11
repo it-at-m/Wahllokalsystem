@@ -32,20 +32,11 @@
             </tr>
             <tr v-if="expandedRows[index]">
               <td :colspan="COLUMN_COUNT_FULL_ROW_SPAN">
-                <v-card class="bg-grey-lighten-3">
-                  <v-card-text>
-                    <base-wahlvorschlag-kandidaten-stimmen-table
-                      :wahlvorschlag-nummer="wahlvorschlag.ordnungszahl"
-                      :model-value="wahlvorschlag.scorableKandidaten"
-                    />
-                  </v-card-text>
-                  <v-card-actions>
-                    <base-button-save
-                      :loading="isSaving"
-                      @click="onSaveWahlvorschlag"
-                    />
-                  </v-card-actions>
-                </v-card>
+                <base-card-wahlvorschlag-kandidaten-stimmen-update
+                  :model-value="wahlvorschlag"
+                  :is-saving="isSaving"
+                  @do-save="onSaveWahlvorschlag"
+                />
               </td>
             </tr>
           </template>
@@ -61,8 +52,7 @@ import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseWahlvorschlagKandidatenStimmenTable from "@/components/ergebnisermittlung/MBW/stapelBC/BaseWahlvorschlagKandidatenStimmenTable.vue";
+import BaseCardWahlvorschlagKandidatenStimmenUpdate from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenUpdate.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
 

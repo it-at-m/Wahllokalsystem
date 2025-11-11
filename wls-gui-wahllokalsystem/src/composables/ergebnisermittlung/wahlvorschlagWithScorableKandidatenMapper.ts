@@ -30,23 +30,18 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
   }
 
   function toErgebnisse(
-    wahlvorschlagWithScorableKandidaten: WahlvorschlagWithScorableKandidaten[],
+    ergebnisse: Ergebnis[],
     wahlbezirkID: string,
     wahlID: string,
     stapelArt: StapelArtEnum
   ): Ergebnisse {
-    const ergebnisValuesToSave = wahlvorschlagWithScorableKandidaten
-      .flatMap((wahlvorschlag) => wahlvorschlag.scorableKandidaten)
-      .map((scorableKandidat) => scorableKandidat.ergebnis)
-      .filter((ergebnis) => ergebnis.ergebnis != null);
-
     return {
       bezirkUndWahlIDStapelart: {
         wahlID,
         wahlbezirkID,
         stapelArt: stapelArt,
       },
-      ergebnisse: ergebnisValuesToSave,
+      ergebnisse,
     };
   }
 

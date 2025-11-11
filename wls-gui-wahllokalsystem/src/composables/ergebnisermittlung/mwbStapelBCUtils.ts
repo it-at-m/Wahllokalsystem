@@ -54,8 +54,13 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     isSaving.value = true;
 
     try {
+      const ergebnisValuesToSave = scorableWahlvorschlaege.value
+        .flatMap((wahlvorschlag) => wahlvorschlag.scorableKandidaten)
+        .map((scorableKandidat) => scorableKandidat.ergebnis)
+        .filter((ergebnis) => ergebnis.ergebnis != null);
+
       const ergebnisse = toErgebnisse(
-        scorableWahlvorschlaege.value,
+        ergebnisValuesToSave,
         wahlbezirkID,
         wahlID,
         StapelArt_BC

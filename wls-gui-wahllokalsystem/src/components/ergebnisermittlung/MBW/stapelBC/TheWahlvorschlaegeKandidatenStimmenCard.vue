@@ -31,7 +31,7 @@
               </td>
             </tr>
             <tr v-if="expandedRows[index]">
-              <td :colspan="COLUMN_COUNT_FULL_ROW_SPAN">
+              <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                 <base-card-wahlvorschlag-kandidaten-stimmen-update
                   :model-value="wahlvorschlag"
                   :is-saving="isSaving"
@@ -56,7 +56,7 @@ import BaseCardWahlvorschlagKandidatenStimmenUpdate from "@/components/ergebnise
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
 
-const COLUMN_COUNT_FULL_ROW_SPAN = 4;
+const COLUMN_COUNT_FULL_COL_SPAN = 4;
 
 const props = defineProps({
   wahlbezirkID: {

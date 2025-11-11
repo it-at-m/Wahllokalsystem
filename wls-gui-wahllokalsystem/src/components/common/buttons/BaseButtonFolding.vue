@@ -9,14 +9,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const isFoldedModel = defineModel("modelValue", {
+const isExpandedModel = defineModel("modelValue", {
   type: Boolean,
   required: false,
 });
 
-const icon = computed(() => (isFoldedModel.value ? "$expand" : "$collapse"));
+const icon = computed(() => (isExpandedModel.value ? "$collapse" : "$expand"));
 
 function onFoldingStateClicked() {
-  isFoldedModel.value = !isFoldedModel.value;
+  isExpandedModel.value = !isExpandedModel.value;
 }
 </script>

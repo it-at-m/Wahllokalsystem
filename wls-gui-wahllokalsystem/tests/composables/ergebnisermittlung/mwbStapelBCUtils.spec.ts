@@ -1,11 +1,9 @@
 import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
-import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 
 import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { all } from "axios";
 import {
   afterAll,
   afterEach,
@@ -140,8 +138,9 @@ describe("mwbStapelBCUtils.ts", () => {
         (wahlvorschlag, index, allWahlvorschlaege) => {
           //check wahlvorschlag is in correct order by ordnungszahl
           if (index < allWahlvorschlaege.length - 1) {
-            expect(wahlvorschlag.ordnungszahl).toBeLessThanOrEqual(
-              allWahlvorschlaege[index + 1].ordnungszahl
+            expect(wahlvorschlag.ordnungszahl).lessThanOrEqual(
+              // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+              allWahlvorschlaege[index + 1]!.ordnungszahl
             );
           }
 
@@ -151,8 +150,9 @@ describe("mwbStapelBCUtils.ts", () => {
               if (index < allKandidatenAndErgebnisse.length - 1) {
                 expect(
                   kandidatAndErgebnis.kandidat.listenposition
-                ).toBeLessThanOrEqual(
-                  allKandidatenAndErgebnisse[index + 1].kandidat.listenposition
+                ).lessThanOrEqual(
+                  // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+                  allKandidatenAndErgebnisse[index + 1]!.kandidat.listenposition
                 );
               }
             }

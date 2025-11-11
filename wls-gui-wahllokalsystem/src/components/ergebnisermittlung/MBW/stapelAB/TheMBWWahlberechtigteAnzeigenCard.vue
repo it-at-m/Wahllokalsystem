@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title> Wahlberechtigte laut Wählerverzeichnis </v-card-title>
     <v-card-text>
-      <the-m-b-w-wahlberechtigten-anzeigen-table
+      <the-mbw-wahlberechtigte-anzeigen-table
         :wahlberechtigte="wahlberechtigte"
       />
     </v-card-text>
@@ -12,7 +12,7 @@
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 import type { PropType } from "vue";
 
-import TheMBWWahlberechtigtenAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigtenAnzeigenTable.vue";
+import TheMbwWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
 
 defineProps({
   wahlberechtigte: {

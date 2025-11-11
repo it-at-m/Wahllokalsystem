@@ -13,7 +13,7 @@
           <td>A2</td>
           <td>Wahlberechtigte mit Sperrvermerk "W" (Wahlschein)</td>
           <td class="text-right">
-            {{ wahlberechtigte.a2 }}
+            {{ wahlberechtigte.a2 ?? 0 }}
           </td>
         </tr>
       </tbody>

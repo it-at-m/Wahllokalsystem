@@ -5,7 +5,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import BaseWahlvorschlagKandidatenStimmen from "@/components/ergebnisermittlung/MBW/kandidatenStimmen/BaseWahlvorschlagKandidatenStimmenTable.vue";
+import BaseWahlvorschlagKandidatenStimmen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseWahlvorschlagKandidatenStimmenTable.vue";
 
 const meta = {
   component: BaseWahlvorschlagKandidatenStimmen,

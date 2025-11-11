@@ -57,9 +57,9 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
               wahlvorschlagWithScorableKandidaten.scorableKandidaten.push({
                 ergebnis: {
                   wahlvorschlagID: wahlvorschlag.identifikator,
-                  kandidat: kandidat.identifikator,
+                  kandidatID: kandidat.identifikator,
                   wahlvorschlagsOrdnungszahl: wahlvorschlag.ordnungszahl,
-                  ergebnisse: null,
+                  ergebnis: null,
                   numIndex: null,
                 },
                 kandidat,

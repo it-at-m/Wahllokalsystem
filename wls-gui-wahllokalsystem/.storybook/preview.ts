@@ -12,6 +12,10 @@ setup((app) => {
 
 initialize();
 
+Set.prototype.toJSON = function toJSON() {
+  return [...Set.prototype.values.call(this)];
+};
+
 const preview: Preview = {
   tags: ["autodocs"],
   parameters: {

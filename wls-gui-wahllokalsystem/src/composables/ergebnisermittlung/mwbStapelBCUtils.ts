@@ -14,7 +14,10 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
 
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
   const { getWahlvorschlaege } = useWahlvorschlaegeService();
-  const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
+  const {
+    compareKandidatenByListenPosition,
+    sortWahlvorschlaegeByOrdnungszahl,
+  } = useWahlvorschlagUtils();
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -26,6 +29,11 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     try {
       const wahlvorschlaege = await getWahlvorschlaege(wahlID, wahlbezirkID);
       sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege);
+      wahlvorschlaege.wahlvorschlaege.forEach((wahlvorschlag) => {
+        wahlvorschlag.kandidaten = new Set(
+          [...wahlvorschlag.kandidaten].sort(compareKandidatenByListenPosition)
+        );
+      });
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,

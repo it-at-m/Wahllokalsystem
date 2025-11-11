@@ -14,7 +14,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    c: number;
+    ungueltigeStimmen: number;
   }
 }
 
@@ -61,7 +61,7 @@ describe("TheTableUngueltigeStimmen.vue", () => {
       StapelArtEnum.MbwD,
       false
     );
-    expect(wrapper.vm.c).toBe(3);
+    expect(wrapper.vm.ungueltigeStimmen).toBe(3);
   });
 
   it("should_setErgebnisTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
@@ -83,6 +83,6 @@ describe("TheTableUngueltigeStimmen.vue", () => {
       StapelArtEnum.MbwD,
       false
     );
-    expect(wrapper.vm.c).toBe(0);
+    expect(wrapper.vm.ungueltigeStimmen).toBe(0);
   });
 });

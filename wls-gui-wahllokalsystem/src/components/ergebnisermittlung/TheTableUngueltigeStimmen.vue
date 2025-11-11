@@ -9,7 +9,7 @@
       <tr class="bg-grey-lighten-3">
         <td class="font-weight-bold">C</td>
         <td class="font-weight-bold">Ungültige Stimmen</td>
-        <td class="font-weight-bold">{{ c }}</td>
+        <td class="font-weight-bold">{{ ungueltigeStimmen }}</td>
       </tr>
     </tbody>
   </v-table>
@@ -28,7 +28,7 @@ const props = defineProps<{
   wahlId: string;
 }>();
 
-const c = ref(0);
+const ungueltigeStimmen = ref(0);
 
 onMounted(async () => {
   const result = await getErgebnisse(
@@ -37,6 +37,6 @@ onMounted(async () => {
     StapelArtEnum.MbwD,
     false
   );
-  c.value = result?.ergebnisse[0]?.ergebnis || 0;
+  ungueltigeStimmen.value = result?.ergebnisse[0]?.ergebnis || 0;
 });
 </script>

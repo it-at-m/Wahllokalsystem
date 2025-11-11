@@ -4,9 +4,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
-const { prepareKandidat, prepareWahlvorschlag } =
+const { createKandidat, prepareKandidat, prepareWahlvorschlag } =
   useWahlvorschlaegeTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomNumber, generateRandomString } =
+  useCommonTestDataFactory();
 const { prepareWahlvorschlaege } = useWahlvorschlaegeTestDataFactory();
 
 describe("wahlvorschlagUtils.ts", () => {
@@ -14,6 +15,118 @@ describe("wahlvorschlagUtils.ts", () => {
 
   beforeEach(() => {
     unitUnderTest = useWahlvorschlagUtils();
+  });
+
+  describe("compareKandidatenByListenPosition", () => {
+    it("should_returnEqual_when_bothObjectsAreSame", () => {
+      const kandidat = createKandidat();
+
+      const result = unitUnderTest.compareKandidatenByListenPosition(
+        kandidat,
+        kandidat
+      );
+
+      expect(result).toStrictEqual(0);
+    });
+
+    it("should_returnEqual_when_bothObjectsHaveEqualListenposition", () => {
+      const listenposition = generateRandomNumber(3);
+      const kandidat1 = prepareKandidat()
+        .listenposition(listenposition)
+        .build();
+      const kandidat2 = prepareKandidat()
+        .listenposition(listenposition)
+        .build();
+
+      const result = unitUnderTest.compareKandidatenByListenPosition(
+        kandidat1,
+        kandidat2
+      );
+
+      expect(result).toStrictEqual(0);
+    });
+
+    it("should_returnSmaller_when_kandidat1HasSmallerListenpositionThanKandidat2", () => {
+      const listenposition = generateRandomNumber(3);
+      const kandidat1 = prepareKandidat()
+        .listenposition(listenposition)
+        .build();
+      const kandidat2 = prepareKandidat()
+        .listenposition(listenposition + 1)
+        .build();
+
+      const result = unitUnderTest.compareKandidatenByListenPosition(
+        kandidat1,
+        kandidat2
+      );
+
+      expect(result).lessThan(0);
+    });
+    it("should_returnLarger_when_kandidat1HasLargerListenpositionThanKandidat2", () => {
+      const listenposition = generateRandomNumber(3);
+      const kandidat1 = prepareKandidat()
+        .listenposition(listenposition)
+        .build();
+      const kandidat2 = prepareKandidat()
+        .listenposition(listenposition - 1)
+        .build();
+
+      const result = unitUnderTest.compareKandidatenByListenPosition(
+        kandidat1,
+        kandidat2
+      );
+
+      expect(result).toBeGreaterThan(0);
+    });
+  });
+
+  describe("getKandidatLaufendeNummer", () => {
+    it.each([
+      { kandidatListenPosition: 0, expectedKandidatListenPosition: "00" },
+      { kandidatListenPosition: 9, expectedKandidatListenPosition: "09" },
+      { kandidatListenPosition: 10, expectedKandidatListenPosition: "10" },
+      { kandidatListenPosition: 99, expectedKandidatListenPosition: "99" },
+      {
+        kandidatListenPosition: 10000,
+        expectedKandidatListenPosition: "10000",
+      },
+    ])(
+      "should_returnNumberWithTwoCharPadAtStartEndingWith'$expectedKandidatListenPosition'_when_noPadLengthIsDefinedAndKandidatenListenpositionIs'$kandidatListenPosition'",
+      (testcaseArgument) => {
+        const wahlvorschlagNummer = generateRandomNumber(2);
+        const result = unitUnderTest.getKandidatLaufendeNummer(
+          wahlvorschlagNummer,
+          testcaseArgument.kandidatListenPosition
+        );
+
+        const expectedResult = `${wahlvorschlagNummer}${testcaseArgument.expectedKandidatListenPosition}`;
+        expect(result).toStrictEqual(expectedResult);
+      }
+    );
+
+    it.each([
+      { kandidatListenPosition: 0, expectedKandidatListenPosition: "00000" },
+      { kandidatListenPosition: 9, expectedKandidatListenPosition: "00009" },
+      { kandidatListenPosition: 10, expectedKandidatListenPosition: "00010" },
+      { kandidatListenPosition: 99, expectedKandidatListenPosition: "00099" },
+      {
+        kandidatListenPosition: 10000,
+        expectedKandidatListenPosition: "10000",
+      },
+    ])(
+      "should_returnNumberWithTwoCharPadAtStartEndingWith'$expectedKandidatListenPosition'_when_padLengthIs5AndKandidatenListenpositionIs'$kandidatListenPosition'",
+      (testcaseArgument) => {
+        const wahlvorschlagNummer = generateRandomNumber(2);
+        const result = unitUnderTest.getKandidatLaufendeNummer(
+          wahlvorschlagNummer,
+          testcaseArgument.kandidatListenPosition,
+          5
+        );
+
+        const expectedResult = `${wahlvorschlagNummer}${testcaseArgument.expectedKandidatListenPosition}`;
+        expect(result).toStrictEqual(expectedResult);
+      }
+    );
   });
 
   describe("getFirstKandidatNameOrEmptyString", () => {

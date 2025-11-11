@@ -3,12 +3,13 @@ import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 export function useWahlvorschlagWithScorableKandidatenMapper() {
   function toWahlvorschlagWithScorableKandidaten(
     wahlvorschlag: Wahlvorschlag,
     ergebnisse: Ergebnisse | null
-  ) {
+  ): WahlvorschlagWithScorableKandidaten {
     const wahlvorschlagWithScorableKandidaten = _initResult(wahlvorschlag);
 
     if (wahlvorschlag.kandidaten) {
@@ -24,9 +25,8 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
           kandidat,
         };
       });
-
-      return wahlvorschlagWithScorableKandidaten;
     }
+    return wahlvorschlagWithScorableKandidaten;
   }
 
   function toErgebnisse(

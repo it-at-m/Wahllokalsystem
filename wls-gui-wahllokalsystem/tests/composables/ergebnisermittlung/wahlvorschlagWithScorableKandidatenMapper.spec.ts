@@ -142,28 +142,31 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
       expect(result).toStrictEqual(expectedResult);
     });
 
-    it("should_ignoreErgebnisse_when_wahlvorschlagHasNoKandidaten", () => {
-      const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(new Set<Kandidat>([]))
-        .build();
+    it.each([new Set<Kandidat>([]), undefined])(
+      "should_ignoreErgebnisse_when_wahlvorschlagHasNoKandidaten",
+      (kandidatenParameter) => {
+        const wahlvorschlag = prepareWahlvorschlag()
+          .kandidaten(kandidatenParameter)
+          .build();
 
-      const ergebnisseToMap: Ergebnisse = prepareErgebnisse()
-        .ergebnisse([createErgebnis(), createErgebnis()])
-        .build();
+        const ergebnisseToMap: Ergebnisse = prepareErgebnisse()
+          .ergebnisse([createErgebnis(), createErgebnis()])
+          .build();
 
-      const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
-        wahlvorschlag,
-        ergebnisseToMap
-      );
+        const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
+          wahlvorschlag,
+          ergebnisseToMap
+        );
 
-      const expectedResult: WahlvorschlagWithScorableKandidaten = {
-        kurzname: wahlvorschlag.kurzname,
-        identifikator: wahlvorschlag.identifikator,
-        ordnungszahl: wahlvorschlag.ordnungszahl,
-        scorableKandidaten: [],
-      };
-      expect(result).toStrictEqual(expectedResult);
-    });
+        const expectedResult: WahlvorschlagWithScorableKandidaten = {
+          kurzname: wahlvorschlag.kurzname,
+          identifikator: wahlvorschlag.identifikator,
+          ordnungszahl: wahlvorschlag.ordnungszahl,
+          scorableKandidaten: [],
+        };
+        expect(result).toStrictEqual(expectedResult);
+      }
+    );
   });
 
   describe("toErgebnisse", () => {

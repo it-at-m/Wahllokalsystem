@@ -1,15 +1,10 @@
 <template>
   <v-table>
-    <colgroup>
-      <col style="width: 50px" />
-      <col />
-      <col style="width: 200px" />
-    </colgroup>
     <thead>
       <tr>
-        <td>Lfd. Nr.</td>
+        <td class="colLfdNr">Lfd. Nr.</td>
         <td>Kandidatin/Kandidat</td>
-        <td>Schlusszahl</td>
+        <td class="colScore">Schlusszahl</td>
       </tr>
     </thead>
     <tbody>
@@ -18,14 +13,14 @@
         :key="index"
         v-model="ergebnisAndKandidat.ergebnis"
         :kandidat="ergebnisAndKandidat.kandidat"
-        :wahlvorschlagNummer="wahlvorschlagNummer"
+        :wahlvorschlag-nummer="wahlvorschlagNummer"
       />
     </tbody>
     <tfoot>
       <tr>
         <td>Gesamtstimmenzahl</td>
         <td />
-        <td>0</td>
+        <td>{{ totalScore }}</td>
       </tr>
     </tfoot>
   </v-table>
@@ -34,7 +29,12 @@
 <script setup lang="ts">
 import type { ErgebnisAndKandidat } from "@/types/ergebnisermittlung/ErgebnisAndKandidat.ts";
 
-import BaseKandidatRow from "@/components/ergebnisermittlung/MBW/kandidatenStimmen/BaseKandidatRow.vue";
+import { computed } from "vue";
+
+import BaseKandidatRow from "@/components/ergebnisermittlung/MBW/stapelBC/BaseKandidatRow.vue";
+import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
+
+const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 
 const ergebnisseAndKandidaten = defineModel<ErgebnisAndKandidat[]>(
   "modelValue",
@@ -43,12 +43,24 @@ const ergebnisseAndKandidaten = defineModel<ErgebnisAndKandidat[]>(
   }
 );
 
-const props = defineProps({
+defineProps({
   wahlvorschlagNummer: {
     type: Number,
     required: true,
   },
 });
+
+const totalScore = computed(() =>
+  summeKandidatenStimmen(ergebnisseAndKandidaten.value)
+);
 </script>
 
-<style scoped></style>
+<style scoped>
+.colLfdNr {
+  width: 4em;
+}
+
+.colScore {
+  width: 200px;
+}
+</style>

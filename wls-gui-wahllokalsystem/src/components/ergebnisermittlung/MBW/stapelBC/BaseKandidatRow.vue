@@ -45,5 +45,3 @@ const laufendeNummer = computed(() =>
   )
 );
 </script>
-
-<style scoped></style>

@@ -2,7 +2,11 @@
   <v-card>
     <v-card-title>Übersicht des Auszählungsergebnisses</v-card-title>
     <v-card-text>
-      <v-table>
+      <v-skeleton-loader
+        v-if="isLoading"
+        type="table"
+      ></v-skeleton-loader>
+      <v-table v-else>
         <thead>
           <tr>
             <td><!-- fold/expand action --></td>
@@ -76,6 +80,7 @@ const props = defineProps({
 });
 
 const {
+  isLoading,
   isSaving,
   scorableWahlvorschlaege,
   loadWahlvorschlaegeAndErgebnisse,

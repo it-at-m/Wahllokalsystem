@@ -111,6 +111,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   }
 
   return {
+    isLoading,
     isSaving,
     scorableWahlvorschlaege,
     loadWahlvorschlaegeAndErgebnisse,

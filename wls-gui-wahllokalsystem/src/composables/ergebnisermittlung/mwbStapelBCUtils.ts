@@ -3,6 +3,7 @@ import type { Ref } from "vue";
 
 import { ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlvorschlagWithScorableKandidatenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithScorableKandidatenMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
@@ -20,6 +21,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   } = useWahlvorschlagUtils();
   const { toErgebnisse, toWahlvorschlagWithScorableKandidaten } =
     useWahlvorschlagWithScorableKandidatenMapper();
+  const { logError } = useLogging("useMwbStapelBCUtils");
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -41,6 +43,8 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         (wahlvorschlag) =>
           toWahlvorschlagWithScorableKandidaten(wahlvorschlag, ergebnisse)
       );
+    } catch (error) {
+      logError("loading of wahlvorschlaege and results failed", error);
     } finally {
       isLoading.value = false;
     }
@@ -57,6 +61,8 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         StapelArt_BC
       );
       await postErgebnisse(wahlbezirkID, wahlID, StapelArt_BC, ergebnisse);
+    } catch (error) {
+      logError("saving ergebnisse failed", error);
     } finally {
       isSaving.value = false;
     }

@@ -5,7 +5,7 @@
       <v-skeleton-loader
         v-if="isLoading"
         type="table"
-      ></v-skeleton-loader>
+      />
       <v-table v-else>
         <thead>
           <tr>

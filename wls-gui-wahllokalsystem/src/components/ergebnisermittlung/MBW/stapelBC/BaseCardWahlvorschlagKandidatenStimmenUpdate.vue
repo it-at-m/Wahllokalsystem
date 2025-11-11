@@ -49,5 +49,3 @@ function onSaveButtonClicked() {
   emit("doSave");
 }
 </script>
-
-<style scoped></style>

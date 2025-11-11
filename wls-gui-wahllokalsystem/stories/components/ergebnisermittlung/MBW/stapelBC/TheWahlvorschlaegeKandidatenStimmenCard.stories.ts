@@ -57,7 +57,7 @@ const meta = {
           }
         ),
 
-        http.post(`/api/*`, async (request) => {
+        http.post(`/api/*`, async () => {
           await delay(2000);
           return new HttpResponse(null, {
             status: 200,

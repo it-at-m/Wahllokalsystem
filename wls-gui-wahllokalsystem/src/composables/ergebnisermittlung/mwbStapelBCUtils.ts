@@ -44,7 +44,6 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
       const result: WahlvorschlagWithScorableKandidaten[] = [];
 
       for (const wahlvorschlag of wahlvorschlaege.wahlvorschlaege) {
-        console.log(`wahlvorschlagDTO > `, wahlvorschlag);
         const wahlvorschlagWithScorableKandidaten: WahlvorschlagWithScorableKandidaten =
           {
             identifikator: wahlvorschlag.identifikator,
@@ -52,7 +51,6 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
             kurzname: wahlvorschlag.kurzname,
             ordnungszahl: wahlvorschlag.ordnungszahl,
           };
-        console.log(`wahlvorschlag > `, wahlvorschlagWithScorableKandidaten);
         result.push(wahlvorschlagWithScorableKandidaten);
         if (wahlvorschlag.kandidaten) {
           for (const kandidat of wahlvorschlag.kandidaten) {
@@ -80,7 +78,6 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         }
       }
 
-      console.log(`loading Result`, result);
       scorableWahlvorschlaege.value = result;
     } finally {
       isLoading.value = false;

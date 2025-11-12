@@ -52,11 +52,19 @@ export function useWahlvorbereitungService() {
   async function getUrnenwahlSchliessungsUhrzeit(
     wahlbezirkID: string,
     sendNotification = true
-  ): Promise<UrnenwahlSchliessungsuhrzeit> {
+  ): Promise<UrnenwahlSchliessungsuhrzeit | null> {
     try {
-      return await urnenwahlSchliessungsUhrzeitControllerAPI
-        .getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)
-        .then((response) => toUrnenwahlSchliessungsuhrzeitModel(response.data));
+      const response =
+        await urnenwahlSchliessungsUhrzeitControllerAPI.getUrnenwahlSchliessungsUhrzeit(
+          wahlbezirkID
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+
+      if (!responseData) {
+        return null;
+      }
+
+      return toUrnenwahlSchliessungsuhrzeitModel(responseData);
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(

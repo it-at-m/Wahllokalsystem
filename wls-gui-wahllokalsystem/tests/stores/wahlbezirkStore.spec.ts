@@ -683,6 +683,27 @@ describe("wahlbezirkStore.ts", () => {
         mockDefinitions.getUrnenwahlSchliessungsUhrzeit
       ).toHaveBeenCalledWith(userWahlbezirkID, false);
     });
+
+    it("should_setUndefinedForSchliessungsuhrzeitAndSchliessungsuhrzeitSend_when_noSchliessungsuhrzeitIsGiven", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit = new Date();
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+        new Date();
+
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockReturnValue(null);
+
+      await unitUnderTest.schliessungsuhrzeitActions.initSchliessungsuhrzeit();
+
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
+      ).toBeUndefined();
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent?.getTime()
+      ).toBeUndefined();
+    });
   });
 
   describe("sendSchliessungsuhrzeit", () => {

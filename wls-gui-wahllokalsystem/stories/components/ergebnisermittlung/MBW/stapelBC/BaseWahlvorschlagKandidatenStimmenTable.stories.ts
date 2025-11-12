@@ -27,7 +27,7 @@ export const Default: Story = {
 
 function createErgebnisseAndKandidaten(size = 11): ErgebnisAndKandidat[] {
   const result: ErgebnisAndKandidat[] = [];
-  for (let i = 1; i < size; i++) {
+  for (let i = 1; i <= size; i++) {
     const kandidat = prepareKandidat().listenposition(i).build();
     const ergebnis = prepareErgebnis()
       .kandidatID(kandidat.identifikator)

@@ -7,7 +7,7 @@ import {
 } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import TheTableUngueltigeStimmen from "@/components/ergebnisermittlung/TheTableUngueltigeStimmen.vue";
+import TheMbwUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -28,10 +28,12 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   }),
 }));
 
-describe("TheTableUngueltigeStimmen.vue", () => {
+describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
 
-  let wrapper: VueWrapper<InstanceType<typeof TheTableUngueltigeStimmen>>;
+  let wrapper: VueWrapper<
+    InstanceType<typeof TheMbwUngueltigeStimmenAnzeigenCard>
+  >;
 
   const wahlId = "wahlId";
   const wahlbezirkId = "wahlbezirkId";
@@ -45,7 +47,7 @@ describe("TheTableUngueltigeStimmen.vue", () => {
         .build()
     );
 
-    wrapper = mount(TheTableUngueltigeStimmen, {
+    wrapper = mount(TheMbwUngueltigeStimmenAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -67,7 +69,7 @@ describe("TheTableUngueltigeStimmen.vue", () => {
   it("should_setErgebnisTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
     mockDefinitions.getErgebnisse.mockReturnValue(null);
 
-    wrapper = mount(TheTableUngueltigeStimmen, {
+    wrapper = mount(TheMbwUngueltigeStimmenAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,

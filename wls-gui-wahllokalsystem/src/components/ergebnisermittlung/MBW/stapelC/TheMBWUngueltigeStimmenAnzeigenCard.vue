@@ -1,18 +1,23 @@
 <template>
-  <v-table>
-    <tbody>
-      <tr>
-        <td />
-        <td />
-        <td class="font-weight-bold">Insgesamt</td>
-      </tr>
-      <tr class="bg-grey-lighten-3">
-        <td class="font-weight-bold">C</td>
-        <td class="font-weight-bold">Ungültige Stimmen</td>
-        <td class="font-weight-bold">{{ ungueltigeStimmen }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-card>
+    <v-card-title> Ungültige Stimmen </v-card-title>
+    <v-card-text>
+      <v-table>
+        <tbody>
+          <tr>
+            <td />
+            <td />
+            <td class="font-weight-bold">Insgesamt</td>
+          </tr>
+          <tr class="bg-grey-lighten-3">
+            <td class="font-weight-bold">C</td>
+            <td class="font-weight-bold">Ungültige Stimmen</td>
+            <td class="font-weight-bold">{{ ungueltigeStimmen }}</td>
+          </tr>
+        </tbody>
+      </v-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">

@@ -131,6 +131,17 @@ describe("wahlvorbereitungService", () => {
       ).toHaveBeenCalledWith(mockedApiResponseData);
     });
 
+    it("should_returnNull_when_apiReturns204", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockResolvedValue(
+        createAxiosResponse({ status: 204, data: {} })
+      );
+
+      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+      expect(result).toBeNull();
+    });
+
     it.each([true, false])(
       "should_throwErrorAndSendNotification=%b_when_apiCallFailedAndSendNotification",
       async (sendNotificationParameter) => {

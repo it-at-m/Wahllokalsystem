@@ -79,7 +79,7 @@ describe("userStore.ts", () => {
         wahlbezirkNummer: "",
         wahlbezirksArt: WahlbezirksArtEnum.UWB,
         pin: "",
-        authorities: new Set<string>(),
+        authorities: [],
         wahlMetaData: [
           {
             wahlbezirkID: "",

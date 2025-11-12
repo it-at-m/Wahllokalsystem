@@ -47,10 +47,10 @@ export function useUserMapper() {
     }
 
     function _assertIsNotEmpty(
-      value: Set<string> | null | undefined,
+      value: string[] | null | undefined,
       propName: string
-    ): asserts value is Set<string> {
-      if (value === undefined || value === null || value.size === 0) {
+    ): asserts value is string[] {
+      if (value === undefined || value === null || value.length === 0) {
         invalidProps.push(propName);
       }
     }

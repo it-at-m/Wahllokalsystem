@@ -19,7 +19,7 @@ describe("wahlvorschlagUtils.ts", () => {
   describe("getFirstKandidatNameOrEmptyString", () => {
     it.each([
       { value: undefined, description: "AreUndefined" },
-      { value: new Set([]), description: "AreEmpty" },
+      { value: [], description: "AreEmpty" },
     ])(
       "should_returnEmptyString_when_wahlvorschlagHasNoKandidaten'$description'",
       (args) => {
@@ -37,7 +37,7 @@ describe("wahlvorschlagUtils.ts", () => {
     it("should_returnNameOfKandidat_when_onlyOneKandidatIsGiven", () => {
       const kandidatName = generateRandomString(10);
       const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(new Set([prepareKandidat().name(kandidatName).build()]))
+        .kandidaten([prepareKandidat().name(kandidatName).build()])
         .build();
 
       const result =
@@ -49,18 +49,13 @@ describe("wahlvorschlagUtils.ts", () => {
     it("should_returnNameOfKandidatWithLowestListenPosition_when_moreThanOneKandidatAreGivenWithDifferentListenPosition", () => {
       const kandidatenNameToGet = generateRandomString(10);
       const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(
-          new Set([
-            prepareKandidat().listenposition(10).build(),
-            prepareKandidat().listenposition(7).build(),
-            prepareKandidat()
-              .listenposition(5)
-              .name(kandidatenNameToGet)
-              .build(),
-            prepareKandidat().listenposition(6).build(),
-            prepareKandidat().listenposition(12).build(),
-          ])
-        )
+        .kandidaten([
+          prepareKandidat().listenposition(10).build(),
+          prepareKandidat().listenposition(7).build(),
+          prepareKandidat().listenposition(5).name(kandidatenNameToGet).build(),
+          prepareKandidat().listenposition(6).build(),
+          prepareKandidat().listenposition(12).build(),
+        ])
         .build();
 
       const result =
@@ -72,18 +67,13 @@ describe("wahlvorschlagUtils.ts", () => {
     it("should_returnNameOfKandidatWithFirstAppearanceOfLowestListenPosition_when_moreThanOneKandidatAreGivenWithSameListenPosition", () => {
       const kandidatenNameToGet = generateRandomString(10);
       const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(
-          new Set([
-            prepareKandidat().listenposition(10).build(),
-            prepareKandidat().listenposition(7).build(),
-            prepareKandidat()
-              .listenposition(5)
-              .name(kandidatenNameToGet)
-              .build(),
-            prepareKandidat().listenposition(6).build(),
-            prepareKandidat().listenposition(5).build(),
-          ])
-        )
+        .kandidaten([
+          prepareKandidat().listenposition(10).build(),
+          prepareKandidat().listenposition(7).build(),
+          prepareKandidat().listenposition(5).name(kandidatenNameToGet).build(),
+          prepareKandidat().listenposition(6).build(),
+          prepareKandidat().listenposition(5).build(),
+        ])
         .build();
 
       const result =
@@ -106,14 +96,12 @@ describe("wahlvorschlagUtils.ts", () => {
       const mockedWahlvorschlaege = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(
-          new Set([
-            wahlvorschlag4,
-            wahlvorschlag2,
-            wahlvorschlag1,
-            wahlvorschlag3,
-          ])
-        )
+        .wahlvorschlaege([
+          wahlvorschlag4,
+          wahlvorschlag2,
+          wahlvorschlag1,
+          wahlvorschlag3,
+        ])
         .build();
 
       const sortedWahlvorschlaege =

@@ -88,34 +88,32 @@ export const Default: Story = {
       prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID("wahlbezirkID")
-        .wahlvorschlaege(
-          new Set([
-            prepareWahlvorschlag()
-              .identifikator("wahlvorschlag1")
-              .kurzname("wahlvorschlag1")
-              .ordnungszahl(1)
-              .kandidaten(new Set([prepareKandidat().build()]))
-              .build(),
-            prepareWahlvorschlag()
-              .identifikator("wahlvorschlag2")
-              .kurzname("wahlvorschlag2")
-              .ordnungszahl(2)
-              .kandidaten(new Set([prepareKandidat().build()]))
-              .build(),
-            prepareWahlvorschlag()
-              .identifikator("wahlvorschlag3")
-              .kurzname("wahlvorschlag3")
-              .ordnungszahl(3)
-              .kandidaten(new Set([prepareKandidat().build()]))
-              .build(),
-            prepareWahlvorschlag()
-              .identifikator("wahlvorschlag4")
-              .kurzname("wahlvorschlag4")
-              .ordnungszahl(4)
-              .kandidaten(new Set([prepareKandidat().build()]))
-              .build(),
-          ])
-        )
+        .wahlvorschlaege([
+          prepareWahlvorschlag()
+            .identifikator("wahlvorschlag1")
+            .kurzname("wahlvorschlag1")
+            .ordnungszahl(1)
+            .kandidaten([prepareKandidat().build()])
+            .build(),
+          prepareWahlvorschlag()
+            .identifikator("wahlvorschlag2")
+            .kurzname("wahlvorschlag2")
+            .ordnungszahl(2)
+            .kandidaten([prepareKandidat().build()])
+            .build(),
+          prepareWahlvorschlag()
+            .identifikator("wahlvorschlag3")
+            .kurzname("wahlvorschlag3")
+            .ordnungszahl(3)
+            .kandidaten([prepareKandidat().build()])
+            .build(),
+          prepareWahlvorschlag()
+            .identifikator("wahlvorschlag4")
+            .kurzname("wahlvorschlag4")
+            .ordnungszahl(4)
+            .kandidaten([prepareKandidat().build()])
+            .build(),
+        ])
         .build(),
     ];
 

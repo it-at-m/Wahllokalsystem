@@ -9,8 +9,8 @@
     </thead>
     <tbody>
       <base-kandidat-row
-        v-for="(ergebnisAndKandidat, index) in ergebnisseAndKandidaten"
-        :key="index"
+        v-for="ergebnisAndKandidat in ergebnisseAndKandidaten"
+        :key="ergebnisAndKandidat.kandidat.identifikator"
         v-model="ergebnisAndKandidat.ergebnis"
         :kandidat="ergebnisAndKandidat.kandidat"
         :wahlvorschlag-nummer="wahlvorschlagNummer"

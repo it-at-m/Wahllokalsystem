@@ -2,9 +2,9 @@
   <v-table>
     <thead>
       <tr>
-        <td class="colLfdNr">Lfd. Nr.</td>
-        <td>Kandidatin/Kandidat</td>
-        <td class="colScore">Schlusszahl</td>
+        <th class="colLfdNr">Lfd. Nr.</th>
+        <th>Kandidatin/Kandidat</th>
+        <th class="colScore">Schlusszahl</th>
       </tr>
     </thead>
     <tbody>

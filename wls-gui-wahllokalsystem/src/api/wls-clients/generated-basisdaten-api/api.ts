@@ -292,10 +292,10 @@ export interface ReferendumvorlageDTO {
     'frage': string;
     /**
      * 
-     * @type {Set<ReferendumoptionDTO>}
+     * @type {Array<ReferendumoptionDTO>}
      * @memberof ReferendumvorlageDTO
      */
-    'referendumoptionen': Set<ReferendumoptionDTO>;
+    'referendumoptionen': Array<ReferendumoptionDTO>;
 }
 /**
  * 
@@ -311,10 +311,10 @@ export interface ReferendumvorlagenDTO {
     'stimmzettelgebietID': string;
     /**
      * 
-     * @type {Set<ReferendumvorlageDTO>}
+     * @type {Array<ReferendumvorlageDTO>}
      * @memberof ReferendumvorlagenDTO
      */
-    'referendumvorlage': Set<ReferendumvorlageDTO>;
+    'referendumvorlage': Array<ReferendumvorlageDTO>;
 }
 /**
  * 
@@ -496,10 +496,10 @@ export interface WahlvorschlaegeDTO {
     'stimmzettelgebietID': string;
     /**
      * 
-     * @type {Set<WahlvorschlagDTO>}
+     * @type {Array<WahlvorschlagDTO>}
      * @memberof WahlvorschlaegeDTO
      */
-    'wahlvorschlaege': Set<WahlvorschlagDTO>;
+    'wahlvorschlaege': Array<WahlvorschlagDTO>;
 }
 /**
  * 
@@ -533,10 +533,10 @@ export interface WahlvorschlagDTO {
     'erhaeltStimmen': boolean;
     /**
      * 
-     * @type {Set<KandidatDTO>}
+     * @type {Array<KandidatDTO>}
      * @memberof WahlvorschlagDTO
      */
-    'kandidaten'?: Set<KandidatDTO>;
+    'kandidaten'?: Array<KandidatDTO>;
 }
 /**
  * 

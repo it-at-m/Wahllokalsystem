@@ -9,10 +9,10 @@
       <v-table v-else>
         <thead>
           <tr>
-            <td><!-- fold/expand action --></td>
-            <td><!-- Ordnungszahl --></td>
-            <td>Wahlvorschlag</td>
-            <td>Gültige Stimmen</td>
+            <th><!-- fold/expand action --></th>
+            <th><!-- Ordnungszahl --></th>
+            <th>Wahlvorschlag</th>
+            <th>Gültige Stimmen</th>
           </tr>
         </thead>
         <tbody>

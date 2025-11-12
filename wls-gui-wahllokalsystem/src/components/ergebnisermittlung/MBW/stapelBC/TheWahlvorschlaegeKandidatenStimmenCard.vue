@@ -78,7 +78,7 @@ const {
 } = useMwbStapelBCUtils(props.wahlbezirkID, props.wahlID);
 const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 
-const expandedRows: Ref<boolean[]> = ref([]);
+const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
 
 onMounted(() => {
   loadWahlvorschlaegeAndErgebnisse();

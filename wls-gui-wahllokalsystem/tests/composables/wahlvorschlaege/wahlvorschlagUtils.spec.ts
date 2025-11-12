@@ -112,7 +112,7 @@ describe("wahlvorschlagUtils.ts", () => {
         expect(wahlvorschlag.ordnungszahl).toBe(expectedOrdnungszahl);
         expectedOrdnungszahl++;
       });
-      expect(Array.from(sortedWahlvorschlaege.wahlvorschlaege)).toEqual([
+      expect(sortedWahlvorschlaege.wahlvorschlaege).toEqual([
         wahlvorschlag1,
         wahlvorschlag2,
         wahlvorschlag3,

@@ -5,7 +5,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { http, HttpResponse } from "msw";
 
 import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import TheMbwUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 
 const { prepareErgebnisDTO, prepareErgebnisseDTO } =
   useErgebnisseTestDataFactory();
@@ -27,7 +27,7 @@ const body = JSON.stringify(
 );
 
 const meta = {
-  component: TheMbwUngueltigeStimmenAnzeigenCard,
+  component: TheMBWUngueltigeStimmenAnzeigenCard,
   parameters: {
     msw: {
       handlers: [
@@ -46,7 +46,7 @@ const meta = {
     },
   },
   args: {},
-} satisfies Meta<typeof TheMbwUngueltigeStimmenAnzeigenCard>;
+} satisfies Meta<typeof TheMBWUngueltigeStimmenAnzeigenCard>;
 
 export default meta;
 

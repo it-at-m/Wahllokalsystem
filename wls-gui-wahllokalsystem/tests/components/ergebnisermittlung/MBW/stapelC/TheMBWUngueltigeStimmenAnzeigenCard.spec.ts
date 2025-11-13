@@ -7,7 +7,7 @@ import {
 } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import TheMbwUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -32,7 +32,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
 
   let wrapper: VueWrapper<
-    InstanceType<typeof TheMbwUngueltigeStimmenAnzeigenCard>
+    InstanceType<typeof TheMBWUngueltigeStimmenAnzeigenCard>
   >;
 
   const wahlId = "wahlId";
@@ -47,7 +47,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
         .build()
     );
 
-    wrapper = mount(TheMbwUngueltigeStimmenAnzeigenCard, {
+    wrapper = mount(TheMBWUngueltigeStimmenAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -69,7 +69,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   it("should_setErgebnisTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
     mockDefinitions.getErgebnisse.mockReturnValue(null);
 
-    wrapper = mount(TheMbwUngueltigeStimmenAnzeigenCard, {
+    wrapper = mount(TheMBWUngueltigeStimmenAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,

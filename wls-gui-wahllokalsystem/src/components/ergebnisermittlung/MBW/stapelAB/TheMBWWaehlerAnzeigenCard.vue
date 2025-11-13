@@ -1,28 +1,33 @@
 <template>
-  <v-table>
-    <tbody>
-      <tr
-        v-for="(row, index) in rows"
-        :key="index"
-      >
-        <td
-          v-for="(value, idx) in row"
-          :key="idx"
-        >
-          {{ value }}
-        </td>
-      </tr>
-      <tr class="bg-grey-lighten-3">
-        <td
-          v-for="(value, index) in resultRow"
-          :key="index"
-          class="font-weight-bold"
-        >
-          {{ value }}
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-card>
+    <v-card-title> Wähler </v-card-title>
+    <v-card-text>
+      <v-table>
+        <tbody>
+          <tr
+            v-for="(row, index) in rows"
+            :key="index"
+          >
+            <td
+              v-for="(value, idx) in row"
+              :key="idx"
+            >
+              {{ value }}
+            </td>
+          </tr>
+          <tr class="bg-grey-lighten-3">
+            <td
+              v-for="(value, index) in resultRow"
+              :key="index"
+              class="font-weight-bold"
+            >
+              {{ value }}
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">

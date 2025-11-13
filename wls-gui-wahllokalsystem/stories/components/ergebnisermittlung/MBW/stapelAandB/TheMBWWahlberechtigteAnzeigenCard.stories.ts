@@ -10,26 +10,6 @@ const { createAWerte } = useAWerteTestDataFactory();
 const meta = {
   component: TheMBWWahlberechtigteAnzeigenCard,
   args: {},
-  parameters: {
-    msw: {
-      handlers: [
-        http.all("/api/*", async () => {
-          await delay(1000);
-          return new HttpResponse(null, {
-            status: 200,
-          });
-        }),
-      ],
-    },
-  },
-  decorators: [
-    (story) => {
-      return {
-        components: { story },
-        template: "<story />",
-      };
-    },
-  ],
 } satisfies Meta<typeof TheMBWWahlberechtigteAnzeigenCard>;
 
 export default meta;

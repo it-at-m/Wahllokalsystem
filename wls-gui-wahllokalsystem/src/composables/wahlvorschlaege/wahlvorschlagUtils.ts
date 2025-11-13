@@ -8,7 +8,7 @@ export function useWahlvorschlagUtils() {
   }
 
   function getFirstKandidatNameOrEmptyString(wahlvorschlag: Wahlvorschlag) {
-    if (wahlvorschlag.kandidaten && wahlvorschlag.kandidaten.size > 0) {
+    if (wahlvorschlag.kandidaten && wahlvorschlag.kandidaten.length > 0) {
       const kandidatWithLowedListenPosition = [
         ...wahlvorschlag.kandidaten,
       ].reduce((min, current) =>
@@ -21,11 +21,12 @@ export function useWahlvorschlagUtils() {
   }
 
   function sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege: Wahlvorschlaege) {
-    const sortedArray = Array.from(wahlvorschlaege.wahlvorschlaege).sort(
+    wahlvorschlaege.wahlvorschlaege = Array.from(
+      wahlvorschlaege.wahlvorschlaege
+    ).sort(
       (vorschlagA, vorschlagB) =>
         vorschlagA.ordnungszahl - vorschlagB.ordnungszahl
     );
-    wahlvorschlaege.wahlvorschlaege = new Set(sortedArray);
     return wahlvorschlaege;
   }
 

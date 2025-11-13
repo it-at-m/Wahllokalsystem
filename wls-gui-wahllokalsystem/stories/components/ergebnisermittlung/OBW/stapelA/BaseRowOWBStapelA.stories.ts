@@ -36,7 +36,7 @@ const meta = {
       ordnungszahl: 1,
       kurzname: "Wahlvorschlag Kurzname",
       erhaeltStimmen: true,
-      kandidaten: new Set([
+      kandidaten: [
         {
           identifikator: "1",
           name: "Kandidat",
@@ -45,7 +45,7 @@ const meta = {
           tabellenSpalteInNiederschrift: 1,
           einzelbewerber: false,
         },
-      ]),
+      ],
     },
     ergebnisStapelC: 0,
   },

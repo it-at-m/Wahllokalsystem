@@ -53,25 +53,23 @@ const defaultErgebnisseObwCGueltig = prepareErgebnisse()
 const defaultWahlvorschlaege = prepareWahlvorschlaege()
   .wahlID(wahlID)
   .wahlbezirkID(wahlbezirkID)
-  .wahlvorschlaege(
-    new Set([
-      prepareWahlvorschlag()
-        .identifikator("id1")
-        .kurzname("Wahlvorschlag 1")
-        .kandidaten(new Set([prepareKandidat().name("Kandidat 11").build()]))
-        .build(),
-      prepareWahlvorschlag()
-        .identifikator("id2")
-        .kurzname("Wahlvorschlag 2")
-        .kandidaten(new Set([prepareKandidat().name("Kandidat 21").build()]))
-        .build(),
-      prepareWahlvorschlag()
-        .identifikator("id3")
-        .kurzname("Wahlvorschlag 3")
-        .kandidaten(new Set([prepareKandidat().name("Kandidat 31").build()]))
-        .build(),
-    ])
-  )
+  .wahlvorschlaege([
+    prepareWahlvorschlag()
+      .identifikator("id1")
+      .kurzname("Wahlvorschlag 1")
+      .kandidaten([prepareKandidat().name("Kandidat 11").build()])
+      .build(),
+    prepareWahlvorschlag()
+      .identifikator("id2")
+      .kurzname("Wahlvorschlag 2")
+      .kandidaten([prepareKandidat().name("Kandidat 21").build()])
+      .build(),
+    prepareWahlvorschlag()
+      .identifikator("id3")
+      .kurzname("Wahlvorschlag 3")
+      .kandidaten([prepareKandidat().name("Kandidat 31").build()])
+      .build(),
+  ])
   .build();
 
 export default meta;

@@ -1,7 +1,6 @@
 import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
@@ -396,9 +395,7 @@ describe("obwStapelCUtils", () => {
         .build();
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
         prepareWahlvorschlaege()
-          .wahlvorschlaege(
-            new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
-          )
+          .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
           .build()
       );
 
@@ -421,9 +418,7 @@ describe("obwStapelCUtils", () => {
 
     it("should_returnEmptyArray_when_wahlvorschlaegeForWahlIdAndWahlbezirkIdHasNoWahlvorschlaeage", () => {
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
-        prepareWahlvorschlaege()
-          .wahlvorschlaege(new Set<Wahlvorschlag>([]))
-          .build()
+        prepareWahlvorschlaege().wahlvorschlaege([]).build()
       );
 
       const result = unitUnderTest.wahlvorschlaege.value;
@@ -444,9 +439,7 @@ describe("obwStapelCUtils", () => {
         .build();
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
         prepareWahlvorschlaege()
-          .wahlvorschlaege(
-            new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
-          )
+          .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
           .build()
       );
 
@@ -530,9 +523,7 @@ describe("obwStapelCUtils", () => {
         .build();
       mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockReturnValue(
         prepareWahlvorschlaege()
-          .wahlvorschlaege(
-            new Set([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
-          )
+          .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2, wahlvorschlag3])
           .build()
       );
 

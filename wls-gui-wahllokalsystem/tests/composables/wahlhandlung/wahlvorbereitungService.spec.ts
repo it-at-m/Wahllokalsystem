@@ -313,7 +313,6 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.toUrnenwahlvorbereitungModel.mockReturnValue(
         expectedUrnenwahlvorbereitung
       );
-      // Mock the API call to return a response with the expected data
       mockDefinitions.getUrnenwahlVorbereitung.mockResolvedValue(
         createUrnenwahlvorbereitungDTO()
       );
@@ -420,7 +419,6 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.toBriefwahlvorbereitungModel.mockReturnValue(
         expectedBriefwahlvorbereitung
       );
-      // Mock the API call to return a response with the expected data
       mockDefinitions.getBriefwahlvorbereitung.mockResolvedValue(
         createBriefwahlvorbereitungDTO()
       );

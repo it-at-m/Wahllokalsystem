@@ -6,6 +6,8 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useWahlvorbereitungTaskFactory(): TaskFactory {
+  const WAHLVORBEREITUNG = "Wahlvorbereitung";
+
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     return taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.UWB
       ? [_createTaskUrnenwahlvorbereitung()]
@@ -15,7 +17,7 @@ export function useWahlvorbereitungTaskFactory(): TaskFactory {
   function _createTaskUrnenwahlvorbereitung(): Task {
     const { urnenwahlVorbereitungActions } = useWahlbezirkStore();
     return {
-      name: "Wahlvorbereitung",
+      name: WAHLVORBEREITUNG,
       callback: () => {
         return urnenwahlVorbereitungActions.initUrnenwahlvorbereitung(false);
       },
@@ -25,7 +27,7 @@ export function useWahlvorbereitungTaskFactory(): TaskFactory {
   function _createTaskBriefwahlvorbereitung(): Task {
     const { briefwahlVorbereitungActions } = useWahlbezirkStore();
     return {
-      name: "Wahlvorbereitung",
+      name: WAHLVORBEREITUNG,
       callback: () => {
         return briefwahlVorbereitungActions.initBriefwahlvorbereitung(false);
       },

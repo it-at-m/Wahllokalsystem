@@ -861,7 +861,7 @@ describe("wahlbezirkStore.ts", () => {
       }
     );
 
-    it("should_initUrnenwahlvorbereitung_when_urnenAnzahlIsEmpty", async () => {
+    it("should_initUrnenwahlvorbereitungUrnenAnzahl_when_urnenAnzahlIsEmpty", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -874,10 +874,6 @@ describe("wahlbezirkStore.ts", () => {
 
       expect(
         unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
-          .urnenAnzahl.length
-      ).toBeGreaterThan(0);
-      expect(
-        unitUnderTest.urnenwahlVorbereitungState.urnenwahlVorbereitung
           .urnenAnzahl
       ).toStrictEqual([
         {
@@ -887,7 +883,7 @@ describe("wahlbezirkStore.ts", () => {
       ]);
     });
 
-    it("should_initUrnenwahlvorbereitung_when_urnenAnzahlIsNotEmpty", async () => {
+    it("should_notInitUrnenwahlvorbereitungUrnenAnzahl_when_urnenAnzahlIsNotEmpty", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -1021,7 +1017,7 @@ describe("wahlbezirkStore.ts", () => {
       }
     );
 
-    it("should_initBriefwahlvorbereitung_when_urnenAnzahlIsEmpty", async () => {
+    it("should_initBriefwahlvorbereitungUrnenAnzahl_when_urnenAnzahlIsEmpty", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
@@ -1047,7 +1043,7 @@ describe("wahlbezirkStore.ts", () => {
       ]);
     });
 
-    it("should_initBriefwahlvorbereitung_when_urnenAnzahlIsNotEmpty", async () => {
+    it("should_notInitBriefwahlvorbereitungUrnenAnzahl_when_urnenAnzahlIsNotEmpty", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());

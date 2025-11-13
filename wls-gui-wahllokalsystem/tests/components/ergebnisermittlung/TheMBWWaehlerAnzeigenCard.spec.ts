@@ -8,7 +8,7 @@ import {
 } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import TheTableWaehler from "@/components/ergebnisermittlung/TheTableWaehler.vue";
+import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -58,7 +58,7 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 
-describe("TheTableWaehler.vue", () => {
+describe("TheMBWWaehlerAnzeigenCard.vue", () => {
   const { prepareWahl } = useWahlTestDataFactory();
   const {
     prepareWahldaten,
@@ -67,7 +67,7 @@ describe("TheTableWaehler.vue", () => {
     prepareStimmzettel,
   } = useStimmabgabevermerkeTestDataFactory();
 
-  let wrapper: VueWrapper<InstanceType<typeof TheTableWaehler>>;
+  let wrapper: VueWrapper<InstanceType<typeof TheMBWWaehlerAnzeigenCard>>;
 
   const wahlId = "wahlId";
   const wahlbezirkId = "wahlbezirkId";
@@ -119,7 +119,7 @@ describe("TheTableWaehler.vue", () => {
         .build()
     );
 
-    wrapper = mount(TheTableWaehler, {
+    wrapper = mount(TheMBWWaehlerAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -153,7 +153,7 @@ describe("TheTableWaehler.vue", () => {
       anzahlWaehler: 4,
     });
 
-    wrapper = mount(TheTableWaehler, {
+    wrapper = mount(TheMBWWaehlerAnzeigenCard, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,

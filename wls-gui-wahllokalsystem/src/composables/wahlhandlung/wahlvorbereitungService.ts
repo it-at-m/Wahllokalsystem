@@ -24,6 +24,7 @@ const {
   toUrnenwahlvorbereitungModel,
   toUrnenwahlvorbereitungWriteDto,
   toBriefwahlvorbereitungWriteDto,
+  toBriefwahlvorbereitungModel,
 } = useWahlvorbereitungMapper();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 const { isValidDate } = useDateTimeUtils();
@@ -151,17 +152,20 @@ export function useWahlvorbereitungService() {
   }
 
   async function getUrnenwahlvorbereitung(
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ): Promise<Urnenwahlvorbereitung> {
     try {
       return await urnenwahlvorbereitungControllerAPI
         .getUrnenwahlVorbereitung(wahlbezirkID)
         .then((response) => toUrnenwahlvorbereitungModel(response.data));
     } catch (error) {
-      userNotificationService.addNotification(
-        "Fehler beim Laden der Urnenwahlvorbereitung.",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Fehler beim Laden der Urnenwahlvorbereitung.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }
@@ -188,6 +192,25 @@ export function useWahlvorbereitungService() {
         "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",
         UserNotificationCategoryEnum.ERROR
       );
+      throw error;
+    }
+  }
+
+  async function getBriefwahlvorbereitung(
+    wahlbezirkID: string,
+    sendNotification = true
+  ): Promise<Wahlvorbereitung> {
+    try {
+      return await briefwahlvorbereitungControllerAPI
+        .getBriefwahlvorbereitung(wahlbezirkID)
+        .then((response) => toBriefwahlvorbereitungModel(response.data));
+    } catch (error) {
+      if (sendNotification) {
+        userNotificationService.addNotification(
+          "Fehler beim Laden der Briefwahlvorbereitung.",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       throw error;
     }
   }
@@ -226,5 +249,6 @@ export function useWahlvorbereitungService() {
     getUrnenwahlvorbereitung,
     postUrnenwahlvorbereitung,
     postBriefwahlvorbereitung,
+    getBriefwahlvorbereitung,
   };
 }

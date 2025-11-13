@@ -80,6 +80,7 @@ const {
   getEroeffnungsuhrzeit,
   postEroeffnungsuhrzeit,
   getUrnenwahlvorbereitung,
+  getBriefwahlvorbereitung,
   postUrnenwahlvorbereitung,
   postBriefwahlvorbereitung,
 } = useWahlvorbereitungService();
@@ -312,7 +313,6 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.toUrnenwahlvorbereitungModel.mockReturnValue(
         expectedUrnenwahlvorbereitung
       );
-      // Mock the API call to return a response with the expected data
       mockDefinitions.getUrnenwahlVorbereitung.mockResolvedValue(
         createUrnenwahlvorbereitungDTO()
       );
@@ -340,6 +340,23 @@ describe("wahlvorbereitungService", () => {
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+    });
+
+    it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+
+      const mockedApiError = new Error("API Error");
+      mockDefinitions.getUrnenwahlVorbereitung.mockRejectedValue(
+        mockedApiError
+      );
+
+      await expect(
+        getUrnenwahlvorbereitung(wahlbezirkID, false)
+      ).rejects.toThrow("API Error");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
     });
   });
 
@@ -391,6 +408,61 @@ describe("wahlvorbereitungService", () => {
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+    });
+  });
+
+  describe("getBriefwahlvorbereitung", () => {
+    it("should_returnBriefwahlvorbereitung_when_apiCallSucceeded", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+      const expectedBriefwahlvorbereitung = createWahlvorbereitung();
+
+      mockDefinitions.toBriefwahlvorbereitungModel.mockReturnValue(
+        expectedBriefwahlvorbereitung
+      );
+      mockDefinitions.getBriefwahlvorbereitung.mockResolvedValue(
+        createBriefwahlvorbereitungDTO()
+      );
+
+      const result = await getBriefwahlvorbereitung(wahlbezirkID);
+
+      expect(result).toEqual(expectedBriefwahlvorbereitung);
+    });
+
+    it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+
+      const mockedApiError = new Error("API Error");
+      mockDefinitions.getBriefwahlvorbereitung.mockRejectedValue(
+        mockedApiError
+      );
+
+      await expect(getBriefwahlvorbereitung(wahlbezirkID)).rejects.toThrow(
+        "API Error"
+      );
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [
+          "Fehler beim Laden der Briefwahlvorbereitung.",
+          UserNotificationCategoryEnum.ERROR,
+        ],
+      ]);
+    });
+
+    it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+
+      const mockedApiError = new Error("API Error");
+      mockDefinitions.getBriefwahlvorbereitung.mockRejectedValue(
+        mockedApiError
+      );
+
+      await expect(
+        getBriefwahlvorbereitung(wahlbezirkID, false)
+      ).rejects.toThrow("API Error");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
     });
   });
 

@@ -32,7 +32,7 @@
             </tr>
             <tr v-if="expandedRows[index]">
               <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
-                <base-card-wahlvorschlag-kandidaten-stimmen-update
+                <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
                   :model-value="wahlvorschlag"
                   :is-saving="isSaving"
                   @do-save="onSaveWahlvorschlag"
@@ -52,7 +52,7 @@ import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
-import BaseCardWahlvorschlagKandidatenStimmenUpdate from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenUpdate.vue";
+import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
 

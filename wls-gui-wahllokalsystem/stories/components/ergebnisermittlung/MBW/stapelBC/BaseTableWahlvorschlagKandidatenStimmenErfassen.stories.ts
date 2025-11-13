@@ -5,12 +5,12 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import BaseWahlvorschlagKandidatenStimmen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseWahlvorschlagKandidatenStimmenTable.vue";
+import BaseTableWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseTableWahlvorschlagKandidatenStimmenErfassen.vue";
 
 const meta = {
-  component: BaseWahlvorschlagKandidatenStimmen,
+  component: BaseTableWahlvorschlagKandidatenStimmenErfassen,
   args: {},
-} satisfies Meta<typeof BaseWahlvorschlagKandidatenStimmen>;
+} satisfies Meta<typeof BaseTableWahlvorschlagKandidatenStimmenErfassen>;
 
 const { prepareKandidat } = useWahlvorschlaegeTestDataFactory();
 const { prepareErgebnis } = useErgebnisseTestDataFactory();

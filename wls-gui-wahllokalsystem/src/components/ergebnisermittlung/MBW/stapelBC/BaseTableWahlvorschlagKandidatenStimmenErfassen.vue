@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <base-kandidat-row
+      <base-row-kandidat-stimmen-erfassen
         v-for="ergebnisAndKandidat in ergebnisseAndKandidaten"
         :key="ergebnisAndKandidat.kandidat.identifikator"
         v-model="ergebnisAndKandidat.ergebnis"
@@ -31,7 +31,7 @@ import type { ErgebnisAndKandidat } from "@/types/ergebnisermittlung/ErgebnisAnd
 
 import { computed } from "vue";
 
-import BaseKandidatRow from "@/components/ergebnisermittlung/MBW/stapelBC/BaseKandidatRow.vue";
+import BaseRowKandidatStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseRowKandidatStimmenErfassen.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
 
 const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();

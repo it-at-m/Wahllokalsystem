@@ -4,10 +4,10 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import BaseKandidatRow from "@/components/ergebnisermittlung/MBW/stapelBC/BaseKandidatRow.vue";
+import BaseRowKandidatStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseRowKandidatStimmenErfassen.vue";
 
 const meta = {
-  component: BaseKandidatRow,
+  component: BaseRowKandidatStimmenErfassen,
   args: {},
   decorators: [
     (story) => {
@@ -18,7 +18,7 @@ const meta = {
       };
     },
   ],
-} satisfies Meta<typeof BaseKandidatRow>;
+} satisfies Meta<typeof BaseRowKandidatStimmenErfassen>;
 
 const { generateRandomNumberInRange } = useCommonTestDataFactory();
 const { createErgebnis } = useErgebnisseTestDataFactory();

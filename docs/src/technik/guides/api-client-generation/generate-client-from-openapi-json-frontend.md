@@ -67,7 +67,7 @@ openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g types
 ```
 
 > [!NOTE]
-> `--type-mappings=set=Array` sorgt dafür, dass an Stelle von Sets Arrays generiert werden. 
+> `--type-mappings=set=Array` sorgt dafür, dass an Stelle von Sets Arrays generiert werden.
 
 Dabei gilt:
 

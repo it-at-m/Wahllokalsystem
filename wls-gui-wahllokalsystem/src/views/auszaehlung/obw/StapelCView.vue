@@ -30,20 +30,21 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 const { params: routeParams } = useRoute();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const { sm } = useDisplay();
+const { smAndDown } = useDisplay();
 
-const wahlID = computed(() => routeParams.wahlId as string);
-const wahlbezirkID = computed(
-  () => getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID.value) ?? ""
-);
+const wahlID = routeParams.wahlId as string;
+const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID) ?? "";
 
 const { wahlvorschlaegeAndSumAboveZero, stapelCUngueltigErgebnisseSum } =
-  useOBWStapelCUtils(wahlID, wahlbezirkID);
+  useOBWStapelCUtils(
+    computed(() => wahlID),
+    computed(() => wahlbezirkID)
+  );
 
 const colsErfassungsCard = computed(() =>
-  hasResultsToShow.value ? (sm.value ? 12 : 8) : 12
+  hasResultsToShow.value ? (smAndDown.value ? 12 : 8) : 12
 );
-const colsSummaryCard = computed(() => (sm.value ? 12 : 4));
+const colsSummaryCard = computed(() => (smAndDown.value ? 12 : 4));
 const hasResultsToShow = computed(
   () =>
     wahlvorschlaegeAndSumAboveZero.value.length > 0 ||

@@ -11,6 +11,15 @@
   min-width: 300px;
 }
 
+/* #2085 */
+
+.v-autocomplete__selection,
+.v-autocomplete .v-autocomplete__selection-text {
+  white-space: normal;
+  height: auto;
+  word-break: break-word;
+}
+
 .v-btn.v-btn--active:hover > .v-btn__overlay,
 .v-btn.v-btn--active:focus > .v-btn__overlay {
   opacity: 0.01;

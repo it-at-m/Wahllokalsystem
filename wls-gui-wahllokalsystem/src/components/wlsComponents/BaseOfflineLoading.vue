@@ -42,13 +42,6 @@
       justify="center"
       class="mt-4"
     >
-      <base-button-refresh
-        data-test="refresh-button"
-        class="ma-4"
-        :disabled="isLoading || numberOfTasksFailed === 0"
-        @click="onRefreshClicked"
-        >Fehlgeschlagene wiederholen</base-button-refresh
-      >
       <base-text-button
         data-test="weiter-button"
         class="ma-4"
@@ -57,6 +50,13 @@
         active
         :to="routeWithName(ROUTE_WAHLVORSTAND)"
         >Weiter</base-text-button
+      >
+      <base-button-refresh
+        data-test="refresh-button"
+        class="ma-4"
+        :disabled="isLoading || numberOfTasksFailed === 0"
+        @click="onRefreshClicked"
+        >Fehlgeschlagene wiederholen</base-button-refresh
       >
     </v-row>
   </v-container>

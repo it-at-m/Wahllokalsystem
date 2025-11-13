@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-table>
       <thead>
         <tr>
@@ -11,20 +11,18 @@
           >
             Stimmzettelumschlag für {{ wahl.name }}
           </th>
+          <th />
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="index in maxRows"
           :key="index"
+          class="pseudoHeightThatAllowsCellsToGrowInHeight"
         >
-          <td>
-            <v-row
-              align="center"
-              class="my-2"
-              style="min-width: 350px"
-            >
-              {{ index }}
+          <td class="fill-height columnStyling">
+            <div class="d-flex align-center fill-height">
+              <p>{{ index }}</p>
               <v-autocomplete
                 :model-value="
                   zurueckweisungsgrundEnumToDisplayString(
@@ -32,10 +30,10 @@
                   )
                 "
                 label="Beschlussergebnis"
-                class="ml-5"
+                class="ml-5 fill-height"
                 :items="gruendeWahlscheine"
-                hide-details
                 auto-select-first
+                :clearable="false"
                 :rules="[required]"
                 :data-test="`wahlscheingruende-input-${index - 1}`"
                 @update:model-value="
@@ -43,11 +41,12 @@
                     onZulassungsgrundWahlscheinChanged(value, index - 1)
                 "
               />
-            </v-row>
+            </div>
           </td>
           <td
             v-for="wahl in wahlenState.wahlen"
             :key="`${wahl.wahlID}-${index - 1}`"
+            class="fill-height columnStyling"
           >
             <v-autocomplete
               :model-value="
@@ -55,10 +54,11 @@
                   wahl.beanstandeteWahlbriefe[index - 1] ?? null
                 )
               "
+              class="fill-height"
               label="Beschlussergebnis"
               :items="gruendeStimmzettel"
-              hide-details
               auto-select-first
+              :clearable="false"
               :rules="[required]"
               :disabled="_isInputDisabled(index - 1)"
               :data-test="`stimmzettelgruende-input-${wahl.wahlID}-${index - 1}`"
@@ -101,15 +101,27 @@
           haben. Wenn Sie das Löschen der Zeile fortsetzen, werden folgende
           Werte gelöscht:
         </div>
-        <div
-          v-for="context in contextForDeletion"
-          :key="context"
-        >
-          {{ context }}
+        <div>
+          Zu löschende Zeile: Wahlbrief Nummer {{ rowIndexToDelete + 1 }}
+        </div>
+        <div>
+          <v-table striped="even">
+            <tbody>
+              <tr
+                v-for="(context, index) in contextForDeletion"
+                :key="index"
+              >
+                <td class="context-category">
+                  {{ context.category }}
+                </td>
+                <td class="text-left">{{ context.beschluss }}</td>
+              </tr>
+            </tbody>
+          </v-table>
         </div>
       </div></base-dialog
     >
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -145,13 +157,14 @@ const maxRows = computed(() => {
 });
 
 const contextForDeletion = computed(() => {
-  const contextLines = [];
+  const contextLines: { category: string; beschluss: string }[] = [];
   if (rowIndexToDelete.value !== null) {
-    contextLines.push(
-      zurueckweisungsgrundEnumToDisplayString(
+    contextLines.push({
+      category: "Wahlschein",
+      beschluss: zurueckweisungsgrundEnumToDisplayString(
         wahlscheinGruende.value[rowIndexToDelete.value]
-      ) + " (Wahlschein)"
-    );
+      ),
+    });
     wahlenState.value.wahlen?.map((wahl) => {
       if (rowIndexToDelete.value !== null) {
         const beanstandeterWahlbrief =
@@ -160,10 +173,12 @@ const contextForDeletion = computed(() => {
             wahl.wahlID
           );
         if (beanstandeterWahlbrief != null) {
-          contextLines.push(
-            zurueckweisungsgrundEnumToDisplayString(beanstandeterWahlbrief) +
-              ` (Stimmzettelumschlag für ${wahl.name})`
-          );
+          contextLines.push({
+            category: `Stimmzettelumschlag für ${wahl.name}`,
+            beschluss: zurueckweisungsgrundEnumToDisplayString(
+              beanstandeterWahlbrief
+            ),
+          });
         }
       }
     });
@@ -303,6 +318,20 @@ function _isInputDisabled(rowIndex: number) {
 
 <style scoped>
 td {
-  text-align: center;
+  text-align: start;
+}
+
+.pseudoHeightThatAllowsCellsToGrowInHeight {
+  height: 1px; /* see #2085 */
+}
+
+.columnStyling {
+  min-width: 350px;
+}
+
+.context-category {
+  text-align: left;
+  width: 300px;
+  font-weight: bold;
 }
 </style>

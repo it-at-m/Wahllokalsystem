@@ -10,6 +10,7 @@ import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactor
 import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
+import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
@@ -54,6 +55,7 @@ export function useTaskListService() {
   const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
+  const { createTasks: createStatusTasks } = useStatusTaskFactory();
   const { createTasks: createWahlvorbereitungTasks } =
     useWahlvorbereitungTaskFactory();
   const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
@@ -78,6 +80,7 @@ export function useTaskListService() {
       ...createBegruendungTasks(taskFactoryData),
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
+      ...createStatusTasks(taskFactoryData),
       ...createWahlvorbereitungTasks(taskFactoryData),
       ...createWahlbriefeTasks(taskFactoryData),
     ];

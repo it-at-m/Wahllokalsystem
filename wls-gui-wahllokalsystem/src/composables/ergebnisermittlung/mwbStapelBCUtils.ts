@@ -89,8 +89,8 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
 
   function _sortKandidatenByListenPosition(wahlvorschlag: Wahlvorschlag) {
     if (wahlvorschlag.kandidaten) {
-      wahlvorschlag.kandidaten = new Set(
-        [...wahlvorschlag.kandidaten].sort(compareKandidatenByListenPosition)
+      wahlvorschlag.kandidaten = [...wahlvorschlag.kandidaten].sort(
+        compareKandidatenByListenPosition
       );
     }
   }

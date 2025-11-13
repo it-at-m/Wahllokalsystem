@@ -1,6 +1,5 @@
 import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
@@ -31,7 +30,7 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
       const kandidat2 = prepareKandidat().identifikator("k2").build();
       const kandidat3 = prepareKandidat().identifikator("k3").build();
       const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(new Set<Kandidat>([kandidat1, kandidat2, kandidat3]))
+        .kandidaten([kandidat1, kandidat2, kandidat3])
         .build();
 
       const ergebnis1 = prepareErgebnis()
@@ -94,7 +93,7 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
       const kandidat2 = prepareKandidat().identifikator("k2").build();
       const kandidat3 = prepareKandidat().identifikator("k3").build();
       const wahlvorschlag = prepareWahlvorschlag()
-        .kandidaten(new Set<Kandidat>([kandidat1, kandidat2, kandidat3]))
+        .kandidaten([kandidat1, kandidat2, kandidat3])
         .build();
 
       const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
@@ -142,7 +141,7 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
       expect(result).toStrictEqual(expectedResult);
     });
 
-    it.each([new Set<Kandidat>([]), undefined])(
+    it.each([[], undefined])(
       "should_ignoreErgebnisse_when_wahlvorschlagHasNoKandidaten",
       (kandidatenParameter) => {
         const wahlvorschlag = prepareWahlvorschlag()

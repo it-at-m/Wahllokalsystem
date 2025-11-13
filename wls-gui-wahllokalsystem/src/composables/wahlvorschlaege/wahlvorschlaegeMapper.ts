@@ -18,11 +18,11 @@ export function useWahlvorschlaegeMapper() {
   }
 
   function _dtoWahlvorschlaegeToModel(
-    dtoWahlvorschlaegeSet: Set<WahlvorschlagDTO>
+    dtoWahlvorschlaegeArray: WahlvorschlagDTO[]
   ) {
-    const modelWahlvorschlaege = new Set<Wahlvorschlag>();
+    const modelWahlvorschlaege = [];
 
-    for (const wahlvorschlagDto of dtoWahlvorschlaegeSet) {
+    for (const wahlvorschlagDto of dtoWahlvorschlaegeArray) {
       const wahlvorschlag: Wahlvorschlag = {
         identifikator: wahlvorschlagDto.identifikator,
         ordnungszahl: wahlvorschlagDto.ordnungszahl,
@@ -36,16 +36,16 @@ export function useWahlvorschlaegeMapper() {
         );
       }
 
-      modelWahlvorschlaege.add(wahlvorschlag);
+      modelWahlvorschlaege.push(wahlvorschlag);
     }
     return modelWahlvorschlaege;
   }
 
-  function _dtoKandidatenToModel(dtoKandidatenSet: Set<KandidatDTO>) {
-    const modelKandidaten = new Set<Kandidat>();
+  function _dtoKandidatenToModel(dtoKandidatenArray: KandidatDTO[]) {
+    const modelKandidaten: Kandidat[] = [];
 
-    for (const kandidatDto of dtoKandidatenSet) {
-      modelKandidaten.add({
+    for (const kandidatDto of dtoKandidatenArray) {
+      modelKandidaten.push({
         identifikator: kandidatDto.identifikator,
         name: kandidatDto.name,
         listenposition: kandidatDto.listenposition,

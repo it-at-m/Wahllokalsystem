@@ -5,5 +5,5 @@ export interface Wahlvorschlag {
   ordnungszahl: number;
   kurzname: string;
   erhaeltStimmen: boolean;
-  kandidaten?: Set<Kandidat>;
+  kandidaten?: Kandidat[];
 }

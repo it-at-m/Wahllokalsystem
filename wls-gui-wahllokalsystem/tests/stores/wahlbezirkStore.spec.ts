@@ -10,7 +10,9 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
+  getUrnenwahlSchliessungsUhrzeit: vi.fn(),
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
+  getEroeffnungsuhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
   postUrnenwahlvorbereitung: vi.fn(),
   postBriefwahlvorbereitung: vi.fn(),
@@ -33,6 +35,9 @@ vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
 }));
 vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
+    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
+    getUrnenwahlSchliessungsUhrzeit:
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
@@ -67,8 +72,11 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();
-const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
-  useWahlbezirkTestDataFactory();
+const {
+  createUngueltigerWahlschein,
+  createUrnenwahlSchliessungsuhrzeit,
+  prepareUngueltigerWahlschein,
+} = useWahlbezirkTestDataFactory();
 
 describe("wahlbezirkStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlbezirkStore>;
@@ -395,6 +403,62 @@ describe("wahlbezirkStore.ts", () => {
     );
   });
 
+  describe("initEroeffnungsuhrzeit", () => {
+    it("should_setCurrentAndSavedEroeffnungsuhrzeitWithDate_when_serviceReturnsValue", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent = undefined;
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = undefined;
+
+      const mockedServiceResponse = new Date();
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(
+        mockedServiceResponse
+      );
+
+      await unitUnderTest.eroeffnungsuhrzeitActions.initEroeffnungsuhrzeit();
+
+      expect(
+        (
+          unitUnderTest.eroeffnungsuhrzeitState
+            .eroeffnungsuhrzeit as unknown as Date
+        ).getTime()
+      ).toStrictEqual(mockedServiceResponse.getTime());
+      expect(
+        (
+          unitUnderTest.eroeffnungsuhrzeitState
+            .eroeffnungsuhrzeitSent as unknown as Date
+        ).getTime()
+      ).toStrictEqual(mockedServiceResponse.getTime());
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit,
+        "should not be same object cause both data are handled independently"
+      ).not.toBe(unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent);
+      expect(mockDefinitions.getEroeffnungsuhrzeit).toHaveBeenCalledWith(
+        userWahlbezirkID,
+        false
+      );
+    });
+
+    it("should_setCurrentAndSavedEroeffnungsuhrzeitWithUndefined_when_serviceReturnsNull", async () => {
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent = new Date();
+      unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit = new Date();
+
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(null);
+
+      await unitUnderTest.eroeffnungsuhrzeitActions.initEroeffnungsuhrzeit();
+
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeit
+      ).toBeUndefined();
+      expect(
+        unitUnderTest.eroeffnungsuhrzeitState.eroeffnungsuhrzeitSent
+      ).toBeUndefined();
+    });
+  });
+
   describe("sendEroeffnungsuhrzeit", () => {
     it("should_updateIsSavingAndSetSentValue_when_succeeded", async () => {
       const eroeffnungsuhrzeit = mockedNow;
@@ -573,6 +637,63 @@ describe("wahlbezirkStore.ts", () => {
       expect(
         mockDefinitions.postWaehlerverzeichnis.mock.calls.length
       ).toStrictEqual(0);
+    });
+  });
+
+  describe("initSchliessungsuhrzeit", () => {
+    it("should_setSchliessungsuhrzeitAndSchliessungsuhrzeitSent_when_schliessungsuhrzeitIsGiven", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const mockedServiceResponse = createUrnenwahlSchliessungsuhrzeit();
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockReturnValue(
+        mockedServiceResponse
+      );
+
+      await unitUnderTest.schliessungsuhrzeitActions.initSchliessungsuhrzeit();
+
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
+      ).toStrictEqual(
+        new Date(mockedServiceResponse.schliessungsuhrzeit).getTime()
+      );
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent?.getTime()
+      ).toStrictEqual(
+        new Date(mockedServiceResponse.schliessungsuhrzeit).getTime()
+      );
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit,
+        "should not be same object cause both data are handled independently"
+      ).not.toBe(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent
+      );
+      expect(
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+      ).toHaveBeenCalledWith(userWahlbezirkID, false);
+    });
+
+    it("should_setUndefinedForSchliessungsuhrzeitAndSchliessungsuhrzeitSend_when_noSchliessungsuhrzeitIsGiven", async () => {
+      const userWahlbezirkID = "wahlbezirkID";
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit = new Date();
+      unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+        new Date();
+
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockReturnValue(null);
+
+      await unitUnderTest.schliessungsuhrzeitActions.initSchliessungsuhrzeit();
+
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeit?.getTime()
+      ).toBeUndefined();
+      expect(
+        unitUnderTest.schliessungsuhrzeitState.schliessungsuhrzeitSent?.getTime()
+      ).toBeUndefined();
     });
   });
 

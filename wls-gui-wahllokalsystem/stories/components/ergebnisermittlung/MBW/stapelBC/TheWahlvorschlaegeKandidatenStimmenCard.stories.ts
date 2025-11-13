@@ -1,8 +1,4 @@
-import type {
-  KandidatDTO,
-  WahlvorschlaegeDTO,
-  WahlvorschlagDTO,
-} from "@/api/wls-clients/generated-basisdaten-api";
+import type { WahlvorschlaegeDTO } from "@/api/wls-clients/generated-basisdaten-api";
 import type { ErgebnisseDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
@@ -76,12 +72,12 @@ export const Default: Story = {
 
 function createWahlvorschlaege(): WahlvorschlaegeDTO {
   return {
-    wahlvorschlaege: new Set<WahlvorschlagDTO>([
+    wahlvorschlaege: [
       {
         erhaeltStimmen: true,
         kurzname: "Wahlvorschlag 2",
         ordnungszahl: 2,
-        kandidaten: new Set<KandidatDTO>([
+        kandidaten: [
           {
             identifikator: "Kandidat22",
             direktkandidat: false,
@@ -98,14 +94,14 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             listenposition: 1,
             tabellenSpalteInNiederschrift: 1,
           },
-        ]),
+        ],
         identifikator: "wahlvorschlagID2",
       },
       {
         erhaeltStimmen: true,
         kurzname: "Wahlvorschlag 1",
         ordnungszahl: 1,
-        kandidaten: new Set<KandidatDTO>([
+        kandidaten: [
           {
             identifikator: "Kandidat12",
             direktkandidat: false,
@@ -122,10 +118,10 @@ function createWahlvorschlaege(): WahlvorschlaegeDTO {
             listenposition: 1,
             tabellenSpalteInNiederschrift: 1,
           },
-        ]),
+        ],
         identifikator: "wahlvorschlagID1",
       },
-    ]),
+    ],
     wahlID,
     wahlbezirkID,
     stimmzettelgebietID,

@@ -351,25 +351,17 @@ describe("mwbStapelBCUtils.ts", () => {
 
   function createWahlvorschlaege() {
     return prepareWahlvorschlaege()
-      .wahlvorschlaege(
-        new Set([
-          prepareWahlvorschlag()
-            .kandidaten(
-              new Set([createKandidat(), createKandidat(), createKandidat()])
-            )
-            .build(),
-          prepareWahlvorschlag()
-            .kandidaten(
-              new Set([createKandidat(), createKandidat(), createKandidat()])
-            )
-            .build(),
-          prepareWahlvorschlag()
-            .kandidaten(
-              new Set([createKandidat(), createKandidat(), createKandidat()])
-            )
-            .build(),
-        ])
-      )
+      .wahlvorschlaege([
+        prepareWahlvorschlag()
+          .kandidaten([createKandidat(), createKandidat(), createKandidat()])
+          .build(),
+        prepareWahlvorschlag()
+          .kandidaten([createKandidat(), createKandidat(), createKandidat()])
+          .build(),
+        prepareWahlvorschlag()
+          .kandidaten([createKandidat(), createKandidat(), createKandidat()])
+          .build(),
+      ])
       .build();
   }
 

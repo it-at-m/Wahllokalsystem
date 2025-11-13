@@ -1,5 +1,10 @@
-import type { UrnenwahlSchliessungsUhrzeitWriteDTO } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type {
+  UrnenwahlSchliessungsUhrzeitDTO,
+  UrnenwahlSchliessungsUhrzeitWriteDTO,
+} from "@/api/wls-clients/generated-wahlvorbereitung-api";
 
+import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -9,8 +14,11 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   toUrnenwahlSchliessungsuhrzeitDTO: vi.fn(),
+  toUrnenwahlSchliessungsuhrzeitModel: vi.fn(),
   toEroeffnungsuhrzeitWriteDTO: vi.fn(),
+  getUrnenwahlSchliessungsUhrzeit: vi.fn(),
   postUrnenwahlSchliessungsUhrzeit: vi.fn(),
+  getEroeffnungsuhrzeit: vi.fn(),
   postEroeffnungsuhrzeit: vi.fn(),
   getUrnenwahlVorbereitung: vi.fn(),
   postUrnenwahlvorbereitung: vi.fn(),
@@ -24,11 +32,14 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
   UrnenwahlSchliessungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
+    getUrnenwahlSchliessungsUhrzeit:
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
     postUrnenwahlSchliessungsUhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsUhrzeit,
   })),
   EroeffnungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
   })),
   UrnenwahlvorbereitungControllerApi: vi.fn().mockImplementation(() => ({
     getUrnenwahlVorbereitung: mockDefinitions.getUrnenwahlVorbereitung,
@@ -49,6 +60,8 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
 
 vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
   useWahlvorbereitungMapper: () => ({
+    toUrnenwahlSchliessungsuhrzeitModel:
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel,
     toUrnenwahlSchliessungsuhrzeitDTO:
       mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO,
     toEroeffnungsuhrzeitWriteDTO: mockDefinitions.toEroeffnungsuhrzeitWriteDTO,
@@ -62,25 +75,96 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
 }));
 
 const {
+  getUrnenwahlSchliessungsUhrzeit,
   postUrnenwahlSchliessungsuhrzeit,
+  getEroeffnungsuhrzeit,
   postEroeffnungsuhrzeit,
   getUrnenwahlvorbereitung,
   postUrnenwahlvorbereitung,
   postBriefwahlvorbereitung,
 } = useWahlvorbereitungService();
 const {
+  createEroeffnungsUhrzeitDTO,
   createEroeffnungsUhrzeitWriteDTO,
+  creteUrnenwahlSchliessungsuhrzeit,
   createUrnenwahlvorbereitungWriteDTO,
   createUrnenwahlvorbereitung,
   createUrnenwahlvorbereitungDTO,
   createWahlvorbereitung,
   createBriefwahlvorbereitungDTO,
 } = useWahlvorbereitungTestDataFactory();
+const { generateRandomString, generateRandomDateTimeAsString } =
+  useCommonTestDataFactory();
+const { createAxiosResponse } = useAxiosTestDataFactory();
 
 describe("wahlvorbereitungService", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.clearAllMocks();
+  });
+
+  describe("getUrnenwahlSchliessungsUhrzeit", () => {
+    it("should_returnMappedApiResponse_when_apiCallWasSuccessful", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      const mockedApiResponseData: UrnenwahlSchliessungsUhrzeitDTO = {
+        wahlbezirkID,
+        schliessungsuhrzeit: generateRandomDateTimeAsString(),
+      };
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockResolvedValue(
+        createAxiosResponse({ status: 200, data: mockedApiResponseData })
+      );
+
+      const mockedMappingResult = creteUrnenwahlSchliessungsuhrzeit();
+      mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel.mockResolvedValue(
+        mockedMappingResult
+      );
+
+      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+      expect(result).toBe(mockedMappingResult);
+
+      expect(
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+      ).toHaveBeenCalledWith(wahlbezirkID);
+      expect(
+        mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel
+      ).toHaveBeenCalledWith(mockedApiResponseData);
+    });
+
+    it("should_returnNull_when_apiReturns204", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockResolvedValue(
+        createAxiosResponse({ status: 204, data: {} })
+      );
+
+      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+      expect(result).toBeNull();
+    });
+
+    it.each([true, false])(
+      "should_throwErrorAndSendNotification=%b_when_apiCallFailedAndSendNotification",
+      async (sendNotificationParameter) => {
+        const wahlbezirkID = "wahlbezirkID";
+        const mockedApiError = new Error("mocked api call failed");
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit.mockRejectedValue(
+          mockedApiError
+        );
+
+        await expect(
+          getUrnenwahlSchliessungsUhrzeit(
+            wahlbezirkID,
+            sendNotificationParameter
+          )
+        ).rejects.toThrow(mockedApiError);
+        expect(
+          mockDefinitions.getUrnenwahlSchliessungsUhrzeit
+        ).toHaveBeenCalledWith(wahlbezirkID);
+        expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+          sendNotificationParameter ? 1 : 0
+        );
+      }
+    );
   });
 
   describe("postUrnenwahlSchliessungsuhrzeit", () => {
@@ -114,6 +198,64 @@ describe("wahlvorbereitungService", () => {
       expect(
         mockDefinitions.toUrnenwahlSchliessungsuhrzeitDTO.mock.calls
       ).toStrictEqual([[expectedDate]]);
+    });
+  });
+
+  describe("getEroeffnungsuhrzeit", () => {
+    it("should_returnEroeffnungsuhrzeit_when_apiReturnsData", async () => {
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedApiResponseData = createEroeffnungsUhrzeitDTO();
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(
+        createAxiosResponse({ status: 200, data: mockedApiResponseData })
+      );
+
+      const result = await getEroeffnungsuhrzeit(wahlbezirkID);
+
+      expect(result?.getTime()).toStrictEqual(
+        new Date(mockedApiResponseData.eroeffnungsuhrzeit).getTime()
+      );
+      expect(mockDefinitions.getEroeffnungsuhrzeit.mock.calls).toStrictEqual([
+        [wahlbezirkID],
+      ]);
+    });
+
+    it("should_returnNull_when_apiReturnsNoData", async () => {
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(
+        createAxiosResponse({ status: 204, data: null })
+      );
+
+      const result = await getEroeffnungsuhrzeit(wahlbezirkID);
+
+      expect(result).toBeNull();
+    });
+
+    it("should_throwErrorAndSendNotification_when_apiFailed", async () => {
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedApiError = new Error("mocked api call failed");
+      mockDefinitions.getEroeffnungsuhrzeit.mockRejectedValue(mockedApiError);
+
+      await expect(getEroeffnungsuhrzeit(wahlbezirkID)).rejects.toThrow(
+        mockedApiError
+      );
+      expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
+    });
+
+    it("should_throwErrorAndSendNoNotification_when_apiFailedAndNotificationFlagIsFalse", async () => {
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedApiError = new Error("mocked api call failed");
+      mockDefinitions.getEroeffnungsuhrzeit.mockRejectedValue(mockedApiError);
+
+      await expect(getEroeffnungsuhrzeit(wahlbezirkID, false)).rejects.toThrow(
+        mockedApiError
+      );
+      expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([]);
     });
   });
 

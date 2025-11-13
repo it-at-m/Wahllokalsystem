@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import TheTableWaehler from "@/components/ergebnisermittlung/TheTableWaehler.vue";
+import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -9,9 +9,9 @@ const wahlID = "wahlID";
 const wahlbezirkID = "wahlbezirkID";
 
 const meta = {
-  component: TheTableWaehler,
+  component: TheMBWWaehlerAnzeigenCard,
   args: {},
-} satisfies Meta<typeof TheTableWaehler>;
+} satisfies Meta<typeof TheMBWWaehlerAnzeigenCard>;
 
 export default meta;
 

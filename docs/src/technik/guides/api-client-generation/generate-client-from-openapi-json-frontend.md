@@ -63,8 +63,11 @@ Im Terminal kann, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Director
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api
+openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api --type-mappings=set=Array
 ```
+
+> [!NOTE]
+> `--type-mappings=set=Array` sorgt dafür, dass an Stelle von Sets Arrays generiert werden.
 
 Dabei gilt:
 
@@ -79,7 +82,7 @@ Dabei gilt:
 Der komplette, zusammengesetzte Befehl für die Generierung der Broadcast API über das Terminal würde so aussehen:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api
+openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api --type-mappings=set=Array
 ```
 
 :::
@@ -92,7 +95,7 @@ In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werd
  "scripts": {
     "dev": "vite",
     /* ... */
-    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api " // [!code ++]
+    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api --type-mappings=set=Array" // [!code ++]
   },
 ```
 
@@ -101,7 +104,7 @@ Der komplette Befehl für die Generierung der Broadcast API über das `package.j
 
 ```json
  "scripts": {
-    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api "
+    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api --type-mappings=set=Array"
   },
 ```
 

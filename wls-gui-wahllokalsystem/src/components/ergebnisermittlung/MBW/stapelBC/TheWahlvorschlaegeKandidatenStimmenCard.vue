@@ -11,8 +11,8 @@
           <tr>
             <th><!-- fold/expand action --></th>
             <th><!-- Ordnungszahl --></th>
-            <th>Wahlvorschlag</th>
-            <th>Gültige Stimmen</th>
+            <th class="font-weight-bold">Wahlvorschlag</th>
+            <th class="font-weight-bold text-right">Gültige Stimmen</th>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
               </td>
               <td>D{{ wahlvorschlag.ordnungszahl }}</td>
               <td>{{ wahlvorschlag.kurzname }}</td>
-              <td>
+              <td class="text-right">
                 {{ summeKandidatenStimmen(wahlvorschlag.scorableKandidaten) }}
               </td>
             </tr>

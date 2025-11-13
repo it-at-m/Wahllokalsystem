@@ -2,9 +2,9 @@
   <v-table>
     <thead>
       <tr>
-        <th class="colLfdNr">Lfd. Nr.</th>
-        <th>Kandidatin/Kandidat</th>
-        <th class="colScore">Schlusszahl</th>
+        <th class="colLfdNr font-weight-bold">Lfd. Nr.</th>
+        <th class="font-weight-bold">Kandidatin/Kandidat</th>
+        <th class="colScore font-weight-bold">Schlusszahl</th>
       </tr>
     </thead>
     <tbody>
@@ -18,9 +18,9 @@
     </tbody>
     <tfoot>
       <tr>
-        <td>Gesamtstimmenzahl</td>
+        <td class="font-weight-bold">Gesamtstimmenzahl</td>
         <td />
-        <td>{{ totalScore }}</td>
+        <td class="font-weight-bold text-right">{{ totalScore }}</td>
       </tr>
     </tfoot>
   </v-table>

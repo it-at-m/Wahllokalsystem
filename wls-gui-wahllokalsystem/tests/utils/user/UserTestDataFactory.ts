@@ -53,7 +53,7 @@ export function useUserTestDataFactory() {
       wahlbezirkNummer: "",
       wahlbezirksArt: WahlbezirksArtEnum.UWB,
       pin: "",
-      authorities: new Set<string>(["authority"]),
+      authorities: ["authority"],
       wahlMetaData: [{ wahlbezirkID: "", wahlID: "", wahlnummer: "" }],
     };
   }
@@ -69,7 +69,7 @@ export function useUserTestDataFactory() {
       wahlbezirkNummer: generateRandomString(10),
       wahlbezirksArt: WahlbezirksArtEnum.BWB,
       pin: generateRandomString(10),
-      authorities: new Set<string>(["authority"]),
+      authorities: ["authority"],
       wbid_wahlnummer: `{"wbid_wahlnummer":[{"wahlbezirkID":"${generateRandomString(10)}","wahlnummer":"${generateRandomString(1)}","wahlID":"${generateRandomString(10)}"}]}`,
     };
   }

@@ -1,5 +1,4 @@
 import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
@@ -171,12 +170,7 @@ describe("obwStapelAUtils", () => {
         mockDefinitions.getWahlvorschlaegeByWahlIDAndWahlbezirkID.mockImplementation(
           () =>
             prepareWahlvorschlaege()
-              .wahlvorschlaege(
-                new Set<Wahlvorschlag>([
-                  mockedWahlvorschlag1,
-                  mockedWahlvorschlag2,
-                ])
-              )
+              .wahlvorschlaege([mockedWahlvorschlag1, mockedWahlvorschlag2])
               .build()
         );
 

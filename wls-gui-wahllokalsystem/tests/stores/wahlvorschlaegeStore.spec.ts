@@ -1,5 +1,3 @@
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
-
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -127,13 +125,11 @@ describe("wahlvorschlaegeStore.ts", () => {
         prepareWahlvorschlaege()
           .wahlbezirkID(generateRandomString(1))
           .wahlID(generateRandomString(1))
-          .wahlvorschlaege(
-            new Set([
-              prepareWahlvorschlag()
-                .identifikator(wahlvorschlagID + "sth more")
-                .build(),
-            ])
-          )
+          .wahlvorschlaege([
+            prepareWahlvorschlag()
+              .identifikator(wahlvorschlagID + "sth more")
+              .build(),
+          ])
           .build(),
       ];
 
@@ -158,15 +154,13 @@ describe("wahlvorschlaegeStore.ts", () => {
         prepareWahlvorschlaege()
           .wahlbezirkID(wahlbezirkID)
           .wahlID(wahlID)
-          .wahlvorschlaege(
-            new Set([
-              prepareWahlvorschlag()
-                .identifikator(wahlvorschlagID + "sth more")
-                .build(),
-              wahlvorschlagToFind,
-              prepareWahlvorschlag().identifikator(wahlvorschlagID).build(),
-            ])
-          )
+          .wahlvorschlaege([
+            prepareWahlvorschlag()
+              .identifikator(wahlvorschlagID + "sth more")
+              .build(),
+            wahlvorschlagToFind,
+            prepareWahlvorschlag().identifikator(wahlvorschlagID).build(),
+          ])
           .build(),
       ];
 
@@ -220,13 +214,11 @@ describe("wahlvorschlaegeStore.ts", () => {
       const mockedWahlvorschlaegeModel = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(
-          new Set<Wahlvorschlag>([
-            prepareWahlvorschlag().ordnungszahl(4).build(),
-            prepareWahlvorschlag().ordnungszahl(2).build(),
-            prepareWahlvorschlag().ordnungszahl(7).build(),
-          ])
-        )
+        .wahlvorschlaege([
+          prepareWahlvorschlag().ordnungszahl(4).build(),
+          prepareWahlvorschlag().ordnungszahl(2).build(),
+          prepareWahlvorschlag().ordnungszahl(7).build(),
+        ])
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(

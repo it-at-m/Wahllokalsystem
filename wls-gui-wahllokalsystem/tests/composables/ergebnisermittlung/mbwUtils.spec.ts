@@ -284,7 +284,7 @@ describe("mbwUtils", () => {
       const sortedWahlvorschlaege = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(new Set([wahlvorschlag1, wahlvorschlag2]))
+        .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(
@@ -364,7 +364,7 @@ describe("mbwUtils", () => {
       const sortedWahlvorschlaege = prepareWahlvorschlaege()
         .wahlID(wahlID)
         .wahlbezirkID(wahlbezirkID)
-        .wahlvorschlaege(new Set([wahlvorschlag1, wahlvorschlag2]))
+        .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
         .build();
 
       mockDefinitions.getWahlvorschlaege.mockResolvedValue(

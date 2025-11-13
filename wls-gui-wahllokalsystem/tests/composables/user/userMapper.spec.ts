@@ -174,9 +174,7 @@ describe("userMapper.ts", () => {
     });
 
     it("should_throwError_when_userHasNoAuthorities", () => {
-      const invalidDto = prepareUserDTO()
-        .authorities(new Set<string>())
-        .build();
+      const invalidDto = prepareUserDTO().authorities([]).build();
 
       expect(() => validateDtoAndMapToModel(invalidDto)).toThrow(
         "Laden des Users fehlgeschlagen. Folgende Pflichtfelder sind nicht befüllt: authorities"

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
-import { delay, http, HttpResponse } from "msw";
 
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 

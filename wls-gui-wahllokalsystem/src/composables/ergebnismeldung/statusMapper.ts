@@ -21,9 +21,8 @@ export function useStatusMapper() {
 
   function _toMeldungModel(dto: MeldungDTO): Meldung {
     return {
-      validierungsstatus: _dtoValidierungsstatusEnumToModel(
-        dto.validierungsstatus
-      ),
+      validierungsstatus:
+        _dtoValidierungsstatusEnumToModelMapping[dto.validierungsstatus],
       gedruckt: dto.gedruckt,
       uebermittelt: dto.uebermittelt,
       sendeuhrzeit: dto.sendeuhrzeit,
@@ -37,22 +36,19 @@ export function useStatusMapper() {
     };
   }
 
-  function _dtoValidierungsstatusEnumToModel(
-    dto: MeldungDTOValidierungsstatusEnum
-  ): MeldungValidierungsstatusEnum {
-    switch (dto) {
-      case MeldungDTOValidierungsstatusEnum.Invalide:
-        return MeldungValidierungsstatusEnum.Invalide;
-      case MeldungDTOValidierungsstatusEnum.NichtGesendet:
-        return MeldungValidierungsstatusEnum.NichtGesendet;
-      case MeldungDTOValidierungsstatusEnum.NichtValidiert:
-        return MeldungValidierungsstatusEnum.NichtValidiert;
-      case MeldungDTOValidierungsstatusEnum.Valide:
-        return MeldungValidierungsstatusEnum.Valide;
-      default:
-        throw new Error("Validierungsstatus nicht gefunden");
-    }
-  }
+  const _dtoValidierungsstatusEnumToModelMapping: Record<
+    MeldungDTOValidierungsstatusEnum,
+    MeldungValidierungsstatusEnum
+  > = {
+    [MeldungDTOValidierungsstatusEnum.Invalide]:
+      MeldungValidierungsstatusEnum.Invalide,
+    [MeldungDTOValidierungsstatusEnum.NichtGesendet]:
+      MeldungValidierungsstatusEnum.NichtGesendet,
+    [MeldungDTOValidierungsstatusEnum.NichtValidiert]:
+      MeldungValidierungsstatusEnum.NichtValidiert,
+    [MeldungDTOValidierungsstatusEnum.Valide]:
+      MeldungValidierungsstatusEnum.Valide,
+  };
 
   return {
     toModel,

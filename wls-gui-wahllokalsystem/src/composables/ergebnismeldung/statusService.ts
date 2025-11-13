@@ -24,7 +24,6 @@ export function useStatusService() {
     sendNotification = true
   ) {
     const { wahlenActions } = useWahlenStore();
-    const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
     try {
       const response = await statusControllerApi.getStatus(
         wahlID,
@@ -32,6 +31,8 @@ export function useStatusService() {
       );
 
       if (sendNotification) {
+        const wahlname =
+          wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
         addNotification(
           `Status für ${wahlname} erfolgreich geladen.`,
           UserNotificationCategoryEnum.SUCCESS
@@ -40,6 +41,7 @@ export function useStatusService() {
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? toModel(responseData) : null;
     } catch {
+      const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
       if (sendNotification) {
         addNotification(
           `Fehler beim Laden des Status für ${wahlname}.`,

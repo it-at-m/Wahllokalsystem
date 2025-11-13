@@ -23,12 +23,16 @@ describe("statusMapper.ts", () => {
           prepareMeldungDTO()
             .validierungsstatus(validierungsstatus)
             .gedruckt(gedruckt)
+            .uebermittelt(true)
+            .sendeuhrzeit("18:15:00")
             .build()
         )
         .niederschrift(
           prepareMeldungDTO()
             .validierungsstatus(validierungsstatus)
             .gedruckt(gedruckt)
+            .uebermittelt(undefined)
+            .sendeuhrzeit(undefined)
             .build()
         )
         .build();
@@ -38,8 +42,8 @@ describe("statusMapper.ts", () => {
           prepareMeldung()
             .validierungsstatus(validierungsstatus)
             .gedruckt(gedruckt)
-            .uebermittelt(undefined)
-            .sendeuhrzeit(undefined)
+            .uebermittelt(true)
+            .sendeuhrzeit("18:15:00")
             .build()
         )
         .niederschrift(
@@ -98,26 +102,5 @@ describe("statusMapper.ts", () => {
         );
       }
     );
-
-    it("should_throwError_when_unknownValidierungsstatusProvided", () => {
-      const invalidDto = prepareStatusDTO()
-        .schnellmeldung(
-          prepareMeldungDTO()
-            .validierungsstatus(
-              "UNKNOWN" as unknown as MeldungDTOValidierungsstatusEnum
-            )
-            .build()
-        )
-        .niederschrift(
-          prepareMeldungDTO()
-            .validierungsstatus(MeldungDTOValidierungsstatusEnum.Valide)
-            .build()
-        )
-        .build();
-
-      expect(() => toModel(invalidDto)).toThrow(
-        "Validierungsstatus nicht gefunden"
-      );
-    });
   });
 });

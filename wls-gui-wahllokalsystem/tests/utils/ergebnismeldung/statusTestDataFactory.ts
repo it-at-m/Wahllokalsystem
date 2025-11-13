@@ -15,7 +15,8 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungVa
 
 const { createBezirkUndWahlIDDTO, createBezirkUndWahlID } =
   useCommonErgebnismeldungTestDataFactory();
-const { generateRandomBoolean, getRandomItem } = useCommonTestDataFactory();
+const { generateRandomBoolean, getRandomItem, generateRandomString } =
+  useCommonTestDataFactory();
 
 export function useStatusTestDataFactory() {
   function createStatusDTO(): StatusDTO {
@@ -32,6 +33,8 @@ export function useStatusTestDataFactory() {
         Object.values(MeldungDTOValidierungsstatusEnum)
       ),
       gedruckt: generateRandomBoolean(),
+      uebermittelt: generateRandomBoolean(),
+      sendeuhrzeit: generateRandomString(10),
     };
   }
 

@@ -1,8 +1,9 @@
 <template>
   <v-card>
     <v-card-title
-      >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}</v-card-title
-    >
+      >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
+      <v-checkbox v-model="wahlvorschlagSelected"
+    /></v-card-title>
     <v-card-text>
       <base-kandidat-score
         v-for="(kandidat, index) in wahlvorschlag.kandidaten"
@@ -23,9 +24,10 @@ import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import BaseKandidatScore from "@/components/experimental/BaseKandidatScore.vue";
+import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
 const props = defineProps({
   wahlvorschlag: {
@@ -34,7 +36,29 @@ const props = defineProps({
   },
 });
 
+const stimmzettelManager = getStimmzettelManger({
+  wahlbezirkId: "wahlbezirkId",
+  wahlId: "wahlId",
+});
+
 const kandidatenErgebnisse = ref<Ergebnis[]>([]);
+
+const wahlvorschlagSelected = computed({
+  set: (value: boolean) => {
+    if (value) {
+      stimmzettelManager.selectWahlvorschlag(props.wahlvorschlag.identifikator);
+    } else {
+      stimmzettelManager.deselectWahlvorschlag(
+        props.wahlvorschlag.identifikator
+      );
+    }
+  },
+  get: () => {
+    return stimmzettelManager.selectedWahlvorschlaege.value.some(
+      (id) => id === props.wahlvorschlag.identifikator
+    );
+  },
+});
 
 function ergebnisOfKandidat(kandidatId: string): Ergebnis {
   let result = kandidatenErgebnisse.value.find(

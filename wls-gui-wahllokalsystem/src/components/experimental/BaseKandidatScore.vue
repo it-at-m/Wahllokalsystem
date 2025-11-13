@@ -25,6 +25,7 @@ import { computed } from "vue";
 
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
 import BaseKandidatScoreOperator from "@/components/experimental/BaseKandidatScoreOperator.vue";
+import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
 const ergebnisModel = defineModel("modelValue", {
   type: Object as PropType<Ergebnis>,
@@ -46,11 +47,18 @@ const kandidatenNummer = computed(
   () => props.listennummer * 100 + (props.kandidat?.listenposition ?? 0)
 );
 
+const stimmzettelManager = getStimmzettelManger({
+  wahlbezirkId: "wahlbezirkId",
+  wahlId: "wahlId",
+});
+
 function onAddScore(count: number) {
   ergebnisModel.value.ergebnis = (ergebnisModel.value.ergebnis ?? 0) + count;
+  stimmzettelManager.addKandidatVote(props.kandidat.identifikator);
 }
 
 function onSubtractScore(count: number) {
   ergebnisModel.value.ergebnis = (ergebnisModel.value.ergebnis ?? 0) - count;
+  stimmzettelManager.removeKandidatVote(props.kandidat.identifikator);
 }
 </script>

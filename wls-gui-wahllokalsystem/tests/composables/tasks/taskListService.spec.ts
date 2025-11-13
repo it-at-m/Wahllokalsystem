@@ -15,6 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
   createTasksEroeffnungsuhrzeit: vi.fn(),
+  createTasksUrnenwahlSchliessungsuhrzeit: vi.fn(),
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createTasksStimmabgabevermerke: vi.fn(),
@@ -26,6 +27,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksAWerte: vi.fn(),
   createTasksHandbuch: vi.fn(),
   createTasksStatus: vi.fn(),
+  createTasksWahlvorbereitung: vi.fn(),
   createTasksWahlbriefe: vi.fn(),
 }));
 
@@ -80,6 +82,17 @@ vi.mock(
     useEroeffnungsuhrzeitTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksEroeffnungsuhrzeit,
     })),
+  })
+);
+
+vi.mock(
+  "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts",
+  () => ({
+    useUrnenwahlSchliessungsuhrzeitTaskFactory: vi
+      .fn()
+      .mockImplementation(() => ({
+        createTasks: mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit,
+      })),
   })
 );
 
@@ -148,6 +161,16 @@ vi.mock("@/composables/tasks/taskFactories/statusTaskFactory.ts", () => ({
     createTasks: mockDefinitions.createTasksStatus,
   })),
 }));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts",
+  () => ({
+    useWahlvorbereitungTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWahlvorbereitung,
+    })),
+  })
+);
+
 vi.mock("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts", () => ({
   useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksWahlbriefe,
@@ -219,6 +242,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue([
+        {
+          name: "Urnenwahl Schließungsuhrzeit",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksEroeffnungsuhrzeit.mockReturnValue([
         {
           name: "Eröffnungsuhrzeit",
@@ -273,6 +302,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksWahlvorbereitung.mockReturnValue([
+        {
+          name: "Wahlvorbereitung",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlbriefe.mockReturnValue([
         {
           name: "Erfasste Wahlbriefe",
@@ -288,6 +323,7 @@ describe("taskListService.ts", () => {
         "Konfigurationsparameter",
         "Wahlvorstand",
         "Eröffnungsuhrzeit",
+        "Urnenwahl Schließungsuhrzeit",
         "UngültigeWahlscheine",
         "Waehlerverzeichnis",
         "Kopfdaten - " + mockedWahl.name,
@@ -300,6 +336,7 @@ describe("taskListService.ts", () => {
         "AWerte",
         "Handbuch",
         "Druckstatus - " + mockedWahl.name,
+        "Wahlvorbereitung",
         "Erfasste Wahlbriefe",
       ];
 
@@ -315,6 +352,9 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createWaehlerverzeichnisTasks).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
       expect(mockDefinitions.createTasksEroeffnungsuhrzeit).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit
+      ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
       expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
       expect(
@@ -326,6 +366,7 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
       expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
       expect(mockDefinitions.createTasksStatus).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlvorbereitung).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlbriefe).toHaveBeenCalled();
     });
   });

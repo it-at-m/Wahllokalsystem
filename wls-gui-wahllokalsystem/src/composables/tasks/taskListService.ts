@@ -14,10 +14,12 @@ import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTa
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";
 import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
 import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
 import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
+import { useWahlvorbereitungTaskFactory } from "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -32,6 +34,8 @@ export function useTaskListService() {
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
   const { createTasks: createEroeffnungsuhrzeitTasks } =
     useEroeffnungsuhrzeitTaskFactory();
+  const { createTasks: createUrnenwahlSchliessungsuhrzeitTasks } =
+    useUrnenwahlSchliessungsuhrzeitTaskFactory();
   const { createTasks: createKonfigurationsparameterTasks } =
     useKonfigurationsparameterTaskFactory();
   const { createTasks: createUngueltigeWahlscheineTasks } =
@@ -52,6 +56,8 @@ export function useTaskListService() {
   const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
   const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
   const { createTasks: createStatusTasks } = useStatusTaskFactory();
+  const { createTasks: createWahlvorbereitungTasks } =
+    useWahlvorbereitungTaskFactory();
   const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
 
   function initTasklist() {
@@ -62,6 +68,7 @@ export function useTaskListService() {
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),
       ...createEroeffnungsuhrzeitTasks(taskFactoryData),
+      ...createUrnenwahlSchliessungsuhrzeitTasks(taskFactoryData),
       ...createKonfigurationsparameterTasks(taskFactoryData),
       ...createWahlscheineTasks(taskFactoryData),
       ...createWahlvorschlaegeTasks(taskFactoryData),
@@ -74,6 +81,7 @@ export function useTaskListService() {
       ...createAWerteTasks(taskFactoryData),
       ...createHandbuchTasks(taskFactoryData),
       ...createStatusTasks(taskFactoryData),
+      ...createWahlvorbereitungTasks(taskFactoryData),
       ...createWahlbriefeTasks(taskFactoryData),
     ];
   }

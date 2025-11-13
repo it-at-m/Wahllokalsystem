@@ -3,6 +3,8 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.eroeffnungs
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.eroeffnungsuhrzeit.EroeffnungsUhrzeitService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,6 +31,10 @@ public class EroeffnungsUhrzeitController extends AbstractController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Eroeffnungsuhrzeit erfolgreich gespeichert."
+                    ),
+                    @ApiResponse(
+                            responseCode = "204", description = "Keine Daten vorhanden",
+                            content = @Content(schema = @Schema())
                     ) }
     )
     @GetMapping("{wahlbezirkID}")

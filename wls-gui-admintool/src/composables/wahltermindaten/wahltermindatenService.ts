@@ -6,6 +6,7 @@ import {
 } from "@/api/wls-clients/generated-admin-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const adminWahltermindatenAPI = new WahltermindatenControllerApi(
   new Configuration({
@@ -25,7 +26,7 @@ export function useWahltermindatenService() {
     } catch (error) {
       addNotification(
         "Importieren der Wahltermindaten fehlgeschlagen",
-        "Error"
+        UserNotificationCategoryEnum.ERROR
       );
       throw error;
     } finally {
@@ -43,7 +44,7 @@ export function useWahltermindatenService() {
     } catch (error) {
       addNotification(
         "Löschen und Importieren der Wahltermindaten fehlgeschlagen",
-        "Error"
+        UserNotificationCategoryEnum.ERROR
       );
       throw error;
     } finally {

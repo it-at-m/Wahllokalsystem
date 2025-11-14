@@ -2,6 +2,7 @@ import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomana
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKonfigurationsparameterService } from "@/composables/infomanagement/konfigurationsparameterService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getKonfigurations: vi.fn(),
@@ -74,7 +75,7 @@ describe("konfigurationsparameterService", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 

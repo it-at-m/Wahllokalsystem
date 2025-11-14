@@ -10,7 +10,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { VContainer } from "vuetify/components";
 
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
 

@@ -65,7 +65,7 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlbriefZulassungBeschlussergebnis_when_componentIsMountedWithoutBeanstandeteWahlbriefe", async (context) => {
       const wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl().name("wahl").beanstandeteWahlbriefe([]).build(),
       ];
 
@@ -78,7 +78,7 @@ describe("TheBeanstandeteWahlbriefeBeschlussergebnis", () => {
 
     it("should_renderWahlbriefZulassungBeschlussergebnis_when_componentIsMountedWithBeanstandeteWahlbriefe", async (context) => {
       const wahlenStore = useWahlenStore(testPinia);
-      wahlenStore.wahlen = wahlen;
+      wahlenStore.wahlenState.wahlen = wahlen;
 
       await flushPromises();
 

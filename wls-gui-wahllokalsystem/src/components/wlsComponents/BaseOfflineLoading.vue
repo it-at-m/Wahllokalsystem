@@ -12,21 +12,19 @@
       v-else
       class="my-4"
     >
-      Herunterladen der Daten abgeschlossen ({{
-        numberOfSuccessfulTasks + numberOfFailedTasks
-      }}
-      / {{ numberOfTasksToRun }})
+      Herunterladen der Daten abgeschlossen ({{ numberOfTasksFinished }} /
+      {{ numberOfTasksToRun }})
     </p>
     <v-progress-linear
       :striped="isLoading"
       :max="numberOfTasksToRun"
-      :model-value="numberOfSuccessfulTasks + numberOfFailedTasks"
+      :model-value="numberOfTasksFinished"
     />
     <base-progress-linear
       titel="Erfolgreich heruntergeladen"
       data-test="base-progress-success"
       :is-loading="isLoading"
-      :current="numberOfSuccessfulTasks"
+      :current="numberOfTasksSucceeded"
       :total="numberOfTasksToRun"
       :tasks="successfullyTasks"
       color="success"
@@ -35,33 +33,76 @@
       titel="Fehlgeschlagen"
       data-test="base-progress-failed"
       :is-loading="isLoading"
-      :current="numberOfFailedTasks"
+      :current="numberOfTasksFailed"
       :total="numberOfTasksToRun"
       :tasks="failedTasks"
-      color="warn"
+      color="warning"
     />
+    <v-row
+      justify="center"
+      class="mt-4"
+    >
+      <base-text-button
+        data-test="weiter-button"
+        class="ma-4"
+        prepend-icon="$continue"
+        :disabled="isLoading"
+        active
+        :to="routeWithName(ROUTE_WAHLVORSTAND)"
+        >Weiter</base-text-button
+      >
+      <base-button-refresh
+        data-test="refresh-button"
+        class="ma-4"
+        :disabled="isLoading || numberOfTasksFailed === 0"
+        @click="onRefreshClicked"
+        >Fehlgeschlagene wiederholen</base-button-refresh
+      >
+    </v-row>
   </v-container>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, watch } from "vue";
+import { useRouter } from "vue-router";
 
+import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 
+const { routeWithName } = useNavigationUtils();
+const router = useRouter();
+
 const {
-  numberOfSuccessfulTasks,
-  numberOfFailedTasks,
   numberOfTasksToRun,
+  numberOfTasksSucceeded,
+  numberOfTasksFailed,
+  numberOfTasksFinished,
   currentlyRunningTask,
   successfullyTasks,
   failedTasks,
+  hasAllTasksRunSuccessfully,
 } = storeToRefs(useTaskManagerStore());
+
+const { rerunFailedTasks } = useTaskManagerStore();
 
 const isLoading = computed(() => {
   return (
-    numberOfSuccessfulTasks.value + numberOfFailedTasks.value !=
+    successfullyTasks.value.length + failedTasks.value.length !=
     numberOfTasksToRun.value
   );
 });
+
+watch(hasAllTasksRunSuccessfully, () => {
+  if (hasAllTasksRunSuccessfully.value) {
+    router.push(ROUTE_WAHLVORSTAND);
+  }
+});
+
+async function onRefreshClicked() {
+  await rerunFailedTasks();
+}
 </script>

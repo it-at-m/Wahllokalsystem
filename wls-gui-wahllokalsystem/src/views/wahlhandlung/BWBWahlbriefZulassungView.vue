@@ -9,7 +9,11 @@
     >
       <v-tab
         value="one"
-        :prepend-icon="isBeanstandeteWahlbriefeTableValid ? `$valid` : `$edit`"
+        :prepend-icon="
+          beanstandeteWahlbriefeState.isBeanstandeteWahlbriefeTableValid
+            ? `$valid`
+            : `$edit`
+        "
         data-test="wahlbriefe-zulassen-tab"
       >
         Wahlbriefe zulassen oder zurückweisen
@@ -35,12 +39,11 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { VTab, VTabs, VTabsWindow, VTabsWindowItem } from "vuetify/components";
 
 import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { isBeanstandeteWahlbriefeTableValid } = storeToRefs(useWahlenStore());
+const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const tab = ref(null);
 </script>

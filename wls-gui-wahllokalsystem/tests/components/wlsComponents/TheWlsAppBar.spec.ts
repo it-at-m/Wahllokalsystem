@@ -64,7 +64,9 @@ describe("TheWlsAppBar.vue", () => {
     it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasCompletelyRun", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
-      taskManagerStore.hasInitializationOfTasksCompletelyRun = true;
+      taskManagerStore.hasAllTasksRunSuccessfully = true;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
 
@@ -73,10 +75,12 @@ describe("TheWlsAppBar.vue", () => {
       );
     });
 
-    it("should_notRenderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
+    it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
       const taskManagerStore = useTaskManagerStore();
       // @ts-expect-error: cannot set readonly
-      taskManagerStore.hasInitializationOfTasksCompletelyRun = false;
+      taskManagerStore.hasAllTasksRunSuccessfully = false;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
 

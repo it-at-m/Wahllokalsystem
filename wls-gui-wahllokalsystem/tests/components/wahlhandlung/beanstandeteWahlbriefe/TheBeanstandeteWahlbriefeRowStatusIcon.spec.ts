@@ -53,7 +53,7 @@ describe("TheBeanstandeteWahlbriefeRowStatusIcon", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showRowIconToBeValidAndGreen_when_rowHasValidInputs", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -90,7 +90,7 @@ describe("TheBeanstandeteWahlbriefeRowStatusIcon", () => {
 
     it("should_showRowIconToBeInvalidAndRed_when_rowHasMissingInputs", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -121,7 +121,8 @@ describe("TheBeanstandeteWahlbriefeRowStatusIcon", () => {
       expect(iconRow0.props("icon")).toBe("$valid");
       expect(iconRow0.props("color")).toBe("success");
 
-      wahlenStore.wahlen[0].beanstandeteWahlbriefe[0] = null;
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      wahlenStore.wahlenState.wahlen[0]!.beanstandeteWahlbriefe[0] = null;
       await nextTick();
 
       expect(iconRow0.props("icon")).toBe("$edit");

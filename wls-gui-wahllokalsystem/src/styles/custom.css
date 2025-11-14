@@ -1,0 +1,26 @@
+.stimmabgabevermerke-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.stimmabgabevermerke-table thead th.sav-first-column {
+  min-width: 150px;
+}
+
+.stimmabgabevermerke-table .dynamic-column {
+  min-width: 300px;
+}
+
+/* #2085 */
+
+.v-autocomplete__selection,
+.v-autocomplete .v-autocomplete__selection-text {
+  white-space: normal;
+  height: auto;
+  word-break: break-word;
+}
+
+.v-btn.v-btn--active:hover > .v-btn__overlay,
+.v-btn.v-btn--active:focus > .v-btn__overlay {
+  opacity: 0.01;
+}

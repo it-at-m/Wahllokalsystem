@@ -4,7 +4,7 @@
       icon="$send"
       class="mr-2"
     />
-    Letzte Absendezeit: {{ time(wahlvorstandStore.lastSending) }}
+    Letzte Absendezeit: {{ toHhMmSs(wahlvorstandStore.lastSending) }}
   </div>
 </template>
 
@@ -12,6 +12,6 @@
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const { time } = useDateTimeFormatter();
+const { toHhMmSs } = useDateTimeFormatter();
 const wahlvorstandStore = useWahlvorstandStore();
 </script>

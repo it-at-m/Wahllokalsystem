@@ -3,100 +3,109 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 export function useDateTimeFormatter() {
   const NO_VALUE_DEFAULT = "";
   const TIME_FIELD_SEPARATOR = ":";
+  const DATE_SEPARATOR = "-";
 
   const { isValidDate } = useDateTimeUtils();
 
-  const time = function (date?: Date | null): string {
-    if (!date) {
+  const toHhMmSs = function (date: Date | string | null | undefined): string {
+    const parsedDate = _returnParsedDateOrInvalid(date);
+
+    if (isValidDate(parsedDate)) {
+      return [
+        _leftPadTwoDigitsWithZero(parsedDate.getHours()),
+        _leftPadTwoDigitsWithZero(parsedDate.getMinutes()),
+        _leftPadTwoDigitsWithZero(parsedDate.getSeconds()),
+      ].join(TIME_FIELD_SEPARATOR);
+    } else {
       return NO_VALUE_DEFAULT;
     }
-
-    const hour = _leftPadTwoDigitsWithZero(date.getHours());
-    const minute = _leftPadTwoDigitsWithZero(date.getMinutes());
-    const second = _leftPadTwoDigitsWithZero(date.getSeconds());
-
-    return `${hour}${TIME_FIELD_SEPARATOR}${minute}${TIME_FIELD_SEPARATOR}${second}`;
   };
 
-  const toHhMm = function (date?: Date | null): string {
-    if (!date) {
+  const toHhMm = function (date: Date | string | null | undefined): string {
+    const parsedDate = _returnParsedDateOrInvalid(date);
+
+    if (isValidDate(parsedDate)) {
+      return [
+        _leftPadTwoDigitsWithZero(parsedDate.getHours()),
+        _leftPadTwoDigitsWithZero(parsedDate.getMinutes()),
+      ].join(TIME_FIELD_SEPARATOR);
+    } else {
       return NO_VALUE_DEFAULT;
     }
-
-    const hour = _leftPadTwoDigitsWithZero(date.getHours());
-    const minute = _leftPadTwoDigitsWithZero(date.getMinutes());
-
-    return `${hour}${TIME_FIELD_SEPARATOR}${minute}`;
   };
 
-  const applyLocalTimezoneOffset = function (date: Date | string): Date {
-    const mappedUhrzeit = new Date(date);
-    mappedUhrzeit.setHours(
-      mappedUhrzeit.getHours() -
-        Math.trunc(mappedUhrzeit.getTimezoneOffset() / 60)
-    );
-    return mappedUhrzeit;
-  };
+  function toGermanDate(
+    date: Date | string | null | undefined
+  ): string | undefined {
+    const parsedDate = _returnParsedDateOrInvalid(date);
 
-  const getDateFromTimeString = function (timeString: string): Date {
-    // Validate time string format (HH:MM)
-    if (!timeString || !/^\d{1,2}:\d{1,2}(?::\d{1,2})?$/.test(timeString)) {
-      return new Date(NaN);
-    }
-
-    const timeParts = timeString.split(":").map(Number);
-
-    const [hours, minutes] = timeParts;
-    if (
-      isNaN(hours) ||
-      isNaN(minutes) ||
-      hours < 0 ||
-      hours > 23 ||
-      minutes < 0 ||
-      minutes > 59
-    ) {
-      return new Date(NaN); // Return invalid date for invalid time values
-    }
-
-    const seconds = timeParts.length === 3 ? timeParts[2] : 0;
-    if (!isNaN(seconds) && (seconds < 0 || seconds > 59)) {
-      return new Date(NaN);
-    }
-
-    const date = new Date();
-    date.setHours(hours, minutes, seconds, 0);
-    return date;
-  };
-
-  function toGermanDateFormat(dateString: string) {
-    const date = new Date(dateString);
-    if (isValidDate(date)) {
-      return date.toLocaleDateString("de-DE", {
+    if (isValidDate(parsedDate)) {
+      return parsedDate.toLocaleDateString("de-DE", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
       });
+    } else {
+      return undefined;
     }
   }
 
-  function toGermanDateWithLongMonth(dateString: string) {
-    const date = new Date(dateString);
-    if (isValidDate(date)) {
-      return date.toLocaleDateString("de-DE", {
+  function toGermanDateWithLongMonth(
+    date: Date | string | null | undefined
+  ): string | undefined {
+    const parsedDate = _returnParsedDateOrInvalid(date);
+
+    if (isValidDate(parsedDate)) {
+      return parsedDate.toLocaleDateString("de-DE", {
         year: "numeric",
         month: "long",
         day: "numeric",
         hour12: false,
       });
+    } else {
+      return undefined;
     }
   }
 
-  function toYyyyMmDd(dateToFormat: Date) {
+  function toYyyyMmDd(date: Date | string | null | undefined): string {
+    const parsedDate = _returnParsedDateOrInvalid(date);
+
+    if (isValidDate(parsedDate)) {
+      return [
+        _leftPadFourDigitsWithZero(parsedDate.getFullYear()),
+        _leftPadTwoDigitsWithZero(parsedDate.getMonth() + 1),
+        _leftPadTwoDigitsWithZero(parsedDate.getDate()),
+      ].join(DATE_SEPARATOR);
+    } else {
+      return NO_VALUE_DEFAULT;
+    }
+  }
+
+  function toYyyyMmDdWithTimeWithoutTimezoneOffset(dateToFormat: Date) {
     if (!isValidDate(dateToFormat)) {
       return NO_VALUE_DEFAULT;
     }
 
-    return `${_leftPadFourDigitsWithZero(dateToFormat.getFullYear())}-${_leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1)}-${_leftPadTwoDigitsWithZero(dateToFormat.getDate())}`;
+    const fullYear = _leftPadFourDigitsWithZero(dateToFormat.getFullYear());
+    const month = _leftPadTwoDigitsWithZero(dateToFormat.getMonth() + 1);
+    const day = _leftPadTwoDigitsWithZero(dateToFormat.getDate());
+
+    const hour = _leftPadTwoDigitsWithZero(dateToFormat.getHours());
+    const minute = _leftPadTwoDigitsWithZero(dateToFormat.getMinutes());
+    const second = _leftPadTwoDigitsWithZero(dateToFormat.getSeconds());
+    const milliseconds = _leftPadWithZero(dateToFormat.getMilliseconds(), 3);
+
+    return `${fullYear}-${month}-${day}T${hour}:${minute}:${second}.${milliseconds}`;
+  }
+
+  function _returnParsedDateOrInvalid(
+    date: Date | string | null | undefined
+  ): Date {
+    if (!date) {
+      return new Date(NaN);
+    }
+
+    return typeof date === "string" ? new Date(date) : date;
   }
 
   function _leftPadTwoDigitsWithZero(number: number): string {
@@ -112,12 +121,11 @@ export function useDateTimeFormatter() {
   }
 
   return {
-    time,
+    toHhMmSs,
     toHhMm,
     toYyyyMmDd,
-    applyLocalTimezoneOffset,
-    getDateFromTimeString,
-    toGermanDateFormat,
+    toYyyyMmDdWithTimeWithoutTimezoneOffset,
+    toGermanDate,
     toGermanDateWithLongMonth,
   };
 }

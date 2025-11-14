@@ -32,7 +32,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getSyncTasks: vi.fn(),
 }));
 
-vi.mock("@/composables/common/taskManager.ts", () => ({
+vi.mock("@/composables/tasks/taskManager.ts", () => ({
   useTaskManager: vi.fn().mockImplementation(() => mockDefinitions.taskManager),
 }));
 vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({

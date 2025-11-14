@@ -11,6 +11,8 @@ const {
   timeGreaterOrEqual,
   timeLessOrEqual,
   timeNotInFuture,
+  dateNotInFuture,
+  dateGreaterOrEqual,
 } = useRules();
 
 describe("Validation rules", () => {
@@ -159,6 +161,68 @@ describe("Validation rules", () => {
 
     it.each(["30:25", "14:75", "10:20:98", "", " ", "text", "ab:cd"])(
       "should_returnErrorMessage_when_inputTime'%s'IsInvalid",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+  });
+
+  describe("dateNotInFuture", () => {
+    beforeEach(() => {
+      const mockedNow = new Date();
+      mockedNow.setFullYear(2025, 9, 1);
+      vi.useFakeTimers({
+        now: mockedNow,
+      });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    const rule = dateNotInFuture;
+
+    it.each(["2025-10-01", "2000-01-01", "2025-01-01"])(
+      "should_returnTrue_when_inputDate'%s'IsLessOrEqualToToday",
+      (input) => {
+        expect(rule(input)).toStrictEqual(true);
+      }
+    );
+
+    it.each(["2025-10-05", "2030-01-01"])(
+      "should_returnErrorMessage_when_inputDateIsInFuture",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+
+    it.each(["2000-30-01", "2020-10-46", "", " ", "text"])(
+      "should_returnErrorMessage_when_inputDate'%s'IsInvalid",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+  });
+
+  describe("dateGreaterOrEqual", () => {
+    const rule = dateGreaterOrEqual("2025-10-01");
+
+    it.each(["2025-10-01", "2025-10-02", "2026-01-01"])(
+      "should_returnTrue_when_inputDate'%s'IsGreaterOrEqualToComparedValue",
+      (input) => {
+        expect(rule(input)).toStrictEqual(true);
+      }
+    );
+
+    it.each(["2025-09-30", "2020-01-01"])(
+      "should_returnErrorMessage_when_inputDate'%s'IsLessThanComparedValue",
+      (input) => {
+        expect(rule(input)).toBeTypeOf("string");
+      }
+    );
+
+    it.each(["2000-30-01", "2020-10-46", "", " ", "text"])(
+      "should_returnErrorMessage_when_inputDate'%s'IsInvalid",
       (input) => {
         expect(rule(input)).toBeTypeOf("string");
       }

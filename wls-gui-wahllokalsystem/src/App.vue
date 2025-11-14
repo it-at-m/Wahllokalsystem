@@ -3,9 +3,17 @@
     <the-wls-app-bar />
     <v-main>
       <v-container fluid>
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ route, Component }">
           <v-fade-transition mode="out-in">
-            <component :is="Component" />
+            <!-- Keep alive is fundamental for our app, to work correctly - see doc for frontend architecture -->
+            <keep-alive>
+              <component
+                :is="Component"
+                :key="route.fullPath"
+              >
+                <!-- :key attribute is fundamental for our app, to work correctly with keep alive - see doc for frontend architecture -->
+              </component>
+            </keep-alive>
           </v-fade-transition>
         </router-view>
       </v-container>
@@ -27,21 +35,14 @@ import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorsta
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { loadEreignisse } = useEreignisStore();
 const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useTaskManagerStore();
-const { loadWaehler } = useMonitoringStore();
-const { initWahlen } = useWahlenStore();
-const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
-const { initBeanstandeteWahlbriefe } = useWahlenStore();
+const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -51,13 +52,10 @@ const { setupIndexDB } = useIndexDB();
 onMounted(async () => {
   try {
     await loadUser();
-    await initWahlen();
+    await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    await loadEreignisse();
-    await loadWaehler();
-    await pflegeWaehlerverzeichnisActions.loadPflegeWaehlerverzeichnis();
-    await initBeanstandeteWahlbriefe();
+    await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

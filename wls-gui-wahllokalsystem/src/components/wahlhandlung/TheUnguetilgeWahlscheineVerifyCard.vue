@@ -6,7 +6,7 @@
         ref="wahlscheinValidationForm"
         v-model="isFormValid"
       >
-        <v-number-input
+        <base-number-input
           :model-value="wahlscheinnummer"
           :rules="[required, minNumber(1), maxNumber(9999999)]"
           label="Wahlscheinnummer"
@@ -41,22 +41,47 @@
           :title="titleFeedbackWahlscheinUngueltig"
           :type="InputFeedbackTypeEnum.error"
         >
-          <div>
-            <ul>
-              <li>
-                Die Person darf mit diesem Wahlschein keine Stimme abgeben!
-              </li>
-              <li>Behalten Sie den Wahlschein ein.</li>
-              <li>
-                Fassen Sie einen Beschluss über die Zurückweisung der wählenden
-                Person.
-              </li>
-              <li>
-                Erfassen Sie dies als besonderes Vorkommnis unter dem Punkt
-                "Ereignisse".
-              </li>
-            </ul>
-          </div>
+          <ul>
+            <li>Die Person darf mit diesem Wahlschein keine Stimme abgeben!</li>
+            <li>Behalten Sie den Wahlschein ein.</li>
+            <li>Fassen Sie einen Beschluss über die Zurückweisung.</li>
+            <li>Erfassen Sie dies als besonderes Ereignis:</li>
+          </ul>
+          <template #additionalFeedback>
+            <v-row>
+              <v-col cols="4">
+                {{ ereignisBeschreibungWahlscheinUnguelttig }}
+              </v-col>
+              <v-col>
+                <v-form v-model="isAbstimmungsergebnisFormValid">
+                  <v-textarea
+                    v-model="abstimmungsergebnis"
+                    label="Abstimmungsergebnis"
+                    width="350"
+                    :rules="[
+                      required,
+                      minLength(0),
+                      maxLength(maxLengthForAbstimmungsergebnis),
+                    ]"
+                    persistent-counter
+                    :counter="maxLengthForAbstimmungsergebnis"
+                    rows="1"
+                    auto-grow
+                    data-test="text-input-abstimmungsergebnis"
+                  />
+                </v-form>
+              </v-col>
+              <v-col>
+                <base-button-save
+                  class="mt-2 ml-5"
+                  save-text="Beschluss speichern"
+                  :disabled="!isAbstimmungsergebnisFormValid"
+                  @click="onSaveAbstimmungsergebnisClicked"
+                />
+              </v-col>
+              <v-spacer />
+            </v-row>
+          </template>
         </base-input-feedback-card>
         <v-img
           position="left"
@@ -82,12 +107,12 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <base-text-button
         active
         :disabled="isSearchButtonDisabled"
         data-test="button-search"
         @click="onSearchClicked"
-        >{{ searchButtonLabel }}</v-btn
+        >{{ searchButtonLabel }}</base-text-button
       >
       <base-button-refresh
         :loading="ungueltigeWahlscheineState.ungueltigeWahlscheineIsLoading"
@@ -107,14 +132,22 @@ import { computed, ref, useTemplateRef } from "vue";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { maxNumber, minNumber, required, maxLength, minLength } = useRules();
+const { addEreignis, sendEreignisse } = useEreignisStore();
 
 const isFormValid = ref<boolean | null>(null);
+const isAbstimmungsergebnisFormValid = ref<boolean | null>(null);
+
 const isSearchButtonDisabled = computed(() => !isFormValid.value);
 const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
@@ -130,6 +163,13 @@ const wahlscheinnummer = ref<null | number>(null);
 //value - found something while searching
 const ungueltigerWahlschein = ref<null | undefined | UngueltigerWahlschein>(
   undefined
+);
+const abstimmungsergebnis = ref<string | undefined>(undefined);
+
+const maxLengthForAbstimmungsergebnis = computed(
+  () =>
+    MAX_LENGTH_FOR_TEXT_INPUT -
+    ereignisBeschreibungWahlscheinUnguelttig.value.length
 );
 
 const feedbackNoDataAvailableIsVisible = computed(
@@ -155,6 +195,9 @@ const searchButtonLabel = computed(() =>
 const titleFeedbackWahlscheinUngueltig = computed(() => {
   return `Wahlschein ${ungueltigerWahlschein.value?.wahlscheinnummer ?? ""} für ${ungueltigerWahlschein.value?.vorname} ${ungueltigerWahlschein.value?.familienname} ist ungültig`;
 });
+const ereignisBeschreibungWahlscheinUnguelttig = computed(() => {
+  return `${titleFeedbackWahlscheinUngueltig.value}. Die Person wurde zurückgewiesen. Abstimmungsergebnis: `;
+});
 
 function onRefreshClicked() {
   ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
@@ -172,12 +215,28 @@ function onSearchClicked() {
   }
 }
 
-function onWahlscheinnummerChanged(newValue: number) {
-  wahlscheinnummer.value = newValue;
+async function onSaveAbstimmungsergebnisClicked() {
+  addEreignis({
+    uhrzeit: new Date(),
+    beschreibung: `${ereignisBeschreibungWahlscheinUnguelttig.value}${abstimmungsergebnis.value}`,
+  });
+  await sendEreignisse();
+
+  abstimmungsergebnis.value = undefined;
+  isAbstimmungsergebnisFormValid.value = false;
+}
+
+function onWahlscheinnummerChanged(newValue: number | null | undefined) {
+  if (newValue !== undefined) {
+    wahlscheinnummer.value = newValue;
+  } else {
+    wahlscheinnummer.value = null;
+  }
   resetUngueltigerWahlschein();
 }
 
 function resetUngueltigerWahlschein() {
   ungueltigerWahlschein.value = undefined;
+  abstimmungsergebnis.value = undefined;
 }
 </script>

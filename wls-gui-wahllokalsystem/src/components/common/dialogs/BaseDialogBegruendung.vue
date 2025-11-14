@@ -27,7 +27,6 @@
           rows="1"
           :label="label"
           auto-grow
-          clearable
           autofocus
           persistent-counter
           :counter="maxLengthForBegruendung"
@@ -37,15 +36,14 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
+        <base-text-button
           data-test="basedialogbegruendung-btn-cancel"
           @click="onCancelClicked"
         >
           Eingaben ändern
-        </v-btn>
+        </base-text-button>
         <base-button-save
           data-test="basedialogbegruendung-btn-confirm"
-          active
           :disabled="!isBegruendungValid"
           @click="onConfirmClicked"
         />
@@ -58,6 +56,7 @@
 import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 

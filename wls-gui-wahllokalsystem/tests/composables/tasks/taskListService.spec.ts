@@ -12,9 +12,23 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksKopfdaten: vi.fn(),
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
+  createWaehlerverzeichnisTasks: vi.fn(),
   createTasksWahlvorstand: vi.fn(),
+  createTasksEroeffnungsuhrzeit: vi.fn(),
+  createTasksUrnenwahlSchliessungsuhrzeit: vi.fn(),
   createTasksWahlscheine: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
+  createTasksStimmabgabevermerke: vi.fn(),
+  createTasksStimmzettelumschlaege: vi.fn(),
+  getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  createTasksWaehler: vi.fn(),
+  createTasksEreignisse: vi.fn(),
+  createTasksBegruendung: vi.fn(),
+  createTasksAWerte: vi.fn(),
+  createTasksHandbuch: vi.fn(),
+  createTasksStatus: vi.fn(),
+  createTasksWahlvorbereitung: vi.fn(),
+  createTasksWahlbriefe: vi.fn(),
 }));
 
 vi.mock(
@@ -41,11 +55,46 @@ vi.mock(
   })
 );
 
+vi.mock("@/composables/tasks/taskFactories/waehlerTaskFactory.ts", () => ({
+  useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWaehler,
+  })),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts",
+  () => ({
+    useWaehlverzeichnisTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createWaehlerverzeichnisTasks,
+    })),
+  })
+);
+
 vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
   useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksWahlvorstand,
   })),
 }));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts",
+  () => ({
+    useEroeffnungsuhrzeitTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksEroeffnungsuhrzeit,
+    })),
+  })
+);
+
+vi.mock(
+  "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts",
+  () => ({
+    useUrnenwahlSchliessungsuhrzeitTaskFactory: vi
+      .fn()
+      .mockImplementation(() => ({
+        createTasks: mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit,
+      })),
+  })
+);
 
 vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
   useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
@@ -53,14 +102,85 @@ vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
   })),
 }));
 
+vi.mock(
+  "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts",
+  () => ({
+    useStimmabgabevermerkeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmabgabevermerke,
+    })),
+  })
+);
+
+vi.mock(
+  "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts",
+  () => ({
+    useStimmzettelumschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStimmzettelumschlaege,
+    })),
+  })
+);
+
+vi.mock("@/composables/tasks/taskFactories/ereignisseTaskFactory.ts", () => ({
+  useEreignisseTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksEreignisse,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/begruendungTaskFactory.ts", () => ({
+  useBegruendungTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksBegruendung,
+  })),
+}));
+
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
-    getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
+
+vi.mock("@/composables/tasks/taskFactories/aWerteTaskFactory.ts", () => ({
+  useAWerteTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksAWerte,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
+  useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksHandbuch,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/statusTaskFactory.ts", () => ({
+  useStatusTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksStatus,
+  })),
+}));
+
+vi.mock(
+  "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts",
+  () => ({
+    useWahlvorbereitungTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWahlvorbereitung,
+    })),
+  })
+);
+
+vi.mock("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts", () => ({
+  useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksWahlbriefe,
+  })),
+}));
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
-  const { generateRandomString } = useCommonTestDataFactory();
+  const { generateRandomString, generateRandomNumber } =
+    useCommonTestDataFactory();
   const { createWahl } = useWahlTestDataFactory();
   beforeEach(() => {
     setActivePinia(
@@ -75,21 +195,23 @@ describe("taskListService.ts", () => {
     it("should_containListWithTasks_when_initTaskListIsCalled", () => {
       const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
         storeToRefs(useUserStore());
-
+      const wahlMedata = {
+        wahlbezirkID: generateRandomString(10),
+        wahlnummer: generateRandomString(10),
+        wahlID: generateRandomString(10),
+      };
       // @ts-expect-error: cannot set readonly
       currentUserWahlbezirksArt.value = WahlbezirksArtEnum.UWB;
       // @ts-expect-error: cannot set readonly
-      currentUserWahlMetadata.value = [
-        {
-          wahlbezirkID: generateRandomString(10),
-          wahlnummer: generateRandomString(10),
-          wahlID: generateRandomString(10),
-        },
-      ];
+      currentUserWahlMetadata.value = [wahlMedata];
 
       const mockedWahl = createWahl();
+      const mockedWaehlerverzeichnisNummer = generateRandomNumber(2);
 
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        mockedWaehlerverzeichnisNummer
+      );
       mockDefinitions.createTasksKonfigurationsparameter.mockReturnValue([
         {
           name: "Konfigurationsparameter",
@@ -108,15 +230,87 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createWaehlerverzeichnisTasks.mockReturnValue([
+        {
+          name: "Waehlerverzeichnis",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlvorstand.mockReturnValue([
         {
           name: "Wahlvorstand",
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit.mockReturnValue([
+        {
+          name: "Urnenwahl Schließungsuhrzeit",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksEroeffnungsuhrzeit.mockReturnValue([
+        {
+          name: "Eröffnungsuhrzeit",
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlscheine.mockReturnValue([
         {
           name: "Wahlscheine - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStimmabgabevermerke.mockReturnValue([
+        {
+          name: `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStimmzettelumschlaege.mockReturnValue([
+        {
+          name: `Stimmzettel ${mockedWahl.name}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksWaehler.mockReturnValue([
+        { name: "Wahlbeteiligung", callback: () => Promise.resolve() },
+      ]);
+      mockDefinitions.createTasksEreignisse.mockReturnValue([
+        { name: "Ereignisse", callback: () => Promise.resolve() },
+      ]);
+      mockDefinitions.createTasksBegruendung.mockReturnValue([
+        {
+          name: `Begruendung Stimmzettel für ${mockedWahl.name}`,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksAWerte.mockReturnValue([
+        {
+          name: "AWerte",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksHandbuch.mockReturnValue([
+        {
+          name: "Handbuch",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStatus.mockReturnValue([
+        {
+          name: "Druckstatus - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksWahlvorbereitung.mockReturnValue([
+        {
+          name: "Wahlvorbereitung",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksWahlbriefe.mockReturnValue([
+        {
+          name: "Erfasste Wahlbriefe",
           callback: () => Promise.resolve(),
         },
       ]);
@@ -128,9 +322,22 @@ describe("taskListService.ts", () => {
       const expectedTaskNames = [
         "Konfigurationsparameter",
         "Wahlvorstand",
+        "Eröffnungsuhrzeit",
+        "Urnenwahl Schließungsuhrzeit",
         "UngültigeWahlscheine",
+        "Waehlerverzeichnis",
         "Kopfdaten - " + mockedWahl.name,
         "Wahlscheine - " + mockedWahl.name,
+        `Stimmabgabevermerke-${wahlMedata.wahlbezirkID}-WVZ-${mockedWaehlerverzeichnisNummer}-${mockedWahl.nummer}`,
+        "Stimmzettel " + mockedWahl.name,
+        "Wahlbeteiligung",
+        "Ereignisse",
+        "Begruendung Stimmzettel für " + mockedWahl.name,
+        "AWerte",
+        "Handbuch",
+        "Druckstatus - " + mockedWahl.name,
+        "Wahlvorbereitung",
+        "Erfasste Wahlbriefe",
       ];
 
       expect(taskNames).toEqual(expect.arrayContaining(expectedTaskNames));
@@ -142,8 +349,25 @@ describe("taskListService.ts", () => {
       expect(
         mockDefinitions.createTasksUngueltigeWahlscheine
       ).toHaveBeenCalled();
+      expect(mockDefinitions.createWaehlerverzeichnisTasks).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorstand).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksEroeffnungsuhrzeit).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksUrnenwahlSchliessungsuhrzeit
+      ).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlscheine).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksStimmabgabevermerke).toHaveBeenCalled();
+      expect(
+        mockDefinitions.createTasksStimmzettelumschlaege
+      ).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWaehler).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksEreignisse).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksBegruendung).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksStatus).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlvorbereitung).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksWahlbriefe).toHaveBeenCalled();
     });
   });
 });

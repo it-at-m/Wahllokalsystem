@@ -28,6 +28,13 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 
+declare module "@vue/runtime-core" {
+  interface ComponentCustomProperties {
+    rowIndexToDelete: number;
+    wahlscheinGruende: string[];
+  }
+}
+
 describe("TheBeanstandeteWahlbriefeTable", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
@@ -71,7 +78,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
 
     it("should_onlyShowHeaders_when_noBeanstandeteWahlbriefeGiven", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -102,7 +109,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
 
     it("should_showOneRow_when_oneZurueckweisungsgrundGiven", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -131,7 +138,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
 
     it("should_showMultipleRows_when_multipleZurueckweisungsgruendeGiven", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -187,7 +194,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         "should_setWahlscheinColumnModelValueToZugelassen_when_beanstandeteWahlbriefeLoadedFromWahlenAndValueIsStimmzettelGrund'%s'",
         async (input) => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -228,7 +235,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         "should_setWahlscheinColumnModelValueToWahlscheingrund_when_beanstandeteWahlbriefeLoadedFromWahlenAndValueIsWahlscheinGrund'$grund'",
         async ({ grund, expected }) => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -257,7 +264,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
       describe("onZulassungsgrundWahlscheinChanged", () => {
         it("should_disableWahlColumnInputsAndSetModelValue_when_wahlscheinColumnInputIsValidWahlscheinGrund", async () => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -306,7 +313,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
 
         it("should_enableWahlColumnInputsAndSetValueToNull_when_wahlscheinColumnInputIsSetToZugelassen", async () => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -352,7 +359,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
       describe("onZulassungsgrundStimmzettelChanged", () => {
         it("should_setWahlColumnValues_when_anyWahlColumnInputExceptNichtWahlberechtigtIsSet", async () => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -406,7 +413,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
 
         it("should_notSetAnyValues_when_anyWahlColumnInputIsSetToNichtWahlberechtigt", async () => {
           const wahlenStore = useWahlenStore();
-          wahlenStore.wahlen = [
+          wahlenStore.wahlenState.wahlen = [
             prepareWahl()
               .name("Wahl1")
               .wahlID("id1")
@@ -461,15 +468,20 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
     });
 
     describe("onDeleteBeanstandeteWahlbriefeRowClicked", () => {
-      it("should_deleteStoreValues_when_deleteRowClicked", async () => {
+      it("should_deleteStoreValuesWithDialog_when_deleteRowClicked", async () => {
         const wahlenStore = useWahlenStore();
-        wahlenStore.wahlen = [
+        wahlenStore.wahlenState.wahlen = [
           prepareWahl()
             .name("Wahl1")
             .wahlID("id1")
             .beanstandeteWahlbriefe(["GEGENSTAND_IM_UMSCHLAG"])
             .build(),
         ];
+
+        const deleteBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+          useWahlenStore().beanstandeteWahlbriefeActions,
+          "deleteBeanstandeterWahlbriefEntry"
+        );
 
         wrapper = mount(TheBeanstandeteWahlbriefeTable, {
           global: {
@@ -483,9 +495,46 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
         );
         await deleteButton.trigger("click");
 
-        expect(
-          wahlenStore.deleteBeanstandeterWahlbriefEntry
-        ).toHaveBeenCalled();
+        expect(wrapper.vm.rowIndexToDelete).equals(0);
+
+        const confirmButton = wrapper.findComponent(
+          '[data-test="basedialog-btn-confirm"]'
+        );
+        await confirmButton.trigger("click");
+
+        expect(deleteBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
+      });
+
+      it("should_deleteEmptyRow_when_deleteRowClicked", async () => {
+        const wahlenStore = useWahlenStore();
+        wahlenStore.wahlenState.wahlen = [
+          prepareWahl()
+            .name("Wahl1")
+            .wahlID("id1")
+            .beanstandeteWahlbriefe([null])
+            .build(),
+        ];
+
+        const deleteBeanstandeterWahlbriefEntrySpy = vi.spyOn(
+          useWahlenStore().beanstandeteWahlbriefeActions,
+          "deleteBeanstandeterWahlbriefEntry"
+        );
+
+        wrapper = mount(TheBeanstandeteWahlbriefeTable, {
+          global: {
+            plugins: [pinia, vuetify],
+          },
+        });
+
+        wrapper.vm.wahlscheinGruende = [];
+
+        // delete first row
+        const deleteButton = wrapper.findComponent<typeof VBtn>(
+          `[data-test="delete-btn-0"]`
+        );
+        await deleteButton.trigger("click");
+
+        expect(deleteBeanstandeterWahlbriefEntrySpy).toHaveBeenCalled();
       });
     });
   });

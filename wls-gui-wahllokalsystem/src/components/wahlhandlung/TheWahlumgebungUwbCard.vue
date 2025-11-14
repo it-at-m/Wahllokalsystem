@@ -29,7 +29,7 @@
         >
           <div class="d-flex flex-wrap justify-start">
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahltische
@@ -39,11 +39,10 @@
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
-                clearable
               />
             </div>
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlNebenraeume
@@ -53,11 +52,10 @@
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
-                clearable
               />
             </div>
             <div>
-              <v-number-input
+              <base-number-input
                 v-model="
                   urnenwahlVorbereitungState.urnenwahlVorbereitung
                     .anzahlWahlkabinen
@@ -67,7 +65,6 @@
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
-                clearable
               />
             </div>
           </div>
@@ -84,7 +81,6 @@
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
           :disabled="isSaveButtonDisabled"
           :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           @click="onSaveWahlumgebungUWBClicked"
@@ -100,6 +96,7 @@ import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -112,7 +109,7 @@ const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenForm = ref<HTMLFormElement>();
 
-const { wahlen } = storeToRefs(useWahlenStore());
+const { wahlenState } = storeToRefs(useWahlenStore());
 const { urnenwahlVorbereitungActions } = useWahlbezirkStore();
 const { urnenwahlVorbereitungState } = storeToRefs(useWahlbezirkStore());
 
@@ -143,7 +140,7 @@ const isMinimumRequired = computed(() => {
 });
 
 const checkboxLabelText = computed(() => {
-  if (wahlen.value && wahlen.value?.length > 1) {
+  if (wahlenState.value.wahlen && wahlenState.value.wahlen?.length > 1) {
     return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
   }
   return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";

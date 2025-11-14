@@ -1,11 +1,11 @@
 ### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280171/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_A
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_A
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_A"
   },
@@ -28,13 +28,13 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280171/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_B_UNGEKENNZEICHNET
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_B_UNGEKENNZEICHNET
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_B_UNGEKENNZEICHNET"
   },
@@ -57,13 +57,13 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280171/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_GUELTIG
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_GUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_C_GUELTIG"
   },
@@ -86,13 +86,13 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280171/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_UNGUELTIG
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_UNGUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
     "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_C_UNGUELTIG"
   },
@@ -127,7 +127,7 @@ Content-Type: application/json
     {
       "waehlerverzeichnisNummer": 1,
       "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
-      "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
       "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
@@ -144,7 +144,7 @@ Content-Type: application/json
       ],
       "vermerke": [
         {
-          "blattnummer": 1,
+          "blattnummer": 2,
           "stimmzettel": [
             {
               "anzahl": 1,
@@ -162,7 +162,7 @@ Content-Type: application/json
 }
 
 ### Send Ergebnismeldung | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/9899cae4-df9a-4ffc-a940-f20cf2280171/1/V1/9899cae4-df9a-4ffc-a940-f20cf2280171
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171/1/V1/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -263,7 +263,7 @@ Content-Type: application/json
       ],
       "vermerke": [
         {
-          "blattnummer": 1,
+          "blattnummer": 2,
           "stimmzettel": [
             {
               "anzahl": 1,

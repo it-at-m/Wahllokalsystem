@@ -4,25 +4,42 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { storeToRefs } from "pinia";
+import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
-import { ROUTES_HOME } from "@/constants.ts";
+import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import HomeView from "@/views/HomeView.vue";
+import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
 
+const mockDefinitions = vi.hoisted(() => ({
+  getWahlen: vi.fn(),
+  postBeanstandeteWahlbriefe: vi.fn(),
+  getBeanstandeteWahlbriefe: vi.fn(),
+}));
+
+vi.mock("@/composables/wahl/wahlService.ts", () => ({
+  useWahlService: () => ({
+    getWahlen: mockDefinitions.getWahlen,
+  }),
+}));
+vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
+  useBriefwahlService: () => ({
+    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+  }),
+}));
 vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
   useBroadcastCronjobService: () => ({
     startBroadcastMessageInterval: startBroadcastMessageIntervalMock,
@@ -65,6 +82,12 @@ describe("App", () => {
         component: HomeView,
         meta: {},
       },
+      {
+        path: "/wahlvorstand",
+        name: ROUTE_WAHLVORSTAND,
+        component: WahlvorstandAnwesenheitView,
+        meta: {},
+      },
     ],
   });
 
@@ -80,6 +103,14 @@ describe("App", () => {
         ],
       },
     });
+
+    const { createWahl } = useWahlTestDataFactory();
+
+    const mockedWahlArrayFromService = [createWahl(), createWahl()];
+
+    mockDefinitions.getWahlen.mockReturnValue(
+      Promise.resolve(mockedWahlArrayFromService)
+    );
   });
 
   afterEach(() => {
@@ -89,6 +120,8 @@ describe("App", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtUWB", async (context) => {
+      router.push = vi.fn();
+
       const store = useUserStore();
       store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
 
@@ -108,6 +141,8 @@ describe("App", () => {
     });
 
     it("should_notRenderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtBWB", async (context) => {
+      router.push = vi.fn();
+
       const store = useUserStore();
       store.user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
 
@@ -147,32 +182,30 @@ describe("App", () => {
       expect(initTasks).toHaveBeenCalled();
     });
 
-    it("should_callLoadEreignisse_when_mounted", async () => {
-      const { loadEreignisse } = useEreignisStore();
-
-      await flushPromises();
-
-      expect(loadEreignisse).toHaveBeenCalled();
-    });
-
-    it("should_callLoadWaehler_when_mounted", async () => {
-      const { loadWaehler } = useMonitoringStore();
-
-      await flushPromises();
-
-      expect(loadWaehler).toHaveBeenCalled();
-    });
-
     it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
-      const { initBeanstandeteWahlbriefe } = useWahlenStore();
-      const { waehlerverzeichnisNummern } = storeToRefs(useWahlenStore());
+      const testingPinia = createTestingPinia({
+        createSpy: vi.fn,
+      });
+      setActivePinia(testingPinia);
+      const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
+      const initBeanstandeteWahlbriefeSpy = vi.spyOn(
+        useWahlenStore().beanstandeteWahlbriefeActions,
+        "initBeanstandeteWahlbriefe"
+      );
+
+      const localWrapper = mount(App, {
+        global: {
+          plugins: [testingPinia, vuetify, router],
+        },
+      });
 
       // @ts-expect-error: cannot set readonly
-      waehlerverzeichnisNummern.value = [1];
+      waehlerverzeichnisGetter.waehlerverzeichnisNummern = [1];
 
       await flushPromises();
 
-      expect(initBeanstandeteWahlbriefe).toHaveBeenCalled();
+      expect(initBeanstandeteWahlbriefeSpy).toHaveBeenCalled();
+      localWrapper.unmount();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

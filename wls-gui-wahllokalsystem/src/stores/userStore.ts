@@ -22,7 +22,7 @@ export const useUserStore = defineStore("user", () => {
     wahlbezirkNummer: "",
     wahlbezirksArt: WahlbezirksArtEnum.UWB,
     pin: "",
-    authorities: new Set<string>(),
+    authorities: [],
     wahlMetaData: [
       {
         wahlbezirkID: "",
@@ -90,6 +90,14 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlMetaData;
   });
 
+  function getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
+    const metadata = currentUserWahlMetadata.value.find((metadata) => {
+      return metadata.wahlID === wahlID;
+    });
+
+    return metadata?.wahlbezirkID;
+  }
+
   function setUser(payload: User): void {
     user.value = payload;
   }
@@ -98,6 +106,7 @@ export const useUserStore = defineStore("user", () => {
     user,
     loadUser,
     setUser,
+    getWahlbezirkIdFromWahlMetaDataByWahlId,
     currentUserWahlbezirkID,
     currentUserWahltagID,
     currentUserWahltag,

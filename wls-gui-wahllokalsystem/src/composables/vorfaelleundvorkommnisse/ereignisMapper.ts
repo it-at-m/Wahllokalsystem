@@ -10,7 +10,7 @@ import { EreignisDTOEreignisartEnum } from "@/api/wls-clients/generated-vorfaell
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
-const { applyLocalTimezoneOffset } = useDateTimeFormatter();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useEreignisMapper() {
   function toModel(
@@ -29,13 +29,15 @@ export function useEreignisMapper() {
   }
 
   function toDto(ereignisseModel: WahlbezirkEreignisse): EreignisseWriteDTO {
-    const ereignisseAsDto = ereignisseModel.ereigniseintraege?.map(
+    const ereignisseAsDto = ereignisseModel.ereigniseintraege.map(
       (ereignisModel) => ereignisModelToEreignisDto(ereignisModel)
     );
     return {
       keineVorfaelle: ereignisseModel.keineVorfaelle,
       keineVorkommnisse: ereignisseModel.keineVorkommnisse,
-      ereigniseintraege: ereignisseAsDto,
+      ereigniseintraege: ereignisseAsDto?.filter(
+        (ereignis) => ereignis.beschreibung
+      ),
     };
   }
 
@@ -56,11 +58,13 @@ function ereignisDtoToEreignisModel(ereignisDto: EreignisDTO): Ereignis {
 function ereignisModelToEreignisDto(ereignisModel: Ereignis): EreignisDTO {
   let mappedUhrzeit;
   if (ereignisModel.uhrzeit) {
-    mappedUhrzeit = applyLocalTimezoneOffset(ereignisModel.uhrzeit);
+    mappedUhrzeit = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+      ereignisModel.uhrzeit
+    );
   }
   return {
     beschreibung: ereignisModel.beschreibung ?? "",
-    uhrzeit: mappedUhrzeit?.toJSON(),
+    uhrzeit: mappedUhrzeit,
     ereignisart: ereignisartModelToEreignisartDto(ereignisModel.ereignisart),
   };
 }

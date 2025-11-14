@@ -4,14 +4,13 @@
       v-for="(wahl, index) in wahlVorbereitung.urnenAnzahl"
       :key="index"
     >
-      <v-number-input
+      <base-number-input
         v-model="wahl.anzahl"
         class="mr-4"
         :rules="[required, minNumber(1), maxNumber(99)]"
         :data-test="`textFieldUrnenAnzahl_${index}`"
-        :label="`Anzahl der Wahlurnen ${getWahlNameOrBlankStringById(wahl.wahlID)}`"
+        :label="`Anzahl der Wahlurnen ${wahlenActions.getWahlNameOrBlankStringById(wahl.wahlID)}`"
         min-width="30rem"
-        clearable
       />
     </div>
   </div>
@@ -20,6 +19,7 @@
 <script setup lang="ts">
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -29,5 +29,5 @@ defineProps<{
   wahlVorbereitung: Wahlvorbereitung;
 }>();
 
-const { getWahlNameOrBlankStringById } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 </script>

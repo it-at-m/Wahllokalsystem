@@ -7,12 +7,15 @@
     <v-col class="text-center">
       <p>
         Back
-        <router-link :to="{ name: ROUTES_HOME }"> Home</router-link>
+        <router-link :to="routeWithName(ROUTES_HOME)"> Home</router-link>
       </p>
     </v-col>
   </v-container>
 </template>
 
 <script setup lang="ts">
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTES_HOME } from "@/constants";
+
+const { routeWithName } = useNavigationUtils();
 </script>

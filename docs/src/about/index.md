@@ -65,7 +65,7 @@ Zu jeder Zeit der Wahlhandlung kann der Nutzer Ereignisse in der Anwendung erfas
 Pflichtfelder:
 
 - eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](./#infobox-ereignisse-uwb))
-- ein Datum mit Uhrzeit
+- ein Datum mit Uhrzeit, welches nicht in der Zukunft und nicht vor dem Wahltag liegen darf
 - eine aussagekräftige Beschreibung mit mindestens 4 und maximal 500 Zeichen.
 
 Weiterhin gibt es einige Verhaltensregeln für die Ereigniserfassung:
@@ -142,6 +142,17 @@ gefährden. Dementsprechend muss die Summe der Anzahl der Tische mit Sichtblende
 Wahlkabinen insgesamt mindestens 1 ergeben, bevor der Nutzer speichern kann.
 :::
 
+📃 **UseCase: `Vorbereitung der Wahlhandlung - Auf ungültige Wahlscheine hinweisen`**
+
+::: info Pflege des Wählerverzeichnisses im Urnenwahlbezirk {data-uwb="true"}
+Vor der Stimmabgabe muss sichergestellt werden, dass das Wählerverzeichnis aktuell und korrekt ist. Dazu müssen
+nachträglich erteilte Wahlscheine berücksichtigt werden, um die Integrität der Wahl zu gewährleisten und allen  
+wahlberechtigten Personen die Möglichkeit zu bieten, ihre Stimmen abzugeben. Es muss immer mindestens die Option
+ausgewählt werden, mit welcher bestätigt wird, dass der Wahlvorstand über ungültige Wahlscheine unterrichtet wurde. Der
+Wahlvorstand wird vom Wahlamt darüber benachrichtigt, ob weitere Korrekturen am Wählerverzeichnis und der
+zugehörigen Ansicht in der Anwendung vorzunehmen sind.
+:::
+
 📃 **UseCase: `Wahl eröffnen`**
 
 Der Nutzer wird dazu aufgefordert, die Uhrzeit einzutragen, zu welcher die Stimmabgabe begonnen wurde, beziehungsweise
@@ -203,7 +214,8 @@ In einem Urnenwahlbezirk muss, wenn jemand mit Wahlschein kommt, geprüft werden
 gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Der Nutzer gibt die Nummer des Wahlscheins ein und sucht.
 Nach der Suche erhält der Nutzer Feedback darüber, ob der Wahlschein gültig oder ungültig ist. Entsprechend werden auch
 Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, werden in der Fehlermeldung neben der Wahlscheinnummer
-auch Vor- und Familienname angezeigt.
+auch Vor- und Familienname angezeigt. Außerdem wird der Nutzer in diesem Fall dazu aufgefordert, den Beschluss über die
+Zurückweisung als Ereignis zu erfassen.
 
 Um suchen zu können, muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnummer muss außerdem im Bereich von `1` bis
 `9999999` liegen.
@@ -241,3 +253,52 @@ Zurückweisungsgrund erhalten, ist `Für diese Wahl nicht Wahlberechtigt`.
 Der Wahlvorstand kann die Daten der Eingabemaske nur speichern, wenn für alle Wahlscheine und Stimmzettelumschläge ein
 valider Wert eingetragen wurde.
 :::
+
+##### Während der Auszählung
+
+📃 **UseCase: `Erfassung abgegebener Stimmen`**
+
+Im Urnenwahl- sowie im Briefwahlbezirk kann der Wahlvorstand die Anzahl der abgegebenen Stimmen erfassen. Die
+Erfassung erfolgt für jede Wahl einzeln.
+
+::: info `Zählen der Stimmzettel` im Urnenwahlbezirk {data-uwb="true"}
+Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettel zu zählen und zu erfassen.
+:::
+
+::: info `Zählen der Stimmzettelumschläge` im Briefwahlbezirk {data-bwb="true"}
+Der Wahlvorstand wird dazu aufgefordert, die Anzahl der erhaltenen Stimmzettelumschläge zu zählen und zu erfassen.
+Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffnet wurde. Diese Uhrzeit darf nicht in
+der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrzeit sein
+(Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
+:::
+
+📃 **UseCase: `Stimmzettel auswerten und Stimmen zählen`**
+
+Für jede Wahl gibt es ein bestimmtes Zählverfahren, in welchem die Stimmzettel nach verschiedenen Stapeln sortiert
+und anschließend ausgezählt werden.
+
+Stapel für die **Oberbürgermeisterwahl**:
+
+  | Stapel               | Beschreibung                                                  | Anmerkung |
+  |----------------------|---------------------------------------------------------------|-----------|
+  | `A`                  | Zweifelsfrei gültige Stimmen                                  |           |
+  | `B_Leer`             | Zweifelsfrei ungültige Stimmen: Leere Stimmzettelumschläge    | nur BWB   |
+  | `B_Ungekennzeichnet` | Zweifelsfrei ungültige Stimmen: Ungekennzeichnete Stimmzettel |           |
+  | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
+  | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |
+
+#### Nach der Auszählung
+
+📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
+
+Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer eine Schnellmeldung zu den vorläufigen Ergebnissen nach
+der Auszählung der Stimmen erstellt.
+
+Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+
+📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
+
+Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer eine Wahlniederschrift über die Wahlhandlung sowie die
+Ermittlung und Feststellung des Wahlergebnisses erstellt.
+
+Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.

@@ -34,7 +34,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="onCloseClicked">Schließen</v-btn>
+        <base-text-button @click="onCloseClicked">Schließen</base-text-button>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -42,8 +42,9 @@
 <script setup lang="ts">
 import { mergeProps, ref } from "vue";
 
-import { useTaskManager } from "@/composables/common/taskManager.ts";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 
 const { getSyncTasks } = useDataSyncer();
 

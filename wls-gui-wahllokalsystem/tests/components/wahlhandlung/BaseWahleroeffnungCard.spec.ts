@@ -275,7 +275,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       // @ts-expect-error: cannot set readonly
       infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
 
-      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege.length).toBe(
         0
       );
 
@@ -291,12 +291,12 @@ describe("BaseWahleroeffnungCard.vue", () => {
       );
       await confirmButton.trigger("click");
 
-      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege?.length).toBe(
+      expect(ereignisStore.wahlbezirkEreignisse.ereigniseintraege.length).toBe(
         1
       );
       if (ereignisStore.wahlbezirkEreignisse.ereigniseintraege) {
         expect(
-          ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0].beschreibung
+          ereignisStore.wahlbezirkEreignisse.ereigniseintraege[0]?.beschreibung
         ).toBe(expectedBegruendung);
       }
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalled();

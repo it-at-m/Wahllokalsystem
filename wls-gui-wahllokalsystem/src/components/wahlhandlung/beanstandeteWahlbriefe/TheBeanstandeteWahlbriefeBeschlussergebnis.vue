@@ -6,7 +6,7 @@
           <tr>
             <th />
             <th
-              v-for="wahl in wahlen"
+              v-for="wahl in wahlenState.wahlen"
               :key="wahl.wahlID"
               class="font-weight-bold text-center"
             >
@@ -18,7 +18,9 @@
           <tr>
             <td class="font-weight-bold">Zugelassen</td>
             <td
-              v-for="(value, index) in summeGueltigerWahlbriefe"
+              v-for="(
+                value, index
+              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe"
               :key="index"
               class="font-weight-bold text-center"
             >
@@ -28,7 +30,9 @@
           <tr>
             <td class="font-weight-bold">Nicht zugelassen</td>
             <td
-              v-for="(value, index) in summeUngueltigerWahlbriefe"
+              v-for="(
+                value, index
+              ) in beanstandeteWahlbriefeGetter.summeUngueltigerWahlbriefe"
               :key="index"
               class="font-weight-bold text-center"
             >
@@ -38,12 +42,16 @@
           <tr class="bg-grey-lighten-3">
             <td class="font-weight-bold">Zurückweisungsgrund</td>
             <td
-              v-for="(_, index) in summeGueltigerWahlbriefe"
+              v-for="(
+                _, index
+              ) in beanstandeteWahlbriefeGetter.summeGueltigerWahlbriefe"
               :key="index"
             />
           </tr>
           <tr
-            v-for="(beanstandung, index) in summenZurueckweisungsgruende"
+            v-for="(
+              beanstandung, index
+            ) in beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende"
             :key="index"
           >
             <td style="text-indent: 20px">
@@ -69,12 +77,8 @@ import { storeToRefs } from "pinia";
 import { useBeanstandeteWahlbriefeMapper } from "@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const {
-  wahlen,
-  summeGueltigerWahlbriefe,
-  summeUngueltigerWahlbriefe,
-  summenZurueckweisungsgruende,
-} = storeToRefs(useWahlenStore());
+const { wahlenState, beanstandeteWahlbriefeGetter } =
+  storeToRefs(useWahlenStore());
 const { zurueckweisungsgrundEnumToDisplayString } =
   useBeanstandeteWahlbriefeMapper();
 </script>

@@ -4,7 +4,7 @@ Beim initialen Aufruf des `Wahllokalsystem UI` müssen eine Reihe von Daten gela
 Dazu wird eine Liste von Tasks erstellt.
 Anhand dieser Liste wird angezeigt, wie viele Tasks noch geladen werden müssen und ob die ausgeführten Tasks erfolgreich abgeschlossen wurden oder nicht.
 
-Das initiale Erstellen der Tasks erfolgt nur einmal beim Start der Anwendung. Danach sind alle Tasks über den `TaskManager` abrufbar.
+Das initiale Erstellen der Tasks erfolgt nur einmal beim Start der Anwendung. Danach sind alle Tasks über den `TaskManagerStore` abrufbar.
 
 Das `TaskFactoryInterface` enthält eine `createTasks` Methode, die jede Factory implementieren und zugänglich machen muss.
 

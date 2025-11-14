@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   async beforeEach() {
     const store = useWahlenStore(pinia);
-    store.wahlen = [createWahl(), createWahl()];
+    store.wahlenState.wahlen = [createWahl(), createWahl()];
   },
   args: {},
 };

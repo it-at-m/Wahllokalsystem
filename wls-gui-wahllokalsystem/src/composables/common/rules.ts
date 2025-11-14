@@ -1,6 +1,8 @@
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 
-const { getDateFromTimeString } = useDateTimeFormatter();
+const { isValidDate, createTodayWithTime } = useDateTimeUtils();
+const { toGermanDate } = useDateTimeFormatter();
 
 export function useRules() {
   /* eslint-disable */
@@ -28,16 +30,38 @@ export function useRules() {
     value >= min || `Eingabe darf nicht kleiner als ${min} sein.`;
 
   const timeNotInFuture = (value: string) =>
-    getDateFromTimeString(value) <= new Date() ||
+    createTodayWithTime(value) <= new Date() ||
     `Eingabe darf nicht in der Zukunft liegen.`;
 
   const timeGreaterOrEqual = (compareValue: string) => (value: string) =>
-    getDateFromTimeString(value) >= getDateFromTimeString(compareValue) ||
+    createTodayWithTime(value) >= createTodayWithTime(compareValue) ||
     `Eingabe muss größer oder gleich ${compareValue} sein.`;
 
   const timeLessOrEqual = (compareValue: string) => (value: string) =>
-    getDateFromTimeString(value) <= getDateFromTimeString(compareValue) ||
+    createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
     `Eingabe muss kleiner oder gleich ${compareValue} sein.`;
+
+  const dateNotInFuture = (value: string) => {
+    const date = new Date(value);
+    if (isValidDate(date)) {
+      return date <= new Date() || `Datum darf nicht in der Zukunft liegen.`;
+    } else {
+      return `Ungültiges Datum`;
+    }
+  };
+
+  const dateGreaterOrEqual = (compareValue: string) => (value: string) => {
+    const date = new Date(value);
+    const compareDate = new Date(compareValue);
+    if (isValidDate(date) && isValidDate(compareDate)) {
+      return (
+        date >= compareDate ||
+        `Datum darf nicht vor dem ${toGermanDate(compareValue)} liegen.`
+      );
+    } else {
+      return `Ungültiges Datum`;
+    }
+  };
 
   return {
     required,
@@ -48,5 +72,7 @@ export function useRules() {
     timeNotInFuture,
     timeGreaterOrEqual,
     timeLessOrEqual,
+    dateNotInFuture,
+    dateGreaterOrEqual,
   };
 }

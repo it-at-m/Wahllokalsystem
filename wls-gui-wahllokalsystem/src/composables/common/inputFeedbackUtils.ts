@@ -11,6 +11,8 @@ export function useInputFeedbackUtils() {
         return "$information";
       case InputFeedbackTypeEnum.success:
         return "$valid";
+      case InputFeedbackTypeEnum.warning:
+        return "$alert";
     }
   }
 
@@ -24,19 +26,23 @@ export function useInputFeedbackUtils() {
         return "info";
       case InputFeedbackTypeEnum.success:
         return "success";
+      case InputFeedbackTypeEnum.warning:
+        return "warning";
     }
   }
 
-  function getTextColorForInputFeedbackType(
+  function getBackgroundColorAndBoldTextForInputFeedbackType(
     inputFeedbackType: InputFeedbackTypeEnum
   ) {
     switch (inputFeedbackType) {
       case InputFeedbackTypeEnum.error:
-        return "text-error";
+        return "bg-error font-weight-bold";
       case InputFeedbackTypeEnum.information:
-        return "text-info";
+        return "bg-info font-weight-bold";
       case InputFeedbackTypeEnum.success:
-        return "text-success";
+        return "bg-success font-weight-bold";
+      case InputFeedbackTypeEnum.warning:
+        return "bg-warning font-weight-bold";
     }
   }
 
@@ -50,6 +56,8 @@ export function useInputFeedbackUtils() {
         return "border-info";
       case InputFeedbackTypeEnum.success:
         return "border-success";
+      case InputFeedbackTypeEnum.warning:
+        return "border-warning";
     }
   }
 
@@ -57,6 +65,6 @@ export function useInputFeedbackUtils() {
     getBorderColorForInputFeedbackType,
     getIconColorForInputFeedbackType,
     getIconForInputFeedbackType,
-    getTextColorForInputFeedbackType,
+    getBackgroundColorAndBoldTextForInputFeedbackType,
   };
 }

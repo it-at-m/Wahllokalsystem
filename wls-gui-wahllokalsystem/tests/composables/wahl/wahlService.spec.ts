@@ -3,6 +3,7 @@ import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createWahl, createWahlDTO } = useWahlTestDataFactory();
 
@@ -71,7 +72,7 @@ describe("wahlService.ts", () => {
       );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
-        "Error",
+        UserNotificationCategoryEnum.ERROR,
       ]);
     });
 

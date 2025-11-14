@@ -109,7 +109,7 @@ describe("ungueltigeWahlscheineService.ts", () => {
         [[wahltagID, wahlbezirksArt]]
       );
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
-        [expect.any(String), "Error"],
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
     });
 

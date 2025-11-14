@@ -2,43 +2,99 @@ import type { ExtendedWahlMetaData } from "@/composables/tasks/ExtendedWahlMetaD
 
 import { storeToRefs } from "pinia";
 
+import { useAWerteTaskFactory } from "@/composables/tasks/taskFactories/aWerteTaskFactory.ts";
+import { useBegruendungTaskFactory } from "@/composables/tasks/taskFactories/begruendungTaskFactory.ts";
+import { useEreignisseTaskFactory } from "@/composables/tasks/taskFactories/ereignisseTaskFactory.ts";
+import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts";
+import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts";
+import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
+import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
+import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
+import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
 import { useUngueltigeWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts";
+import { useUrnenwahlSchliessungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts";
+import { useWaehlerTaskFactory } from "@/composables/tasks/taskFactories/waehlerTaskFactory.ts";
+import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts";
+import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
+import { useWahlvorbereitungTaskFactory } from "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts";
+import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 export function useTaskListService() {
-  const { getWahlOrUndefinedById } = useWahlenStore();
-  const { currentUserWahlMetadata } = storeToRefs(useUserStore());
-  const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
+  const { wahlenActions, waehlerverzeichnisActions } = useWahlenStore();
+  const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
 
   const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
+  const { createTasks: createEroeffnungsuhrzeitTasks } =
+    useEroeffnungsuhrzeitTaskFactory();
+  const { createTasks: createUrnenwahlSchliessungsuhrzeitTasks } =
+    useUrnenwahlSchliessungsuhrzeitTaskFactory();
   const { createTasks: createKonfigurationsparameterTasks } =
     useKonfigurationsparameterTaskFactory();
   const { createTasks: createUngueltigeWahlscheineTasks } =
     useUngueltigeWahlscheineTaskFactory();
   const { createTasks: createWahlscheineTasks } = useWahlscheineTaskFactory();
+  const { createTasks: createWaehlerverzeichnisTasks } =
+    useWaehlverzeichnisTaskFactory();
+  const { createTasks: createWahlvorschlaegeTasks } =
+    useWahlvorschlaegeTaskFactory();
+  const { createTasks: createStimmabgabevermerkeTasks } =
+    useStimmabgabevermerkeTaskFactory();
+  const { createTasks: createErgebnisseTasks } = useErgebnisseTaskFactory();
+  const { createTasks: createStimmzettelumschlaegeTasks } =
+    useStimmzettelumschlaegeTaskFactory();
+  const { createTasks: createWaehlerTasks } = useWaehlerTaskFactory();
+  const { createTasks: createEreignisseTasks } = useEreignisseTaskFactory();
+  const { createTasks: createBegruendungTasks } = useBegruendungTaskFactory();
+  const { createTasks: createAWerteTasks } = useAWerteTaskFactory();
+  const { createTasks: createHandbuchTasks } = useHandbuchTaskFactory();
+  const { createTasks: createStatusTasks } = useStatusTaskFactory();
+  const { createTasks: createWahlvorbereitungTasks } =
+    useWahlvorbereitungTaskFactory();
+  const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
-    const tasks = [];
-    tasks.push(...createKopfdatenTasks(taskFactoryData));
-    tasks.push(...createUngueltigeWahlscheineTasks(taskFactoryData));
-    tasks.push(...createWahlvorstandTasks(taskFactoryData));
-    tasks.push(...createKonfigurationsparameterTasks(taskFactoryData));
-    tasks.push(...createWahlscheineTasks(taskFactoryData));
-    return tasks;
+    return [
+      ...createKopfdatenTasks(taskFactoryData),
+      ...createWaehlerverzeichnisTasks(taskFactoryData),
+      ...createUngueltigeWahlscheineTasks(taskFactoryData),
+      ...createWahlvorstandTasks(taskFactoryData),
+      ...createEroeffnungsuhrzeitTasks(taskFactoryData),
+      ...createUrnenwahlSchliessungsuhrzeitTasks(taskFactoryData),
+      ...createKonfigurationsparameterTasks(taskFactoryData),
+      ...createWahlscheineTasks(taskFactoryData),
+      ...createWahlvorschlaegeTasks(taskFactoryData),
+      ...createErgebnisseTasks(taskFactoryData),
+      ...createEreignisseTasks(taskFactoryData),
+      ...createStimmabgabevermerkeTasks(taskFactoryData),
+      ...createStimmzettelumschlaegeTasks(taskFactoryData),
+      ...createWaehlerTasks(taskFactoryData),
+      ...createBegruendungTasks(taskFactoryData),
+      ...createAWerteTasks(taskFactoryData),
+      ...createHandbuchTasks(taskFactoryData),
+      ...createStatusTasks(taskFactoryData),
+      ...createWahlvorbereitungTasks(taskFactoryData),
+      ...createWahlbriefeTasks(taskFactoryData),
+    ];
   }
 
   function _createTaskFactoryData() {
     const extendedWahlMetaData: ExtendedWahlMetaData[] =
       currentUserWahlMetadata.value.map((wahlMetadata) => {
-        const wahl = getWahlOrUndefinedById(wahlMetadata.wahlID);
-        if (!wahl) {
+        const wahl = wahlenActions.getWahlOrUndefinedById(wahlMetadata.wahlID);
+        const waehlerverzeichnisNummer =
+          waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+            wahlMetadata.wahlID
+          );
+        if (!wahl || !waehlerverzeichnisNummer) {
           throw new Error(`Wahl not found for wahlID: ${wahlMetadata.wahlID}`);
         }
         const extendedWahlMetaData: ExtendedWahlMetaData = {
@@ -47,6 +103,7 @@ export function useTaskListService() {
           wahlbezirkID: wahlMetadata.wahlbezirkID,
           wahlName: wahl.name,
           wahlnummer: wahlMetadata.wahlnummer,
+          waehlerverzeichnisNummer: waehlerverzeichnisNummer,
         };
         return extendedWahlMetaData;
       });

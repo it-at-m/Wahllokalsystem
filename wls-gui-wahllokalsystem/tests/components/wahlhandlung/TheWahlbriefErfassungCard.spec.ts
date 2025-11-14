@@ -1,3 +1,4 @@
+import type BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import type { TestingPinia } from "@pinia/testing";
 import type { VForm } from "vuetify/components";
 
@@ -8,12 +9,13 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheWahlbriefErfassungCard from "@/components/wahlhandlung/TheWahlbriefErfassungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 declare module "@vue/runtime-core" {
@@ -64,6 +66,10 @@ describe("TheWahlbriefErfassungCard.vue", () => {
   };
 
   beforeEach(() => {
+    const mockedNow = new Date();
+    mockedNow.setHours(10, 0, 0);
+    vi.useFakeTimers({ now: mockedNow });
+
     testPinia = createTestingPinia({
       stubActions: false,
       createSpy: vi.fn,
@@ -73,6 +79,10 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         plugins: [testPinia, vuetify],
       },
     });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
@@ -114,8 +124,50 @@ describe("TheWahlbriefErfassungCard.vue", () => {
       const errorMessages = wrapper.findAll(".v-messages__message");
 
       expect(errorMessages.length).toBe(1);
-      expect(errorMessages[0].text()).toBe("Feld darf nicht leer sein.");
+      expect(errorMessages[0]?.text()).toBe("Feld darf nicht leer sein.");
 
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithDisabledInputForNachgelieferteWahlbriefe_when_currentTimeIsBeforeFruehesteSchliessungsuhrzeit", async (context) => {
+      // @ts-expect-error: cannot set readonly
+      useInfomanagementStore().fruehesteSchliessungsuhrzeit = "10:15:00";
+      await nextTick();
+
+      wrapper = mount(TheWahlbriefErfassungCard, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+      });
+
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
+        '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
+      );
+
+      expect(input.attributes().class).toContain("disabled");
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithEnabledInputForNachgelieferteWahlbriefe_when_currentTimeIsAfterFruehesteSchliessungsuhrzeit", async (context) => {
+      // @ts-expect-error: cannot set readonly
+      useInfomanagementStore().fruehesteSchliessungsuhrzeit = "09:15:00";
+      await nextTick();
+
+      wrapper = mount(TheWahlbriefErfassungCard, {
+        global: {
+          plugins: [testPinia, vuetify],
+        },
+      });
+
+      const input = wrapper.findComponent<typeof BaseNumberInput>(
+        '[data-test="textFieldNachtraeglichUeberbrachteAnzahl"]'
+      );
+
+      expect(input.attributes().class).not.toContain("disabled");
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

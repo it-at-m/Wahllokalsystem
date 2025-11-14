@@ -1,10 +1,11 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
+import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import { useTaskManager } from "@/composables/common/taskManager.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 
 const { createTask, prepareTask } = useTasksTestDataFactory();
 
@@ -55,9 +56,9 @@ describe("taskManager.ts", () => {
   });
 
   describe("hasAllTasksRun", () => {
-    it("should_returnFalse_when_noTasksAreSet", () => {
+    it("should_returnTrue_when_noTasksAreSet", () => {
       unitUnderTest.setTasks([]);
-      expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(false);
+      expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(true);
     });
 
     it("should_returnFalse_when_tasksAreSetButHasNotRunYet", () => {
@@ -112,6 +113,93 @@ describe("taskManager.ts", () => {
       await unitUnderTest.runAllTasks();
 
       expect(unitUnderTest.hasAllTasksRun.value).toStrictEqual(true);
+    });
+  });
+
+  describe("hasAllTasksRunSuccessfully", () => {
+    it("should_returnTrue_when_noTasksAreSet", () => {
+      unitUnderTest.setTasks([]);
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_returnFalse_when_tasksAreSetButHasNotRunYet", () => {
+      unitUnderTest.setTasks([{ name: "mocked task", callback: vi.fn() }]);
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_returnFalse_when_isRunningButNotAllTasksAreDone", async () => {
+      const timeout = 100;
+
+      const task1: Task = {
+        name: "successful task",
+        callback: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({});
+            }, timeout);
+          })
+        ),
+      };
+      const task2: Task = {
+        name: "successful task",
+        callback: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve({});
+            }, timeout);
+          })
+        ),
+      };
+      unitUnderTest.setTasks([task1, task2]);
+
+      const runAllTasksPromise = unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
+
+      vi.advanceTimersByTime(timeout * 2);
+      await runAllTasksPromise;
+    });
+
+    it("should_returnTrue_when_allTasksHaveRunWithOutError", async () => {
+      const taskThatFails: Task = {
+        name: "failing task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      const taskThatSucceeded: Task = {
+        name: "successful task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      unitUnderTest.setTasks([taskThatFails, taskThatSucceeded]);
+
+      await unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_returnFalse_when_allTasksHaveRunButAtLeastOneProducedAnError", async () => {
+      const taskThatFails: Task = {
+        name: "failing task",
+        callback: vi.fn().mockRejectedValue(new Error("mocked task failed")),
+      };
+      const taskThatSucceeded: Task = {
+        name: "successful task",
+        callback: vi.fn().mockResolvedValue(null),
+      };
+      unitUnderTest.setTasks([taskThatFails, taskThatSucceeded]);
+
+      await unitUnderTest.runAllTasks();
+
+      expect(unitUnderTest.hasAllTasksRunSuccessfully.value).toStrictEqual(
+        false
+      );
     });
   });
 
@@ -233,7 +321,7 @@ describe("taskManager.ts", () => {
       expect(unitUnderTest.numberOfTasksFinished.value).toStrictEqual(1);
 
       vi.advanceTimersByTime(timeout);
-      await nextTick(); //wait to reevaluate computed props
+      await flushPromises(); //wait to reevaluate computed props
       expect(unitUnderTest.numberOfTasksFinished.value).toStrictEqual(2);
 
       await runAllTasksPromise;
@@ -326,6 +414,30 @@ describe("taskManager.ts", () => {
 
       expect(unitUnderTest.successfullyTasks.value).toStrictEqual([task2]);
       expect(unitUnderTest.failedTasks.value).toStrictEqual([task1, task3]);
+    });
+  });
+
+  describe("rerunFailedTasks", () => {
+    it("should_runFailedTasks_when_failedTasksAreSet", async () => {
+      const task1 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      const task2 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      const task3 = prepareTask()
+        .callback(vi.fn().mockResolvedValue(null))
+        .build();
+      unitUnderTest.successfullyTasks.value = [task1];
+      unitUnderTest.failedTasks.value = [task2, task3];
+
+      await unitUnderTest.rerunFailedTasks();
+
+      expect(task1.callback).not.toHaveBeenCalled();
+      expect(task2.callback).toHaveBeenCalled();
+      expect(task3.callback).toHaveBeenCalled();
+      expect(unitUnderTest.successfullyTasks.value.length).toBe(3);
+      expect(unitUnderTest.failedTasks.value.length).toBe(0);
     });
   });
 });

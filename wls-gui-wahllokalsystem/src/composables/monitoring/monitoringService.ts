@@ -5,15 +5,14 @@ import {
   WaehleranzahlControllerApi,
   WahllokalZustandControllerApi,
 } from "@/api/wls-clients/generated-monitoring-api";
-import { useCommonApiUtils } from "@/composables/common/commonApiUtils.ts";
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useWahlbeteiligungMapper } from "@/composables/monitoring/wahlbeteiligungMapper.ts";
 import { MONITORING_SERVICE_API_URL } from "@/constants.ts";
 
 const { toDto, toModel } = useWahlbeteiligungMapper();
-const { applyLocalTimezoneOffset } = useDateTimeFormatter();
-const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+  useCommonApiUtils();
 const { logDebug } = useLogging("monitoringService");
 
 export function useMonitoringService() {
@@ -44,7 +43,7 @@ export function useMonitoringService() {
   ): Promise<void> {
     const wahlbeteiligung: Waehleranzahl = {
       anzahlWaehler: waehleranzahl,
-      uhrzeit: applyLocalTimezoneOffset(new Date()),
+      uhrzeit: new Date(),
     };
 
     try {
@@ -61,7 +60,10 @@ export function useMonitoringService() {
 
   async function postLastSeen(wahlbezirkID: string) {
     try {
-      await wahllokalZustandControllerApi.postLastSeen(wahlbezirkID);
+      await wahllokalZustandControllerApi.postLastSeen(
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
     } catch {
       throw new Error("postLastSeen failed");
     }

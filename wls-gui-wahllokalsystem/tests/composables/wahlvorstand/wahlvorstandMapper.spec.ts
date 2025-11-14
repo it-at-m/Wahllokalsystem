@@ -31,7 +31,12 @@ describe("wahlvorstandMapper.ts", () => {
       const result = toModel(dtoToMap);
 
       const expectedResult: Wahlvorstand = {
-        wahlvorstandsmitglieder: getWahlvorstandmitglieder(),
+        wahlvorstandsmitglieder: getWahlvorstandmitglieder().map(
+          (mitglied) => ({
+            ...mitglied,
+            anwesend: false,
+          })
+        ),
       };
       expect(result).toStrictEqual(expectedResult);
     });
@@ -48,7 +53,7 @@ describe("wahlvorstandMapper.ts", () => {
 
       const expectedResult: WahlvorstandWriteDTO = {
         wahlvorstandsmitglieder: getWahlvorstandmitgliederDTO(),
-        anwesenheitBeginn: datetime.toISOString(),
+        anwesenheitBeginn: "2025-04-28T08:05:00.000",
       };
       expect(result).toStrictEqual(expectedResult);
     });

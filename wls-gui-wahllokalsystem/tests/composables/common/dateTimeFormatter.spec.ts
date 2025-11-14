@@ -6,12 +6,11 @@ const mockedNow = new Date();
 
 describe("dateTimeFormatter.ts", () => {
   const {
-    time,
-    applyLocalTimezoneOffset,
-    getDateFromTimeString,
-    toGermanDateFormat,
+    toHhMmSs,
+    toGermanDate,
     toGermanDateWithLongMonth,
     toYyyyMmDd,
+    toYyyyMmDdWithTimeWithoutTimezoneOffset,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -24,15 +23,15 @@ describe("dateTimeFormatter.ts", () => {
     vi.useRealTimers();
   });
 
-  describe("time", () => {
+  describe("toHhMmSs", () => {
     it("should_returnEmptyString_when_parameterIsNull", () => {
-      const result = time(null);
+      const result = toHhMmSs(null);
 
       expect(result).toStrictEqual("");
     });
 
     it("should_returnEmptyString_when_parameterIsUndefined", () => {
-      const result = time(undefined);
+      const result = toHhMmSs(undefined);
 
       expect(result).toStrictEqual("");
     });
@@ -40,7 +39,7 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithoutPadding_when_eachTimePartHasTwoDigits", () => {
       const dateWithTwoDigitTimeParts = new Date("2025-02-18T14:10:23");
 
-      const result = time(dateWithTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithTwoDigitTimeParts);
 
       expect(result).toStrictEqual("14:10:23");
     });
@@ -48,65 +47,13 @@ describe("dateTimeFormatter.ts", () => {
     it("should_returnStringWithPaddingZeros_when_timePartHasNotTwoDigits", () => {
       const dateWithoutTwoDigitTimeParts = new Date("2025-02-18T04:00:03");
 
-      const result = time(dateWithoutTwoDigitTimeParts);
+      const result = toHhMmSs(dateWithoutTwoDigitTimeParts);
 
       expect(result).toStrictEqual("04:00:03");
     });
   });
 
-  describe("applyLocalTimezoneOffset", () => {
-    it.each([
-      { time: "2025-04-29T12:12:07.855Z", when: "DateString" },
-      { time: new Date("2025-04-29T12:12:07.855Z"), when: "Date" },
-    ])("should_returnDateWithCorrectTime_when_given$when", async ({ time }) => {
-      const result = applyLocalTimezoneOffset(time);
-
-      const utcDate = new Date(time);
-      const localOffset = utcDate.getTimezoneOffset() * 60000;
-      const expectedDate = new Date(utcDate.getTime() - localOffset);
-
-      expect(result.toISOString()).toEqual(expectedDate.toISOString());
-    });
-
-    it("should_returnDateWithUndefinedTime_when_inputStringIsNoDateString", () => {
-      const result = applyLocalTimezoneOffset("text");
-
-      expect(result).toBeInstanceOf(Date);
-      expect(isNaN(result.getTime())).toBe(true);
-    });
-  });
-
-  describe("getDateFromTimeString", () => {
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithGivenTime_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input).toString();
-
-        expect(result).toContain(input);
-      }
-    );
-
-    it.each(["text", "26:12", "11:78", "23:45:67", "", " "])(
-      "should_returnInvalidDate_when_inputStringIsInvalidValue'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result).toBeInstanceOf(Date);
-        expect(isNaN(result.getTime())).toBe(true);
-      }
-    );
-
-    it.each(["12:12", "12:12:30"])(
-      "should_returnDateWithZeroMilliseconds_when_givenValidTimeString'%s'",
-      (input) => {
-        const result = getDateFromTimeString(input);
-
-        expect(result.getMilliseconds()).toBe(0);
-      }
-    );
-  });
-
-  describe("toGermanDateFormat", () => {
+  describe("toGermanDate", () => {
     it.each([
       "2026-01-01",
       "2026/01/01",
@@ -116,7 +63,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnDateStringInLocalFormat_when_givenValidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe("01.01.2026");
+        expect(toGermanDate(datestring)).toBe("01.01.2026");
       }
     );
 
@@ -130,7 +77,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });
@@ -159,7 +106,7 @@ describe("dateTimeFormatter.ts", () => {
     ])(
       "should_returnUndefined_when_givenInvalidDateString'%s'",
       (datestring) => {
-        expect(toGermanDateFormat(datestring)).toBe(undefined);
+        expect(toGermanDate(datestring)).toBe(undefined);
       }
     );
   });
@@ -189,6 +136,62 @@ describe("dateTimeFormatter.ts", () => {
 
     it("should_returnEmptyString_when_dateIsInvalid", () => {
       const result = toYyyyMmDd(new Date("2025-29-45"));
+      expect(result).toStrictEqual("");
+    });
+  });
+
+  describe("toYyyyMmDdWithTimeWithoutTimezoneOffset", () => {
+    it.each([
+      {
+        dateStringToParse: "2025-07-30T01:01:01.001",
+        expectedDateString: "2025-07-30T01:01:01.001",
+      },
+      {
+        dateStringToParse: "2025-07-30T01:01:01",
+        expectedDateString: "2025-07-30T01:01:01.000",
+      },
+      {
+        dateStringToParse: "2025-07-30T01:01",
+        expectedDateString: "2025-07-30T01:01:00.000",
+      },
+      {
+        dateStringToParse: "2025-12-30T11:12:13.654",
+        expectedDateString: "2025-12-30T11:12:13.654",
+      },
+      {
+        dateStringToParse: "2025-07-30T00:00:00.000",
+        expectedDateString: "2025-07-30T00:00:00.000",
+      },
+      {
+        dateStringToParse: "2025-07-30T23:59:59.999",
+        expectedDateString: "2025-07-30T23:59:59.999",
+      },
+      {
+        dateStringToParse: "0100-01-01T00:00:00.000",
+        expectedDateString: "0100-01-01T00:00:00.000",
+      },
+      {
+        dateStringToParse: "0010-01-01T00:00:00.000",
+        expectedDateString: "0010-01-01T00:00:00.000",
+      },
+      {
+        dateStringToParse: "0001-01-01T00:00:00.000",
+        expectedDateString: "0001-01-01T00:00:00.000",
+      },
+    ])(
+      "should_returnDateOnlyAsIsoDate_when_dateIsGivenAsString'$dateStringToParse'",
+      ({ dateStringToParse, expectedDateString }) => {
+        const result = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+          new Date(dateStringToParse)
+        );
+        expect(result).toStrictEqual(expectedDateString);
+      }
+    );
+
+    it("should_returnEmptyString_when_dateIsInvalid", () => {
+      const result = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+        new Date("2025-29-45")
+      );
       expect(result).toStrictEqual("");
     });
   });

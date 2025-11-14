@@ -1,14 +1,18 @@
 import type {
   BriefwahlvorbereitungDTO,
+  EroeffnungsUhrzeitDTO,
   EroeffnungsUhrzeitWriteDTO,
   UrnenwahlvorbereitungDTO,
   UrnenwahlvorbereitungWriteDTO,
   WahlurneDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type { UrnenwahlSchliessungsuhrzeit } from "@/types/wahlhandlung/UrnenwahlSchliessungsuhrzeit.ts";
 import type { Urnenwahlvorbereitung } from "@/types/wahlhandlung/Urnenwahlvorbereitung.ts";
 import type { Wahlurne } from "@/types/wahlhandlung/Wahlurne.ts";
 import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
+import type { Builder } from "@tests/utils/Builder.ts";
 
+import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 const {
@@ -19,9 +23,22 @@ const {
 } = useCommonTestDataFactory();
 
 export function useWahlvorbereitungTestDataFactory() {
+  function createEroeffnungsUhrzeitDTO(): EroeffnungsUhrzeitDTO {
+    return {
+      wahlbezirkID: generateRandomString(10),
+      eroeffnungsuhrzeit: generateRandomDateTimeAsString(),
+    };
+  }
+
   function createEroeffnungsUhrzeitWriteDTO(): EroeffnungsUhrzeitWriteDTO {
     return {
       eroeffnungsuhrzeit: generateRandomDateTimeAsString(),
+    };
+  }
+
+  function creteUrnenwahlSchliessungsuhrzeit(): UrnenwahlSchliessungsuhrzeit {
+    return {
+      schliessungsuhrzeit: generateRandomDateTimeAsString(),
     };
   }
 
@@ -70,6 +87,14 @@ export function useWahlvorbereitungTestDataFactory() {
     };
   }
 
+  function prepareUrnenwahlvorbereitung(): Builder<Urnenwahlvorbereitung> {
+    return proxyBuilder<Urnenwahlvorbereitung>(createUrnenwahlvorbereitung());
+  }
+
+  function prepareWahlvorbereitung(): Builder<Wahlvorbereitung> {
+    return proxyBuilder<Wahlvorbereitung>(createWahlvorbereitung());
+  }
+
   function _generateWahlurneArray(): Wahlurne[] {
     return [
       {
@@ -90,11 +115,15 @@ export function useWahlvorbereitungTestDataFactory() {
   }
 
   return {
+    createEroeffnungsUhrzeitDTO,
     createEroeffnungsUhrzeitWriteDTO,
+    creteUrnenwahlSchliessungsuhrzeit,
     createUrnenwahlvorbereitungWriteDTO,
     createUrnenwahlvorbereitung,
     createUrnenwahlvorbereitungDTO,
     createWahlvorbereitung,
     createBriefwahlvorbereitungDTO,
+    prepareUrnenwahlvorbereitung,
+    prepareWahlvorbereitung,
   };
 }

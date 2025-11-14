@@ -79,7 +79,7 @@ describe("userStore.ts", () => {
         wahlbezirkNummer: "",
         wahlbezirksArt: WahlbezirksArtEnum.UWB,
         pin: "",
-        authorities: new Set<string>(),
+        authorities: [],
         wahlMetaData: [
           {
             wahlbezirkID: "",
@@ -88,6 +88,59 @@ describe("userStore.ts", () => {
           },
         ],
       });
+    });
+  });
+
+  describe("getWahlbezirkIdFromWahlMetaDataByWahlId", () => {
+    it("should_returnWahlbezirkId_when_givenWahlIdThatExists", () => {
+      const wahlbezirkIdToReturn = "ich bin eine id";
+      const wahlID = "wahlID";
+
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: wahlbezirkIdToReturn,
+              wahlID: wahlID,
+              wahlnummer: "0",
+            },
+            {
+              wahlbezirkID: "andere id",
+              wahlID: "andere wahl id",
+              wahlnummer: "1",
+            },
+          ])
+          .build()
+      );
+
+      expect(
+        unitUnderTest.getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID)
+      ).toStrictEqual(wahlbezirkIdToReturn);
+    });
+
+    it("should_notReturnWahlbezirkId_when_givenWahlIdThatDoesNotExist", () => {
+      unitUnderTest.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID: "id",
+              wahlID: "wahl id",
+              wahlnummer: "0",
+            },
+            {
+              wahlbezirkID: "andere id",
+              wahlID: "andere wahl id",
+              wahlnummer: "1",
+            },
+          ])
+          .build()
+      );
+
+      expect(
+        unitUnderTest.getWahlbezirkIdFromWahlMetaDataByWahlId(
+          "non existant wahl id"
+        )
+      ).toBeUndefined();
     });
   });
 

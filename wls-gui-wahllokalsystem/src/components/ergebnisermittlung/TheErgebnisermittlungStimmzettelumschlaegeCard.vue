@@ -1,23 +1,30 @@
 <template>
   <v-container>
     <v-card v-if="wahl">
-      <v-card-title>Wahlurne öffnen und Stimmzettel zählen</v-card-title>
-      <v-card-text class="pb-0 pt-2">
+      <v-card-title>{{ title }}</v-card-title>
+      <v-card-text class="pb-0 pt-2 mr-4">
         <v-form v-model="anzahlStimmzettelValidForm">
-          <v-number-input
+          <base-time-input
+            v-if="useTime"
+            v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
+            :rules="[
+              timeNotInFuture,
+              timeGreaterOrEqual(fruehesteSchliessungsuhrzeit),
+            ]"
+            label="Uhrzeit der Öffnung der Wahlurne"
+            min-width="20rem"
+          />
+          <base-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-            class="mr-4"
             :rules="[required, minNumber(0), maxNumber(9999)]"
             min-width="20rem"
-            label="Anzahl der Stimmzettel"
-            clearable
+            :label="`Anzahl der ${getStimmzettelTermForWahl(wahl)}`"
           />
         </v-form>
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
-          :loading="isStimmzettelumschlaegeSaving"
+          :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveAnzahlStimmzettelClicked"
         />
@@ -31,19 +38,28 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
+import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { maxNumber, minNumber, required, timeGreaterOrEqual, timeNotInFuture } =
+  useRules();
 
 const props = defineProps<{
   wahlId: string;
+  title: string;
+  useTime?: boolean;
 }>();
 
-const { getWahlOrUndefinedById, saveStimmzettelumschlaege } = useWahlenStore();
-const { isStimmzettelumschlaegeSaving } = storeToRefs(useWahlenStore());
+const { wahlenActions, stimmzettelumschlaegeActions } = useWahlenStore();
+const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
+const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
+const { getStimmzettelTermForWahl } = useTextFormatter();
 
-const wahl = computed(() => getWahlOrUndefinedById(props.wahlId));
+const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
@@ -52,6 +68,6 @@ const isSaveButtonDisabled = computed(() => {
 });
 
 function onSaveAnzahlStimmzettelClicked() {
-  saveStimmzettelumschlaege(props.wahlId);
+  stimmzettelumschlaegeActions.saveStimmzettelumschlaege(props.wahlId);
 }
 </script>

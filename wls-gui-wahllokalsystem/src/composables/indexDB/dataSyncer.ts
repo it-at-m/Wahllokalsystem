@@ -1,14 +1,19 @@
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
+
 import axios from "axios";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
 const { getDirtyItems } = useIndexDB();
+const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
   async function getSyncTasks() {
     const itemsToSync = await getDirtyItems();
+    itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,
       callback: () =>
@@ -16,10 +21,29 @@ export function useDataSyncer() {
           basicPostConfig(
             item.key,
             FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
-            item.item.data ? JSON.parse(item.item.data) : undefined
+            _parseDataBasedOnContentType(item.item.data)
           )
         ),
     }));
+  }
+
+  function _compareSyncItemByTimeStamp(
+    a: { item: IndexDBValue },
+    b: { item: IndexDBValue }
+  ) {
+    return compareByTimestamp(a.item, b.item);
+  }
+
+  function _parseDataBasedOnContentType(
+    data: string | ArrayBuffer | null
+  ): object | undefined {
+    if (data && typeof data === "string") {
+      return JSON.parse(data);
+    } else if (data && data instanceof ArrayBuffer) {
+      return data;
+    } else {
+      return undefined;
+    }
   }
 
   return {

@@ -53,7 +53,7 @@ describe("BWBWahlbriefZulassungView", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEditIcon_when_beanstandeteWahlbriefeTableNotValid", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")
@@ -86,7 +86,7 @@ describe("BWBWahlbriefZulassungView", () => {
 
     it("should_renderWithValidIcon_when_beanstandeteWahlbriefeTableHasValidRows", async (context) => {
       const wahlenStore = useWahlenStore();
-      wahlenStore.wahlen = [
+      wahlenStore.wahlenState.wahlen = [
         prepareWahl()
           .name("Wahl1")
           .wahlID("id1")

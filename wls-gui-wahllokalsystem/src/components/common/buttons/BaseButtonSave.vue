@@ -1,21 +1,38 @@
 <template>
-  <v-btn
+  <base-text-button
     prepend-icon="$save"
-    :disabled="props.disabled"
+    :disabled="disabled"
     data-test="buttonSave"
-    >Speichern</v-btn
+    :active="active"
   >
+    {{ saveText }}
+  </base-text-button>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+
+defineProps({
   /**
    * Is the Button interactable
    */
   disabled: {
     type: Boolean,
     default: false,
-    required: false,
+  },
+  /**
+   * Custom Save Text
+   */
+  saveText: {
+    type: String,
+    default: "Speichern",
+  },
+  /**
+   * Is the Button active
+   */
+  active: {
+    type: Boolean,
+    default: true,
   },
 });
 </script>

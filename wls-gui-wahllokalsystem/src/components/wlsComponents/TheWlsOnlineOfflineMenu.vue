@@ -17,14 +17,14 @@
     >
       <v-list class="pt-0">
         <v-list-item>
-          <v-btn
+          <base-text-button
             :loading="isCheckingStatus"
             color="primary"
             style="width: 100%"
             @click.stop="onCheckStatusClicked"
           >
             Verbindung überprüfen
-          </v-btn>
+          </base-text-button>
         </v-list-item>
         <v-list-item active>
           <v-row
@@ -49,17 +49,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import {
-  VBtn,
-  VCard,
-  VDivider,
-  VList,
-  VListItem,
-  VMenu,
-  VRow,
-  VSpacer,
-} from "vuetify/components";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 import { useInterval } from "@/composables/useInterval";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";

@@ -6,7 +6,7 @@ Im Projekt verwenden wir `checkstyle` und `spotless` um für einen möglichst ei
 Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jeweiligen IDE ist
 [hier](https://github.com/it-at-m/itm-java-codeformat) beschrieben.
 
-## Zusammenspiel IDE mit Docker
+## Zusammenspiel IDE mit Podman
 
 ```mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
             frontend_gui[gui_wahllokalsystem]
         end
 
-        subgraph Docker
+        subgraph Podman
             authService
             oracleDB[Oracle DB]
             apiGateway[API Gateway]
@@ -44,11 +44,11 @@ flowchart LR
 Übersicht über die Services und auf welchen Port sie im Standard lauschen:
 
 > [!IMPORTANT]
-> Diese Ports werden sowohl in der IDE als auch in Docker verwendet.
+> Diese Ports werden sowohl in der IDE als auch in Podman verwendet.
 > Beachten Sie, dass somit nur eine Instanz eines Services gleichzeitig laufen kann.
 
 | Service                                                                                   | Port |
-|-------------------------------------------------------------------------------------------| ---- |
+|-------------------------------------------------------------------------------------------|------|
 | [Admin](/services/backend-services/admin-service/)                                        | 8209 |
 | [Auth](/services/backend-services/auth-service/)                                          | 8100 |
 | [Basisdaten](/services/backend-services/basisdaten-service/)                              | 8205 |
@@ -67,7 +67,7 @@ flowchart LR
 | Profilname             | Beschreibung                                                                                                                             |
 |------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
-| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Docker) verwendet.                  |
+| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Podman) verwendet.                  |
 | db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
 | no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
 | dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
@@ -78,10 +78,14 @@ flowchart LR
 
 ## Benutzer
 
-| Name        | Passwort | Beschreibung                                                          |
-| ----------- | -------- | --------------------------------------------------------------------- |
-| wls_all_bwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt BWB (Briefwahl) |
-| wls_all_uwb | test     | Ein Benutzer mit allen Rechten mit der WahlbezirksArt UWB (Urnenwahl) |
+| Name         | Passwort | Beschreibung                                                                                                           |
+|--------------|----------|------------------------------------------------------------------------------------------------------------------------|
+| wls_all_bwb  | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_all_uwb  | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_komw_bwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
+| wls_komw_uwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
+| wls_mbw_bwb  | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
+| wls_mbw_uwb  | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
 
 > [!CAUTION]
 > Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.
@@ -101,11 +105,22 @@ Eine Übersicht über die Profile gibt es [hier](#profile).
 > [!TIP]
 > Wenn es Updates an den Runconfigurations gab, die gefetcht wurden, ist es notwendig IntelliJ neu zu starten.
 
+## Podman
+
+Für die Nutzung von Podman ist im `docker-compose.yml` File `host.docker.internal` als DNS-Name konfiguriert,
+damit die Kommunikation zwischen Containern und dem Host-Computer vereinfacht wird. Dabei ist darauf zu achten,
+dass im `hosts` File unter `C:\Windows\System32\drivers\etc` der folgende Eintrag existiert,
+sodass `host.docker.internal` auf `localhost` verweist:
+
+```text
+127.0.0.1 host.docker.internal
+```
+
 ## Starten des Frontends
 
 Standardmäßig wird das Frontend über den Befehl `"dev": "vite"` in der `package.json`-Datei gestartet.
 
-Nachdem das Frontend in der IDE und das ApiGateway über Docker gestartet wurde, kann es über `http://localhost:8400/`
+Nachdem das Frontend in der IDE und das ApiGateway über Podman gestartet wurde, kann es über `http://localhost:8400/`
 aufgerufen werden. Allerdings befindet sich die Oberfläche dann in einer Ladeschleife und man sieht nur einen
 flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, gibt es zwei Möglichkeiten:
 
@@ -124,7 +139,7 @@ zum Frontend weitergeleitet und die Ladeschleife ist weg.
 Die zweite Möglichkeit ist es, das ApiGateway mit dem `no-security`-Profil zu starten.
 Dazu muss im `/stack/docker-compose.yml` File beim Service refarch-gateway unter environment in der Zeile
 `- SPRING_PROFILES_ACTIVE=hazelcast-local` das Profil `no-security` hinzugefügt werden. Damit die Änderung wirksam wird,
-sollte der Container in Docker einmal komplett gelöscht und über das `docker-compose.yml` File neu gestartet werden.
+sollte der Container in Podman einmal komplett gelöscht und über das `docker-compose.yml` File neu gestartet werden.
 
 > [!WARNING]
 > Bei dieser Variante ist es wichtig, dass die Änderung im `docker-compose.yml` File nicht gepusht wird, weil alle
@@ -134,11 +149,10 @@ sollte der Container in Docker einmal komplett gelöscht und über das `docker-c
 
 Damit das Frontend im Zusammenspiel mit den anderen Services lokal gestartet werden kann, sind einmalig nach dem Aufsetzen der DB folgende Schritte notwendig:
 
-1. `db-oracle`-Service in Docker oder über das `docker-compose.yml` starten
+1. `db-oracle`-Service in Podman oder über das `docker-compose.yml` starten
 2. `auth-service` starten
-3. `refarch-gateway-wls`-Service in Docker oder über das `docker-compose.yml` starten
-4. Das Wahllokalsystem-Frontend in Docker oder über `npm run dev` starten
+3. `refarch-gateway-wls`-Service in Podman oder über das `docker-compose.yml` starten
+4. Das Wahllokalsystem-Frontend in Podman oder über `npm run dev` starten
    (siehe [Punkt 1](#start-via-gateway): *Jetzt kann das Frontend zwar aufgerufen werden, aber durch das fehlgeschlagene Laden der initialen Daten ist noch kein Zugriff auf die Anwendung möglich)*
-5. die Services `basisdaten-service`, `eai-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
-   http-requests aus dem File [`initOracleDB.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB.http)
-   ausführen
+5. die Services `basisdaten-service`, `eai-service`, `ergebnismeldung-service`, `infomanagement-service` und `wahlvorstand-service` starten und die
+   http-requests aus dem File für die gewünschte Wahl ausführen (Kommunalwahl mit OBW und SRW: [`initOracleDB_KomW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_Komw.http) oder Migrationsbeiratswahl: [`initOracleDB_MBW.http`](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/http_requests/initOracleDB_MBW.http))

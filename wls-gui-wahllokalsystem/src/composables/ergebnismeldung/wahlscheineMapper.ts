@@ -1,13 +1,22 @@
-import type { WahlscheineDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID as BezirkUndWahlIdDTO } from "@/api/wls-clients/generated-monitoring-api";
-import type { BezirkUndWahlID } from "@/types/ereignismeldung/BezirkUndWahlID.ts";
-import type { Wahlscheine } from "@/types/ereignismeldung/Wahlscheine.ts";
+import type {
+  BezirkUndWahlID as BezirkUndWahlIdDTO,
+  WahlscheineDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 
 export function useWahlscheineMapper() {
   function toModel(dto: WahlscheineDTO): Wahlscheine {
     return {
       bezirkUndWahlID: _toBezirkUndWahlIDModel(dto.bezirkUndWahlID),
       stimmabgabevermerke: dto.stimmabgabevermerke,
+    };
+  }
+
+  function toDto(model: Wahlscheine): WahlscheineDTO {
+    return {
+      bezirkUndWahlID: _toBezirkUndWahlIDDTO(model.bezirkUndWahlID),
+      stimmabgabevermerke: model.stimmabgabevermerke,
     };
   }
 
@@ -18,7 +27,15 @@ export function useWahlscheineMapper() {
     };
   }
 
+  function _toBezirkUndWahlIDDTO(model: BezirkUndWahlID): BezirkUndWahlIdDTO {
+    return {
+      wahlID: model.wahlID,
+      wahlbezirkID: model.wahlbezirkID,
+    };
+  }
+
   return {
     toModel,
+    toDto,
   };
 }

@@ -12,6 +12,16 @@ export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
 export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
 export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
+export const ROUTE_STIMMABGABEVERMERKE = "stimmabgabevermerke";
+export const ROUTE_WAHLSCHEINE = "wahlscheine";
+export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
+export const ROUTE_STAPEL_A = "stapelA";
+export const ROUTE_STAPEL_B = "stapelB";
+export const ROUTE_STAPEL_C = "stapelC";
+export const ROUTE_STAPEL_A_AND_B = "stapelAandB";
+export const ROUTE_STAPEL_D = "stapelD";
+export const ROUTE_SCHNELLMELDUNG = "schnellmeldung";
+export const ROUTE_NIEDERSCHRIFT = "niederschrift";
 
 export const TOAST = "toast";
 export const PRINT_EXAMPLE = "print-example";
@@ -48,3 +58,5 @@ export const ERGEBNISMELDUNG_SERVICE_API_URL =
   WLS_SERVICE_API_URL + "ergebnismeldung-service";
 
 export const MAX_LENGTH_FOR_TEXT_INPUT = 500;
+
+export const PRIMARY_COLOR = "#546e7a";

@@ -20,7 +20,6 @@
       </v-card-text>
       <v-card-actions>
         <base-button-save
-          active
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
           @click="onSaveEroeffnungsuhrzeitClicked"
@@ -40,7 +39,7 @@
     >
       <span>
         Die eingetragene Uhrzeit ist nach
-        {{ toHhMm(getDateFromTimeString(spaetesteEroeffnungsuhrzeit)) }} Uhr,
+        {{ toHhMm(createTodayWithTime(spaetesteEroeffnungsuhrzeit)) }} Uhr,
         bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
         eines besonderen Vorfalls.
       </span>
@@ -56,6 +55,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -65,7 +65,8 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { required, timeGreaterOrEqual, timeLessOrEqual, timeNotInFuture } =
   useRules();
 
-const { getDateFromTimeString, toHhMm } = useDateTimeFormatter();
+const { toHhMm } = useDateTimeFormatter();
+const { createTodayWithTime } = useDateTimeUtils();
 
 const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
 const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
@@ -90,7 +91,7 @@ function onSaveEroeffnungsuhrzeitClicked() {
   if (
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
-      getDateFromTimeString(spaetesteEroeffnungsuhrzeit.value)
+      createTodayWithTime(spaetesteEroeffnungsuhrzeit.value)
   ) {
     eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
   } else {

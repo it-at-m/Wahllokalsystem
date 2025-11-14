@@ -7,7 +7,7 @@
           class="d-flex align-center justify-start"
         >
           <v-app-bar-nav-icon
-            v-if="hasInitializationOfTasksCompletelyRun"
+            v-if="hasAllTasksRun"
             @click.stop="toggleDrawer()"
           />
           <span class="navbar-text mx-2"> {{ wahltermin }} </span>
@@ -41,22 +41,7 @@
       </v-row>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Home"
-          :to="'/'"
-        />
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-        <the-b-w-b-election-list-group v-if="isBWB" />
-        <the-u-w-b-election-list-group v-if="isUWB" />
-        <v-list-item
-          title="Ereignisse"
-          :to="ROUTE_EREIGNISSE"
-        />
-      </v-list>
+      <the-root-navigation-list />
     </v-navigation-drawer>
   </div>
 </template>
@@ -68,12 +53,10 @@ import { computed } from "vue";
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
-import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
-import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
+import TheRootNavigationList from "@/components/navigation/TheRootNavigationList.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
-import { ROUTE_EREIGNISSE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -81,15 +64,14 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
-const { toGermanDateFormat } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB, isBWB } =
+const { toGermanDate } = useDateTimeFormatter();
+const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
   storeToRefs(useUserStore());
-const { hasInitializationOfTasksCompletelyRun } = storeToRefs(
-  useTaskManagerStore()
-);
+const { hasAllTasksRun } = storeToRefs(useTaskManagerStore());
+
 const [drawer, toggleDrawer] = useToggle();
 const wahltermin = computed(() =>
-  user ? toGermanDateFormat(currentUserWahltag.value ?? "") : ""
+  user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""

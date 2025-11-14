@@ -1,3 +1,4 @@
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
@@ -8,6 +9,7 @@ import pinia from "@/plugins/pinia.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const meta = {
@@ -34,28 +36,66 @@ export const Default: Story = {
       useStimmabgabevermerkeStore(pinia)
     );
 
-    stimmabgabevermerke.value = {
+    const stimmabgabevermerkeOne: Stimmabgabevermerke = {
       anzahlBlaetter: 0,
       waehlerverzeichnisNummer: 0,
-      wahldaten: new Set([
+      wahlbezirkID: "wahlbezikID1",
+      wahldaten: [
         {
+          wahlbezirkID: "wahlbezikID1",
           wahlID: "wahlID",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
             [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
           ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
         },
+      ],
+    };
+
+    const stimmabgabevermerkeTwo: Stimmabgabevermerke = {
+      anzahlBlaetter: 0,
+      waehlerverzeichnisNummer: 0,
+      wahlbezirkID: "wahlbezirkID2",
+      wahldaten: [
         {
+          wahlbezirkID: "wahlbezirkID2",
           wahlID: "wahlID2",
           waehlerverzeichnisNummer: 0,
           eingenommeneWahlscheine: new Map([
             [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
           ]),
+          vermerke: [
+            {
+              blattnummer: 2,
+              stimmzettel: [
+                {
+                  anzahl: 20,
+                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
+                },
+              ],
+            },
+          ],
         },
-      ]),
+      ],
     };
-    const { wahlen } = storeToRefs(useWahlenStore(pinia));
-    wahlen.value = [
+
+    stimmabgabevermerke.value = [
+      stimmabgabevermerkeOne,
+      stimmabgabevermerkeTwo,
+    ];
+    const { wahlenState } = storeToRefs(useWahlenStore(pinia));
+    wahlenState.value.wahlen = [
       {
         beanstandeteWahlbriefe: [],
         farbe: undefined,

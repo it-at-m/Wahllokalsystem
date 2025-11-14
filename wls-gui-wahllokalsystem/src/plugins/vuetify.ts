@@ -1,7 +1,10 @@
 import "vuetify/styles";
 
 import {
+  mdiAlert,
+  mdiArrowRightBold,
   mdiCheckCircle,
+  mdiCloudUpload,
   mdiContentSave,
   mdiDelete,
   mdiDiameterVariant,
@@ -30,6 +33,8 @@ import {
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+
+import { PRIMARY_COLOR } from "@/constants.ts";
 
 export default createVuetify({
   icons: {
@@ -62,6 +67,9 @@ export default createVuetify({
       edit: mdiPencil,
       valid: mdiCheckCircle,
       summary: mdiTextBoxOutline,
+      alert: mdiAlert,
+      continue: mdiArrowRightBold,
+      cloudUpload: mdiCloudUpload,
     },
     sets: {
       mdi,
@@ -71,12 +79,13 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#546e7a",
+          primary: PRIMARY_COLOR,
           secondary: "#FFCC00",
           accent: "#7BA4D9",
-          success: "#7fbf7f",
+          info: "#0000f0",
+          success: "#008c00",
           error: "#FF0000",
-          warn: "#ffe993",
+          warning: "#E07400",
         },
       },
     },
@@ -85,19 +94,25 @@ export default createVuetify({
     VCardTitle: {
       class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
     },
+    VNumberInput: {
+      persistentClear: true,
+      clearable: true,
+    },
     VProgressLinear: {
       height: 50,
       color: "primary",
     },
-    VBtn: {
-      variant: "elevated",
-      activeColor: "primary",
+    VAutocomplete: {
+      persistentClear: true,
+      clearable: true,
     },
-    VCardActions: {
-      VBtn: {
-        variant: "elevated",
-        activeColor: "primary",
-      },
+    VTextField: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VTextarea: {
+      persistentClear: true,
+      clearable: true,
     },
   },
 });

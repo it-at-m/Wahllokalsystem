@@ -1,3 +1,6 @@
+app:
+  authServiceUri: http://kubernetes.docker.internal:8100
+
 server:
   port: 8083
 spring:
@@ -7,8 +10,7 @@ spring:
         webflux:
           routes:
             - id: sso
-              #uri: http://kubernetes.docker.internal:8100/
-              uri: https://kubernetes.docker.internal:8100/
+              uri: ${app.authServiceUri}/
               predicates:
                 - Path=/api/sso/userinfo
               filters:
@@ -16,8 +18,7 @@ spring:
                 - RemoveRequestHeader=Cookie
                 - RemoveResponseHeader=Set-Cookie
             - id: auth-service
-              #uri: http://kubernetes.docker.internal:8100/
-              uri: https://kubernetes.docker.internal:8100/
+              uri: ${app.authServiceUri}/
               predicates:
                 - Path=/api/auth-service/**
               filters:
@@ -87,13 +88,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          #issuer-uri: http://kubernetes.docker.internal:8100/user
-          issuer-uri: https://kubernetes.docker.internal:8100/user
+          issuer-uri: ${app.authServiceUri}/user
       client:
         provider:
           sso:
-            #issuer-uri: http://kubernetes.docker.internal:8100/
-            issuer-uri: https://kubernetes.docker.internal:8100
+            issuer-uri: ${app.authServiceUri}
         registration:
           sso:
             provider: sso

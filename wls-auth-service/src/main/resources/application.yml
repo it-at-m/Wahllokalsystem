@@ -29,6 +29,7 @@ security:
   logging.requests: all
 
 server:
+  forward-headers-strategy: native
   shutdown: "graceful"
   port: 8080
   error:

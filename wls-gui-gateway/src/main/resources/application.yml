@@ -28,6 +28,7 @@ spring:
             - TokenRelay=
 
 server:
+  forward-headers-strategy: native
   error:
     include-message: always
     whitelabel:

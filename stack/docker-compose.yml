@@ -287,6 +287,36 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  refarch-gateway-wls-by-build:
+    container_name: wls-refarch-gateway-wls-by-build
+    build: ../wls-gui-gateway
+    env_file:
+      - .env
+    ports:
+      - "8083:8080"
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=local
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
+      - JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=/config_ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dserver.ssl.enabled=false
+    volumes:
+      - './gateway_config_wls:/config'
+      - './reverse-proxy-auth-service/ssl:/config_ssl'
+    networks:
+      - services
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+      - "gui.wls.host.docker.internal:host-gateway"
+      - "auth.wls.host.docker.internal:host-gateway"
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 60s
+      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+    security_opt:
+      - no-new-privileges:true
+
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
     image: ghcr.io/it-at-m/refarch/refarch-gateway:1.7.0@sha256:3f82ab83c212ca53c9c2b606cfe29291f21525eac86fece215d0e1c6ca51273f

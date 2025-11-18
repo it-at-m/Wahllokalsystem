@@ -117,10 +117,10 @@ export interface UserDTO {
     'pin'?: string;
     /**
      * 
-     * @type {Set<string>}
+     * @type {Array<string>}
      * @memberof UserDTO
      */
-    'authorities': Set<string>;
+    'authorities': Array<string>;
     /**
      * 
      * @type {string}

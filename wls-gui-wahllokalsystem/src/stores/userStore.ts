@@ -22,7 +22,7 @@ export const useUserStore = defineStore("user", () => {
     wahlbezirkNummer: "",
     wahlbezirksArt: WahlbezirksArtEnum.UWB,
     pin: "",
-    authorities: new Set<string>(),
+    authorities: [],
     wahlMetaData: [
       {
         wahlbezirkID: "",

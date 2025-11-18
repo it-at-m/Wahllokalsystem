@@ -4,5 +4,5 @@ export interface Wahlvorschlaege {
   wahlID: string;
   wahlbezirkID: string;
   stimmzettelgebietID: string;
-  wahlvorschlaege: Set<Wahlvorschlag>;
+  wahlvorschlaege: Wahlvorschlag[];
 }

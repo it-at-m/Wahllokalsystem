@@ -404,6 +404,24 @@ services:
     networks:
       - services
 
+  wls-refarch-gateway-wls-reverse-proxy:
+    container_name: wls-refarch-gateway-wls-reverse-proxy
+    build: ./reverse-proxy
+    ports:
+      - "58083:443"
+    volumes:
+      - ./reverse-proxy/ssl:/etc/nginx/ssl
+    restart: always
+
+  wls-auth-service-reverse-proxy:
+    container_name: wls-auth-service-reverse-proxy
+    build: ./reverse-proxy-auth-service
+    ports:
+      - "58100:443"
+    volumes:
+      - ./reverse-proxy-auth-service/ssl:/etc/nginx/ssl
+    restart: always
+
 networks:
   internal:
   services:

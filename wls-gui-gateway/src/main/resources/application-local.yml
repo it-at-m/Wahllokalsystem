@@ -92,7 +92,7 @@ spring:
       client:
         provider:
           sso:
-            issuer-uri: ${app.authServiceUri}
+            issuer-uri: https://auth.wls.host.docker.internal:58100
         registration:
           sso:
             provider: sso

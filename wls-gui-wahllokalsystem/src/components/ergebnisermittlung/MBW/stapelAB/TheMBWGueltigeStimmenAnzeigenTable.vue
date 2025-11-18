@@ -51,9 +51,11 @@ const props = defineProps({
   },
 });
 
-const sortedModelValue = sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
-  props.ergebnisseAndWahlvorschlaege
-);
+const sortedModelValue = computed(() => {
+  return sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
+    props.ergebnisseAndWahlvorschlaege
+  );
+});
 
 const totalSum = computed(() => {
   let total = 0;

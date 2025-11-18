@@ -10,14 +10,29 @@
 </template>
 <script setup lang="ts">
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
-import type { PropType } from "vue";
+
+import { onMounted, ref } from "vue";
 
 import TheMbwWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
+import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
 
-defineProps({
-  wahlberechtigte: {
-    type: Object as PropType<AWerte>,
-    required: true,
-  },
+const props = defineProps<{
+  wahlbezirkId: string;
+  wahlId: string;
+}>();
+
+const { getAWerteForWahlbezirkAndWahl } = useMbwUtils(
+  props.wahlId,
+  props.wahlbezirkId
+);
+
+const wahlberechtigte = ref<AWerte>({
+  bezirkUndWahlID: { wahlID: "", wahlbezirkID: "" },
+  a1: 0,
+  a2: 0,
+});
+
+onMounted(async () => {
+  wahlberechtigte.value = await getAWerteForWahlbezirkAndWahl();
 });
 </script>

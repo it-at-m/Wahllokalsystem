@@ -5,9 +5,22 @@
       >Kontrolle, Übermittlung und Druck der Schnellmeldung</v-card-subtitle
     >
     <v-card-text>
-      <v-form v-model="isFormValid">
-        <!-- TBD: Platzhalter für Schnellmeldung-Komponente -->
-      </v-form>
+      <the-m-b-w-wahlberechtigte-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-waehler-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-ungueltige-stimmen-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-gueltige-stimmen-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
     </v-card-text>
     <v-card-actions>
       <base-button-save
@@ -37,12 +50,18 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
+import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
+import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
+const { currentUserWahlbezirkID } = useUserStore();
 
 const isFormValid = ref<null | boolean>(null);
 

@@ -94,7 +94,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     let aWerte;
     try {
       aWerte = await getAWerte(wahlbezirkID, false);
-    } catch (error) {
+    } catch {
       throw new Error(`Fehler beim Laden der AWerte`);
     }
 

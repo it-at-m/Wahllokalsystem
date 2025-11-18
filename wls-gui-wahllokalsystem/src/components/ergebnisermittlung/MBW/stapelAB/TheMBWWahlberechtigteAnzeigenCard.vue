@@ -1,12 +1,12 @@
 <template>
-  <v-card>
+  <div>
     <v-card-title> Wahlberechtigte laut Wählerverzeichnis </v-card-title>
     <v-card-text>
       <the-mbw-wahlberechtigte-anzeigen-table
         :wahlberechtigte="wahlberechtigte"
       />
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 <script setup lang="ts">
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";

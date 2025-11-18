@@ -1,27 +1,25 @@
 <template>
   <v-card>
-    <v-card-title>Schnellmeldung</v-card-title>
-    <v-card-subtitle
+    <v-card-title class="font-weight-bold">Schnellmeldung</v-card-title>
+    <v-card-subtitle class="font-weight-bold mb-10"
       >Kontrolle, Übermittlung und Druck der Schnellmeldung</v-card-subtitle
     >
-    <v-card-text>
-      <the-m-b-w-wahlberechtigte-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-waehler-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-ungueltige-stimmen-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-      <the-m-b-w-gueltige-stimmen-anzeigen-card
-        :wahlbezirk-id="currentUserWahlbezirkID"
-        :wahl-id="wahlID"
-      />
-    </v-card-text>
+    <the-m-b-w-wahlberechtigte-anzeigen-card
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-waehler-anzeigen-card
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-ungueltige-stimmen-anzeigen-card
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-gueltige-stimmen-anzeigen-card
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
     <v-card-actions>
       <base-button-save
         save-text="Schnellmeldung senden"

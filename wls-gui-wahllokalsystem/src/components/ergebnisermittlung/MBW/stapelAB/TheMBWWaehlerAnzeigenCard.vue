@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <div>
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
@@ -8,26 +8,31 @@
             v-for="(row, index) in rows"
             :key="index"
           >
-            <td
-              v-for="(value, idx) in row"
-              :key="idx"
-            >
-              {{ value }}
+            <td>
+              {{ row[0] }}
+            </td>
+            <td>
+              {{ row[1] }}
+            </td>
+            <td class="text-right">
+              {{ row[2] }}
             </td>
           </tr>
           <tr class="bg-grey-lighten-3">
-            <td
-              v-for="(value, index) in resultRow"
-              :key="index"
-              class="font-weight-bold"
-            >
-              {{ value }}
+            <td class="font-weight-bold">
+              {{ resultRow[0] }}
+            </td>
+            <td class="font-weight-bold">
+              {{ resultRow[1] }}
+            </td>
+            <td class="font-weight-bold text-right">
+              {{ resultRow[2] }}
             </td>
           </tr>
         </tbody>
       </v-table>
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">

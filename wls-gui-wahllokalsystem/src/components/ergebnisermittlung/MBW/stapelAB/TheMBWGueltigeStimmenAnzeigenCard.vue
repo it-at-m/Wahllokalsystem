@@ -1,12 +1,12 @@
 <template>
-  <v-card>
+  <div>
     <v-card-title> Gültige Stimmen </v-card-title>
     <v-card-text>
       <the-m-b-w-gueltige-stimmen-anzeigen-table
         :ergebnisse-and-wahlvorschlaege="ergebnisseAndWahlvorschlaege"
       />
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";

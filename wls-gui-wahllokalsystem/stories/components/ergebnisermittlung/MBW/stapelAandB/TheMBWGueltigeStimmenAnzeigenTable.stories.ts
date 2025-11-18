@@ -3,51 +3,22 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import { delay, http, HttpResponse } from "msw";
 
-import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
+import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 const { prepareWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
 
-const wahlID = "wahlID";
-const wahlbezirkID = "wahlbezirkID";
-
 const meta = {
-  component: TheMBWGueltigeStimmenAnzeigenCard,
-  args: {
-    wahlID,
-    wahlbezirkID,
-  },
-  parameters: {
-    msw: {
-      handlers: [
-        http.all("/api/*", async () => {
-          await delay(1000);
-          return new HttpResponse(null, {
-            status: 200,
-          });
-        }),
-      ],
-    },
-  },
-  decorators: [
-    (story) => {
-      return {
-        components: { story },
-        template: "<story />",
-      };
-    },
-  ],
-} satisfies Meta<typeof TheMBWGueltigeStimmenAnzeigenCard>;
+  component: TheMBWGueltigeStimmenAnzeigenTable,
+  args: {},
+} satisfies Meta<typeof TheMBWGueltigeStimmenAnzeigenTable>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
-    wahlID: wahlID,
-    wahlbezirkID: wahlbezirkID,
     ergebnisseAndWahlvorschlaege: _getWahlvorschlaegeAndErgebnisseMbw(),
   },
 };

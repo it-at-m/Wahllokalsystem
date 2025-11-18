@@ -89,7 +89,7 @@ service:
       userSearchFilter: uid={0}
     loginCheckMessage: notInActiveElectionDay
     oauth2:
-      logoutUri: http://host.docker.internal:8100/logout
+      logoutUri: https://auth.wls.host.docker.internal:58100/logout
       clients:
         wahllokalgui:
           id: wls

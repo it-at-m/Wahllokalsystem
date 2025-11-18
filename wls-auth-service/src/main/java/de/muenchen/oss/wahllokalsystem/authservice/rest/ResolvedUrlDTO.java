@@ -1,4 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
-public record ResolvedUrlDTO(String url) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record ResolvedUrlDTO(@Schema(requiredMode = Schema.RequiredMode.REQUIRED) String url) {
 }

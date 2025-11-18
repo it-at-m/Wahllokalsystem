@@ -1,13 +1,29 @@
+import {
+  AuthServerControllerApi,
+  Configuration,
+} from "@/api/wls-clients/generated-auth-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
+import { AUTH_SERVICE_API_URL } from "@/constants.ts";
+
+const { axiosConfigWrapper } = useCommonApiUtils();
+
 export function useLogoutService() {
+  const authServerControllerApi = new AuthServerControllerApi(
+    new Configuration({
+      basePath: AUTH_SERVICE_API_URL,
+    })
+  );
+
   async function logout() {
     try {
-      const request = new Request(
-        "https://kubernetes.docker.internal:8100/logout",
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const authServerLogoutUrlResponse =
+        await authServerControllerApi.getLogoutUrl(
+          axiosConfigWrapper().requestAsOnlineOnly()
+        );
+      const request = new Request(authServerLogoutUrlResponse.data.url, {
+        method: "GET",
+        credentials: "include",
+      });
       await fetch(request).catch((reason) => console.log(reason));
 
       await fetch("logout", getPOSTConfig(undefined));

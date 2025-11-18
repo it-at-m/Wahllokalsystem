@@ -57,7 +57,6 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
@@ -136,13 +135,6 @@ public class SecurityConfiguration {
                 .formLogin((form) -> form
                         .loginPage(LOGIN_PATH)
                         .permitAll())
-                .csrf(csrfSpec -> {
-                    val tokenRepo = new HttpSessionCsrfTokenRepository();
-                    tokenRepo.setHeaderName("X-XSRF-TOKEN");
-                    csrfSpec.csrfTokenRepository(tokenRepo);
-                })
-                .sessionManagement(sessionConfig -> {
-                })
                 .logout(LogoutConfigurer::permitAll)
                 .logout(logoutspec -> logoutspec.permitAll(true).clearAuthentication(true)
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()

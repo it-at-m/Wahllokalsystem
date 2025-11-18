@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isUWB">
     <v-card-title> Wahlberechtigte laut Wählerverzeichnis </v-card-title>
     <v-card-text>
       <the-mbw-wahlberechtigte-anzeigen-table
@@ -11,15 +11,19 @@
 <script setup lang="ts">
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 
+import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 
 import TheMbwWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const props = defineProps<{
   wahlbezirkId: string;
   wahlId: string;
 }>();
+
+const { isUWB } = storeToRefs(useUserStore());
 
 const { getAWerteForWahlbezirkAndWahl } = useMbwUtils(
   props.wahlId,

@@ -25,7 +25,6 @@ public class CorsFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         setHeaderAccessControlAllowOrigin(request, response);
         response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-        //        response.setHeader("Access-Control-Allow-Origin", "https://localhost:8083/");
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",

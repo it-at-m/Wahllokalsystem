@@ -42,6 +42,7 @@ describe("logoutService.ts", () => {
 
   afterAll(() => {
     vi.resetAllMocks();
+    vi.unstubAllGlobals();
   });
 
   describe("logout", () => {

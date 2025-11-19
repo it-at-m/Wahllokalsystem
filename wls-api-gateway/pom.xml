@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.4</version>
+        <version>3.5.7</version>
         <relativePath />
     </parent>
 
@@ -41,24 +41,21 @@
         <spring-cloud-dependencies.version>2025.0.0</spring-cloud-dependencies.version>
 
         <!-- Linting & Formatting -->
-        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.1.0</spotless-maven-plugin.version>
         <itm-java-codeformat.version>1.0.10</itm-java-codeformat.version>
-        <pmd-maven-plugin.version>3.27.0</pmd-maven-plugin.version>
-        <spotbugs-maven-plugin.version>4.9.3.2</spotbugs-maven-plugin.version>
-        <spotbugs-annotations.version>4.9.4</spotbugs-annotations.version> <!-- must match the patch version of spotbugs-maven-plugin -->
+        <pmd-maven-plugin.version>3.28.0</pmd-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.9.8.1</spotbugs-maven-plugin.version>
+        <spotbugs-annotations.version>4.9.8</spotbugs-annotations.version> <!-- must match the patch version of spotbugs-maven-plugin -->
         <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
 
         <!-- Testing -->
-        <jacoco.version>0.8.13</jacoco.version>
+        <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Release -->
-        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
 
         <!-- Utility -->
         <refarch-tools.version>1.2.0</refarch-tools.version>
-
-        <!-- Additional required dependencies -->
-        <hazelcast.version>5.5.0</hazelcast.version>
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
@@ -105,11 +102,6 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-hazelcast</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-spring</artifactId>
-            <version>${hazelcast.version}</version>
         </dependency>
 
         <dependency>
@@ -281,7 +273,7 @@
                         <endWithNewline />
                         <importOrder />
                         <removeUnusedImports />
-                        <removeWildcardImports />
+                        <forbidWildcardImports />
                         <formatAnnotations />
                     </java>
                 </configuration>

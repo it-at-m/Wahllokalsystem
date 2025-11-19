@@ -220,6 +220,10 @@ export default withMermaid({
               text: "Update embedded LDAP User",
               link: `${PATH_GUIDES}update-ldif-file-data.md`,
             },
+            {
+              text: "Zertfikate für SSL erstellen",
+              link: `${PATH_GUIDES}generate certs for ssl.md`,
+            },
           ],
         },
         {

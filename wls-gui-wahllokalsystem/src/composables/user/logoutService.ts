@@ -40,17 +40,6 @@ export function useLogoutService() {
     }
   }
 
-  function _getPOSTConfig(): RequestInit {
-    return {
-      method: "POST",
-      body: undefined,
-      headers: _getHeaders(),
-      mode: "cors",
-      credentials: "include",
-      redirect: "manual",
-    };
-  }
-
   function _getHeaders(): Headers {
     const headers = new Headers({
       "Content-Type": "application/json",
@@ -60,6 +49,17 @@ export function useLogoutService() {
       headers.append("X-XSRF-TOKEN", csrfCookie);
     }
     return headers;
+  }
+
+  function _getPOSTConfig(): RequestInit {
+    return {
+      method: "POST",
+      body: undefined,
+      headers: _getHeaders(),
+      mode: "cors",
+      credentials: "include",
+      redirect: "manual",
+    };
   }
 
   function _getXSRFToken(): string {

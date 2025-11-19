@@ -33,7 +33,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   async function loadWahlvorschlaegeAndErgebnisse() {
     isLoading.value = true;
     try {
-      const wahlvorschlaege = await _loadAndSortWahlschlaege();
+      const wahlvorschlaege = await _loadAndSortWahlvorschlaege();
       const ergebnisse = await getErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -77,7 +77,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     }
   }
 
-  function _loadAndSortWahlschlaege() {
+  function _loadAndSortWahlvorschlaege() {
     return getWahlvorschlaege(wahlID, wahlbezirkID)
       .then((wahlvorschlaege) =>
         sortWahlvorschlaegeByOrdnungszahl(wahlvorschlaege)

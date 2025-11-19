@@ -8,36 +8,23 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ## Zusammenspiel IDE mit Podman
 
-```mermaid
-flowchart LR
+![Aufteilung Komponenten auf dem Entwicklungs-PC](/developmentPCEnvironment.png)
 
-    subgraph Dev-PC
-        subgraph IDE
-            wlsService
-            frontend_gui[gui_wahllokalsystem]
-        end
+Auf dem Entwicklungs-PC müssen Container ausführbar sein. Einige Komponenten, die zur Ausführung des Systems
+notwendig sind, liegen nur als Image vor. Die Komponenten sind mit dem Stereotyp `podman only` markiert. Alle
+anderen Komponenten liegen sowohl als Image als auch anderweitig startbar vor. Die Microservices können über Skripte
+oder `run configurations` (IntelliJ) ausgeführt werden.
 
-        subgraph Podman
-            authService
-            oracleDB[Oracle DB]
-            apiGateway[API Gateway]
-            backendServiceN[Backend Service N]
-        end
+> [!NOTE]
+> 
+> Damit Services die in Podman laufen mit Services außerhalb von Podman kommunizieren können, müssen die Container
+> entsprechende host-Gateway konfiguriert haben.
 
-        apiGateway --->|forwards request| backendServiceN
-        apiGateway --->|forwards request| authService
-
-        backendServiceN --->|accesses| oracleDB
-        backendServiceN --->|OAuth2| authService
-
-        frontend_gui --->|request| apiGateway
-
-        authService-->|accesses| oracleDB
-
-        wlsService ---|OAuth2| authService
-        wlsService --->|accesses|oracleDB
-    end
-```
+> [!CAUTION] Zugriff bei Frontendentwicklung
+> 
+> Bei Entwicklung am Frontend sollte der Zugriff über `host.docker.internal:8083` erfolgen, da nur dadurch das
+> hot module replacement (hmr) des vite-Servers funktioniert. Bei Zugriff über `gui.wls.host.docker.internal:58083`
+> kann die Websocket-Verbindung nicht aufgebaut werden und hmr funktioniert nicht.
 
 ## Services und Ports
 

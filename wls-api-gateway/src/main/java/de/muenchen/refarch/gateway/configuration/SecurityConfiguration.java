@@ -107,7 +107,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * Get Spring Session timeout. Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
+     * Get Spring Session timeout. Uses {@link SessionProperties} and
+     * {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
      * according
      * <a href="https://docs.spring.io/spring-boot/reference/web/spring-session.html">Spring
      * documentation</a>.

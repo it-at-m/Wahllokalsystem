@@ -27,11 +27,21 @@ export function useLogoutService() {
         method: "GET",
         credentials: "include",
       });
-      await fetch(request).catch((reason) =>
-        logError("logout bei auth-Service war nicht erfolgreich", reason)
-      );
+      await fetch(request).then((response) => {
+        if (!response.ok) {
+          return Promise.reject(
+            new Error("logout bei auth-Service war nicht erfolgreich")
+          );
+        }
+      });
 
-      await fetch("logout", _getPOSTConfig());
+      await fetch("logout", _getPOSTConfig()).then((response) => {
+        if (!response.ok) {
+          return Promise.reject(
+            new Error("logout bei api gateway war nicht erfolgreich")
+          );
+        }
+      });
 
       logDebug(`logout erfolgreich durchgeführt`);
     } catch (error) {

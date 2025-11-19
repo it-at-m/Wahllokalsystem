@@ -70,7 +70,7 @@ describe("logoutService.ts", () => {
       );
     });
 
-    it("should_throwError_when_gettingLogoutFailed", async () => {
+    it("should_throwError_when_gettingLogoutUrlFailed", async () => {
       const mockedGetLogoutUrlError = new Error("mocked get logout url failed");
       mockDefinitions.getLogoutUrl.mockRejectedValue(mockedGetLogoutUrlError);
 

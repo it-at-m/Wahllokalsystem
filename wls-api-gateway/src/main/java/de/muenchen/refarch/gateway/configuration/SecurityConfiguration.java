@@ -21,7 +21,6 @@ import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
 import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
-import org.springframework.security.web.server.authentication.logout.ServerLogoutHandler;
 import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
@@ -73,14 +72,11 @@ public class SecurityConfiguration {
                         .permitAll()
                         // only authenticated
                         .anyExchange().authenticated())
-                .logout(spec -> spec.logoutUrl("/logout").logoutHandler(new ServerLogoutHandler() {
-                    @Override
-                    public Mono<Void> logout(final WebFilterExchange exchange, final Authentication authentication) {
-                        log.info("logout request received");
-                        return logoutHandler.logout(exchange, authentication);
-                    }
+                .logout(spec -> spec.logoutUrl("/logout").logoutHandler((exchange, authentication) -> {
+                    log.info("logout request received for {}", authentication.getName());
+                    return logoutHandler.logout(exchange, authentication);
                 }).logoutSuccessHandler((exchange, authentication) -> {
-                    log.info("logout successful");
+                    log.info("logout successful for {}", authentication.getName());
                     exchange.getExchange().getResponse().setStatusCode(HttpStatus.TEMPORARY_REDIRECT);
                     exchange.getExchange().getResponse().getHeaders().setLocation(URI.create("http://kubernetes.docker.internal:8100/logout"));
 
@@ -115,8 +111,7 @@ public class SecurityConfiguration {
     }
 
     /**
-     * Get Spring Session timeout. Uses {@link SessionProperties} and
-     * {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
+     * Get Spring Session timeout. Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
      * according
      * <a href="https://docs.spring.io/spring-boot/reference/web/spring-session.html">Spring
      * documentation</a>.

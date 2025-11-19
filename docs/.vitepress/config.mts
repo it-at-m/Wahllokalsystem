@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import {withMermaid} from "vitepress-plugin-mermaid";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
@@ -221,7 +221,7 @@ export default withMermaid({
               link: `${PATH_GUIDES}update-ldif-file-data.md`,
             },
             {
-              text: "Zertfikate für SSL erstellen",
+              text: "Zertifikate für SSL erstellen",
               link: `${PATH_GUIDES}generate certs for ssl.md`,
             },
           ],

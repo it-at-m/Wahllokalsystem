@@ -8,6 +8,13 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ## Zusammenspiel IDE mit Podman
 
+> [!NOTE] Konfiguration von hosts
+> 
+> Im hosts-File müssen folgende Enträge enthalten sein, damit das Wahllokalsystem lokal korrekt funktioniert
+> 127.0.0.1 host.docker.internal
+> 127.0.0.1 auth.wls.host.docker.internal
+> 127.0.0.1 gui.wls.host.docker.internal
+
 ![Aufteilung Komponenten auf dem Entwicklungs-PC](/developmentPCEnvironment.png)
 
 Auf dem Entwicklungs-PC müssen Container ausführbar sein. Einige Komponenten, die zur Ausführung des Systems

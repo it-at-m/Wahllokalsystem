@@ -9,6 +9,6 @@ on:
 jobs:
   verify-pull-request:
     uses:
-      ./.github/workflows/callable-run-mvn-verify.yml
+      ./.github/workflows/callable-run-mvn-verify_java21.yml
     with:
       pom-dir: 'wls-api-gateway'

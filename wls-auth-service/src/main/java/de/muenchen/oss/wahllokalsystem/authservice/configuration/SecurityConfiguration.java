@@ -14,10 +14,6 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAK
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
@@ -43,7 +39,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -55,7 +50,6 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -111,23 +105,23 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                        // allow access to /actuator/info
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
-                        // allow access to /actuator/health for OpenShift Health Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
-                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
-                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
-                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/home"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                                // allow access to /actuator/info
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
+                                // allow access to /actuator/health for OpenShift Health Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
+                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
+                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
+                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/home"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/logout"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
@@ -139,13 +133,8 @@ public class SecurityConfiguration {
                 .logout(logoutspec -> logoutspec.permitAll(true).clearAuthentication(true)
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()
                                 .matcher(HttpMethod.GET, "/logout"))
-                        .logoutSuccessHandler(new LogoutSuccessHandler() {
-                            @Override
-                            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-                                    throws IOException, ServletException {
-                                log.info("onLogoutSuccess");
-                            }
-                        }))
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> log.info("logout successful for {}", authentication.getName())))
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

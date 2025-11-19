@@ -35,7 +35,7 @@ export function useLogoutService() {
         }
       });
 
-      await fetch("logout", _getPOSTConfig()).then((response) => {
+      await fetch("/logout", _getPOSTConfig()).then((response) => {
         if (!response.ok) {
           return Promise.reject(
             new Error("logout bei api gateway war nicht erfolgreich")

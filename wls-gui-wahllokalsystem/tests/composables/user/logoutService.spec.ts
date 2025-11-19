@@ -65,7 +65,9 @@ describe("logoutService.ts", () => {
       expect(
         (mockDefinitions.fetch.mock.calls[0]?.[0] as Request)?.url
       ).toStrictEqual(`${mockedLogoutUrlResponse.url.toLowerCase()}/`);
-      expect(mockDefinitions.fetch.mock.calls[1]?.[0])?.toStrictEqual(`logout`);
+      expect(mockDefinitions.fetch.mock.calls[1]?.[0])?.toStrictEqual(
+        `/logout`
+      );
     });
 
     it("should_throwError_when_gettingLogoutFailed", async () => {

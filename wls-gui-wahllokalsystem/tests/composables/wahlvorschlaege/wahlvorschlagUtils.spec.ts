@@ -29,7 +29,7 @@ describe("wahlvorschlagUtils.ts", () => {
       expect(result).toStrictEqual(0);
     });
 
-    it("should_returnEqual_when_bothObjectsHaveEqualListenposition", () => {
+    it("should_returnZero_when_bothObjectsHaveEqualListenposition", () => {
       const listenposition = generateRandomNumber(3);
       const kandidat1 = prepareKandidat()
         .listenposition(listenposition)
@@ -46,7 +46,7 @@ describe("wahlvorschlagUtils.ts", () => {
       expect(result).toStrictEqual(0);
     });
 
-    it("should_returnSmaller_when_kandidat1HasSmallerListenpositionThanKandidat2", () => {
+    it("should_returnNegativeValue_when_kandidat1HasSmallerListenpositionThanKandidat2", () => {
       const listenposition = generateRandomNumber(3);
       const kandidat1 = prepareKandidat()
         .listenposition(listenposition)
@@ -62,7 +62,7 @@ describe("wahlvorschlagUtils.ts", () => {
 
       expect(result).lessThan(0);
     });
-    it("should_returnLarger_when_kandidat1HasLargerListenpositionThanKandidat2", () => {
+    it("should_returnPositiveValue_when_kandidat1HasLargerListenpositionThanKandidat2", () => {
       const listenposition = generateRandomNumber(3);
       const kandidat1 = prepareKandidat()
         .listenposition(listenposition)

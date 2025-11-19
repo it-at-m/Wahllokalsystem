@@ -69,6 +69,10 @@ info.application.version: @project.version@
 
 service:
   config:
+    cors:
+      allowedOrigins:
+        - http://localhost:8083
+        - http://host.docker.internal:8083
     crypto:
       encryptionPrefix: "ENCRYPTED:"
     maxLoginAttempts: 5

@@ -55,8 +55,7 @@ public class SecurityConfiguration {
     @Order(1)
     public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
         val logoutHandler = new DelegatingServerLogoutHandler(
-                new SecurityContextServerLogoutHandler(), new WebSessionServerLogoutHandler()
-        );
+                new SecurityContextServerLogoutHandler(), new WebSessionServerLogoutHandler());
 
         http
                 .authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
@@ -76,7 +75,7 @@ public class SecurityConfiguration {
                         .anyExchange().authenticated())
                 .logout(spec -> spec.logoutUrl("/logout").logoutHandler(new ServerLogoutHandler() {
                     @Override
-                    public Mono<Void> logout(WebFilterExchange exchange, Authentication authentication) {
+                    public Mono<Void> logout(final WebFilterExchange exchange, final Authentication authentication) {
                         log.info("logout request received");
                         return logoutHandler.logout(exchange, authentication);
                     }
@@ -116,7 +115,8 @@ public class SecurityConfiguration {
     }
 
     /**
-     * Get Spring Session timeout. Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
+     * Get Spring Session timeout. Uses {@link SessionProperties} and
+     * {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
      * according
      * <a href="https://docs.spring.io/spring-boot/reference/web/spring-session.html">Spring
      * documentation</a>.

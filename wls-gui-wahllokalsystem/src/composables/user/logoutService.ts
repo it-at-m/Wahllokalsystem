@@ -3,9 +3,12 @@ import {
   Configuration,
 } from "@/api/wls-clients/generated-auth-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { AUTH_SERVICE_API_URL } from "@/constants.ts";
 
 const { axiosConfigWrapper } = useCommonApiUtils();
+
+const { logDebug, logError } = useLogging("logoutService");
 
 export function useLogoutService() {
   const authServerControllerApi = new AuthServerControllerApi(
@@ -24,13 +27,16 @@ export function useLogoutService() {
         method: "GET",
         credentials: "include",
       });
-      await fetch(request).catch((reason) => console.log(reason));
+      await fetch(request).catch((reason) =>
+        logError("logout bei auth-Service war nicht erfolgreich", reason)
+      );
 
       await fetch("logout", getPOSTConfig(undefined));
 
-      console.log("logout successful");
+      logDebug(`logout erfolgreich durchgeführt`);
     } catch (error) {
-      console.log("get logout", error);
+      logError(`fehler bei logout`, error);
+      throw error;
     }
   }
 

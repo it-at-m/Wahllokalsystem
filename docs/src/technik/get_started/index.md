@@ -9,7 +9,7 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 ## Zusammenspiel IDE mit Podman
 
 > [!NOTE] Konfiguration von hosts
-> 
+>
 > Im hosts-File müssen folgende Enträge enthalten sein, damit das Wahllokalsystem lokal korrekt funktioniert
 > 127.0.0.1 host.docker.internal
 > 127.0.0.1 auth.wls.host.docker.internal
@@ -23,12 +23,12 @@ anderen Komponenten liegen sowohl als Image als auch anderweitig startbar vor. D
 oder `run configurations` (IntelliJ) ausgeführt werden.
 
 > [!NOTE]
-> 
+>
 > Damit Services die in Podman laufen mit Services außerhalb von Podman kommunizieren können, müssen die Container
 > entsprechende host-Gateway konfiguriert haben.
 
 > [!CAUTION] Zugriff bei Frontendentwicklung
-> 
+>
 > Bei Entwicklung am Frontend sollte der Zugriff über `host.docker.internal:8083` erfolgen, da nur dadurch das
 > hot module replacement (hmr) des vite-Servers funktioniert. Bei Zugriff über `gui.wls.host.docker.internal:58083`
 > kann die Websocket-Verbindung nicht aufgebaut werden und hmr funktioniert nicht.

@@ -19,6 +19,7 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout key.pem -out cert.p
 ```
 
 Dabei werden diverse Parameter abgefragt. Folgende Werte sollten dabei verwendet werden:
+
 - country: `de`
 - province: `bavaria`
 - city: `munich`
@@ -42,4 +43,5 @@ keytool -importcert -alias wls-auth-service -file cert.der -keystore truststore.
 ## Truststore einbinden
 
 Die Einbindung des Truststore in einen Service erfolgt durch folgende vm-Options:
+
 - `-Djavax.net.ssl.trustStore=./../stack/reverse-proxy-auth-service/ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12`

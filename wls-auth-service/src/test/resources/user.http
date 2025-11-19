@@ -6,6 +6,6 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 POST {{ WLS_AUTH_SERVICE }}/user/wls_all_uwb/unlock
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GEt logout url
+### GET logout url
 GET {{ WLS_AUTH_SERVICE}}/authserver/logouturl
 Authorization: Bearer {{$auth.token("auth-service")}}

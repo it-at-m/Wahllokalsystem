@@ -1,4 +1,4 @@
-import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
 
 import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -21,16 +21,16 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getWahlvorschlaege: vi.fn(),
-  mapToWahlvorschlagWithScorableKandidaten: vi.fn(),
+  mapToWahlvorschlagWithKandidatenErgebnissen: vi.fn(),
   mapToErgebnisse: vi.fn(),
 }));
 
 vi.mock(
-  "@/composables/ergebnisermittlung/wahlvorschlagWithScorableKandidatenMapper.ts",
+  "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts",
   () => ({
-    useWahlvorschlagWithScorableKandidatenMapper: () => ({
-      toWahlvorschlagWithScorableKandidaten:
-        mockDefinitions.mapToWahlvorschlagWithScorableKandidaten,
+    useWahlvorschlagWithKandidatenErgebnissenMapper: () => ({
+      toWahlvorschlagWithKandidatenErgebnissen:
+        mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen,
       toErgebnisse: mockDefinitions.mapToErgebnisse,
     }),
   })
@@ -76,8 +76,10 @@ describe("mwbStapelBCUtils.ts", () => {
   });
 
   describe("loadWahlvorschlaegeAndErgebnisse", () => {
-    it("should_setScorable_when_wahlvorschlaegeAndErgebnisseAreGiven", async () => {
-      expect(unitUnderTest.scorableWahlvorschlaege.value).toStrictEqual([]);
+    it("should_setWahlvorschlagWithKandidatenErgebnissen_when_wahlvorschlaegeAndErgebnisseAreGiven", async () => {
+      expect(
+        unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value
+      ).toStrictEqual([]);
       expect(unitUnderTest.isLoading.value).toStrictEqual(false);
 
       const spyOnValueSetterOfIsLoading = spyOn(
@@ -93,8 +95,9 @@ describe("mwbStapelBCUtils.ts", () => {
       const mockedErgebnisse = createErgebnisse();
       mockDefinitions.getErgebnisse.mockReturnValue(mockedErgebnisse);
 
-      const mockedMappingResult = createWahlvorschlagWithScorableKandidaten();
-      mockDefinitions.mapToWahlvorschlagWithScorableKandidaten.mockReturnValue(
+      const mockedMappingResult =
+        createWahlvorschlagWithKandidatenErgebnissen();
+      mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen.mockReturnValue(
         mockedMappingResult
       );
 
@@ -105,14 +108,16 @@ describe("mwbStapelBCUtils.ts", () => {
         [false],
       ]);
 
-      expect(unitUnderTest.scorableWahlvorschlaege.value).toStrictEqual([
+      expect(
+        unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value
+      ).toStrictEqual([
         mockedMappingResult,
         mockedMappingResult,
         mockedMappingResult,
       ]);
       [...mockedWahlvorschlaege.wahlvorschlaege].forEach((wahlvorschlag) => {
         expect(
-          mockDefinitions.mapToWahlvorschlagWithScorableKandidaten
+          mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen
         ).toHaveBeenCalledWith(wahlvorschlag, mockedErgebnisse);
       });
 
@@ -127,14 +132,15 @@ describe("mwbStapelBCUtils.ts", () => {
       const mockedErgebnisse = createErgebnisse();
       mockDefinitions.getErgebnisse.mockReturnValue(mockedErgebnisse);
 
-      const mockedMappingResult = createWahlvorschlagWithScorableKandidaten();
-      mockDefinitions.mapToWahlvorschlagWithScorableKandidaten.mockReturnValue(
+      const mockedMappingResult =
+        createWahlvorschlagWithKandidatenErgebnissen();
+      mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen.mockReturnValue(
         mockedMappingResult
       );
 
       await unitUnderTest.loadWahlvorschlaegeAndErgebnisse();
 
-      unitUnderTest.scorableWahlvorschlaege.value.forEach(
+      unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
         (wahlvorschlag, index, allWahlvorschlaege) => {
           //check wahlvorschlag is in correct order by ordnungszahl
           if (index < allWahlvorschlaege.length - 1) {
@@ -145,7 +151,7 @@ describe("mwbStapelBCUtils.ts", () => {
           }
 
           //check that kandidaten are sorted by listenposition
-          wahlvorschlag.scorableKandidaten.forEach(
+          wahlvorschlag.kandidatenErgebnisse.forEach(
             (kandidatAndErgebnis, index, allKandidatenAndErgebnisse) => {
               if (index < allKandidatenAndErgebnisse.length - 1) {
                 expect(
@@ -161,8 +167,10 @@ describe("mwbStapelBCUtils.ts", () => {
       );
     });
 
-    it("should_setScorable_when_wahlvorschlaegeButNoErgebnisseAreGiven", async () => {
-      expect(unitUnderTest.scorableWahlvorschlaege.value).toStrictEqual([]);
+    it("should_setWahlvorschlaegeWithKandidatenErgebnisse_when_wahlvorschlaegeButNoErgebnisseAreGiven", async () => {
+      expect(
+        unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value
+      ).toStrictEqual([]);
       expect(unitUnderTest.isLoading.value).toStrictEqual(false);
 
       const spyOnValueSetterOfIsLoading = spyOn(
@@ -178,8 +186,9 @@ describe("mwbStapelBCUtils.ts", () => {
       const mockedErgebnisse = prepareErgebnisse().ergebnisse([]).build();
       mockDefinitions.getErgebnisse.mockReturnValue(mockedErgebnisse);
 
-      const mockedMappingResult = createWahlvorschlagWithScorableKandidaten();
-      mockDefinitions.mapToWahlvorschlagWithScorableKandidaten.mockReturnValue(
+      const mockedMappingResult =
+        createWahlvorschlagWithKandidatenErgebnissen();
+      mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen.mockReturnValue(
         mockedMappingResult
       );
 
@@ -190,14 +199,16 @@ describe("mwbStapelBCUtils.ts", () => {
         [false],
       ]);
 
-      expect(unitUnderTest.scorableWahlvorschlaege.value).toStrictEqual([
+      expect(
+        unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value
+      ).toStrictEqual([
         mockedMappingResult,
         mockedMappingResult,
         mockedMappingResult,
       ]);
       [...mockedWahlvorschlaege.wahlvorschlaege].forEach((wahlvorschlag) => {
         expect(
-          mockDefinitions.mapToWahlvorschlagWithScorableKandidaten
+          mockDefinitions.mapToWahlvorschlagWithKandidatenErgebnissen
         ).toHaveBeenCalledWith(wahlvorschlag, mockedErgebnisse);
       });
 
@@ -264,9 +275,9 @@ describe("mwbStapelBCUtils.ts", () => {
       const ergebnisToSave2 = createErgebnis();
       const ergebnisToSave3 = createErgebnis();
       const ergebnisToSave4 = createErgebnis();
-      unitUnderTest.scorableWahlvorschlaege.value = [
+      unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value = [
         {
-          scorableKandidaten: [
+          kandidatenErgebnisse: [
             { kandidat: createKandidat(), ergebnis: ergebnisToSave1 },
             { kandidat: createKandidat(), ergebnis: ergebnisToSave2 },
             {
@@ -280,7 +291,7 @@ describe("mwbStapelBCUtils.ts", () => {
           kurzname: generateRandomString(10),
         },
         {
-          scorableKandidaten: [
+          kandidatenErgebnisse: [
             {
               kandidat: createKandidat(),
               ergebnis: prepareErgebnis().ergebnis(null).build(),
@@ -365,9 +376,9 @@ describe("mwbStapelBCUtils.ts", () => {
       .build();
   }
 
-  function createWahlvorschlagWithScorableKandidaten(): WahlvorschlagWithScorableKandidaten {
+  function createWahlvorschlagWithKandidatenErgebnissen(): WahlvorschlagWithKandidatenErgebnissen {
     return {
-      scorableKandidaten: [
+      kandidatenErgebnisse: [
         { kandidat: createKandidat(), ergebnis: createErgebnis() },
       ],
       ordnungszahl: generateRandomNumber(3),

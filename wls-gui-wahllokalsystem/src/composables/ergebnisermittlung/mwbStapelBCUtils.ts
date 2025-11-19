@@ -1,11 +1,11 @@
-import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useWahlvorschlagWithScorableKandidatenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithScorableKandidatenMapper.ts";
+import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
@@ -20,14 +20,15 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     compareKandidatenByListenPosition,
     sortWahlvorschlaegeByOrdnungszahl,
   } = useWahlvorschlagUtils();
-  const { toErgebnisse, toWahlvorschlagWithScorableKandidaten } =
-    useWahlvorschlagWithScorableKandidatenMapper();
+  const { toErgebnisse, toWahlvorschlagWithKandidatenErgebnissen } =
+    useWahlvorschlagWithKandidatenErgebnissenMapper();
   const { logError } = useLogging("useMwbStapelBCUtils");
 
   const isLoading = ref(false);
   const isSaving = ref(false);
-  const scorableWahlvorschlaege: Ref<WahlvorschlagWithScorableKandidaten[]> =
-    ref([]);
+  const wahlvorschlaegeWithKandidatenErgebnissen: Ref<
+    WahlvorschlagWithKandidatenErgebnissen[]
+  > = ref([]);
 
   async function loadWahlvorschlaegeAndErgebnisse() {
     isLoading.value = true;
@@ -40,9 +41,10 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         false
       );
 
-      scorableWahlvorschlaege.value = [...wahlvorschlaege.wahlvorschlaege].map(
-        (wahlvorschlag) =>
-          toWahlvorschlagWithScorableKandidaten(wahlvorschlag, ergebnisse)
+      wahlvorschlaegeWithKandidatenErgebnissen.value = [
+        ...wahlvorschlaege.wahlvorschlaege,
+      ].map((wahlvorschlag) =>
+        toWahlvorschlagWithKandidatenErgebnissen(wahlvorschlag, ergebnisse)
       );
     } catch (error) {
       logError("loading of wahlvorschlaege and results failed", error);
@@ -55,10 +57,11 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     isSaving.value = true;
 
     try {
-      const ergebnisValuesToSave = scorableWahlvorschlaege.value
-        .flatMap((wahlvorschlag) => wahlvorschlag.scorableKandidaten)
-        .map((scorableKandidat) => scorableKandidat.ergebnis)
-        .filter((ergebnis) => ergebnis.ergebnis != null);
+      const ergebnisValuesToSave =
+        wahlvorschlaegeWithKandidatenErgebnissen.value
+          .flatMap((wahlvorschlag) => wahlvorschlag.kandidatenErgebnisse)
+          .map((kandidatErgebnis) => kandidatErgebnis.ergebnis)
+          .filter((ergebnis) => ergebnis.ergebnis != null);
 
       const ergebnisse = toErgebnisse(
         ergebnisValuesToSave,
@@ -98,7 +101,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   return {
     isLoading,
     isSaving,
-    scorableWahlvorschlaege,
+    wahlvorschlaegeWithKandidatenErgebnissen,
     loadWahlvorschlaegeAndErgebnisse,
     saveErgebnisse,
   };

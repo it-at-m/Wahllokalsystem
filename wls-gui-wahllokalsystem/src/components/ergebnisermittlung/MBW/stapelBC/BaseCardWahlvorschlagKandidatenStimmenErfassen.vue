@@ -4,7 +4,7 @@
       <v-form v-model="isFormValid">
         <base-table-wahlvorschlag-kandidaten-stimmen-erfassen
           :wahlvorschlag-nummer="wahlvorschlagModel.ordnungszahl"
-          :model-value="wahlvorschlagModel.scorableKandidaten"
+          :model-value="wahlvorschlagModel.kandidatenErgebnisse"
         />
       </v-form>
     </v-card-text>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { PropType } from "vue";
 
 import { ref } from "vue";
@@ -28,7 +28,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTableWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseTableWahlvorschlagKandidatenStimmenErfassen.vue";
 
 const wahlvorschlagModel = defineModel("modelValue", {
-  type: Object as PropType<WahlvorschlagWithScorableKandidaten>,
+  type: Object as PropType<WahlvorschlagWithKandidatenErgebnissen>,
   required: true,
 });
 

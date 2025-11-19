@@ -1,4 +1,4 @@
-import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -6,7 +6,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useWahlvorschlagWithScorableKandidatenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithScorableKandidatenMapper.ts";
+import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
@@ -15,16 +15,16 @@ const { prepareWahlvorschlag, prepareKandidat } =
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
   useErgebnisseTestDataFactory();
 
-describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
+describe("wahlvorschlagWithKandidatenErgebnissenMapper.ts", () => {
   let unitUnderTest: ReturnType<
-    typeof useWahlvorschlagWithScorableKandidatenMapper
+    typeof useWahlvorschlagWithKandidatenErgebnissenMapper
   >;
 
   beforeEach(() => {
-    unitUnderTest = useWahlvorschlagWithScorableKandidatenMapper();
+    unitUnderTest = useWahlvorschlagWithKandidatenErgebnissenMapper();
   });
 
-  describe("toWahlvorschlagWithScorableKandidaten", () => {
+  describe("toWahlvorschlagWithKandidatenErgebnissen", () => {
     it("should_mapWahlvorschlagAndErgebnisValues_when_wahlvorschlagAndErgebnisseAreGiven", () => {
       const kandidat1 = prepareKandidat().identifikator("k1").build();
       const kandidat2 = prepareKandidat().identifikator("k2").build();
@@ -43,16 +43,16 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
         .ergebnisse([ergebnis1, ergebnis2])
         .build();
 
-      const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
+      const result = unitUnderTest.toWahlvorschlagWithKandidatenErgebnissen(
         wahlvorschlag,
         ergebnisseToMap
       );
 
-      const expectedResult: WahlvorschlagWithScorableKandidaten = {
+      const expectedResult: WahlvorschlagWithKandidatenErgebnissen = {
         kurzname: wahlvorschlag.kurzname,
         identifikator: wahlvorschlag.identifikator,
         ordnungszahl: wahlvorschlag.ordnungszahl,
-        scorableKandidaten: [
+        kandidatenErgebnisse: [
           {
             ergebnis: {
               ergebnis: ergebnis1.ergebnis,
@@ -96,16 +96,16 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
         .kandidaten([kandidat1, kandidat2, kandidat3])
         .build();
 
-      const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
+      const result = unitUnderTest.toWahlvorschlagWithKandidatenErgebnissen(
         wahlvorschlag,
         null
       );
 
-      const expectedResult: WahlvorschlagWithScorableKandidaten = {
+      const expectedResult: WahlvorschlagWithKandidatenErgebnissen = {
         kurzname: wahlvorschlag.kurzname,
         identifikator: wahlvorschlag.identifikator,
         ordnungszahl: wahlvorschlag.ordnungszahl,
-        scorableKandidaten: [
+        kandidatenErgebnisse: [
           {
             ergebnis: {
               ergebnis: null,
@@ -152,16 +152,16 @@ describe("wahlvorschlagWithScorableKandidatenMapper.ts", () => {
           .ergebnisse([createErgebnis(), createErgebnis()])
           .build();
 
-        const result = unitUnderTest.toWahlvorschlagWithScorableKandidaten(
+        const result = unitUnderTest.toWahlvorschlagWithKandidatenErgebnissen(
           wahlvorschlag,
           ergebnisseToMap
         );
 
-        const expectedResult: WahlvorschlagWithScorableKandidaten = {
+        const expectedResult: WahlvorschlagWithKandidatenErgebnissen = {
           kurzname: wahlvorschlag.kurzname,
           identifikator: wahlvorschlag.identifikator,
           ordnungszahl: wahlvorschlag.ordnungszahl,
-          scorableKandidaten: [],
+          kandidatenErgebnisse: [],
         };
         expect(result).toStrictEqual(expectedResult);
       }

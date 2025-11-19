@@ -1,19 +1,19 @@
-import type { WahlvorschlagWithScorableKandidaten } from "@/types/ergebnisermittlung/WahlvorschlagWithScorableKandidaten.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
-export function useWahlvorschlagWithScorableKandidatenMapper() {
-  function toWahlvorschlagWithScorableKandidaten(
+export function useWahlvorschlagWithKandidatenErgebnissenMapper() {
+  function toWahlvorschlagWithKandidatenErgebnissen(
     wahlvorschlag: Wahlvorschlag,
     ergebnisse: Ergebnisse | null
-  ): WahlvorschlagWithScorableKandidaten {
-    const wahlvorschlagWithScorableKandidaten = _initResult(wahlvorschlag);
+  ): WahlvorschlagWithKandidatenErgebnissen {
+    const wahlvorschlagWithKandidatenErgebnissen = _initResult(wahlvorschlag);
 
     if (wahlvorschlag.kandidaten) {
-      wahlvorschlagWithScorableKandidaten.scorableKandidaten = [
+      wahlvorschlagWithKandidatenErgebnissen.kandidatenErgebnisse = [
         ...wahlvorschlag.kandidaten,
       ].map((kandidat) => {
         const ergebnisForKandidat =
@@ -26,7 +26,7 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
         };
       });
     }
-    return wahlvorschlagWithScorableKandidaten;
+    return wahlvorschlagWithKandidatenErgebnissen;
   }
 
   function toErgebnisse(
@@ -60,10 +60,10 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
 
   function _initResult(
     wahlvorschlag: Wahlvorschlag
-  ): WahlvorschlagWithScorableKandidaten {
+  ): WahlvorschlagWithKandidatenErgebnissen {
     return {
       identifikator: wahlvorschlag.identifikator,
-      scorableKandidaten: [],
+      kandidatenErgebnisse: [],
       kurzname: wahlvorschlag.kurzname,
       ordnungszahl: wahlvorschlag.ordnungszahl,
     };
@@ -75,6 +75,6 @@ export function useWahlvorschlagWithScorableKandidatenMapper() {
 
   return {
     toErgebnisse,
-    toWahlvorschlagWithScorableKandidaten,
+    toWahlvorschlagWithKandidatenErgebnissen,
   };
 }

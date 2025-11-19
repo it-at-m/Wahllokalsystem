@@ -17,7 +17,9 @@
         </thead>
         <tbody>
           <template
-            v-for="(wahlvorschlag, index) in scorableWahlvorschlaege"
+            v-for="(
+              wahlvorschlag, index
+            ) in wahlvorschlaegeWithKandidatenErgebnissen"
             :key="index"
           >
             <tr>
@@ -27,7 +29,7 @@
               <td>D{{ wahlvorschlag.ordnungszahl }}</td>
               <td>{{ wahlvorschlag.kurzname }}</td>
               <td class="text-right">
-                {{ summeKandidatenStimmen(wahlvorschlag.scorableKandidaten) }}
+                {{ summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse) }}
               </td>
             </tr>
             <tr v-if="expandedRows[index]">
@@ -72,7 +74,7 @@ const props = defineProps({
 const {
   isLoading,
   isSaving,
-  scorableWahlvorschlaege,
+  wahlvorschlaegeWithKandidatenErgebnissen,
   loadWahlvorschlaegeAndErgebnisse,
   saveErgebnisse,
 } = useMwbStapelBCUtils(props.wahlbezirkID, props.wahlID);

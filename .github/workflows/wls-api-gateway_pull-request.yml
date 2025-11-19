@@ -1,0 +1,14 @@
+name: verify pull request api-gateway
+
+on:
+  pull_request:
+    paths:
+      - 'wls-api-gateway/**'
+      - '.github/workflows/wls-api-gateway_pull-request.yml'
+
+jobs:
+  verify-pull-request:
+    uses:
+      ./.github/workflows/callable-run-mvn-verify.yml
+    with:
+      pom-dir: 'wls-api-gateway'

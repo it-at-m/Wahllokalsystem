@@ -1,6 +1,5 @@
 package de.muenchen.refarch.gateway.configuration;
 
-import java.net.URI;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
@@ -77,8 +75,6 @@ public class SecurityConfiguration {
                     return logoutHandler.logout(exchange, authentication);
                 }).logoutSuccessHandler((exchange, authentication) -> {
                     log.info("logout successful for {}", authentication.getName());
-                    exchange.getExchange().getResponse().setStatusCode(HttpStatus.TEMPORARY_REDIRECT);
-                    exchange.getExchange().getResponse().getHeaders().setLocation(URI.create("http://kubernetes.docker.internal:8100/logout"));
 
                     return exchange.getExchange().getResponse().setComplete();
                 }))

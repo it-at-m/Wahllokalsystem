@@ -85,7 +85,7 @@ on:
           - wls-<domain>-service
 ```
 
-```yml {14} [dispatch-build-github-container-image.yml]
+```yml {14} [dispatch-create-github-container-image.yml]
 name: dispatch build github container image
 
 on:

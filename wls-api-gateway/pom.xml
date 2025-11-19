@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
-    <artifactId>wls-gateway-gui-wahllokalsystem</artifactId>
+    <artifactId>wls-api-gateway</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
-    <name>wls_gateway_gui-wahllokalsystem</name>
-    <description>api gateway for wls-gui-wahllokalsystem</description>
+    <name>wls_api_gateway</name>
+    <description>api gateway for wahllokalsystem</description>
     <url>https://github.com/it-at-m/refarch</url>
     <licenses>
         <license>

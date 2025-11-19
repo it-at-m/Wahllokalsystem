@@ -289,7 +289,7 @@ services:
 
   refarch-gateway-wls-by-build:
     container_name: wls-refarch-gateway-wls-by-build
-    build: ../wls-gui-gateway
+    build: ../wls-api-gateway
     env_file:
       - .env
     ports:

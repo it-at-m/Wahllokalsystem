@@ -21,7 +21,7 @@
 
         <!-- Logger -->
         <logger name="de.muenchen.oss.wahllokalsystem.authservice"
-                level="trace"
+                level="debug"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
@@ -45,7 +45,7 @@
         </logger>
 
         <!-- Logger usage -->
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT" />
         </root>
 

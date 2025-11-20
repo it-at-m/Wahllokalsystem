@@ -8,7 +8,7 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungVa
 const { prepareStatusDTO, prepareMeldungDTO, prepareStatus, prepareMeldung } =
   useStatusTestDataFactory();
 
-const { toModel } = useStatusMapper();
+const { toModel, toDto } = useStatusMapper();
 
 describe("statusMapper.ts", () => {
   describe("toModel", () => {
@@ -99,6 +99,95 @@ describe("statusMapper.ts", () => {
         );
         expect(result.niederschrift.validierungsstatus).toBe(
           modelValidierungsstatus
+        );
+      }
+    );
+  });
+
+  describe("toDto", () => {
+    it("should_returnDto_when_givenModel", () => {
+      const wahlbezirkID = "wahlbezirkID";
+      const wahlID = "wahlID";
+      const validierungsstatus = MeldungValidierungsstatusEnum.Valide;
+      const gedruckt = true;
+      const statusModel = prepareStatus()
+        .bezirkUndWahlID({ wahlID: wahlID, wahlbezirkID: wahlbezirkID })
+        .schnellmeldung(
+          prepareMeldung()
+            .validierungsstatus(validierungsstatus)
+            .gedruckt(gedruckt)
+            .uebermittelt(true)
+            .sendeuhrzeit("18:15:00")
+            .build()
+        )
+        .niederschrift(
+          prepareMeldung()
+            .validierungsstatus(validierungsstatus)
+            .gedruckt(gedruckt)
+            .uebermittelt(undefined)
+            .sendeuhrzeit(undefined)
+            .build()
+        )
+        .build();
+      const statusDto = prepareStatusDTO()
+        .bezirkUndWahlID({ wahlID: wahlID, wahlbezirkID: wahlbezirkID })
+        .schnellmeldung(
+          prepareMeldungDTO()
+            .validierungsstatus(validierungsstatus)
+            .gedruckt(gedruckt)
+            .uebermittelt(true)
+            .sendeuhrzeit("18:15:00")
+            .build()
+        )
+        .niederschrift(
+          prepareMeldungDTO()
+            .validierungsstatus(validierungsstatus)
+            .gedruckt(gedruckt)
+            .uebermittelt(undefined)
+            .sendeuhrzeit(undefined)
+            .build()
+        )
+        .build();
+
+      const result = toDto(statusModel);
+
+      expect(result).toStrictEqual(statusDto);
+    });
+
+    it.each([
+      [
+        MeldungValidierungsstatusEnum.Invalide,
+        MeldungDTOValidierungsstatusEnum.Invalide,
+      ],
+      [
+        MeldungValidierungsstatusEnum.NichtGesendet,
+        MeldungDTOValidierungsstatusEnum.NichtGesendet,
+      ],
+      [
+        MeldungValidierungsstatusEnum.NichtValidiert,
+        MeldungDTOValidierungsstatusEnum.NichtValidiert,
+      ],
+      [
+        MeldungValidierungsstatusEnum.Valide,
+        MeldungDTOValidierungsstatusEnum.Valide,
+      ],
+    ])(
+      "should_mapModelValidierungsstatus%s_when_givenDtoValidierungsstatus%s",
+      (modelValidierungsstatus, dtoValidierungsstatus) => {
+        const statusModel = prepareStatus()
+          .schnellmeldung(
+            prepareMeldung().validierungsstatus(modelValidierungsstatus).build()
+          )
+          .niederschrift(
+            prepareMeldung().validierungsstatus(modelValidierungsstatus).build()
+          )
+          .build();
+        const result = toDto(statusModel);
+        expect(result.schnellmeldung.validierungsstatus).toBe(
+          dtoValidierungsstatus
+        );
+        expect(result.niederschrift.validierungsstatus).toBe(
+          dtoValidierungsstatus
         );
       }
     );

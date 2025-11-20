@@ -37,6 +37,7 @@ import {
   ROUTE_NIEDERSCHRIFT,
   ROUTE_SCHNELLMELDUNG,
   ROUTE_STAPEL_A_AND_B,
+  ROUTE_STAPEL_BC,
   ROUTE_STAPEL_D,
 } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -53,6 +54,7 @@ const listItems = [
   { title: "Ungültige Stimmzettel", routeName: ROUTE_STAPEL_D },
   { title: "Gültige Stimmzettel", routeName: ROUTE_STAPEL_A_AND_B },
   { title: "Schnellmeldung", routeName: ROUTE_SCHNELLMELDUNG },
+  { title: "Kandidatinnenstimmen", routeName: ROUTE_STAPEL_BC },
   { title: "Niederschrift", routeName: ROUTE_NIEDERSCHRIFT },
 ];
 </script>

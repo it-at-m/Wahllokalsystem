@@ -23,10 +23,12 @@
             :key="index"
           >
             <tr>
-              <td>
+              <td class="foldingButtonColumn">
                 <base-button-folding v-model="expandedRows[index]" />
               </td>
-              <td>D{{ wahlvorschlag.ordnungszahl }}</td>
+              <td class="ordnungszahlColumn">
+                D{{ wahlvorschlag.ordnungszahl }}
+              </td>
               <td>{{ wahlvorschlag.kurzname }}</td>
               <td class="text-right">
                 {{ summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse) }}
@@ -90,3 +92,12 @@ function onSaveWahlvorschlag() {
   saveErgebnisse();
 }
 </script>
+
+<style scoped>
+.foldingButtonColumn {
+  width: 48px;
+}
+.ordnungszahlColumn {
+  width: 5em;
+}
+</style>

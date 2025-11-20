@@ -1,0 +1,35 @@
+import type { Meta, StoryObj } from "@storybook/vue3";
+
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+
+import BaseRowKandidatStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseRowKandidatStimmenErfassen.vue";
+
+const meta = {
+  component: BaseRowKandidatStimmenErfassen,
+  args: {},
+  decorators: [
+    (story) => {
+      return {
+        component: { story },
+        template:
+          "<table style='width: 100%; border: solid 1px black'><story /></table>",
+      };
+    },
+  ],
+} satisfies Meta<typeof BaseRowKandidatStimmenErfassen>;
+
+const { generateRandomNumberInRange } = useCommonTestDataFactory();
+const { createErgebnis } = useErgebnisseTestDataFactory();
+const { prepareKandidat } = useWahlvorschlaegeTestDataFactory();
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = {
+  args: {
+    kandidat: prepareKandidat().build(),
+    modelValue: createErgebnis(),
+    wahlvorschlagNummer: generateRandomNumberInRange(1, 12),
+  },
+};

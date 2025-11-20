@@ -62,6 +62,7 @@ export const useStatusStore = defineStore(storeID, () => {
 
   return {
     status,
+    isStatusSaving,
     loadStatus,
     saveStatus,
   };

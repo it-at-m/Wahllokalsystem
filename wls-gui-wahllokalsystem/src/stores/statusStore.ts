@@ -10,9 +10,10 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungVa
 export const storeID = "status";
 
 export const useStatusStore = defineStore(storeID, () => {
-  const { getStatus } = useStatusService();
+  const { getStatus, postStatus } = useStatusService();
 
   const status = ref<Status[]>([]);
+  const isStatusSaving = ref(false);
 
   const DEFAULT_MELDUNG = {
     validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
@@ -46,9 +47,23 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveStatus(wahlID: string, wahlbezirkID: string) {
+    isStatusSaving.value = true;
+    for (const statusEntry of status.value) {
+      try {
+        await postStatus(wahlID, wahlbezirkID, statusEntry);
+      } catch {
+        throw Error(`Fehler beim Speichern des Status für WahlID: ${wahlID}`);
+      } finally {
+        isStatusSaving.value = false;
+      }
+    }
+  }
+
   return {
     status,
     loadStatus,
+    saveStatus,
   };
 });
 

@@ -26,6 +26,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksBegruendung: vi.fn(),
   createTasksAWerte: vi.fn(),
   createTasksHandbuch: vi.fn(),
+  createTasksStatus: vi.fn(),
   createTasksWahlvorbereitung: vi.fn(),
   createTasksWahlbriefe: vi.fn(),
 }));
@@ -152,6 +153,12 @@ vi.mock("@/composables/tasks/taskFactories/aWerteTaskFactory.ts", () => ({
 vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
   useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
     createTasks: mockDefinitions.createTasksHandbuch,
+  })),
+}));
+
+vi.mock("@/composables/tasks/taskFactories/statusTaskFactory.ts", () => ({
+  useStatusTaskFactory: vi.fn().mockImplementation(() => ({
+    createTasks: mockDefinitions.createTasksStatus,
   })),
 }));
 
@@ -289,6 +296,12 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
+      mockDefinitions.createTasksStatus.mockReturnValue([
+        {
+          name: "Druckstatus - " + mockedWahl.name,
+          callback: () => Promise.resolve(),
+        },
+      ]);
       mockDefinitions.createTasksWahlvorbereitung.mockReturnValue([
         {
           name: "Wahlvorbereitung",
@@ -322,6 +335,7 @@ describe("taskListService.ts", () => {
         "Begruendung Stimmzettel für " + mockedWahl.name,
         "AWerte",
         "Handbuch",
+        "Druckstatus - " + mockedWahl.name,
         "Wahlvorbereitung",
         "Erfasste Wahlbriefe",
       ];
@@ -351,6 +365,7 @@ describe("taskListService.ts", () => {
       expect(mockDefinitions.createTasksBegruendung).toHaveBeenCalled();
       expect(mockDefinitions.createTasksAWerte).toHaveBeenCalled();
       expect(mockDefinitions.createTasksHandbuch).toHaveBeenCalled();
+      expect(mockDefinitions.createTasksStatus).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlvorbereitung).toHaveBeenCalled();
       expect(mockDefinitions.createTasksWahlbriefe).toHaveBeenCalled();
     });

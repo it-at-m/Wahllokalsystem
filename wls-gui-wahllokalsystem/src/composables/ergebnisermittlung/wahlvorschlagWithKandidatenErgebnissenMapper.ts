@@ -39,7 +39,7 @@ export function useWahlvorschlagWithKandidatenErgebnissenMapper() {
       bezirkUndWahlIDStapelart: {
         wahlID,
         wahlbezirkID,
-        stapelArt: stapelArt,
+        stapelArt,
       },
       ergebnisse,
     };

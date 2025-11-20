@@ -20,18 +20,18 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 Auf dem Entwicklungs-PC müssen Container ausführbar sein. Einige Komponenten, die zur Ausführung des Systems
 notwendig sind, liegen nur als Image vor. Die Komponenten sind mit dem Stereotyp `podman only` markiert. Alle
 anderen Komponenten liegen sowohl als Image als auch anderweitig startbar vor. Die Microservices können über Skripte
-oder `run configurations` (IntelliJ) ausgeführt werden.
+oder `Run Configurations` (IntelliJ) ausgeführt werden.
 
 > [!NOTE]
 >
-> Damit Services die in Podman laufen mit Services außerhalb von Podman kommunizieren können, müssen die Container
-> entsprechende host-Gateway konfiguriert haben.
+> Damit Services, die in Podman laufen, mit Services außerhalb von Podman kommunizieren können, müssen die Container
+> das entsprechende Host-Gateway konfiguriert haben.
 
 > [!CAUTION] Zugriff bei Frontendentwicklung
 >
-> Bei Entwicklung am Frontend sollte der Zugriff über `host.docker.internal:8083` erfolgen, da nur dadurch das
-> hot module replacement (hmr) des vite-Servers funktioniert. Bei Zugriff über `gui.wls.host.docker.internal:58083`
-> kann die Websocket-Verbindung nicht aufgebaut werden und hmr funktioniert nicht.
+> Bei der Entwicklung am Frontend sollte der Zugriff über `host.docker.internal:8083` erfolgen, da nur dadurch das
+> Hot Module Replacement (HMR) des Vite-Servers funktioniert. Bei Zugriff über `gui.wls.host.docker.internal:58083`
+> kann die WebSocket-Verbindung nicht aufgebaut werden, und HMR funktioniert nicht.
 
 ## Services und Ports
 

@@ -67,7 +67,7 @@ umsetzen und sich um die Datenhaltung kümmern.
 
 ![Architektur der Laufzeitumgebung](/RuntimeEnvironment.png)
 
-Betrieben wird das Wahllokalsystem in OpenShift. Der Zugriff auf den Cluster erfolgt durch die Routes (Reverse Proxy)
-mittels https. Innerhalb des Clusters wird über http kommuniziert.
+Das Wahllokalsystem wird in OpenShift betrieben. Der Zugriff auf den Cluster erfolgt über die Routes (Reverse Proxy)
+mittels HTTPS. Innerhalb des Clusters wird über HTTP kommuniziert.
 
-Die Datenbank der Services sind nicht Teil des Clusters, sondern sind separat.
+Die Datenbank der Services ist nicht Teil des Clusters, sondern befindet sich separat.

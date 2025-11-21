@@ -54,7 +54,7 @@ const listItems = [
   { title: "Ungültige Stimmzettel", routeName: ROUTE_STAPEL_D },
   { title: "Gültige Stimmzettel", routeName: ROUTE_STAPEL_A_AND_B },
   { title: "Schnellmeldung", routeName: ROUTE_SCHNELLMELDUNG },
-  { title: "Kandidatinnenstimmen", routeName: ROUTE_STAPEL_BC },
+  { title: "Kandidatinnen- und Kandidatenstimmen", routeName: ROUTE_STAPEL_BC },
   { title: "Niederschrift", routeName: ROUTE_NIEDERSCHRIFT },
 ];
 </script>

@@ -70,7 +70,7 @@ export function useStatusService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-    } catch (e) {
+    } catch {
       if (sendNotification) {
         addNotification(
           `Fehler beim Speichern des Status für ${wahlname}.`,

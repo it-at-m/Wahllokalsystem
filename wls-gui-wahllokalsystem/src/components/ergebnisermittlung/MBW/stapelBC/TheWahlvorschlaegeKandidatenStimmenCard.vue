@@ -45,6 +45,19 @@
             </tr>
           </template>
         </tbody>
+        <tfoot>
+          <tr>
+            <td
+              :colspan="COUNT_COLUMNS_BEFORE_SUM"
+              class="font-weight-bold"
+            >
+              Gültige Stimmen insgesamt
+            </td>
+            <td class="font-weight-bold text-right">
+              {{ totalSumErgebnisse }}
+            </td>
+          </tr>
+        </tfoot>
       </v-table>
     </v-card-text>
   </v-card>
@@ -53,7 +66,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
@@ -84,8 +97,18 @@ const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 
 const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
 
+const COUNT_COLUMNS_BEFORE_SUM = 3;
+
 onMounted(() => {
   loadWahlvorschlaegeAndErgebnisse();
+});
+
+const totalSumErgebnisse = computed(() => {
+  return wahlvorschlaegeWithKandidatenErgebnissen.value.reduce(
+    (sum, wahlvorschlag) =>
+      sum + summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse),
+    0
+  );
 });
 
 function onSaveWahlvorschlag() {

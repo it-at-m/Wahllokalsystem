@@ -79,7 +79,7 @@ describe("statusMapper.ts", () => {
         MeldungValidierungsstatusEnum.Valide,
       ],
     ])(
-      "should_mapDtoValidierungsstatus%s_when_givenModelValidierungsstatus%s",
+      "should_mapToModelValidierungsstatus%s_when_givenDtoValidierungsstatus%s",
       (dtoValidierungsstatus, modelValidierungsstatus) => {
         const statusDto = prepareStatusDTO()
           .schnellmeldung(
@@ -172,7 +172,7 @@ describe("statusMapper.ts", () => {
         MeldungDTOValidierungsstatusEnum.Valide,
       ],
     ])(
-      "should_mapModelValidierungsstatus%s_when_givenDtoValidierungsstatus%s",
+      "should_mapToDtoValidierungsstatus%s_when_givenModelValidierungsstatus%s",
       (modelValidierungsstatus, dtoValidierungsstatus) => {
         const statusModel = prepareStatus()
           .schnellmeldung(

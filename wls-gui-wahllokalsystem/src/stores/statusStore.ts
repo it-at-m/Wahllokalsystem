@@ -49,14 +49,14 @@ export const useStatusStore = defineStore(storeID, () => {
 
   async function saveStatus(wahlID: string, wahlbezirkID: string) {
     isStatusSaving.value = true;
-    for (const statusEntry of status.value) {
-      try {
+    try {
+      for (const statusEntry of status.value) {
         await postStatus(wahlID, wahlbezirkID, statusEntry);
-      } catch {
-        throw Error(`Fehler beim Speichern des Status für WahlID: ${wahlID}`);
-      } finally {
-        isStatusSaving.value = false;
       }
+    } catch {
+      throw Error(`Fehler beim Speichern des Status für WahlID: ${wahlID}`);
+    } finally {
+      isStatusSaving.value = false;
     }
   }
 

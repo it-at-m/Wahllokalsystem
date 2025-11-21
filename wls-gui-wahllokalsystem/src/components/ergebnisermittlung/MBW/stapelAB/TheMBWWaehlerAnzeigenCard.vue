@@ -5,28 +5,27 @@
       <v-table>
         <tbody>
           <tr
-            v-for="(row, index) in rows"
-            :key="index"
+            v-for="(row, idx) in rows"
+            :key="idx"
           >
-            <td>
-              {{ row[0] }}
-            </td>
-            <td>
-              {{ row[1] }}
-            </td>
-            <td class="text-right">
-              {{ row[2] }}
+            <td
+              v-for="(value, index1) in row"
+              :key="index1"
+              :class="{ 'text-right': index1 === 2 }"
+            >
+              {{ value }}
             </td>
           </tr>
           <tr class="bg-grey-lighten-3">
-            <td class="font-weight-bold">
-              {{ resultRow[0] }}
-            </td>
-            <td class="font-weight-bold">
-              {{ resultRow[1] }}
-            </td>
-            <td class="font-weight-bold text-right">
-              {{ resultRow[2] }}
+            <td
+              v-for="(value, index2) in resultRow"
+              :key="index2"
+              :class="[
+                { 'font-weight-bold': true },
+                { 'text-right': index2 === 2 },
+              ]"
+            >
+              {{ value }}
             </td>
           </tr>
         </tbody>

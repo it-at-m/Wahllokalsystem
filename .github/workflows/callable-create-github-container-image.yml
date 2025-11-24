@@ -11,6 +11,11 @@ on:
         required: true
         type: string
         description: 'name of service to use'
+      javaVersion:
+        required: false
+        default: '17'
+        type: string
+        description: 'java version to use for build'
 
 env:
   REGISTRY: ghcr.io
@@ -32,7 +37,7 @@ jobs:
         with:
           cache: 'maven'
           cache-dependency-path: ${{ inputs.service }}/pom.xml
-          java-version: '17'
+          java-version: ${{ inputs.javaVersion }}
           distribution: 'temurin'
 
       - name: build jar without tests

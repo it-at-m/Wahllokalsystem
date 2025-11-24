@@ -301,7 +301,7 @@ services:
       - JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=/config_ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dserver.ssl.enabled=false
     volumes:
       - './gateway_config_wls:/config'
-      - './reverse-proxy-auth-service/ssl:/config_ssl'
+      - './reverse-proxy-auth-service/ssl:/config_ssl' # Pfad zum Reverseproxy da dort die Certs und der Truststore liegen (siehe JAVA_TOOL_OPTIONS)
     networks:
       - services
     extra_hosts:

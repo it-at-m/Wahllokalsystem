@@ -11,10 +11,10 @@
   min-width: 300px;
 }
 
+/* #1946 */
 .schnellmeldung-table tbody td.schnellmeldung-first-column {
   width: 150px;
 }
-
 .bottom-border-black tr:last-child td {
   border-bottom: 1px solid black;
 }

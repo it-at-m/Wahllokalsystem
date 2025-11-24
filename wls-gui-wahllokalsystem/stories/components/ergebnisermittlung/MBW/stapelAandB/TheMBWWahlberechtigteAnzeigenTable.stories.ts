@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
 
-import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import TheMBWWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
 
 const { createAWerte } = useAWerteTestDataFactory();
 
 const meta = {
-  component: TheMBWWahlberechtigteAnzeigenCard,
+  component: TheMBWWahlberechtigteAnzeigenTable,
   args: {},
-} satisfies Meta<typeof TheMBWWahlberechtigteAnzeigenCard>;
+} satisfies Meta<typeof TheMBWWahlberechtigteAnzeigenTable>;
 
 export default meta;
 

@@ -1,37 +1,35 @@
 <template>
-  <v-container>
-    <v-table>
-      <thead>
-        <tr>
-          <th />
-          <th class="font-weight-bold text-left">Wahlvorschlag</th>
-          <th class="font-weight-bold text-right">Insgesamt</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="vorschlag in sortedModelValue"
-          :key="vorschlag.wahlvorschlag.identifikator"
-        >
-          <td>D {{ vorschlag.wahlvorschlag.ordnungszahl }}</td>
-          <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
-          <td class="text-right">
-            {{
-              (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
-              (vorschlag.ergebnisStapelB.ergebnis ?? 0)
-            }}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>D</td>
-          <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
-          <td class="font-weight-bold text-right">{{ totalSum }}</td>
-        </tr>
-      </tfoot>
-    </v-table>
-  </v-container>
+  <v-table>
+    <thead>
+      <tr>
+        <th />
+        <th class="font-weight-bold text-left">Wahlvorschlag</th>
+        <th class="font-weight-bold text-right">Insgesamt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="vorschlag in sortedModelValue"
+        :key="vorschlag.wahlvorschlag.identifikator"
+      >
+        <td>D {{ vorschlag.wahlvorschlag.ordnungszahl }}</td>
+        <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
+        <td class="text-right">
+          {{
+            (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
+            (vorschlag.ergebnisStapelB.ergebnis ?? 0)
+          }}
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="bg-grey-lighten-3">
+        <td>D</td>
+        <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
+        <td class="font-weight-bold text-right">{{ totalSum }}</td>
+      </tr>
+    </tfoot>
+  </v-table>
 </template>
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
@@ -51,9 +49,11 @@ const props = defineProps({
   },
 });
 
-const sortedModelValue = sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
-  props.ergebnisseAndWahlvorschlaege
-);
+const sortedModelValue = computed(() => {
+  return sortMbwErgebnisseAndWahlvorschlagByOrdnungszahl(
+    props.ergebnisseAndWahlvorschlaege
+  );
+});
 
 const totalSum = computed(() => {
   let total = 0;

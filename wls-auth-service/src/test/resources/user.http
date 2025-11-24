@@ -5,3 +5,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 ### unlock user "wls_all_uwb"; dummy data are prepared that this works for the first time only
 POST {{ WLS_AUTH_SERVICE }}/user/wls_all_uwb/unlock
 Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET logout url
+GET {{ WLS_AUTH_SERVICE}}/authserver/logouturl
+Authorization: Bearer {{$auth.token("auth-service")}}

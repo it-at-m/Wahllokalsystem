@@ -1,9 +1,11 @@
+import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { ref } from "vue";
 
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
+import { useAWerteService } from "@/composables/ergebnismeldung/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
@@ -12,6 +14,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 const { postErgebnisse, getErgebnisse } = useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
+const { getAWerte } = useAWerteService();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -87,6 +90,24 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return ergebnisse;
   }
 
+  async function getAWerteForWahlbezirkAndWahl(): Promise<AWerte> {
+    let aWerte;
+    try {
+      aWerte = await getAWerte(wahlbezirkID, false);
+    } catch {
+      throw new Error(`Fehler beim Laden der AWerte`);
+    }
+
+    const filteredAWert = aWerte.find(
+      ({ bezirkUndWahlID }) => bezirkUndWahlID.wahlID === wahlID
+    );
+
+    if (!filteredAWert) {
+      throw new Error(`Kein AWert gefunden für wahlID: ${wahlID}`);
+    }
+    return filteredAWert;
+  }
+
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -121,5 +142,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     isErgebnisseSaving,
     saveGueltigeErgebnisse,
     loadAndCombineErgebnisseAndWahlvorschlaege,
+    getAWerteForWahlbezirkAndWahl,
   };
 }

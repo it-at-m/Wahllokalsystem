@@ -26,7 +26,8 @@ on:
         description: 'optional: gittag'
       javaVersion:
         required: false
-        default: 17
+        type: string
+        default: '17'
         description: "optional: java version für den Build"
 
 jobs:

@@ -13,6 +13,7 @@ import {
   mdiHelpCircleOutline,
   mdiHome,
   mdiInformationOutline,
+  mdiLogout,
   mdiMapSearch,
   mdiPencil,
   mdiPhone,
@@ -70,6 +71,7 @@ export default createVuetify({
       alert: mdiAlert,
       continue: mdiArrowRightBold,
       cloudUpload: mdiCloudUpload,
+      logout: mdiLogout,
     },
     sets: {
       mdi,

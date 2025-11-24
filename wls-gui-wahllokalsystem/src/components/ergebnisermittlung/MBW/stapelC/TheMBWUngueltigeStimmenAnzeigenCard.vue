@@ -2,10 +2,10 @@
   <v-card class="ma-5">
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
-      <v-table>
+      <v-table class="schnellmeldung-table">
         <tbody class="bottom-border-black">
           <tr>
-            <td class="schnellmeldung-first-column-width" />
+            <td class="schnellmeldung-first-column" />
             <td />
             <td class="font-weight-bold text-right">Insgesamt</td>
           </tr>
@@ -47,8 +47,3 @@ onMounted(async () => {
   ungueltigeStimmen.value = result?.ergebnisse[0]?.ergebnis || 0;
 });
 </script>
-<style scoped>
-.schnellmeldung-first-column-width {
-  width: 150px;
-}
-</style>

@@ -1,8 +1,8 @@
 <template>
-  <v-table>
+  <v-table class="schnellmeldung-table">
     <thead>
       <tr>
-        <th />
+        <th class="schnellmeldung-first-column" />
         <th class="font-weight-bold text-left">Wahlvorschlag</th>
         <th class="font-weight-bold text-right">Insgesamt</th>
       </tr>

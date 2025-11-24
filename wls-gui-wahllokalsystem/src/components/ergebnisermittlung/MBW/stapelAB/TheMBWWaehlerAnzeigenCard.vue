@@ -1,25 +1,29 @@
 <template>
-  <v-card>
+  <div>
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
         <tbody>
           <tr
-            v-for="(row, index) in rows"
-            :key="index"
+            v-for="(row, idx) in rows"
+            :key="idx"
           >
             <td
-              v-for="(value, idx) in row"
-              :key="idx"
+              v-for="(value, index1) in row"
+              :key="index1"
+              :class="{ 'text-right': index1 === 2 }"
             >
               {{ value }}
             </td>
           </tr>
           <tr class="bg-grey-lighten-3">
             <td
-              v-for="(value, index) in resultRow"
-              :key="index"
-              class="font-weight-bold"
+              v-for="(value, index2) in resultRow"
+              :key="index2"
+              :class="[
+                { 'font-weight-bold': true },
+                { 'text-right': index2 === 2 },
+              ]"
             >
               {{ value }}
             </td>
@@ -27,7 +31,7 @@
         </tbody>
       </v-table>
     </v-card-text>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">

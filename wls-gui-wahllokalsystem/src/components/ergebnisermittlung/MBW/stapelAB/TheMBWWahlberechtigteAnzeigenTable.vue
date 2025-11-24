@@ -1,33 +1,29 @@
 <template>
-  <v-container>
-    <v-table>
-      <tbody>
-        <tr>
-          <td>A1</td>
-          <td>Wahlberechtigte ohne Sperrvermerk "W" (Wahlschein)</td>
-          <td class="text-right">
-            {{ wahlberechtigte.a1 }}
-          </td>
-        </tr>
-        <tr>
-          <td>A2</td>
-          <td>Wahlberechtigte mit Sperrvermerk "W" (Wahlschein)</td>
-          <td class="text-right">
-            {{ wahlberechtigte.a2 ?? 0 }}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td class="font-weight-bold">A1 + A2</td>
-          <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
-          <td class="font-weight-bold text-right">
-            {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}
-          </td>
-        </tr>
-      </tfoot>
-    </v-table>
-  </v-container>
+  <v-table>
+    <tbody>
+      <tr>
+        <td>A1</td>
+        <td>Wahlberechtigte ohne Sperrvermerk "W" (Wahlschein)</td>
+        <td class="text-right">
+          {{ wahlberechtigte.a1 }}
+        </td>
+      </tr>
+      <tr>
+        <td>A2</td>
+        <td>Wahlberechtigte mit Sperrvermerk "W" (Wahlschein)</td>
+        <td class="text-right">
+          {{ wahlberechtigte.a2 ?? 0 }}
+        </td>
+      </tr>
+      <tr class="bg-grey-lighten-3">
+        <td class="font-weight-bold">A1 + A2</td>
+        <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
+        <td class="font-weight-bold text-right">
+          {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 <script setup lang="ts">
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";

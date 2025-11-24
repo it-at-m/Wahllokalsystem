@@ -16,7 +16,7 @@
               {{ value }}
             </td>
           </tr>
-          <tr class="bg-grey-lighten-3">
+          <tr>
             <td
               v-for="(value, index2) in resultRow"
               :key="index2"

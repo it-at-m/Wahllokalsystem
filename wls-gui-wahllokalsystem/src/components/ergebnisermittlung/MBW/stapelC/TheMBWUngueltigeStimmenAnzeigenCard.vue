@@ -11,7 +11,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-grey-lighten-3">
+          <tr>
             <td class="font-weight-bold">C</td>
             <td class="font-weight-bold">Ungültige Stimmen</td>
             <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>

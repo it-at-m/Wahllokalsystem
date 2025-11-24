@@ -15,7 +15,7 @@
           {{ wahlberechtigte.a2 ?? 0 }}
         </td>
       </tr>
-      <tr class="bg-grey-lighten-3">
+      <tr>
         <td class="font-weight-bold">A1 + A2</td>
         <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
         <td class="font-weight-bold text-right">

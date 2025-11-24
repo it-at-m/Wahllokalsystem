@@ -23,7 +23,7 @@
       </tr>
     </tbody>
     <tfoot>
-      <tr class="bg-grey-lighten-3">
+      <tr>
         <td>D</td>
         <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
         <td class="font-weight-bold text-right">{{ totalSum }}</td>

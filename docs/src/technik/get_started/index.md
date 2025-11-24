@@ -18,7 +18,7 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 ![Aufteilung Komponenten auf dem Entwicklungs-PC](/developmentPCEnvironment.png)
 
 Auf dem Entwicklungs-PC müssen Container ausführbar sein. Einige Komponenten, die zur Ausführung des Systems
-notwendig sind, liegen nur als Image vor. Die Komponenten sind mit dem Stereotyp `podman only` markiert. Alle
+notwendig sind, liegen nur als Image vor. Die Komponenten sind mit `podman only` markiert. Alle
 anderen Komponenten liegen sowohl als Image als auch anderweitig startbar vor. Die Microservices können über Skripte
 oder `Run Configurations` (IntelliJ) ausgeführt werden.
 

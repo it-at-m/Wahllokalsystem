@@ -19,11 +19,12 @@ export function useLogoutService() {
 
   async function logout() {
     try {
-      const authServerLogoutUrlResponse =
+      const logoutUrl = (
         await authServerControllerApi.getLogoutUrl(
           axiosConfigWrapper().requestAsOnlineOnly()
-        );
-      const request = new Request(authServerLogoutUrlResponse.data.url, {
+        )
+      ).data.url;
+      const request = new Request(logoutUrl, {
         method: "GET",
         credentials: "include",
       });

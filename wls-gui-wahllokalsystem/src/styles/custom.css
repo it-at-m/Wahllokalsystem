@@ -1,12 +1,11 @@
+/* #1537 */
 .stimmabgabevermerke-table {
   table-layout: fixed;
   width: 100%;
 }
-
 .stimmabgabevermerke-table thead th.sav-first-column {
   min-width: 150px;
 }
-
 .stimmabgabevermerke-table .dynamic-column {
   min-width: 300px;
 }

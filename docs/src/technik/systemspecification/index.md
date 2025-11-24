@@ -62,3 +62,12 @@ flowchart TD
 Das WLS besteht aus 3 Arten von Komponenten. Die **Frontends** stellen das Userinterface für die Benutzer dar.
 Über die **Apigateways** wird der Zugriff auf die **Backendservices** ermöglicht, welche die Anwendungslogik
 umsetzen und sich um die Datenhaltung kümmern.
+
+### Architektur der Laufzeitumgebung
+
+![Architektur der Laufzeitumgebung](/RuntimeEnvironment.png)
+
+Das Wahllokalsystem wird in OpenShift betrieben. Der Zugriff auf den Cluster erfolgt über die Routes (Reverse Proxy)
+mittels HTTPS. Innerhalb des Clusters wird über HTTP kommuniziert.
+
+Die Datenbank der Services ist nicht Teil des Clusters, sondern befindet sich separat.

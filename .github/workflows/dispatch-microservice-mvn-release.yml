@@ -14,6 +14,7 @@ on:
         type: choice
         description: service/directory to build (wls-broadcast-service, ...)
         options:
+          - wls-api-gateway
           - wls-admin-service
           - wls-auth-service
           - wls-basisdaten-service

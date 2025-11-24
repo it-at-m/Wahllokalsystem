@@ -7,7 +7,7 @@ Der Zugriff auf das Wahllokalsystem soll über eine gesicherte Verbindung erfolg
 kommen Reverse-Proxies zum Einsatz, die eine HTTPS-Verbindung verlangen, aber mit den Services dann via HTTP
 kommunizieren. Für die HTTPS-Verbindungen müssen die Reverse-Proxies entsprechend Zertifikate bereitstellen.
 
-Die Verwendung der Zertifikate ist in der Konfiguration des Nginx (`nginx.conf`) vorgenommen.
+Die Verwendung der Zertifikate ist in der Konfiguration des Nginx (`nginx.conf`) zu finden.
 
 ## Zertifikat erstellen
 

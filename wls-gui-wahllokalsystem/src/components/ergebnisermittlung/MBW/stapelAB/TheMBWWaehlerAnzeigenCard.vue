@@ -3,7 +3,7 @@
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody>
+        <tbody class="bottom-border-black">
           <tr
             v-for="(row, idx) in rows"
             :key="idx"
@@ -16,6 +16,8 @@
               {{ value }}
             </td>
           </tr>
+        </tbody>
+        <tfoot>
           <tr>
             <td
               v-for="(value, index2) in resultRow"
@@ -28,7 +30,7 @@
               {{ value }}
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </v-table>
     </v-card-text>
   </v-card>

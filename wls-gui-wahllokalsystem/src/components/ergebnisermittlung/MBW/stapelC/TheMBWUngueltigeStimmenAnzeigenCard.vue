@@ -3,20 +3,20 @@
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
-        <thead>
+        <tbody class="bottom-border-black">
           <tr>
-            <th />
-            <th />
-            <th class="font-weight-bold text-right">Insgesamt</th>
+            <td class="schnellmeldung-first-column-width" />
+            <td />
+            <td class="font-weight-bold text-right">Insgesamt</td>
           </tr>
-        </thead>
-        <tbody>
+        </tbody>
+        <tfoot>
           <tr>
             <td class="font-weight-bold">C</td>
             <td class="font-weight-bold">Ungültige Stimmen</td>
             <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>
           </tr>
-        </tbody>
+        </tfoot>
       </v-table>
     </v-card-text>
   </v-card>
@@ -47,3 +47,8 @@ onMounted(async () => {
   ungueltigeStimmen.value = result?.ergebnisse[0]?.ergebnis || 0;
 });
 </script>
+<style scoped>
+.schnellmeldung-first-column-width {
+  width: 150px;
+}
+</style>

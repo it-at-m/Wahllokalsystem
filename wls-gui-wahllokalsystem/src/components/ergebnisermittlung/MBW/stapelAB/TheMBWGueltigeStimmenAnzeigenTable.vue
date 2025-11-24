@@ -7,7 +7,7 @@
         <th class="font-weight-bold text-right">Insgesamt</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="bottom-border-black">
       <tr
         v-for="vorschlag in sortedModelValue"
         :key="vorschlag.wahlvorschlag.identifikator"

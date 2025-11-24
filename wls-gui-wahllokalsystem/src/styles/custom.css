@@ -11,8 +11,11 @@
   min-width: 300px;
 }
 
-/* #2085 */
+.bottom-border-black tr:last-child td {
+  border-bottom: 1px solid black;
+}
 
+/* #2085 */
 .v-autocomplete__selection,
 .v-autocomplete .v-autocomplete__selection-text {
   white-space: normal;
@@ -20,6 +23,7 @@
   word-break: break-word;
 }
 
+/* #1765 */
 .v-btn.v-btn--active:hover > .v-btn__overlay,
 .v-btn.v-btn--active:focus > .v-btn__overlay {
   opacity: 0.01;

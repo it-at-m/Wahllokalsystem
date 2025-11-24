@@ -24,7 +24,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td>D</td>
+        <td class="font-weight-bold">D</td>
         <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
         <td class="font-weight-bold text-right">{{ totalSum }}</td>
       </tr>

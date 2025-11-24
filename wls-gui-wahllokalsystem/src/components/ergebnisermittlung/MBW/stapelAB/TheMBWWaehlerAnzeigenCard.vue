@@ -76,7 +76,7 @@ const rows = computed(() =>
 );
 const resultRow = computed(() =>
   isUWB.value
-    ? ["B1+B2", "Wähler insgesamt", b1.value + b2.value]
+    ? ["B1 + B2", "Wähler insgesamt", b1.value + b2.value]
     : ["B", "Wähler insgesamt", b.value]
 );
 

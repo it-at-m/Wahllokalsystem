@@ -1,6 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="GatewayWlsGui - local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
     <option name="ACTIVE_PROFILES" value="local" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.config.additional-location" />
+        <option name="value" value="../stack/gateway_config_wls/application-routes.yml" />
+      </param>
+    </additionalParameters>
     <module name="wls-api-gateway" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.refarch.gateway.ApiGatewayApplication" />
     <option name="VM_PARAMETERS" value="-Djavax.net.ssl.trustStore=./../stack/reverse-proxy-auth-service/ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12" />

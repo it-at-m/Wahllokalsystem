@@ -104,7 +104,7 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 | Name                                               | Beschreibung                                                                                      | Default                                                     |
 |----------------------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| cors.allowedOrigins                                | Liste mit erlaubten Origins für CORS. Ist eine Liste von Werten.                                  | `http://localhost:8083`, `http://host.docker.internal:8083` |
+| cors.allowedOrigins                                | Liste mit erlaubten Origins für CORS.                                                             | `http://localhost:8083`, `http://host.docker.internal:8083` |
 | crypto.encryptionPrefix                            | String vor dem verschlüssten Wert. Auf diese Weise sind verschlüsselte Werte erkennbar            | ENCRYPTED:                                                  |
 | crypto.key                                         | Schlüssel zum ver- und entschlüsseln                                                              |                                                             |
 | falscheLoginZeitstrafe                             | Zeit in Minuten für eine Sperrung                                                                 | 10                                                          |

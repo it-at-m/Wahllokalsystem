@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-card class="ma-5">
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
@@ -19,7 +19,7 @@
         </tbody>
       </v-table>
     </v-card-text>
-  </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">

@@ -1,12 +1,15 @@
 <template>
-  <div v-if="isUWB">
+  <v-card
+    v-if="isUWB"
+    class="ma-5"
+  >
     <v-card-title> Wahlberechtigte laut Wählerverzeichnis </v-card-title>
     <v-card-text>
       <the-mbw-wahlberechtigte-anzeigen-table
         :wahlberechtigte="wahlberechtigte"
       />
     </v-card-text>
-  </div>
+  </v-card>
 </template>
 <script setup lang="ts">
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";

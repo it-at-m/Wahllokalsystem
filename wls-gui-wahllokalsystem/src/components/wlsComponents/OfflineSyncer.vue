@@ -45,7 +45,7 @@ import { mergeProps, ref } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
 import { useTaskManager } from "@/composables/tasks/taskManager.ts";
-import {useUserStore} from "@/stores/userStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { getSyncTasks } = useDataSyncer();
 const { cryptoKey, iv } = useUserStore();

@@ -1,18 +1,20 @@
-import type {IndexDBValue} from "@/types/indexDB/IndexDBValue.ts";
+import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 
 import axios from "axios";
 
-import {basicPostConfig} from "@/api/axios-utils.ts";
-import {useIndexDB} from "@/composables/indexDB/indexDB.ts";
-import {useIndexDBUtils} from "@/composables/indexDB/indexDBUtils.ts";
-import {FetchStrategiesEnum} from "@/types/api/FetchStrategiesEnum.ts";
+import { basicPostConfig } from "@/api/axios-utils.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
 const { getDirtyItems } = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
-  async function getSyncTasks(cryptoKey: CryptoKey | undefined, vector: Uint8Array<ArrayBuffer>) {
-    console.debug("dataSyncer: ", cryptoKey);
+  async function getSyncTasks(
+    cryptoKey: CryptoKey,
+    vector: Uint8Array<ArrayBuffer>
+  ) {
     const itemsToSync = await getDirtyItems(cryptoKey, vector);
     itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({

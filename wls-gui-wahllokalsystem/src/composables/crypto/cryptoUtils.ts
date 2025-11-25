@@ -1,25 +1,41 @@
 export function useCryptoUtils() {
+  const algorithm = "AES-GCM";
 
-  /*async function encrypt(data: string | undefined, pin: string) {
-    console.debug("Encrypt with pin: ", pin);
+  async function encrypt(
+    data: string | undefined,
+    key: CryptoKey,
+    iv: Uint8Array<ArrayBuffer>
+  ) {
     return await crypto.subtle.encrypt(
-      algorithm,
+      { name: algorithm, iv },
       key,
       new TextEncoder().encode(data)
     );
   }
 
-  async function decrypt(data: ArrayBuffer, pin: string) {
-    console.debug("Decrypt with pin: ", pin);
-    console.debug("Key:", key);
-    console.debug("algorithm:", algorithm);
-    console.debug("data:", data);
-    return await crypto.subtle.decrypt(
-      algorithm,
+  async function decrypt(
+    data: ArrayBuffer | string | null,
+    key: CryptoKey | undefined,
+    iv: Uint8Array<ArrayBuffer>
+  ) {
+    if (!key) {
+      throw new Error(
+        "Entschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+      );
+    }
+    let dataBuffer: ArrayBuffer;
+    if (typeof data === "string") {
+      dataBuffer = _base64ToArrayBuffer(data);
+    } else {
+      dataBuffer = data ?? new ArrayBuffer();
+    }
+    const result = await crypto.subtle.decrypt(
+      { name: algorithm, iv },
       key,
-      data
+      dataBuffer
     );
-  }*/
+    return new TextDecoder("utf-8").decode(result);
+  }
 
   async function importKey(password: string) {
     const keyMaterial = await crypto.subtle.importKey(
@@ -39,15 +55,30 @@ export function useCryptoUtils() {
         hash: "SHA-256",
       },
       keyMaterial,
-      { name: "AES-GCM", length: 256 },
+      { name: algorithm, length: 256 },
       false,
       ["encrypt", "decrypt"]
     );
   }
 
+  function createIV() {
+    return crypto.getRandomValues(new Uint8Array(12));
+  }
+
+  function _base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
   return {
-    /*encrypt,
-    decrypt,*/
+    encrypt,
+    decrypt,
     importKey,
+    createIV,
   };
 }

@@ -4,13 +4,13 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
-import {useCryptoUtils} from "@/composables/crypto/cryptoUtils.ts";
 
 const { getUser } = useUserService();
-const { importKey } = useCryptoUtils();
+const { importKey, createIV } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
@@ -50,8 +50,7 @@ export const useUserStore = defineStore("user", () => {
       }
     } finally {
       cryptoKey.value = await importKey(user.value.pin);
-      iv.value = crypto.getRandomValues(new Uint8Array(12));
-      console.debug("userStore: ", cryptoKey.value);
+      iv.value = createIV();
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: "PIN",

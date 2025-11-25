@@ -1,5 +1,6 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
 import {
   afterAll,
@@ -30,9 +31,18 @@ vi.mock("@/api/axios-utils.ts", () => ({
 }));
 
 const { prepareIndexDBValue } = useIndexDBValueTestDataFactory();
+const { generateRandomNumber } = useCommonTestDataFactory();
 
 describe("dataSyncer.ts", () => {
   let unitUnderTest: ReturnType<typeof useDataSyncer>;
+
+  const mockKey: CryptoKey = {
+    algorithm: { name: "AES-GCM", length: 256 },
+    extractable: true,
+    type: "secret",
+    usages: ["encrypt", "decrypt"],
+  } as CryptoKey;
+  const mockIV = new Uint8Array(new ArrayBuffer(generateRandomNumber(1)));
 
   beforeEach(() => {
     unitUnderTest = useDataSyncer();
@@ -52,7 +62,7 @@ describe("dataSyncer.ts", () => {
         createUnOrderedSetOfItemsToSync()
       );
 
-      const result = await unitUnderTest.getSyncTasks();
+      const result = await unitUnderTest.getSyncTasks(mockKey, mockIV);
       const taskNames = result.map((task: Task) => task.name);
 
       expect(taskNames).toStrictEqual([
@@ -68,7 +78,7 @@ describe("dataSyncer.ts", () => {
     it("should_returnEmptyArray_when_noDirtyItemsAreGiven", async () => {
       mockDefinitions.getDirtyItems.mockResolvedValue([]);
 
-      const result = await unitUnderTest.getSyncTasks();
+      const result = await unitUnderTest.getSyncTasks(mockKey, mockIV);
 
       expect(result).toStrictEqual([]);
     });
@@ -80,7 +90,7 @@ describe("dataSyncer.ts", () => {
         { key, item: prepareIndexDBValue().data(`"${data}"`).build() },
       ]);
 
-      const result = await unitUnderTest.getSyncTasks();
+      const result = await unitUnderTest.getSyncTasks(mockKey, mockIV);
       await result[0]?.callback();
 
       expect(mockDefinitions.basicPostConfig.mock.calls).toStrictEqual([

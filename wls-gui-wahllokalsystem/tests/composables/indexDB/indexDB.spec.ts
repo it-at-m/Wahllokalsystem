@@ -1,5 +1,6 @@
 import type { MockInstance } from "vitest";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
 import localforage from "localforage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -7,12 +8,33 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 const { prepareIndexDBValue } = useIndexDBValueTestDataFactory();
+const { generateRandomNumber } = useCommonTestDataFactory();
+
+const mockDefinitions = vi.hoisted(() => ({
+  decrypt: vi.fn(),
+  encrypt: vi.fn(),
+}));
 
 vi.mock("localforage");
+
+vi.mock("@/composables/crypto/cryptoUtils.ts", () => ({
+  useCryptoUtils: () => ({
+    decrypt: mockDefinitions.decrypt,
+    encrypt: mockDefinitions.encrypt,
+  }),
+}));
 
 describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
+
+  const mockKey: CryptoKey = {
+    algorithm: { name: "AES-GCM", length: 256 },
+    extractable: true,
+    type: "secret",
+    usages: ["encrypt", "decrypt"],
+  } as CryptoKey;
+  const mockIV = new Uint8Array(new ArrayBuffer(generateRandomNumber(1)));
 
   beforeEach(() => {
     unitUnderTest = useIndexDB();
@@ -49,7 +71,13 @@ describe("indexDB.ts", () => {
         });
       });
 
-      const result = await unitUnderTest.getDirtyItems();
+      mockDefinitions.decrypt.mockImplementation((data) => {
+        return data;
+      });
+
+      const result = await unitUnderTest.getDirtyItems(mockKey, mockIV);
+
+      expect(mockDefinitions.decrypt).toHaveBeenCalledTimes(2);
 
       expect(result).toEqual([
         { key: "key1", item: indexDBValueDirty1 },
@@ -69,7 +97,7 @@ describe("indexDB.ts", () => {
         });
       });
 
-      const result = await unitUnderTest.getDirtyItems();
+      const result = await unitUnderTest.getDirtyItems(mockKey, mockIV);
 
       expect(result).toEqual([]);
     });
@@ -124,7 +152,13 @@ describe("indexDB.ts", () => {
       const key = "test";
       const data = prepareIndexDBValue().build();
 
+      mockDefinitions.encrypt.mockImplementation((data) => {
+        return data;
+      });
+
       await unitUnderTest.storeItem(key, data);
+
+      expect(mockDefinitions.encrypt).toHaveBeenCalled();
 
       expect(localforage.setItem).toHaveBeenCalledWith(key, data);
     });

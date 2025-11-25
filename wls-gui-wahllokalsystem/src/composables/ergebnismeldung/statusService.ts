@@ -1,3 +1,5 @@
+import type { Status } from "@/types/ergebnismeldung/Status.ts";
+
 import {
   Configuration,
   StatusControllerApi,
@@ -12,7 +14,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useStatusService() {
   const { getNullOn204OrElseResponseData } = useCommonApiUtils();
   const { addNotification } = useUserNotificationService();
-  const { toModel } = useStatusMapper();
+  const { toModel, toDto } = useStatusMapper();
 
   const statusControllerApi = new StatusControllerApi(
     new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
@@ -52,7 +54,35 @@ export function useStatusService() {
     }
   }
 
+  async function postStatus(
+    wahlID: string,
+    wahlbezirkID: string,
+    status: Status,
+    sendNotification = true
+  ) {
+    const { wahlenActions } = useWahlenStore();
+    const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";
+    try {
+      await statusControllerApi.setStatus(wahlID, wahlbezirkID, toDto(status));
+      if (sendNotification) {
+        addNotification(
+          `Status für ${wahlname} erfolgreich gespeichert.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch {
+      if (sendNotification) {
+        addNotification(
+          `Fehler beim Speichern des Status für ${wahlname}.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw new Error(`Post Status für ${wahlname} failed.`);
+    }
+  }
+
   return {
     getStatus,
+    postStatus,
   };
 }

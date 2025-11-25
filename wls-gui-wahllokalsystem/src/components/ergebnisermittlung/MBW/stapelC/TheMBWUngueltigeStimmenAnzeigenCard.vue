@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table class="schnellmeldung-table">

@@ -1,8 +1,5 @@
 <template>
-  <v-card
-    v-if="isUWB"
-    class="ma-5"
-  >
+  <v-card v-if="isUWB">
     <v-card-title> Wahlberechtigte laut Wählerverzeichnis </v-card-title>
     <v-card-text>
       <the-mbw-wahlberechtigte-anzeigen-table

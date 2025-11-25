@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-5">
+  <v-card>
     <v-card-title> Gültige Stimmen </v-card-title>
     <v-card-text>
       <the-m-b-w-gueltige-stimmen-anzeigen-table

@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
-      <v-table class="schnellmeldung-table">
+      <v-table>
         <tbody class="bottom-border-black">
           <tr
             v-for="(row, idx) in rows"
@@ -12,7 +12,7 @@
               v-for="(value, index1) in row"
               :key="index1"
               :class="[
-                { 'schnellmeldung-first-column': index1 === 0 },
+                { 'index-column': index1 === 0 },
                 { 'text-right': index1 === 2 },
               ]"
             >

@@ -11,7 +11,7 @@
 }
 
 /* #1946 */
-.schnellmeldung-table tbody td.schnellmeldung-first-column {
+.index-column {
   width: 150px;
 }
 .bottom-border-black tr:last-child td {

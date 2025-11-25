@@ -1,8 +1,8 @@
 <template>
-  <v-table class="schnellmeldung-table">
+  <v-table>
     <tbody class="bottom-border-black">
       <tr>
-        <td class="schnellmeldung-first-column">A1</td>
+        <td class="index-column">A1</td>
         <td>Wahlberechtigte ohne Sperrvermerk "W" (Wahlschein)</td>
         <td class="text-right">
           {{ wahlberechtigte.a1 }}

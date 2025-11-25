@@ -2,10 +2,10 @@
   <v-card>
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
-      <v-table class="schnellmeldung-table">
+      <v-table>
         <tbody class="bottom-border-black">
           <tr>
-            <td class="schnellmeldung-first-column" />
+            <td class="index-column" />
             <td />
             <td class="font-weight-bold text-right">Insgesamt</td>
           </tr>

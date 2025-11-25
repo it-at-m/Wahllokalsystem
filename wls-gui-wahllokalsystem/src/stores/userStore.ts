@@ -44,6 +44,13 @@ export const useUserStore = defineStore("user", () => {
         user.value = defaultUser;
         throw e;
       }
+    } finally {
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: "PIN",
+          payload: user.value.pin,
+        });
+      }
     }
   }
 

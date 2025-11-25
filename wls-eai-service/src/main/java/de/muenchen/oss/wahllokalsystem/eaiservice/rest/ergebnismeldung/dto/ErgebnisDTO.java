@@ -7,6 +7,6 @@ public record ErgebnisDTO(@NotNull String stimmenart,
                           @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long wahlvorschlagsordnungszahl,
                           @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long ergebnis,
                           @NotNull String wahlvorschlagID,
-                          @NotNull String kandidatID
+                          String kandidatID
 ) {
 }

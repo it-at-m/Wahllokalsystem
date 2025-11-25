@@ -18,7 +18,6 @@ public class UngueltigeStimmzettel {
 
     private Long anzahl;
 
-    @NotNull
     private String wahlvorschlagID;
 
 }

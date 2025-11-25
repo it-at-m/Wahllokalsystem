@@ -24,7 +24,6 @@ public class Ergebnis {
     @NotNull
     private String wahlvorschlagID;
 
-    @NotNull
     private String kandidatID;
 
 }

@@ -7,8 +7,10 @@ import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import {useCryptoUtils} from "@/composables/crypto/cryptoUtils.ts";
 
 const { getUser } = useUserService();
+const { importKey } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
@@ -32,6 +34,8 @@ export const useUserStore = defineStore("user", () => {
     ],
   };
   const user = ref<User>(defaultUser);
+  const cryptoKey = ref();
+  const iv = ref();
 
   async function loadUser() {
     try {
@@ -45,10 +49,17 @@ export const useUserStore = defineStore("user", () => {
         throw e;
       }
     } finally {
+      cryptoKey.value = await importKey(user.value.pin);
+      iv.value = crypto.getRandomValues(new Uint8Array(12));
+      console.debug("userStore: ", cryptoKey.value);
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: "PIN",
-          payload: user.value.pin,
+          payload: cryptoKey.value,
+        });
+        navigator.serviceWorker.controller.postMessage({
+          type: "IV",
+          payload: iv.value,
         });
       }
     }
@@ -111,6 +122,8 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     user,
+    cryptoKey,
+    iv,
     loadUser,
     setUser,
     getWahlbezirkIdFromWahlMetaDataByWahlId,

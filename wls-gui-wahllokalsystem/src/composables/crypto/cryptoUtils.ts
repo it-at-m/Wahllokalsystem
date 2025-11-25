@@ -1,22 +1,6 @@
-
-//let key: CryptoKey;
-/*let pin = "";
-
-self.addEventListener("message", async function (event) {
-  if (event.data.type === "PIN") {
-    pin = event.data.payload;
-    console.debug("PIN: ", pin);
-
-  }
-});*/
-
 export function useCryptoUtils() {
 
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const algorithm = { name: "AES-GCM", iv };
-
-  async function encrypt(data: string | undefined, pin: string) {
-    const key = await _importKey(pin);
+  /*async function encrypt(data: string | undefined, pin: string) {
     console.debug("Encrypt with pin: ", pin);
     return await crypto.subtle.encrypt(
       algorithm,
@@ -26,7 +10,6 @@ export function useCryptoUtils() {
   }
 
   async function decrypt(data: ArrayBuffer, pin: string) {
-    const key = await _importKey(pin);
     console.debug("Decrypt with pin: ", pin);
     console.debug("Key:", key);
     console.debug("algorithm:", algorithm);
@@ -36,9 +19,9 @@ export function useCryptoUtils() {
       key,
       data
     );
-  }
+  }*/
 
-  async function _importKey(password: string) {
+  async function importKey(password: string) {
     const keyMaterial = await crypto.subtle.importKey(
       "raw",
       new TextEncoder().encode(password),
@@ -63,7 +46,8 @@ export function useCryptoUtils() {
   }
 
   return {
-    encrypt,
-    decrypt,
+    /*encrypt,
+    decrypt,*/
+    importKey,
   };
 }

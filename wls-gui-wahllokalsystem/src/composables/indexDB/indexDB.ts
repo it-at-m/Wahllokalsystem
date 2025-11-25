@@ -3,19 +3,19 @@ import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import localforage from "localforage";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import {useCryptoUtils} from "@/composables/crypto/cryptoUtils.ts";
 
 const { logError } = useLogging(useIndexDB.name);
-//const { encrypt, decrypt } = useCryptoUtils();
 
 export function useIndexDB() {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
   let cryptoKey: CryptoKey;
+  let iv: Uint8Array<ArrayBuffer>;
 
-  self.addEventListener("message", async function (event) {
+  self.addEventListener("message", function (event) {
     if (event.data.type === "PIN") {
-      console.debug("PIN: ", event.data.payload);
-      cryptoKey = await _importKey(event.data.payload);
+      cryptoKey = event.data.payload;
+    }
+    if (event.data.type === "IV") {
+      iv = event.data.payload;
     }
   });
 
@@ -28,12 +28,12 @@ export function useIndexDB() {
     }
   }
 
-  async function getDirtyItems() {
+  async function getDirtyItems(cKey: CryptoKey | undefined, vector: Uint8Array<ArrayBuffer>) {
     const matchingItems: {
       key: string;
       item: IndexDBValue;
     }[] = [];
-    console.debug("CryptoKey start getDirtyItems: ", cryptoKey);
+    console.debug("CryptoKey start getDirtyItems: ", cKey);
     await localforage.iterate((value: IndexDBValue, key) => {
       if (value.dirty === true) {
         matchingItems.push({
@@ -44,27 +44,36 @@ export function useIndexDB() {
     });
 
     console.debug("MachtingItems vor der Entschlüsselung: ", matchingItems);
-    await Promise.all(matchingItems.map(async value => ({
-      ...value,
-      data: await _decryptData(value.item.data)
-    })));
-    console.debug("MachtingItems nach der Entschlüsselung: ", matchingItems);
+    let matchingItemsWithDecryptedData: {
+      key: string;
+      item: IndexDBValue;
+    }[] = [];
+    if (cKey) {
+      console.debug("ckey vorhanden: ", cKey);
+      matchingItemsWithDecryptedData = await Promise.all(matchingItems.map(async value => ({
+        key: value.key,
+        item: {
+          ...value.item,
+          data: await _decryptData(value.item.data, cKey, vector)
+        }
+      })));
 
-    return matchingItems;
+    }
+    console.debug("MachtingItems nach der Entschlüsselung: ", matchingItemsWithDecryptedData);
+
+    return matchingItemsWithDecryptedData;
   }
 
   async function storeItem(key: string, data: IndexDBValue) {
     const encrypted = await encrypt(data.data?.toString(), cryptoKey);
     console.debug("Encrypted: ", encrypted);
-    const decrypted = await decrypt(encrypted, cryptoKey);
-    console.debug("Decrypted: ", new TextDecoder('utf-8').decode(decrypted).toString());
 
     await localforage.setItem(key, {...data, data: encrypted});
   }
 
   async function encrypt(data: string | undefined, key: CryptoKey) {
-    //const key = await _importKey(pin);
     console.debug("Encrypt with pin: ", key);
+    console.debug("Encrypted with iv: ", iv);
     return await crypto.subtle.encrypt(
       { name: "AES-GCM", iv },
       key,
@@ -72,24 +81,17 @@ export function useIndexDB() {
     );
   }
 
-  async function decryptData(data: ArrayBuffer) {
-    //return await decrypt(data, pin);
-    //return await decrypt(data, "dummyPin");
-    console.debug(cryptoKey);
-    return await decrypt(data, cryptoKey);
-  }
-
-  async function decrypt(data: ArrayBuffer, key: CryptoKey) {
-    //const key = await _importKey(pin);
+  async function decrypt(data: ArrayBuffer, key: CryptoKey, vector: Uint8Array<ArrayBuffer>) {
     console.debug("Decrypt with pin: ", key);
+    console.debug("Decrypted with iv: ", vector);
     return await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv },
+      { name: "AES-GCM", iv: vector },
       key,
       data
     );
   }
 
-  async function _decryptData(data: ArrayBuffer | string | null) {
+  async function _decryptData(data: ArrayBuffer | string | null, key: CryptoKey, vector: Uint8Array<ArrayBuffer>) {
     let dataBuffer: ArrayBuffer;
     if (typeof data === "string") {
       dataBuffer = _base64ToArrayBuffer(data);
@@ -97,9 +99,9 @@ export function useIndexDB() {
       dataBuffer = data ?? new ArrayBuffer();
     }
     console.debug("vor decryptData: ", dataBuffer);
-    const result = await decryptData(dataBuffer);
-    console.debug("Result: ", result);
-    return new TextDecoder('utf-8').decode(result).toString();
+    const result = await decrypt(dataBuffer, key, vector);
+    console.debug("Decrypted: ", new TextDecoder('utf-8').decode(result));
+    return new TextDecoder('utf-8').decode(result);
   }
 
   function _base64ToArrayBuffer(base64: string): ArrayBuffer {
@@ -110,30 +112,6 @@ export function useIndexDB() {
       bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
-  }
-
-  async function _importKey(password: string) {
-    const keyMaterial = await crypto.subtle.importKey(
-      "raw",
-      new TextEncoder().encode(password),
-      "PBKDF2",
-      false,
-      ["deriveBits", "deriveKey"]
-    );
-
-    const salt = crypto.getRandomValues(new Uint8Array(16));
-    return await crypto.subtle.deriveKey(
-      {
-        name: "PBKDF2",
-        salt: salt,
-        iterations: 100000,
-        hash: "SHA-256",
-      },
-      keyMaterial,
-      { name: "AES-GCM", length: 256 },
-      false,
-      ["encrypt", "decrypt"]
-    );
   }
 
   function setupIndexDB() {
@@ -151,6 +129,5 @@ export function useIndexDB() {
     getItemFromIDB,
     setupIndexDB,
     storeItem,
-    decryptData,
   };
 }

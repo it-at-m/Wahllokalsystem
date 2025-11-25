@@ -6,13 +6,17 @@ import {
   BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
   GetErgebnisseStapelartEnum,
   PostErgebnisseStapelartEnum,
+  SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
+  addNotification: vi.fn(),
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
+  sendErgebnisse: vi.fn(),
   toModel: vi.fn(),
   toDto: vi.fn(),
   toGetErgebnisseStapelartEnum: vi.fn(),
@@ -23,17 +27,27 @@ const mockDefinitions = vi.hoisted(() => ({
   postErgebnisseStapelartEnum: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  ErgebnisseControllerApi: vi.fn().mockImplementation(() => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postErgebnisse: mockDefinitions.postErgebnisse,
-  })),
-  Configuration: mockDefinitions.configurationConstructor,
-  BezirkUndWahlIDStapelartDTOStapelartEnum:
-    mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
-  GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
-  PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
-}));
+vi.mock(
+  "@/api/wls-clients/generated-ergebnismeldung-api",
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...(mod as object),
+      ErgebnisseControllerApi: vi.fn().mockImplementation(() => ({
+        getErgebnisse: mockDefinitions.getErgebnisse,
+        postErgebnisse: mockDefinitions.postErgebnisse,
+      })),
+      ErgebnismeldungControllerApi: vi.fn().mockImplementation(() => ({
+        sendErgebnisse: mockDefinitions.sendErgebnisse,
+      })),
+      Configuration: mockDefinitions.configurationConstructor,
+      BezirkUndWahlIDStapelartDTOStapelartEnum:
+        mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
+      GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
+      PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
+    };
+  }
+);
 vi.mock("@/composables/ergebnismeldung/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
     toModel: mockDefinitions.toModel,
@@ -43,8 +57,14 @@ vi.mock("@/composables/ergebnismeldung/ergebnisMapper.ts", () => ({
       mockDefinitions.toPostErgebnisseStapelartEnum,
   }),
 }));
+vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
+  useUserNotificationService: () => ({
+    addNotification: mockDefinitions.addNotification,
+  }),
+}));
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 const {
   createErgebnisse,
   createErgebnisseDTO,
@@ -55,7 +75,8 @@ const {
 } = useErgebnisseTestDataFactory();
 
 describe("ergebnisService.ts", () => {
-  const { getErgebnisse, postErgebnisse } = useErgebnisService();
+  const { getErgebnisse, postErgebnisse, sendSchnellmeldung } =
+    useErgebnisService();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -194,5 +215,47 @@ describe("ergebnisService.ts", () => {
         postErgebnisse(wahlbezirkID, wahlID, stapelArt, ergebnisse)
       ).rejects.toThrowError();
     });
+  });
+
+  describe("sendSchnellmeldung", () => {
+    it.each([
+      [true, true],
+      [false, false],
+    ])(
+      "should_callClientAndSendSuccessNotification%s_when_clientCallWasSuccessfulAndSendNotificationIs%s",
+      async (sendNotificationParameter, sendNotificationCallIsExpected) => {
+        const wahlID = generateRandomString(10);
+        const wahlbezirkID = generateRandomString(10);
+        const hauptwahlbezirkID = generateRandomString(10);
+        const waehlerverzeichnisNummer = generateRandomNumber(2);
+
+        await sendSchnellmeldung(
+          wahlID,
+          wahlbezirkID,
+          hauptwahlbezirkID,
+          waehlerverzeichnisNummer,
+          sendNotificationParameter
+        );
+
+        expect(mockDefinitions.sendErgebnisse.mock.calls).toStrictEqual([
+          [
+            wahlID,
+            wahlbezirkID,
+            waehlerverzeichnisNummer,
+            SendErgebnisseMeldungsartEnum.V3,
+            hauptwahlbezirkID,
+          ],
+        ]);
+
+        if (sendNotificationCallIsExpected) {
+          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
+          expect(mockDefinitions.addNotification.mock.calls).toEqual([
+            [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+          ]);
+        } else {
+          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
+        }
+      }
+    );
   });
 });

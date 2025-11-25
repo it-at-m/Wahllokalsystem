@@ -41,7 +41,7 @@ onMounted(async () => {
   const result = await getErgebnisse(
     props.wahlbezirkId,
     props.wahlId,
-    StapelArtEnum.MbwD,
+    StapelArtEnum.MbwDUngueltig,
     false
   );
   ungueltigeStimmen.value = result?.ergebnisse[0]?.ergebnis || 0;

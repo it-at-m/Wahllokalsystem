@@ -65,6 +65,8 @@ export function useErgebnisMapper() {
         return GetErgebnisseStapelartEnum.MbwB;
       case StapelArtEnum.MbwD:
         return GetErgebnisseStapelartEnum.MbwD;
+      case StapelArtEnum.MbwDUngueltig:
+        return GetErgebnisseStapelartEnum.MbwDUngueltig;
       case StapelArtEnum.MbwAB:
         return GetErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
@@ -106,6 +108,8 @@ export function useErgebnisMapper() {
         return PostErgebnisseStapelartEnum.MbwB;
       case StapelArtEnum.MbwD:
         return PostErgebnisseStapelartEnum.MbwD;
+      case StapelArtEnum.MbwDUngueltig:
+        return PostErgebnisseStapelartEnum.MbwDUngueltig;
       case StapelArtEnum.MbwAB:
         return PostErgebnisseStapelartEnum.MbwAB;
       case StapelArtEnum.MbwBC:
@@ -174,6 +178,8 @@ export function useErgebnisMapper() {
         return StapelArtEnum.MbwBC;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD:
         return StapelArtEnum.MbwD;
+      case BezirkUndWahlIDStapelartDTOStapelartEnum.MbwDUngueltig:
+        return StapelArtEnum.MbwDUngueltig;
       case BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege:
         return StapelArtEnum.StimmzettelUmschlaege;
       default:
@@ -235,6 +241,8 @@ export function useErgebnisMapper() {
         return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwBC;
       case StapelArtEnum.MbwD:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD;
+      case StapelArtEnum.MbwDUngueltig:
+        return BezirkUndWahlIDStapelartDTOStapelartEnum.MbwDUngueltig;
       case StapelArtEnum.StimmzettelUmschlaege:
         return BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege;
       default:

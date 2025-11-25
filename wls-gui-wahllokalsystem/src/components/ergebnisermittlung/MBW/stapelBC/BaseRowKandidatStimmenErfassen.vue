@@ -6,6 +6,7 @@
       <base-number-input
         v-model="ergebnis.ergebnis"
         :rules="[required, minNumber(0), maxNumber(9999)]"
+        class="styleErgebnisCell"
       />
     </td>
   </tr>
@@ -45,3 +46,9 @@ const laufendeNummer = computed(() =>
   )
 );
 </script>
+
+<style scoped>
+.styleErgebnisCell {
+  min-width: 21em;
+}
+</style>

@@ -12,6 +12,7 @@ import {
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_A_AND_B,
   ROUTE_STAPEL_B,
+  ROUTE_STAPEL_BC,
   ROUTE_STAPEL_C,
   ROUTE_STAPEL_D,
   ROUTE_STIMMABGABE,
@@ -29,6 +30,7 @@ import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelVi
 import MBWNiederschriftView from "@/views/auszaehlung/mbw/MBWNiederschriftView.vue";
 import MBWSchnellmeldungView from "@/views/auszaehlung/mbw/MBWSchnellmeldungView.vue";
 import MBWStapelAandBView from "@/views/auszaehlung/mbw/MBWStapelAandBView.vue";
+import MBWStapelBCView from "@/views/auszaehlung/mbw/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
 import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
 import ObwStapelBView from "@/views/auszaehlung/OBWStapelBView.vue";
@@ -155,6 +157,11 @@ const routes = [
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/schnellmeldung",
     name: ROUTE_SCHNELLMELDUNG,
     component: MBWSchnellmeldungView,
+  },
+  {
+    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelBC",
+    name: ROUTE_STAPEL_BC,
+    component: MBWStapelBCView,
   },
   {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",

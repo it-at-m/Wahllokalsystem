@@ -27,7 +27,7 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
     }
   }
 
-  watch(isOnline, async (oldIsOnline, newIsOnline) => {
+  watch(isOnline, async (newIsOnline, oldIsOnline) => {
     if (!oldIsOnline && newIsOnline) {
       await synchronizeOfflineData();
     }

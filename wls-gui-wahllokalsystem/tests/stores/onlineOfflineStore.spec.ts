@@ -8,17 +8,25 @@ import {
   it,
   vi,
 } from "vitest";
+import { nextTick } from "vue";
 
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postLastSeen: vi.fn(),
+  synchronizeOfflineData: vi.fn(),
 }));
 
 vi.mock("@/composables/monitoring/monitoringService.ts", () => ({
   useMonitoringService: vi.fn().mockImplementation(() => ({
     postLastSeen: mockDefinitions.postLastSeen,
+  })),
+}));
+
+vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
+  useDataSyncer: vi.fn().mockImplementation(() => ({
+    synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
   })),
 }));
 
@@ -117,5 +125,45 @@ describe("onlineOfflineStore.ts", () => {
         expect(unitUnderTest.isCheckingStatus).toStrictEqual(false);
       }
     );
+  });
+
+  describe("triggerSync", () => {
+    it("should_triggerSync_when_switchingFromOfflineToOnline", async () => {
+      unitUnderTest.isOnline = false;
+      await nextTick();
+      unitUnderTest.isOnline = true;
+
+      expect(
+        mockDefinitions.synchronizeOfflineData.mock.calls.length
+      ).toStrictEqual(1);
+    });
+
+    it("should_notTriggerSync_when_switchingFromOnlineToOffline", async () => {
+      unitUnderTest.isOnline = true;
+      await nextTick();
+      unitUnderTest.isOnline = false;
+
+      expect(
+        mockDefinitions.synchronizeOfflineData.mock.calls.length
+      ).toStrictEqual(0);
+    });
+
+    it("should_notTriggerSync_when_stayingOnlineForMultipleChecks", async () => {
+      unitUnderTest.isOnline = true;
+      await nextTick();
+      unitUnderTest.isOnline = true;
+
+      expect(
+        mockDefinitions.synchronizeOfflineData.mock.calls.length
+      ).toStrictEqual(0);
+    });
+
+    it("should_notTriggerSync_when_stayingOfflineForMultipleChecks", () => {
+      unitUnderTest.isOnline = false;
+
+      expect(
+        mockDefinitions.synchronizeOfflineData.mock.calls.length
+      ).toStrictEqual(0);
+    });
   });
 });

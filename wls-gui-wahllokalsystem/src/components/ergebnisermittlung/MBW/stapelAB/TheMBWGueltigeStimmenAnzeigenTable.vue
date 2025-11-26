@@ -2,12 +2,12 @@
   <v-table>
     <thead>
       <tr>
-        <th />
+        <th class="index-column" />
         <th class="font-weight-bold text-left">Wahlvorschlag</th>
         <th class="font-weight-bold text-right">Insgesamt</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="bottom-border-black">
       <tr
         v-for="vorschlag in sortedModelValue"
         :key="vorschlag.wahlvorschlag.identifikator"
@@ -23,8 +23,8 @@
       </tr>
     </tbody>
     <tfoot>
-      <tr class="bg-grey-lighten-3">
-        <td>D</td>
+      <tr>
+        <td class="font-weight-bold">D</td>
         <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
         <td class="font-weight-bold text-right">{{ totalSum }}</td>
       </tr>

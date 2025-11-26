@@ -1,8 +1,8 @@
 <template>
   <v-table>
-    <tbody>
+    <tbody class="bottom-border-black">
       <tr>
-        <td>A1</td>
+        <td class="index-column">A1</td>
         <td>Wahlberechtigte ohne Sperrvermerk "W" (Wahlschein)</td>
         <td class="text-right">
           {{ wahlberechtigte.a1 }}
@@ -15,14 +15,16 @@
           {{ wahlberechtigte.a2 ?? 0 }}
         </td>
       </tr>
-      <tr class="bg-grey-lighten-3">
+    </tbody>
+    <tfoot>
+      <tr>
         <td class="font-weight-bold">A1 + A2</td>
         <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
         <td class="font-weight-bold text-right">
           {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}
         </td>
       </tr>
-    </tbody>
+    </tfoot>
   </v-table>
 </template>
 <script setup lang="ts">

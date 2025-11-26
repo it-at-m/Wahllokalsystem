@@ -257,5 +257,40 @@ describe("ergebnisService.ts", () => {
         }
       }
     );
+
+    it.each([
+      [true, true],
+      [false, false],
+    ])(
+      "should_throwError_when_apiCallFailed",
+      async (sendNotificationParameter, sendNotificationCallIsExpected) => {
+        const wahlID = generateRandomString(10);
+        const wahlbezirkID = generateRandomString(10);
+        const hauptwahlbezirkID = generateRandomString(10);
+        const waehlerverzeichnisNummer = generateRandomNumber(2);
+
+        const mockedApiError = new Error("mocked api call failed");
+        mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
+
+        await expect(
+          sendSchnellmeldung(
+            wahlID,
+            wahlbezirkID,
+            hauptwahlbezirkID,
+            waehlerverzeichnisNummer,
+            sendNotificationParameter
+          )
+        ).rejects.toThrowError(mockedApiError);
+
+        if (sendNotificationCallIsExpected) {
+          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
+          expect(mockDefinitions.addNotification.mock.calls).toEqual([
+            [expect.any(String), UserNotificationCategoryEnum.ERROR],
+          ]);
+        } else {
+          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
+        }
+      }
+    );
   });
 });

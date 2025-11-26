@@ -7,6 +7,7 @@ import {
   VueWrapper,
 } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { defineComponent, h, KeepAlive } from "vue";
 
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
@@ -67,7 +68,9 @@ describe("TheMBWWaehlerAnzeigenCard.vue", () => {
     prepareStimmzettel,
   } = useStimmabgabevermerkeTestDataFactory();
 
-  let wrapper: VueWrapper<InstanceType<typeof TheMBWWaehlerAnzeigenCard>>;
+  let wrapper: VueWrapper<
+    InstanceType<ReturnType<typeof createKeepAliveComponent>>
+  >;
 
   const wahlId = "wahlId";
   const wahlbezirkId = "wahlbezirkId";
@@ -119,7 +122,12 @@ describe("TheMBWWaehlerAnzeigenCard.vue", () => {
         .build()
     );
 
-    wrapper = mount(TheMBWWaehlerAnzeigenCard, {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      wahlId,
+      wahlbezirkId
+    );
+
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -134,9 +142,12 @@ describe("TheMBWWaehlerAnzeigenCard.vue", () => {
       1
     );
 
-    expect(wrapper.vm.b1).toBe(3);
-    expect(wrapper.vm.b2).toBe(2);
-    expect(wrapper.vm.b).toBe(0);
+    const theMBWWaehlerAnzeigenCardComponentWrapper = wrapper.findComponent(
+      TheMBWWaehlerAnzeigenCard
+    );
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b1).toBe(3);
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b2).toBe(2);
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b).toBe(0);
   });
 
   it("should_calculateB_when_wahlbezirksartIsBWB", async () => {
@@ -153,7 +164,12 @@ describe("TheMBWWaehlerAnzeigenCard.vue", () => {
       anzahlWaehler: 4,
     });
 
-    wrapper = mount(TheMBWWaehlerAnzeigenCard, {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      wahlId,
+      wahlbezirkId
+    );
+
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -170,8 +186,25 @@ describe("TheMBWWaehlerAnzeigenCard.vue", () => {
       false
     );
 
-    expect(wrapper.vm.b1).toBe(0);
-    expect(wrapper.vm.b2).toBe(0);
-    expect(wrapper.vm.b).toBe(4);
+    const theMBWWaehlerAnzeigenCardComponentWrapper = wrapper.findComponent(
+      TheMBWWaehlerAnzeigenCard
+    );
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b1).toBe(0);
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b2).toBe(0);
+    expect(theMBWWaehlerAnzeigenCardComponentWrapper.vm.b).toBe(4);
   });
 });
+
+function createKeepAliveComponent(wahlId: string, wahlbezirkId: string) {
+  return defineComponent({
+    render() {
+      return h(KeepAlive, null, {
+        default: () =>
+          h(TheMBWWaehlerAnzeigenCard, {
+            wahlId,
+            wahlbezirkId,
+          }),
+      });
+    },
+  });
+}

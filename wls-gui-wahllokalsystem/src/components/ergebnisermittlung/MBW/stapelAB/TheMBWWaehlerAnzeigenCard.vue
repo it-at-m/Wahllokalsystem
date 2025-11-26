@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <v-card>
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody>
+        <tbody class="bottom-border-black">
           <tr
             v-for="(row, idx) in rows"
             :key="idx"
@@ -11,12 +11,17 @@
             <td
               v-for="(value, index1) in row"
               :key="index1"
-              :class="{ 'text-right': index1 === 2 }"
+              :class="[
+                { 'index-column': index1 === 0 },
+                { 'text-right': index1 === 2 },
+              ]"
             >
               {{ value }}
             </td>
           </tr>
-          <tr class="bg-grey-lighten-3">
+        </tbody>
+        <tfoot>
+          <tr>
             <td
               v-for="(value, index2) in resultRow"
               :key="index2"
@@ -28,10 +33,10 @@
               {{ value }}
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </v-table>
     </v-card-text>
-  </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -71,7 +76,7 @@ const rows = computed(() =>
 );
 const resultRow = computed(() =>
   isUWB.value
-    ? ["B1+B2", "Wähler insgesamt", b1.value + b2.value]
+    ? ["B1 + B2", "Wähler insgesamt", b1.value + b2.value]
     : ["B", "Wähler insgesamt", b.value]
 );
 

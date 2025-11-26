@@ -12,7 +12,7 @@
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 
 import { storeToRefs } from "pinia";
-import { onActivated, onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import TheMbwWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";

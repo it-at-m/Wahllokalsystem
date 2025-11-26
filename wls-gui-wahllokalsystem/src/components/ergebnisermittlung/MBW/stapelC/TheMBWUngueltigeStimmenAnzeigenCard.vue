@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";

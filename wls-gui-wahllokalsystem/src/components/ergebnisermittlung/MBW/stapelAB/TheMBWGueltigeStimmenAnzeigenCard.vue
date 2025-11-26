@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 
-import { onActivated, onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";

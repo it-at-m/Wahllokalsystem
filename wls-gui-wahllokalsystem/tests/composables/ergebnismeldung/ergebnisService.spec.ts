@@ -1,6 +1,6 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
@@ -78,9 +78,12 @@ describe("ergebnisService.ts", () => {
   const { getErgebnisse, postErgebnisse, sendSchnellmeldung } =
     useErgebnisService();
 
-  beforeEach(() => {
-    vi.resetAllMocks();
+  afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.resetAllMocks();
   });
 
   describe("getErgebnisse", () => {

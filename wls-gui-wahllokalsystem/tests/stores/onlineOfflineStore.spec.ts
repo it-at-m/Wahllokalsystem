@@ -132,6 +132,7 @@ describe("onlineOfflineStore.ts", () => {
       unitUnderTest.isOnline = false;
       await nextTick();
       unitUnderTest.isOnline = true;
+      await nextTick();
 
       expect(
         mockDefinitions.synchronizeOfflineData.mock.calls.length
@@ -142,6 +143,7 @@ describe("onlineOfflineStore.ts", () => {
       unitUnderTest.isOnline = true;
       await nextTick();
       unitUnderTest.isOnline = false;
+      await nextTick();
 
       expect(
         mockDefinitions.synchronizeOfflineData.mock.calls.length
@@ -152,14 +154,16 @@ describe("onlineOfflineStore.ts", () => {
       unitUnderTest.isOnline = true;
       await nextTick();
       unitUnderTest.isOnline = true;
+      await nextTick();
 
       expect(
         mockDefinitions.synchronizeOfflineData.mock.calls.length
       ).toStrictEqual(0);
     });
 
-    it("should_notTriggerSync_when_stayingOfflineForMultipleChecks", () => {
+    it("should_notTriggerSync_when_stayingOfflineForMultipleChecks", async () => {
       unitUnderTest.isOnline = false;
+      await nextTick();
 
       expect(
         mockDefinitions.synchronizeOfflineData.mock.calls.length

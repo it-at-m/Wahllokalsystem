@@ -106,23 +106,23 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                                // allow access to /actuator/info
-                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
-                                // allow access to /actuator/health for OpenShift Health Check
-                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
-                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
-                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
-                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/home"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                        // allow access to /actuator/info
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
+                        // allow access to /actuator/health for OpenShift Health Check
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
+                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
+                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
+                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/home"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer

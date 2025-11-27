@@ -69,7 +69,7 @@ class AuthUtilsTest {
 
             @Test
             void should_returnUsername_when_authenticationIsGivenInSecurityContext() {
-                val authentication = new UsernamePasswordAuthenticationToken("username", "password");
+                val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 

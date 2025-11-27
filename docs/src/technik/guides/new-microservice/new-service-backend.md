@@ -13,7 +13,8 @@ die Dateien des jeweiligen Unterordners in den erstellten Projektordner kopieren
 
 > [!NOTE]
 >
-> Damit die IntelliJ-Runconfigurationen verwendbar sind, muss das Projekt importiert sein. Der Import
+> Damit die [IntelliJ-Runconfigurationen](https://it-at-m.github.io/Wahllokalsystem/technik/get_started/#runconfigurations)
+> verwendbar sind, muss das Projekt importiert sein. Der Import
 > erfolgt über das Kontextmenü der `pom.xml` > `+ Add as Maven Project`.
 
 ### Pflege der Dependencies und Plugins

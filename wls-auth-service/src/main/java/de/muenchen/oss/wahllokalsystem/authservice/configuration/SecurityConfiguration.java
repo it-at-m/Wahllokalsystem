@@ -11,6 +11,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
+import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -105,23 +106,23 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                        // allow access to /actuator/info
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
-                        // allow access to /actuator/health for OpenShift Health Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
-                        // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
-                        // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
-                        // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/home"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                                // allow access to /actuator/info
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
+                                // allow access to /actuator/health for OpenShift Health Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
+                                // allow access to /actuator/health/liveness for OpenShift Liveness Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness"),
+                                // allow access to /actuator/health/readiness for OpenShift Readiness Check
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness"),
+                                // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
+                                PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/home"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/logout"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
@@ -134,7 +135,7 @@ public class SecurityConfiguration {
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()
                                 .matcher(HttpMethod.GET, "/logout"))
                         .logoutSuccessHandler(
-                                (request, response, authentication) -> log.info("logout successful for {}", authentication.getName())))
+                                (request, response, authentication) -> log.info("logout successful for {}", AuthUtils.getUsername(authentication))))
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

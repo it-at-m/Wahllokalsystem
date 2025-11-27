@@ -1,11 +1,21 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="GatewayWlsGui - local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
+  <configuration default="false" name="GatewayAdminGui - local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
     <option name="ACTIVE_PROFILES" value="local" />
     <additionalParameters>
       <param>
         <option name="enabled" value="true" />
         <option name="name" value="spring.config.additional-location" />
-        <option name="value" value="../stack/gateway_config_wls/application-routes.yml" />
+        <option name="value" value="../stack/gateway_config_admin/application-routes.yml" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.security.oauth2.client.registration.sso.clientid" />
+        <option name="value" value="admingui" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server.port" />
+        <option name="value" value="8084" />
       </param>
     </additionalParameters>
     <module name="wls-api-gateway" />

@@ -108,9 +108,6 @@ logging:
   level:
     root: INFO
     de.muenchen.oss.wahllokalsystem: DEBUG
-    org.springframework.web: DEBUG
-    org.springframework.cloud.gateway: TRACE
-    org.springframework.security: DEBUG
 
 ALLOWED_ORIGINS_PUBLIC: "*"
 ALLOWED_ORIGINS_CLIENTS: "*"

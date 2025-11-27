@@ -111,7 +111,13 @@ describe("indexDB.ts", () => {
         Promise.resolve(mockItem)
       );
 
+      mockDefinitions.decrypt.mockImplementation((data) => {
+        return data;
+      });
+
       const result = await unitUnderTest.getItemFromIDB(key);
+
+      expect(mockDefinitions.decrypt).toHaveBeenCalled();
 
       expect(result).toEqual(mockItem);
       expect(localforage.getItem).toHaveBeenCalledWith(key);

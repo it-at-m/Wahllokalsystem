@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <v-card>
     <v-card-title> Gültige Stimmen </v-card-title>
     <v-card-text>
       <the-m-b-w-gueltige-stimmen-anzeigen-table
         :ergebnisse-and-wahlvorschlaege="ergebnisseAndWahlvorschlaege"
       />
     </v-card-text>
-  </div>
+  </v-card>
 </template>
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 
-import { onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
@@ -28,7 +28,7 @@ const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
   props.wahlbezirkId
 );
 
-onMounted(async () => {
+onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
 });

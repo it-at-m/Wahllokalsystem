@@ -1,3 +1,6 @@
+"api-gateway":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-api-gateway/**' ]
 "documentation":
   - changed-files:
       - any-glob-to-any-file: [ 'docs/**' ]

@@ -255,41 +255,7 @@ services:
 
   refarch-gateway-wls:
     container_name: wls-refarch-gateway-wls
-    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.7.0@sha256:3f82ab83c212ca53c9c2b606cfe29291f21525eac86fece215d0e1c6ca51273f
-    env_file:
-      - .env
-    ports:
-      - "8083:8080"
-    environment:
-      - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
-      - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
-      - CONFIG_MAP5XXTO400=false
-      - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
-      - SPRING_PROFILES_ACTIVE=hazelcast-local
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://host.docker.internal:8100
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID_WLS}
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=openid
-    volumes:
-      - './gateway_config_wls:/config'
-    networks:
-      - services
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      interval: 30s
-      timeout: 60s
-      retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
-    security_opt:
-      - no-new-privileges:true
-
-  refarch-gateway-wls-by-build:
-    container_name: wls-refarch-gateway-wls-by-build
-    build: ../wls-api-gateway
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev
     env_file:
       - .env
     ports:
@@ -297,7 +263,12 @@ services:
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=local
+      - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID_WLS}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=openid
       - JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=/config_ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dserver.ssl.enabled=false
     volumes:
       - './gateway_config_wls:/config'
@@ -319,29 +290,30 @@ services:
 
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
-    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.7.0@sha256:3f82ab83c212ca53c9c2b606cfe29291f21525eac86fece215d0e1c6ca51273f
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev
     env_file:
       - .env
     ports:
       - "8084:8080"
     environment:
-      - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
-      - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
-      - CONFIG_MAP5XXTO400=false
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=local
       - SPRING_CONFIG_ADDITIONAL_LOCATION=/config/application-routes.yml
-      - SPRING_PROFILES_ACTIVE=hazelcast-local
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=${SSO_USER_INFO_URI}
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=http://host.docker.internal:8100
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=${SSO_CLIENT_ID_ADMIN}
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=${SSO_CLIENT_SECRET}
       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=openid
+      - JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=/config_ssl/truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dserver.ssl.enabled=false
     volumes:
       - './gateway_config_admin:/config'
+      - './reverse-proxy-auth-service/ssl:/config_ssl' # Pfad zum Reverseproxy da dort die Certs und der Truststore liegen (siehe JAVA_TOOL_OPTIONS)
     networks:
       - services
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "gui.wls.host.docker.internal:host-gateway"
+      - "auth.wls.host.docker.internal:host-gateway"
     healthcheck:
       interval: 30s
       timeout: 60s

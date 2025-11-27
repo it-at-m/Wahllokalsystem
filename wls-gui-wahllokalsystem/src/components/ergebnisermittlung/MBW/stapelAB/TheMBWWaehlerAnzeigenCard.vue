@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
@@ -80,7 +80,7 @@ const resultRow = computed(() =>
     : ["B", "Wähler insgesamt", b.value]
 );
 
-onMounted(async () => {
+onActivated(async () => {
   if (isUWB.value) {
     const waehlerverzeichnisNummer =
       waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(

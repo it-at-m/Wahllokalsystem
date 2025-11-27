@@ -82,6 +82,11 @@ class AuthUtilsTest {
                 });
                 Assertions.assertThat(result).isEqualTo("unauthenticated");
             }
+
+            @Test
+            void should_returnNameForUnauthenticatedUser_when_authenticationIsNull() {
+                Assertions.assertThat(AuthUtils.getUsername(null)).isEqualTo("unauthenticated");
+            }
         }
 
         @Nested

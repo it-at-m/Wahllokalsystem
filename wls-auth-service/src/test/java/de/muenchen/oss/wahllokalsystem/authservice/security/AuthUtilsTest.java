@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 class AuthUtilsTest {
 
+    private static final String USERNAME = "username";
+
     @Nested
     class GetUsername {
 
@@ -26,21 +28,19 @@ class AuthUtilsTest {
 
             @Test
             void should_returnUserName_when_jwtAuthenticationTokenIsGiven() {
-                val username = "username";
                 val authentication = new JwtAuthenticationToken(
-                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("user_name", username)));
+                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("user_name", USERNAME)));
 
                 val result = AuthUtils.getUsername(authentication);
-                Assertions.assertThat(result).isEqualTo(username);
+                Assertions.assertThat(result).isEqualTo(USERNAME);
             }
 
             @Test
             void should_returnUsername_when_usernamePasswordAuthenticationToken() {
-                val username = "username";
                 val authentication = new UsernamePasswordAuthenticationToken("username", "password");
 
                 val result = AuthUtils.getUsername(authentication);
-                Assertions.assertThat(result).isEqualTo(username);
+                Assertions.assertThat(result).isEqualTo(USERNAME);
             }
 
             @Test
@@ -72,7 +72,7 @@ class AuthUtilsTest {
                     }
 
                     @Override
-                    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+                    public void setAuthenticated(boolean isAuthenticated) {
 
                     }
 
@@ -95,13 +95,12 @@ class AuthUtilsTest {
 
             @Test
             void should_returnUsername_when_authenticationIsGivenInSecurityContext() {
-                val username = "username";
                 val authentication = new UsernamePasswordAuthenticationToken("username", "password");
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 val result = AuthUtils.getUsername();
-                Assertions.assertThat(result).isEqualTo(username);
+                Assertions.assertThat(result).isEqualTo(USERNAME);
 
                 SecurityContextHolder.clearContext();
             }

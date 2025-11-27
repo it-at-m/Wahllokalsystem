@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 /**
  * Utilities zu Authentifizierungsdaten.
  */
-public class AuthUtils {
+public final class AuthUtils {
 
     public static final String NAME_UNAUTHENTICATED_USER = "unauthenticated";
 
@@ -22,8 +22,7 @@ public class AuthUtils {
     }
 
     /**
-     * Extrahiert den Usernamen aus dem vorliegenden Spring Security Context via
-     * {@link SecurityContextHolder}.
+     * Extrahiert den Usernamen aus dem vorliegenden Spring Security Context via {@link SecurityContextHolder}.
      *
      * @return der Username or a "unauthenticated", wenn keine {@link Authentication} existiert
      */

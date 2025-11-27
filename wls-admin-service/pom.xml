@@ -557,7 +557,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.6.2.json</inputSpec>
+                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.7.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

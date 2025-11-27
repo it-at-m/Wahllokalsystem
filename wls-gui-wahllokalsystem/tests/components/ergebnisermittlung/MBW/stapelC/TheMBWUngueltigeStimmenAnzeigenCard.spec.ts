@@ -1,11 +1,9 @@
+import type { VueWrapper } from "@vue/test-utils";
+
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
-import {
-  enableAutoUnmount,
-  flushPromises,
-  mount,
-  VueWrapper,
-} from "@vue/test-utils";
+import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { defineComponent, h, KeepAlive } from "vue";
 
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
@@ -32,7 +30,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
 
   let wrapper: VueWrapper<
-    InstanceType<typeof TheMBWUngueltigeStimmenAnzeigenCard>
+    InstanceType<ReturnType<typeof createKeepAliveComponent>>
   >;
 
   const wahlId = "wahlId";
@@ -41,13 +39,18 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   enableAutoUnmount(afterEach);
 
   it("should_getErgebnisseStapelD_when_mountedAndRequestReturnsErgebnisse", async () => {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      wahlId,
+      wahlbezirkId
+    );
+
     mockDefinitions.getErgebnisse.mockReturnValue(
       prepareErgebnisse()
         .ergebnisse([prepareErgebnis().ergebnis(3).build()])
         .build()
     );
 
-    wrapper = mount(TheMBWUngueltigeStimmenAnzeigenCard, {
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -63,13 +66,21 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
       StapelArtEnum.MbwD,
       false
     );
-    expect(wrapper.vm.ungueltigeStimmen).toBe(3);
+    expect(
+      wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
+        .ungueltigeStimmen
+    ).toBe(3);
   });
 
   it("should_setErgebnisTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      wahlId,
+      wahlbezirkId
+    );
+
     mockDefinitions.getErgebnisse.mockReturnValue(null);
 
-    wrapper = mount(TheMBWUngueltigeStimmenAnzeigenCard, {
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify] },
       props: {
         wahlId,
@@ -85,6 +96,23 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
       StapelArtEnum.MbwD,
       false
     );
-    expect(wrapper.vm.ungueltigeStimmen).toBe(0);
+    expect(
+      wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
+        .ungueltigeStimmen
+    ).toBe(0);
   });
 });
+
+function createKeepAliveComponent(wahlId: string, wahlbezirkId: string) {
+  return defineComponent({
+    render() {
+      return h(KeepAlive, null, {
+        default: () =>
+          h(TheMBWUngueltigeStimmenAnzeigenCard, {
+            wahlId,
+            wahlbezirkId,
+          }),
+      });
+    },
+  });
+}

@@ -44,8 +44,8 @@ class AuthUtilsTest {
             }
 
             @Test
-            void should_returnUsername_when_usernamePasswordAuthenticationToken() {
-                val authentication = new UsernamePasswordAuthenticationToken("username", "password");
+            void should_returnUsername_when_usernamePasswordAuthenticationTokenIsGiven() {
+                val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
 
                 val result = AuthUtils.getUsername(authentication);
                 Assertions.assertThat(result).isEqualTo(USERNAME);
@@ -53,42 +53,7 @@ class AuthUtilsTest {
 
             @Test
             void should_returnNameForUnauthenticatedUser_when_authenticationTokenIsNotSupported() {
-                val result = AuthUtils.getUsername(new Authentication() {
-                    @Override
-                    public Collection<? extends GrantedAuthority> getAuthorities() {
-                        return List.of();
-                    }
-
-                    @Override
-                    public Object getCredentials() {
-                        return null;
-                    }
-
-                    @Override
-                    public Object getDetails() {
-                        return null;
-                    }
-
-                    @Override
-                    public Object getPrincipal() {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean isAuthenticated() {
-                        return false;
-                    }
-
-                    @Override
-                    public void setAuthenticated(boolean isAuthenticated) {
-
-                    }
-
-                    @Override
-                    public String getName() {
-                        return "";
-                    }
-                });
+                val result = AuthUtils.getUsername(getNotSupportedAuthentication());
                 Assertions.assertThat(result).isEqualTo("unauthenticated");
             }
 
@@ -121,5 +86,44 @@ class AuthUtilsTest {
                 Assertions.assertThat(result).isEqualTo("unauthenticated");
             }
         }
+    }
+
+    private static Authentication getNotSupportedAuthentication() {
+        return new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return List.of();
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return null;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return false;
+            }
+
+            @Override
+            public void setAuthenticated(boolean isAuthenticated) {
+
+            }
+
+            @Override
+            public String getName() {
+                return "";
+            }
+        };
     }
 }

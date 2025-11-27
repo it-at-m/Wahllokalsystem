@@ -36,6 +36,15 @@ class AuthUtilsTest {
             }
 
             @Test
+            void should_returnNull_when_jwtAuthenticationTokenIsGivenButHasNoUsername() {
+                val authentication = new JwtAuthenticationToken(
+                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("notTheUsernameClaim", USERNAME)));
+
+                val result = AuthUtils.getUsername(authentication);
+                Assertions.assertThat(result).isNull();
+            }
+
+            @Test
             void should_returnUsername_when_usernamePasswordAuthenticationToken() {
                 val authentication = new UsernamePasswordAuthenticationToken("username", "password");
 

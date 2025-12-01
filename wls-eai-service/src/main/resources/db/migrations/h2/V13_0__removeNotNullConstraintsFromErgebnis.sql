@@ -1,2 +1,0 @@
-ALTER TABLE Ergebnisse
-    ALTER COLUMN kandidatID DROP NOT NULL;

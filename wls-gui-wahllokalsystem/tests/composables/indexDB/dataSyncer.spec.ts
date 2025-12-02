@@ -1,5 +1,6 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { spyOn } from "@storybook/test";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
 import {
   afterAll,
@@ -17,6 +18,8 @@ import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   getDirtyItems: vi.fn(),
   basicPostConfig: vi.fn(),
+  setTasks: vi.fn(),
+  runAllTasks: vi.fn(),
 }));
 
 vi.mock("axios");
@@ -27,6 +30,12 @@ vi.mock("@/composables/indexDB/indexDB.ts", () => ({
 }));
 vi.mock("@/api/axios-utils.ts", () => ({
   basicPostConfig: mockDefinitions.basicPostConfig,
+}));
+vi.mock("@/composables/tasks/taskManager.ts", () => ({
+  useTaskManager: vi.fn().mockImplementation(() => ({
+    setTasks: mockDefinitions.setTasks,
+    runAllTasks: mockDefinitions.runAllTasks,
+  })),
 }));
 
 const { prepareIndexDBValue } = useIndexDBValueTestDataFactory();
@@ -119,5 +128,41 @@ describe("dataSyncer.ts", () => {
         },
       ];
     }
+  });
+
+  describe("synchronizeOfflineData", () => {
+    it("should_toggleOfflineDataSyncingVariable_when_called", async () => {
+      const isOfflineDataSyncingSpy = spyOn(
+        unitUnderTest.isOfflineDataSyncing,
+        "value",
+        "set"
+      );
+      mockDefinitions.getDirtyItems.mockResolvedValue([]);
+
+      await unitUnderTest.synchronizeOfflineData();
+
+      expect(isOfflineDataSyncingSpy.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      isOfflineDataSyncingSpy.mockRestore();
+    });
+
+    it("should_syncingTasks_when_called", async () => {
+      const isOfflineDataSyncingSpy = spyOn(
+        unitUnderTest.isOfflineDataSyncing,
+        "value",
+        "set"
+      );
+      mockDefinitions.getDirtyItems.mockResolvedValue([]);
+
+      await unitUnderTest.synchronizeOfflineData();
+
+      expect(mockDefinitions.setTasks).toHaveBeenCalledOnce();
+      expect(mockDefinitions.runAllTasks).toHaveBeenCalledOnce();
+
+      isOfflineDataSyncingSpy.mockRestore();
+    });
   });
 });

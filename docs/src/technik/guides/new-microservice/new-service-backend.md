@@ -11,6 +11,12 @@ Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt
 In dem Ordner wird das Maven-Projekt eingerichtet. Dazu aus den [RefArch-Templates](https://github.com/it-at-m/refarch-templates/tree/main/refarch-backend/)
 die Dateien des jeweiligen Unterordners in den erstellten Projektordner kopieren.
 
+> [!NOTE]
+>
+> Damit die [IntelliJ-Runconfigurationen](https://it-at-m.github.io/Wahllokalsystem/technik/get_started/#runconfigurations)
+> verwendbar sind, muss das Projekt importiert sein. Der Import
+> erfolgt über das Kontextmenü der `pom.xml` > `+ Add as Maven Project`.
+
 ### Pflege der Dependencies und Plugins
 
 Einen Überblick über die verwendeten Dependencies und Plugins geben die vorhandenen Services. Der Broadcast-Service ist
@@ -85,7 +91,7 @@ on:
           - wls-<domain>-service
 ```
 
-```yml {14} [dispatch-build-github-container-image.yml]
+```yml {14} [dispatch-create-github-container-image.yml]
 name: dispatch build github container image
 
 on:

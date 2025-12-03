@@ -11,7 +11,7 @@ export interface User {
   wahlbezirkNummer: string;
   wahlbezirksArt: WahlbezirksArtEnum;
   pin: string;
-  authorities: Set<string>;
+  authorities: string[];
   wahlMetaData: WahlMetaData[];
 }
 
@@ -26,7 +26,7 @@ export function createUserLocalDevelopment(): User {
     wahlbezirkNummer: "1234",
     wahlbezirksArt: "UWB",
     pin: "pin",
-    authorities: new Set<string>(),
+    authorities: [],
     wahlMetaData: [
       {
         wahlbezirkID: "wahlbezirkID",

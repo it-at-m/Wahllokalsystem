@@ -3,25 +3,27 @@
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody>
+        <tbody class="bottom-border-black">
           <tr>
+            <td class="index-column" />
             <td />
-            <td />
-            <td class="font-weight-bold">Insgesamt</td>
-          </tr>
-          <tr class="bg-grey-lighten-3">
-            <td class="font-weight-bold">C</td>
-            <td class="font-weight-bold">Ungültige Stimmen</td>
-            <td class="font-weight-bold">{{ ungueltigeStimmen }}</td>
+            <td class="font-weight-bold text-right">Insgesamt</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td class="font-weight-bold">C</td>
+            <td class="font-weight-bold">Ungültige Stimmen</td>
+            <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>
+          </tr>
+        </tfoot>
       </v-table>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -35,7 +37,7 @@ const props = defineProps<{
 
 const ungueltigeStimmen = ref(0);
 
-onMounted(async () => {
+onActivated(async () => {
   const result = await getErgebnisse(
     props.wahlbezirkId,
     props.wahlId,

@@ -87,24 +87,18 @@ export const Default: Story = {
         prepareWahlvorschlaege()
           .wahlID(wahlID)
           .wahlbezirkID(wahlbezirkID)
-          .wahlvorschlaege(
-            new Set([
-              prepareWahlvorschlag()
-                .identifikator("wahlvorschlag1")
-                .kurzname("Wahlvorschlag1")
-                .kandidaten(
-                  new Set([prepareKandidat().name("Kandidat 11").build()])
-                )
-                .build(),
-              prepareWahlvorschlag()
-                .identifikator("wahlvorschlag2")
-                .kurzname("Wahlvorschlag2")
-                .kandidaten(
-                  new Set([prepareKandidat().name("Kandidat 21").build()])
-                )
-                .build(),
-            ])
-          )
+          .wahlvorschlaege([
+            prepareWahlvorschlag()
+              .identifikator("wahlvorschlag1")
+              .kurzname("Wahlvorschlag1")
+              .kandidaten([prepareKandidat().name("Kandidat 11").build()])
+              .build(),
+            prepareWahlvorschlag()
+              .identifikator("wahlvorschlag2")
+              .kurzname("Wahlvorschlag2")
+              .kandidaten([prepareKandidat().name("Kandidat 21").build()])
+              .build(),
+          ])
           .build(),
       ];
 
@@ -134,24 +128,18 @@ export const NoErgebnisseInStore: Story = {
         prepareWahlvorschlaege()
           .wahlID(wahlID)
           .wahlbezirkID(wahlbezirkID)
-          .wahlvorschlaege(
-            new Set([
-              prepareWahlvorschlag()
-                .identifikator("wahlvorschlag1")
-                .kurzname("Wahlvorschlag1")
-                .kandidaten(
-                  new Set([prepareKandidat().name("Kandidat 11").build()])
-                )
-                .build(),
-              prepareWahlvorschlag()
-                .identifikator("wahlvorschlag2")
-                .kurzname("Wahlvorschlag2")
-                .kandidaten(
-                  new Set([prepareKandidat().name("Kandidat 21").build()])
-                )
-                .build(),
-            ])
-          )
+          .wahlvorschlaege([
+            prepareWahlvorschlag()
+              .identifikator("wahlvorschlag1")
+              .kurzname("Wahlvorschlag1")
+              .kandidaten([prepareKandidat().name("Kandidat 11").build()])
+              .build(),
+            prepareWahlvorschlag()
+              .identifikator("wahlvorschlag2")
+              .kurzname("Wahlvorschlag2")
+              .kandidaten([prepareKandidat().name("Kandidat 21").build()])
+              .build(),
+          ])
           .build(),
       ];
 

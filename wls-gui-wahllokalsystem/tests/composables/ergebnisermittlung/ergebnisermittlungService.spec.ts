@@ -12,10 +12,13 @@ const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
   getStimmzettelumschlaege: vi.fn(),
   getBegruendung: vi.fn(),
+  postBegruendung: vi.fn(),
   addNotification: vi.fn(),
   toDto: vi.fn(),
   toModel: vi.fn(),
   toBegruendungModel: vi.fn(),
+  toBegruendungDto: vi.fn(),
+  toPostErgebnisseStapelartEnum: vi.fn(),
   configurationConstructor: vi.fn().mockImplementation(() => ({})),
 }));
 
@@ -31,6 +34,7 @@ vi.mock(
       })),
       BegruendungControllerApi: vi.fn().mockImplementation(() => ({
         getBegruendung: mockDefinitions.getBegruendung,
+        postBegruendung: mockDefinitions.postBegruendung,
       })),
       Configuration: mockDefinitions.configurationConstructor,
     };
@@ -45,6 +49,9 @@ vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
 vi.mock("@/composables/ergebnismeldung/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
     toBegruendungModel: mockDefinitions.toBegruendungModel,
+    toBegruendungDto: mockDefinitions.toBegruendungDto,
+    toPostErgebnisseStapelartEnum:
+      mockDefinitions.toPostErgebnisseStapelartEnum,
   }),
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
@@ -57,6 +64,7 @@ const {
   postStimmzettelumschlaege,
   getStimmzettelumschlaege,
   getBegruendungStimmzettelumschlaege,
+  postBegruendung,
 } = useErgebnisermittlungService();
 
 const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
@@ -347,6 +355,92 @@ describe("ergebnisermittlungService", () => {
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
+    });
+  });
+
+  describe("postBegruendung", () => {
+    it("should_notCallNotificationServiceAfterSuccess_when_sendNotificationParameterIsFalse", async () => {
+      const begruendung = prepareBegruendung()
+        .wahlID(generateRandomString(10))
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund("grund")
+        .build();
+      const wahlbezirkID = generateRandomString(10);
+
+      await postBegruendung(begruendung, wahlbezirkID, false);
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+      expect(mockDefinitions.toBegruendungDto.mock.calls).toStrictEqual([
+        [begruendung, wahlbezirkID],
+      ]);
+    });
+
+    it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
+      const begruendung = prepareBegruendung()
+        .wahlID(generateRandomString(10))
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund("grund")
+        .build();
+      const wahlbezirkID = generateRandomString(10);
+
+      await postBegruendung(begruendung, wahlbezirkID, true);
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+      expect(mockDefinitions.toBegruendungDto.mock.calls).toStrictEqual([
+        [begruendung, wahlbezirkID],
+      ]);
+    });
+
+    it("should_callNotificationServiceAfterFailure_when_sendNotificationParameterIsTrue", async () => {
+      const begruendung = prepareBegruendung()
+        .wahlID(generateRandomString(10))
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund("grund")
+        .build();
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.postBegruendung.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(
+        postBegruendung(begruendung, wahlbezirkID, true)
+      ).rejects.toThrow("mocked api call failed");
+
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
+      expect(mockDefinitions.toBegruendungDto.mock.calls).toStrictEqual([
+        [begruendung, wahlbezirkID],
+      ]);
+    });
+
+    it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
+      const begruendung = prepareBegruendung()
+        .wahlID(generateRandomString(10))
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund("grund")
+        .build();
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.postBegruendung.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(
+        postBegruendung(begruendung, wahlbezirkID, false)
+      ).rejects.toThrow("mocked api call failed");
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+      expect(mockDefinitions.toBegruendungDto.mock.calls).toStrictEqual([
+        [begruendung, wahlbezirkID],
       ]);
     });
   });

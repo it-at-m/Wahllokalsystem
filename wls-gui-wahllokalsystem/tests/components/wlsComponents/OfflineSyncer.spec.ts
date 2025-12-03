@@ -108,7 +108,9 @@ describe("OfflineSyncer", () => {
         '[data-test="button-sync-offline-data"]'
       );
 
-      mockDefinitions.synchronizeOfflineData.mockResolvedValue(Promise.resolve())
+      mockDefinitions.synchronizeOfflineData.mockResolvedValue(
+        Promise.resolve()
+      );
       await syncButton.trigger("click");
 
       expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledTimes(1);

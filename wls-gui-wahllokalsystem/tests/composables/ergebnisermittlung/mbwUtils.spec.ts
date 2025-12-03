@@ -17,7 +17,7 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),
   getErgebnisse: vi.fn(),
-  serviceSendSchnellmeldung: vi.fn(),
+  postSchnellmeldung: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
@@ -28,7 +28,7 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
     getErgebnisse: mockDefinitions.getErgebnisse,
-    sendSchnellmeldung: mockDefinitions.serviceSendSchnellmeldung,
+    postSchnellmeldung: mockDefinitions.postSchnellmeldung,
   }),
 }));
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
@@ -432,7 +432,7 @@ describe("mbwUtils", () => {
 
   describe("sendSchnellmeldung", () => {
     it("should_callSendSchnellmeldungOnService_when_wahlForWahlIdIsGiven", async () => {
-      mockDefinitions.serviceSendSchnellmeldung.mockResolvedValueOnce(null);
+      mockDefinitions.postSchnellmeldung.mockResolvedValueOnce(null);
 
       const mockedWahl = createWahl();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
@@ -455,9 +455,7 @@ describe("mbwUtils", () => {
       expect(
         spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
       ).toStrictEqual([[true], [false]]);
-      expect(
-        mockDefinitions.serviceSendSchnellmeldung.mock.calls
-      ).toStrictEqual([
+      expect(mockDefinitions.postSchnellmeldung.mock.calls).toStrictEqual([
         [
           wahlID,
           wahlbezirkID,
@@ -491,7 +489,7 @@ describe("mbwUtils", () => {
         spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
       ).toStrictEqual([[true], [false]]);
       expect(
-        mockDefinitions.serviceSendSchnellmeldung.mock.calls.length
+        mockDefinitions.postSchnellmeldung.mock.calls.length
       ).toStrictEqual(0);
 
       spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
@@ -499,9 +497,7 @@ describe("mbwUtils", () => {
 
     it("should_updateIsSendingSchnellmeldung_when_apiCallFailed", async () => {
       const mockedServiceError = new Error("mocked service call failed");
-      mockDefinitions.serviceSendSchnellmeldung.mockRejectedValue(
-        mockedServiceError
-      );
+      mockDefinitions.postSchnellmeldung.mockRejectedValue(mockedServiceError);
 
       const mockedWahl = createWahl();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
@@ -526,9 +522,7 @@ describe("mbwUtils", () => {
       expect(
         spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
       ).toStrictEqual([[true], [false]]);
-      expect(
-        mockDefinitions.serviceSendSchnellmeldung.mock.calls
-      ).toStrictEqual([
+      expect(mockDefinitions.postSchnellmeldung.mock.calls).toStrictEqual([
         [
           wahlID,
           wahlbezirkID,

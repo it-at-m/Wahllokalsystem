@@ -96,7 +96,7 @@ export function useErgebnisService() {
     }
   }
 
-  async function sendSchnellmeldung(
+  async function postSchnellmeldung(
     wahlID: string,
     wahlbezirkID: string,
     hauptwahlbezirkID: string,
@@ -129,5 +129,5 @@ export function useErgebnisService() {
     }
   }
 
-  return { getErgebnisse, postErgebnisse, sendSchnellmeldung };
+  return { getErgebnisse, postErgebnisse, postSchnellmeldung };
 }

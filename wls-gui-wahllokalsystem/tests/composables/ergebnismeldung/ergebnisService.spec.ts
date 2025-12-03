@@ -75,7 +75,7 @@ const {
 } = useErgebnisseTestDataFactory();
 
 describe("ergebnisService.ts", () => {
-  const { getErgebnisse, postErgebnisse, sendSchnellmeldung } =
+  const { getErgebnisse, postErgebnisse, postSchnellmeldung } =
     useErgebnisService();
 
   afterEach(() => {
@@ -232,7 +232,7 @@ describe("ergebnisService.ts", () => {
         const hauptwahlbezirkID = generateRandomString(10);
         const waehlerverzeichnisNummer = generateRandomNumber(2);
 
-        await sendSchnellmeldung(
+        await postSchnellmeldung(
           wahlID,
           wahlbezirkID,
           hauptwahlbezirkID,
@@ -276,7 +276,7 @@ describe("ergebnisService.ts", () => {
         mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
 
         await expect(
-          sendSchnellmeldung(
+          postSchnellmeldung(
             wahlID,
             wahlbezirkID,
             hauptwahlbezirkID,

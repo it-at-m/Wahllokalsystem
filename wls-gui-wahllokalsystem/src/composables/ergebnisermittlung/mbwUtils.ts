@@ -15,11 +15,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const {
-  postErgebnisse,
-  getErgebnisse,
-  sendSchnellmeldung: serviceSendSchnellmeldung,
-} = useErgebnisService();
+const { postErgebnisse, getErgebnisse, postSchnellmeldung } =
+  useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 const { getAWerte } = useAWerteService();
@@ -129,7 +126,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       if (!wahl) {
         logError(`zur wahlID ${wahlID} existiert keine Wahl`);
       } else {
-        await serviceSendSchnellmeldung(
+        await postSchnellmeldung(
           wahlID,
           wahlbezirkID,
           currentUserWahlbezirkID.value,

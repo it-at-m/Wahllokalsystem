@@ -59,7 +59,7 @@ async function initiateOfflineDataSync() {
   isDialogVisible.value = true;
   isSyncInProgress.value = true;
 
-  if (!isOfflineDataSyncing) {
+  if (!isOfflineDataSyncing.value) {
     await synchronizeOfflineData();
   }
   isSyncInProgress.value = false;

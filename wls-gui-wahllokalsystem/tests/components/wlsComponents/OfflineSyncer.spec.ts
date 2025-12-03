@@ -1,7 +1,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 import type { Ref } from "vue";
 
-import { useTasksTestDataFactory } from "@tests/utils/tasks/TasksTestDataFactory.ts";
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
@@ -30,6 +29,7 @@ const mockDefinitions = vi.hoisted(() => ({
     runAllTasks: vi.fn(),
   },
   getSyncTasks: vi.fn(),
+  synchronizeOfflineData: vi.fn(),
 }));
 
 vi.mock("@/composables/tasks/taskManager.ts", () => ({
@@ -40,8 +40,12 @@ vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
     getSyncTasks: mockDefinitions.getSyncTasks,
   })),
 }));
-
-const { createTask } = useTasksTestDataFactory();
+vi.mock("@/stores/dataSyncStore.ts", () => ({
+  useDataSyncStore: () => ({
+    isOfflineDataSyncing: ref(false),
+    synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
+  }),
+}));
 
 describe("OfflineSyncer", () => {
   let wrapper: VueWrapper;
@@ -104,17 +108,10 @@ describe("OfflineSyncer", () => {
         '[data-test="button-sync-offline-data"]'
       );
 
-      const mockedTasks = [createTask("task1"), createTask("task2")];
-      mockDefinitions.getSyncTasks.mockReturnValue(
-        Promise.resolve(mockedTasks)
-      );
-
+      mockDefinitions.synchronizeOfflineData.mockResolvedValue(Promise.resolve())
       await syncButton.trigger("click");
 
-      expect(mockDefinitions.taskManager.setTasks.mock.calls).toStrictEqual([
-        [mockedTasks],
-      ]);
-      expect(mockDefinitions.taskManager.runAllTasks).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledTimes(1);
     });
   });
 });

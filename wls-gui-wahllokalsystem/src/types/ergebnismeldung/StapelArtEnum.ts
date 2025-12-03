@@ -9,7 +9,6 @@ export const StapelArtEnum = {
   SrwBawAB: "SRW_BAW_A_B",
   SrwBawDUngueltig: "SRW_BAW_D_UNGUELTIG",
   SrwBawBC: "SRW_BAW_B_C",
-  MbwD: "MBW_D",
   MbwDUngueltig: "MBW_D_UNGUELTIG",
   MbwA: "MBW_A",
   MbwB: "MBW_B",

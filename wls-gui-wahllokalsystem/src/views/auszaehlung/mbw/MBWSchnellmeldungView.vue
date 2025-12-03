@@ -5,18 +5,22 @@
       >Kontrolle, Übermittlung und Druck der Schnellmeldung</v-card-subtitle
     >
     <the-m-b-w-wahlberechtigte-anzeigen-card
+      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-waehler-anzeigen-card
+      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-ungueltige-stimmen-anzeigen-card
+      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-gueltige-stimmen-anzeigen-card
+      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />

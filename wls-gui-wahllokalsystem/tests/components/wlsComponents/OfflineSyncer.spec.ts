@@ -1,4 +1,3 @@
-import type { VueWrapper } from "@vue/test-utils";
 import type { Ref } from "vue";
 
 import {
@@ -48,8 +47,6 @@ vi.mock("@/stores/dataSyncStore.ts", () => ({
 }));
 
 describe("OfflineSyncer", () => {
-  let wrapper: VueWrapper;
-
   vi.stubGlobal("visualViewport", new EventTarget());
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),

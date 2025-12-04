@@ -431,7 +431,7 @@ describe("mbwUtils", () => {
   });
 
   describe("sendSchnellmeldung", () => {
-    it("should_callSendSchnellmeldungOnService_when_wahlForWahlIdIsGiven", async () => {
+    it("should_callPostSchnellmeldung_when_wahlForWahlIdIsGiven", async () => {
       mockDefinitions.postSchnellmeldung.mockResolvedValueOnce(null);
 
       const mockedWahl = createWahl();
@@ -467,7 +467,7 @@ describe("mbwUtils", () => {
       spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
     });
 
-    it("should_notCallSendSchnellmeldungOnService_when_wahlForWahlIdIsNotGiven", async () => {
+    it("should_notCallPostSchnellmeldung_when_wahlForWahlIdIsNotGiven", async () => {
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(undefined);
 
       const userWahlbezirkID = generateRandomString(10);

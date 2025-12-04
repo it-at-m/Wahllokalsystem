@@ -220,7 +220,7 @@ describe("ergebnisService.ts", () => {
     });
   });
 
-  describe("sendSchnellmeldung", () => {
+  describe("postSchnellmeldung", () => {
     it.each([
       [true, true],
       [false, false],

@@ -62,25 +62,26 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
 const router = useRouter();
+
+const wahlbezirkID = route.params.wahlbezirkId as string;
+const wahlID = route.params.wahlId as string;
+
 const { wahlenActions } = useWahlenStore();
+const { isSendingSchnellmeldung, sendSchnellmeldung } = useMbwUtils(
+  wahlID,
+  wahlbezirkID
+);
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 
-const wahlbezirkID = route.params.wahlbezirkId as string;
-const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
   router.push({
     name: EXAMPLE_ROUTES_NOTFOUND,
   });
 }
-
-const { isSendingSchnellmeldung, sendSchnellmeldung } = useMbwUtils(
-  wahlID,
-  wahlbezirkID
-);
 
 function onSendenClicked() {
   sendSchnellmeldung();

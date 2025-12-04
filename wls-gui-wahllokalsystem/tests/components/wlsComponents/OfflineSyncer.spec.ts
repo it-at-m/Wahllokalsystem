@@ -29,7 +29,10 @@ const mockDefinitions = vi.hoisted(() => ({
     runAllTasks: vi.fn(),
   },
   getSyncTasks: vi.fn(),
-  synchronizeOfflineData: vi.fn(),
+  dataSyncer: {
+    isOfflineDataSyncing: undefined as Ref<boolean> | undefined,
+    synchronizeOfflineData: vi.fn(),
+  },
 }));
 
 vi.mock("@/composables/tasks/taskManager.ts", () => ({
@@ -41,10 +44,9 @@ vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
   })),
 }));
 vi.mock("@/stores/dataSyncStore.ts", () => ({
-  useDataSyncStore: () => ({
-    isOfflineDataSyncing: ref(false),
-    synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
-  }),
+  useDataSyncStore: vi
+    .fn()
+    .mockImplementation(() => mockDefinitions.dataSyncer),
 }));
 
 describe("OfflineSyncer", () => {
@@ -61,7 +63,7 @@ describe("OfflineSyncer", () => {
   beforeEach(() => {
     mockDefinitions.taskManager.numberOfTasksFinished = ref(0);
     mockDefinitions.taskManager.numberOfTasksToRun = ref(0);
-
+    mockDefinitions.dataSyncer.isOfflineDataSyncing = ref(false);
     wrapper = mount(OfflineSyncer, {
       global: {
         plugins: [vuetify],
@@ -94,6 +96,7 @@ describe("OfflineSyncer", () => {
       mockDefinitions.taskManager.numberOfTasksToRun!.value = 10;
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       mockDefinitions.taskManager.numberOfTasksFinished!.value = 2;
+
       await syncButton.trigger("click");
 
       await expect(document.body.innerHTML).toMatchFileSnapshot(
@@ -103,17 +106,36 @@ describe("OfflineSyncer", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_triggerRunAllTasks_when_syncButtonIsClicked", async () => {
+    it("should_triggerSynchronizeOfflineData_when_syncButtonIsClicked", async () => {
       const syncButton = wrapper.findComponent(
         '[data-test="button-sync-offline-data"]'
       );
 
-      mockDefinitions.synchronizeOfflineData.mockResolvedValue(
+      mockDefinitions.dataSyncer.synchronizeOfflineData.mockResolvedValue(
         Promise.resolve()
       );
       await syncButton.trigger("click");
 
-      expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledTimes(1);
+      expect(
+        mockDefinitions.dataSyncer.synchronizeOfflineData
+      ).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_notTriggerSynchronizeOfflineData_when_syncButtonIsClickedAndValueIsAlreadySyncing", async () => {
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      mockDefinitions.dataSyncer.isOfflineDataSyncing!.value = true;
+      const syncButton = wrapper.findComponent(
+        '[data-test="button-sync-offline-data"]'
+      );
+
+      mockDefinitions.dataSyncer.synchronizeOfflineData.mockResolvedValue(
+        Promise.resolve()
+      );
+      await syncButton.trigger("click");
+
+      expect(
+        mockDefinitions.dataSyncer.synchronizeOfflineData
+      ).toHaveBeenCalledTimes(0);
     });
   });
 });

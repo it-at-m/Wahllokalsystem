@@ -27,6 +27,9 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
     }
   }
 
+  /*
+    should only trigger, when the state switches from Offline to Online
+   */
   watch(isOnline, async (newIsOnline, oldIsOnline) => {
     if (!oldIsOnline && newIsOnline) {
       await synchronizeOfflineData();

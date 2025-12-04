@@ -150,19 +150,12 @@ describe("dataSyncer.ts", () => {
     });
 
     it("should_syncingTasks_when_called", async () => {
-      const isOfflineDataSyncingSpy = spyOn(
-        unitUnderTest.isOfflineDataSyncing,
-        "value",
-        "set"
-      );
       mockDefinitions.getDirtyItems.mockResolvedValue([]);
 
       await unitUnderTest.synchronizeOfflineData();
 
       expect(mockDefinitions.setTasks).toHaveBeenCalledOnce();
       expect(mockDefinitions.runAllTasks).toHaveBeenCalledOnce();
-
-      isOfflineDataSyncingSpy.mockRestore();
     });
   });
 });

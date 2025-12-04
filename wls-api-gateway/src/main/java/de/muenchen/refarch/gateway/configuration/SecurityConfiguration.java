@@ -1,5 +1,6 @@
 package de.muenchen.refarch.gateway.configuration;
 
+import de.muenchen.refarch.gateway.security.AuthUtils;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,10 +72,10 @@ public class SecurityConfiguration {
                         // only authenticated
                         .anyExchange().authenticated())
                 .logout(spec -> spec.logoutUrl("/logout").logoutHandler((exchange, authentication) -> {
-                    log.info("logout request received for {}", authentication.getName());
+                    log.info("logout request received for {}", AuthUtils.getUsername(authentication));
                     return logoutHandler.logout(exchange, authentication);
                 }).logoutSuccessHandler((exchange, authentication) -> {
-                    log.info("logout successful for {}", authentication.getName());
+                    log.info("logout successful for {}", AuthUtils.getUsername(authentication));
 
                     return exchange.getExchange().getResponse().setComplete();
                 }))

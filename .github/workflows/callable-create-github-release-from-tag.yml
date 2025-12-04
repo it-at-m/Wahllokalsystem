@@ -14,6 +14,11 @@ on:
         required: true
         type: string
         description: 'Newline-delimited globs of paths to assets to upload for release'
+      javaVersion:
+        required: false
+        default: '17'
+        type: string
+        description: 'java version to use for build'
 
 env:
   REGISTRY: ghcr.io
@@ -30,12 +35,12 @@ jobs:
         with:
           ref: ${{ inputs.tag }}
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           cache: 'maven'
           cache-dependency-path: '${{ inputs.service }}/pom.xml'
-          java-version: '17'
+          java-version: ${{ inputs.javaVersion }}
           distribution: 'temurin'
 
       - name: build jar without tests

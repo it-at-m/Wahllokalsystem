@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
@@ -37,7 +37,7 @@ const props = defineProps<{
 
 const ungueltigeStimmen = ref(0);
 
-onMounted(async () => {
+onActivated(async () => {
   const result = await getErgebnisse(
     props.wahlbezirkId,
     props.wahlId,

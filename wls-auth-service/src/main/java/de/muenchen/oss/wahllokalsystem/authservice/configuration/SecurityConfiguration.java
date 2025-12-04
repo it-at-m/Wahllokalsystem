@@ -11,6 +11,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
+import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -134,7 +135,7 @@ public class SecurityConfiguration {
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()
                                 .matcher(HttpMethod.GET, "/logout"))
                         .logoutSuccessHandler(
-                                (request, response, authentication) -> log.info("logout successful for {}", authentication.getName())))
+                                (request, response, authentication) -> log.info("logout successful for {}", AuthUtils.getUsername(authentication))))
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

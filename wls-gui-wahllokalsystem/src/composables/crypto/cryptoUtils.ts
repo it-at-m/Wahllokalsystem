@@ -1,13 +1,9 @@
 export function useCryptoUtils() {
-  const algorithm = "AES-GCM";
+  const algorithm = { name: "AES-GCM", iv: new Uint8Array(16) };
 
-  async function encrypt(
-    data: string | undefined,
-    key: CryptoKey,
-    iv: Uint8Array<ArrayBuffer>
-  ) {
+  async function encrypt(data: string | undefined, key: CryptoKey) {
     return await crypto.subtle.encrypt(
-      { name: algorithm, iv },
+      algorithm,
       key,
       new TextEncoder().encode(data)
     );
@@ -15,8 +11,7 @@ export function useCryptoUtils() {
 
   async function decrypt(
     data: ArrayBuffer | string | null,
-    key: CryptoKey | undefined,
-    iv: Uint8Array<ArrayBuffer>
+    key: CryptoKey | undefined
   ) {
     if (!key) {
       throw new Error(
@@ -29,11 +24,7 @@ export function useCryptoUtils() {
     } else {
       dataBuffer = data ?? new ArrayBuffer();
     }
-    const result = await crypto.subtle.decrypt(
-      { name: algorithm, iv },
-      key,
-      dataBuffer
-    );
+    const result = await crypto.subtle.decrypt(algorithm, key, dataBuffer);
     return new TextDecoder("utf-8").decode(result);
   }
 
@@ -46,23 +37,18 @@ export function useCryptoUtils() {
       ["deriveBits", "deriveKey"]
     );
 
-    const salt = crypto.getRandomValues(new Uint8Array(16));
     return await crypto.subtle.deriveKey(
       {
         name: "PBKDF2",
-        salt: salt,
+        salt: new Uint8Array(16),
         iterations: 100000,
         hash: "SHA-256",
       },
       keyMaterial,
-      { name: algorithm, length: 256 },
+      { name: "AES-GCM", length: 256 },
       false,
       ["encrypt", "decrypt"]
     );
-  }
-
-  function createIV() {
-    return crypto.getRandomValues(new Uint8Array(12));
   }
 
   function _base64ToArrayBuffer(base64: string): ArrayBuffer {
@@ -79,6 +65,5 @@ export function useCryptoUtils() {
     encrypt,
     decrypt,
     importKey,
-    createIV,
   };
 }

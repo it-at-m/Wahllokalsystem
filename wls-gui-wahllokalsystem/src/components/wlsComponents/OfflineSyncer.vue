@@ -45,10 +45,8 @@ import { mergeProps, ref } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
 import { useTaskManager } from "@/composables/tasks/taskManager.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const { getSyncTasks } = useDataSyncer();
-const { cryptoKey, iv } = useUserStore();
 
 const { setTasks, numberOfTasksFinished, numberOfTasksToRun, runAllTasks } =
   useTaskManager();
@@ -60,7 +58,7 @@ async function synchronizeOfflineData() {
   isDialogVisible.value = true;
   isSyncInProgress.value = true;
 
-  setTasks(await getSyncTasks(cryptoKey, iv));
+  setTasks(await getSyncTasks());
   await runAllTasks();
 
   isSyncInProgress.value = false;

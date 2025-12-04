@@ -1,6 +1,5 @@
 import type { MockInstance } from "vitest";
 
-import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
 import localforage from "localforage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -8,7 +7,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 const { prepareIndexDBValue } = useIndexDBValueTestDataFactory();
-const { generateRandomNumber } = useCommonTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   decrypt: vi.fn(),
@@ -27,14 +25,6 @@ vi.mock("@/composables/crypto/cryptoUtils.ts", () => ({
 describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
-
-  const mockKey: CryptoKey = {
-    algorithm: { name: "AES-GCM", length: 256 },
-    extractable: true,
-    type: "secret",
-    usages: ["encrypt", "decrypt"],
-  } as CryptoKey;
-  const mockIV = new Uint8Array(new ArrayBuffer(generateRandomNumber(1)));
 
   beforeEach(() => {
     unitUnderTest = useIndexDB();
@@ -75,7 +65,7 @@ describe("indexDB.ts", () => {
         return data;
       });
 
-      const result = await unitUnderTest.getDirtyItems(mockKey, mockIV);
+      const result = await unitUnderTest.getDirtyItems();
 
       expect(mockDefinitions.decrypt).toHaveBeenCalledTimes(2);
 
@@ -97,7 +87,7 @@ describe("indexDB.ts", () => {
         });
       });
 
-      const result = await unitUnderTest.getDirtyItems(mockKey, mockIV);
+      const result = await unitUnderTest.getDirtyItems();
 
       expect(result).toEqual([]);
     });

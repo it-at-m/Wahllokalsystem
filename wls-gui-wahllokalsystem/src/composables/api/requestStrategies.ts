@@ -1,3 +1,4 @@
+import type { IndexDBComposable } from "@/composables/indexDB/indexDB.ts";
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
@@ -6,7 +7,6 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 
-const { getItemFromIDB, storeItem } = useIndexDB();
 const {
   createResponseOkWithoutResponseBody,
   createResponseNotFoundWithoutResponseBody,
@@ -15,6 +15,15 @@ const {
   isTextContext,
 } = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
+
+let indexDBSingleton: IndexDBComposable;
+
+self.addEventListener("message", async function (event) {
+  if (event.data.type === "PIN") {
+    indexDBSingleton = useIndexDB();
+    indexDBSingleton.setKey(event.data.payload);
+  }
+});
 
 export function useRequestStrategies() {
   const textDecoder = new TextDecoder("utf-8");
@@ -34,7 +43,7 @@ export function useRequestStrategies() {
     );
 
     const dbKey = options.request.url;
-    const storedData = await getItemFromIDB(dbKey);
+    const storedData = await indexDBSingleton.getItemFromIDB(dbKey);
     if (storedData) {
       return createResponseOfIndexDBValue(storedData);
     } else {
@@ -116,7 +125,7 @@ export function useRequestStrategies() {
       dirty: dirty,
       timestamp: new Date().getTime(),
     };
-    await storeItem(dbKey, requestToStore);
+    await indexDBSingleton.storeItem(dbKey, requestToStore);
   }
 
   async function _storeResponse(response: Response, dbKey: string) {
@@ -130,7 +139,7 @@ export function useRequestStrategies() {
     };
     try {
       logDebug(`storing response with key ${dbKey}`, responseToStore);
-      await storeItem(dbKey, responseToStore);
+      await indexDBSingleton.storeItem(dbKey, responseToStore);
     } catch (error) {
       logError("error storing idb data", error);
     }
@@ -158,7 +167,7 @@ export function useRequestStrategies() {
   }
 
   async function _storedResponseOrNotFound(dbKey: string) {
-    const storedItem = await getItemFromIDB(dbKey);
+    const storedItem = await indexDBSingleton.getItemFromIDB(dbKey);
     if (storedItem) {
       return createResponseOfIndexDBValue(storedItem);
     } else {

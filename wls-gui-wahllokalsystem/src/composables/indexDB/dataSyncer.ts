@@ -7,15 +7,12 @@ import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-const { getDirtyItems } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
-  async function getSyncTasks(
-    cryptoKey: CryptoKey,
-    vector: Uint8Array<ArrayBuffer>
-  ) {
-    const itemsToSync = await getDirtyItems(cryptoKey, vector);
+  async function getSyncTasks() {
+    const itemsToSync = await indexDBSingleton.getDirtyItems();
     itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,

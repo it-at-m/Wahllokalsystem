@@ -129,8 +129,8 @@ describe("infomanagementStore.ts", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
 
-    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
-    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
+    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00";
+    const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00";
 
     beforeEach(() => {
       userStore = useUserStore();
@@ -252,8 +252,8 @@ describe("infomanagementStore.ts", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
 
-    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59:00";
-    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW = "17:59:00";
+    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59";
+    const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW = "17:59";
 
     beforeEach(() => {
       userStore = useUserStore();
@@ -375,8 +375,8 @@ describe("infomanagementStore.ts", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
 
-    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW = "18:00:00";
-    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW = "18:00:00";
+    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW = "18:00";
+    const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW = "18:00";
 
     beforeEach(() => {
       userStore = useUserStore();

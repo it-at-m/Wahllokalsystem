@@ -225,7 +225,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         begruendung.wahlID
       );
       if (wahlbezirkID) {
-        await postBegruendung(begruendung, wahlbezirkID, sendNotification);
         const existingBegruendungIndex = begruendungen.value.findIndex(
           (b) => b.wahlID === begruendung.wahlID
         );
@@ -234,6 +233,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
         } else {
           begruendungen.value.push(begruendung);
         }
+        await postBegruendung(begruendung, wahlbezirkID, sendNotification);
       }
     } catch {
       throw new Error(`Fehler beim Speichern der Begründung.`);

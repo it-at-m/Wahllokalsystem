@@ -42,7 +42,7 @@
     "@chromatic-com/storybook": "3.2.7",
     "@mdi/js": "7.4.47",
     "@muenchen/prettier-codeformat": "1.0.2",
-    "@pinia/testing": "1.0.2",
+    "@pinia/testing": "1.0.3",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-interactions": "8.6.14",
     "@storybook/addon-onboarding": "8.6.14",

@@ -1,4 +1,3 @@
-import type { IndexDBComposable } from "@/composables/indexDB/indexDB.ts";
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
@@ -16,11 +15,10 @@ const {
 } = useCommonApiUtils();
 const { log, logDebug, logError } = useLogging("requestStrategies");
 
-let indexDBSingleton: IndexDBComposable;
+const indexDBSingleton = useIndexDB();
 
 self.addEventListener("message", async function (event) {
   if (event.data.type === "PIN") {
-    indexDBSingleton = useIndexDB();
     indexDBSingleton.setKey(event.data.payload);
   }
 });

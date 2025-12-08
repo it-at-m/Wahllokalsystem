@@ -6,7 +6,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 
 export interface IndexDBComposable {
-  cryptoKey: CryptoKey;
+  cryptoKey: CryptoKey | null;
   setKey: (key: CryptoKey) => void;
   getItemFromIDB: (key: string) => Promise<IndexDBValue | null>;
   getDirtyItems: () => Promise<
@@ -27,9 +27,12 @@ export const useIndexDB = () => {
 
   if (!instance) {
     instance = {
-      cryptoKey: {} as CryptoKey,
+      cryptoKey: null as CryptoKey | null,
 
       setKey(key: CryptoKey) {
+        if (!key || !(key instanceof CryptoKey)) {
+          throw new Error("CryptoKey kann nicht gesetzt werden.");
+        }
         this.cryptoKey = key;
       },
 
@@ -67,24 +70,39 @@ export const useIndexDB = () => {
         });
 
         return await Promise.all(
-          matchingItems.map(async (value) => ({
-            key: value.key,
-            item: {
-              ...value.item,
-              data: await decrypt(value.item.data, this.cryptoKey),
-            },
-          }))
+          matchingItems.map(async (value) => {
+            try {
+              return {
+                key: value.key,
+                item: {
+                  ...value.item,
+                  data: await decrypt(value.item.data, this.cryptoKey),
+                },
+              };
+            } catch (error) {
+              logError(
+                `Fehler beim Entschlüsseln von Item ${value.key}:`,
+                error
+              );
+              throw error;
+            }
+          })
         );
       },
 
       async storeItem(key: string, data: IndexDBValue) {
-        if (data.data === null) {
-          await localforage.setItem(key, data);
-        } else {
-          await localforage.setItem(key, {
-            ...data,
-            data: await encrypt(data.data?.toString(), this.cryptoKey),
-          });
+        try {
+          if (data.data === null) {
+            await localforage.setItem(key, data);
+          } else {
+            await localforage.setItem(key, {
+              ...data,
+              data: await encrypt(data.data?.toString(), this.cryptoKey),
+            });
+          }
+        } catch (error) {
+          logError(`Fehler beim Speichern von Item ${key}:`, error);
+          throw error;
         }
       },
 

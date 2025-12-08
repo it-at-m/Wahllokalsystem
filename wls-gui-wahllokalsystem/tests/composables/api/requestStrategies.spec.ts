@@ -1,4 +1,3 @@
-import type { IndexDBComposable } from "@/composables/indexDB/indexDB.ts";
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
@@ -25,17 +24,12 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
 }));
 
-const mockIndexDB: Partial<IndexDBComposable> = {
-  cryptoKey: {} as CryptoKey,
-  setKey: vi.fn(),
-  getItemFromIDB: mockDefinitions.getItemFromIDB,
-  getDirtyItems: vi.fn(),
-  storeItem: mockDefinitions.storeItem,
-  setupIndexDB: vi.fn(),
-};
-
 vi.mock("@/composables/indexDB/indexDB.ts", () => ({
-  useIndexDB: () => mockIndexDB,
+  useIndexDB: vi.fn().mockImplementation(() => ({
+    getItemFromIDB: mockDefinitions.getItemFromIDB,
+    storeItem: mockDefinitions.storeItem,
+    setKey: vi.fn(),
+  })),
 }));
 
 global.fetch = mockDefinitions.fetch;
@@ -57,12 +51,6 @@ describe("requestStrategies.ts", () => {
 
   beforeEach(() => {
     unitUnderTest = useRequestStrategies();
-    const testKey = {} as CryptoKey;
-    self.dispatchEvent(
-      new MessageEvent("message", {
-        data: { type: "PIN", payload: testKey },
-      })
-    );
   });
 
   afterEach(() => {

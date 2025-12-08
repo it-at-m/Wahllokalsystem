@@ -1,7 +1,7 @@
 export function useCryptoUtils() {
   const algorithm = { name: "AES-GCM", iv: new Uint8Array(16) };
 
-  async function encrypt(data: string | undefined, key: CryptoKey) {
+  async function encrypt(data: string | undefined, key: CryptoKey | null) {
     if (!key) {
       throw new Error(
         "Verschlüsselung kann ohne CryptKey nicht durchgeführt werden."
@@ -16,7 +16,7 @@ export function useCryptoUtils() {
 
   async function decrypt(
     data: ArrayBuffer | string | null,
-    key: CryptoKey | undefined
+    key: CryptoKey | null
   ) {
     if (!key) {
       throw new Error(

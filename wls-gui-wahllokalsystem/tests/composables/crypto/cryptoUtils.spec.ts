@@ -68,7 +68,7 @@ describe("cryptoUtils.ts", () => {
     it("should_throwAnError_when_crptoKeyIsMissing", async () => {
       const mockEncryptedData = new ArrayBuffer(16);
 
-      await expect(decrypt(mockEncryptedData, undefined)).rejects.toThrow(
+      await expect(decrypt(mockEncryptedData, null)).rejects.toThrow(
         "Entschlüsselung kann ohne CryptKey nicht durchgeführt werden."
       );
     });

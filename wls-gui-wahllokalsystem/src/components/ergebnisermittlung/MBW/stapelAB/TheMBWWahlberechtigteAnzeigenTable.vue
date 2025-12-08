@@ -1,5 +1,12 @@
 <template>
   <v-table>
+    <thead>
+      <tr>
+        <th class="index-column" />
+        <th />
+        <th class="font-weight-bold text-right">Insgesamt</th>
+      </tr>
+    </thead>
     <tbody>
       <tr>
         <td class="index-column">A1</td>
@@ -19,7 +26,7 @@
     <tfoot>
       <tr>
         <td class="font-weight-bold index-column">A1 + A2</td>
-        <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
+        <td class="font-weight-bold">Wahlberechtigte</td>
         <td class="font-weight-bold text-right">
           {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}
         </td>

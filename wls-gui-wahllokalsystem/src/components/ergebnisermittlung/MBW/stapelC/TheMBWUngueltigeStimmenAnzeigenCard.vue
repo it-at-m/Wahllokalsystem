@@ -3,13 +3,13 @@
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody>
+        <thead>
           <tr>
-            <td class="index-column" />
-            <td />
-            <td class="font-weight-bold text-right">Insgesamt</td>
+            <th class="index-column" />
+            <th />
+            <th class="font-weight-bold text-right">Insgesamt</th>
           </tr>
-        </tbody>
+        </thead>
         <tfoot>
           <tr>
             <td class="font-weight-bold index-column">C</td>

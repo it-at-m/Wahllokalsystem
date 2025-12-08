@@ -785,7 +785,7 @@ describe("ergebnismeldungStore.ts", () => {
       expect(unitUnderTest.isBegruendungSaving).toBe(false);
     });
 
-    it("should_setIsBegruendungSavingToTrueWhileSaving", async () => {
+    it("should_setIsBegruendungSavingToTrue_when_saving", async () => {
       const begruendung = createBegruendung();
       const wahlbezirkID = generateRandomString(10);
 

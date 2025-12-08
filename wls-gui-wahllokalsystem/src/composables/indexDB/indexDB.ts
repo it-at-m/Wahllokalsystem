@@ -36,14 +36,17 @@ export const useIndexDB = () => {
       async getItemFromIDB(key: string): Promise<IndexDBValue | null> {
         try {
           const item = await localforage.getItem<IndexDBValue>(key);
-          return item
-            ? ({
-                ...item,
-                data: await decrypt(item.data, this.cryptoKey),
-              } as IndexDBValue)
-            : null;
+          if (item) {
+            return item.data
+              ? ({
+                  ...item,
+                  data: await decrypt(item.data, this.cryptoKey),
+                } as IndexDBValue)
+              : item;
+          } else {
+            return null;
+          }
         } catch (error) {
-          console.debug(error);
           logError("Fehler beim Laden aus IDB:", error);
           return null;
         }

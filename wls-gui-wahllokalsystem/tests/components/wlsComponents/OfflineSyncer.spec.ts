@@ -8,7 +8,6 @@ import {
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
-import { createPinia, setActivePinia } from "pinia";
 import {
   afterAll,
   afterEach,
@@ -58,7 +57,6 @@ describe("OfflineSyncer", () => {
   beforeEach(() => {
     mockDefinitions.taskManager.numberOfTasksFinished = ref(0);
     mockDefinitions.taskManager.numberOfTasksToRun = ref(0);
-    setActivePinia(createPinia());
     wrapper = mount(OfflineSyncer, {
       global: {
         plugins: [vuetify],

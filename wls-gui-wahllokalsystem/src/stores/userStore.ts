@@ -35,7 +35,6 @@ export const useUserStore = defineStore("user", () => {
     ],
   };
   const user = ref<User>(defaultUser);
-  const cryptoKey = ref();
 
   async function loadUser() {
     try {
@@ -118,7 +117,6 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     user,
-    cryptoKey,
     loadUser,
     setUser,
     getWahlbezirkIdFromWahlMetaDataByWahlId,

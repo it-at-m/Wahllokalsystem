@@ -2,6 +2,11 @@ export function useCryptoUtils() {
   const algorithm = { name: "AES-GCM", iv: new Uint8Array(16) };
 
   async function encrypt(data: string | undefined, key: CryptoKey) {
+    if (!key) {
+      throw new Error(
+        "Verschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+      );
+    }
     return await crypto.subtle.encrypt(
       algorithm,
       key,

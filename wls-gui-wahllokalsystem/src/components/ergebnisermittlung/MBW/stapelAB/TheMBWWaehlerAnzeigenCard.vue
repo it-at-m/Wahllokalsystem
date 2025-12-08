@@ -3,7 +3,7 @@
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody class="bottom-border-black">
+        <tbody>
           <tr
             v-for="(row, idx) in rows"
             :key="idx"

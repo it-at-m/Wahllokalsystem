@@ -1,6 +1,6 @@
 <template>
   <v-table>
-    <tbody class="bottom-border-black">
+    <tbody>
       <tr>
         <td class="index-column">A1</td>
         <td>Wahlberechtigte ohne Sperrvermerk "W" (Wahlschein)</td>

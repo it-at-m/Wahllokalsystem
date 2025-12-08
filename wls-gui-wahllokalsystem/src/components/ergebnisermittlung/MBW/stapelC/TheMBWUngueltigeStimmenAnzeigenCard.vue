@@ -3,7 +3,7 @@
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody class="bottom-border-black">
+        <tbody>
           <tr>
             <td class="index-column" />
             <td />

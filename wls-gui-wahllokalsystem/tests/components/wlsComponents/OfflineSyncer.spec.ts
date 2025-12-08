@@ -57,6 +57,7 @@ describe("OfflineSyncer", () => {
   beforeEach(() => {
     mockDefinitions.taskManager.numberOfTasksFinished = ref(0);
     mockDefinitions.taskManager.numberOfTasksToRun = ref(0);
+
     wrapper = mount(OfflineSyncer, {
       global: {
         plugins: [vuetify],

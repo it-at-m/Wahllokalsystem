@@ -26,6 +26,7 @@
               v-for="(value, index2) in resultRow"
               :key="index2"
               :class="[
+                { 'index-column': index2 === 0 },
                 { 'font-weight-bold': true },
                 { 'text-right': index2 === 2 },
               ]"

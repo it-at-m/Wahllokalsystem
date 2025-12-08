@@ -12,7 +12,9 @@
         v-for="vorschlag in sortedModelValue"
         :key="vorschlag.wahlvorschlag.identifikator"
       >
-        <td>D {{ vorschlag.wahlvorschlag.ordnungszahl }}</td>
+        <td class="index-column">
+          D {{ vorschlag.wahlvorschlag.ordnungszahl }}
+        </td>
         <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
         <td class="text-right">
           {{
@@ -24,7 +26,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td class="font-weight-bold">D</td>
+        <td class="font-weight-bold index-column">D</td>
         <td class="font-weight-bold">Gültige Stimmen insgesamt</td>
         <td class="font-weight-bold text-right">{{ totalSum }}</td>
       </tr>

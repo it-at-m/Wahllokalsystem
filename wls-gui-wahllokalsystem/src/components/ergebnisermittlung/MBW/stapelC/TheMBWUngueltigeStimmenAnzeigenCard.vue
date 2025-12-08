@@ -12,7 +12,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <td class="font-weight-bold">C</td>
+            <td class="font-weight-bold index-column">C</td>
             <td class="font-weight-bold">Ungültige Stimmen</td>
             <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>
           </tr>

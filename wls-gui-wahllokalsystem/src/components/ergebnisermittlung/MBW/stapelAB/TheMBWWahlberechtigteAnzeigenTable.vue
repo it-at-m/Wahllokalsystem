@@ -9,7 +9,7 @@
         </td>
       </tr>
       <tr>
-        <td>A2</td>
+        <td class="index-column">A2</td>
         <td>Wahlberechtigte mit Sperrvermerk "W" (Wahlschein)</td>
         <td class="text-right">
           {{ wahlberechtigte.a2 ?? 0 }}
@@ -18,7 +18,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td class="font-weight-bold">A1 + A2</td>
+        <td class="font-weight-bold index-column">A1 + A2</td>
         <td class="font-weight-bold">Wahlberechtigte insgesamt</td>
         <td class="font-weight-bold text-right">
           {{ wahlberechtigte.a1 + (wahlberechtigte.a2 ?? 0) }}

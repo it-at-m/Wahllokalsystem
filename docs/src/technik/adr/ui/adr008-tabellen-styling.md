@@ -10,7 +10,7 @@ Um ein einheitliches, optisches Auftreten in der Anwendung zu haben, sollen Tabe
 
 ## Entscheidung
 
-Für ein einheitliches Bild sollen alle Tabellen, die am Ende eine Zusammenfassung von Werten darstellen, einen 
+Für ein einheitliches Bild sollen alle Tabellen, die am Ende eine Zusammenfassung von Werten darstellen, einen
 Footer haben, dessen Top-Border sich von den anderen abhebt, um deutlich zu machen, dass es sich um die Summen handelt.
 
 ## Konsequenzen

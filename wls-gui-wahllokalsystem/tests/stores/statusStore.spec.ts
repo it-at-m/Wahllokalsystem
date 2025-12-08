@@ -10,11 +10,13 @@ const { createStatus } = useStatusTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getStatus: vi.fn(),
+  postStatus: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/statusService.ts", () => ({
   useStatusService: () => ({
     getStatus: mockDefinitions.getStatus,
+    postStatus: mockDefinitions.postStatus,
   }),
 }));
 
@@ -118,5 +120,58 @@ describe("statusStore.ts", () => {
         ]);
       }
     );
+  });
+
+  describe("saveStatus", () => {
+    it("should_saveAllStatusEntries_when_saveStatusIsCalled", async () => {
+      const statusEntry1 = createStatus();
+      const statusEntry2 = createStatus();
+      unitUnderTest.status = [statusEntry1, statusEntry2];
+
+      await unitUnderTest.saveStatus(wahlID, wahlbezirkID);
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledTimes(2);
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        statusEntry1
+      );
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        statusEntry2
+      );
+    });
+
+    it("should_handleError_when_postStatusFails", async () => {
+      const statusEntry = createStatus();
+      unitUnderTest.status = [statusEntry];
+
+      // Mock the postStatus function to throw an error
+      mockDefinitions.postStatus.mockRejectedValue(new Error("Network error"));
+
+      await expect(
+        unitUnderTest.saveStatus(wahlID, wahlbezirkID)
+      ).rejects.toThrow(
+        `Fehler beim Speichern des Status für WahlID: ${wahlID}`
+      );
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_toggleIsStatusSavingFromTrueToFalse_when_saving", async () => {
+      const statusEntry = createStatus();
+      unitUnderTest.status = [statusEntry];
+
+      mockDefinitions.postStatus.mockResolvedValue(undefined);
+
+      const saveStatusPromise = unitUnderTest.saveStatus(wahlID, wahlbezirkID);
+
+      expect(unitUnderTest.isStatusSaving).toBe(true);
+
+      await saveStatusPromise;
+
+      expect(unitUnderTest.isStatusSaving).toBe(false);
+    });
   });
 });

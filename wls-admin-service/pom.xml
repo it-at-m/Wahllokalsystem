@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-admin-service</artifactId>
-    <version>0.4.6-SNAPSHOT</version>
+    <version>0.4.7-SNAPSHOT</version>
     <name>wls_admin_service</name>
 
     <properties>
@@ -519,7 +519,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.15.0</version>
+                <version>7.17.0</version>
                 <configuration>
                     <generatorName>java</generatorName>
                     <library>resttemplate</library>
@@ -557,7 +557,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.6.2.json</inputSpec>
+                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.auth.0.7.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

@@ -58,7 +58,7 @@ jobs:
       package-dir: "wls-gui-<frontend-name>"
 ```
 
-```yml {13} [dispatch-build-github-container-image-for-frontend.yml]
+```yml {13} [dispatch-create-github-container-image-frontend.yml]
 name: dispatch build github container image for frontend
 
 on:

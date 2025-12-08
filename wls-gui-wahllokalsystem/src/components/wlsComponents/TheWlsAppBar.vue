@@ -37,6 +37,13 @@
           <wls-clock class="navbar-text mx-2 mt-1" />
           <the-wls-online-offline-menu />
           <the-info-help-icon />
+          <v-btn
+            icon="$logout"
+            variant="text"
+            density="comfortable"
+            size="x-large"
+            @click="onLogoutClicked"
+          />
         </v-col>
       </v-row>
     </v-app-bar>
@@ -57,6 +64,7 @@ import TheRootNavigationList from "@/components/navigation/TheRootNavigationList
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -70,12 +78,18 @@ const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
 const { hasAllTasksRun } = storeToRefs(useTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();
+const { logout } = useLogoutService();
+
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
 const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
+
+function onLogoutClicked() {
+  logout();
+}
 </script>
 
 <style>

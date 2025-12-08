@@ -28,7 +28,10 @@ public class AuthUtils {
      * @return der Username or a "unauthenticated", wenn keine {@link Authentication} existiert
      */
     public static String getUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getUsername(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    public static String getUsername(final Authentication authentication) {
         if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
             return (String) jwtAuthenticationToken.getTokenAttributes().getOrDefault(TOKEN_USER_NAME, null);
         } else if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {

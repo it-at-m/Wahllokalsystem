@@ -11,6 +11,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
+import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
@@ -31,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.config.Customizer;
@@ -93,7 +95,8 @@ public class SecurityConfiguration {
                                 new LoginUrlAuthenticationEntryPoint(LOGIN_PATH),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
                 .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()));
+                        .jwt(Customizer.withDefaults()))
+                .logout(logoutspec -> logoutspec.clearAuthentication(true));
 
         return http.build();
     }
@@ -118,7 +121,8 @@ public class SecurityConfiguration {
                         PathPatternRequestMatcher.withDefaults().matcher("/"),
                         PathPatternRequestMatcher.withDefaults().matcher("/home"),
                         PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
-                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"))
+                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
@@ -127,6 +131,11 @@ public class SecurityConfiguration {
                         .loginPage(LOGIN_PATH)
                         .permitAll())
                 .logout(LogoutConfigurer::permitAll)
+                .logout(logoutspec -> logoutspec.permitAll(true).clearAuthentication(true)
+                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()
+                                .matcher(HttpMethod.GET, "/logout"))
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> log.info("logout successful for {}", AuthUtils.getUsername(authentication))))
                 .securityContext(securityContext -> securityContext.requireExplicitSave(false))
                 .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

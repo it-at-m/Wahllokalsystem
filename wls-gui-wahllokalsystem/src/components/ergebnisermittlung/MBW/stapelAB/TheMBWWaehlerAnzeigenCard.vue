@@ -3,28 +3,37 @@
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody>
+        <tbody class="bottom-border-black">
           <tr
-            v-for="(row, index) in rows"
-            :key="index"
+            v-for="(row, idx) in rows"
+            :key="idx"
           >
             <td
-              v-for="(value, idx) in row"
-              :key="idx"
-            >
-              {{ value }}
-            </td>
-          </tr>
-          <tr class="bg-grey-lighten-3">
-            <td
-              v-for="(value, index) in resultRow"
-              :key="index"
-              class="font-weight-bold"
+              v-for="(value, index1) in row"
+              :key="index1"
+              :class="[
+                { 'index-column': index1 === 0 },
+                { 'text-right': index1 === 2 },
+              ]"
             >
               {{ value }}
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td
+              v-for="(value, index2) in resultRow"
+              :key="index2"
+              :class="[
+                { 'font-weight-bold': true },
+                { 'text-right': index2 === 2 },
+              ]"
+            >
+              {{ value }}
+            </td>
+          </tr>
+        </tfoot>
       </v-table>
     </v-card-text>
   </v-card>
@@ -32,7 +41,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
@@ -67,11 +76,11 @@ const rows = computed(() =>
 );
 const resultRow = computed(() =>
   isUWB.value
-    ? ["B1+B2", "Wähler insgesamt", b1.value + b2.value]
+    ? ["B1 + B2", "Wähler insgesamt", b1.value + b2.value]
     : ["B", "Wähler insgesamt", b.value]
 );
 
-onMounted(async () => {
+onActivated(async () => {
   if (isUWB.value) {
     const waehlerverzeichnisNummer =
       waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(

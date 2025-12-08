@@ -19,6 +19,14 @@ export function useStatusMapper() {
     };
   }
 
+  function toDto(model: Status): StatusDTO {
+    return {
+      bezirkUndWahlID: _toBezirkUndWahlIDDto(model.bezirkUndWahlID),
+      schnellmeldung: _toMeldungDto(model.schnellmeldung),
+      niederschrift: _toMeldungDto(model.niederschrift),
+    };
+  }
+
   function _toMeldungModel(dto: MeldungDTO): Meldung {
     return {
       validierungsstatus:
@@ -29,10 +37,27 @@ export function useStatusMapper() {
     };
   }
 
+  function _toMeldungDto(model: Meldung): MeldungDTO {
+    return {
+      validierungsstatus:
+        _modelValidierungsstatusEnumToDtoMapping[model.validierungsstatus],
+      gedruckt: model.gedruckt,
+      uebermittelt: model.uebermittelt,
+      sendeuhrzeit: model.sendeuhrzeit,
+    };
+  }
+
   function _toBezirkUndWahlIDModel(dto: BezirkUndWahlIdDTO): BezirkUndWahlID {
     return {
       wahlID: dto.wahlID,
       wahlbezirkID: dto.wahlbezirkID,
+    };
+  }
+
+  function _toBezirkUndWahlIDDto(model: BezirkUndWahlID): BezirkUndWahlIdDTO {
+    return {
+      wahlID: model.wahlID,
+      wahlbezirkID: model.wahlbezirkID,
     };
   }
 
@@ -50,7 +75,22 @@ export function useStatusMapper() {
       MeldungValidierungsstatusEnum.Valide,
   };
 
+  const _modelValidierungsstatusEnumToDtoMapping: Record<
+    MeldungValidierungsstatusEnum,
+    MeldungDTOValidierungsstatusEnum
+  > = {
+    [MeldungValidierungsstatusEnum.Invalide]:
+      MeldungDTOValidierungsstatusEnum.Invalide,
+    [MeldungValidierungsstatusEnum.NichtGesendet]:
+      MeldungDTOValidierungsstatusEnum.NichtGesendet,
+    [MeldungValidierungsstatusEnum.NichtValidiert]:
+      MeldungDTOValidierungsstatusEnum.NichtValidiert,
+    [MeldungValidierungsstatusEnum.Valide]:
+      MeldungDTOValidierungsstatusEnum.Valide,
+  };
+
   return {
     toModel,
+    toDto,
   };
 }

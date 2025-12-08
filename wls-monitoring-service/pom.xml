@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-monitoring-service</artifactId>
-    <version>0.3.7-SNAPSHOT</version>
+    <version>0.3.8-SNAPSHOT</version>
     <name>wls_monitoring_service</name>
 
     <properties>
@@ -388,7 +388,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.15.0</version>
+                <version>7.17.0</version>
                 <configuration>
                     <typeMappings>
                         <typeMapping>OffsetDateTime=LocalDateTime</typeMapping>

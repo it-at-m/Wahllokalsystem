@@ -2,4 +2,5 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorr
 
 import jakarta.persistence.Embeddable;
 
-@Embeddable public record ExampleDto(){}
+@Embeddable
+public record ExampleDto() {}

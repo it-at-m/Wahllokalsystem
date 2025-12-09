@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 
 public class ExampleServiceTest {
 
-    @Nested
-    class NotHavingTestEnding {
+  @Nested
+  class NotHavingTestEnding {
 
-        @Test
-        void should_testFileName_when_foundTestAnnotation() {
-        }
-    }
+    @Test
+    void should_testFileName_when_foundTestAnnotation() {}
+  }
 }

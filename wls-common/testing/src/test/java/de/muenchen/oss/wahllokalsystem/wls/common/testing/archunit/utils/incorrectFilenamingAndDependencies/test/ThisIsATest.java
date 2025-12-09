@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Nested;
 
 public class ThisIsATest {
 
-    @Nested
-    class ThereIsNoMatchingMethod {
-    }
+  @Nested
+  class ThereIsNoMatchingMethod {}
 }

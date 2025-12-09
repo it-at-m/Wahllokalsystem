@@ -4,13 +4,13 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correct
 import java.util.List;
 
 public interface ExampleInterface {
-    ExampleModel exampleModel = new ExampleModel();
+  ExampleModel exampleModel = new ExampleModel();
 
-    String methodWithOverload();
+  String methodWithOverload();
 
-    List<String> methodWithOverload(String input);
+  List<String> methodWithOverload(String input);
 
-    Integer anotherMethodWithOverload();
+  Integer anotherMethodWithOverload();
 
-    List<Integer> anotherMethodWithOverload(Integer input);
+  List<Integer> anotherMethodWithOverload(Integer input);
 }

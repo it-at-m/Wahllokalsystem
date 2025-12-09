@@ -14,26 +14,36 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allTestClasses;
+  private static JavaClasses allTestClasses;
 
-    @BeforeAll
-    static void init() {
-        allTestClasses = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(SwaggerDefaultConfiguration.class.getPackage().getName());
-    }
+  @BeforeAll
+  static void init() {
+    allTestClasses =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(SwaggerDefaultConfiguration.class.getPackage().getName());
+  }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("allTestClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allTestClasses);
-    }
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allTestClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(
+      final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allTestClasses);
+  }
 
-    public static Stream<Arguments> allTestClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of("TEST_BEFORE_EACH_NAMING_CONVENTION_RULE", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED", MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
-    }
+  public static Stream<Arguments> allTestClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "TEST_NAMING_CONVENTION_RULE",
+            MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+        Arguments.of(
+            "TEST_BEFORE_EACH_NAMING_CONVENTION_RULE",
+            MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
+            MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
+  }
 }

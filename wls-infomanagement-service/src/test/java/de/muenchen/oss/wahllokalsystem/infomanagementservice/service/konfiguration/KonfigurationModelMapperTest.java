@@ -18,152 +18,167 @@ import org.mapstruct.factory.Mappers;
 
 class KonfigurationModelMapperTest {
 
-    private final KonfigurationModelMapper unitUnderTest = Mappers.getMapper(KonfigurationModelMapper.class);
+  private final KonfigurationModelMapper unitUnderTest =
+      Mappers.getMapper(KonfigurationModelMapper.class);
 
-    @Nested
-    class ToModel {
-        @Test
-        void should_returnKonfigurationModel_when_konfigurationIsGiven() {
-            val key = "key";
-            val value = "value";
-            val description = "description";
-            val defaultValue = "defaultValue";
-            val entityToMap = new Konfiguration(key, value, description, defaultValue);
+  @Nested
+  class ToModel {
+    @Test
+    void should_returnKonfigurationModel_when_konfigurationIsGiven() {
+      val key = "key";
+      val value = "value";
+      val description = "description";
+      val defaultValue = "defaultValue";
+      val entityToMap = new Konfiguration(key, value, description, defaultValue);
 
-            val expectedResult = new KonfigurationModel(key, value, description, defaultValue);
+      val expectedResult = new KonfigurationModel(key, value, description, defaultValue);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class GetAlternativeKey {
+
+    @Test
+    void should_returnNotNull_when_dataFound() {
+      Assertions.assertThat(
+              unitUnderTest
+                  .getAlternativeKey(
+                      KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT, WahlbezirkArt.BWB)
+                  .get())
+          .isNotNull();
     }
 
-    @Nested
-    class GetAlternativeKey {
+    @Test
+    void should_returnEmptyOptional_when_noDataFound() {
+      Assertions.assertThat(
+              unitUnderTest.getAlternativeKey(
+                  KonfigurationKonfigKey.WILLKOMMENSTEXT, WahlbezirkArt.BWB))
+          .isEmpty();
+    }
+  }
 
-        @Test
-        void should_returnNotNull_when_dataFound() {
-            Assertions.assertThat(unitUnderTest.getAlternativeKey(KonfigurationKonfigKey.FRUEHESTE_EROEFFNUNGSZEIT, WahlbezirkArt.BWB).get()).isNotNull();
-        }
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnEmptyOptional_when_noDataFound() {
-            Assertions.assertThat(unitUnderTest.getAlternativeKey(KonfigurationKonfigKey.WILLKOMMENSTEXT, WahlbezirkArt.BWB)).isEmpty();
-        }
+    @Test
+    void should_returnKonfiguration_when_konfigurationModelIsGiven() {
+      val schluessel = "schluessel";
+      val wert = "wert";
+      val beschreibung = "beschreibung";
+      val standardwert = "standardwert";
+      val modelToMap = new KonfigurationSetModel(schluessel, wert, beschreibung, standardwert);
+      val expectedResult = new Konfiguration(schluessel, wert, beschreibung, standardwert);
+
+      val result = unitUnderTest.toEntity(modelToMap);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class MapStandardwertFromModel {
+
+    @Test
+    void should_returnStandardwert_when_standardwertIsGivenInKonfigurationSetModel() {
+      val wert = "wert";
+      val standardwert = "standardwert";
+      val modelToMap =
+          KonfigurationSetModel.builder().standardwert(standardwert).wert(wert).build();
+
+      val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
+
+      Assertions.assertThat(result).isEqualTo(standardwert);
     }
 
-    @Nested
-    class ToEntity {
+    @Test
+    void should_returnWert_when_noStandardwertIsGivenInKonfigurationSetModel() {
+      val wert = "wert";
+      val modelToMap = KonfigurationSetModel.builder().standardwert(null).wert(wert).build();
 
-        @Test
-        void should_returnKonfiguration_when_konfigurationModelIsGiven() {
-            val schluessel = "schluessel";
-            val wert = "wert";
-            val beschreibung = "beschreibung";
-            val standardwert = "standardwert";
-            val modelToMap = new KonfigurationSetModel(schluessel, wert, beschreibung, standardwert);
-            val expectedResult = new Konfiguration(schluessel, wert, beschreibung, standardwert);
+      val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
 
-            val result = unitUnderTest.toEntity(modelToMap);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
+      Assertions.assertThat(result).isEqualTo(wert);
     }
+  }
 
-    @Nested
-    class MapStandardwertFromModel {
+  @Nested
+  class ToKennbuchstabenListenModel {
+    // includes all default methods of the mapper because they are using each other
 
-        @Test
-        void should_returnStandardwert_when_standardwertIsGivenInKonfigurationSetModel() {
-            val wert = "wert";
-            val standardwert = "standardwert";
-            val modelToMap = KonfigurationSetModel.builder().standardwert(standardwert).wert(wert).build();
+    @Test
+    void should_returnKennbuchstabenListenModel_when_stringIsGiven() {
+      val stringToMap =
+          "K1,K2,K3 (K1 + K2),K4,K (K3 + K4);L1,L2,L3 (L1 + L2),L4,L (L3 + L4)$K1,K2,K3 (K1 + K2),K4,"
+              + "K (K3 + K4);L1,L2,L3 (L1 + L2),L4,L (L3 + L4)";
 
-            val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
+      List<KennbuchstabenListeModel> kennbuchstabenListe_list = new ArrayList<>();
+      val expectedKennbuchstabenListen = new KennbuchstabenListenModel(kennbuchstabenListe_list);
 
-            Assertions.assertThat(result).isEqualTo(standardwert);
-        }
+      val kennbuchstaben_1_list = new ArrayList<KennbuchstabenModel>();
+      val kennbuchstabenListe_1 = new KennbuchstabenListeModel(kennbuchstaben_1_list);
 
-        @Test
-        void should_returnWert_when_noStandardwertIsGivenInKonfigurationSetModel() {
-            val wert = "wert";
-            val modelToMap = KonfigurationSetModel.builder().standardwert(null).wert(wert).build();
+      val kennbuchstaben_2_list = new ArrayList<KennbuchstabenModel>();
+      val kennbuchstabenListe_2 = new KennbuchstabenListeModel(kennbuchstaben_2_list);
 
-            val result = unitUnderTest.mapStandardwertFromModel(modelToMap);
+      val kennbuchstaben_1_1_list = List.of("K1", "K2", "K3 (K1 + K2)", "K4", "K (K3 + K4)");
+      val kennbuchstaben_1_1 = new KennbuchstabenModel(kennbuchstaben_1_1_list);
+      kennbuchstaben_1_list.add(kennbuchstaben_1_1);
 
-            Assertions.assertThat(result).isEqualTo(wert);
-        }
+      val kennbuchstaben_1_2_list = List.of("L1", "L2", "L3 (L1 + L2)", "L4", "L (L3 + L4)");
+      val kennbuchstaben_1_2 = new KennbuchstabenModel(kennbuchstaben_1_2_list);
+      kennbuchstaben_1_list.add(kennbuchstaben_1_2);
+
+      kennbuchstabenListe_list.add(kennbuchstabenListe_1);
+
+      val kennbuchstaben_2_1_list = List.of("K1", "K2", "K3 (K1 + K2)", "K4", "K (K3 + K4)");
+      val kennbuchstaben_2_1 = new KennbuchstabenModel(kennbuchstaben_2_1_list);
+      kennbuchstaben_2_list.add(kennbuchstaben_2_1);
+
+      val kennbuchstaben_2_2_list = List.of("L1", "L2", "L3 (L1 + L2)", "L4", "L (L3 + L4)");
+      val kennbuchstaben_2_2 = new KennbuchstabenModel(kennbuchstaben_2_2_list);
+      kennbuchstaben_2_list.add(kennbuchstaben_2_2);
+
+      kennbuchstabenListe_list.add(kennbuchstabenListe_2);
+
+      Assertions.assertThat(unitUnderTest.toKennbuchstabenListenModel(stringToMap))
+          .isEqualTo(expectedKennbuchstabenListen);
     }
+  }
 
-    @Nested
-    class ToKennbuchstabenListenModel {
-        //includes all default methods of the mapper because they are using each other
+  @Nested
+  class ToKennbuchstabenListeModel {
 
-        @Test
-        void should_returnKennbuchstabenListenModel_when_stringIsGiven() {
-            val stringToMap = "K1,K2,K3 (K1 + K2),K4,K (K3 + K4);L1,L2,L3 (L1 + L2),L4,L (L3 + L4)$K1,K2,K3 (K1 + K2),K4,"
-                    + "K (K3 + K4);L1,L2,L3 (L1 + L2),L4,L (L3 + L4)";
+    @Test
+    void should_returnKennbuchstabenListeModel_when_stringIsGiven() {
+      val stringToMap = "first; second";
 
-            List<KennbuchstabenListeModel> kennbuchstabenListe_list = new ArrayList<>();
-            val expectedKennbuchstabenListen = new KennbuchstabenListenModel(kennbuchstabenListe_list);
+      val result = unitUnderTest.toKennbuchstabenListeModel(stringToMap);
 
-            val kennbuchstaben_1_list = new ArrayList<KennbuchstabenModel>();
-            val kennbuchstabenListe_1 = new KennbuchstabenListeModel(kennbuchstaben_1_list);
+      val expectedResult =
+          new KennbuchstabenListeModel(
+              List.of(
+                  new KennbuchstabenModel(List.of("first")),
+                  new KennbuchstabenModel(List.of(" second"))));
 
-            val kennbuchstaben_2_list = new ArrayList<KennbuchstabenModel>();
-            val kennbuchstabenListe_2 = new KennbuchstabenListeModel(kennbuchstaben_2_list);
-
-            val kennbuchstaben_1_1_list = List.of("K1", "K2", "K3 (K1 + K2)", "K4", "K (K3 + K4)");
-            val kennbuchstaben_1_1 = new KennbuchstabenModel(kennbuchstaben_1_1_list);
-            kennbuchstaben_1_list.add(kennbuchstaben_1_1);
-
-            val kennbuchstaben_1_2_list = List.of("L1", "L2", "L3 (L1 + L2)", "L4", "L (L3 + L4)");
-            val kennbuchstaben_1_2 = new KennbuchstabenModel(kennbuchstaben_1_2_list);
-            kennbuchstaben_1_list.add(kennbuchstaben_1_2);
-
-            kennbuchstabenListe_list.add(kennbuchstabenListe_1);
-
-            val kennbuchstaben_2_1_list = List.of("K1", "K2", "K3 (K1 + K2)", "K4", "K (K3 + K4)");
-            val kennbuchstaben_2_1 = new KennbuchstabenModel(kennbuchstaben_2_1_list);
-            kennbuchstaben_2_list.add(kennbuchstaben_2_1);
-
-            val kennbuchstaben_2_2_list = List.of("L1", "L2", "L3 (L1 + L2)", "L4", "L (L3 + L4)");
-            val kennbuchstaben_2_2 = new KennbuchstabenModel(kennbuchstaben_2_2_list);
-            kennbuchstaben_2_list.add(kennbuchstaben_2_2);
-
-            kennbuchstabenListe_list.add(kennbuchstabenListe_2);
-
-            Assertions.assertThat(unitUnderTest.toKennbuchstabenListenModel(stringToMap)).isEqualTo(expectedKennbuchstabenListen);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToKennbuchstabenListeModel {
+  @Nested
+  class ToKennbuchstabenModel {
+    @Test
+    void should_returnKennbuchstabenModel_when_stringIsGiven() {
+      val stringToMap = "a,b , 1";
 
-        @Test
-        void should_returnKennbuchstabenListeModel_when_stringIsGiven() {
-            val stringToMap = "first; second";
+      val result = unitUnderTest.toKennbuchstabenModel(stringToMap);
 
-            val result = unitUnderTest.toKennbuchstabenListeModel(stringToMap);
+      val expectedResult = new KennbuchstabenModel(List.of("a", "b ", " 1"));
 
-            val expectedResult = new KennbuchstabenListeModel(List.of(new KennbuchstabenModel(List.of("first")), new KennbuchstabenModel(List.of(" second"))));
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
-
-    @Nested
-    class ToKennbuchstabenModel {
-        @Test
-        void should_returnKennbuchstabenModel_when_stringIsGiven() {
-            val stringToMap = "a,b , 1";
-
-            val result = unitUnderTest.toKennbuchstabenModel(stringToMap);
-
-            val expectedResult = new KennbuchstabenModel(List.of("a", "b ", " 1"));
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-    }
+  }
 }

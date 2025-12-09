@@ -23,45 +23,53 @@ import org.springframework.util.Assert;
 /*
  * inspired by org.springframework.security.test.context.support.WithMockUserSecurityContextFactory
  */
-final public class WithMockUserAsJwtSecurityContextFactory implements WithSecurityContextFactory<WithMockUserAsJwt> {
+public final class WithMockUserAsJwtSecurityContextFactory
+    implements WithSecurityContextFactory<WithMockUserAsJwt> {
 
-    private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
-            .getContextHolderStrategy();
+  private SecurityContextHolderStrategy securityContextHolderStrategy =
+      SecurityContextHolder.getContextHolderStrategy();
 
-    @Override
-    public SecurityContext createSecurityContext(WithMockUserAsJwt withUser) {
-        val username = withUser.value();
-        Assert.notNull(username, () -> withUser + " cannot have null username on both username and value properties");
+  @Override
+  public SecurityContext createSecurityContext(WithMockUserAsJwt withUser) {
+    val username = withUser.value();
+    Assert.notNull(
+        username,
+        () -> withUser + " cannot have null username on both username and value properties");
 
-        val issuedAt = Instant.now().minus(withUser.issuedBeforeHours(), ChronoUnit.HOURS);
-        val expiresAt = Instant.now().plus(withUser.expiredInHours(), ChronoUnit.HOURS);
-        val headers = Map.of("jwtDummyHeader", (Object) "jwtDummyValue");
+    val issuedAt = Instant.now().minus(withUser.issuedBeforeHours(), ChronoUnit.HOURS);
+    val expiresAt = Instant.now().plus(withUser.expiredInHours(), ChronoUnit.HOURS);
+    val headers = Map.of("jwtDummyHeader", (Object) "jwtDummyValue");
 
-        val claims = new HashMap<String, Object>();
-        claims.put("dummyClaim", "dummyClaimValue");
-        claims.putAll(createClaimsMap(withUser.claimProperties(), withUser.claimPropertiesSeparator()));
+    val claims = new HashMap<String, Object>();
+    claims.put("dummyClaim", "dummyClaimValue");
+    claims.putAll(createClaimsMap(withUser.claimProperties(), withUser.claimPropertiesSeparator()));
 
-        val jwt = new Jwt(username, issuedAt, expiresAt, headers, claims);
+    val jwt = new Jwt(username, issuedAt, expiresAt, headers, claims);
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (String authority : withUser.authorities()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority));
-        }
-
-        val authentication = new JwtAuthenticationToken(jwt, grantedAuthorities);
-
-        val context = this.securityContextHolderStrategy.createEmptyContext();
-        context.setAuthentication(authentication);
-        return context;
+    List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+    for (String authority : withUser.authorities()) {
+      grantedAuthorities.add(new SimpleGrantedAuthority(authority));
     }
 
-    @Autowired(required = false)
-    void setSecurityContextHolderStrategy(SecurityContextHolderStrategy securityContextHolderStrategy) {
-        this.securityContextHolderStrategy = securityContextHolderStrategy;
-    }
+    val authentication = new JwtAuthenticationToken(jwt, grantedAuthorities);
 
-    private Map<String, Object> createClaimsMap(final String[] concatedClaimProperties, final String keyValueSeparator) {
-        return Arrays.stream(concatedClaimProperties).map(concatedClaimProperty -> concatedClaimProperty.split(keyValueSeparator))
-                .collect(Collectors.toMap(propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
-    }
+    val context = this.securityContextHolderStrategy.createEmptyContext();
+    context.setAuthentication(authentication);
+    return context;
+  }
+
+  @Autowired(required = false)
+  void setSecurityContextHolderStrategy(
+      SecurityContextHolderStrategy securityContextHolderStrategy) {
+    this.securityContextHolderStrategy = securityContextHolderStrategy;
+  }
+
+  private Map<String, Object> createClaimsMap(
+      final String[] concatedClaimProperties, final String keyValueSeparator) {
+    return Arrays.stream(concatedClaimProperties)
+        .map(concatedClaimProperty -> concatedClaimProperty.split(keyValueSeparator))
+        .collect(
+            Collectors.toMap(
+                propertyAsArray -> propertyAsArray[0], propertyAsArray -> propertyAsArray[1]));
+  }
 }

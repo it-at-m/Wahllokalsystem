@@ -9,11 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = MicroServiceApplication.class)
 class MicroServiceApplicationDefaultProfileTest {
 
-    @Autowired(required = false)
-    AnonymousDetailRetriever anonymousDetailRetriever;
+  @Autowired(required = false)
+  AnonymousDetailRetriever anonymousDetailRetriever;
 
-    @Test
-    void should_returnNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
-        Assertions.assertThat(anonymousDetailRetriever).isNull();
-    }
+  @Test
+  void should_returnNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
+    Assertions.assertThat(anonymousDetailRetriever).isNull();
+  }
 }

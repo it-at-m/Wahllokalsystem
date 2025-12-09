@@ -23,80 +23,93 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class KonfigurationController {
 
-    private final KonfigurationService konfigurationService;
+  private final KonfigurationService konfigurationService;
 
-    private final KonfigurationDTOMapper konfigurationDTOMapper;
+  private final KonfigurationDTOMapper konfigurationDTOMapper;
 
-    @Operation(
-            description = "Gibt die Konfiguration { key } zurück.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Konfiguration erfolgreich zurückgegeben."),
-                    @ApiResponse(responseCode = "204", description = "Keine Konfiguration vorhanden."),
-            }
-    )
-    @GetMapping("/konfiguration/{key}")
-    public ResponseEntity<KonfigurationDTO> getKonfiguration(@PathVariable("key") KonfigurationKey key) {
-        val konfiguration = konfigurationService.getKonfiguration(konfigurationDTOMapper.toModelKey(key));
+  @Operation(
+      description = "Gibt die Konfiguration { key } zurück.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Konfiguration erfolgreich zurückgegeben."),
+        @ApiResponse(responseCode = "204", description = "Keine Konfiguration vorhanden."),
+      })
+  @GetMapping("/konfiguration/{key}")
+  public ResponseEntity<KonfigurationDTO> getKonfiguration(
+      @PathVariable("key") KonfigurationKey key) {
+    val konfiguration =
+        konfigurationService.getKonfiguration(konfigurationDTOMapper.toModelKey(key));
 
-        return konfiguration.map(konfigurationModel -> ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
-                .orElseGet(() -> ResponseEntity.noContent().build());
+    return konfiguration
+        .map(
+            konfigurationModel ->
+                ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
+        .orElseGet(() -> ResponseEntity.noContent().build());
+  }
+
+  @Operation(
+      description = "Speichert die Konfiguration { key }.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Konfiguration erfolgreich gespeichert."),
+      })
+  @PostMapping("/konfiguration/{key}")
+  public void postKonfiguration(
+      @PathVariable("key") final KonfigurationKey key,
+      @RequestBody final KonfigurationSetDTO konfigurationSetDTO) {
+    val konfigurationSetModel = konfigurationDTOMapper.toSetModel(key, konfigurationSetDTO);
+
+    konfigurationService.setKonfiguration(konfigurationSetModel);
+  }
+
+  @Operation(
+      description = "Gibt alle Konfigurationen zurück.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
+        @ApiResponse(responseCode = "204", description = "Keine Konfigurationen vorhanden."),
+      })
+  @GetMapping("/konfiguration")
+  public ResponseEntity<List<KonfigurationDTO>> getKonfigurations() {
+    val allKonfigurations = konfigurationService.getAllKonfigurations();
+
+    if (CollectionUtils.isEmpty(allKonfigurations)) {
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.ok(
+          allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());
     }
+  }
 
-    @Operation(
-            description = "Speichert die Konfiguration { key }.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Konfiguration erfolgreich gespeichert."),
-            }
-    )
-    @PostMapping("/konfiguration/{key}")
-    public void postKonfiguration(@PathVariable("key") final KonfigurationKey key, @RequestBody final KonfigurationSetDTO konfigurationSetDTO) {
-        val konfigurationSetModel = konfigurationDTOMapper.toSetModel(key, konfigurationSetDTO);
+  @Operation(
+      description = "Gibt eine Konfiguration anhand der Loginzeit { key } zurück.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
+        @ApiResponse(
+            responseCode = "200",
+            description = "Keine Konfiguration für den { key } vorhanden."),
+      })
+  @GetMapping("/konfigurationUnauthorized/{key}")
+  public ResponseEntity<KonfigurationDTO> getKonfigurationUnauthorized(
+      @PathVariable("key") final KonfigurationKey key) {
+    val konfiguration =
+        konfigurationService.getKonfigurationUnauthorized(konfigurationDTOMapper.toModelKey(key));
 
-        konfigurationService.setKonfiguration(konfigurationSetModel);
-    }
+    return konfiguration
+        .map(
+            konfigurationModel ->
+                ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
+        .orElseGet(() -> ResponseEntity.noContent().build());
+  }
 
-    @Operation(
-            description = "Gibt alle Konfigurationen zurück.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
-                    @ApiResponse(responseCode = "204", description = "Keine Konfigurationen vorhanden."),
-            }
-    )
-    @GetMapping("/konfiguration")
-    public ResponseEntity<List<KonfigurationDTO>> getKonfigurations() {
-        val allKonfigurations = konfigurationService.getAllKonfigurations();
-
-        if (CollectionUtils.isEmpty(allKonfigurations)) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(allKonfigurations.stream().map(konfigurationDTOMapper::toDTO).toList());
-        }
-    }
-
-    @Operation(
-            description = "Gibt eine Konfiguration anhand der Loginzeit { key } zurück.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Konfigurationen erfolgreich geladen."),
-                    @ApiResponse(responseCode = "200", description = "Keine Konfiguration für den { key } vorhanden."),
-            }
-    )
-    @GetMapping("/konfigurationUnauthorized/{key}")
-    public ResponseEntity<KonfigurationDTO> getKonfigurationUnauthorized(@PathVariable("key") final KonfigurationKey key) {
-        val konfiguration = konfigurationService.getKonfigurationUnauthorized(konfigurationDTOMapper.toModelKey(key));
-
-        return konfiguration.map(konfigurationModel -> ResponseEntity.ok(konfigurationDTOMapper.toDTO(konfigurationModel)))
-                .orElseGet(() -> ResponseEntity.noContent().build());
-    }
-
-    @Operation(
-            description = "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Objekt mit Liste aller Kennbuchstaben erfolgreich geladen."),
-            }
-    )
-    @GetMapping("/kennbuchstaben")
-    public KennbuchstabenListenDTO getKennbuchstabenListen() {
-        return konfigurationDTOMapper.toDTO(konfigurationService.getKennbuchstabenListen());
-    }
-
+  @Operation(
+      description = "Gibt die Objekt mit einer Liste aller Kennbuchstaben zurück.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Objekt mit Liste aller Kennbuchstaben erfolgreich geladen."),
+      })
+  @GetMapping("/kennbuchstaben")
+  public KennbuchstabenListenDTO getKennbuchstabenListen() {
+    return konfigurationDTOMapper.toDTO(konfigurationService.getKennbuchstabenListen());
+  }
 }

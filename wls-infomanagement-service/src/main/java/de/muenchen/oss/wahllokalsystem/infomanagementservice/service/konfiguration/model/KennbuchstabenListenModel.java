@@ -3,4 +3,5 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 import java.util.List;
 import lombok.Builder;
 
-@Builder public record KennbuchstabenListenModel(List<KennbuchstabenListeModel>kennbuchstabenListen){}
+@Builder
+public record KennbuchstabenListenModel(List<KennbuchstabenListeModel> kennbuchstabenListen) {}

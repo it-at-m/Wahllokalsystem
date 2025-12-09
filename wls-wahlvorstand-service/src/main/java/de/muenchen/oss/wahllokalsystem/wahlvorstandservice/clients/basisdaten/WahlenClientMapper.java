@@ -9,8 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlenClientMapper {
 
-    @Mapping(target = "reihenfolge", constant = "1l")
-    WahlModel toModel(WahlDTO wahlDTO);
+  @Mapping(target = "reihenfolge", constant = "1l")
+  WahlModel toModel(WahlDTO wahlDTO);
 
-    List<WahlModel> fromRemoteClientListOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTO);
+  List<WahlModel> fromRemoteClientListOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTO);
 }

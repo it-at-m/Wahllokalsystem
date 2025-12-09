@@ -9,42 +9,45 @@ import org.mapstruct.factory.Mappers;
 
 public class WahlvorstandDTOMapperTest {
 
-    private final WahlvorstandDTOMapper unitUnderTest = Mappers.getMapper(WahlvorstandDTOMapper.class);
+  private final WahlvorstandDTOMapper unitUnderTest =
+      Mappers.getMapper(WahlvorstandDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnWahlvorstandDTO_when_givenWahlvorstandModel() {
-            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
-            val expectedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
-
-            val result = unitUnderTest.toDTO(mockedWahlvorstandModel);
-            Assertions.assertThat(result).isEqualTo(expectedWahlvorstandDTO);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
     }
 
-    @Nested
-    class ToModel {
+    @Test
+    void should_returnWahlvorstandDTO_when_givenWahlvorstandModel() {
+      val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
+      val expectedWahlvorstandDTO =
+          TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null, null)).isNull();
-        }
-
-        @Test
-        void should_returnWahlvorstandModel_when_givenWahlvorstandDTO() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
-            val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDTO);
-
-            val result = unitUnderTest.toModel(wahlbezirkID, mockedWahlvorstandDTO);
-            Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
-        }
+      val result = unitUnderTest.toDTO(mockedWahlvorstandModel);
+      Assertions.assertThat(result).isEqualTo(expectedWahlvorstandDTO);
     }
+  }
+
+  @Nested
+  class ToModel {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModel(null, null)).isNull();
+    }
+
+    @Test
+    void should_returnWahlvorstandModel_when_givenWahlvorstandDTO() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
+      val expectedWahlvorstandModel =
+          TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDTO);
+
+      val result = unitUnderTest.toModel(wahlbezirkID, mockedWahlvorstandDTO);
+      Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
+    }
+  }
 }

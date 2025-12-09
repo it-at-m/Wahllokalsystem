@@ -21,22 +21,24 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahlenClientImpl implements WahlenClient {
 
-    private final ExceptionFactory exceptionFactory;
-    private final WahlenControllerApi wahlenControllerApi;
-    private final WahlenClientMapper wahlenClientMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final WahlenControllerApi wahlenControllerApi;
+  private final WahlenClientMapper wahlenClientMapper;
 
-    @Override
-    public List<WahlModel> getWahlen(final KonfigurierterWahltagModel wahltag) throws WlsException {
-        final List<WahlDTO> wahlDTOs;
-        try {
-            wahlDTOs = wahlenControllerApi.getWahlen(wahltag.wahltagID());
-        } catch (final Exception exception) {
-            log.info("exception on loadwahl from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
-        if (wahlDTOs == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_ANTWORT_NULL);
-        }
-        return wahlenClientMapper.fromRemoteClientListOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  @Override
+  public List<WahlModel> getWahlen(final KonfigurierterWahltagModel wahltag) throws WlsException {
+    final List<WahlDTO> wahlDTOs;
+    try {
+      wahlDTOs = wahlenControllerApi.getWahlen(wahltag.wahltagID());
+    } catch (final Exception exception) {
+      log.info("exception on loadwahl from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+    if (wahlDTOs == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.BASISDATEN_ANTWORT_NULL);
+    }
+    return wahlenClientMapper.fromRemoteClientListOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  }
 }

@@ -41,141 +41,206 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 public class UserControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    UserRepository userRepository;
+  @Autowired UserRepository userRepository;
 
-    @Autowired
-    LoginAttemptRepository loginAttemptRepository;
+  @Autowired LoginAttemptRepository loginAttemptRepository;
 
-    @Autowired
-    AuthorityRepository authorityRepository;
+  @Autowired AuthorityRepository authorityRepository;
 
-    @Autowired
-    PermissionRepository permissionRepository;
+  @Autowired PermissionRepository permissionRepository;
 
-    @Autowired
-    TransactionTemplate transactionTemplate;
+  @Autowired TransactionTemplate transactionTemplate;
 
-    @Autowired
-    CacheManager cacheManager;
+  @Autowired CacheManager cacheManager;
 
-    @MockitoSpyBean
-    private UserService userService;
+  @MockitoSpyBean private UserService userService;
 
-    @AfterEach
-    void teardown() {
-        cacheManager.getCache(CacheConfig.USER_CACHE).clear();
-        transactionTemplate.executeWithoutResult(status -> {
-            SecurityUtils.runWith(Authorities.ROLE_ADMIN);
-            userRepository.deleteUsersByWahltagID("wahltagID");
-            authorityRepository.deleteAll();
-            permissionRepository.deleteAll();
-            loginAttemptRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    cacheManager.getCache(CacheConfig.USER_CACHE).clear();
+    transactionTemplate.executeWithoutResult(
+        status -> {
+          SecurityUtils.runWith(Authorities.ROLE_ADMIN);
+          userRepository.deleteUsersByWahltagID("wahltagID");
+          authorityRepository.deleteAll();
+          permissionRepository.deleteAll();
+          loginAttemptRepository.deleteAll();
         });
+  }
+
+  @Nested
+  class UserMethod {
+
+    @WithMockUser(username = "Hansi")
+    @Test
+    void should_returnOK_when_noUserFound() throws Exception {
+      val request = MockMvcRequestBuilders.get("/user");
+      api.perform(request).andExpect(status().isOk());
     }
 
-    @Nested
-    class UserMethod {
+    @WithMockUser(username = "Hansi")
+    @Test
+    void should_returnUserDTO_when_userFound() throws Exception {
+      val testauthorityName = "testauthority";
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val permission1Saved = permissionRepository.save(new Permission("permission1"));
+            val permission2Saved = permissionRepository.save(new Permission("permission2"));
+            val authorityToSave =
+                new Authority(
+                    testauthorityName,
+                    new HashSet<>(Set.of(permission1Saved, permission2Saved)),
+                    Collections.emptySet());
+            val authoritySaved = authorityRepository.save(authorityToSave);
+            val userToSave =
+                new User(
+                    "Hansi",
+                    null,
+                    null,
+                    true,
+                    true,
+                    "wahltagID",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new HashSet<>(Set.of(authoritySaved)),
+                    null);
+            userRepository.save(userToSave);
+          });
 
-        @WithMockUser(username = "Hansi")
-        @Test
-        void should_returnOK_when_noUserFound() throws Exception {
-            val request = MockMvcRequestBuilders.get("/user");
-            api.perform(request).andExpect(status().isOk());
-        }
+      val request = MockMvcRequestBuilders.get("/user");
 
-        @WithMockUser(username = "Hansi")
-        @Test
-        void should_returnUserDTO_when_userFound() throws Exception {
-            val testauthorityName = "testauthority";
-            transactionTemplate.executeWithoutResult(status -> {
-                val permission1Saved = permissionRepository.save(new Permission("permission1"));
-                val permission2Saved = permissionRepository.save(new Permission("permission2"));
-                val authorityToSave = new Authority(testauthorityName, new HashSet<>(Set.of(permission1Saved, permission2Saved)), Collections.emptySet());
-                val authoritySaved = authorityRepository.save(authorityToSave);
-                val userToSave = new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, new HashSet<>(Set.of(authoritySaved)),
-                        null);
-                userRepository.save(userToSave);
-            });
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
+      val expectedResponseBody =
+          new UserDTO(
+              "Hansi",
+              null,
+              true,
+              "wahltagID",
+              null,
+              null,
+              null,
+              null,
+              null,
+              Set.of("permission1", "permission2"),
+              null);
 
-            val request = MockMvcRequestBuilders.get("/user");
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
-            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Set.of("permission1", "permission2"), null);
-
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-        }
-
-        @WithMockUser(username = "Hansi")
-        @Test
-        void should_cacheUser_when_controllerIsCalledMoreThanOnce() throws Exception {
-            userRepository.save(new User("Hansi", null, null, true, true, "wahltagID", null, null, null, null, null, null, null));
-
-            val request = MockMvcRequestBuilders.get("/user");
-            // first call
-            api.perform(request).andExpect(status().isOk());
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
-            val expectedResponseBody = new UserDTO("Hansi", null, true, "wahltagID", null, null, null, null, null, Collections.emptySet(), null);
-
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-            // do two more calls with same user
-            api.perform(request).andExpect(status().isOk());
-            api.perform(request).andExpect(status().isOk());
-            // service should be called only once, other two responses come  from cache
-            Mockito.verify(userService, Mockito.times(1)).getUser("Hansi");
-        }
-
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class UnlockUser {
+    @WithMockUser(username = "Hansi")
+    @Test
+    void should_cacheUser_when_controllerIsCalledMoreThanOnce() throws Exception {
+      userRepository.save(
+          new User(
+              "Hansi",
+              null,
+              null,
+              true,
+              true,
+              "wahltagID",
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null));
 
-        @WithMockUser(authorities = Authorities.ROLE_ADMIN)
-        @Test
-        void should_failWith500AndIllegalArgumentException_when_userNotFound() throws Exception {
-            val userName = "Hansi";
-            val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
+      val request = MockMvcRequestBuilders.get("/user");
+      // first call
+      api.perform(request).andExpect(status().isOk());
 
-            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(response.getResponse().getContentAsString(), UserDTO.class);
+      val expectedResponseBody =
+          new UserDTO(
+              "Hansi",
+              null,
+              true,
+              "wahltagID",
+              null,
+              null,
+              null,
+              null,
+              null,
+              Collections.emptySet(),
+              null);
 
-            val expectedException = new IllegalArgumentException("User with username " + userName + " not found.");
-            Assertions.assertThat(response.getResolvedException()).isInstanceOf(expectedException.getClass());
-            Assertions.assertThat(response.getResolvedException().getMessage()).isEqualTo(expectedException.getMessage());
-        }
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
+      // do two more calls with same user
+      api.perform(request).andExpect(status().isOk());
+      api.perform(request).andExpect(status().isOk());
+      // service should be called only once, other two responses come  from cache
+      Mockito.verify(userService, Mockito.times(1)).getUser("Hansi");
+    }
+  }
 
-        @WithMockUser(authorities = Authorities.ROLE_ADMIN)
-        @Test
-        void should_unlockUser_when_userFound() throws Exception {
-            val userName = "Hansi";
-            val accountNonLocked = false;
-            userRepository.save(new User(userName, null, null, true, accountNonLocked, "wahltagID", null, null, null, null, null, null, null));
-            loginAttemptRepository.save(createLoginAttemptWithUsername(userName));
+  @Nested
+  class UnlockUser {
 
-            val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
-            api.perform(request).andExpect(status().isOk());
+    @WithMockUser(authorities = Authorities.ROLE_ADMIN)
+    @Test
+    void should_failWith500AndIllegalArgumentException_when_userNotFound() throws Exception {
+      val userName = "Hansi";
+      val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
 
-            val hansi = userRepository.findByUsername(userName);
-            Assertions.assertThat(hansi).isNotNull();
-            Assertions.assertThat(hansi.get().isAccountNonLocked()).isTrue();
-        }
+      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
 
-        private LoginAttempt createLoginAttemptWithUsername(final String username) {
-            val loginAttempt = new LoginAttempt();
-            loginAttempt.setUsername(username);
-            return loginAttempt;
-        }
+      val expectedException =
+          new IllegalArgumentException("User with username " + userName + " not found.");
+      Assertions.assertThat(response.getResolvedException())
+          .isInstanceOf(expectedException.getClass());
+      Assertions.assertThat(response.getResolvedException().getMessage())
+          .isEqualTo(expectedException.getMessage());
     }
 
+    @WithMockUser(authorities = Authorities.ROLE_ADMIN)
+    @Test
+    void should_unlockUser_when_userFound() throws Exception {
+      val userName = "Hansi";
+      val accountNonLocked = false;
+      userRepository.save(
+          new User(
+              userName,
+              null,
+              null,
+              true,
+              accountNonLocked,
+              "wahltagID",
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null));
+      loginAttemptRepository.save(createLoginAttemptWithUsername(userName));
+
+      val request = MockMvcRequestBuilders.post("/user/" + userName + "/unlock").with(csrf());
+      api.perform(request).andExpect(status().isOk());
+
+      val hansi = userRepository.findByUsername(userName);
+      Assertions.assertThat(hansi).isNotNull();
+      Assertions.assertThat(hansi.get().isAccountNonLocked()).isTrue();
+    }
+
+    private LoginAttempt createLoginAttemptWithUsername(final String username) {
+      val loginAttempt = new LoginAttempt();
+      loginAttempt.setUsername(username);
+      return loginAttempt;
+    }
+  }
 }

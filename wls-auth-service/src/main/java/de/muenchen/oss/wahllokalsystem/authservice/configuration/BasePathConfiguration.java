@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-    @Value("${service.config.clients.infomanagement.basepath}")
-    String eaiBasePath;
+  @Value("${service.config.clients.infomanagement.basepath}")
+  String eaiBasePath;
 
-    private final ApiClient eaiApiClient;
+  private final ApiClient eaiApiClient;
 
-    @PostConstruct
-    public void updateBasePaths() {
-        eaiApiClient.setBasePath(eaiBasePath);
-    }
+  @PostConstruct
+  public void updateBasePaths() {
+    eaiApiClient.setBasePath(eaiBasePath);
+  }
 }

@@ -21,65 +21,76 @@ import org.springframework.stereotype.Service;
 @Setter
 public class CryptoUtils {
 
-    private final ServiceIDFormatter formatter;
-    private final Cipher encryptionCipher;
-    private final Cipher decryptionCipher;
+  private final ServiceIDFormatter formatter;
+  private final Cipher encryptionCipher;
+  private final Cipher decryptionCipher;
 
-    @Value("${service.config.crypto.encryptionPrefix}")
-    private String encryptedPrefix = "";
+  @Value("${service.config.crypto.encryptionPrefix}")
+  private String encryptedPrefix = "";
 
-    public CryptoUtils(ServiceIDFormatter formatter,
-            @Qualifier("encryptionCipher") Cipher encryptionCipher,
-            @Qualifier("decryptionCipher") Cipher decryptionCipher) {
-        this.formatter = formatter;
-        this.encryptionCipher = encryptionCipher;
-        this.decryptionCipher = decryptionCipher;
+  public CryptoUtils(
+      ServiceIDFormatter formatter,
+      @Qualifier("encryptionCipher") Cipher encryptionCipher,
+      @Qualifier("decryptionCipher") Cipher decryptionCipher) {
+    this.formatter = formatter;
+    this.encryptionCipher = encryptionCipher;
+    this.decryptionCipher = decryptionCipher;
+  }
+
+  public boolean isEncrypted(final String value) {
+    return value.startsWith(encryptedPrefix);
+  }
+
+  public String encrypt(final String value) {
+    return encryptedPrefix + encryptValue(value);
+  }
+
+  public String decrypt(final String value) {
+    if (isEncrypted(value)) {
+      val encryptedSubstring = value.substring(encryptedPrefix.length());
+      return decryptValue(encryptedSubstring);
+    } else {
+      log.warn("value was already decrypted");
+      return value;
     }
+  }
 
-    public boolean isEncrypted(final String value) {
-        return value.startsWith(encryptedPrefix);
+  private String decryptValue(String value) {
+    if (value != null && !value.isEmpty()) {
+      try {
+        val decode = Base64.getUrlDecoder().decode(value.getBytes());
+        val finalized = decryptionCipher.doFinal(decode);
+        return new String(finalized);
+      } catch (IllegalBlockSizeException | BadPaddingException e) {
+        log.error(
+            "Unable to decrypt the value due to "
+                + e.getClass().getSimpleName()
+                + ". Using direct object reference!",
+            e);
+        throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE)
+            .inService(formatter.getId())
+            .buildWithMessage("Problem bei der Entschlüsselung von Objekt-Referenzen");
+      }
     }
+    return value;
+  }
 
-    public String encrypt(final String value) {
-        return encryptedPrefix + encryptValue(value);
+  private String encryptValue(String value) {
+    if (value != null && !value.isEmpty()) {
+      try {
+        val finalized = encryptionCipher.doFinal(value.getBytes());
+        value = Base64.getUrlEncoder().encodeToString(finalized);
+      } catch (IllegalBlockSizeException | BadPaddingException e) {
+        log.error(
+            "Unable to encrypt the value due to "
+                + e.getClass().getSimpleName()
+                + ". Using direct object reference!",
+            e);
+        throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE)
+            .inService(formatter.getId())
+            .buildWithMessage("Problem bei der Verschlüsselung von Objekt-Referenzen");
+      }
     }
-
-    public String decrypt(final String value) {
-        if (isEncrypted(value)) {
-            val encryptedSubstring = value.substring(encryptedPrefix.length());
-            return decryptValue(encryptedSubstring);
-        } else {
-            log.warn("value was already decrypted");
-            return value;
-        }
-    }
-
-    private String decryptValue(String value) {
-        if (value != null && !value.isEmpty()) {
-            try {
-                val decode = Base64.getUrlDecoder().decode(value.getBytes());
-                val finalized = decryptionCipher.doFinal(decode);
-                return new String(finalized);
-            } catch (IllegalBlockSizeException | BadPaddingException e) {
-                log.error("Unable to decrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
-                        .buildWithMessage("Problem bei der Entschlüsselung von Objekt-Referenzen");
-            }
-        }
-        return value;
-    }
-
-    private String encryptValue(String value) {
-        if (value != null && !value.isEmpty()) {
-            try {
-                val finalized = encryptionCipher.doFinal(value.getBytes());
-                value = Base64.getUrlEncoder().encodeToString(finalized);
-            } catch (IllegalBlockSizeException | BadPaddingException e) {
-                log.error("Unable to encrypt the value due to " + e.getClass().getSimpleName() + ". Using direct object reference!", e);
-                throw TechnischeWlsException.withCode(ExceptionConstants.CRYPTO_EXCEPTION_CODE).inService(formatter.getId())
-                        .buildWithMessage("Problem bei der Verschlüsselung von Objekt-Referenzen");
-            }
-        }
-        return value;
-    }
+    return value;
+  }
 }

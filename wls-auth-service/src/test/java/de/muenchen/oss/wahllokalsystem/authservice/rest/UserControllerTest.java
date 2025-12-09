@@ -17,63 +17,64 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Mock
-    UserDTOMapper userDTOMapper;
+  @Mock UserDTOMapper userDTOMapper;
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @InjectMocks
-    UserController unitUnderTest;
+  @InjectMocks UserController unitUnderTest;
 
-    @Nested
-    class User {
+  @Nested
+  class User {
 
-        @Test
-        void should_returnUserDTO_when_serviceWasSuccessful() {
-            val mockedPrincipalParameter = Mockito.mock(Principal.class);
-            val mockedMappedUserModel = UserModel.builder().build();
-            Mockito.when(userService.getUser(mockedPrincipalParameter.getName())).thenReturn(Optional.of(mockedMappedUserModel));
+    @Test
+    void should_returnUserDTO_when_serviceWasSuccessful() {
+      val mockedPrincipalParameter = Mockito.mock(Principal.class);
+      val mockedMappedUserModel = UserModel.builder().build();
+      Mockito.when(userService.getUser(mockedPrincipalParameter.getName()))
+          .thenReturn(Optional.of(mockedMappedUserModel));
 
-            val mockedMapperUserToDTO = UserDTO.builder().build();
-            Mockito.when(userDTOMapper.toDTO(mockedMappedUserModel)).thenReturn(mockedMapperUserToDTO);
+      val mockedMapperUserToDTO = UserDTO.builder().build();
+      Mockito.when(userDTOMapper.toDTO(mockedMappedUserModel)).thenReturn(mockedMapperUserToDTO);
 
-            val result = unitUnderTest.user(mockedPrincipalParameter);
+      val result = unitUnderTest.user(mockedPrincipalParameter);
 
-            Assertions.assertThat(result).isEqualTo(mockedMapperUserToDTO);
-        }
-
-        @Test
-        void should_returnNullBody_when_serviceReturnsEmptyOptional() {
-            val mockedPrincipalParameter = Mockito.mock(Principal.class);
-            Mockito.when(userService.getUser(mockedPrincipalParameter.getName())).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.user(mockedPrincipalParameter);
-
-            Assertions.assertThat(result).isNull();
-        }
+      Assertions.assertThat(result).isEqualTo(mockedMapperUserToDTO);
     }
 
-    @Nested
-    class UnlockUser {
+    @Test
+    void should_returnNullBody_when_serviceReturnsEmptyOptional() {
+      val mockedPrincipalParameter = Mockito.mock(Principal.class);
+      Mockito.when(userService.getUser(mockedPrincipalParameter.getName()))
+          .thenReturn(Optional.empty());
 
-        @Test
-        void should_returnOK_when_serviceWasSuccessful() {
-            val username = "Hansi";
-            Mockito.doNothing().when(userService).resetFailAttempts(username);
+      val result = unitUnderTest.user(mockedPrincipalParameter);
 
-            unitUnderTest.unlockUser(username);
-
-            Mockito.verify(userService).resetFailAttempts(username);
-        }
-
-        @Test
-        void should_failWithIllegalArgumentException_when_serviceWasNotSuccessful() {
-            val username = "Hansi";
-            Mockito.doThrow(new IllegalArgumentException("User with username " + username + " not found.")).when(userService).resetFailAttempts(username);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.unlockUser(username));
-        }
-
+      Assertions.assertThat(result).isNull();
     }
+  }
+
+  @Nested
+  class UnlockUser {
+
+    @Test
+    void should_returnOK_when_serviceWasSuccessful() {
+      val username = "Hansi";
+      Mockito.doNothing().when(userService).resetFailAttempts(username);
+
+      unitUnderTest.unlockUser(username);
+
+      Mockito.verify(userService).resetFailAttempts(username);
+    }
+
+    @Test
+    void should_failWithIllegalArgumentException_when_serviceWasNotSuccessful() {
+      val username = "Hansi";
+      Mockito.doThrow(
+              new IllegalArgumentException("User with username " + username + " not found."))
+          .when(userService)
+          .resetFailAttempts(username);
+
+      Assertions.assertThatException().isThrownBy(() -> unitUnderTest.unlockUser(username));
+    }
+  }
 }

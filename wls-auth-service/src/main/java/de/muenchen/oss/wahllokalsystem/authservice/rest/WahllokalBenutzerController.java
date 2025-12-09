@@ -21,63 +21,65 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahllokalBenutzerController {
 
-    private final UserDTOMapper userDTOMapper;
+  private final UserDTOMapper userDTOMapper;
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Operation(
-            description = "Generiert Wahllokalbenutzer zum angegebenen Wahltag. Für jeden Benutzer der angelegt werden soll, muss eine WahllokalUserInfo im Body vorhanden sein. Als Antwort wird eine CSV-Liste mit den generierten Benutzernamen zurückgegeben.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahllokalbenutzer wurde erfolgreich angelegt."
-                    )
-            }
-    )
-    @PostMapping(value = "/generateAndExportWahllokalbenutzer/{wahltagID}")
-    @ResponseBody
-    public ResponseEntity<String> createAndExportWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID,
-            @RequestBody List<WahllokalUserInfoDTO> wahllokalUserInfo) {
-        log.info("Erstelle Benutzer für Wahltag-ID <{}>.", wahltagID);
-        try {
-            String s = userService.generateWahllokalBenutzer(userDTOMapper.toModel(wahltagID, wahllokalUserInfo));
-            return new ResponseEntity<>(s, HttpStatus.CREATED);
-        } catch (Exception e) {
-            log.error("#createAndExportWahllokalBenutzer error: ", e);
-            return new ResponseEntity<>("createAndExportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+  @Operation(
+      description =
+          "Generiert Wahllokalbenutzer zum angegebenen Wahltag. Für jeden Benutzer der angelegt werden soll, muss eine WahllokalUserInfo im Body vorhanden sein. Als Antwort wird eine CSV-Liste mit den generierten Benutzernamen zurückgegeben.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahllokalbenutzer wurde erfolgreich angelegt.")
+      })
+  @PostMapping(value = "/generateAndExportWahllokalbenutzer/{wahltagID}")
+  @ResponseBody
+  public ResponseEntity<String> createAndExportWahllokalBenutzer(
+      @PathVariable("wahltagID") String wahltagID,
+      @RequestBody List<WahllokalUserInfoDTO> wahllokalUserInfo) {
+    log.info("Erstelle Benutzer für Wahltag-ID <{}>.", wahltagID);
+    try {
+      String s =
+          userService.generateWahllokalBenutzer(
+              userDTOMapper.toModel(wahltagID, wahllokalUserInfo));
+      return new ResponseEntity<>(s, HttpStatus.CREATED);
+    } catch (Exception e) {
+      log.error("#createAndExportWahllokalBenutzer error: ", e);
+      return new ResponseEntity<>(
+          "createAndExportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
 
-    @Operation(
-            description = "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Der CSV-String wurde erfolgreich geliefert."
-                    )
-            }
-    )
-    @GetMapping(value = "/exportWahllokalbenutzer/{wahltagID}")
-    @ResponseBody
-    public ResponseEntity<String> exportWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
-        log.info("Exportiere Benutzer für Wahltag-ID <{}>.", wahltagID);
-        try {
-            String s = userService.exportWahllokalBenutzer(wahltagID);
-            return new ResponseEntity<>(s, HttpStatus.CREATED);
-        } catch (Exception e) {
-            log.error("#exportWahllokalBenutzer error: ", e);
-            return new ResponseEntity<>("exportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+  @Operation(
+      description =
+          "Liefert einen CSV-String der alle Wahllokalbenutzernamen zum angegebenen Wahltag enthält.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Der CSV-String wurde erfolgreich geliefert.")
+      })
+  @GetMapping(value = "/exportWahllokalbenutzer/{wahltagID}")
+  @ResponseBody
+  public ResponseEntity<String> exportWahllokalBenutzer(
+      @PathVariable("wahltagID") String wahltagID) {
+    log.info("Exportiere Benutzer für Wahltag-ID <{}>.", wahltagID);
+    try {
+      String s = userService.exportWahllokalBenutzer(wahltagID);
+      return new ResponseEntity<>(s, HttpStatus.CREATED);
+    } catch (Exception e) {
+      log.error("#exportWahllokalBenutzer error: ", e);
+      return new ResponseEntity<>(
+          "exportWahllokalBenutzer error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
 
-    @Operation(
-            description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.", responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "User erfolgreich gelöscht."
-                    )
-            }
-    )
-    @DeleteMapping(value = "/deleteWahllokalbenutzer/{wahltagID}")
-    public void deleteWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
-        log.info("Lösche Benutzer für Wahltag-ID <{}>.", wahltagID);
-        userService.deleteWahllokalBenutzer(wahltagID);
-    }
+  @Operation(
+      description = "Löscht alle Wahllokalbenutzer zum angegebenen Wahltag unwiederruflich.",
+      responses = {@ApiResponse(responseCode = "200", description = "User erfolgreich gelöscht.")})
+  @DeleteMapping(value = "/deleteWahllokalbenutzer/{wahltagID}")
+  public void deleteWahllokalBenutzer(@PathVariable("wahltagID") String wahltagID) {
+    log.info("Lösche Benutzer für Wahltag-ID <{}>.", wahltagID);
+    userService.deleteWahllokalBenutzer(wahltagID);
+  }
 }

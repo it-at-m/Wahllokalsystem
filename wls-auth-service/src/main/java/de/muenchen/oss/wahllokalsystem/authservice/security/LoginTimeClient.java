@@ -4,5 +4,5 @@ import de.muenchen.oss.wahllokalsystem.authservice.service.LegalLoginIntervalMod
 
 public interface LoginTimeClient {
 
-    LegalLoginIntervalModel getLegalLoginInterval();
+  LegalLoginIntervalModel getLegalLoginInterval();
 }

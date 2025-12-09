@@ -3,6 +3,4 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewah
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record BeanstandeteWahlbriefeReferenceModel(@NotNull String wahlbezirkID, @NotNull Long waehlerverzeichnisNummer) {
-}
+@Builder public record BeanstandeteWahlbriefeReferenceModel(@NotNull String wahlbezirkID,@NotNull Long waehlerverzeichnisNummer){}

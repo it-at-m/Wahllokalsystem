@@ -18,42 +18,44 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SwaggerConfigurationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Value("${info.application.version}")
-    String version;
+  @Value("${info.application.version}")
+  String version;
 
-    @Test
-    void should_returnVersion_when_setInApiDoc() throws Exception {
-        val request = MockMvcRequestBuilders.get("/v3/api-docs/public-apis").contentType(MediaType.APPLICATION_JSON);
+  @Test
+  void should_returnVersion_when_setInApiDoc() throws Exception {
+    val request =
+        MockMvcRequestBuilders.get("/v3/api-docs/public-apis")
+            .contentType(MediaType.APPLICATION_JSON);
 
-        val response = mockMvc.perform(request).andReturn();
+    val response = mockMvc.perform(request).andReturn();
 
-        val openApiDoc = objectMapper.readValue(response.getResponse().getContentAsString(), OpenApiDoc.class);
+    val openApiDoc =
+        objectMapper.readValue(response.getResponse().getContentAsString(), OpenApiDoc.class);
 
-        Assertions.assertThat(openApiDoc.getInfo().getVersion()).isNotNull();
-        Assertions.assertThat(openApiDoc.getInfo().getVersion()).isEqualTo(version);
-    }
+    Assertions.assertThat(openApiDoc.getInfo().getVersion()).isNotNull();
+    Assertions.assertThat(openApiDoc.getInfo().getVersion()).isEqualTo(version);
+  }
+
+  @Data
+  private static class OpenApiDoc {
+
+    private Info info;
 
     @Data
-    private static class OpenApiDoc {
-
-        private Info info;
-
-        @Data
-        private static class Info {
-            private String version;
-        }
+    private static class Info {
+      private String version;
     }
-
+  }
 }

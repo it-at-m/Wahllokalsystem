@@ -20,32 +20,33 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahlbezirkeClientImpl implements WahlbezirkeClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahlbezirkeControllerApi wahlbezirkeControllerApi;
+  private final WahlbezirkeControllerApi wahlbezirkeControllerApi;
 
-    private final WahlbezirkeClientMapper wahlbezirkeClientMapper;
+  private final WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
-    @Override
-    public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
-        log.debug("#getWahlbezirke");
+  @Override
+  public List<WahlbezirkModel> getWahlbezirke(String wahltagID) {
+    log.debug("#getWahlbezirke");
 
-        final List<WahlbezirkModel> wahlbezirke;
-        try {
-            val wahlbezirkeDTO = wahlbezirkeControllerApi.getWahlbezirke(wahltagID);
+    final List<WahlbezirkModel> wahlbezirke;
+    try {
+      val wahlbezirkeDTO = wahlbezirkeControllerApi.getWahlbezirke(wahltagID);
 
-            if (wahlbezirkeDTO == null) {
-                return null;
-            }
+      if (wahlbezirkeDTO == null) {
+        return null;
+      }
 
-            wahlbezirke = wahlbezirkeClientMapper.toModelList(wahlbezirkeDTO);
-        } catch (final WlsException wlsException) {
-            log.error("#getWahlbezirke found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            log.error("#getWahlbezirke exception:", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
-        return wahlbezirke;
+      wahlbezirke = wahlbezirkeClientMapper.toModelList(wahlbezirkeDTO);
+    } catch (final WlsException wlsException) {
+      log.error("#getWahlbezirke found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      log.error("#getWahlbezirke exception:", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+    return wahlbezirke;
+  }
 }

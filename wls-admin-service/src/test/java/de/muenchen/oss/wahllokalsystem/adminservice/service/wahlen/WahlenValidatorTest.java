@@ -21,40 +21,42 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlenValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    private WahlenValidator unitUnderTest;
+  @InjectMocks private WahlenValidator unitUnderTest;
 
-    @Nested
-    class ValidWahlIDParamOrThrow {
+  @Nested
+  class ValidWahlIDParamOrThrow {
 
-        @Test
-        void should_notThrowException_when_wahltagIDIsValid() {
-            val wahlID = "wahlID";
+    @Test
+    void should_notThrowException_when_wahltagIDIsValid() {
+      val wahlID = "wahlID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIDParamOrThrow(wahlID));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidwahlIDArgumentsWithTestcaseNameAppendix")
-        void should_throwFachlicheWlsException_when_wahlIDIsNotValid(final ArgumentsAccessor arguments) {
-
-            val mockedException = FachlicheWlsException.withCode("165").buildWithMessage("Parameter fehlt.");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT)).thenReturn(mockedException);
-
-            Assertions.assertThatException()
-                    .isThrownBy(
-                            () -> unitUnderTest.validWahlIDParamOrThrow(arguments.get(0, String.class)))
-                    .isSameAs(mockedException);
-        }
-
-        public static Stream<Arguments> invalidwahlIDArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(null, "wahlID is null"),
-                    Arguments.of((""), "wahlID is empty"),
-                    Arguments.of(("   "), "wahlID is blank"));
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWahlIDParamOrThrow(wahlID));
     }
+
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidwahlIDArgumentsWithTestcaseNameAppendix")
+    void should_throwFachlicheWlsException_when_wahlIDIsNotValid(
+        final ArgumentsAccessor arguments) {
+
+      val mockedException =
+          FachlicheWlsException.withCode("165").buildWithMessage("Parameter fehlt.");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWahlIDParamOrThrow(arguments.get(0, String.class)))
+          .isSameAs(mockedException);
+    }
+
+    public static Stream<Arguments> invalidwahlIDArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(null, "wahlID is null"),
+          Arguments.of((""), "wahlID is empty"),
+          Arguments.of(("   "), "wahlID is blank"));
+    }
+  }
 }

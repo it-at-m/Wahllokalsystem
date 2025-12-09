@@ -20,56 +20,78 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahltageClientImplTest {
 
-    @Mock
-    WahltageControllerApi wahltageControllerApi;
+  @Mock WahltageControllerApi wahltageControllerApi;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    WahltagClientMapper wahltagClientMapper;
+  @Mock WahltagClientMapper wahltagClientMapper;
 
-    @InjectMocks
-    WahltageClientImpl unitUnderTest;
+  @InjectMocks WahltageClientImpl unitUnderTest;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_returnWahltage_when_wahltageExists() {
-            val wahltag = LocalDate.now();
-            val mockedWahltageDTOList = List.of(
-                    new WahltagDTO().wahltagID("wahltagID1").wahltag(wahltag).beschreibung("beschreibung").nummer("1"),
-                    new WahltagDTO().wahltagID("wahltagID2").wahltag(wahltag).beschreibung("beschreibung").nummer("2"),
-                    new WahltagDTO().wahltagID("wahltagID3").wahltag(wahltag).beschreibung("beschreibung").nummer("3"));
-            val mockedWahltageModelList = wahltagClientMapper.toModelList(mockedWahltageDTOList);
+    @Test
+    void should_returnWahltage_when_wahltageExists() {
+      val wahltag = LocalDate.now();
+      val mockedWahltageDTOList =
+          List.of(
+              new WahltagDTO()
+                  .wahltagID("wahltagID1")
+                  .wahltag(wahltag)
+                  .beschreibung("beschreibung")
+                  .nummer("1"),
+              new WahltagDTO()
+                  .wahltagID("wahltagID2")
+                  .wahltag(wahltag)
+                  .beschreibung("beschreibung")
+                  .nummer("2"),
+              new WahltagDTO()
+                  .wahltagID("wahltagID3")
+                  .wahltag(wahltag)
+                  .beschreibung("beschreibung")
+                  .nummer("3"));
+      val mockedWahltageModelList = wahltagClientMapper.toModelList(mockedWahltageDTOList);
 
-            Mockito.when(wahltageControllerApi.getWahltage()).thenReturn(mockedWahltageDTOList);
-            Mockito.when(wahltagClientMapper.toModelList(mockedWahltageDTOList)).thenReturn(mockedWahltageModelList);
+      Mockito.when(wahltageControllerApi.getWahltage()).thenReturn(mockedWahltageDTOList);
+      Mockito.when(wahltagClientMapper.toModelList(mockedWahltageDTOList))
+          .thenReturn(mockedWahltageModelList);
 
-            val result = unitUnderTest.getWahltage();
+      val result = unitUnderTest.getWahltage();
 
-            Assertions.assertThat(result).isEqualTo(mockedWahltageModelList);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltageApi() {
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltage api failed");
-
-            Mockito.doThrow(mockedWlsException).when(wahltageControllerApi).getWahltage();
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltage()).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltageApi() {
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltage api failed");
-
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahltageControllerApi).getWahltage();
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltage()).isSameAs(mockedWlsException);
-        }
+      Assertions.assertThat(result).isEqualTo(mockedWahltageModelList);
     }
+
+    @Test
+    void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltageApi() {
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltage api failed");
+
+      Mockito.doThrow(mockedWlsException).when(wahltageControllerApi).getWahltage();
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahltage())
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltageApi() {
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltage api failed");
+
+      Mockito.doThrow(new RuntimeException("api call failed"))
+          .when(wahltageControllerApi)
+          .getWahltage();
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahltage())
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

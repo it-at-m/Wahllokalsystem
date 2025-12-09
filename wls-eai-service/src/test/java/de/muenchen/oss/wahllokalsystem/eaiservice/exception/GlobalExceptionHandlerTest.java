@@ -15,19 +15,18 @@ import org.springframework.http.ResponseEntity;
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
 
-    @Mock
-    DTOMapper dtoMapper;
+  @Mock DTOMapper dtoMapper;
 
-    @Mock
-    ServiceIDFormatter serviceIDFormatter;
+  @Mock ServiceIDFormatter serviceIDFormatter;
 
-    @InjectMocks
-    GlobalExceptionHandler unitUnderTest;
+  @InjectMocks GlobalExceptionHandler unitUnderTest;
 
-    @Test
-    void should_returnNotFound_when_givenNotFoundException() {
-        val result = unitUnderTest.handleNotFoundException(new NotFoundException(UUID.randomUUID(), Object.class));
+  @Test
+  void should_returnNotFound_when_givenNotFoundException() {
+    val result =
+        unitUnderTest.handleNotFoundException(
+            new NotFoundException(UUID.randomUUID(), Object.class));
 
-        Assertions.assertThat(result).isEqualTo(ResponseEntity.notFound().build());
-    }
+    Assertions.assertThat(result).isEqualTo(ResponseEntity.notFound().build());
+  }
 }

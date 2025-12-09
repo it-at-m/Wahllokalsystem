@@ -6,4 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Builder;
 
-@Builder public record WahlvorstandsaktualisierungDTO(@NotNull String wahlbezirkID,@NotNull @Size(min=1)Set<WahlvorstandsmitgliedAktualisierungDTO>mitglieder,@NotNull LocalDateTime anwesenheitBeginn){}
+@Builder
+public record WahlvorstandsaktualisierungDTO(
+    @NotNull String wahlbezirkID,
+    @NotNull @Size(min = 1) Set<WahlvorstandsmitgliedAktualisierungDTO> mitglieder,
+    @NotNull LocalDateTime anwesenheitBeginn) {}

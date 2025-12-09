@@ -7,15 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = MicroServiceApplication.class, properties = "spring.datasource.url=jdbc:h2:mem:wls-eai-service-dummydata")
-@ActiveProfiles({ "db-h2", "db-dummydata" })
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    properties = "spring.datasource.url=jdbc:h2:mem:wls-eai-service-dummydata")
+@ActiveProfiles({"db-h2", "db-dummydata"})
 class MicroServiceApplicationDummyDataIntegrationTest {
 
-    @Autowired
-    WahlvorstandRepository wahlvorstandRepository;
+  @Autowired WahlvorstandRepository wahlvorstandRepository;
 
-    @Test
-    void should_throwNoException_when_serviceIsStartedWithDummyData() {
-        Assertions.assertThat(wahlvorstandRepository.count()).isGreaterThan(0);
-    }
+  @Test
+  void should_throwNoException_when_serviceIsStartedWithDummyData() {
+    Assertions.assertThat(wahlvorstandRepository.count()).isGreaterThan(0);
+  }
 }

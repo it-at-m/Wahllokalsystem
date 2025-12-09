@@ -22,22 +22,15 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Wahlvorstandsmitglied extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    private String vorname;
+  @NotNull @ToString.Include private String vorname;
 
-    @NotNull
-    @ToString.Include
-    private String nachname;
+  @NotNull @ToString.Include private String nachname;
 
-    @NotNull
-    @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private WahlvorstandsmitgliedsFunktion funktion;
+  @NotNull @ToString.Include
+  @Enumerated(EnumType.STRING)
+  private WahlvorstandsmitgliedsFunktion funktion;
 
-    @ToString.Include
-    private boolean anwesend;
+  @ToString.Include private boolean anwesend;
 
-    @ToString.Include
-    private LocalDateTime anwesenheitUpdatedOn;
+  @ToString.Include private LocalDateTime anwesenheitUpdatedOn;
 }

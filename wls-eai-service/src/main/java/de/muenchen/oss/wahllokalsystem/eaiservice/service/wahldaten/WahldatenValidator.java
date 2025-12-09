@@ -11,48 +11,54 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahldatenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validGetWahltageParameterOrThrow(final LocalDate wahltag) {
-        if (wahltag == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT);
-        }
+  public void validGetWahltageParameterOrThrow(final LocalDate wahltag) {
+    if (wahltag == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT);
+    }
+  }
+
+  public void validGetWahlenParameterOrThrow(final LocalDate wahltag, final String nummer) {
+    if (wahltag == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT);
     }
 
-    public void validGetWahlenParameterOrThrow(final LocalDate wahltag, final String nummer) {
-        if (wahltag == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT);
-        }
+    if (nummer == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT);
+    }
+  }
 
-        if (nummer == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT);
-        }
+  public void validGetWahlbezirkeParameterOrThrow(final LocalDate wahltag, final String nummer) {
+    if (wahltag == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT);
     }
 
-    public void validGetWahlbezirkeParameterOrThrow(final LocalDate wahltag, final String nummer) {
-        if (wahltag == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT);
-        }
+    if (nummer == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT);
+    }
+  }
 
-        if (nummer == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT);
-        }
+  public void validGetWahlberechtigteParameterOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG);
+    }
+  }
+
+  public void validGetBasisdatenParameterOrThrow(final LocalDate wahltag, final String nummer) {
+    if (wahltag == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADBASISDATEN_TAG_FEHLT);
     }
 
-    public void validGetWahlberechtigteParameterOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+    if (nummer == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADBASISDATEN_NUMMER_FEHLT);
     }
-
-    public void validGetBasisdatenParameterOrThrow(final LocalDate wahltag, final String nummer) {
-        if (wahltag == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_TAG_FEHLT);
-        }
-
-        if (nummer == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_NUMMER_FEHLT);
-        }
-    }
-
+  }
 }

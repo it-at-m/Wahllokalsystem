@@ -4,4 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder public record WahlvorstandsmitgliedAktualisierungDTO(@NotNull String identifikator,@Schema(requiredMode=Schema.RequiredMode.REQUIRED)boolean anwesend){}
+@Builder
+public record WahlvorstandsmitgliedAktualisierungDTO(
+    @NotNull String identifikator,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean anwesend) {}

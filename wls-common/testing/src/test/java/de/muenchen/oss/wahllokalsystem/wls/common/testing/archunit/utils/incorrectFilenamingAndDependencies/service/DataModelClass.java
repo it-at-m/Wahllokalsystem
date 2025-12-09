@@ -2,6 +2,4 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorr
 
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFilenamingAndDependencies.rest.ExampleDto;
 
-public record DataModelClass() {
-    static ExampleDto exampleDto = new ExampleDto();
-}
+public record DataModelClass(){static ExampleDto exampleDto=new ExampleDto();}

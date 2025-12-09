@@ -1,4 +1,3 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.rest;
 
-public record ThisIsAValidDTO() {
-}
+public record ThisIsAValidDTO(){}

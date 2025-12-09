@@ -25,48 +25,40 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+    classes = {MicroServiceApplication.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 @Slf4j
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/businessActions/broadcast";
+  private static final String ENTITY_ENDPOINT_URL = "/businessActions/broadcast";
 
-    /**
-     * Decomposed string:
-     * String "Ä-é" represented with unicode letters "A◌̈-e◌́"
-     */
-    private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
+  /** Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́" */
+  private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
 
-    /**
-     * Composed string:
-     * String "Ä-é" represented with unicode letters "Ä-é".
-     */
-    private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
+  /** Composed string: String "Ä-é" represented with unicode letters "Ä-é". */
+  private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private MessageRepository messageRepository;
+  @Autowired private MessageRepository messageRepository;
 
-    @BeforeEach
-    void setup() {
-        messageRepository.deleteAll();
-    }
+  @BeforeEach
+  void setup() {
+    messageRepository.deleteAll();
+  }
 
-    @Test
-    void should_returnComposedString_when_givenDecomposedString() {
-        List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-        val broadcastMessageDTO = new BroadcastMessageDTO(wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() {
+    List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+    val broadcastMessageDTO = new BroadcastMessageDTO(wahlbezirke, TEXT_ATTRIBUTE_DECOMPOSED);
 
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), broadcastMessageDTO.nachricht().length());
-        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), broadcastMessageDTO, Void.class);
-        // Check persisted entity contains a composed string via JPA repository.
-        val message = messageRepository.findFirstByWahlbezirkIDOrderByEmpfangsZeit("3").orElseThrow();
-        Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
-    }
+    assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), broadcastMessageDTO.nachricht().length());
+    testRestTemplate.postForEntity(
+        URI.create(ENTITY_ENDPOINT_URL), broadcastMessageDTO, Void.class);
+    // Check persisted entity contains a composed string via JPA repository.
+    val message = messageRepository.findFirstByWahlbezirkIDOrderByEmpfangsZeit("3").orElseThrow();
+    Assertions.assertThat(message.getNachricht()).isEqualTo(TEXT_ATTRIBUTE_COMPOSED);
+    assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), message.getNachricht().length());
+  }
 }

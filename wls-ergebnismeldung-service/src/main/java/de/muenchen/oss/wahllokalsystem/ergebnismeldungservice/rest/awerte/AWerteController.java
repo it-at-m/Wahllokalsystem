@@ -27,37 +27,44 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AWerteController {
 
-    private final AWerteService aWerteService;
+  private final AWerteService aWerteService;
 
-    private final AWerteDTOMapper awerteDTOMapper;
+  private final AWerteDTOMapper awerteDTOMapper;
 
-    @Operation(description = "Laden der Wahlberechtigten (A-Werte) für den Wahlbezirk {wahlbezirkID}.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlberechtigten (A-Werte) erfolgreich zurückgegeben.",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class))) }
-                    )
-            }
-    )
-    @GetMapping("/awerte/{wahlbezirkID}")
-    public ResponseEntity<List<AWerteDTO>> getAWerte(@PathVariable("wahlbezirkID") String wahlbezirkID) {
-        val result = awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(aWerteService.getAWerte(wahlbezirkID));
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+  @Operation(
+      description = "Laden der Wahlberechtigten (A-Werte) für den Wahlbezirk {wahlbezirkID}.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlberechtigten (A-Werte) erfolgreich zurückgegeben.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = AWerteDTO.class)))
+            })
+      })
+  @GetMapping("/awerte/{wahlbezirkID}")
+  public ResponseEntity<List<AWerteDTO>> getAWerte(
+      @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    val result =
+        awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(
+            aWerteService.getAWerte(wahlbezirkID));
+    return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 
-    @Operation(description = "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "A-Werte erfolgreich synchronisiert.",
-                            content = @Content(schema = @Schema())
-                    )
-            }
-    )
-    @PostMapping("/awerte/init")
-    @ResponseStatus(HttpStatus.OK)
-    public void initialiseAWerte(@RequestBody List<String> wahlbezirkIDs) {
-        aWerteService.initialiseAWerte(wahlbezirkIDs);
-    }
+  @Operation(
+      description = "Asynchrones initialisieren aller A-Werte für die gegebenen Wahlbezirk-IDs.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "A-Werte erfolgreich synchronisiert.",
+            content = @Content(schema = @Schema()))
+      })
+  @PostMapping("/awerte/init")
+  @ResponseStatus(HttpStatus.OK)
+  public void initialiseAWerte(@RequestBody List<String> wahlbezirkIDs) {
+    aWerteService.initialiseAWerte(wahlbezirkIDs);
+  }
 }

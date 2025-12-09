@@ -2,4 +2,9 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebniss
 
 import jakarta.validation.constraints.NotNull;
 
-public record ErgebnisModel(String wahlvorschlagID,String kandidatID,Long wahlvorschlagsordnungszahl,@NotNull long ergebnis,Long numIndex){}
+public record ErgebnisModel(
+    String wahlvorschlagID,
+    String kandidatID,
+    Long wahlvorschlagsordnungszahl,
+    @NotNull long ergebnis,
+    Long numIndex) {}

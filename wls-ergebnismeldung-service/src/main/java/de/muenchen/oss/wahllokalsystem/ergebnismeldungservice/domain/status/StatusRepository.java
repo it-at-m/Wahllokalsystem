@@ -11,37 +11,37 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Status')")
 public interface StatusRepository extends CrudRepository<Status, BezirkUndWahlID> {
 
-    String CACHE = "StatusCACHE";
+  String CACHE = "StatusCACHE";
 
-    @Override
-    Iterable<Status> findAll();
+  @Override
+  Iterable<Status> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Status> findById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Status> findById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Status')")
-    <S extends Status> S save(S status);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Status')")
+  <S extends Status> S save(S status);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
-    void deleteById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
+  void deleteById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
-    void delete(Status entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
+  void delete(Status entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
-    void deleteAll(Iterable<? extends Status> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
+  void deleteAll(Iterable<? extends Status> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Status')")
+  void deleteAll();
 }

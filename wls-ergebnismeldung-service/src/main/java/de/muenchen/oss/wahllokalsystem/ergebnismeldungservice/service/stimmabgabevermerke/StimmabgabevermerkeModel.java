@@ -4,4 +4,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWae
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
-public record StimmabgabevermerkeModel(@NotNull BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer,@NotNull long anzahlBlaetter,@NotNull Set<WahldatenModel>wahldaten){}
+public record StimmabgabevermerkeModel(
+    @NotNull BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer,
+    @NotNull long anzahlBlaetter,
+    @NotNull Set<WahldatenModel> wahldaten) {}

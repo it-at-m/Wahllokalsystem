@@ -19,41 +19,60 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlUndBezirkIDUndMeldungsartValidatorTest {
 
-    @InjectMocks
-    WahlUndBezirkIDUndMeldungsartValidator unitUnderTest;
+  @InjectMocks WahlUndBezirkIDUndMeldungsartValidator unitUnderTest;
 
-    @Nested
-    class validWahlUndBezirkIDUndMeldungsartOrThrow {
+  @Nested
+  class validWahlUndBezirkIDUndMeldungsartOrThrow {
 
-        final FachlicheWlsException providedException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+    final FachlicheWlsException providedException =
+        FachlicheWlsException.withCode("").buildWithMessage("sth failed");
 
-        @Test
-        void should_notThrowException_when_wahlUndBezirkIDUndMeldungsartIsValid() {
-            val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
+    @Test
+    void should_notThrowException_when_wahlUndBezirkIDUndMeldungsartIsValid() {
+      val id = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", Meldungsart.V1);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(id, providedException));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix")
-        void should_throwProvidedException_when_wahlUndBezirkIDIsNotValid(final ArgumentsAccessor arguments) {
-            Assertions.assertThatException()
-                    .isThrownBy(
-                            () -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(arguments.get(0, WahlUndBezirkIDUndMeldungsart.class),
-                                    providedException))
-                    .isSameAs(providedException);
-        }
-
-        public static Stream<Arguments> invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(null, "argument is null"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart(null, "wahlID", Meldungsart.V1), "wahlbezirkID is null"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("", "wahlID", Meldungsart.V1), "wahlbezirkID is empty"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("   ", "wahlID", Meldungsart.V1), "wahlbezirkID is blank"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", null, Meldungsart.V1), "wahlID is null"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "", Meldungsart.V1), "wahlID is is empty"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "   ", Meldungsart.V1), "wahlID is blank"),
-                    Arguments.of(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", null), "meldungsart is null"));
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(id, providedException));
     }
+
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix")
+    void should_throwProvidedException_when_wahlUndBezirkIDIsNotValid(
+        final ArgumentsAccessor arguments) {
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlUndBezirkIDUndMeldungsartOrThrow(
+                      arguments.get(0, WahlUndBezirkIDUndMeldungsart.class), providedException))
+          .isSameAs(providedException);
+    }
+
+    public static Stream<Arguments>
+        invalidWahlUndBezirkIDUndMeldungsartArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(null, "argument is null"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart(null, "wahlID", Meldungsart.V1),
+              "wahlbezirkID is null"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("", "wahlID", Meldungsart.V1),
+              "wahlbezirkID is empty"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("   ", "wahlID", Meldungsart.V1),
+              "wahlbezirkID is blank"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", null, Meldungsart.V1),
+              "wahlID is null"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "", Meldungsart.V1),
+              "wahlID is is empty"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "   ", Meldungsart.V1),
+              "wahlID is blank"),
+          Arguments.of(
+              new WahlUndBezirkIDUndMeldungsart("wahlbezirkID", "wahlID", null),
+              "meldungsart is null"));
+    }
+  }
 }

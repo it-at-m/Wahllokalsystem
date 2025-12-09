@@ -2,4 +2,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabga
 
 import jakarta.validation.constraints.NotNull;
 
-public record StimmzettelModel(@NotNull long anzahl,@NotNull StimmzettelartModel stimmzettelart){}
+public record StimmzettelModel(@NotNull long anzahl, @NotNull StimmzettelartModel stimmzettelart) {}

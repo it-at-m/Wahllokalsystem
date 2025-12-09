@@ -17,35 +17,45 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class VeBeValidationImpl implements ElectionTypeValidation {
 
-    private final DefaultElectionTypeValidator validator;
+  private final DefaultElectionTypeValidator validator;
 
-    @Override
-    public boolean supportsWahlart(final WahlartModel wahlart) {
-        return WahlartModel.VE == wahlart || WahlartModel.BEB == wahlart;
-    }
+  @Override
+  public boolean supportsWahlart(final WahlartModel wahlart) {
+    return WahlartModel.VE == wahlart || WahlartModel.BEB == wahlart;
+  }
 
-    @Override
-    public boolean isValidUwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
-            throws WlsException {
-        val necessaryStacks = buildNecessaryStack();
-        return validator.checkValidation(WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
-    }
+  @Override
+  public boolean isValidUwb(
+      final String wahlbezirkID,
+      final String wahlID,
+      final Long waehlerverzeichnisNummer,
+      final MeldungsartModel meldungsart)
+      throws WlsException {
+    val necessaryStacks = buildNecessaryStack();
+    return validator.checkValidation(
+        WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
+  }
 
-    @Override
-    public boolean isValidBwb(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer, final MeldungsartModel meldungsart)
-            throws WlsException {
-        val necessaryStacks = buildNecessaryStack();
-        return validator.checkValidation(WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
-    }
+  @Override
+  public boolean isValidBwb(
+      final String wahlbezirkID,
+      final String wahlID,
+      final Long waehlerverzeichnisNummer,
+      final MeldungsartModel meldungsart)
+      throws WlsException {
+    val necessaryStacks = buildNecessaryStack();
+    return validator.checkValidation(
+        WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
+  }
 
-    private List<Stapelart> buildNecessaryStack() {
-        List<Stapelart> necessaryStacks = new ArrayList<>();
-        necessaryStacks.add(Stapelart.VE_BE_D_OPTION_1);
-        necessaryStacks.add(Stapelart.VE_BE_D_OPTION_2);
-        necessaryStacks.add(Stapelart.VE_BE_D_UNGUELTIG);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_1);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_2);
-        necessaryStacks.add(Stapelart.VE_BE_CBA_UNGUELTIG);
-        return necessaryStacks;
-    }
+  private List<Stapelart> buildNecessaryStack() {
+    List<Stapelart> necessaryStacks = new ArrayList<>();
+    necessaryStacks.add(Stapelart.VE_BE_D_OPTION_1);
+    necessaryStacks.add(Stapelart.VE_BE_D_OPTION_2);
+    necessaryStacks.add(Stapelart.VE_BE_D_UNGUELTIG);
+    necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_1);
+    necessaryStacks.add(Stapelart.VE_BE_CBA_OPTION_2);
+    necessaryStacks.add(Stapelart.VE_BE_CBA_UNGUELTIG);
+    return necessaryStacks;
+  }
 }

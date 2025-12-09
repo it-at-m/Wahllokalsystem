@@ -5,4 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Builder;
 
-@Builder public record ErgebnisseDTO(@NotNull BezirkUndWahlIDStapelartDTO bezirkUndWahlIDStapelart,@NotNull List<ErgebnisDTO>ergebnisse){}
+@Builder
+public record ErgebnisseDTO(
+    @NotNull BezirkUndWahlIDStapelartDTO bezirkUndWahlIDStapelart,
+    @NotNull List<ErgebnisDTO> ergebnisse) {}

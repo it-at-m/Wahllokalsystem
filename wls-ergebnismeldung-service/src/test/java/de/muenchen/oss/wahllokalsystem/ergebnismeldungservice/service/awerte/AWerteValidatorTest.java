@@ -16,42 +16,53 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AWerteValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    AWerteValidator unitUnderTest;
+  @InjectMocks AWerteValidator unitUnderTest;
 
-    @Nested
-    class ValidWahlbezirkIDParamOrThrow {
+  @Nested
+  class ValidWahlbezirkIDParamOrThrow {
 
-        @Test
-        void should_notThrowException_when_criteriaIsValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("validWahlbezirkID"));
-        }
-
-        @Test
-        void should_throwException_when_criteriaIsNull() {
-            val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow(null)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwException_when_criteriaIsEmpty() {
-            val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("")).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwException_when_criteriaIsBlank() {
-            val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("   ")).isSameAs(mockedException);
-        }
+    @Test
+    void should_notThrowException_when_criteriaIsValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("validWahlbezirkID"));
     }
+
+    @Test
+    void should_throwException_when_criteriaIsNull() {
+      val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow(null))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwException_when_criteriaIsEmpty() {
+      val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow(""))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwException_when_criteriaIsBlank() {
+      val mockedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlbezirkIDParamOrThrow("   "))
+          .isSameAs(mockedException);
+    }
+  }
 }

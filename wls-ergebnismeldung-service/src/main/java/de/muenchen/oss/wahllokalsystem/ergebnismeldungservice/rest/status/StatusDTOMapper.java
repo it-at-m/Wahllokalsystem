@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface StatusDTOMapper {
 
-    StatusDTO toDTO(StatusModel statusModel);
+  StatusDTO toDTO(StatusModel statusModel);
 
-    StatusModel toModel(StatusDTO statusDTO);
+  StatusModel toModel(StatusDTO statusDTO);
 }

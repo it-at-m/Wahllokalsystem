@@ -11,21 +11,23 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BegruendungValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validReferenceOrThrow(final BegruendungReferenceModel begruendungReferenceModel) throws FachlicheWlsException {
-        if (StringUtils.isBlank(
-                begruendungReferenceModel.wahlbezirkID()) ||
-                StringUtils.isBlank(
-                        begruendungReferenceModel.wahlID())
-                || begruendungReferenceModel.stapelart() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validReferenceOrThrow(final BegruendungReferenceModel begruendungReferenceModel)
+      throws FachlicheWlsException {
+    if (StringUtils.isBlank(begruendungReferenceModel.wahlbezirkID())
+        || StringUtils.isBlank(begruendungReferenceModel.wahlID())
+        || begruendungReferenceModel.stapelart() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validModelOrThrow(final BegruendungModel begruendungToAdd) throws FachlicheWlsException {
-        if (begruendungToAdd.grund1() == null && begruendungToAdd.grund2() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validModelOrThrow(final BegruendungModel begruendungToAdd)
+      throws FachlicheWlsException {
+    if (begruendungToAdd.grund1() == null && begruendungToAdd.grund2() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

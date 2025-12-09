@@ -5,4 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
-@Builder public record SendungsdatenDTO(@NotNull BezirkUndWahlID bezirkUndWahlID,@NotNull LocalDateTime sendungsuhrzeit){}
+@Builder
+public record SendungsdatenDTO(
+    @NotNull BezirkUndWahlID bezirkUndWahlID, @NotNull LocalDateTime sendungsuhrzeit) {}

@@ -27,188 +27,215 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
-    @MockitoBean
-    WaehleranzahlService waehleranzahlService;
+  @MockitoBean WaehleranzahlService waehleranzahlService;
 
-    @MockitoBean
-    WahllokalZustandService wahllokalZustandService;
+  @MockitoBean WahllokalZustandService wahllokalZustandService;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
-        api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
+    api.perform(get("/")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
-        api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
+    api.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
-        api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
+    api.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
-        api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
+    api.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
-        api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
+    api.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
-        api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
+    api.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
+    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class Waehleranzahl {
 
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-        api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+    @WithAnonymousUser
+    void should_return401Unauthorized_when_getWithUnauthorizedAnonymousUser() throws Exception {
+      api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID"))
+          .andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class Waehleranzahl {
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_getWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return204NoContent_when_getWithAuthorizedMockUser() throws Exception {
-            api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")).andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postWithAuthorizedMockUser() throws Exception {
-            val requestBody = new WaehleranzahlDTO(null, null);
-            val request = post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            api.perform(request).andExpect(status().isOk());
-        }
+    @Test
+    @WithMockUser
+    void should_return204NoContent_when_getWithAuthorizedMockUser() throws Exception {
+      api.perform(get("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID"))
+          .andExpect(status().isNoContent());
     }
 
-    @Nested
-    class WallokalZustand {
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postlastSeenWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postletzteAbmeldungWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postschnellmeldungSendungsuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postschnellmeldungDruckuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postniederschriftSendungsuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/niederschriftSendungsuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_return401Unauthorized_when_postniederschriftDruckuhrzeitWithUnauthorizedAnonymousUser() throws Exception {
-            api.perform(post("/businessActions/niederschriftDruckuhrzeit").with(csrf())).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postlastSeenWithAuthorizedMockUser() throws Exception {
-            api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf())).andExpect(status().isOk());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postletzteAbmeldungWithAuthorizedMockUser() throws Exception {
-            api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf())).andExpect(status().isOk());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postschnellmeldungSendungsuhrzeitWithAuthorizedMockUser() throws Exception {
-            val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
-            val requestSchnellmeldungSendungsuhrzeit = post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
-            api.perform(requestSchnellmeldungSendungsuhrzeit).andExpect(status().isOk());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postschnellmeldungDruckuhrzeitWithAuthorizedMockUser() throws Exception {
-            val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
-
-            val requestSchnellmeldungDruckuhrzeit = post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                            objectMapper.writeValueAsString(requestBodyOfDruckdaten));
-            api.perform(requestSchnellmeldungDruckuhrzeit).andExpect(status().isOk());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postniederschriftSendungsuhrzeitWithAuthorizedMockUser() throws Exception {
-            val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
-            val requestNiederschriftSendungsuhrzeit = post("/businessActions/niederschriftSendungsuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                            objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
-            api.perform(requestNiederschriftSendungsuhrzeit).andExpect(status().isOk());
-        }
-
-        @Test
-        @WithMockUser
-        void should_return200OK_when_postniederschriftDruckuhrzeitWithAuthorizedMockUser() throws Exception {
-            val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
-            val requestNiederschriftDruckuhrzeit = post("/businessActions/niederschriftDruckuhrzeit").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                            objectMapper.writeValueAsString(requestBodyOfDruckdaten));
-            api.perform(requestNiederschriftDruckuhrzeit).andExpect(status().isOk());
-        }
+    @Test
+    @WithAnonymousUser
+    void should_return401Unauthorized_when_postWithUnauthorizedAnonymousUser() throws Exception {
+      api.perform(post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID").with(csrf()))
+          .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postWithAuthorizedMockUser() throws Exception {
+      val requestBody = new WaehleranzahlDTO(null, null);
+      val request =
+          post("/businessActions/wahlbeteiligung/wahlID/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      api.perform(request).andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class WallokalZustand {
+
+    @Test
+    @WithAnonymousUser
+    void should_return401Unauthorized_when_postlastSeenWithUnauthorizedAnonymousUser()
+        throws Exception {
+      api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_return401Unauthorized_when_postletzteAbmeldungWithUnauthorizedAnonymousUser()
+        throws Exception {
+      api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void
+        should_return401Unauthorized_when_postschnellmeldungSendungsuhrzeitWithUnauthorizedAnonymousUser()
+            throws Exception {
+      api.perform(post("/businessActions/schnellmeldungSendungsuhrzeit").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void
+        should_return401Unauthorized_when_postschnellmeldungDruckuhrzeitWithUnauthorizedAnonymousUser()
+            throws Exception {
+      api.perform(post("/businessActions/schnellmeldungDruckuhrzeit").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void
+        should_return401Unauthorized_when_postniederschriftSendungsuhrzeitWithUnauthorizedAnonymousUser()
+            throws Exception {
+      api.perform(post("/businessActions/niederschriftSendungsuhrzeit").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void
+        should_return401Unauthorized_when_postniederschriftDruckuhrzeitWithUnauthorizedAnonymousUser()
+            throws Exception {
+      api.perform(post("/businessActions/niederschriftDruckuhrzeit").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postlastSeenWithAuthorizedMockUser() throws Exception {
+      api.perform(post("/businessActions/lastSeen/wahlbezirkID").with(csrf()))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postletzteAbmeldungWithAuthorizedMockUser() throws Exception {
+      api.perform(post("/businessActions/letzteAbmeldung/wahlbezirkID").with(csrf()))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postschnellmeldungSendungsuhrzeitWithAuthorizedMockUser()
+        throws Exception {
+      val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
+      val requestSchnellmeldungSendungsuhrzeit =
+          post("/businessActions/schnellmeldungSendungsuhrzeit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
+      api.perform(requestSchnellmeldungSendungsuhrzeit).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postschnellmeldungDruckuhrzeitWithAuthorizedMockUser()
+        throws Exception {
+      val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
+
+      val requestSchnellmeldungDruckuhrzeit =
+          post("/businessActions/schnellmeldungDruckuhrzeit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBodyOfDruckdaten));
+      api.perform(requestSchnellmeldungDruckuhrzeit).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postniederschriftSendungsuhrzeitWithAuthorizedMockUser()
+        throws Exception {
+      val requestBodyOfSendungsdaten = new SendungsdatenDTO(null, null);
+      val requestNiederschriftSendungsuhrzeit =
+          post("/businessActions/niederschriftSendungsuhrzeit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBodyOfSendungsdaten));
+      api.perform(requestNiederschriftSendungsuhrzeit).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void should_return200OK_when_postniederschriftDruckuhrzeitWithAuthorizedMockUser()
+        throws Exception {
+      val requestBodyOfDruckdaten = new DruckdatenDTO(null, null);
+      val requestNiederschriftDruckuhrzeit =
+          post("/businessActions/niederschriftDruckuhrzeit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBodyOfDruckdaten));
+      api.perform(requestNiederschriftDruckuhrzeit).andExpect(status().isOk());
+    }
+  }
 }

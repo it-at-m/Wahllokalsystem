@@ -2,5 +2,4 @@ package de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfigurat
 
 import java.util.List;
 
-public record KennbuchstabenModel(List<String> kennbuchstaben) {
-}
+public record KennbuchstabenModel(List<String>kennbuchstaben){}

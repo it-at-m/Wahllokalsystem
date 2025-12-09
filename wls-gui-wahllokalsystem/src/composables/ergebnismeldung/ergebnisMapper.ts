@@ -130,6 +130,22 @@ export function useErgebnisMapper() {
     };
   }
 
+  function toBegruendungDto(
+    model: Begruendung,
+    wahlbezirkID: string
+  ): BegruendungDTO {
+    return {
+      bezirkUndWahlIDStapelart: {
+        wahlID: model.wahlID,
+        wahlbezirkID: wahlbezirkID,
+        stapelart: _modelStapelArtEnumToDto(model.stapelart),
+      },
+      grund: model.grund,
+      nachzaehlung: model.nachzaehlung,
+      unstimmigkeiten: model.unstimmigkeiten,
+    };
+  }
+
   function _dtoBezirkUndWahlIDStapelartToModel(
     dto: BezirkUndWahlIDStapelartDTO
   ): BezirkUndWahlIDStapelArt {
@@ -258,5 +274,6 @@ export function useErgebnisMapper() {
     toGetErgebnisseStapelartEnum,
     toPostErgebnisseStapelartEnum,
     toBegruendungModel,
+    toBegruendungDto,
   };
 }

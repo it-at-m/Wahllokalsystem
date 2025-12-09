@@ -1,31 +1,46 @@
 <template>
   <v-card>
-    <v-card-title>Niederschrift</v-card-title>
-    <v-card-subtitle
+    <v-card-title class="font-weight-bold">Niederschrift</v-card-title>
+    <v-card-subtitle class="font-weight-bold mb-10"
       >Kontrolle, Übermittlung und Druck der Niederschrift</v-card-subtitle
     >
-    <v-card-text>
-      <v-form v-model="isFormValid">
-        <!-- TBD: Platzhalter für Niederschrift-Komponenten -->
-      </v-form>
-    </v-card-text>
+    <the-m-b-w-wahlberechtigte-anzeigen-card
+      class="ma-5"
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-waehler-anzeigen-card
+      class="ma-5"
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-ungueltige-stimmen-anzeigen-card
+      class="ma-5"
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
+    <the-m-b-w-gueltige-stimmen-anzeigen-card
+      class="ma-5"
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
     <v-card-actions>
       <base-button-save
         save-text="Niederschrift senden"
         prepend-icon="$cloudUpload"
-        :disabled="!isFormValid"
+        :disabled="!isSendenValid"
         @click="onSendenClicked"
       />
       <base-button-save
         save-text="Niederschrift korrigieren"
         prepend-icon="$edit"
-        :disabled="!isFormValid"
+        :disabled="!isKorrigierenValid"
         @click="onKorrigierenClicked"
       />
       <base-button-save
         save-text="Niederschrift drucken"
         prepend-icon="$printer"
-        :disabled="!isFormValid"
+        :disabled="!isDruckenValid"
         @click="onDruckenClicked"
       />
     </v-card-actions>
@@ -37,6 +52,10 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
+import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
+import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -44,8 +63,12 @@ const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 
-const isFormValid = ref<null | boolean>(null);
+// button logic to be implemented
+const isSendenValid = ref<null | boolean>();
+const isKorrigierenValid = ref<null | boolean>();
+const isDruckenValid = ref<null | boolean>(true);
 
+const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 

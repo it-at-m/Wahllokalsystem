@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.common.Wahlu
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record BriefwahlvorbereitungWriteDTO(@NotNull java.util.List<WahlurneDTO> urnenAnzahl) {
+@Builder public record BriefwahlvorbereitungWriteDTO(@NotNull java.util.List<WahlurneDTO>urnenAnzahl){
 
 }

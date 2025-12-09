@@ -8,37 +8,36 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Briefwahl_READ_BeanstandeteWahlbriefe')")
-public interface BeanstandeteWahlbriefeRepository extends CrudRepository<BeanstandeteWahlbriefe, BezirkIDUndWaehlerverzeichnisNummer> {
+public interface BeanstandeteWahlbriefeRepository
+    extends CrudRepository<BeanstandeteWahlbriefe, BezirkIDUndWaehlerverzeichnisNummer> {
 
-    String CACHE = "BeanstandeteWahlbriefeCACHE";
+  String CACHE = "BeanstandeteWahlbriefeCACHE";
 
-    @Override
-    @NonNull
-    Iterable<BeanstandeteWahlbriefe> findAll();
+  @Override
+  @NonNull Iterable<BeanstandeteWahlbriefe> findAll();
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
-    @PreAuthorize("hasAuthority('Briefwahl_WRITE_BeanstandeteWahlbriefe')")
-    @NonNull
-    <S extends BeanstandeteWahlbriefe> S save(@NonNull S beanstandeteWahlbriefe);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
+  @PreAuthorize("hasAuthority('Briefwahl_WRITE_BeanstandeteWahlbriefe')")
+  @NonNull <S extends BeanstandeteWahlbriefe> S save(@NonNull S beanstandeteWahlbriefe);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
-    void deleteById(@NonNull BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
+  void deleteById(@NonNull BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
-    @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
-    void delete(@NonNull BeanstandeteWahlbriefe entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
+  @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
+  void delete(@NonNull BeanstandeteWahlbriefe entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
-    void deleteAll(@NonNull Iterable<? extends BeanstandeteWahlbriefe> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
+  void deleteAll(@NonNull Iterable<? extends BeanstandeteWahlbriefe> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Briefwahl_DELETE_BeanstandeteWahlbriefe')")
+  void deleteAll();
 }

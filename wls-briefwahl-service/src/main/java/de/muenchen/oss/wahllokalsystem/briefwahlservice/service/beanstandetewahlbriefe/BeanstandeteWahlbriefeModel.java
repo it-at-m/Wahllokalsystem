@@ -5,4 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.Builder;
 
-@Builder public record BeanstandeteWahlbriefeModel(@NotNull String wahlbezirkID,@NotNull Long waehlerverzeichnisNummer,@NotNull Map<String,Zurueckweisungsgrund[]>beanstandeteWahlbriefe){}
+@Builder
+public record BeanstandeteWahlbriefeModel(
+    @NotNull String wahlbezirkID,
+    @NotNull Long waehlerverzeichnisNummer,
+    @NotNull Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe) {}

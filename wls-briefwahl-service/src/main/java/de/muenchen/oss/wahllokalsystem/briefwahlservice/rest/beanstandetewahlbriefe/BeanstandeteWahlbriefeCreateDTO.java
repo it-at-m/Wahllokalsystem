@@ -7,4 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import lombok.Builder;
 
-@Builder public record BeanstandeteWahlbriefeCreateDTO(@Schema(enumAsRef=true,example=SwaggerConfiguration.BEANSTANDETE_WAHLBRIEFE_EXAMPLE)@NotNull Map<String,Zurueckweisungsgrund[]>beanstandeteWahlbriefe){}
+@Builder
+public record BeanstandeteWahlbriefeCreateDTO(
+    @Schema(enumAsRef = true, example = SwaggerConfiguration.BEANSTANDETE_WAHLBRIEFE_EXAMPLE)
+        @NotNull Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe) {}

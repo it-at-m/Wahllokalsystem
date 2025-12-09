@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlbriefdatenDTOMapper {
 
-    WahlbriefdatenDTO toDTO(WahlbriefdatenModel model);
+  WahlbriefdatenDTO toDTO(WahlbriefdatenModel model);
 
-    WahlbriefdatenModel toModel(String wahlbezirkID, WahlbriefdatenWriteDTO dto);
+  WahlbriefdatenModel toModel(String wahlbezirkID, WahlbriefdatenWriteDTO dto);
 }

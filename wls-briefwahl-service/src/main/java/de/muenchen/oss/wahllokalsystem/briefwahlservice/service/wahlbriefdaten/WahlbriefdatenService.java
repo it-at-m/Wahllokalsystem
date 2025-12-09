@@ -13,32 +13,30 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahlbriefdatenService {
 
-    private final WahlbriefdatenRepository wahlbriefdatenRepository;
+  private final WahlbriefdatenRepository wahlbriefdatenRepository;
 
-    private final WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
+  private final WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
 
-    private final WahlbriefdatenValidator wahlbriefdatenValidator;
+  private final WahlbriefdatenValidator wahlbriefdatenValidator;
 
-    @PreAuthorize(
-        "hasAuthority('Briefwahl_BUSINESSACTION_GetWahlbriefdaten')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<WahlbriefdatenModel> getWahlbriefdaten(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.info("#getBeanstandeteWahlbriefe");
-        wahlbriefdatenValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Briefwahl_BUSINESSACTION_GetWahlbriefdaten')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<WahlbriefdatenModel> getWahlbriefdaten(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.info("#getBeanstandeteWahlbriefe");
+    wahlbriefdatenValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        return wahlbriefdatenRepository.findById(wahlbezirkID).map(wahlbriefdatenModelMapper::toModel);
-    }
+    return wahlbriefdatenRepository.findById(wahlbezirkID).map(wahlbriefdatenModelMapper::toModel);
+  }
 
-    @PreAuthorize(
-        "hasAuthority('Briefwahl_BUSINESSACTION_PostWahlbriefdaten')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)"
-    )
-    public void setWahlbriefdaten(@P("param") final WahlbriefdatenModel wahlbriefdatenToSet) {
-        log.info("#postBeanstandeteWahlbriefe");
-        wahlbriefdatenValidator.validWahlbriefdatenToSetOrThrow(wahlbriefdatenToSet);
+  @PreAuthorize(
+      "hasAuthority('Briefwahl_BUSINESSACTION_PostWahlbriefdaten')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)")
+  public void setWahlbriefdaten(@P("param") final WahlbriefdatenModel wahlbriefdatenToSet) {
+    log.info("#postBeanstandeteWahlbriefe");
+    wahlbriefdatenValidator.validWahlbriefdatenToSetOrThrow(wahlbriefdatenToSet);
 
-        wahlbriefdatenRepository.save(wahlbriefdatenModelMapper.toEntity(wahlbriefdatenToSet));
-    }
-
+    wahlbriefdatenRepository.save(wahlbriefdatenModelMapper.toEntity(wahlbriefdatenToSet));
+  }
 }

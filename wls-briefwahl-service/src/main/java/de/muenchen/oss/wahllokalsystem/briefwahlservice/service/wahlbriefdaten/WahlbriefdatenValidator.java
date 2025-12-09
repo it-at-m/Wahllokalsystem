@@ -10,17 +10,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlbriefdatenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlbezirkIDOrThrow(final String wahlbezirkIDToValidate) {
-        if (StringUtils.isBlank(wahlbezirkIDToValidate)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlbezirkIDOrThrow(final String wahlbezirkIDToValidate) {
+    if (StringUtils.isBlank(wahlbezirkIDToValidate)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validWahlbriefdatenToSetOrThrow(final WahlbriefdatenModel wahlbriefdatenToSet) {
-        if (wahlbriefdatenToSet == null || StringUtils.isEmpty(wahlbriefdatenToSet.wahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlbriefdatenToSetOrThrow(final WahlbriefdatenModel wahlbriefdatenToSet) {
+    if (wahlbriefdatenToSet == null || StringUtils.isEmpty(wahlbriefdatenToSet.wahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POSTWAHLBRIEFDATEN_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

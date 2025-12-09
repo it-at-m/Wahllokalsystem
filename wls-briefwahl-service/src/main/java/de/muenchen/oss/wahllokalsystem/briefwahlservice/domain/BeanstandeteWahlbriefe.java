@@ -26,20 +26,20 @@ import org.hibernate.annotations.JdbcTypeCode;
 @AllArgsConstructor
 public class BeanstandeteWahlbriefe {
 
-    @EmbeddedId
-    private BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer;
+  @EmbeddedId private BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer;
 
-    @NotNull
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "Zurueckweisegruende", joinColumns = {
-                    @JoinColumn(name = "bw_wahlbezirkid", referencedColumnName = "wahlbezirkID"),
-                    @JoinColumn(name = "bw_waehlerverzeichnisnummer", referencedColumnName = "waehlerverzeichnisNummer")
-            }
-    )
-    @Column(name = "zurueckweisegruende")
-    @MapKeyColumn(name = "wahlID")
-    @Convert(attributeName = "value", converter = ZurueckweisungsgrundConverter.class)
-    @JdbcTypeCode(Types.CLOB)
-    private java.util.Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe = new HashMap<>();
+  @NotNull @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+      name = "Zurueckweisegruende",
+      joinColumns = {
+        @JoinColumn(name = "bw_wahlbezirkid", referencedColumnName = "wahlbezirkID"),
+        @JoinColumn(
+            name = "bw_waehlerverzeichnisnummer",
+            referencedColumnName = "waehlerverzeichnisNummer")
+      })
+  @Column(name = "zurueckweisegruende")
+  @MapKeyColumn(name = "wahlID")
+  @Convert(attributeName = "value", converter = ZurueckweisungsgrundConverter.class)
+  @JdbcTypeCode(Types.CLOB)
+  private java.util.Map<String, Zurueckweisungsgrund[]> beanstandeteWahlbriefe = new HashMap<>();
 }

@@ -5,12 +5,4 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record KopfdatenModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                             @NotNull String gemeinde,
-                             @NotNull StimmzettelgebietsartModel stimmzettelgebietsart,
-                             @NotNull String stimmzettelgebietsnummer,
-                             @NotNull String stimmzettelgebietsname,
-                             @NotNull String wahlname,
-                             @NotNull String wahlbezirknummer) {
-}
+@Builder public record KopfdatenModel(@NotNull BezirkUndWahlID bezirkUndWahlID,@NotNull String gemeinde,@NotNull StimmzettelgebietsartModel stimmzettelgebietsart,@NotNull String stimmzettelgebietsnummer,@NotNull String stimmzettelgebietsname,@NotNull String wahlname,@NotNull String wahlbezirknummer){}

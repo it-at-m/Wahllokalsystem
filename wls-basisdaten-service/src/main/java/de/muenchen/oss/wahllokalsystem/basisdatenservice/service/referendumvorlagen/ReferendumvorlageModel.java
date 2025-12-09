@@ -3,9 +3,4 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorl
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
-public record ReferendumvorlageModel(@NotNull String wahlvorschlagID,
-                                     @NotNull Long ordnungszahl,
-                                     @NotNull String kurzname,
-                                     @NotNull String frage,
-                                     @NotNull Set<ReferendumoptionModel> referendumoptionen) {
-}
+public record ReferendumvorlageModel(@NotNull String wahlvorschlagID,@NotNull Long ordnungszahl,@NotNull String kurzname,@NotNull String frage,@NotNull Set<ReferendumoptionModel>referendumoptionen){}

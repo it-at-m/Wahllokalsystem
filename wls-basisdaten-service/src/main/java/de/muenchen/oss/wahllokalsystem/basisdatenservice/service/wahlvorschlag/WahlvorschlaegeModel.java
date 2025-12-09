@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 import lombok.Builder;
 
-@Builder
-public record WahlvorschlaegeModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                                   @NotNull String stimmzettelgebietID,
-                                   @NotNull Set<WahlvorschlagModel> wahlvorschlaege) {
+@Builder public record WahlvorschlaegeModel(@NotNull BezirkUndWahlID bezirkUndWahlID,@NotNull String stimmzettelgebietID,@NotNull Set<WahlvorschlagModel>wahlvorschlaege){
 
 }

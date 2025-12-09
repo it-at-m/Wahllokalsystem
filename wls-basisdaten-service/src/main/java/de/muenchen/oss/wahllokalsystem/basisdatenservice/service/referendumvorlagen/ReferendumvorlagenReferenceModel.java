@@ -3,4 +3,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorl
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder public record ReferendumvorlagenReferenceModel(@NotNull String wahlID,@NotNull String wahlbezirkID){}
+@Builder
+public record ReferendumvorlagenReferenceModel(
+    @NotNull String wahlID, @NotNull String wahlbezirkID) {}

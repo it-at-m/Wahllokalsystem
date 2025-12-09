@@ -14,44 +14,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface KopfdatenRepository extends CrudRepository<Kopfdaten, BezirkUndWahlID> {
 
-    String CACHE = "KOPFDATEN_CACHE";
+  String CACHE = "KOPFDATEN_CACHE";
 
-    @Override
-    List<Kopfdaten> findAll();
+  @Override
+  List<Kopfdaten> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Kopfdaten> findById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Kopfdaten> findById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kopfdaten')")
-    <S extends Kopfdaten> S save(S kopfdaten);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kopfdaten')")
+  <S extends Kopfdaten> S save(S kopfdaten);
 
-    @Override
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kopfdaten')")
-    <S extends Kopfdaten> Iterable<S> saveAll(Iterable<S> iterable);
+  @Override
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_Kopfdaten')")
+  <S extends Kopfdaten> Iterable<S> saveAll(Iterable<S> iterable);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
-    void deleteById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+  void deleteById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
-    void delete(Kopfdaten entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+  void delete(Kopfdaten entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
-    void deleteAll(Iterable<? extends Kopfdaten> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+  void deleteAll(Iterable<? extends Kopfdaten> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+  void deleteAll();
 
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
-    void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Kopfdaten')")
+  void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
 }

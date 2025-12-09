@@ -15,43 +15,48 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UngueltigeWahlscheineService {
 
-    private final UngueltigeWahlscheineModelMapper ungueltigeWahlscheineModelMapper;
+  private final UngueltigeWahlscheineModelMapper ungueltigeWahlscheineModelMapper;
 
-    private final UngueltigeWahlscheineValidator ungueltigeWahlscheineValidator;
+  private final UngueltigeWahlscheineValidator ungueltigeWahlscheineValidator;
 
-    private final ExceptionFactory exceptionFactory;
-    private final UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
+  private final ExceptionFactory exceptionFactory;
+  private final UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetUngueltigews')")
-    public byte[] getUngueltigeWahlscheine(final UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel) {
-        log.info("#getUngueltigews");
-        log.debug("#getUngueltigews getUngueltigews {}", ungueltigeWahlscheineReferenceModel);
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetUngueltigews')")
+  public byte[] getUngueltigeWahlscheine(
+      final UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel) {
+    log.info("#getUngueltigews");
+    log.debug("#getUngueltigews getUngueltigews {}", ungueltigeWahlscheineReferenceModel);
 
-        ungueltigeWahlscheineValidator.validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReferenceModel);
+    ungueltigeWahlscheineValidator.validUngueltigeWahlscheineReferenceOrThrow(
+        ungueltigeWahlscheineReferenceModel);
 
-        val entityId = ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel);
-        val entity = ungueltigeWahlscheineRepository.findById(entityId);
+    val entityId = ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel);
+    val entity = ungueltigeWahlscheineRepository.findById(entityId);
 
-        if (entity.isEmpty()) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN);
-        } else {
-            val ungueltigeWahlscheineData = entity.get().getUngueltigeWahlscheine();
-            return Arrays.copyOf(ungueltigeWahlscheineData, ungueltigeWahlscheineData.length);
-        }
+    if (entity.isEmpty()) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN);
+    } else {
+      val ungueltigeWahlscheineData = entity.get().getUngueltigeWahlscheine();
+      return Arrays.copyOf(ungueltigeWahlscheineData, ungueltigeWahlscheineData.length);
     }
+  }
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostUngueltigews')")
-    public void setUngueltigeWahlscheine(final UngueltigeWahlscheineWriteModel ungueltigeWahlscheineModel) {
-        log.info("#postUngueltigews");
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostUngueltigews')")
+  public void setUngueltigeWahlscheine(
+      final UngueltigeWahlscheineWriteModel ungueltigeWahlscheineModel) {
+    log.info("#postUngueltigews");
 
-        ungueltigeWahlscheineValidator.validUngueltigeWahlscheineWriteModelOrThrow(ungueltigeWahlscheineModel);
+    ungueltigeWahlscheineValidator.validUngueltigeWahlscheineWriteModelOrThrow(
+        ungueltigeWahlscheineModel);
 
-        val entityToSave = ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineModel);
-        try {
-            ungueltigeWahlscheineRepository.save(entityToSave);
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH);
-        }
+    val entityToSave = ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineModel);
+    try {
+      ungueltigeWahlscheineRepository.save(entityToSave);
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH);
     }
-
+  }
 }

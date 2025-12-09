@@ -32,79 +32,86 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock
 public class WahltageServiceSecurityTest {
 
-    @Autowired
-    WahltageService wahltageService;
+  @Autowired WahltageService wahltageService;
 
-    @Autowired
-    WahltagRepository wahltagRepository;
+  @Autowired WahltagRepository wahltagRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @AfterEach
-        void teardown() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
-            wahltagRepository.deleteAll();
-        }
-
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLTAGE);
-
-            String requestDate = LocalDate.now().minusMonths(3).toString();
-            val eaiWahltage = createClientWahltageDTO();
-
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
-
-            Assertions.assertThatNoException().isThrownBy(() -> wahltageService.getWahltage());
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            String requestDate = LocalDate.now().minusMonths(3).toString();
-            val eaiWahltage = createClientWahltageDTO();
-
-            WireMock.stubFor(WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
-
-            Assertions.assertThatException().isThrownBy(() -> wahltageService.getWahltage())
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
-        }
-
-        private Set<WahltagDTO> createClientWahltageDTO() {
-            val wahltag1 = new WahltagDTO();
-            wahltag1.setIdentifikator("identifikatorWahltag1");
-            wahltag1.setBeschreibung("beschreibungWahltag1");
-            wahltag1.setNummer("nummerWahltag1");
-            wahltag1.setTag(LocalDate.now().minusMonths(2));
-
-            val wahltag2 = new WahltagDTO();
-            wahltag2.setIdentifikator("identifikatorWahltag2");
-            wahltag2.setBeschreibung("beschreibungWahltag2");
-            wahltag2.setNummer("nummerWahltag2");
-            wahltag2.setTag(LocalDate.now().minusMonths(1));
-
-            val wahltag3 = new WahltagDTO();
-            wahltag3.setIdentifikator("identifikatorWahltag3");
-            wahltag3.setBeschreibung("beschreibungWahltag3");
-            wahltag3.setNummer("nummerWahltag3");
-            wahltag3.setTag(LocalDate.now().plusMonths(1));
-
-            return Set.of(wahltag3, wahltag2, wahltag1);
-        }
+    @AfterEach
+    void teardown() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
+      wahltagRepository.deleteAll();
     }
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLTAGE);
+
+      String requestDate = LocalDate.now().minusMonths(3).toString();
+      val eaiWahltage = createClientWahltageDTO();
+
+      WireMock.stubFor(
+          WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
+
+      Assertions.assertThatNoException().isThrownBy(() -> wahltageService.getWahltage());
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor)
+        throws Exception {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      String requestDate = LocalDate.now().minusMonths(3).toString();
+      val eaiWahltage = createClientWahltageDTO();
+
+      WireMock.stubFor(
+          WireMock.get("/wahldaten/wahltage?includingSince=" + requestDate)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahltage))));
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahltageService.getWahltage())
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
+    }
+
+    private Set<WahltagDTO> createClientWahltageDTO() {
+      val wahltag1 = new WahltagDTO();
+      wahltag1.setIdentifikator("identifikatorWahltag1");
+      wahltag1.setBeschreibung("beschreibungWahltag1");
+      wahltag1.setNummer("nummerWahltag1");
+      wahltag1.setTag(LocalDate.now().minusMonths(2));
+
+      val wahltag2 = new WahltagDTO();
+      wahltag2.setIdentifikator("identifikatorWahltag2");
+      wahltag2.setBeschreibung("beschreibungWahltag2");
+      wahltag2.setNummer("nummerWahltag2");
+      wahltag2.setTag(LocalDate.now().minusMonths(1));
+
+      val wahltag3 = new WahltagDTO();
+      wahltag3.setIdentifikator("identifikatorWahltag3");
+      wahltag3.setBeschreibung("beschreibungWahltag3");
+      wahltag3.setNummer("nummerWahltag3");
+      wahltag3.setTag(LocalDate.now().plusMonths(1));
+
+      return Set.of(wahltag3, wahltag2, wahltag1);
+    }
+  }
 }

@@ -6,5 +6,6 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface WahlbezirkDTOMapper {
-    List<WahlbezirkDTO> fromListOfWahlbezirkModelToListOfWahlbezirkDTO(List<WahlbezirkModel> wahlbezirkModelList);
+  List<WahlbezirkDTO> fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
+      List<WahlbezirkModel> wahlbezirkModelList);
 }

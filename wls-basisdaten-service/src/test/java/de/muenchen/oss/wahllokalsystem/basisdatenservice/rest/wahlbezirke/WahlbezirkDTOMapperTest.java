@@ -10,23 +10,24 @@ import org.mapstruct.factory.Mappers;
 
 class WahlbezirkDTOMapperTest {
 
-    private final WahlbezirkDTOMapper unitUnderTest = Mappers.getMapper(WahlbezirkDTOMapper.class);
+  private final WahlbezirkDTOMapper unitUnderTest = Mappers.getMapper(WahlbezirkDTOMapper.class);
 
-    @Nested
-    class FromListOfWahlbezirkModelToListOfWahlbezirkDTO {
+  @Nested
+  class FromListOfWahlbezirkModelToListOfWahlbezirkDTO {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnWahlbezirkDTOList_when_givenWahlbezirkModelList() {
-            val modelsInput = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
-            val dtosExpected = MockDataFactory.createWlsWahlbezirkDTOs("", LocalDate.now());
-
-            val result = unitUnderTest.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(modelsInput);
-            Assertions.assertThat(result).isEqualTo(dtosExpected);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(null))
+          .isNull();
     }
+
+    @Test
+    void should_returnWahlbezirkDTOList_when_givenWahlbezirkModelList() {
+      val modelsInput = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
+      val dtosExpected = MockDataFactory.createWlsWahlbezirkDTOs("", LocalDate.now());
+
+      val result = unitUnderTest.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(modelsInput);
+      Assertions.assertThat(result).isEqualTo(dtosExpected);
+    }
+  }
 }

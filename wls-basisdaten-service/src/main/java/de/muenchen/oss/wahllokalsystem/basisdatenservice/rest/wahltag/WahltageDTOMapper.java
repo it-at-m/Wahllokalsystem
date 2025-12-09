@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface WahltageDTOMapper {
-    List<WahltagDTO> fromListOfWahltagModelToListOfWahltagDTO(List<WahltagModel> wahltage);
+  List<WahltagDTO> fromListOfWahltagModelToListOfWahltagDTO(List<WahltagModel> wahltage);
 }

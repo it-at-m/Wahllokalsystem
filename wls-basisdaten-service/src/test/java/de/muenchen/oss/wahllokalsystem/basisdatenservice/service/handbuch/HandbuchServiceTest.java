@@ -23,98 +23,108 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class HandbuchServiceTest {
 
-    @Mock
-    HandbuchValidator handbuchValidator;
+  @Mock HandbuchValidator handbuchValidator;
 
-    @Mock
-    HandbuchModelMapper handbuchModelMapper;
+  @Mock HandbuchModelMapper handbuchModelMapper;
 
-    @Mock
-    HandbuchRepository handbuchRepository;
+  @Mock HandbuchRepository handbuchRepository;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    HandbuchService unitUnderTest;
+  @InjectMocks HandbuchService unitUnderTest;
 
-    @Nested
-    class GetHandbuch {
+  @Nested
+  class GetHandbuch {
 
-        @Test
-        void should_returnHandbuch_when_dataIsFoundInRepo() {
-            val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+    @Test
+    void should_returnHandbuch_when_dataIsFoundInRepo() {
+      val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
-            val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
-            val mockedRepoResponse = new Handbuch(null, "handbuch.txt".getBytes());
+      val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
+      val mockedRepoResponse = new Handbuch(null, "handbuch.txt".getBytes());
 
-            Mockito.when(handbuchModelMapper.toEntityID(handbuchReference)).thenReturn(mockedHandbuchID);
-            Mockito.when(handbuchRepository.findById(mockedHandbuchID)).thenReturn(Optional.of(mockedRepoResponse));
+      Mockito.when(handbuchModelMapper.toEntityID(handbuchReference)).thenReturn(mockedHandbuchID);
+      Mockito.when(handbuchRepository.findById(mockedHandbuchID))
+          .thenReturn(Optional.of(mockedRepoResponse));
 
-            val result = unitUnderTest.getHandbuch(handbuchReference);
+      val result = unitUnderTest.getHandbuch(handbuchReference);
 
-            Assertions.assertThat(result).isEqualTo("handbuch.txt".getBytes());
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_dataIsNotFoundInRepo() {
-            val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
-
-            val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
-            val mockedException = TechnischeWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(handbuchModelMapper.toEntityID(handbuchReference)).thenReturn(mockedHandbuchID);
-            Mockito.when(handbuchRepository.findById(mockedHandbuchID)).thenReturn(Optional.empty());
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETHANDBUCH_KEINE_DATEN)).thenReturn(mockedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getHandbuch(handbuchReference)).isSameAs(mockedException);
-        }
+      Assertions.assertThat(result).isEqualTo("handbuch.txt".getBytes());
     }
 
-    @Nested
-    class SetHandbuch {
+    @Test
+    void should_returnTechnischeWlsException_when_dataIsNotFoundInRepo() {
+      val handbuchReference = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
-        @Test
-        void should_saveHandbuch_when_callingPost() {
-            val handbuchToSave = HandbuchWriteModel.builder().build();
+      val mockedHandbuchID = new WahltagIdUndWahlbezirksart();
+      val mockedException = TechnischeWlsException.withCode("").buildWithMessage("");
 
-            val mockedModelMappedToEntity = new Handbuch();
+      Mockito.when(handbuchModelMapper.toEntityID(handbuchReference)).thenReturn(mockedHandbuchID);
+      Mockito.when(handbuchRepository.findById(mockedHandbuchID)).thenReturn(Optional.empty());
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.GETHANDBUCH_KEINE_DATEN))
+          .thenReturn(mockedException);
 
-            Mockito.when(handbuchModelMapper.toEntity(handbuchToSave)).thenReturn(mockedModelMappedToEntity);
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getHandbuch(handbuchReference))
+          .isSameAs(mockedException);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave));
+  @Nested
+  class SetHandbuch {
 
-            Mockito.verify(handbuchRepository).save(mockedModelMappedToEntity);
-        }
+    @Test
+    void should_saveHandbuch_when_callingPost() {
+      val handbuchToSave = HandbuchWriteModel.builder().build();
 
-        @Test
-        void should_returnValidationException_when_validationFailed() {
-            val handbuchToSave = HandbuchWriteModel.builder().build();
+      val mockedModelMappedToEntity = new Handbuch();
 
-            val mockedValidationException = new RuntimeException("validation failed");
+      Mockito.when(handbuchModelMapper.toEntity(handbuchToSave))
+          .thenReturn(mockedModelMappedToEntity);
 
-            Mockito.doThrow(mockedValidationException).when(handbuchValidator).validHandbuchWriteModelOrThrow(handbuchToSave);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave));
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave)).isSameAs(mockedValidationException);
-
-            Mockito.verify(handbuchRepository, times(0)).save(Mockito.any());
-        }
-
-        @Test
-        void should_mapExceptionToWlsException_when_savingFailed() {
-            val handbuchToSave = HandbuchWriteModel.builder().build();
-
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-            val mockedOnSaveException = new RuntimeException("saving failed");
-            val mockedModelMappedToEntity = new Handbuch();
-
-            Mockito.when(handbuchModelMapper.toEntity(handbuchToSave)).thenReturn(mockedModelMappedToEntity);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH))
-                    .thenReturn(mockedWlsException);
-            Mockito.doThrow(mockedOnSaveException).when(handbuchRepository).save(mockedModelMappedToEntity);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave)).isSameAs(mockedWlsException);
-        }
+      Mockito.verify(handbuchRepository).save(mockedModelMappedToEntity);
     }
 
+    @Test
+    void should_returnValidationException_when_validationFailed() {
+      val handbuchToSave = HandbuchWriteModel.builder().build();
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(handbuchValidator)
+          .validHandbuchWriteModelOrThrow(handbuchToSave);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave))
+          .isSameAs(mockedValidationException);
+
+      Mockito.verify(handbuchRepository, times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void should_mapExceptionToWlsException_when_savingFailed() {
+      val handbuchToSave = HandbuchWriteModel.builder().build();
+
+      val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
+      val mockedOnSaveException = new RuntimeException("saving failed");
+      val mockedModelMappedToEntity = new Handbuch();
+
+      Mockito.when(handbuchModelMapper.toEntity(handbuchToSave))
+          .thenReturn(mockedModelMappedToEntity);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH))
+          .thenReturn(mockedWlsException);
+      Mockito.doThrow(mockedOnSaveException)
+          .when(handbuchRepository)
+          .save(mockedModelMappedToEntity);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch(handbuchToSave))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

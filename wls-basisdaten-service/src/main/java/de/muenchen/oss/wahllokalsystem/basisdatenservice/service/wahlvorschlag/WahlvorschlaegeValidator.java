@@ -11,11 +11,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlvorschlaegeValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlIdUndWahlbezirkIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
-        if (bezirkUndWahlID == null || StringUtils.isEmpty(bezirkUndWahlID.getWahlID()) || StringUtils.isEmpty(bezirkUndWahlID.getWahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+  public void validWahlIdUndWahlbezirkIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
+    if (bezirkUndWahlID == null
+        || StringUtils.isEmpty(bezirkUndWahlID.getWahlID())
+        || StringUtils.isEmpty(bezirkUndWahlID.getWahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
     }
+  }
 }

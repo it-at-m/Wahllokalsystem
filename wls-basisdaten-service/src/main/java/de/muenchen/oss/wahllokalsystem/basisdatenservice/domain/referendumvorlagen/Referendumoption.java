@@ -18,14 +18,9 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Referendumoption {
 
-    @NotNull
-    @ToString.Include
-    private String id;
+  @NotNull @ToString.Include private String id;
 
-    @NotNull
-    @ToString.Include
-    private String name;
+  @NotNull @ToString.Include private String name;
 
-    @ToString.Include
-    private Long position;
+  @ToString.Include private Long position;
 }

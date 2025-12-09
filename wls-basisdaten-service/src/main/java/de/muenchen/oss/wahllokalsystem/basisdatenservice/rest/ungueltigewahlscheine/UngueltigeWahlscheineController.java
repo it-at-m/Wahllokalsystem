@@ -25,55 +25,66 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RequiredArgsConstructor
 public class UngueltigeWahlscheineController {
 
-    private static final String UNGUELTIGE_WAHLSCHEINE_FILE_CONTENT_TYPE = "text/csv";
+  private static final String UNGUELTIGE_WAHLSCHEINE_FILE_CONTENT_TYPE = "text/csv";
 
-    @Value("${app.config.ungueltigewahlscheine.filenamesuffix:Ungueltigews.csv}")
-    String ungueltigeWahlscheineFileNameSuffix;
+  @Value("${app.config.ungueltigewahlscheine.filenamesuffix:Ungueltigews.csv}")
+  String ungueltigeWahlscheineFileNameSuffix;
 
-    private final UngueltigeWahlscheineService ungueltigeWahlscheineService;
+  private final UngueltigeWahlscheineService ungueltigeWahlscheineService;
 
-    private final UngueltigeWahlscheineDTOMapper ungueltigeWahlscheineDTOMapper;
+  private final UngueltigeWahlscheineDTOMapper ungueltigeWahlscheineDTOMapper;
 
-    private final FileMapper fileMapper;
+  private final FileMapper fileMapper;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @GetMapping("{wahltagID}/{wahlbezirksart}")
-    @Operation(
-            description = "Abrufen der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich zurückgegeben."
-                    )
-            }
-    )
-    public ResponseEntity<byte[]> getUngueltigeWahlscheine(@PathVariable("wahltagID") final String wahltagID,
-            @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO) {
-        val ungueltigeWahlscheineData = ungueltigeWahlscheineService.getUngueltigeWahlscheine(
-                ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
+  @GetMapping("{wahltagID}/{wahlbezirksart}")
+  @Operation(
+      description =
+          "Abrufen der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart. Kommen als Anhang im csv-Format mit den Spalten Nachname, Vorname und Nummer",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ungueltige Wahlscheine erfolgreich zurückgegeben.")
+      })
+  public ResponseEntity<byte[]> getUngueltigeWahlscheine(
+      @PathVariable("wahltagID") final String wahltagID,
+      @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO) {
+    val ungueltigeWahlscheineData =
+        ungueltigeWahlscheineService.getUngueltigeWahlscheine(
+            ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
 
-        val attachmentFilename = wahlbezirkArtDTO.toString() + ungueltigeWahlscheineFileNameSuffix;
+    val attachmentFilename = wahlbezirkArtDTO.toString() + ungueltigeWahlscheineFileNameSuffix;
 
-        return fileMapper.toResponseEntity(
-                new FileResponseEntityModel(ungueltigeWahlscheineData, UNGUELTIGE_WAHLSCHEINE_FILE_CONTENT_TYPE, attachmentFilename));
+    return fileMapper.toResponseEntity(
+        new FileResponseEntityModel(
+            ungueltigeWahlscheineData,
+            UNGUELTIGE_WAHLSCHEINE_FILE_CONTENT_TYPE,
+            attachmentFilename));
+  }
+
+  @PostMapping("{wahltagID}/{wahlbezirksart}")
+  @Operation(
+      description =
+          "Speichern der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ungueltige Wahlscheine erfolgreich gespeichert.")
+      })
+  public void setUngueltigeWahlscheine(
+      @PathVariable("wahltagID") final String wahltagID,
+      @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO,
+      final MultipartHttpServletRequest request) {
+    try {
+      val requestContent = fileMapper.fromRequest(request);
+      val ungueltigeWahlscheineWriteModel =
+          ungueltigeWahlscheineDTOMapper.toModel(
+              ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO), requestContent);
+      ungueltigeWahlscheineService.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel);
+    } catch (final IOException e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH);
     }
-
-    @PostMapping("{wahltagID}/{wahlbezirksart}")
-    @Operation(
-            description = "Speichern der ungueltigen Wahlscheine eines Wahltages für eine bestimmte Wahlbezirksart",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Ungueltige Wahlscheine erfolgreich gespeichert.")
-            }
-    )
-    public void setUngueltigeWahlscheine(@PathVariable("wahltagID") final String wahltagID,
-            @PathVariable("wahlbezirksart") final WahlbezirkArtDTO wahlbezirkArtDTO, final MultipartHttpServletRequest request) {
-        try {
-            val requestContent = fileMapper.fromRequest(request);
-            val ungueltigeWahlscheineWriteModel = ungueltigeWahlscheineDTOMapper.toModel(ungueltigeWahlscheineDTOMapper.toModel(wahltagID, wahlbezirkArtDTO),
-                    requestContent);
-            ungueltigeWahlscheineService.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel);
-        } catch (final IOException e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH);
-        }
-    }
+  }
 }

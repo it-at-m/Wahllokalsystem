@@ -3,4 +3,5 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorl
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
-public record ReferendumvorlagenModel(@NotNull String stimmzettelgebietID,@NotNull Set<ReferendumvorlageModel>referendumvorlagen){}
+public record ReferendumvorlagenModel(
+    @NotNull String stimmzettelgebietID, @NotNull Set<ReferendumvorlageModel> referendumvorlagen) {}

@@ -14,99 +14,182 @@ import org.mapstruct.factory.Mappers;
 
 class ReferendumvorlagenModelMapperTest {
 
-    private final ReferendumvorlagenModelMapper unitUnderTest = Mappers.getMapper(ReferendumvorlagenModelMapper.class);
+  private final ReferendumvorlagenModelMapper unitUnderTest =
+      Mappers.getMapper(ReferendumvorlagenModelMapper.class);
+
+  @Nested
+  class ToBezirkUndWahlID {
+
+    @Test
+    void should_returnBezirkUndWahlID_when_givenReferendumvorlagenReferenceModel() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val modelToMap = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
+
+      val result = unitUnderTest.toBezirkUndWahlID(modelToMap);
+
+      val expectedResult = new BezirkUndWahlID(wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class ToModel {
+
+    @Test
+    void should_returnReferendumvorlagenReferenceModel_when_givenBezirkUndWahlID() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stimmzettelgebietID = "stimmzettelgebietID";
+
+      val entityToMap =
+          new Referendumvorlagen(
+              UUID.randomUUID(),
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              stimmzettelgebietID,
+              Set.of(
+                  new Referendumvorlage(
+                      null,
+                      null,
+                      "wahlvorschlagID1",
+                      1L,
+                      "kurzname1",
+                      "frage1",
+                      Set.of(
+                          new Referendumoption("option11", "optionsName11", 1L),
+                          new Referendumoption("option12", "optionsName12", 2L))),
+                  new Referendumvorlage(
+                      null,
+                      null,
+                      "wahlvorschlagID2",
+                      2L,
+                      "kurzname2",
+                      "frage2",
+                      Set.of(
+                          new Referendumoption("option21", "optionsName21", 3L),
+                          new Referendumoption("option22", "optionsName22", 4L)))));
+
+      val result = unitUnderTest.toModel(entityToMap);
+
+      val expectedResult =
+          new ReferendumvorlagenModel(
+              stimmzettelgebietID,
+              Set.of(
+                  new ReferendumvorlageModel(
+                      "wahlvorschlagID1",
+                      1L,
+                      "kurzname1",
+                      "frage1",
+                      Set.of(
+                          new ReferendumoptionModel("option11", "optionsName11", 1L),
+                          new ReferendumoptionModel("option12", "optionsName12", 2L))),
+                  new ReferendumvorlageModel(
+                      "wahlvorschlagID2",
+                      2L,
+                      "kurzname2",
+                      "frage2",
+                      Set.of(
+                          new ReferendumoptionModel("option21", "optionsName21", 3L),
+                          new ReferendumoptionModel("option22", "optionsName22", 4L)))));
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+      Assertions.assertThat(result).hasNoNullFieldsOrProperties();
+    }
+  }
+
+  @Nested
+  class ToEntity {
 
     @Nested
-    class ToBezirkUndWahlID {
+    class OfReferendumvorlagenModel {
 
-        @Test
-        void should_returnBezirkUndWahlID_when_givenReferendumvorlagenReferenceModel() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val modelToMap = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
+      @Test
+      void should_returnReferendumvorlagenEntity_when_givenReferendumvorlagenModel() {
+        val stimmzettelgebietID = "stimmzettelgebietID";
 
-            val result = unitUnderTest.toBezirkUndWahlID(modelToMap);
+        val modelToMap =
+            new ReferendumvorlagenModel(
+                stimmzettelgebietID,
+                Set.of(
+                    new ReferendumvorlageModel(
+                        "wahlvorschlagID1",
+                        1L,
+                        "kurzname1",
+                        "frage1",
+                        Set.of(
+                            new ReferendumoptionModel("option11", "optionsName11", 1L),
+                            new ReferendumoptionModel("option12", "optionsName12", 2L))),
+                    new ReferendumvorlageModel(
+                        "wahlvorschlagID2",
+                        2L,
+                        "kurzname2",
+                        "frage2",
+                        Set.of(
+                            new ReferendumoptionModel("option21", "optionsName21", 3L),
+                            new ReferendumoptionModel("option22", "optionsName22", 4L)))));
+        val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val expectedResult = new BezirkUndWahlID(wahlID, wahlbezirkID);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+        val result = unitUnderTest.toEntity(modelToMap, bezirkUndWahlID);
+
+        val expectedResult =
+            new Referendumvorlagen(
+                null,
+                bezirkUndWahlID,
+                stimmzettelgebietID,
+                Set.of(
+                    new Referendumvorlage(
+                        null,
+                        null,
+                        "wahlvorschlagID1",
+                        1L,
+                        "kurzname1",
+                        "frage1",
+                        Set.of(
+                            new Referendumoption("option11", "optionsName11", 1L),
+                            new Referendumoption("option12", "optionsName12", 2L))),
+                    new Referendumvorlage(
+                        null,
+                        null,
+                        "wahlvorschlagID2",
+                        2L,
+                        "kurzname2",
+                        "frage2",
+                        Set.of(
+                            new Referendumoption("option21", "optionsName21", 3L),
+                            new Referendumoption("option22", "optionsName22", 4L)))));
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
     }
 
     @Nested
-    class ToModel {
+    class OfReferendumvorlageModel {
 
-        @Test
-        void should_returnReferendumvorlagenReferenceModel_when_givenBezirkUndWahlID() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stimmzettelgebietID = "stimmzettelgebietID";
+      @Test
+      void should_returnReferendumvorlageEntity_when_givenReferendumvorlageModel() {
+        val modelToMap =
+            new ReferendumvorlageModel(
+                "wahlvorschlagID1",
+                1L,
+                "kurzname1",
+                "frage1",
+                Set.of(
+                    new ReferendumoptionModel("option11", "optionsName11", 1L),
+                    new ReferendumoptionModel("option12", "optionsName12", 2L)));
 
-            val entityToMap = new Referendumvorlagen(UUID.randomUUID(), new BezirkUndWahlID(wahlID, wahlbezirkID), stimmzettelgebietID,
-                    Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                            Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
-                            new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                                    Set.of(new Referendumoption("option21", "optionsName21", 3L), new Referendumoption("option22", "optionsName22", 4L)))));
+        val result = unitUnderTest.toEntity(modelToMap);
 
-            val result = unitUnderTest.toModel(entityToMap);
-
-            val expectedResult = new ReferendumvorlagenModel(stimmzettelgebietID,
-                    Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                            Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
-                                    new ReferendumoptionModel("option12", "optionsName12", 2L))),
-                            new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                                    Set.of(new ReferendumoptionModel("option21", "optionsName21", 3L),
-                                            new ReferendumoptionModel("option22", "optionsName22", 4L)))));
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-            Assertions.assertThat(result).hasNoNullFieldsOrProperties();
-        }
+        val expectedResult =
+            new Referendumvorlage(
+                null,
+                null,
+                "wahlvorschlagID1",
+                1L,
+                "kurzname1",
+                "frage1",
+                Set.of(
+                    new Referendumoption("option11", "optionsName11", 1L),
+                    new Referendumoption("option12", "optionsName12", 2L)));
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
     }
-
-    @Nested
-    class ToEntity {
-
-        @Nested
-        class OfReferendumvorlagenModel {
-
-            @Test
-            void should_returnReferendumvorlagenEntity_when_givenReferendumvorlagenModel() {
-                val stimmzettelgebietID = "stimmzettelgebietID";
-
-                val modelToMap = new ReferendumvorlagenModel(stimmzettelgebietID,
-                        Set.of(new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
-                                        new ReferendumoptionModel("option12", "optionsName12", 2L))),
-                                new ReferendumvorlageModel("wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                                        Set.of(new ReferendumoptionModel("option21", "optionsName21", 3L),
-                                                new ReferendumoptionModel("option22", "optionsName22", 4L)))));
-                val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-                val result = unitUnderTest.toEntity(modelToMap, bezirkUndWahlID);
-
-                val expectedResult = new Referendumvorlagen(null, bezirkUndWahlID, stimmzettelgebietID,
-                        Set.of(new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                                Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L))),
-                                new Referendumvorlage(null, null, "wahlvorschlagID2", 2L, "kurzname2", "frage2",
-                                        Set.of(new Referendumoption("option21", "optionsName21", 3L), new Referendumoption("option22", "optionsName22", 4L)))));
-                Assertions.assertThat(result).isEqualTo(expectedResult);
-            }
-        }
-
-        @Nested
-        class OfReferendumvorlageModel {
-
-            @Test
-            void should_returnReferendumvorlageEntity_when_givenReferendumvorlageModel() {
-                val modelToMap = new ReferendumvorlageModel("wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                        Set.of(new ReferendumoptionModel("option11", "optionsName11", 1L),
-                                new ReferendumoptionModel("option12", "optionsName12", 2L)));
-
-                val result = unitUnderTest.toEntity(modelToMap);
-
-                val expectedResult = new Referendumvorlage(null, null, "wahlvorschlagID1", 1L, "kurzname1", "frage1",
-                        Set.of(new Referendumoption("option11", "optionsName11", 1L), new Referendumoption("option12", "optionsName12", 2L)));
-                Assertions.assertThat(result).isEqualTo(expectedResult);
-            }
-        }
-    }
-
+  }
 }

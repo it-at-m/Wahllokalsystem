@@ -445,6 +445,8 @@
                         </eclipse>
                         <trimTrailingWhitespace />
                         <endWithNewline />
+                        <googleJavaFormat />
+                        <formatAnnotations />
                     </java>
                 </configuration>
                 <executions>

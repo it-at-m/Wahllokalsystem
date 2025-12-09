@@ -3,4 +3,6 @@ package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ere
 import java.util.List;
 import lombok.Builder;
 
-@Builder public record EreignisseWriteDTO(boolean keineVorfaelle,boolean keineVorkommnisse,List<EreignisDTO>ereigniseintraege){}
+@Builder
+public record EreignisseWriteDTO(
+    boolean keineVorfaelle, boolean keineVorkommnisse, List<EreignisDTO> ereigniseintraege) {}

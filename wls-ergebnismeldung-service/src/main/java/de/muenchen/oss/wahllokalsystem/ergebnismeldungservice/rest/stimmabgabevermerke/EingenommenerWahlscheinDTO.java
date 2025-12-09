@@ -2,6 +2,4 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabev
 
 import jakarta.validation.constraints.NotNull;
 
-public record EingenommenerWahlscheinDTO(@NotNull long anzahl,
-                                         @NotNull StimmzettelartDTO stimmzettelart) {
-}
+public record EingenommenerWahlscheinDTO(@NotNull long anzahl,@NotNull StimmzettelartDTO stimmzettelart){}

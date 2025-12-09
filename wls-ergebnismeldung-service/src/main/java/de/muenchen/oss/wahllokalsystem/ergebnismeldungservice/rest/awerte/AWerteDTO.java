@@ -4,9 +4,4 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-@Builder
-public record AWerteDTO(
-    @NotNull BezirkUndWahlID bezirkUndWahlID,
-    @NotNull long a1,
-    Long a2) {
-}
+@Builder public record AWerteDTO(@NotNull BezirkUndWahlID bezirkUndWahlID,@NotNull long a1,Long a2){}

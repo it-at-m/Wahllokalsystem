@@ -4,4 +4,5 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
-@Builder public record UrnenwahlSchliessungsUhrzeitWriteDTO(@NotNull LocalDateTime schliessungsuhrzeit){}
+@Builder
+public record UrnenwahlSchliessungsUhrzeitWriteDTO(@NotNull LocalDateTime schliessungsuhrzeit) {}

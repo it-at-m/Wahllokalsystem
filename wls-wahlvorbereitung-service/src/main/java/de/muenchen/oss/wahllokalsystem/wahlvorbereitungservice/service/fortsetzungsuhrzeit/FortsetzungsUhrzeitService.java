@@ -16,43 +16,44 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FortsetzungsUhrzeitService {
 
-    private final FortsetzungsUhrzeitRepository fortsetzungsUhrzeitRepository;
-    private final FortsetzungsUhrzeitModelMapper fortsetzungsUhrzeitModelMapper;
-    private final FortsetzungsUhrzeitValidator fortsetzungsUhrzeitValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final FortsetzungsUhrzeitRepository fortsetzungsUhrzeitRepository;
+  private final FortsetzungsUhrzeitModelMapper fortsetzungsUhrzeitModelMapper;
+  private final FortsetzungsUhrzeitValidator fortsetzungsUhrzeitValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<FortsetzungsUhrzeitModel> getFortsetzungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getFortsetzungsUhrzeit");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<FortsetzungsUhrzeitModel> getFortsetzungsUhrzeit(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getFortsetzungsUhrzeit");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        fortsetzungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    fortsetzungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = fortsetzungsUhrzeitRepository.findById(wahlbezirkID);
+    val dataFromRepo = fortsetzungsUhrzeitRepository.findById(wahlbezirkID);
 
-        log.debug("out: fortsetzungsUhrzeit > {}", dataFromRepo.orElse(null));
+    log.debug("out: fortsetzungsUhrzeit > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(fortsetzungsUhrzeitModelMapper::toModel);
+    return dataFromRepo.map(fortsetzungsUhrzeitModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#fortsetzungsUhrzeitToSet.wahlbezirkID(), authentication)")
+  public void setFortsetzungsUhrzeit(
+      @P("fortsetzungsUhrzeitToSet") final FortsetzungsUhrzeitModel fortsetzungsUhrzeitToSet) {
+    log.debug("#postFortsetzungsUhrzeit");
+    log.debug("in: fortsetzungsUhrzeit > {}", fortsetzungsUhrzeitToSet);
+
+    fortsetzungsUhrzeitValidator.validModelToSetOrThrow(fortsetzungsUhrzeitToSet);
+
+    try {
+      fortsetzungsUhrzeitRepository.save(
+          fortsetzungsUhrzeitModelMapper.toEntity(fortsetzungsUhrzeitToSet));
+    } catch (Exception e) {
+      log.error("Fehler beim speichern: ", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_FortsetzungsUhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#fortsetzungsUhrzeitToSet.wahlbezirkID(), authentication)"
-    )
-    public void setFortsetzungsUhrzeit(@P("fortsetzungsUhrzeitToSet") final FortsetzungsUhrzeitModel fortsetzungsUhrzeitToSet) {
-        log.debug("#postFortsetzungsUhrzeit");
-        log.debug("in: fortsetzungsUhrzeit > {}", fortsetzungsUhrzeitToSet);
-
-        fortsetzungsUhrzeitValidator.validModelToSetOrThrow(fortsetzungsUhrzeitToSet);
-
-        try {
-            fortsetzungsUhrzeitRepository.save(fortsetzungsUhrzeitModelMapper.toEntity(fortsetzungsUhrzeitToSet));
-        } catch (Exception e) {
-            log.error("Fehler beim speichern: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

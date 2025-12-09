@@ -14,16 +14,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Waehlerverzeichnis {
 
-    @EmbeddedId
-    private BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference;
+  @EmbeddedId private BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference;
 
-    private Boolean verzeichnisLagVor;
+  private Boolean verzeichnisLagVor;
 
-    @Column(name = "berichtigungvorbeginn")
-    private Boolean berichtigungVorBeginnDerAbstimmung;
+  @Column(name = "berichtigungvorbeginn")
+  private Boolean berichtigungVorBeginnDerAbstimmung;
 
-    private Boolean nachtraeglicheBerichtigung;
+  private Boolean nachtraeglicheBerichtigung;
 
-    @Column(name = "mitteilungungueltigescheine")
-    private Boolean mitteilungUeberUngueltigeWahlscheineErhalten;
+  @Column(name = "mitteilungungueltigescheine")
+  private Boolean mitteilungUeberUngueltigeWahlscheineErhalten;
 }

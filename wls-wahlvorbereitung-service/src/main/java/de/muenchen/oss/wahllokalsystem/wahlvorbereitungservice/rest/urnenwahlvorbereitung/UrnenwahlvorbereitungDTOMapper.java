@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(uses = WahlurneDTOMapper.class)
 public interface UrnenwahlvorbereitungDTOMapper {
 
-    UrnenwahlvorbereitungDTO toDTO(UrnenwahlvorbereitungModel model);
+  UrnenwahlvorbereitungDTO toDTO(UrnenwahlvorbereitungModel model);
 
-    UrnenwahlvorbereitungModel toModel(String wahlbezirkID, UrnenwahlvorbereitungWriteDTO dto);
+  UrnenwahlvorbereitungModel toModel(String wahlbezirkID, UrnenwahlvorbereitungWriteDTO dto);
 }

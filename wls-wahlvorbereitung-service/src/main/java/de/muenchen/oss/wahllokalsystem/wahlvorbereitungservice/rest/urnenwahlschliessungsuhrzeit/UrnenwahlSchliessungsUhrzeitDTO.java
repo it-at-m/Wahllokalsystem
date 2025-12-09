@@ -3,6 +3,5 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlsc
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public record UrnenwahlSchliessungsUhrzeitDTO(@NotNull String wahlbezirkID,@NotNull LocalDateTime schliessungsuhrzeit){
-
-}
+public record UrnenwahlSchliessungsUhrzeitDTO(
+    @NotNull String wahlbezirkID, @NotNull LocalDateTime schliessungsuhrzeit) {}

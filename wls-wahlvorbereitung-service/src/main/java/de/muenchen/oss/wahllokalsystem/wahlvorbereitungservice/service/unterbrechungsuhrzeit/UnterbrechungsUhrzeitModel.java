@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
-@Builder public record UnterbrechungsUhrzeitModel(@NotNull String wahlbezirkID,@NotNull LocalDateTime unterbrechungsUhrzeit){
-
-}
+@Builder
+public record UnterbrechungsUhrzeitModel(
+    @NotNull String wahlbezirkID, @NotNull LocalDateTime unterbrechungsUhrzeit) {}

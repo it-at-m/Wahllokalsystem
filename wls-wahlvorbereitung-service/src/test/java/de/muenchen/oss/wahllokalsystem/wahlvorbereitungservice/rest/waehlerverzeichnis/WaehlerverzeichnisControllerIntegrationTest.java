@@ -40,159 +40,259 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
 public class WaehlerverzeichnisControllerIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WaehlerverzeichnisRepository waehlerverzeichnisRepository;
+  @Autowired WaehlerverzeichnisRepository waehlerverzeichnisRepository;
 
-    @Autowired
-    WaehlerverzeichnisDTOMapper waehlerverzeichnisDTOMapper;
+  @Autowired WaehlerverzeichnisDTOMapper waehlerverzeichnisDTOMapper;
 
-    @Autowired
-    WaehlerverzeichnisModelMapper waehlerverzeichnisModelMapper;
+  @Autowired WaehlerverzeichnisModelMapper waehlerverzeichnisModelMapper;
 
-    @Autowired
-    ExceptionFactory exceptionFactory;
+  @Autowired ExceptionFactory exceptionFactory;
 
-    @MockitoSpyBean
-    WaehlerverzeichnisValidator waehlerverzeichnisValidator;
+  @MockitoSpyBean WaehlerverzeichnisValidator waehlerverzeichnisValidator;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERVERZEICHNIS);
-        waehlerverzeichnisRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERVERZEICHNIS);
+    waehlerverzeichnisRepository.deleteAll();
+  }
+
+  @Nested
+  class PostWaehlerverzeichnis {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+        })
+    void should_setNewData_when_callingPost() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 89L;
+      val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
+
+      val request =
+          post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      mockMvc.perform(request).andExpect(status().isCreated());
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+      val savedWaehlerverzeichnis =
+          waehlerverzeichnisRepository
+              .findById(
+                  new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
+              .get();
+      val expectedWaehlerverzeichnis =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              requestBody.verzeichnisLagVor(),
+              requestBody.berichtigungVorBeginnDerAbstimmung(),
+              requestBody.nachtraeglicheBerichtigung(),
+              requestBody.mitteilungUeberUngueltigeWahlscheineErhalten());
+      Assertions.assertThat(savedWaehlerverzeichnis).isEqualTo(expectedWaehlerverzeichnis);
     }
 
-    @Nested
-    class PostWaehlerverzeichnis {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+        })
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 89L;
+      val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void should_setNewData_when_callingPost() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 89L;
-            val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
+      waehlerverzeichnisRepository.save(
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              false,
+              false));
 
-            val request = post(buildURL(wahlbezirkID, waehlerverzeichnisNummer)).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
+      val request =
+          post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-            mockMvc.perform(request).andExpect(status().isCreated());
+      mockMvc.perform(request).andExpect(status().isCreated());
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
-            val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
-                    .get();
-            val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                    requestBody.verzeichnisLagVor(), requestBody.berichtigungVorBeginnDerAbstimmung(), requestBody.nachtraeglicheBerichtigung(),
-                    requestBody.mitteilungUeberUngueltigeWahlscheineErhalten());
-            Assertions.assertThat(savedWaehlerverzeichnis).isEqualTo(expectedWaehlerverzeichnis);
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 89L;
-            val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
-
-            waehlerverzeichnisRepository.save(
-                    new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, false,
-                            false));
-
-            val request = post(buildURL(wahlbezirkID, waehlerverzeichnisNummer)).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            mockMvc.perform(request).andExpect(status().isCreated());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
-            val savedWaehlerverzeichnis = waehlerverzeichnisRepository.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
-                    .get();
-            val expectedWaehlerverzeichnis = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                    requestBody.verzeichnisLagVor(), requestBody.berichtigungVorBeginnDerAbstimmung(), requestBody.nachtraeglicheBerichtigung(),
-                    requestBody.mitteilungUeberUngueltigeWahlscheineErhalten());
-            Assertions.assertThat(savedWaehlerverzeichnis).isEqualTo(expectedWaehlerverzeichnis);
-            Assertions.assertThat(waehlerverzeichnisRepository.count()).isEqualTo(1);
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS })
-        void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 89L;
-            val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
-
-            val request = post(buildURL(wahlbezirkID, waehlerverzeichnisNummer)).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            val mockedValidationException = exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
-            Mockito.doThrow(mockedValidationException).when(waehlerverzeichnisValidator).validModelToSetOrThrow(any());
-
-            val result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val wlsExceptionFromBody = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
-
-            Assertions.assertThat(wlsExceptionFromBody)
-                    .isEqualTo(new WlsExceptionDTO(WlsExceptionCategory.F, mockedValidationException.getCode(),
-                            mockedValidationException.getServiceName(), mockedValidationException.getMessage()));
-        }
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+      val savedWaehlerverzeichnis =
+          waehlerverzeichnisRepository
+              .findById(
+                  new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer))
+              .get();
+      val expectedWaehlerverzeichnis =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              requestBody.verzeichnisLagVor(),
+              requestBody.berichtigungVorBeginnDerAbstimmung(),
+              requestBody.nachtraeglicheBerichtigung(),
+              requestBody.mitteilungUeberUngueltigeWahlscheineErhalten());
+      Assertions.assertThat(savedWaehlerverzeichnis).isEqualTo(expectedWaehlerverzeichnis);
+      Assertions.assertThat(waehlerverzeichnisRepository.count()).isEqualTo(1);
     }
 
-    @Nested
-    class GetWaehlerverzeichnis {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+        })
+    void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete()
+        throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 89L;
+      val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
-        void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlbezirkIDToFind = "wahlbezirkIDToFind";
-            val waehlerverzeichnisNummerToFind = 23L;
+      val request =
+          post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-            val waehlerverzeichnis1 = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind + 1),
-                    true, true, true, true);
-            val waehlerverzeichnis2 = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind),
-                    true, true, true, false);
-            val waehlerverzeichnis3 = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind), true,
-                    false, true, false);
-            val waehlerverzeichnis4 = new Waehlerverzeichnis(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind + 1), false, false, true, true);
-            waehlerverzeichnisRepository.saveAll(List.of(waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3, waehlerverzeichnis4));
+      val mockedValidationException =
+          exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
+      Mockito.doThrow(mockedValidationException)
+          .when(waehlerverzeichnisValidator)
+          .validModelToSetOrThrow(any());
 
-            val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind));
+      val result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val wlsExceptionFromBody =
+          objectMapper.readValue(
+              result.getResponse().getContentAsString(StandardCharsets.UTF_8),
+              WlsExceptionDTO.class);
 
-            val result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-            val resultBodyAsDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WaehlerverzeichnisDTO.class);
+      Assertions.assertThat(wlsExceptionFromBody)
+          .isEqualTo(
+              new WlsExceptionDTO(
+                  WlsExceptionCategory.F,
+                  mockedValidationException.getCode(),
+                  mockedValidationException.getServiceName(),
+                  mockedValidationException.getMessage()));
+    }
+  }
 
-            val expectedResultBody = waehlerverzeichnisDTOMapper.toDto(waehlerverzeichnisModelMapper.toModel(waehlerverzeichnis3));
-            Assertions.assertThat(resultBodyAsDTO).isEqualTo(expectedResultBody);
-        }
+  @Nested
+  class GetWaehlerverzeichnis {
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_WAEHLERVERZEICHNIS, Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS })
-        void should_returnNoContent_when_noDataFound() throws Exception {
-            val wahlbezirkIDToFind = "wahlbezirkIDToFind";
-            val waehlerverzeichnisNummerToFind = 23L;
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
+          Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
+        })
+    void should_returnData_when_dataIsPresentInRepo() throws Exception {
+      val wahlbezirkIDToFind = "wahlbezirkIDToFind";
+      val waehlerverzeichnisNummerToFind = 23L;
 
-            val waehlerverzeichnis1 = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind + 1),
-                    true, true, true, true);
-            val waehlerverzeichnis2 = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind),
-                    true, true, true, false);
-            val waehlerverzeichnis3 = new Waehlerverzeichnis(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind + 1), false, false, true, true);
-            waehlerverzeichnisRepository.saveAll(List.of(waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3));
+      val waehlerverzeichnis1 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind, waehlerverzeichnisNummerToFind + 1),
+              true,
+              true,
+              true,
+              true);
+      val waehlerverzeichnis2 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind),
+              true,
+              true,
+              true,
+              false);
+      val waehlerverzeichnis3 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind, waehlerverzeichnisNummerToFind),
+              true,
+              false,
+              true,
+              false);
+      val waehlerverzeichnis4 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind + 1),
+              false,
+              false,
+              true,
+              true);
+      waehlerverzeichnisRepository.saveAll(
+          List.of(
+              waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3, waehlerverzeichnis4));
 
-            val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind));
+      val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind));
 
-            val result = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
+      val result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val resultBodyAsDTO =
+          objectMapper.readValue(
+              result.getResponse().getContentAsString(), WaehlerverzeichnisDTO.class);
 
-            Assertions.assertThat(result.getResponse().getContentAsString()).isEmpty();
-        }
+      val expectedResultBody =
+          waehlerverzeichnisDTOMapper.toDto(
+              waehlerverzeichnisModelMapper.toModel(waehlerverzeichnis3));
+      Assertions.assertThat(resultBodyAsDTO).isEqualTo(expectedResultBody);
     }
 
-    private String buildURL(final String wahlbezirkID, final long waehlerverzeichnisnummer) {
-        return "/businessActions/waehlerverzeichnis/" + wahlbezirkID + "/" + waehlerverzeichnisnummer;
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
+          Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
+        })
+    void should_returnNoContent_when_noDataFound() throws Exception {
+      val wahlbezirkIDToFind = "wahlbezirkIDToFind";
+      val waehlerverzeichnisNummerToFind = 23L;
+
+      val waehlerverzeichnis1 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind, waehlerverzeichnisNummerToFind + 1),
+              true,
+              true,
+              true,
+              true);
+      val waehlerverzeichnis2 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind),
+              true,
+              true,
+              true,
+              false);
+      val waehlerverzeichnis3 =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(
+                  wahlbezirkIDToFind + "!", waehlerverzeichnisNummerToFind + 1),
+              false,
+              false,
+              true,
+              true);
+      waehlerverzeichnisRepository.saveAll(
+          List.of(waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3));
+
+      val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind));
+
+      val result = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
+
+      Assertions.assertThat(result.getResponse().getContentAsString()).isEmpty();
     }
+  }
+
+  private String buildURL(final String wahlbezirkID, final long waehlerverzeichnisnummer) {
+    return "/businessActions/waehlerverzeichnis/" + wahlbezirkID + "/" + waehlerverzeichnisnummer;
+  }
 }

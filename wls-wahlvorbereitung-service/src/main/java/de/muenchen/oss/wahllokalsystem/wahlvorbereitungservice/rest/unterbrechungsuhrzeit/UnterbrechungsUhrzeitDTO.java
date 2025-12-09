@@ -3,6 +3,5 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.unterbrechu
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public record UnterbrechungsUhrzeitDTO(@NotNull String wahlbezirkID,@NotNull LocalDateTime unterbrechungsUhrzeit){
-
-}
+public record UnterbrechungsUhrzeitDTO(
+    @NotNull String wahlbezirkID, @NotNull LocalDateTime unterbrechungsUhrzeit) {}

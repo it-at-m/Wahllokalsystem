@@ -21,36 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BriefwahlvorbereitungController extends AbstractController {
 
-    private final BriefwahlvorbereitungService briefwahlvorbereitungService;
-    private final BriefwahlvorbereitungDTOMapper briefwahlvorbereitungDTOMapper;
+  private final BriefwahlvorbereitungService briefwahlvorbereitungService;
+  private final BriefwahlvorbereitungDTOMapper briefwahlvorbereitungDTOMapper;
 
-    @Operation(
-            description = "Wahlvorbereitungsdaten des Briefwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorbereitungsdaten erfolgreich zurückgegeben."
-                    ) }
-    )
-    @GetMapping("{wahlbezirkID}")
-    public ResponseEntity<BriefwahlvorbereitungDTO> getBriefwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val briefwahlvorbereitungModel = briefwahlvorbereitungService.getBriefwahlvorbereitung(wahlbezirkID);
+  @Operation(
+      description = "Wahlvorbereitungsdaten des Briefwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlvorbereitungsdaten erfolgreich zurückgegeben.")
+      })
+  @GetMapping("{wahlbezirkID}")
+  public ResponseEntity<BriefwahlvorbereitungDTO> getBriefwahlvorbereitung(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val briefwahlvorbereitungModel =
+        briefwahlvorbereitungService.getBriefwahlvorbereitung(wahlbezirkID);
 
-        return okWithBodyOrNoContent(briefwahlvorbereitungModel.map(briefwahlvorbereitungDTOMapper::toDTO));
-    }
+    return okWithBodyOrNoContent(
+        briefwahlvorbereitungModel.map(briefwahlvorbereitungDTOMapper::toDTO));
+  }
 
-    @Operation(
-            description = "Aktualisiert die Wahlvorbereitungsdaten des Briefwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201", description = "Wahlvorbereitungsdaten erfolgreich gespeichert."
-                    ) }
-    )
-    @PostMapping("{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void postBriefwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final BriefwahlvorbereitungWriteDTO briefwahlvorbereitungWriteDTO) {
-        val briefwahlvorbereitungToSet = briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, briefwahlvorbereitungWriteDTO);
-        briefwahlvorbereitungService.setBriefwahlvorbereitung(briefwahlvorbereitungToSet);
-    }
-
+  @Operation(
+      description = "Aktualisiert die Wahlvorbereitungsdaten des Briefwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Wahlvorbereitungsdaten erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void postBriefwahlvorbereitung(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final BriefwahlvorbereitungWriteDTO briefwahlvorbereitungWriteDTO) {
+    val briefwahlvorbereitungToSet =
+        briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, briefwahlvorbereitungWriteDTO);
+    briefwahlvorbereitungService.setBriefwahlvorbereitung(briefwahlvorbereitungToSet);
+  }
 }

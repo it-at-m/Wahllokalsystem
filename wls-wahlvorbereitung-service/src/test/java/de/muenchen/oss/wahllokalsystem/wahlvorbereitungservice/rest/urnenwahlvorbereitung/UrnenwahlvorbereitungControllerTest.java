@@ -20,61 +20,65 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class UrnenwahlvorbereitungControllerTest {
 
-    @Mock
-    UrnenwahlvorbereitungService service;
+  @Mock UrnenwahlvorbereitungService service;
 
-    @Mock
-    UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
+  @Mock UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
 
-    @InjectMocks
-    UrnenwahlvorbereitungController unitUnderTest;
+  @InjectMocks UrnenwahlvorbereitungController unitUnderTest;
 
-    @Nested
-    class GetUrnenwahlVorbereitung {
+  @Nested
+  class GetUrnenwahlVorbereitung {
 
-        @Test
-        void should_returnUrnenwahlvorbereitungData_when_dataFound() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnUrnenwahlvorbereitungData_when_dataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedServiceOptionalBody = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
-            val mockedMappedServiceResponseAsDTO = new UrnenwahlvorbereitungDTO(wahlbezirkID, 0, 0, 0, Collections.emptyList());
+      val mockedServiceOptionalBody =
+          new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
+      val mockedMappedServiceResponseAsDTO =
+          new UrnenwahlvorbereitungDTO(wahlbezirkID, 0, 0, 0, Collections.emptyList());
 
-            Mockito.when(service.getUrnenwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.of(mockedServiceOptionalBody));
-            Mockito.when(urnenwahlvorbereitungDTOMapper.toDTO(mockedServiceOptionalBody)).thenReturn(mockedMappedServiceResponseAsDTO);
+      Mockito.when(service.getUrnenwahlvorbereitung(wahlbezirkID))
+          .thenReturn(Optional.of(mockedServiceOptionalBody));
+      Mockito.when(urnenwahlvorbereitungDTOMapper.toDTO(mockedServiceOptionalBody))
+          .thenReturn(mockedMappedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getUrnenwahlVorbereitung(wahlbezirkID);
+      val result = unitUnderTest.getUrnenwahlVorbereitung(wahlbezirkID);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
-        }
-
-        @Test
-        void should_returnNoContent_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(service.getUrnenwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getUrnenwahlVorbereitung(wahlbezirkID);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
     }
 
-    @Nested
-    class PostUrnenwahlvorbereitung {
+    @Test
+    void should_returnNoContent_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_postUrnenwahlvorbereitungData_when_calledAndMappedCorrectly() {
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, Collections.emptyList());
+      Mockito.when(service.getUrnenwahlvorbereitung(wahlbezirkID)).thenReturn(Optional.empty());
 
-            val mockedMappedRequest = new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
+      val result = unitUnderTest.getUrnenwahlVorbereitung(wahlbezirkID);
 
-            Mockito.when(urnenwahlvorbereitungDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUrnenwahlvorbereitung(wahlbezirkID, requestBody));
-            Mockito.verify(service).setUrnenwahlvorbereitung(mockedMappedRequest);
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
+  }
+
+  @Nested
+  class PostUrnenwahlvorbereitung {
+
+    @Test
+    void should_postUrnenwahlvorbereitungData_when_calledAndMappedCorrectly() {
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, Collections.emptyList());
+
+      val mockedMappedRequest =
+          new UrnenwahlvorbereitungModel(wahlbezirkID, 0, 0, 0, Collections.emptyList());
+
+      Mockito.when(urnenwahlvorbereitungDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody)))
+          .thenReturn(mockedMappedRequest);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postUrnenwahlvorbereitung(wahlbezirkID, requestBody));
+      Mockito.verify(service).setUrnenwahlvorbereitung(mockedMappedRequest);
+    }
+  }
 }

@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlurneModelMapper {
 
-    WahlurneModel toModel(Wahlurne wahlurne);
+  WahlurneModel toModel(Wahlurne wahlurne);
 }

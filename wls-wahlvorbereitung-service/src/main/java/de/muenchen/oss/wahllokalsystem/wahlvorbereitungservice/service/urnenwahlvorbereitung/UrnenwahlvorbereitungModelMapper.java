@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(uses = WahlurneModelMapper.class)
 public interface UrnenwahlvorbereitungModelMapper {
 
-    UrnenwahlvorbereitungModel toModel(UrnenwahlVorbereitung entity);
+  UrnenwahlvorbereitungModel toModel(UrnenwahlVorbereitung entity);
 
-    UrnenwahlVorbereitung toEntity(UrnenwahlvorbereitungModel model);
+  UrnenwahlVorbereitung toEntity(UrnenwahlvorbereitungModel model);
 }

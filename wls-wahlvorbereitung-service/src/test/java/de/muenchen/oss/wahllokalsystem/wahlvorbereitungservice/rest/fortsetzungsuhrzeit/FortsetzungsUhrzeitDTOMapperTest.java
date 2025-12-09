@@ -9,42 +9,41 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { FortsetzungsUhrzeitDTOMapperImpl.class })
+@SpringBootTest(classes = {FortsetzungsUhrzeitDTOMapperImpl.class})
 class FortsetzungsUhrzeitDTOMapperTest {
 
-    @Autowired
-    private FortsetzungsUhrzeitDTOMapper unitUnderTest;
+  @Autowired private FortsetzungsUhrzeitDTOMapper unitUnderTest;
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnFortsetzungsUhrzeitDTO_when_givenFortsetzungsUhrzeitModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val fortsetzungsUhrzeit = LocalDateTime.now();
-            val modelToMap = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
+    @Test
+    void should_returnFortsetzungsUhrzeitDTO_when_givenFortsetzungsUhrzeitModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val fortsetzungsUhrzeit = LocalDateTime.now();
+      val modelToMap = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
 
-            val result = unitUnderTest.toDTO(modelToMap);
-            val expectedResult = new FortsetzungsUhrzeitDTO(wahlbezirkID, fortsetzungsUhrzeit);
+      val result = unitUnderTest.toDTO(modelToMap);
+      val expectedResult = new FortsetzungsUhrzeitDTO(wahlbezirkID, fortsetzungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnFortsetzungsUhrzeitModel_when_givenFortsetzungsUhrzeitDTO() {
-            val fortsetzungsUhrzeit = LocalDateTime.now();
-            val dtoToMap = new FortsetzungsUhrzeitWriteDTO(fortsetzungsUhrzeit);
-            val wahlbezirkIDToMap = "wahlbezirkID";
+    @Test
+    void should_returnFortsetzungsUhrzeitModel_when_givenFortsetzungsUhrzeitDTO() {
+      val fortsetzungsUhrzeit = LocalDateTime.now();
+      val dtoToMap = new FortsetzungsUhrzeitWriteDTO(fortsetzungsUhrzeit);
+      val wahlbezirkIDToMap = "wahlbezirkID";
 
-            val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
+      val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 
-            val expectedResult = new FortsetzungsUhrzeitModel(wahlbezirkIDToMap, fortsetzungsUhrzeit);
+      val expectedResult = new FortsetzungsUhrzeitModel(wahlbezirkIDToMap, fortsetzungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

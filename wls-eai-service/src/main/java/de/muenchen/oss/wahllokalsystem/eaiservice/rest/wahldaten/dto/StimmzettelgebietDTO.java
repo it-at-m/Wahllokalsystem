@@ -4,10 +4,4 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.Builder;
 
-@Builder
-public record StimmzettelgebietDTO(String identifikator,
-                                   String nummer,
-                                   String name,
-                                   LocalDate wahltag,
-                                   @NotNull StimmzettelgebietsartDTO stimmzettelgebietsart) {
-}
+@Builder public record StimmzettelgebietDTO(String identifikator,String nummer,String name,LocalDate wahltag,@NotNull StimmzettelgebietsartDTO stimmzettelgebietsart){}

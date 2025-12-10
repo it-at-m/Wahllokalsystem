@@ -255,7 +255,7 @@ services:
 
   refarch-gateway-wls:
     container_name: wls-refarch-gateway-wls
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev@sha256:03cd6fae94815f45b776b84d0de59efef63a6dbdf704159459f89c6a2e284f06
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev
     env_file:
       - .env
     ports:
@@ -290,7 +290,7 @@ services:
 
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev@sha256:03cd6fae94815f45b776b84d0de59efef63a6dbdf704159459f89c6a2e284f06
+    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev
     env_file:
       - .env
     ports:
@@ -408,7 +408,7 @@ services:
 
   wls-refarch-gateway-wls-reverse-proxy:
     container_name: wls-refarch-gateway-wls-reverse-proxy
-    image: nginx:alpine@sha256:b3c656d55d7ad751196f21b7fd2e8d4da9cb430e32f646adcf92441b72f82b14
+    image: nginx:alpine@sha256:289decab414250121a93c3f1b8316b9c69906de3a4993757c424cb964169ad42
     ports:
       - "58083:443"
     volumes:
@@ -418,7 +418,7 @@ services:
 
   wls-auth-service-reverse-proxy:
     container_name: wls-auth-service-reverse-proxy
-    image: nginx:alpine@sha256:b3c656d55d7ad751196f21b7fd2e8d4da9cb430e32f646adcf92441b72f82b14
+    image: nginx:alpine@sha256:289decab414250121a93c3f1b8316b9c69906de3a4993757c424cb964169ad42
     ports:
       - "58100:443"
     volumes:

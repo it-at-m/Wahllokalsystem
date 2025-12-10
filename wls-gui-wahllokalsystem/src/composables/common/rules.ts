@@ -71,7 +71,7 @@ export function useRules() {
     }
   };
 
-  function _formatToHhMm(compareValue: string): string {
+  function _formatTimeStringToHhMm(compareValue: string): string {
     if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(compareValue)) {
       const parts = compareValue.split(":");
       return `${parts[0]}:${parts[1]}`;

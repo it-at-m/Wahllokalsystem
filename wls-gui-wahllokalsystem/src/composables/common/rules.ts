@@ -71,15 +71,12 @@ export function useRules() {
     }
   };
 
-  function _formatToHhMm(compareValue: string) {
-    let formattedErrorValue;
+  function _formatToHhMm(compareValue: string): string {
     if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(compareValue)) {
       const parts = compareValue.split(":");
-      const hh = parts[0];
-      const mm = parts[1];
-      formattedErrorValue = hh + ":" + mm;
+      return `${parts[0]}:${parts[1]}`;
     }
-    return formattedErrorValue;
+    return compareValue;
   }
 
   return {

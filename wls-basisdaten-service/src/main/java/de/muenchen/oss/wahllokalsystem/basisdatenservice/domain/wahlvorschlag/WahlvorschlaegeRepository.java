@@ -15,42 +15,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaege, UUID> {
 
-    String CACHE = "WLSWAHLVORSCHLAEGE_CACHE";
+  String CACHE = "WLSWAHLVORSCHLAEGE_CACHE";
 
-    @Override
-    List<Wahlvorschlaege> findAll();
+  @Override
+  List<Wahlvorschlaege> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Wahlvorschlaege> findById(UUID bezirkUndWahlID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Wahlvorschlaege> findById(UUID bezirkUndWahlID);
 
-    Optional<Wahlvorschlaege> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
+  Optional<Wahlvorschlaege> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_WLSWahlvorschlaege')")
-    <S extends Wahlvorschlaege> S save(S wahlvorschlaege);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_WLSWahlvorschlaege')")
+  <S extends Wahlvorschlaege> S save(S wahlvorschlaege);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteById(UUID bezirkUndWahlID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
+  void deleteById(UUID bezirkUndWahlID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void delete(Wahlvorschlaege entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
+  void delete(Wahlvorschlaege entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteAll(Iterable<? extends Wahlvorschlaege> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
+  void deleteAll(Iterable<? extends Wahlvorschlaege> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
+  void deleteAll();
 
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
-    void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_WLSWahlvorschlaege')")
+  void deleteAllByBezirkUndWahlID_WahlID(String wahlID);
 }

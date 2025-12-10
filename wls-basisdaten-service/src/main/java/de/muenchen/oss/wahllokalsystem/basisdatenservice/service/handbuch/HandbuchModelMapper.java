@@ -8,10 +8,14 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface HandbuchModelMapper {
 
-    WahltagIdUndWahlbezirksart toEntityID(HandbuchReferenceModel handbuchReferenceModel);
+  WahltagIdUndWahlbezirksart toEntityID(HandbuchReferenceModel handbuchReferenceModel);
 
-    @Mapping(target = "wahltagIdUndWahlbezirksart.wahltagID", source = "handbuchReferenceModel.wahltagID")
-    @Mapping(target = "wahltagIdUndWahlbezirksart.wahlbezirksart", source = "handbuchReferenceModel.wahlbezirksart")
-    @Mapping(target = "handbuch", source = "handbuchData")
-    Handbuch toEntity(HandbuchWriteModel handbuchWriteModel);
+  @Mapping(
+      target = "wahltagIdUndWahlbezirksart.wahltagID",
+      source = "handbuchReferenceModel.wahltagID")
+  @Mapping(
+      target = "wahltagIdUndWahlbezirksart.wahlbezirksart",
+      source = "handbuchReferenceModel.wahlbezirksart")
+  @Mapping(target = "handbuch", source = "handbuchData")
+  Handbuch toEntity(HandbuchWriteModel handbuchWriteModel);
 }

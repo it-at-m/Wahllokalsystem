@@ -22,34 +22,30 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SessionController {
 
-    private final SessionService sessionService;
+  private final SessionService sessionService;
 
-    @Operation(
-            description = "Listet alle aktive Sessions auf.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Liste aller aktiver Sessions."
-                    )
-            }
-    )
-    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
-    @GetMapping(value = "/oauthsessions/")
-    public ResponseEntity<OAuthServerSessions> listActiveSessions() {
-        return ResponseEntity.ok(sessionService.getActiveSessions());
-    }
+  @Operation(
+      description = "Listet alle aktive Sessions auf.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Liste aller aktiver Sessions.")
+      })
+  @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
+  @GetMapping(value = "/oauthsessions/")
+  public ResponseEntity<OAuthServerSessions> listActiveSessions() {
+    return ResponseEntity.ok(sessionService.getActiveSessions());
+  }
 
-    @Operation(
-            description = "Beenden einer Session.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Session wurde erfolgreich beendet."
-                    )
-            }
-    )
-    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
-    @RequestMapping(value = "/oauthsessions/{sessionID}/invalidate", method = POST)
-    public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
-        log.info("Attempt to kill session with id {}", sessionID);
-        return sessionService.killSession(sessionID) ? new ResponseEntity<>(OK) : new ResponseEntity<>(NOT_FOUND);
-    }
+  @Operation(
+      description = "Beenden einer Session.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Die Session wurde erfolgreich beendet.")
+      })
+  @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
+  @RequestMapping(value = "/oauthsessions/{sessionID}/invalidate", method = POST)
+  public ResponseEntity<?> killSession(@PathVariable("sessionID") String sessionID) {
+    log.info("Attempt to kill session with id {}", sessionID);
+    return sessionService.killSession(sessionID)
+        ? new ResponseEntity<>(OK)
+        : new ResponseEntity<>(NOT_FOUND);
+  }
 }

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BriefwahlvorbereitungDTOMapper {
 
-    BriefwahlvorbereitungDTO toDTO(BriefwahlvorbereitungModel model);
+  BriefwahlvorbereitungDTO toDTO(BriefwahlvorbereitungModel model);
 
-    BriefwahlvorbereitungModel toModel(String wahlbezirkID, BriefwahlvorbereitungWriteDTO dto);
+  BriefwahlvorbereitungModel toModel(String wahlbezirkID, BriefwahlvorbereitungWriteDTO dto);
 }

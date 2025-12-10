@@ -13,48 +13,102 @@ import org.mapstruct.factory.Mappers;
 
 class WahlDTOMapperTest {
 
-    private final WahlDTOMapper unitUnderTest = Mappers.getMapper(WahlDTOMapper.class);
+  private final WahlDTOMapper unitUnderTest = Mappers.getMapper(WahlDTOMapper.class);
 
-    @Nested
-    class FromListOfWahlModelToListOfWahlDTO {
+  @Nested
+  class FromListOfWahlModelToListOfWahlDTO {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.fromListOfWahlModelToListOfWahlDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnWahlDTOList_when_givenWahlModelList() {
-            val modelsInput = createListOfWahlModels();
-            val dtosExpected = createControllerListOfWahlDTO();
-
-            val result = unitUnderTest.fromListOfWahlModelToListOfWahlDTO(modelsInput);
-            Assertions.assertThat(result).isEqualTo(dtosExpected);
-        }
-
-        @Test
-        void should_returnWahlModelList_when_givenWahlDTOList() {
-            val modelsExpected = createListOfWahlModels();
-            val dtosInput = createControllerListOfWahlDTO();
-
-            val result = unitUnderTest.fromListOfWahlDTOtoListOfWahlModel(dtosInput);
-            Assertions.assertThat(result).isEqualTo(modelsExpected);
-        }
-
-        private List<WahlDTO> createControllerListOfWahlDTO() {
-            val wahl1 = new WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "1");
-            val wahl2 = new WahlDTO("wahlID2", "name2", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "2");
-            val wahl3 = new WahlDTO("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "3");
-
-            return List.of(wahl1, wahl2, wahl3);
-        }
-
-        private List<WahlModel> createListOfWahlModels() {
-            val wahl1 = new WahlModel("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartModel.BAW, new FarbeModel(1, 1, 1), "1");
-            val wahl2 = new WahlModel("wahlID2", "name2", 3L, 1L, LocalDate.now(), WahlartModel.BAW, new FarbeModel(1, 1, 1), "2");
-            val wahl3 = new WahlModel("wahlID3", "name3", 3L, 1L, LocalDate.now().plusMonths(2), WahlartModel.BAW, new FarbeModel(1, 1, 1), "3");
-
-            return List.of(wahl1, wahl2, wahl3);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.fromListOfWahlModelToListOfWahlDTO(null)).isNull();
     }
+
+    @Test
+    void should_returnWahlDTOList_when_givenWahlModelList() {
+      val modelsInput = createListOfWahlModels();
+      val dtosExpected = createControllerListOfWahlDTO();
+
+      val result = unitUnderTest.fromListOfWahlModelToListOfWahlDTO(modelsInput);
+      Assertions.assertThat(result).isEqualTo(dtosExpected);
+    }
+
+    @Test
+    void should_returnWahlModelList_when_givenWahlDTOList() {
+      val modelsExpected = createListOfWahlModels();
+      val dtosInput = createControllerListOfWahlDTO();
+
+      val result = unitUnderTest.fromListOfWahlDTOtoListOfWahlModel(dtosInput);
+      Assertions.assertThat(result).isEqualTo(modelsExpected);
+    }
+
+    private List<WahlDTO> createControllerListOfWahlDTO() {
+      val wahl1 =
+          new WahlDTO(
+              "wahlID1",
+              "name1",
+              3L,
+              1L,
+              LocalDate.now(),
+              WahlartDTO.BAW,
+              new FarbeDTO(1, 1, 1),
+              "1");
+      val wahl2 =
+          new WahlDTO(
+              "wahlID2",
+              "name2",
+              3L,
+              1L,
+              LocalDate.now(),
+              WahlartDTO.BAW,
+              new FarbeDTO(1, 1, 1),
+              "2");
+      val wahl3 =
+          new WahlDTO(
+              "wahlID3",
+              "name3",
+              3L,
+              1L,
+              LocalDate.now().plusMonths(2),
+              WahlartDTO.BAW,
+              new FarbeDTO(1, 1, 1),
+              "3");
+
+      return List.of(wahl1, wahl2, wahl3);
+    }
+
+    private List<WahlModel> createListOfWahlModels() {
+      val wahl1 =
+          new WahlModel(
+              "wahlID1",
+              "name1",
+              3L,
+              1L,
+              LocalDate.now(),
+              WahlartModel.BAW,
+              new FarbeModel(1, 1, 1),
+              "1");
+      val wahl2 =
+          new WahlModel(
+              "wahlID2",
+              "name2",
+              3L,
+              1L,
+              LocalDate.now(),
+              WahlartModel.BAW,
+              new FarbeModel(1, 1, 1),
+              "2");
+      val wahl3 =
+          new WahlModel(
+              "wahlID3",
+              "name3",
+              3L,
+              1L,
+              LocalDate.now().plusMonths(2),
+              WahlartModel.BAW,
+              new FarbeModel(1, 1, 1),
+              "3");
+
+      return List.of(wahl1, wahl2, wahl3);
+    }
+  }
 }

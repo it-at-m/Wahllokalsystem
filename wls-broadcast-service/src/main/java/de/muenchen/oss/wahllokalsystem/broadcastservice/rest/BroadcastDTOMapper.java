@@ -8,15 +8,19 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BroadcastDTOMapper {
 
-    MessageDTO toDto(Message entityToMap);
+  MessageDTO toDto(Message entityToMap);
 
-    default List<Message> toListOfMessageEntity(BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
-        return messageToBroadcast.wahlbezirkIDs().stream().map(wahlbezirkId -> {
-            Message message = new Message();
-            message.setWahlbezirkID(wahlbezirkId);
-            message.setEmpfangsZeit(now);
-            message.setNachricht(messageToBroadcast.nachricht());
-            return message;
-        }).toList();
-    }
+  default List<Message> toListOfMessageEntity(
+      BroadcastMessageDTO messageToBroadcast, LocalDateTime now) {
+    return messageToBroadcast.wahlbezirkIDs().stream()
+        .map(
+            wahlbezirkId -> {
+              Message message = new Message();
+              message.setWahlbezirkID(wahlbezirkId);
+              message.setEmpfangsZeit(now);
+              message.setNachricht(messageToBroadcast.nachricht());
+              return message;
+            })
+        .toList();
+  }
 }

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UnterbrechungsUhrzeitModelMapper {
 
-    UnterbrechungsUhrzeitModel toModel(UnterbrechungsUhrzeit entity);
+  UnterbrechungsUhrzeitModel toModel(UnterbrechungsUhrzeit entity);
 
-    UnterbrechungsUhrzeit toEntity(UnterbrechungsUhrzeitModel model);
+  UnterbrechungsUhrzeit toEntity(UnterbrechungsUhrzeitModel model);
 }

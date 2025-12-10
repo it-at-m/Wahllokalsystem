@@ -12,19 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Ergebnis {
 
-    @NotNull
-    private String stimmenart;
+  @NotNull private String stimmenart;
 
-    @NotNull
-    private long wahlvorschlagsordnungszahl;
+  @NotNull private long wahlvorschlagsordnungszahl;
 
-    @NotNull
-    private long ergebnis;
+  @NotNull private long ergebnis;
 
-    @NotNull
-    private String wahlvorschlagID;
+  @NotNull private String wahlvorschlagID;
 
-    @NotNull
-    private String kandidatID;
-
+  @NotNull private String kandidatID;
 }

@@ -12,19 +12,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheConfig {
 
-    public static final String USER_CACHE = "user_cache";
+  public static final String USER_CACHE = "user_cache";
 
-    @Bean
-    public Caffeine<Object, Object> caffeineConfig() {
-        return Caffeine.newBuilder()
-                .expireAfterWrite(5, TimeUnit.MINUTES)
-                .initialCapacity(10);
-    }
+  @Bean
+  public Caffeine<Object, Object> caffeineConfig() {
+    return Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).initialCapacity(10);
+  }
 
-    @Bean
-    public CacheManager cacheManager(Caffeine caffeine) {
-        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
-        caffeineCacheManager.setCaffeine(caffeine);
-        return caffeineCacheManager;
-    }
+  @Bean
+  public CacheManager cacheManager(Caffeine caffeine) {
+    CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
+    caffeineCacheManager.setCaffeine(caffeine);
+    return caffeineCacheManager;
+  }
 }

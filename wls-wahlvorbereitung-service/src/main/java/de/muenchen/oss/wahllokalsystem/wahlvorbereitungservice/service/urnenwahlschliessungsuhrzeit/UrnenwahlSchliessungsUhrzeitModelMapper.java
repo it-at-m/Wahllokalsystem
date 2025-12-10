@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UrnenwahlSchliessungsUhrzeitModelMapper {
 
-    UrnenwahlSchliessungsUhrzeitModel toModel(UrnenwahlSchliessungsUhrzeit entity);
+  UrnenwahlSchliessungsUhrzeitModel toModel(UrnenwahlSchliessungsUhrzeit entity);
 
-    UrnenwahlSchliessungsUhrzeit toEntity(UrnenwahlSchliessungsUhrzeitModel model);
+  UrnenwahlSchliessungsUhrzeit toEntity(UrnenwahlSchliessungsUhrzeitModel model);
 }

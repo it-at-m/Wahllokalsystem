@@ -31,111 +31,130 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class EuwValidationImplTest {
 
-    @Mock
-    DefaultElectionTypeValidator defaultElectionTypeValidator;
+  @Mock DefaultElectionTypeValidator defaultElectionTypeValidator;
 
-    @InjectMocks
-    EuwValidationImpl unitUnderTest;
+  @InjectMocks EuwValidationImpl unitUnderTest;
 
-    @Captor
-    ArgumentCaptor<List<Stapelart>> captorStapelList;
+  @Captor ArgumentCaptor<List<Stapelart>> captorStapelList;
 
-    @Nested
-    class SupportsWahlart {
+  @Nested
+  class SupportsWahlart {
 
-        @Test
-        void should_returnTrue_when_wahlartIsEUW() {
-            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.EUW)).isTrue();
-        }
-
-        @ParameterizedTest
-        @MethodSource("argumentsForNonEUWWahlart")
-        void should_returnFalse_when_wahlartIsNotEUW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
-        }
-
-        public static Stream<Arguments> argumentsForNonEUWWahlart() {
-            return Arrays.stream(WahlartModel.values()).filter(wahlart -> !WahlartModel.EUW.equals(wahlart)).map(Arguments::of);
-        }
+    @Test
+    void should_returnTrue_when_wahlartIsEUW() {
+      Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.EUW)).isTrue();
     }
 
-    @Nested
-    class IsValidUwb {
-
-        @Test
-        void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Mockito.verify(defaultElectionTypeValidator)
-                    .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
-
-            val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> !Stapelart.EUW_B_LEER.equals(stapelart))
-                    .filter(stapelart -> stapelart.name().startsWith("EUW_"))
-                    .toList().toArray(new Stapelart[0]);
-
-            Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
-        }
-
-        @Test
-        void should_returnResponseOfDefaultValidator_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            val mockedValidatorResponse = true;
-            Mockito.when(defaultElectionTypeValidator.checkValidation(eq(WahlbezirkArtModel.UWB), anyString(), anyString(), any(), any()))
-                    .thenReturn(mockedValidatorResponse);
-
-            val result = unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
-        }
+    @ParameterizedTest
+    @MethodSource("argumentsForNonEUWWahlart")
+    void should_returnFalse_when_wahlartIsNotEUW(final ArgumentsAccessor arguments) {
+      Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class)))
+          .isFalse();
     }
 
-    @Nested
-    class IsValidBwb {
+    public static Stream<Arguments> argumentsForNonEUWWahlart() {
+      return Arrays.stream(WahlartModel.values())
+          .filter(wahlart -> !WahlartModel.EUW.equals(wahlart))
+          .map(Arguments::of);
+    }
+  }
 
-        @Test
-        void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
+  @Nested
+  class IsValidUwb {
 
-            unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+    @Test
+    void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
 
-            Mockito.verify(defaultElectionTypeValidator)
-                    .checkValidation(eq(WahlbezirkArtModel.BWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
+      unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
 
-            val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> stapelart.name().startsWith("EUW_"))
-                    .toList().toArray(new Stapelart[0]);
+      Mockito.verify(defaultElectionTypeValidator)
+          .checkValidation(
+              eq(WahlbezirkArtModel.UWB),
+              eq(wahlbezirkID),
+              eq(wahlID),
+              eq(waehlerverzeichnisNummer),
+              captorStapelList.capture());
 
-            Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
-        }
+      val expectedStapel =
+          Arrays.stream(Stapelart.values())
+              .filter(stapelart -> !Stapelart.EUW_B_LEER.equals(stapelart))
+              .filter(stapelart -> stapelart.name().startsWith("EUW_"))
+              .toList()
+              .toArray(new Stapelart[0]);
 
-        @Test
-        void should_returnResponseOfDefaultValidator_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            val mockedValidatorResponse = true;
-            Mockito.when(defaultElectionTypeValidator.checkValidation(eq(WahlbezirkArtModel.BWB), anyString(), anyString(), any(), any()))
-                    .thenReturn(mockedValidatorResponse);
-
-            val result = unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
-        }
+      Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
     }
 
+    @Test
+    void should_returnResponseOfDefaultValidator_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      val mockedValidatorResponse = true;
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  eq(WahlbezirkArtModel.UWB), anyString(), anyString(), any(), any()))
+          .thenReturn(mockedValidatorResponse);
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+    }
+  }
+
+  @Nested
+  class IsValidBwb {
+
+    @Test
+    void should_callDefaultValidatorWithEUWStapel_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Mockito.verify(defaultElectionTypeValidator)
+          .checkValidation(
+              eq(WahlbezirkArtModel.BWB),
+              eq(wahlbezirkID),
+              eq(wahlID),
+              eq(waehlerverzeichnisNummer),
+              captorStapelList.capture());
+
+      val expectedStapel =
+          Arrays.stream(Stapelart.values())
+              .filter(stapelart -> stapelart.name().startsWith("EUW_"))
+              .toList()
+              .toArray(new Stapelart[0]);
+
+      Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
+    }
+
+    @Test
+    void should_returnResponseOfDefaultValidator_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      val mockedValidatorResponse = true;
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  eq(WahlbezirkArtModel.BWB), anyString(), anyString(), any(), any()))
+          .thenReturn(mockedValidatorResponse);
+
+      val result =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+    }
+  }
 }

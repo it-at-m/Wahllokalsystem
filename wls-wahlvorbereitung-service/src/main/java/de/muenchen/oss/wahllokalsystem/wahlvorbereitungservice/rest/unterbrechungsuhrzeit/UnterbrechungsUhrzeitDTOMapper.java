@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UnterbrechungsUhrzeitDTOMapper {
 
-    UnterbrechungsUhrzeitDTO toDTO(UnterbrechungsUhrzeitModel model);
+  UnterbrechungsUhrzeitDTO toDTO(UnterbrechungsUhrzeitModel model);
 
-    UnterbrechungsUhrzeitModel toModel(String wahlbezirkID, UnterbrechungsUhrzeitWriteDTO dto);
+  UnterbrechungsUhrzeitModel toModel(String wahlbezirkID, UnterbrechungsUhrzeitWriteDTO dto);
 }

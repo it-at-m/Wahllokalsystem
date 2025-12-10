@@ -20,68 +20,72 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class StimmzettelumschlaegeControllerTest {
 
-    @Mock
-    StimmzettelumschlaegeService stimmzettelumschlaegeService;
+  @Mock StimmzettelumschlaegeService stimmzettelumschlaegeService;
 
-    @Mock
-    StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
+  @Mock StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
 
-    @InjectMocks
-    StimmzettelumschlaegeController unitUnderTest;
+  @InjectMocks StimmzettelumschlaegeController unitUnderTest;
 
-    @Nested
-    class GetStimmzettelumschlaege {
+  @Nested
+  class GetStimmzettelumschlaege {
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val mockedServiceResponse = new StimmzettelumschlaegeModel(bezirkUndWahlID, null, 0, 0);
-            val mockedServiceResponseAsDTO = new StimmzettelumschlaegeDTO(bezirkUndWahlID, null, 0, 0L);
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val mockedServiceResponse = new StimmzettelumschlaegeModel(bezirkUndWahlID, null, 0, 0);
+      val mockedServiceResponseAsDTO = new StimmzettelumschlaegeDTO(bezirkUndWahlID, null, 0, 0L);
 
-            Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID)).thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(stimmzettelumschlaegeDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(stimmzettelumschlaegeDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getStimmzettelumschlaege(wahlID, wahlbezirkID);
+      val result = unitUnderTest.getStimmzettelumschlaege(wahlID, wahlbezirkID);
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getStimmzettelumschlaege(wahlID, wahlbezirkID);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class PostStimmzettelumschlaege {
+    @Test
+    void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stimmzettelumschlaegeDTO = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0L);
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val mockedStimmzettelumschlaegeModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0);
-            Mockito.when(stimmzettelumschlaegeDTOMapper.toModel(stimmzettelumschlaegeDTO)).thenReturn(mockedStimmzettelumschlaegeModel);
+      Mockito.when(stimmzettelumschlaegeService.getStimmzettelumschlaege(bezirkUndWahlID))
+          .thenReturn(Optional.empty());
 
-            unitUnderTest.postStimmzettelumschlaege(wahlID, wahlbezirkID, stimmzettelumschlaegeDTO);
+      val result = unitUnderTest.getStimmzettelumschlaege(wahlID, wahlbezirkID);
 
-            Mockito.verify(stimmzettelumschlaegeService).setStimmzettelumschlaege(eq(new BezirkUndWahlID(wahlID, wahlbezirkID)),
-                    eq(mockedStimmzettelumschlaegeModel));
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+  }
+
+  @Nested
+  class PostStimmzettelumschlaege {
+
+    @Test
+    void should_callServiceWithModel_when_calledWithData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stimmzettelumschlaegeDTO =
+          new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0L);
+
+      val mockedStimmzettelumschlaegeModel =
+          new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), null, 0, 0);
+      Mockito.when(stimmzettelumschlaegeDTOMapper.toModel(stimmzettelumschlaegeDTO))
+          .thenReturn(mockedStimmzettelumschlaegeModel);
+
+      unitUnderTest.postStimmzettelumschlaege(wahlID, wahlbezirkID, stimmzettelumschlaegeDTO);
+
+      Mockito.verify(stimmzettelumschlaegeService)
+          .setStimmzettelumschlaege(
+              eq(new BezirkUndWahlID(wahlID, wahlbezirkID)), eq(mockedStimmzettelumschlaegeModel));
+    }
+  }
 }

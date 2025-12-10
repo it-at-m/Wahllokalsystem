@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record WahlbezirkDTO(@NotNull String identifikator,
-                            @NotNull WahlbezirkArtDTO wahlbezirkArt,
-                            @NotNull String nummer,
-                            @NotNull LocalDate wahltag,
-                            @NotNull String wahlnummer,
-                            @NotNull String wahlID) {
-}
+public record WahlbezirkDTO(
+    @NotNull String identifikator,
+    @NotNull WahlbezirkArtDTO wahlbezirkArt,
+    @NotNull String nummer,
+    @NotNull LocalDate wahltag,
+    @NotNull String wahlnummer,
+    @NotNull String wahlID) {}

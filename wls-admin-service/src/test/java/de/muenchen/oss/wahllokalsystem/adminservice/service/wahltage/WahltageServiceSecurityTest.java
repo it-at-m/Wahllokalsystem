@@ -14,29 +14,28 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class WahltageServiceSecurityTest {
 
-    @Autowired
-    WahltageService unitUnderTest;
+  @Autowired WahltageService unitUnderTest;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ADMIN_GETWAHLTAGE);
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ADMIN_GETWAHLTAGE);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getWahltage());
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
-            SecurityUtils.runWith("wrong_authority");
-
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.getWahltage())
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getWahltage());
     }
+
+    @Test
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+      SecurityUtils.runWith("wrong_authority");
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahltage())
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

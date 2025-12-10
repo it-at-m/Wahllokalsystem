@@ -12,55 +12,61 @@ import org.mapstruct.factory.Mappers;
 
 class StatusClientMapperTest {
 
-    StatusClientMapper unitUnderTest = Mappers.getMapper(StatusClientMapper.class);
+  StatusClientMapper unitUnderTest = Mappers.getMapper(StatusClientMapper.class);
 
-    @Nested
-    class ToDruckdatenDTO {
+  @Nested
+  class ToDruckdatenDTO {
 
-        @Test
-        void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toDruckdatenDTO(null, null)).isNull();
-        }
-
-        @Test
-        void should_returnDruckdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
-            val dateTimeOfEvent = LocalDateTime.now();
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            val result = unitUnderTest.toDruckdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
-
-            val expectedResult = new DruckdatenDTO().bezirkUndWahlID(
-                    new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
-                            bezirkUndWahlID.getWahlbezirkID())
-                            .wahlID(bezirkUndWahlID.getWahlID()))
-                    .druckuhrzeit(dateTimeOfEvent);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_nullIsGiven() {
+      Assertions.assertThat(unitUnderTest.toDruckdatenDTO(null, null)).isNull();
     }
 
-    @Nested
-    class ToSendungsdatenDTO {
+    @Test
+    void should_returnDruckdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
+      val dateTimeOfEvent = LocalDateTime.now();
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-        @Test
-        void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toSendungsdatenDTO(null, null)).isNull();
-        }
+      val result = unitUnderTest.toDruckdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
 
-        @Test
-        void should_returnSendungsdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
-            val dateTimeOfEvent = LocalDateTime.now();
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val expectedResult =
+          new DruckdatenDTO()
+              .bezirkUndWahlID(
+                  new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model
+                          .BezirkUndWahlID()
+                      .wahlbezirkID(bezirkUndWahlID.getWahlbezirkID())
+                      .wahlID(bezirkUndWahlID.getWahlID()))
+              .druckuhrzeit(dateTimeOfEvent);
 
-            val result = unitUnderTest.toSendungsdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
-
-            val expectedResult = new SendungsdatenDTO().bezirkUndWahlID(
-                    new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model.BezirkUndWahlID().wahlbezirkID(
-                            bezirkUndWahlID.getWahlbezirkID())
-                            .wahlID(bezirkUndWahlID.getWahlID()))
-                    .sendungsuhrzeit(dateTimeOfEvent);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @Nested
+  class ToSendungsdatenDTO {
+
+    @Test
+    void should_returnNull_when_nullIsGiven() {
+      Assertions.assertThat(unitUnderTest.toSendungsdatenDTO(null, null)).isNull();
+    }
+
+    @Test
+    void should_returnSendungsdatenDTO_when_bezirkUndWahlIDAndLocalDateTimeIsGiven() {
+      val dateTimeOfEvent = LocalDateTime.now();
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+
+      val result = unitUnderTest.toSendungsdatenDTO(bezirkUndWahlID, dateTimeOfEvent);
+
+      val expectedResult =
+          new SendungsdatenDTO()
+              .bezirkUndWahlID(
+                  new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.model
+                          .BezirkUndWahlID()
+                      .wahlbezirkID(bezirkUndWahlID.getWahlbezirkID())
+                      .wahlID(bezirkUndWahlID.getWahlID()))
+              .sendungsuhrzeit(dateTimeOfEvent);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

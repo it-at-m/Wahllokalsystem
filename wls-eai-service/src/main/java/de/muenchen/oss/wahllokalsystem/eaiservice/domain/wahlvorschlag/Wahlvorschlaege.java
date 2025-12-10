@@ -23,19 +23,13 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class Wahlvorschlaege extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    String wahlbezirkID;
+  @NotNull @ToString.Include String wahlbezirkID;
 
-    @NotNull
-    @ToString.Include
-    String wahlID;
+  @NotNull @ToString.Include String wahlID;
 
-    @NotNull
-    @ToString.Include
-    String stimmzettelgebietID;
+  @NotNull @ToString.Include String stimmzettelgebietID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlaegeID")
-    Set<Wahlvorschlag> wahlvorschlaege;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "wahlvorschlaegeID")
+  Set<Wahlvorschlag> wahlvorschlaege;
 }

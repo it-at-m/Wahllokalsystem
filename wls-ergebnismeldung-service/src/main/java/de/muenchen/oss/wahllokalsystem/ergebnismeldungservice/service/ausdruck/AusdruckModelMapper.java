@@ -9,13 +9,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface AusdruckModelMapper {
 
-    @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel", source = "wahlUndBezirkIDUndMeldungsart")
-    AusdruckReadModel toModel(Ausdruck entity);
+  @Mapping(target = "wahlUndBezirkIDUndMeldungsartModel", source = "wahlUndBezirkIDUndMeldungsart")
+  AusdruckReadModel toModel(Ausdruck entity);
 
-    @Mapping(target = "wahlUndBezirkIDUndMeldungsart", source = "model.wahlUndBezirkIDUndMeldungsartModel")
-    Ausdruck toEntity(AusdruckWriteModel model, Instant erstelltAm);
+  @Mapping(
+      target = "wahlUndBezirkIDUndMeldungsart",
+      source = "model.wahlUndBezirkIDUndMeldungsartModel")
+  Ausdruck toEntity(AusdruckWriteModel model, Instant erstelltAm);
 
-    WahlUndBezirkIDUndMeldungsartModel toModel(WahlUndBezirkIDUndMeldungsart entity);
+  WahlUndBezirkIDUndMeldungsartModel toModel(WahlUndBezirkIDUndMeldungsart entity);
 
-    WahlUndBezirkIDUndMeldungsart toEntity(WahlUndBezirkIDUndMeldungsartModel model);
+  WahlUndBezirkIDUndMeldungsart toEntity(WahlUndBezirkIDUndMeldungsartModel model);
 }

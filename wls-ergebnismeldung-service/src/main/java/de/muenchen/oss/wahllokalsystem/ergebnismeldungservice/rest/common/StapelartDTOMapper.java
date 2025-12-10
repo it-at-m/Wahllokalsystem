@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface StapelartDTOMapper {
 
-    StapelartDTO toDTO(StapelartModel stapelartModel);
+  StapelartDTO toDTO(StapelartModel stapelartModel);
 
-    StapelartModel toModel(StapelartDTO stapelartDTO);
+  StapelartModel toModel(StapelartDTO stapelartDTO);
 }

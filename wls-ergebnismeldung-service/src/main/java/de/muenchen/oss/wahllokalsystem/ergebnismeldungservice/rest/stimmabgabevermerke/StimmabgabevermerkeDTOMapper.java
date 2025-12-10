@@ -7,12 +7,17 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface StimmabgabevermerkeDTOMapper {
 
-    @Mapping(source = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer", target = "waehlerverzeichnisNummer")
-    @Mapping(source = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID", target = "wahlbezirkID")
-    StimmabgabevermerkeDTO toStimmabgabevermerkeDTO(StimmabgabevermerkeModel stimmabgabevermerkeModel);
+  @Mapping(
+      source = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer",
+      target = "waehlerverzeichnisNummer")
+  @Mapping(source = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID", target = "wahlbezirkID")
+  StimmabgabevermerkeDTO toStimmabgabevermerkeDTO(
+      StimmabgabevermerkeModel stimmabgabevermerkeModel);
 
-    @Mapping(source = "waehlerverzeichnisNummer", target = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer")
-    @Mapping(source = "wahlbezirkID", target = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID")
-    StimmabgabevermerkeModel toStimmabgabevermerkeModel(StimmabgabevermerkeDTO stimmabgabevermerkeDTO);
-
+  @Mapping(
+      source = "waehlerverzeichnisNummer",
+      target = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer")
+  @Mapping(source = "wahlbezirkID", target = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID")
+  StimmabgabevermerkeModel toStimmabgabevermerkeModel(
+      StimmabgabevermerkeDTO stimmabgabevermerkeDTO);
 }

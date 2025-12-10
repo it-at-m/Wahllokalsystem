@@ -16,76 +16,97 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ReferendumvorlagenValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    ReferendumvorlagenValidator unitUnderTest;
+  @InjectMocks ReferendumvorlagenValidator unitUnderTest;
 
-    @Nested
-    class ValidReferumvorlageReferenceModelOrThrow {
+  @Nested
+  class ValidReferumvorlageReferenceModelOrThrow {
 
-        private final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+    private final FachlicheWlsException mockedWlsException =
+        FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_throwNoException_when_modelIsValid() {
-            val validModel = initValidModel().build();
+    @Test
+    void should_throwNoException_when_modelIsValid() {
+      val validModel = initValidModel().build();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(validModel));
-        }
-
-        @Test
-        void should_throwException_when_modelIsNull() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(null)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlIDIsNull() {
-            val invalidModel = initValidModel().wahlID(null).build();
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlIDIsEmptyString() {
-            val invalidModel = initValidModel().wahlID("").build();
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDIsNull() {
-            val invalidModel = initValidModel().wahlbezirkID(null).build();
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDIsEmptyString() {
-            val invalidModel = initValidModel().wahlbezirkID("").build();
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel)).isSameAs(mockedWlsException);
-        }
-
-        private ReferendumvorlagenReferenceModel.ReferendumvorlagenReferenceModelBuilder initValidModel() {
-            return ReferendumvorlagenReferenceModel.builder().wahlbezirkID("wahlbezirkID").wahlID("wahlID");
-        }
-
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(validModel));
     }
 
+    @Test
+    void should_throwException_when_modelIsNull() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(null))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlIDIsNull() {
+      val invalidModel = initValidModel().wahlID(null).build();
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlIDIsEmptyString() {
+      val invalidModel = initValidModel().wahlID("").build();
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDIsNull() {
+      val invalidModel = initValidModel().wahlbezirkID(null).build();
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDIsEmptyString() {
+      val invalidModel = initValidModel().wahlbezirkID("").build();
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validReferumvorlageReferenceModelOrThrow(invalidModel))
+          .isSameAs(mockedWlsException);
+    }
+
+    private ReferendumvorlagenReferenceModel.ReferendumvorlagenReferenceModelBuilder
+        initValidModel() {
+      return ReferendumvorlagenReferenceModel.builder()
+          .wahlbezirkID("wahlbezirkID")
+          .wahlID("wahlID");
+    }
+  }
 }

@@ -28,26 +28,26 @@ import org.hibernate.annotations.JdbcTypeCode;
 @ToString
 public abstract class BaseEntity implements Cloneable, Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Column(name = "id", length = 36)
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @JdbcTypeCode(VARCHAR)
-    private UUID id;
+  @Column(name = "id", length = 36)
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(name = "uuid", strategy = "uuid2")
+  @JdbcTypeCode(VARCHAR)
+  private UUID id;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass() || id == null) return false;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass() || id == null) return false;
 
-        val that = (BaseEntity) o;
-        return Objects.equals(id, that.id);
-    }
+    val that = (BaseEntity) o;
+    return Objects.equals(id, that.id);
+  }
 
-    @Override
-    public int hashCode() {
-        return 42;
-    }
+  @Override
+  public int hashCode() {
+    return 42;
+  }
 }

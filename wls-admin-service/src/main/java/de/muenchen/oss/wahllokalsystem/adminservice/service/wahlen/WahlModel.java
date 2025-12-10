@@ -5,11 +5,11 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record WahlModel(@NotNull String wahlID,
-                        @NotNull String name,
-                        @NotNull Long reihenfolge,
-                        @NotNull Long waehlerverzeichnisNummer,
-                        @NotNull LocalDate wahltag,
-                        @NotNull WahlartModel wahlart,
-                        FarbeModel farbe) {
-}
+public record WahlModel(
+    @NotNull String wahlID,
+    @NotNull String name,
+    @NotNull Long reihenfolge,
+    @NotNull Long waehlerverzeichnisNummer,
+    @NotNull LocalDate wahltag,
+    @NotNull WahlartModel wahlart,
+    FarbeModel farbe) {}

@@ -11,11 +11,11 @@ import org.mapstruct.Mapping;
 @Mapper(imports = FarbeModel.class)
 public interface WahlenClientMapper {
 
-    @Mapping(target = "waehlerverzeichnisNummer", constant = "1l")
-    @Mapping(target = "reihenfolge", constant = "1l")
-    @Mapping(target = "farbe", expression = "java(new FarbeModel(0, 0, 0))")
-    @Mapping(target = "wahlID", source = "identifikator")
-    WahlModel toModel(WahlDTO wahlDTO);
+  @Mapping(target = "waehlerverzeichnisNummer", constant = "1l")
+  @Mapping(target = "reihenfolge", constant = "1l")
+  @Mapping(target = "farbe", expression = "java(new FarbeModel(0, 0, 0))")
+  @Mapping(target = "wahlID", source = "identifikator")
+  WahlModel toModel(WahlDTO wahlDTO);
 
-    List<WahlModel> fromRemoteClientSetOfWahlDTOtoListOfWahlModel(Set<WahlDTO> wahlDTO);
+  List<WahlModel> fromRemoteClientSetOfWahlDTOtoListOfWahlModel(Set<WahlDTO> wahlDTO);
 }

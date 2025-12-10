@@ -17,83 +17,101 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KonfigurierterWahltagValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    KonfigurierterWahltagValidator unitUnderTest;
+  @InjectMocks KonfigurierterWahltagValidator unitUnderTest;
 
-    @Nested
-    class ValidPostModelOrThrow {
+  @Nested
+  class ValidPostModelOrThrow {
 
-        @Test
-        void should_notThrowException_when_konfigurierterWahltagModelIsValid() {
-            val validModel = initValidModel().build();
+    @Test
+    void should_notThrowException_when_konfigurierterWahltagModelIsValid() {
+      val validModel = initValidModel().build();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validPostModelOrThrow(validModel));
-        }
-
-        @Test
-        void should_throwException_when_konfigurierterWahltagModelIsNull() {
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(null)).isSameAs(expectedException);
-        }
-
-        @Test
-        void should_throwException_when_konfigurierterWahltagModelWahltagIsNull() {
-            val invalidModel = initValidModel().wahltag(null).build();
-
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(invalidModel)).isSameAs(expectedException);
-        }
-
-        @Test
-        void should_throwException_when_konfigurierterWahltagModelWahltagIDIsNull() {
-            val invalidModel = initValidModel().wahltagID(null).build();
-
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(invalidModel)).isSameAs(expectedException);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validPostModelOrThrow(validModel));
     }
 
-    @Nested
-    class ValidDeleteModelOrThrow {
+    @Test
+    void should_throwException_when_konfigurierterWahltagModelIsNull() {
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
 
-        @Test
-        void should_notThrowException_when_wahltagIDIsValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validDeleteModelOrThrow("wahltagID"));
-        }
-
-        @Test
-        void should_throwException_when_wahltagIDIsNull() {
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(null)).isSameAs(expectedException);
-        }
-
-        @Test
-        void should_throwException_when_wahltagIDIsEmpty() {
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow("")).isSameAs(expectedException);
-        }
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(null))
+          .isSameAs(expectedException);
     }
 
-    private KonfigurierterWahltagModel.KonfigurierterWahltagModelBuilder initValidModel() {
-        return KonfigurierterWahltagModel.builder().wahltag(LocalDate.now()).wahltagID("wahltagID").active(true).nummer("nummer");
+    @Test
+    void should_throwException_when_konfigurierterWahltagModelWahltagIsNull() {
+      val invalidModel = initValidModel().wahltag(null).build();
+
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(invalidModel))
+          .isSameAs(expectedException);
     }
 
+    @Test
+    void should_throwException_when_konfigurierterWahltagModelWahltagIDIsNull() {
+      val invalidModel = initValidModel().wahltagID(null).build();
+
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validPostModelOrThrow(invalidModel))
+          .isSameAs(expectedException);
+    }
+  }
+
+  @Nested
+  class ValidDeleteModelOrThrow {
+
+    @Test
+    void should_notThrowException_when_wahltagIDIsValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validDeleteModelOrThrow("wahltagID"));
+    }
+
+    @Test
+    void should_throwException_when_wahltagIDIsNull() {
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(null))
+          .isSameAs(expectedException);
+    }
+
+    @Test
+    void should_throwException_when_wahltagIDIsEmpty() {
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validDeleteModelOrThrow(""))
+          .isSameAs(expectedException);
+    }
+  }
+
+  private KonfigurierterWahltagModel.KonfigurierterWahltagModelBuilder initValidModel() {
+    return KonfigurierterWahltagModel.builder()
+        .wahltag(LocalDate.now())
+        .wahltagID("wahltagID")
+        .active(true)
+        .nummer("nummer");
+  }
 }

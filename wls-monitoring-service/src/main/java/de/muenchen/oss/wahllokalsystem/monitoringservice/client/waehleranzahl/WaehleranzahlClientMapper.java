@@ -12,19 +12,19 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WaehleranzahlClientMapper {
 
-    ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
+  ZoneId DEFAULT_ZONE_ID = ZoneId.systemDefault();
 
-    @Mapping(target = "wahlID", ignore = true)
-    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
-    @Mapping(target = "meldeZeitpunkt", source = "uhrzeit")
-    WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);
+  @Mapping(target = "wahlID", ignore = true)
+  @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlID.wahlbezirkID")
+  @Mapping(target = "meldeZeitpunkt", source = "uhrzeit")
+  WahlbeteiligungsMeldungDTO fromModelToRemoteClientDTO(WaehleranzahlModel waehleranzahlModel);
 
-    default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
-        return localDateTimeToOffsetDateTime(localDateTime, DEFAULT_ZONE_ID);
-    }
+  default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime) {
+    return localDateTimeToOffsetDateTime(localDateTime, DEFAULT_ZONE_ID);
+  }
 
-    default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime, ZoneId zoneId) {
-        val zoneOffset = zoneId.getRules().getOffset(localDateTime);
-        return localDateTime.atOffset(zoneOffset);
-    }
+  default OffsetDateTime localDateTimeToOffsetDateTime(LocalDateTime localDateTime, ZoneId zoneId) {
+    val zoneOffset = zoneId.getRules().getOffset(localDateTime);
+    return localDateTime.atOffset(zoneOffset);
+  }
 }

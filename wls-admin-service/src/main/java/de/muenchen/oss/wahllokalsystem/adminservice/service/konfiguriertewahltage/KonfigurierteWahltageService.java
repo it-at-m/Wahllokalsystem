@@ -14,23 +14,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class KonfigurierteWahltageService {
 
-    private final KonfigurierterWahltagClient konfigurierterWahltagClient;
+  private final KonfigurierterWahltagClient konfigurierterWahltagClient;
 
-    private final WahlenClient wahlenClient;
+  private final WahlenClient wahlenClient;
 
-    private final KonfigurierterWahltagValidator konfigurierterWahltagValidator;
+  private final KonfigurierterWahltagValidator konfigurierterWahltagValidator;
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetKonfigurierteWahltage')")
-    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
-        return konfigurierterWahltagClient.getKonfigurierteWahltage();
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetKonfigurierteWahltage')")
+  public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() {
+    return konfigurierterWahltagClient.getKonfigurierteWahltage();
+  }
+
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_PostKonfigurierterWahltag')")
+  public void postKonfigurierterWahltag(
+      final KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    konfigurierterWahltagValidator.validateModel(konfigurierterWahltagModel);
+    if (konfigurierterWahltagModel.active()) {
+      wahlenClient.resetWahlen();
     }
-
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_PostKonfigurierterWahltag')")
-    public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltagModel) {
-        konfigurierterWahltagValidator.validateModel(konfigurierterWahltagModel);
-        if (konfigurierterWahltagModel.active()) {
-            wahlenClient.resetWahlen();
-        }
-        konfigurierterWahltagClient.postKonfigurierterWahltag(konfigurierterWahltagModel);
-    }
+    konfigurierterWahltagClient.postKonfigurierterWahltag(konfigurierterWahltagModel);
+  }
 }

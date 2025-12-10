@@ -15,18 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BezirkUndWahlIDStapelart implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Size(max = 1024)
-    private String wahlbezirkID;
+  @NotNull @Size(max = 1024) private String wahlbezirkID;
 
-    @NotNull
-    @Size(max = 1024)
-    private String wahlID;
+  @NotNull @Size(max = 1024) private String wahlID;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Stapelart stapelart;
+  @Enumerated(EnumType.STRING)
+  @NotNull private Stapelart stapelart;
 }

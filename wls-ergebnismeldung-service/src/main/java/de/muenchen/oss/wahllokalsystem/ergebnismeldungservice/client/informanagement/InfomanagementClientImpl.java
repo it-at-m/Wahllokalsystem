@@ -18,26 +18,28 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class InfomanagementClientImpl implements CurrentWahltagClient {
 
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public String getWahltagID() {
-        final KonfigurierterWahltagDTO konfigurierterWahltag;
-        try {
-            konfigurierterWahltag = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException", wlsException);
-            throw wlsException;
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
-
-        if (konfigurierterWahltag == null || konfigurierterWahltag.getWahltagID() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INFOMANAGEMENT_WAHLTAG_NULL_OR_EMPTY);
-        }
-
-        return konfigurierterWahltag.getWahltagID();
+  @Override
+  public String getWahltagID() {
+    final KonfigurierterWahltagDTO konfigurierterWahltag;
+    try {
+      konfigurierterWahltag = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
+    } catch (final WlsException wlsException) {
+      log.debug("found WlsException", wlsException);
+      throw wlsException;
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
     }
+
+    if (konfigurierterWahltag == null || konfigurierterWahltag.getWahltagID() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.INFOMANAGEMENT_WAHLTAG_NULL_OR_EMPTY);
+    }
+
+    return konfigurierterWahltag.getWahltagID();
+  }
 }

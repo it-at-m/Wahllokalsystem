@@ -16,43 +16,45 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UnterbrechungsUhrzeitService {
 
-    private final UnterbrechungsUhrzeitRepository unterbrechungsUhrzeitRepository;
-    private final UnterbrechungsUhrzeitModelMapper unterbrechungsUhrzeitModelMapper;
-    private final UnterbrechungsUhrzeitValidator unterbrechungsUhrzeitValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final UnterbrechungsUhrzeitRepository unterbrechungsUhrzeitRepository;
+  private final UnterbrechungsUhrzeitModelMapper unterbrechungsUhrzeitModelMapper;
+  private final UnterbrechungsUhrzeitValidator unterbrechungsUhrzeitValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<UnterbrechungsUhrzeitModel> getUnterbrechungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getUnterbrechungsUhrzeit");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<UnterbrechungsUhrzeitModel> getUnterbrechungsUhrzeit(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getUnterbrechungsUhrzeit");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        unterbrechungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    unterbrechungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = unterbrechungsUhrzeitRepository.findById(wahlbezirkID);
+    val dataFromRepo = unterbrechungsUhrzeitRepository.findById(wahlbezirkID);
 
-        log.debug("out: unterbrechungsUhrzeit > {}", dataFromRepo.orElse(null));
+    log.debug("out: unterbrechungsUhrzeit > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(unterbrechungsUhrzeitModelMapper::toModel);
+    return dataFromRepo.map(unterbrechungsUhrzeitModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#unterbrechungsUhrzeitToSet.wahlbezirkID(), authentication)")
+  public void setUnterbrechungsUhrzeit(
+      @P("unterbrechungsUhrzeitToSet")
+          final UnterbrechungsUhrzeitModel unterbrechungsUhrzeitToSet) {
+    log.debug("#postUnterbrechungsUhrzeit");
+    log.debug("in: unterbrechungsUhrzeit > {}", unterbrechungsUhrzeitToSet);
+
+    unterbrechungsUhrzeitValidator.validModelToSetOrThrow(unterbrechungsUhrzeitToSet);
+
+    try {
+      unterbrechungsUhrzeitRepository.save(
+          unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitToSet));
+    } catch (Exception e) {
+      log.error("Fehler beim speichern: ", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_UnterbrechungsUhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#unterbrechungsUhrzeitToSet.wahlbezirkID(), authentication)"
-    )
-    public void setUnterbrechungsUhrzeit(@P("unterbrechungsUhrzeitToSet") final UnterbrechungsUhrzeitModel unterbrechungsUhrzeitToSet) {
-        log.debug("#postUnterbrechungsUhrzeit");
-        log.debug("in: unterbrechungsUhrzeit > {}", unterbrechungsUhrzeitToSet);
-
-        unterbrechungsUhrzeitValidator.validModelToSetOrThrow(unterbrechungsUhrzeitToSet);
-
-        try {
-            unterbrechungsUhrzeitRepository.save(unterbrechungsUhrzeitModelMapper.toEntity(unterbrechungsUhrzeitToSet));
-        } catch (Exception e) {
-            log.error("Fehler beim speichern: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

@@ -26,22 +26,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Ereignisse {
 
-    @Id
-    @NotNull
-    @Size(max = 1024)
-    @ToString.Include
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 1024) @ToString.Include
+  private String wahlbezirkID;
 
-    @NotNull
-    @ToString.Include
-    private boolean keineVorfaelle;
+  @NotNull @ToString.Include private boolean keineVorfaelle;
 
-    @NotNull
-    @ToString.Include
-    private boolean keineVorkommnisse;
+  @NotNull @ToString.Include private boolean keineVorkommnisse;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "Ereignis", joinColumns = @JoinColumn(name = "ereignisse_wahlbezirkID"))
-    @NotNull
-    private Set<Ereignis> ereignisse = new LinkedHashSet<>();
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "Ereignis", joinColumns = @JoinColumn(name = "ereignisse_wahlbezirkID"))
+  @NotNull private Set<Ereignis> ereignisse = new LinkedHashSet<>();
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Nested;
 
 public class ThisIsARepositoryTest {
 
-    @Nested
-    class SayHello {
-    }
+  @Nested
+  class SayHello {}
 }

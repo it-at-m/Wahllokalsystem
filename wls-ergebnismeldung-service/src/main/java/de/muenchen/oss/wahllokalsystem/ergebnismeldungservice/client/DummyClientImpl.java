@@ -23,57 +23,82 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.DUMMY_CLIENTS)
 @Slf4j
 public class DummyClientImpl
-        implements AWerteClient, StatusClient, UrnenwahlClient, WahlenClient, BriefwahlClient, EaiClient, CurrentWahltagClient {
+    implements AWerteClient,
+        StatusClient,
+        UrnenwahlClient,
+        WahlenClient,
+        BriefwahlClient,
+        EaiClient,
+        CurrentWahltagClient {
 
-    @Override
-    public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
-        return List.of(
-                new AWerteModel(new BezirkUndWahlID("wahlID01", wahlbezirkID), 25L, 26L));
-    }
+  @Override
+  public List<AWerteModel> getAWerte(final String wahlbezirkID) throws WlsException {
+    return List.of(new AWerteModel(new BezirkUndWahlID("wahlID01", wahlbezirkID), 25L, 26L));
+  }
 
-    @Override
-    public void postSchnellmeldungSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
-            throws WlsException {
-        log.info("dummy client postSchnellmeldungSendungsuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
-    }
+  @Override
+  public void postSchnellmeldungSendungsuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
+      throws WlsException {
+    log.info(
+        "dummy client postSchnellmeldungSendungsuhrzeit of {} on {} called instead of monitoring",
+        bezirkUndWahlID,
+        schnellmeldungSendungsuhrzeit);
+  }
 
-    @Override
-    public void postSchnellmeldungDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit) throws WlsException {
-        log.info("dummy client postSchnellmeldungDruckuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, schnellmeldungDruckuhrzeit);
-    }
+  @Override
+  public void postSchnellmeldungDruckuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit)
+      throws WlsException {
+    log.info(
+        "dummy client postSchnellmeldungDruckuhrzeit of {} on {} called instead of monitoring",
+        bezirkUndWahlID,
+        schnellmeldungDruckuhrzeit);
+  }
 
-    @Override
-    public void postNiederschriftSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit) throws WlsException {
-        log.info("dummy client postNiederschriftSendungsuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, niederschriftSendungsuhrzeit);
-    }
+  @Override
+  public void postNiederschriftSendungsuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit)
+      throws WlsException {
+    log.info(
+        "dummy client postNiederschriftSendungsuhrzeit of {} on {} called instead of monitoring",
+        bezirkUndWahlID,
+        niederschriftSendungsuhrzeit);
+  }
 
-    @Override
-    public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
-        log.info("dummy client postNiederschriftDruckuhrzeit of {} on {} called instead of monitoring", bezirkUndWahlID, niederschriftDruckuhrzeit);
-    }
+  @Override
+  public void postNiederschriftDruckuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit)
+      throws WlsException {
+    log.info(
+        "dummy client postNiederschriftDruckuhrzeit of {} on {} called instead of monitoring",
+        bezirkUndWahlID,
+        niederschriftDruckuhrzeit);
+  }
 
-    @Override
-    public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
-        return true;
-    }
+  @Override
+  public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
+    return true;
+  }
 
-    @Override
-    public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
-        return WahlartModel.EUW;
-    }
+  @Override
+  public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
+    return WahlartModel.EUW;
+  }
 
-    @Override
-    public long getAnzahlZurueckgewiesenerWahlbriefe(final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
-        return 0;
-    }
+  @Override
+  public long getAnzahlZurueckgewiesenerWahlbriefe(
+      final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
+    return 0;
+  }
 
-    @Override
-    public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
-        log.info("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
-    }
+  @Override
+  public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
+    log.info("dummy client sendErgebnismeldung {}", ergebnismeldungDTO);
+  }
 
-    @Override
-    public String getWahltagID() {
-        return "wahltagID";
-    }
+  @Override
+  public String getWahltagID() {
+    return "wahltagID";
+  }
 }

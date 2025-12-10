@@ -17,82 +17,106 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahltermindatenClientImplTest {
 
-    @Mock
-    WahltermindatenControllerApi wahltermindatenControllerApi;
+  @Mock WahltermindatenControllerApi wahltermindatenControllerApi;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    WahltermindatenClientImpl unitUnderTest;
+  @InjectMocks WahltermindatenClientImpl unitUnderTest;
 
-    @Nested
-    class PutWahltermindaten {
+  @Nested
+  class PutWahltermindaten {
 
-        @Test
-        void should_verifyPutWahltermindatenApiCall_when_wahltagIDIsGiven() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_verifyPutWahltermindatenApiCall_when_wahltagIDIsGiven() {
+      val wahltagID = "wahltagID";
 
-            unitUnderTest.putWahltermindaten(wahltagID);
+      unitUnderTest.putWahltermindaten(wahltagID);
 
-            Mockito.verify(wahltermindatenControllerApi).putWahltermindaten(wahltagID);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltagApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltag api failed");
-
-            Mockito.doThrow(mockedWlsException).when(wahltermindatenControllerApi).putWahltermindaten(wahltagID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltagApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltag api failed");
-
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahltermindatenControllerApi).putWahltermindaten(wahltagID);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID)).isSameAs(mockedWlsException);
-        }
+      Mockito.verify(wahltermindatenControllerApi).putWahltermindaten(wahltagID);
     }
 
-    @Nested
-    class DeleteWahltermindaten {
-        @Test
-        void should_verifyDeleteWahltermindatenAPICall_when_wahltagIDIsGiven() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltagApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltag api failed");
 
-            unitUnderTest.deleteWahltermindaten(wahltagID);
+      Mockito.doThrow(mockedWlsException)
+          .when(wahltermindatenControllerApi)
+          .putWahltermindaten(wahltagID);
 
-            Mockito.verify(wahltermindatenControllerApi).deleteWahltermindaten(wahltagID);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltagApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltag api failed");
-
-            Mockito.doThrow(mockedWlsException).when(wahltermindatenControllerApi).deleteWahltermindaten(wahltagID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltagApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahltag api failed");
-
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahltermindatenControllerApi).deleteWahltermindaten(wahltagID);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID)).isSameAs(mockedWlsException);
-        }
-
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
+          .isSameAs(mockedWlsException);
     }
+
+    @Test
+    void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltagApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltag api failed");
+
+      Mockito.doThrow(new RuntimeException("api call failed"))
+          .when(wahltermindatenControllerApi)
+          .putWahltermindaten(wahltagID);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class DeleteWahltermindaten {
+    @Test
+    void should_verifyDeleteWahltermindatenAPICall_when_wahltagIDIsGiven() {
+      val wahltagID = "wahltagID";
+
+      unitUnderTest.deleteWahltermindaten(wahltagID);
+
+      Mockito.verify(wahltermindatenControllerApi).deleteWahltermindaten(wahltagID);
+    }
+
+    @Test
+    void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahltagApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltag api failed");
+
+      Mockito.doThrow(mockedWlsException)
+          .when(wahltermindatenControllerApi)
+          .deleteWahltermindaten(wahltagID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahltagApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahltag api failed");
+
+      Mockito.doThrow(new RuntimeException("api call failed"))
+          .when(wahltermindatenControllerApi)
+          .deleteWahltermindaten(wahltagID);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

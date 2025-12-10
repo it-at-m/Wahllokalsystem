@@ -11,59 +11,66 @@ import org.mapstruct.factory.Mappers;
 
 public class WahlvorstandModelMapperTest {
 
-    private final WahlvorstandModelMapper unitUnderTest = Mappers.getMapper(WahlvorstandModelMapper.class);
+  private final WahlvorstandModelMapper unitUnderTest =
+      Mappers.getMapper(WahlvorstandModelMapper.class);
+
+  @Nested
+  class ToModel {
+
+    @Test
+    void should_returnWahlvorstandModel_when_givenWahlvorstandEntity() {
+      val mockedWahlvorstandEntity = TestDataFactory.CreateWahlvorstandEntity.withData();
+      val expectedWahlvorstandModel =
+          TestDataFactory.CreateWahlvorstandModel.fromEntity(mockedWahlvorstandEntity);
+
+      val result = unitUnderTest.toModel(mockedWahlvorstandEntity);
+      Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
+    }
+  }
+
+  @Nested
+  class ToEntity {
 
     @Nested
-    class ToModel {
+    class ToWahlvorstandsmitgliedEntity {
 
-        @Test
-        void should_returnWahlvorstandModel_when_givenWahlvorstandEntity() {
-            val mockedWahlvorstandEntity = TestDataFactory.CreateWahlvorstandEntity.withData();
-            val expectedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromEntity(mockedWahlvorstandEntity);
+      @Test
+      void should_returnWahlvorstandsmitgliedEntity_when_givenWahlvorstandsmitgliedModel() {
+        val mockedWahlvorstandsmitgliedModel =
+            TestDataFactory.CreateWahlvorstandsmitgliedModel.withData();
+        val expectedWahlvorstandsmitgliedEntity =
+            TestDataFactory.CreateWahlvorstandsmitgliedEntity.fromModel(
+                mockedWahlvorstandsmitgliedModel);
 
-            val result = unitUnderTest.toModel(mockedWahlvorstandEntity);
-            Assertions.assertThat(result).isEqualTo(expectedWahlvorstandModel);
-        }
+        val result = unitUnderTest.toEntity(mockedWahlvorstandsmitgliedModel);
+        Assertions.assertThat(result).isEqualTo(expectedWahlvorstandsmitgliedEntity);
+      }
     }
 
     @Nested
-    class ToEntity {
+    class ToWahlvorstandEntity {
 
-        @Nested
-        class ToWahlvorstandsmitgliedEntity {
+      @Test
+      void should_returnWahlvorstandEntity_when_givenWahlvorstandModel() {
+        val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
+        val expectedWahlvorstandEntity =
+            TestDataFactory.CreateWahlvorstandEntity.fromModel(mockedWahlvorstandModel);
 
-            @Test
-            void should_returnWahlvorstandsmitgliedEntity_when_givenWahlvorstandsmitgliedModel() {
-                val mockedWahlvorstandsmitgliedModel = TestDataFactory.CreateWahlvorstandsmitgliedModel.withData();
-                val expectedWahlvorstandsmitgliedEntity = TestDataFactory.CreateWahlvorstandsmitgliedEntity.fromModel(mockedWahlvorstandsmitgliedModel);
-
-                val result = unitUnderTest.toEntity(mockedWahlvorstandsmitgliedModel);
-                Assertions.assertThat(result).isEqualTo(expectedWahlvorstandsmitgliedEntity);
-            }
-        }
-
-        @Nested
-        class ToWahlvorstandEntity {
-
-            @Test
-            void should_returnWahlvorstandEntity_when_givenWahlvorstandModel() {
-                val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
-                val expectedWahlvorstandEntity = TestDataFactory.CreateWahlvorstandEntity.fromModel(mockedWahlvorstandModel);
-
-                val result = unitUnderTest.toEntity(mockedWahlvorstandModel);
-                Assertions.assertThat(result).isEqualTo(expectedWahlvorstandEntity);
-            }
-        }
-
-        @Nested
-        class ToFunktion {
-
-            @ParameterizedTest
-            @EnumSource(FunktionModel.class)
-            void should_returnFunktionWithSameName_when_givenFunktionModel(final FunktionModel funktionToMap) {
-                val mappedValue = unitUnderTest.toEntity(funktionToMap);
-                Assertions.assertThat(mappedValue.name()).isEqualTo(funktionToMap.name());
-            }
-        }
+        val result = unitUnderTest.toEntity(mockedWahlvorstandModel);
+        Assertions.assertThat(result).isEqualTo(expectedWahlvorstandEntity);
+      }
     }
+
+    @Nested
+    class ToFunktion {
+
+      @ParameterizedTest
+      @EnumSource(FunktionModel.class)
+      void should_returnFunktionWithSameName_when_givenFunktionModel(
+          final FunktionModel funktionToMap) {
+        val mappedValue = unitUnderTest.toEntity(funktionToMap);
+        Assertions.assertThat(mappedValue.name()).isEqualTo(funktionToMap.name());
+      }
+    }
+  }
 }

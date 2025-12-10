@@ -17,17 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahlbeteiligungController {
 
-    private final WahlbeteiligungService wahlbeteiligungService;
+  private final WahlbeteiligungService wahlbeteiligungService;
 
-    @Operation(
-            description = "Speichert die Wahlbeteiligung.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Wahlbeteiligung erfolgreich gespeichert.")
-            }
-    )
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void saveWahlbeteiligung(@RequestBody WahlbeteiligungsMeldungDTO wahlbeteiligung) {
-        wahlbeteiligungService.saveWahlbeteiligung(wahlbeteiligung);
-    }
+  @Operation(
+      description = "Speichert die Wahlbeteiligung.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlbeteiligung erfolgreich gespeichert.")
+      })
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public void saveWahlbeteiligung(@RequestBody WahlbeteiligungsMeldungDTO wahlbeteiligung) {
+    wahlbeteiligungService.saveWahlbeteiligung(wahlbeteiligung);
+  }
 }

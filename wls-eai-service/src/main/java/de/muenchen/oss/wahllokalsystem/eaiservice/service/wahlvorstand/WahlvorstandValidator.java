@@ -11,31 +11,37 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlvorstandValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validateWahlbezirkIDOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+  public void validateWahlbezirkIDOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLVORSTAND_SUCHKRITERIEN_UNVOLLSTAENDIG);
+    }
+  }
+
+  public void validateSaveAnwesenheitDataOrThrow(
+      final WahlvorstandsaktualisierungDTO saveAnwesenheitData) {
+    if (saveAnwesenheitData == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
     }
 
-    public void validateSaveAnwesenheitDataOrThrow(final WahlvorstandsaktualisierungDTO saveAnwesenheitData) {
-        if (saveAnwesenheitData == null) {
-            throw exceptionFactory.createFachlicheWlsException(
-                    ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
-        }
-
-        if (StringUtils.isBlank(saveAnwesenheitData.wahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_BEZIRKID_FEHLT);
-        }
-
-        if (saveAnwesenheitData.anwesenheitBeginn() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_ANWESENHEITBEGINN_FEHLT);
-        }
-
-        if (saveAnwesenheitData.mitglieder() != null && saveAnwesenheitData.mitglieder().stream()
-                .anyMatch(mitglied -> StringUtils.isBlank(mitglied.identifikator()))) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT);
-        }
+    if (StringUtils.isBlank(saveAnwesenheitData.wahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEANWESENHEIT_BEZIRKID_FEHLT);
     }
+
+    if (saveAnwesenheitData.anwesenheitBeginn() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEANWESENHEIT_ANWESENHEITBEGINN_FEHLT);
+    }
+
+    if (saveAnwesenheitData.mitglieder() != null
+        && saveAnwesenheitData.mitglieder().stream()
+            .anyMatch(mitglied -> StringUtils.isBlank(mitglied.identifikator()))) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEANWESENHEIT_IDENTIFIKATOR_FEHLT);
+    }
+  }
 }

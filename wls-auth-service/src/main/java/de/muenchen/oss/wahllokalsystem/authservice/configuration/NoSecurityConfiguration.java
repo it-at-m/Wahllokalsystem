@@ -22,31 +22,37 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 @EnableWebSecurity
 public class NoSecurityConfiguration {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
-        // @formatter:off
-        http
-                .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests(requests -> requests.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**"))
-                        .permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .anyRequest()
-                        .permitAll())
-                .sessionManagement(customizer ->
-                        customizer.sessionFixation().migrateSession()
-                                .maximumSessions(1)
-                                .expiredUrl("/login")
-                                .maxSessionsPreventsLogin(false)
-                                .sessionRegistry(sessionRegistry)
-                )
-                .csrf(AbstractHttpConfigurer::disable);
-        // @formatter:on
-        return http.build();
-    }
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
+      throws Exception {
+    // @formatter:off
+    http.headers(
+            customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .authorizeHttpRequests(
+            requests ->
+                requests
+                    .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**"))
+                    .permitAll()
+                    .requestMatchers(PathRequest.toH2Console())
+                    .permitAll()
+                    .anyRequest()
+                    .permitAll())
+        .sessionManagement(
+            customizer ->
+                customizer
+                    .sessionFixation()
+                    .migrateSession()
+                    .maximumSessions(1)
+                    .expiredUrl("/login")
+                    .maxSessionsPreventsLogin(false)
+                    .sessionRegistry(sessionRegistry))
+        .csrf(AbstractHttpConfigurer::disable);
+    // @formatter:on
+    return http.build();
+  }
 
-    @Bean
-    SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
+  @Bean
+  SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
 }

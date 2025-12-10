@@ -32,135 +32,157 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 class StimmzettelumschlaegeServiceSecurityTest {
 
-    @MockitoBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @Autowired
-    StimmzettelumschlaegeService unitUnderTest;
+  @Autowired StimmzettelumschlaegeService unitUnderTest;
 
-    @Autowired
-    StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
+  @Autowired StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
-        stimmzettelumschlaegeRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
+    stimmzettelumschlaegeRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStimmzettelumschlaege {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
+
+      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id));
     }
 
-    @Nested
-    class GetStimmzettelumschlaege {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(arguments.get(0, String[].class));
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
+      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id));
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(arguments.get(0, String[].class));
-
-            val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class SetStimmzettelumschlaege {
-
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
-                claimProperties = { "wahlbezirksArt=BWB" }
-        )
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_serviceSetStimmzettelumschlaegeAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE },
-                claimProperties = { "wahlbezirksArt=BWB" }
-        )
-        void should_throwTechnischeWlsException_when_repositoryWriteStimmzettelumschlaegeAuthorityIsMissing() {
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
-                    .isInstanceOf(TechnischeWlsException.class);
-        }
-
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE }
-        )
-        void should_throwFachlicheWlsException_when_claimPropertyWahlbezirksArtIsMissing() {
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
-                    .isInstanceOf(FachlicheWlsException.class);
-        }
-
-        private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(BezirkUndWahlID id) {
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11;
-            return new StimmzettelumschlaegeModel(id, urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
-
-        }
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
     }
+  }
+
+  @Nested
+  class SetStimmzettelumschlaege {
+
+    @Test
+    @WithMockUserAsJwt(
+        authorities = {
+          Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+        },
+        claimProperties = {"wahlbezirksArt=BWB"})
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege));
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMZETTELUMSCHLAEGE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_serviceSetStimmzettelumschlaegeAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    @WithMockUserAsJwt(
+        authorities = {Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE},
+        claimProperties = {"wahlbezirksArt=BWB"})
+    void
+        should_throwTechnischeWlsException_when_repositoryWriteStimmzettelumschlaegeAuthorityIsMissing() {
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    @Test
+    @WithMockUserAsJwt(
+        authorities = {
+          Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+        })
+    void should_throwFachlicheWlsException_when_claimPropertyWahlbezirksArtIsMissing() {
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val stimmzettelumschlaege = createStimmzettelumschlaegeModel(id);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaege))
+          .isInstanceOf(FachlicheWlsException.class);
+    }
+
+    private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(BezirkUndWahlID id) {
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11;
+      return new StimmzettelumschlaegeModel(
+          id, urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
+    }
+  }
 }

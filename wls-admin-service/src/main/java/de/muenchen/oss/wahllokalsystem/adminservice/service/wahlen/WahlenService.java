@@ -12,21 +12,21 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahlenService {
 
-    private final WahlenValidator wahlenValidator;
+  private final WahlenValidator wahlenValidator;
 
-    private final WahlenClient wahlenClient;
+  private final WahlenClient wahlenClient;
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahlen')")
-    public List<WahlModel> getWahlen(final String wahltagID) {
-        wahlenValidator.validWahlIDParamOrThrow(wahltagID);
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahlen')")
+  public List<WahlModel> getWahlen(final String wahltagID) {
+    wahlenValidator.validWahlIDParamOrThrow(wahltagID);
 
-        return wahlenClient.getWahlen(wahltagID);
-    }
+    return wahlenClient.getWahlen(wahltagID);
+  }
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_UpdateWahlen')")
-    public void updateWahlen(final List<WahlModel> wahlen, final String wahltagID) {
-        wahlenValidator.validWahlModelListOrThrow(wahlen);
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_UpdateWahlen')")
+  public void updateWahlen(final List<WahlModel> wahlen, final String wahltagID) {
+    wahlenValidator.validWahlModelListOrThrow(wahlen);
 
-        wahlenClient.postWahlen(wahltagID, wahlen);
-    }
+    wahlenClient.postWahlen(wahltagID, wahlen);
+  }
 }

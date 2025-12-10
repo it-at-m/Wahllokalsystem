@@ -10,12 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ReferendumvorlagenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validReferumvorlageReferenceModelOrThrow(final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
-        if (referendumvorlagenReferenceModel == null || StringUtils.isEmpty(referendumvorlagenReferenceModel.wahlID()) || StringUtils.isEmpty(
-                referendumvorlagenReferenceModel.wahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validReferumvorlageReferenceModelOrThrow(
+      final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
+    if (referendumvorlagenReferenceModel == null
+        || StringUtils.isEmpty(referendumvorlagenReferenceModel.wahlID())
+        || StringUtils.isEmpty(referendumvorlagenReferenceModel.wahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

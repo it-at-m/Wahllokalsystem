@@ -14,31 +14,35 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_NO_SECURITY_PROFILE})
 class KonfigurierterWahltagRepositoryTest {
 
-    @Autowired
-    KonfigurierterWahltagRepository konfigurierterWahltagRepository;
+  @Autowired KonfigurierterWahltagRepository konfigurierterWahltagRepository;
 
-    @Nested
-    class SetExistingKonfigurierteWahltageInaktiv {
+  @Nested
+  class SetExistingKonfigurierteWahltageInaktiv {
 
-        @Test
-        @Transactional
-        void should_verifyThatAllKonfigurierteWahltageAreInaktiv_when_setExistingKonfigurierteWahltageInaktivIsCalled() {
-            val wahltageToSave = List.of(new KonfigurierterWahltag(LocalDate.parse("2024-01-01"), "wahltag1", true, "nummer1"),
-                    new KonfigurierterWahltag(LocalDate.parse("2024-01-02"), "wahltag2", false, "nummer2"),
-                    new KonfigurierterWahltag(LocalDate.parse("2024-01-03"), "wahltag3", false, "nummer3"),
-                    new KonfigurierterWahltag(LocalDate.parse("2024-01-04"), "wahltag4", true, "nummer4"));
-            konfigurierterWahltagRepository.saveAll(wahltageToSave);
+    @Test
+    @Transactional
+    void
+        should_verifyThatAllKonfigurierteWahltageAreInaktiv_when_setExistingKonfigurierteWahltageInaktivIsCalled() {
+      val wahltageToSave =
+          List.of(
+              new KonfigurierterWahltag(LocalDate.parse("2024-01-01"), "wahltag1", true, "nummer1"),
+              new KonfigurierterWahltag(
+                  LocalDate.parse("2024-01-02"), "wahltag2", false, "nummer2"),
+              new KonfigurierterWahltag(
+                  LocalDate.parse("2024-01-03"), "wahltag3", false, "nummer3"),
+              new KonfigurierterWahltag(
+                  LocalDate.parse("2024-01-04"), "wahltag4", true, "nummer4"));
+      konfigurierterWahltagRepository.saveAll(wahltageToSave);
 
-            konfigurierterWahltagRepository.setExistingKonfigurierteWahltageInaktiv();
+      konfigurierterWahltagRepository.setExistingKonfigurierteWahltageInaktiv();
 
-            val konfigurierteWahltageInRepo = konfigurierterWahltagRepository.findAll();
+      val konfigurierteWahltageInRepo = konfigurierterWahltagRepository.findAll();
 
-            Assertions.assertThat(konfigurierteWahltageInRepo)
-                    .allSatisfy(wahltag -> Assertions.assertThat(wahltag.isActive()).isFalse());
-        }
+      Assertions.assertThat(konfigurierteWahltageInRepo)
+          .allSatisfy(wahltag -> Assertions.assertThat(wahltag.isActive()).isFalse());
     }
-
+  }
 }

@@ -22,54 +22,63 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BroadcastService {
 
-    private final MessageRepository messageRepo;
+  private final MessageRepository messageRepo;
 
-    private final BroadcastDTOMapper broadcastMapper;
+  private final BroadcastDTOMapper broadcastMapper;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
-    public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
-        log.debug("#broadcast");
+  @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
+  public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
+    log.debug("#broadcast");
 
-        if (null == messageToBroadcast || null == messageToBroadcast.wahlbezirkIDs() || messageToBroadcast.wahlbezirkIDs().size() <= 0
-                || StringUtils.isEmpty(messageToBroadcast.nachricht()) || StringUtils.isBlank(messageToBroadcast.nachricht())) {
-            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG);
-        }
-
-        List<Message> messagesToSave = broadcastMapper.toListOfMessageEntity(messageToBroadcast, LocalDateTime.now());
-
-        messageRepo.saveAll(messagesToSave);
+    if (null == messageToBroadcast
+        || null == messageToBroadcast.wahlbezirkIDs()
+        || messageToBroadcast.wahlbezirkIDs().size() <= 0
+        || StringUtils.isEmpty(messageToBroadcast.nachricht())
+        || StringUtils.isBlank(messageToBroadcast.nachricht())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG);
     }
 
-    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
-    public MessageDTO getOldestMessage(String wahlbezirkID) {
-        log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
+    List<Message> messagesToSave =
+        broadcastMapper.toListOfMessageEntity(messageToBroadcast, LocalDateTime.now());
 
-        if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_WAHLBEZIRKID);
-        }
+    messageRepo.saveAll(messagesToSave);
+  }
 
-        val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
+  @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
+  public MessageDTO getOldestMessage(String wahlbezirkID) {
+    log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
-        if (message.isEmpty()) {
-            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_ENTITY_NOT_FOUND);
-        }
-
-        return broadcastMapper.toDto(message.get());
+    if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_WAHLBEZIRKID);
     }
 
-    @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
-    public void deleteMessage(String nachrichtID) { //TODO UUID als Parameter
-        if (StringUtils.isEmpty(nachrichtID) || StringUtils.isBlank(nachrichtID)) {
-            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_NACHRICHTID);
-        }
+    val message = messageRepo.findFirstByWahlbezirkIDOrderByEmpfangsZeit(wahlbezirkID);
 
-        try {
-            UUID nachrichtUUID = java.util.UUID.fromString(nachrichtID);
-            messageRepo.deleteById(nachrichtUUID);
-        } catch (IllegalArgumentException e) {
-            throw exceptionFactory.createFachlicheWlsException(BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID);
-        }
+    if (message.isEmpty()) {
+      throw exceptionFactory.createFachlicheWlsException(
+          BroadcastExceptionKonstanten.BROADCAST_ENTITY_NOT_FOUND);
     }
+
+    return broadcastMapper.toDto(message.get());
+  }
+
+  @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_MessageRead')")
+  public void deleteMessage(String nachrichtID) { // TODO UUID als Parameter
+    if (StringUtils.isEmpty(nachrichtID) || StringUtils.isBlank(nachrichtID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_NACHRICHTID);
+    }
+
+    try {
+      UUID nachrichtUUID = java.util.UUID.fromString(nachrichtID);
+      messageRepo.deleteById(nachrichtUUID);
+    } catch (IllegalArgumentException e) {
+      throw exceptionFactory.createFachlicheWlsException(
+          BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID);
+    }
+  }
 }

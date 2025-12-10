@@ -18,29 +18,32 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahlvorbereitungClientImpl implements UrnenwahlClient {
 
-    private final UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
+  private final UrnenwahlSchliessungsUhrzeitControllerApi urnenwahlSchliessungsUhrzeitControllerApi;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
-        assertWahlbezirkWithSchliessungsuhrzeitExists(wahlbezirkID);
-        return true;
+  @Override
+  public boolean isWahlbezirkGeschlossen(final String wahlbezirkID) {
+    assertWahlbezirkWithSchliessungsuhrzeitExists(wahlbezirkID);
+    return true;
+  }
+
+  private void assertWahlbezirkWithSchliessungsuhrzeitExists(final String wahlbezirkID) {
+    final UrnenwahlSchliessungsUhrzeitDTO urnenwahlSchliessungsUhrzeitDTO;
+    try {
+      urnenwahlSchliessungsUhrzeitDTO =
+          urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+    } catch (final WlsException wlsException) {
+      log.debug("found WlsException", wlsException);
+      throw wlsException;
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_WAHLVORBEREITUNG);
     }
 
-    private void assertWahlbezirkWithSchliessungsuhrzeitExists(final String wahlbezirkID) {
-        final UrnenwahlSchliessungsUhrzeitDTO urnenwahlSchliessungsUhrzeitDTO;
-        try {
-            urnenwahlSchliessungsUhrzeitDTO = urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException", wlsException);
-            throw wlsException;
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_WAHLVORBEREITUNG);
-        }
-
-        if (urnenwahlSchliessungsUhrzeitDTO == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLVORBEREITUNG_SCHLIESSUNGSUHRZEIT_NULL_OR_EMPTY);
-        }
+    if (urnenwahlSchliessungsUhrzeitDTO == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.WAHLVORBEREITUNG_SCHLIESSUNGSUHRZEIT_NULL_OR_EMPTY);
     }
+  }
 }

@@ -21,79 +21,99 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allTestClassesNamingConvention;
-    private static JavaClasses allTestClassesBeforeEachConvention;
-    private static JavaClasses allTestClassesAfterEachConvention;
-    private static JavaClasses allTestClassesTestMethodsArePrivatePackageConvention;
-    private static JavaClasses allTestClassesEndWithTestConvention;
+  private static JavaClasses allTestClassesNamingConvention;
+  private static JavaClasses allTestClassesBeforeEachConvention;
+  private static JavaClasses allTestClassesAfterEachConvention;
+  private static JavaClasses allTestClassesTestMethodsArePrivatePackageConvention;
+  private static JavaClasses allTestClassesEndWithTestConvention;
 
-    @BeforeAll
-    static void init() {
-        allTestClassesNamingConvention = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(SecurityUtils.class.getPackage().getName())
-                // excluding intended negative examples from actual test
-                .that(not(equivalentTo(NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule.class)));
+  @BeforeAll
+  static void init() {
+    allTestClassesNamingConvention =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(SecurityUtils.class.getPackage().getName())
+            // excluding intended negative examples from actual test
+            .that(
+                not(
+                    equivalentTo(
+                        NamingConventionExamplesTest.ExampleTestNamesViolatingNamingConventionRule
+                            .class)));
 
-        allTestClassesBeforeEachConvention = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(SecurityUtils.class.getPackage().getName())
-                // excluding intended negative examples from actual test
-                .that(not(equivalentTo(NamingConventionExamplesTest.ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class)));
+    allTestClassesBeforeEachConvention =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(SecurityUtils.class.getPackage().getName())
+            // excluding intended negative examples from actual test
+            .that(
+                not(
+                    equivalentTo(
+                        NamingConventionExamplesTest
+                            .ExampleBeforeEachMethodNamesViolatingNamingConventionRule.class)));
 
-        allTestClassesAfterEachConvention = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(SecurityUtils.class.getPackage().getName())
-                // excluding intended negative examples from actual test
-                .that(not(equivalentTo(NamingConventionExamplesTest.ExampleAfterEachMethodNamesViolatingNamingConventionRule.class)));
+    allTestClassesAfterEachConvention =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(SecurityUtils.class.getPackage().getName())
+            // excluding intended negative examples from actual test
+            .that(
+                not(
+                    equivalentTo(
+                        NamingConventionExamplesTest
+                            .ExampleAfterEachMethodNamesViolatingNamingConventionRule.class)));
 
-        allTestClassesTestMethodsArePrivatePackageConvention = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(SecurityUtils.class.getPackage().getName())
-                // excluding intended negative examples from actual test
-                .that(not(equivalentTo(ModifiersExampleTest.WrongModifierExamples.class)));
+    allTestClassesTestMethodsArePrivatePackageConvention =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(SecurityUtils.class.getPackage().getName())
+            // excluding intended negative examples from actual test
+            .that(not(equivalentTo(ModifiersExampleTest.WrongModifierExamples.class)));
 
-        allTestClassesEndWithTestConvention = new ClassFileImporter()
-                .importPackages(SecurityUtils.class.getPackage().getName())
-                // excluding intended negative examples from actual test
-                .that(not(equivalentTo(TestWithWrongEnding.class)));
-    }
+    allTestClassesEndWithTestConvention =
+        new ClassFileImporter()
+            .importPackages(SecurityUtils.class.getPackage().getName())
+            // excluding intended negative examples from actual test
+            .that(not(equivalentTo(TestWithWrongEnding.class)));
+  }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("allTestClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
-    }
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allTestClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(
+      final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
+  }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("allClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
-    }
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(arguments.get(2, JavaClasses.class));
+  }
 
-    public static Stream<Arguments> allTestClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of(
-                        "TEST_NAMING_CONVENTION_RULE",
-                        MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
-                        allTestClassesNamingConvention),
-                Arguments.of(
-                        "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
-                        MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesBeforeEachConvention),
-                Arguments.of(
-                        "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
-                        MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
-                        allTestClassesAfterEachConvention),
-                Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
-                        MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
-                        allTestClassesTestMethodsArePrivatePackageConvention));
-    }
+  public static Stream<Arguments> allTestClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "TEST_NAMING_CONVENTION_RULE",
+            MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED,
+            allTestClassesNamingConvention),
+        Arguments.of(
+            "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED,
+            allTestClassesBeforeEachConvention),
+        Arguments.of(
+            "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED,
+            allTestClassesAfterEachConvention),
+        Arguments.of(
+            "TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
+            MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED,
+            allTestClassesTestMethodsArePrivatePackageConvention));
+  }
 
-    private static Stream<Arguments> allClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of("RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
-                        MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED,
-                        allTestClassesEndWithTestConvention));
-    }
+  private static Stream<Arguments> allClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+            MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED,
+            allTestClassesEndWithTestConvention));
+  }
 }

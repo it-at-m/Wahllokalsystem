@@ -4,7 +4,5 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record EreignisseWriteDTO(boolean keineVorfaelle,
-                                 boolean keineVorkommnisse,
-                                 List<EreignisDTO> ereigniseintraege) {
-}
+public record EreignisseWriteDTO(
+    boolean keineVorfaelle, boolean keineVorkommnisse, List<EreignisDTO> ereigniseintraege) {}

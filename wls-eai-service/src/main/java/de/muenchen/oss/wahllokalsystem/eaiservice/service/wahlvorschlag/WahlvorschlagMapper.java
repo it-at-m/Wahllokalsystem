@@ -20,19 +20,19 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlvorschlagMapper {
 
-    WahlvorschlaegeListeDTO toDTO(WahlvorschlaegeListe wahlvorschlaegeListe);
+  WahlvorschlaegeListeDTO toDTO(WahlvorschlaegeListe wahlvorschlaegeListe);
 
-    WahlvorschlaegeDTO toDTO(Wahlvorschlaege wahlvorschlaege);
+  WahlvorschlaegeDTO toDTO(Wahlvorschlaege wahlvorschlaege);
 
-    @Mapping(target = "identifikator", source = "id")
-    WahlvorschlagDTO toDTO(Wahlvorschlag wahlvorschlag);
+  @Mapping(target = "identifikator", source = "id")
+  WahlvorschlagDTO toDTO(Wahlvorschlag wahlvorschlag);
 
-    @Mapping(target = "identifikator", source = "id")
-    KandidatDTO toDTO(Kandidat kandidat);
+  @Mapping(target = "identifikator", source = "id")
+  KandidatDTO toDTO(Kandidat kandidat);
 
-    ReferendumvorlagenDTO toDTO(Referendumvorlagen referendumvorlagen);
+  ReferendumvorlagenDTO toDTO(Referendumvorlagen referendumvorlagen);
 
-    ReferendumvorlageDTO toDTO(Referendumvorlage referendumvorlage);
+  ReferendumvorlageDTO toDTO(Referendumvorlage referendumvorlage);
 
-    ReferendumoptionDTO toDTO(Referendumoption referendumoption);
+  ReferendumoptionDTO toDTO(Referendumoption referendumoption);
 }

@@ -10,18 +10,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahltermindatenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validateParameterToInitWahltermindaten(final String wahltagID) {
-        if (StringUtils.isBlank(wahltagID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_PUTWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validateParameterToInitWahltermindaten(final String wahltagID) {
+    if (StringUtils.isBlank(wahltagID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.CODE_PUTWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validateParameterToDeleteWahltermindaten(final String wahltagID) {
-        if (StringUtils.isBlank(wahltagID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.CODE_DELETEWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validateParameterToDeleteWahltermindaten(final String wahltagID) {
+    if (StringUtils.isBlank(wahltagID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.CODE_DELETEWAHLTERMINDATEN_PARAMETER_UNVOLLSTAENDIG);
     }
-
+  }
 }

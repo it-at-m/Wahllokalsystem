@@ -17,54 +17,55 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UrnenwahlSchliessungsUhrzeitService {
 
-    private final UrnenwahlSchliessungsUhrzeitRepository urnenwahlSchliessungsUhrzeitRepository;
-    private final UrnenwahlSchliessungsUhrzeitModelMapper urnenwahlSchliessungsUhrzeitModelMapper;
-    private final UrnenwahlSchliessungsUhrzeitValidator urnenwahlSchliessungsUhrzeitValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final UrnenwahlSchliessungsUhrzeitRepository urnenwahlSchliessungsUhrzeitRepository;
+  private final UrnenwahlSchliessungsUhrzeitModelMapper urnenwahlSchliessungsUhrzeitModelMapper;
+  private final UrnenwahlSchliessungsUhrzeitValidator urnenwahlSchliessungsUhrzeitValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<UrnenwahlSchliessungsUhrzeitModel> getUrnenwahlSchliessungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getSchliessungsuhrzeit");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlSchliessungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<UrnenwahlSchliessungsUhrzeitModel> getUrnenwahlSchliessungsUhrzeit(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getSchliessungsuhrzeit");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        urnenwahlSchliessungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    urnenwahlSchliessungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID);
+    val dataFromRepo = urnenwahlSchliessungsUhrzeitRepository.findById(wahlbezirkID);
 
-        log.debug("out: schliessungsuhrzeit > {}", dataFromRepo.orElse(null));
+    log.debug("out: schliessungsuhrzeit > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(urnenwahlSchliessungsUhrzeitModelMapper::toModel);
+    return dataFromRepo.map(urnenwahlSchliessungsUhrzeitModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#urnenwahlSchliessungsUhrzeitToSet.wahlbezirkID(), authentication)")
+  public void setUrnenwahlSchliessungsUhrzeit(
+      @P("urnenwahlSchliessungsUhrzeitToSet")
+          final UrnenwahlSchliessungsUhrzeitModel urnenwahlSchliessungsUhrzeitToSet) {
+    log.debug("#postUrnenwahlSchliessungsUhrzeit");
+    log.debug("in: schliessungsuhrzeit > {}", urnenwahlSchliessungsUhrzeitToSet);
+
+    urnenwahlSchliessungsUhrzeitValidator.validModelToSetOrThrow(urnenwahlSchliessungsUhrzeitToSet);
+
+    try {
+      val urnenwahlSchliessungsUhrzeitToSave =
+          urnenwahlSchliessungsUhrzeitModelMapper.toEntity(urnenwahlSchliessungsUhrzeitToSet);
+      urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToSave);
+      // Fachliches Logging mit  SIEM
+      try {
+        MDC.put("eid", "EROEFFNUNG");
+        MDC.put("result", "0");
+        log.info("openingTime={}|", urnenwahlSchliessungsUhrzeitToSave.getSchliessungsuhrzeit());
+      } finally {
+        MDC.remove("eid");
+        MDC.remove("result");
+      }
+    } catch (final Exception e) {
+      log.error("Fehler beim speichern: ", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlSchliessungsuhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#urnenwahlSchliessungsUhrzeitToSet.wahlbezirkID(), authentication)"
-    )
-    public void setUrnenwahlSchliessungsUhrzeit(
-            @P("urnenwahlSchliessungsUhrzeitToSet") final UrnenwahlSchliessungsUhrzeitModel urnenwahlSchliessungsUhrzeitToSet) {
-        log.debug("#postUrnenwahlSchliessungsUhrzeit");
-        log.debug("in: schliessungsuhrzeit > {}", urnenwahlSchliessungsUhrzeitToSet);
-
-        urnenwahlSchliessungsUhrzeitValidator.validModelToSetOrThrow(urnenwahlSchliessungsUhrzeitToSet);
-
-        try {
-            val urnenwahlSchliessungsUhrzeitToSave = urnenwahlSchliessungsUhrzeitModelMapper.toEntity(urnenwahlSchliessungsUhrzeitToSet);
-            urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToSave);
-            // Fachliches Logging mit  SIEM
-            try {
-                MDC.put("eid", "EROEFFNUNG");
-                MDC.put("result", "0");
-                log.info("openingTime={}|", urnenwahlSchliessungsUhrzeitToSave.getSchliessungsuhrzeit());
-            } finally {
-                MDC.remove("eid");
-                MDC.remove("result");
-            }
-        } catch (final Exception e) {
-            log.error("Fehler beim speichern: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

@@ -12,18 +12,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EreignisValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETEREIGNIS_SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+  public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETEREIGNIS_SUCHKRITERIEN_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validEreignisAndWahlbezirkIDOrThrow(final EreignisseModel ereignis) {
-        if (ereignis == null || StringUtils.isBlank(ereignis.wahlbezirkID())) {
-            log.warn("#postEreignis: Parameter unvollständig");
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTEREIGNIS_PARAMS_UNVOLLSTAENDIG);
-        }
+  public void validEreignisAndWahlbezirkIDOrThrow(final EreignisseModel ereignis) {
+    if (ereignis == null || StringUtils.isBlank(ereignis.wahlbezirkID())) {
+      log.warn("#postEreignis: Parameter unvollständig");
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POSTEREIGNIS_PARAMS_UNVOLLSTAENDIG);
     }
+  }
 }

@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ReferendumvorlagenRepository extends CrudRepository<Referendumvorlagen, UUID> {
 
-    Optional<Referendumvorlagen> findFirstByWahlbezirkIDAndWahlID(String wahlbezirkID, String wahlID);
+  Optional<Referendumvorlagen> findFirstByWahlbezirkIDAndWahlID(String wahlbezirkID, String wahlID);
 }

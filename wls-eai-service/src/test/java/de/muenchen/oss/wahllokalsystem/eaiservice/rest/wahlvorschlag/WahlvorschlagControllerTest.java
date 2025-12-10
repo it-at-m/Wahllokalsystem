@@ -19,59 +19,68 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlvorschlagControllerTest {
 
-    @Mock
-    WahlvorschlagService wahlvorschlagService;
+  @Mock WahlvorschlagService wahlvorschlagService;
 
-    @InjectMocks
-    WahlvorschlagController unitUnderTest;
+  @InjectMocks WahlvorschlagController unitUnderTest;
 
-    @Nested
-    class LoadWahlvorschlaege {
+  @Nested
+  class LoadWahlvorschlaege {
 
-        @Test
-        void should_loadWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "stimmzettelgebietID";
+    @Test
+    void should_loadWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "stimmzettelgebietID";
 
-            val wahlvorschlaegeFromService = new WahlvorschlaegeDTO(wahlbezirkID, wahlID, stimmzettelgebietID, Collections.emptySet());
+      val wahlvorschlaegeFromService =
+          new WahlvorschlaegeDTO(wahlbezirkID, wahlID, stimmzettelgebietID, Collections.emptySet());
 
-            Mockito.when(wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID)).thenReturn(wahlvorschlaegeFromService);
+      Mockito.when(
+              wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID))
+          .thenReturn(wahlvorschlaegeFromService);
 
-            Assertions.assertThat(unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)).isSameAs(wahlvorschlaegeFromService);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID))
+          .isSameAs(wahlvorschlaegeFromService);
     }
+  }
 
-    @Nested
-    class LoadReferendumvorlagen {
+  @Nested
+  class LoadReferendumvorlagen {
 
-        @Test
-        void should_loadReferendumvorlagen_when_givenValidWahlIDAndWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "stimmzettelgebietID";
+    @Test
+    void should_loadReferendumvorlagen_when_givenValidWahlIDAndWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "stimmzettelgebietID";
 
-            val referendumVorlagenFromService = new ReferendumvorlagenDTO(wahlbezirkID, Collections.emptySet());
+      val referendumVorlagenFromService =
+          new ReferendumvorlagenDTO(wahlbezirkID, Collections.emptySet());
 
-            Mockito.when(wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID)).thenReturn(referendumVorlagenFromService);
+      Mockito.when(
+              wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID))
+          .thenReturn(referendumVorlagenFromService);
 
-            Assertions.assertThat(unitUnderTest.loadReferendumvorlagen(wahlID, wahlbezirkID)).isSameAs(referendumVorlagenFromService);
-        }
+      Assertions.assertThat(unitUnderTest.loadReferendumvorlagen(wahlID, wahlbezirkID))
+          .isSameAs(referendumVorlagenFromService);
     }
+  }
 
-    @Nested
-    class LoadWahlvorschlaegeListe {
+  @Nested
+  class LoadWahlvorschlaegeListe {
 
-        @Test
-        void should_loadListOfWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
-            val wahltag = LocalDate.of(2024, 10, 10);
-            val wahlID = "wahlID";
+    @Test
+    void should_loadListOfWahlvorschlaege_when_givenValidWahlIDAndWahlbezirkID() {
+      val wahltag = LocalDate.of(2024, 10, 10);
+      val wahlID = "wahlID";
 
-            val wahlvorschlaegeListeFromService = new WahlvorschlaegeListeDTO(wahlID, Collections.emptySet());
+      val wahlvorschlaegeListeFromService =
+          new WahlvorschlaegeListeDTO(wahlID, Collections.emptySet());
 
-            Mockito.when(wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID)).thenReturn(wahlvorschlaegeListeFromService);
+      Mockito.when(wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID))
+          .thenReturn(wahlvorschlaegeListeFromService);
 
-            Assertions.assertThat(unitUnderTest.loadWahlvorschlaegeListe(wahltag, wahlID)).isSameAs(wahlvorschlaegeListeFromService);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahlvorschlaegeListe(wahltag, wahlID))
+          .isSameAs(wahlvorschlaegeListeFromService);
     }
+  }
 }

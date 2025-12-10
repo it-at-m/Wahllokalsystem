@@ -4,6 +4,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorre
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFilenamingAndDependencies.service.DataModelClass;
 
 public record IncorrectDependenciesDTO() {
-    static ExampleDTO exampleDTO = new ExampleDTO();
-    static DataModelClass dataModelClass = new DataModelClass();
+  static ExampleDTO exampleDTO = new ExampleDTO();
+  static DataModelClass dataModelClass = new DataModelClass();
 }

@@ -24,78 +24,105 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ClassRulesTest {
 
-    static final String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFileNamingAndDependencies";
-    static final String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH = "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies";
+  static final String INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH =
+      "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFileNamingAndDependencies";
+  static final String CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH =
+      "de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies";
 
-    @ParameterizedTest
-    @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
-    void should_throwError_when_ruleNotSatisfied(ArchRule ruleUnderTest, String packageString) {
-        JavaClasses classes = new ClassFileImporter().importPackages(packageString);
+  @ParameterizedTest
+  @MethodSource("getRulesAndMatchingTestClassesThrowingErrors")
+  void should_throwError_when_ruleNotSatisfied(ArchRule ruleUnderTest, String packageString) {
+    JavaClasses classes = new ClassFileImporter().importPackages(packageString);
 
-        Assertions.assertThatThrownBy(() -> ruleUnderTest.check(classes)).isInstanceOf(AssertionError.class);
-    }
+    Assertions.assertThatThrownBy(() -> ruleUnderTest.check(classes))
+        .isInstanceOf(AssertionError.class);
+  }
 
-    @ParameterizedTest
-    @MethodSource("getRulesAndMatchingTestClassesNotThrowingErrors")
-    void should_throwNoError_when_ruleSatisfied(ArchRule ruleUnderTest, String packageString) {
-        JavaClasses classes = new ClassFileImporter().importPackages(packageString);
+  @ParameterizedTest
+  @MethodSource("getRulesAndMatchingTestClassesNotThrowingErrors")
+  void should_throwNoError_when_ruleSatisfied(ArchRule ruleUnderTest, String packageString) {
+    JavaClasses classes = new ClassFileImporter().importPackages(packageString);
 
-        Assertions.assertThatCode(() -> ruleUnderTest.check(classes)).doesNotThrowAnyException();
-    }
+    Assertions.assertThatCode(() -> ruleUnderTest.check(classes)).doesNotThrowAnyException();
+  }
 
-    private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
-        return Stream.of(
-                Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
-                Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
-                        INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
-    }
+  private static Stream<Arguments> getRulesAndMatchingTestClassesThrowingErrors() {
+    return Stream.of(
+        Arguments.of(
+            RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
+        Arguments.of(
+            RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
+        Arguments.of(
+            RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
+            INCORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
+  }
 
-    private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
-        return Stream.of(
-                Arguments.of(RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
-                Arguments.of(RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
-                Arguments.of(RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
-                        CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
-    }
+  private static Stream<Arguments> getRulesAndMatchingTestClassesNotThrowingErrors() {
+    return Stream.of(
+        Arguments.of(
+            RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
+        Arguments.of(
+            RULE_DATAMODEL_IN_SERVICE_ENDS_WITH_MODEL_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".service"),
+        Arguments.of(
+            RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".domain"),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH + ".rest"),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_SERVICE_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH),
+        Arguments.of(
+            RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED,
+            CORRECT_FILENAMING_AND_DEPENDENCIES_PACKAGE_PATH));
+  }
 }

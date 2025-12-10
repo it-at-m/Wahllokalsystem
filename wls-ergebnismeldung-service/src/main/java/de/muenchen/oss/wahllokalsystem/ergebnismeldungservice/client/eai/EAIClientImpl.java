@@ -25,48 +25,56 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EAIClientImpl implements AWerteClient, EaiClient {
 
-    private final WahldatenControllerApi wahldatenControllerApi;
-    private final ErgebnismeldungControllerApi ergebnismeldungControllerApi;
+  private final WahldatenControllerApi wahldatenControllerApi;
+  private final ErgebnismeldungControllerApi ergebnismeldungControllerApi;
 
-    private final AWerteClientMapper aWerteClientMapper;
+  private final AWerteClientMapper aWerteClientMapper;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public List<AWerteModel> getAWerte(final String wahlbezirkID) {
-        final List<WahlberechtigteDTO> wahlberechtigteDTOSet;
-        try {
-            wahlberechtigteDTOSet = wahldatenControllerApi.loadWahlberechtigte(wahlbezirkID);
-        } catch (final Exception exception) {
-            log.info("exception on getAWerte from external", exception);
-            return null;
-        }
-        return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(wahlberechtigteDTOSet);
+  @Override
+  public List<AWerteModel> getAWerte(final String wahlbezirkID) {
+    final List<WahlberechtigteDTO> wahlberechtigteDTOSet;
+    try {
+      wahlberechtigteDTOSet = wahldatenControllerApi.loadWahlberechtigte(wahlbezirkID);
+    } catch (final Exception exception) {
+      log.info("exception on getAWerte from external", exception);
+      return null;
     }
+    return aWerteClientMapper.fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(
+        wahlberechtigteDTOSet);
+  }
 
-    @Override
-    public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
-        try {
-            ergebnismeldungControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
-        } catch (final Exception exception) {
-            log.warn("Failed to save Ergebnismeldung: {}. Exception: {}", ergebnismeldungDTO, exception.getMessage());
-            simLogging(Objects.requireNonNull(ergebnismeldungDTO.getMeldungsart(), "Ergebnismeldung Meldungsart is null"));
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
-        }
+  @Override
+  public void sendErgebnismeldung(final ErgebnismeldungDTO ergebnismeldungDTO) {
+    try {
+      ergebnismeldungControllerApi.saveErgebnismeldung(ergebnismeldungDTO);
+    } catch (final Exception exception) {
+      log.warn(
+          "Failed to save Ergebnismeldung: {}. Exception: {}",
+          ergebnismeldungDTO,
+          exception.getMessage());
+      simLogging(
+          Objects.requireNonNull(
+              ergebnismeldungDTO.getMeldungsart(), "Ergebnismeldung Meldungsart is null"));
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
     }
+  }
 
-    private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
-        try {
-            val mdcEIDValue = switch (meldungsart) {
+  private void simLogging(final ErgebnismeldungDTO.MeldungsartEnum meldungsart) {
+    try {
+      val mdcEIDValue =
+          switch (meldungsart) {
             case NIEDERSCHRIFT -> "NIEDERSCHRIFT_GESENDET";
             case SCHNELLMELDUNG -> "SCHNELLMELDUNG_GESENDET";
-            };
-            MDC.put("eid", mdcEIDValue);
-            MDC.put("result", "3");
-            log.info("AOUEAI nicht erreichbar!");
-        } finally {
-            MDC.remove("eid");
-            MDC.remove("result");
-        }
+          };
+      MDC.put("eid", mdcEIDValue);
+      MDC.put("result", "3");
+      log.info("AOUEAI nicht erreichbar!");
+    } finally {
+      MDC.remove("eid");
+      MDC.remove("result");
     }
+  }
 }

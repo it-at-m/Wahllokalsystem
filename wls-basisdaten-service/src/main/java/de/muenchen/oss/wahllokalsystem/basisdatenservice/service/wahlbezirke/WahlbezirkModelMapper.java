@@ -9,8 +9,9 @@ import org.mapstruct.Mapper;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlbezirkModelMapper {
 
-    Collection<Wahlbezirk> fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(Collection<WahlbezirkModel> wahlbezirkModelList);
+  Collection<Wahlbezirk> fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
+      Collection<WahlbezirkModel> wahlbezirkModelList);
 
-    List<WahlbezirkModel> fromListOfWahlbezirkEntityToListOfWahlbezirkModel(List<Wahlbezirk> wahlbezirkEntityList);
-
+  List<WahlbezirkModel> fromListOfWahlbezirkEntityToListOfWahlbezirkModel(
+      List<Wahlbezirk> wahlbezirkEntityList);
 }

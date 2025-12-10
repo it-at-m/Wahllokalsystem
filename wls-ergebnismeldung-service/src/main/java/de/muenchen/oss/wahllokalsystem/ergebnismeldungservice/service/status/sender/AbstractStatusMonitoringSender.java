@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class AbstractStatusMonitoringSender {
 
-    private final StatusClient monitoringClient;
+  private final StatusClient monitoringClient;
 
-    public abstract void submitStatus(BezirkUndWahlID id, StatusModel newStatus, @Nullable StatusModel oldStatus);
+  public abstract void submitStatus(
+      BezirkUndWahlID id, StatusModel newStatus, @Nullable StatusModel oldStatus);
 }

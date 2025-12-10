@@ -23,52 +23,75 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahllokalZustandValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    WahllokalZustandValidator unitUnderTest;
+  @InjectMocks WahllokalZustandValidator unitUnderTest;
 
-    @Nested
-    class ValidWahllokalZustandOrThrow {
+  @Nested
+  class ValidWahllokalZustandOrThrow {
 
-        @ParameterizedTest(name = "{1}")
-        @MethodSource("minimalValidWahllokalZustandDTOArguments")
-        void should_notThrowAnyException_when_wahllokalZustandGivenWithMinimalDataIsValid(final ArgumentsAccessor arguments) {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahllokalZustandOrThrow(arguments.get(0, WahllokalZustandDTO.class)));
-        }
-
-        @Test
-        void should_throwException_when_argumentIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("parameter is null");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahllokalZustandOrThrow(null)).isSameAs(mockedWlsException);
-        }
-
-        @ParameterizedTest(name = "{1}")
-        @MethodSource("invalidWahlbezirkIDArguments")
-        void should_throwException_when_wahlbezirkIdIsMissing(final ArgumentsAccessor arguments) {
-            val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("wahlbezirkID is null");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(
-                    ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahllokalZustandOrThrow(arguments.get(0, WahllokalZustandDTO.class)))
-                    .isSameAs(mockedWlsException);
-        }
-
-        public static Stream<Arguments> minimalValidWahllokalZustandDTOArguments() {
-            return Stream.of(
-                    Arguments.of(new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet()), "Set is empty"),
-                    Arguments.of(new WahllokalZustandDTO("wahlbezirkID", null, null, null), "Set is null"));
-        }
-
-        public static Stream<Arguments> invalidWahlbezirkIDArguments() {
-            return Stream.of(
-                    Arguments.of(new WahllokalZustandDTO(null, null, null, Collections.emptySet()), "wahlbezirkID is null"),
-                    Arguments.of(new WahllokalZustandDTO("", null, null, Collections.emptySet()), "wahlbezirkID is empty string"),
-                    Arguments.of(new WahllokalZustandDTO("   ", null, null, Collections.emptySet()), "wahlbezirkID is blank string"));
-        }
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("minimalValidWahllokalZustandDTOArguments")
+    void should_notThrowAnyException_when_wahllokalZustandGivenWithMinimalDataIsValid(
+        final ArgumentsAccessor arguments) {
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahllokalZustandOrThrow(
+                      arguments.get(0, WahllokalZustandDTO.class)));
     }
+
+    @Test
+    void should_throwException_when_argumentIsNull() {
+      val mockedWlsException =
+          FachlicheWlsException.withCode("000").buildWithMessage("parameter is null");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWahllokalZustandOrThrow(null))
+          .isSameAs(mockedWlsException);
+    }
+
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("invalidWahlbezirkIDArguments")
+    void should_throwException_when_wahlbezirkIdIsMissing(final ArgumentsAccessor arguments) {
+      val mockedWlsException =
+          FachlicheWlsException.withCode("000").buildWithMessage("wahlbezirkID is null");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahllokalZustandOrThrow(
+                      arguments.get(0, WahllokalZustandDTO.class)))
+          .isSameAs(mockedWlsException);
+    }
+
+    public static Stream<Arguments> minimalValidWahllokalZustandDTOArguments() {
+      return Stream.of(
+          Arguments.of(
+              new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet()),
+              "Set is empty"),
+          Arguments.of(new WahllokalZustandDTO("wahlbezirkID", null, null, null), "Set is null"));
+    }
+
+    public static Stream<Arguments> invalidWahlbezirkIDArguments() {
+      return Stream.of(
+          Arguments.of(
+              new WahllokalZustandDTO(null, null, null, Collections.emptySet()),
+              "wahlbezirkID is null"),
+          Arguments.of(
+              new WahllokalZustandDTO("", null, null, Collections.emptySet()),
+              "wahlbezirkID is empty string"),
+          Arguments.of(
+              new WahllokalZustandDTO("   ", null, null, Collections.emptySet()),
+              "wahlbezirkID is blank string"));
+    }
+  }
 }

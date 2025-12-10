@@ -12,19 +12,22 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ClientConfiguration {
 
-    @Bean
-    public RestTemplate restTemplate(final RestTemplateBuilder builder, final WlsResponseErrorHandler wlsResponseErrorHandler,
-            final OAuth2TokenInterceptor oAuth2TokenInterceptor, final ObjectMapper objectMapper) {
+  @Bean
+  public RestTemplate restTemplate(
+      final RestTemplateBuilder builder,
+      final WlsResponseErrorHandler wlsResponseErrorHandler,
+      final OAuth2TokenInterceptor oAuth2TokenInterceptor,
+      final ObjectMapper objectMapper) {
 
-        return builder
-                .additionalMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
-                .errorHandler(wlsResponseErrorHandler)
-                .additionalInterceptors(oAuth2TokenInterceptor)
-                .build();
-    }
+    return builder
+        .additionalMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+        .errorHandler(wlsResponseErrorHandler)
+        .additionalInterceptors(oAuth2TokenInterceptor)
+        .build();
+  }
 
-    @Bean
-    public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
-        return new WlsResponseErrorHandler(objectMapper);
-    }
+  @Bean
+  public WlsResponseErrorHandler wlsResponseErrorHandler(final ObjectMapper objectMapper) {
+    return new WlsResponseErrorHandler(objectMapper);
+  }
 }

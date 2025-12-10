@@ -33,13 +33,21 @@ export function useRules() {
     createTodayWithTime(value) <= new Date() ||
     `Eingabe darf nicht in der Zukunft liegen.`;
 
-  const timeGreaterOrEqual = (compareValue: string) => (value: string) =>
-    createTodayWithTime(value) >= createTodayWithTime(compareValue) ||
-    `Eingabe muss größer oder gleich ${compareValue} sein.`;
+  const timeGreaterOrEqual = (compareValue: string) => (value: string) => {
+    let formattedErrorValue = _formatToHhMm(compareValue);
+    return (
+      createTodayWithTime(value) >= createTodayWithTime(compareValue) ||
+      `Eingabe muss größer oder gleich ${formattedErrorValue} sein.`
+    );
+  };
 
-  const timeLessOrEqual = (compareValue: string) => (value: string) =>
-    createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
-    `Eingabe muss kleiner oder gleich ${compareValue} sein.`;
+  const timeLessOrEqual = (compareValue: string) => (value: string) => {
+    let formattedErrorValue = _formatToHhMm(compareValue);
+    return (
+      createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
+      `Eingabe muss kleiner oder gleich ${formattedErrorValue} sein.`
+    );
+  };
 
   const dateNotInFuture = (value: string) => {
     const date = new Date(value);
@@ -62,6 +70,17 @@ export function useRules() {
       return `Ungültiges Datum`;
     }
   };
+
+  function _formatToHhMm(compareValue: string) {
+    let formattedErrorValue;
+    if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(compareValue)) {
+      const parts = compareValue.split(":");
+      const hh = parts[0];
+      const mm = parts[1];
+      formattedErrorValue = hh + ":" + mm;
+    }
+    return formattedErrorValue;
+  }
 
   return {
     required,

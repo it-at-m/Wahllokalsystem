@@ -140,6 +140,20 @@ describe("Validation rules", () => {
         expect(rule(input)).toBeTypeOf("string");
       }
     );
+
+    it("should_returnHhMmFormattedValueInErrorMessage_when_compareValueIsHhMmSs", () => {
+      const rule = timeGreaterOrEqual("16:00:00");
+      expect(rule("15:00")).toStrictEqual(
+        "Eingabe muss größer oder gleich 16:00 sein."
+      );
+    });
+
+    it("should_returnHhMmFormattedValueInErrorMessage_when_compareValueIsHhMm", () => {
+      const rule = timeGreaterOrEqual("16:00");
+      expect(rule("15:00")).toStrictEqual(
+        "Eingabe muss größer oder gleich 16:00 sein."
+      );
+    });
   });
 
   describe("timeLessOrEqual", () => {
@@ -165,6 +179,20 @@ describe("Validation rules", () => {
         expect(rule(input)).toBeTypeOf("string");
       }
     );
+
+    it("should_returnHhMmFormattedValueInErrorMessage_when_CompareValueIsHhMmSs", () => {
+      const rule = timeLessOrEqual("16:00:00");
+      expect(rule("17:00")).toStrictEqual(
+        "Eingabe muss kleiner oder gleich 16:00 sein."
+      );
+    });
+
+    it("should_returnHhMmFormattedValueInErrorMessage_when_CompareValueIsHhMm", () => {
+      const rule = timeLessOrEqual("16:00");
+      expect(rule("17:00")).toStrictEqual(
+        "Eingabe muss kleiner oder gleich 16:00 sein."
+      );
+    });
   });
 
   describe("dateNotInFuture", () => {

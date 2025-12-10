@@ -2,5 +2,6 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorl
 
 public interface ReferendumvorlagenClient {
 
-    ReferendumvorlagenModel getReferendumvorlagen(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel);
+  ReferendumvorlagenModel getReferendumvorlagen(
+      ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel);
 }

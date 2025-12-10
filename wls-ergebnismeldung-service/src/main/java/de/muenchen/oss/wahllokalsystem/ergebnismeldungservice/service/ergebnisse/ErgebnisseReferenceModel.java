@@ -5,7 +5,5 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record ErgebnisseReferenceModel(@NotNull String wahlbezirkID,
-                                       @NotNull String wahlID,
-                                       @NotNull StapelartModel stapelart) {
-}
+public record ErgebnisseReferenceModel(
+    @NotNull String wahlbezirkID, @NotNull String wahlID, @NotNull StapelartModel stapelart) {}

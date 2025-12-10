@@ -17,33 +17,35 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahltermindatenClientImpl implements WahltermindatenClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahltermindatenControllerApi wahltermindatenControllerApi;
+  private final WahltermindatenControllerApi wahltermindatenControllerApi;
 
-    @Override
-    public void putWahltermindaten(final String wahltagID) {
-        try {
-            wahltermindatenControllerApi.putWahltermindaten(wahltagID);
-        } catch (WlsException wlsException) {
-            log.debug("#putWahltermindaten found WlsException:", wlsException);
-            throw wlsException;
-        } catch (Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
+  @Override
+  public void putWahltermindaten(final String wahltagID) {
+    try {
+      wahltermindatenControllerApi.putWahltermindaten(wahltagID);
+    } catch (WlsException wlsException) {
+      log.debug("#putWahltermindaten found WlsException:", wlsException);
+      throw wlsException;
+    } catch (Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+  }
 
-    @Override
-    public void deleteWahltermindaten(final String wahltagID) {
-        log.debug("#deleteWahltermindaten");
+  @Override
+  public void deleteWahltermindaten(final String wahltagID) {
+    log.debug("#deleteWahltermindaten");
 
-        try {
-            wahltermindatenControllerApi.deleteWahltermindaten(wahltagID);
-        } catch (final WlsException wlsException) {
-            log.debug("#deleteWahltermindaten found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
+    try {
+      wahltermindatenControllerApi.deleteWahltermindaten(wahltagID);
+    } catch (final WlsException wlsException) {
+      log.debug("#deleteWahltermindaten found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+  }
 }

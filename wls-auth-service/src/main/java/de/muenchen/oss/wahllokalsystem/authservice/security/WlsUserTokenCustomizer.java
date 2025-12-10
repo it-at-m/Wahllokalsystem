@@ -12,21 +12,24 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 @Slf4j
 public class WlsUserTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Override
-    public void customize(JwtEncodingContext context) {
-        if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-            val user = userService.getUser(context.getPrincipal().getName());
-            if (user.isPresent()) {
-                context.getClaims().claims(claims -> {
-                    claims.put("wahlbezirksArt", user.get().wahlbezirksArt());
-                    claims.put("wahlbezirkID", user.get().wahlbezirkID());
-                    claims.put("wahlbezirkid_wahlnummer", user.get().wbid_wahlnummer());
+  @Override
+  public void customize(JwtEncodingContext context) {
+    if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+      val user = userService.getUser(context.getPrincipal().getName());
+      if (user.isPresent()) {
+        context
+            .getClaims()
+            .claims(
+                claims -> {
+                  claims.put("wahlbezirksArt", user.get().wahlbezirksArt());
+                  claims.put("wahlbezirkID", user.get().wahlbezirkID());
+                  claims.put("wahlbezirkid_wahlnummer", user.get().wbid_wahlnummer());
                 });
-            } else {
-                log.warn("no user found with {}", context.getPrincipal().getName());
-            }
-        }
+      } else {
+        log.warn("no user found with {}", context.getPrincipal().getName());
+      }
     }
+  }
 }

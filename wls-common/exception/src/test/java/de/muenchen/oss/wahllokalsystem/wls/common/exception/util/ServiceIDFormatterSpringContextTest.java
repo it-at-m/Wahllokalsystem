@@ -9,15 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = ServiceIDFormatter.class, properties = "service.info.oid=My app name")
 class ServiceIDFormatterSpringContextTest {
 
-    @Autowired
-    ServiceIDFormatter serviceIDFormatter;
+  @Autowired ServiceIDFormatter serviceIDFormatter;
 
-    @Nested
-    class GetId {
+  @Nested
+  class GetId {
 
-        @Test
-        void should_returnServiceId_when_propertyIsDefinedInSpringContext() {
-            Assertions.assertThat(serviceIDFormatter.getId()).contains("My app name");
-        }
+    @Test
+    void should_returnServiceId_when_propertyIsDefinedInSpringContext() {
+      Assertions.assertThat(serviceIDFormatter.getId()).contains("My app name");
     }
+  }
 }

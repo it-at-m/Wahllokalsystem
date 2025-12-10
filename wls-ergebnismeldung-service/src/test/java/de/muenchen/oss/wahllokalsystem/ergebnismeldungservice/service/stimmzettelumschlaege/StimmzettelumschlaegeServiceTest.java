@@ -25,141 +25,163 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StimmzettelumschlaegeServiceTest {
 
-    @Mock
-    StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
+  @Mock StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
 
-    @Mock
-    StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
+  @Mock StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
 
-    @Mock
-    StimmzettelumschlaegeValidator stimmzettelumschlaegeValidator;
+  @Mock StimmzettelumschlaegeValidator stimmzettelumschlaegeValidator;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    AuthenticationService authenticationService;
+  @Mock AuthenticationService authenticationService;
 
-    @InjectMocks
-    StimmzettelumschlaegeService unitUnderTest;
+  @InjectMocks StimmzettelumschlaegeService unitUnderTest;
 
-    @Nested
-    class GetStimmzettelumschlaege {
+  @Nested
+  class GetStimmzettelumschlaege {
 
-        @Test
-        void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
-            val id = new BezirkUndWahlID();
+    @Test
+    void should_submitFachlicheWlsExceptionForParameter_when_callingValidator() {
+      val id = new BezirkUndWahlID();
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
 
-            unitUnderTest.getStimmzettelumschlaege(id);
+      unitUnderTest.getStimmzettelumschlaege(id);
 
-            Mockito.verify(stimmzettelumschlaegeValidator).validBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
-        }
-
-        @Test
-        void should_returnStimmzettelumschlaegeModel_when_stimmzettelumschlaegeIsFoundFromRepo() {
-            val id = new BezirkUndWahlID();
-
-            val mockedEntity = new Stimmzettelumschlaege();
-            val mockedMappedEntityAsModel = new StimmzettelumschlaegeModel(id, null, 0, 0);
-
-            Mockito.when(stimmzettelumschlaegeRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
-            Mockito.when(stimmzettelumschlaegeModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
-
-            val result = unitUnderTest.getStimmzettelumschlaege(id);
-
-            Assertions.assertThat(result).isEqualTo(Optional.of(mockedMappedEntityAsModel));
-        }
-
-        @Test
-        void should_returnEmptyOptional_when_stimmzettelumschlaegeIsNotFoundFromRepo() {
-            val id = new BezirkUndWahlID();
-
-            Mockito.when(stimmzettelumschlaegeRepository.findById(id)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getStimmzettelumschlaege(id);
-
-            Assertions.assertThat(result).isEmpty();
-        }
+      Mockito.verify(stimmzettelumschlaegeValidator)
+          .validBezirkUndWahlIdOrThrow(eq(id), eq(mockedWlsException));
     }
 
-    @Nested
-    class SetStimmzettelumschlaege {
+    @Test
+    void should_returnStimmzettelumschlaegeModel_when_stimmzettelumschlaegeIsFoundFromRepo() {
+      val id = new BezirkUndWahlID();
 
-        private static final String JWT_DETAIL_WAHLBEZIRKSART_KEY = "wahlbezirksArt";
+      val mockedEntity = new Stimmzettelumschlaege();
+      val mockedMappedEntityAsModel = new StimmzettelumschlaegeModel(id, null, 0, 0);
 
-        @Test
-        void should_callValidators_when_callingService() {
-            val id = new BezirkUndWahlID();
-            val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
+      Mockito.when(stimmzettelumschlaegeRepository.findById(id))
+          .thenReturn(Optional.of(mockedEntity));
+      Mockito.when(stimmzettelumschlaegeModelMapper.toModel(mockedEntity))
+          .thenReturn(mockedMappedEntityAsModel);
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+      val result = unitUnderTest.getStimmzettelumschlaege(id);
 
-            unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
-
-            Mockito.verify(stimmzettelumschlaegeValidator).validBezirkUndWahlIdOrThrow(id, mockedWlsException);
-            Mockito.verify(stimmzettelumschlaegeValidator).validStimmzettelumschlaegeOrThrow(stimmzettelumschlaegeToSet);
-            Mockito.verify(stimmzettelumschlaegeValidator).validHasBWBRequiredEroeffnungsUhrzeitOrThrow(eq(WahlbezirkArtModel.BWB),
-                    eq(stimmzettelumschlaegeToSet.urneneroeffnungsUhrzeit()));
-        }
-
-        @Test
-        void should_validateStimmzettelumschlaegeModel_when_called() {
-            val id = new BezirkUndWahlID();
-            val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
-
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
-
-            Mockito.verify(stimmzettelumschlaegeValidator).validStimmzettelumschlaegeOrThrow(stimmzettelumschlaegeToSet);
-        }
-
-        @Test
-        void should_saveMappedStimmzettelumschlaegeModel_when_called() {
-            val id = new BezirkUndWahlID();
-            val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
-
-            val mockedModelAsEntity = Mockito.mock(Stimmzettelumschlaege.class);
-
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
-            Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet)).thenReturn(mockedModelAsEntity);
-
-            unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
-
-            Mockito.verify(stimmzettelumschlaegeRepository).save(mockedModelAsEntity);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_savingFailed() {
-            val id = new BezirkUndWahlID();
-            val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
-
-            val mockedModelAsEntity = Mockito.mock(Stimmzettelumschlaege.class);
-            val mockedRepositorySaveException = new RuntimeException("saving failed");
-            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("save exception");
-
-            Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow()).thenReturn(WahlbezirkArtModel.BWB);
-            Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet)).thenReturn(mockedModelAsEntity);
-            Mockito.doThrow(mockedRepositorySaveException).when(stimmzettelumschlaegeRepository).save(mockedModelAsEntity);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE))
-                    .thenReturn(mockedExceptionFactoryWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet))
-                    .isSameAs(mockedExceptionFactoryWlsException);
-        }
-
-        private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(final BezirkUndWahlID id) {
-            return new StimmzettelumschlaegeModel(id, null, 0, 0);
-        }
+      Assertions.assertThat(result).isEqualTo(Optional.of(mockedMappedEntityAsModel));
     }
+
+    @Test
+    void should_returnEmptyOptional_when_stimmzettelumschlaegeIsNotFoundFromRepo() {
+      val id = new BezirkUndWahlID();
+
+      Mockito.when(stimmzettelumschlaegeRepository.findById(id)).thenReturn(Optional.empty());
+
+      val result = unitUnderTest.getStimmzettelumschlaege(id);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+  }
+
+  @Nested
+  class SetStimmzettelumschlaege {
+
+    private static final String JWT_DETAIL_WAHLBEZIRKSART_KEY = "wahlbezirksArt";
+
+    @Test
+    void should_callValidators_when_callingService() {
+      val id = new BezirkUndWahlID();
+      val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
+
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+          .thenReturn(WahlbezirkArtModel.BWB);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
+
+      Mockito.verify(stimmzettelumschlaegeValidator)
+          .validBezirkUndWahlIdOrThrow(id, mockedWlsException);
+      Mockito.verify(stimmzettelumschlaegeValidator)
+          .validStimmzettelumschlaegeOrThrow(stimmzettelumschlaegeToSet);
+      Mockito.verify(stimmzettelumschlaegeValidator)
+          .validHasBWBRequiredEroeffnungsUhrzeitOrThrow(
+              eq(WahlbezirkArtModel.BWB), eq(stimmzettelumschlaegeToSet.urneneroeffnungsUhrzeit()));
+    }
+
+    @Test
+    void should_validateStimmzettelumschlaegeModel_when_called() {
+      val id = new BezirkUndWahlID();
+      val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
+
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+          .thenReturn(WahlbezirkArtModel.BWB);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
+
+      Mockito.verify(stimmzettelumschlaegeValidator)
+          .validStimmzettelumschlaegeOrThrow(stimmzettelumschlaegeToSet);
+    }
+
+    @Test
+    void should_saveMappedStimmzettelumschlaegeModel_when_called() {
+      val id = new BezirkUndWahlID();
+      val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
+
+      val mockedModelAsEntity = Mockito.mock(Stimmzettelumschlaege.class);
+
+      Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+          .thenReturn(WahlbezirkArtModel.BWB);
+      Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet))
+          .thenReturn(mockedModelAsEntity);
+
+      unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet);
+
+      Mockito.verify(stimmzettelumschlaegeRepository).save(mockedModelAsEntity);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_savingFailed() {
+      val id = new BezirkUndWahlID();
+      val stimmzettelumschlaegeToSet = createStimmzettelumschlaegeModel(id);
+
+      val mockedModelAsEntity = Mockito.mock(Stimmzettelumschlaege.class);
+      val mockedRepositorySaveException = new RuntimeException("saving failed");
+      val mockedExceptionFactoryWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("save exception");
+
+      Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+          .thenReturn(WahlbezirkArtModel.BWB);
+      Mockito.when(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeToSet))
+          .thenReturn(mockedModelAsEntity);
+      Mockito.doThrow(mockedRepositorySaveException)
+          .when(stimmzettelumschlaegeRepository)
+          .save(mockedModelAsEntity);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE))
+          .thenReturn(mockedExceptionFactoryWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.setStimmzettelumschlaege(id, stimmzettelumschlaegeToSet))
+          .isSameAs(mockedExceptionFactoryWlsException);
+    }
+
+    private StimmzettelumschlaegeModel createStimmzettelumschlaegeModel(final BezirkUndWahlID id) {
+      return new StimmzettelumschlaegeModel(id, null, 0, 0);
+    }
+  }
 }

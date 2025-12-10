@@ -18,36 +18,37 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlbezirkeControllerTest {
 
-    @Mock
-    WahlbezirkeService wahlbezirkeService;
+  @Mock WahlbezirkeService wahlbezirkeService;
 
-    @Mock
-    WahlbezirkDTOMapper wahlbezirkDTOMapper;
+  @Mock WahlbezirkDTOMapper wahlbezirkDTOMapper;
 
-    @InjectMocks
-    WahlbezirkeController wahlbezirkeController;
+  @InjectMocks WahlbezirkeController wahlbezirkeController;
 
-    @Nested
-    class GetWahlbezirke {
+  @Nested
+  class GetWahlbezirke {
 
-        @Test
-        void should_returnWahlbezirkDTOList_when_serviceIsCalled() {
-            val wahlbezirkModels = List.of(
-                    WahlbezirkModel.builder().build(),
-                    WahlbezirkModel.builder().build(),
-                    WahlbezirkModel.builder().build());
+    @Test
+    void should_returnWahlbezirkDTOList_when_serviceIsCalled() {
+      val wahlbezirkModels =
+          List.of(
+              WahlbezirkModel.builder().build(),
+              WahlbezirkModel.builder().build(),
+              WahlbezirkModel.builder().build());
 
-            val wahlbezirkDTOs = List.of(
-                    WahlbezirkDTO.builder().build(),
-                    WahlbezirkDTO.builder().build(),
-                    WahlbezirkDTO.builder().build());
+      val wahlbezirkDTOs =
+          List.of(
+              WahlbezirkDTO.builder().build(),
+              WahlbezirkDTO.builder().build(),
+              WahlbezirkDTO.builder().build());
 
-            Mockito.when(wahlbezirkeService.getWahlbezirke(any())).thenReturn(wahlbezirkModels);
-            Mockito.when(wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(wahlbezirkModels)).thenReturn(wahlbezirkDTOs);
+      Mockito.when(wahlbezirkeService.getWahlbezirke(any())).thenReturn(wahlbezirkModels);
+      Mockito.when(
+              wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(wahlbezirkModels))
+          .thenReturn(wahlbezirkDTOs);
 
-            val result = wahlbezirkeController.getWahlbezirke("wahltagID");
+      val result = wahlbezirkeController.getWahlbezirke("wahltagID");
 
-            Assertions.assertThat(result).isEqualTo(wahlbezirkDTOs);
-        }
+      Assertions.assertThat(result).isEqualTo(wahlbezirkDTOs);
     }
+  }
 }

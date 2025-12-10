@@ -28,269 +28,361 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class KonfigurierterWahltagControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    KonfigurierterWahltagRepository konfigurierterWahltagRepository;
+  @Autowired KonfigurierterWahltagRepository konfigurierterWahltagRepository;
 
-    @MockitoSpyBean
-    KonfigurierterWahltagValidator konfigurierterWahltagValidator;
+  @MockitoSpyBean KonfigurierterWahltagValidator konfigurierterWahltagValidator;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG);
-        konfigurierterWahltagRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(
+        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+            .REPOSITORY_DELETE_KONFIGURIERTERWAHLTAG);
+    konfigurierterWahltagRepository.deleteAll();
+  }
+
+  @Nested
+  class GetKonfigurierterWahltag {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTERWAHLTAG
+        })
+    void should_returnNoContent_when_noDataFoundInRepository() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+
+      val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
 
-    @Nested
-    class GetKonfigurierterWahltag {
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG
+        })
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val konfigurierterWahltag1 =
+          new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+      val konfigurierterWahltag2 =
+          new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+      val konfigurierterWahltagExpected =
+          new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
-        )
-        void should_returnNoContent_when_noDataFoundInRepository() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+      konfigurierterWahltagRepository.save(konfigurierterWahltag1);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag2);
+      konfigurierterWahltagRepository.save(konfigurierterWahltagExpected);
 
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+      val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
 
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
-        )
-        void should_returnData_when_dataIsPresentInRepository() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
-            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
+      val expectedResponseBody =
+          new KonfigurierterWahltagDTO(
+              konfigurierterWahltagExpected.getWahltag(),
+              konfigurierterWahltagExpected.getWahltagID(),
+              WahltagStatus.AKTIV,
+              konfigurierterWahltagExpected.getNummer());
 
-            konfigurierterWahltagRepository.save(konfigurierterWahltag1);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag2);
-            konfigurierterWahltagRepository.save(konfigurierterWahltagExpected);
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
+    }
+  }
 
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+  @Nested
+  class PostKonfigurierterWahltag {
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_POST_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTERWAHLTAG
+        })
+    void should_persistAndFindData_when_noDataIsPresentInRepository() throws Exception {
+      // DB leer, Wahltag neu setzen mit WahltagStatus.AKTIV -> OK zurück mit empty body
+      val konfigurierterWahltagDTO =
+          new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.AKTIV, "4711");
+      val requestPost = createPostWithBody(konfigurierterWahltagDTO);
 
-            val expectedResponseBody = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(), konfigurierterWahltagExpected.getWahltagID(),
-                    WahltagStatus.AKTIV, konfigurierterWahltagExpected.getNummer());
+      val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
 
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-        }
+      Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
+
+      // vorher gesetzten Wahltag aus DB lesen -> OK zurück mit vorher gesetztem body
+      val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+      val responseGet = api.perform(requestGet).andExpect(status().isOk()).andReturn();
+      val responseGetBody =
+          objectMapper.readValue(
+              responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
+
+      val expectedResponseGetBody =
+          new KonfigurierterWahltagDTO(
+              konfigurierterWahltagDTO.wahltag(),
+              konfigurierterWahltagDTO.wahltagID(),
+              konfigurierterWahltagDTO.wahltagStatus(),
+              konfigurierterWahltagDTO.nummer());
+
+      Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
     }
 
-    @Nested
-    class PostKonfigurierterWahltag {
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_POST_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTERWAHLTAG
+        })
+    void should_persistAndNotFindData_when_noDataIsPresentInRepository() throws Exception {
+      // Dooffall: DB leer neu setzen mit WahltagStatus.INAKTIV -> OK zurück mit empty body
+      val konfigurierterWahltagDTO =
+          new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
+      val requestPost = createPostWithBody(konfigurierterWahltagDTO);
 
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
-        )
-        void should_persistAndFindData_when_noDataIsPresentInRepository() throws Exception {
-            // DB leer, Wahltag neu setzen mit WahltagStatus.AKTIV -> OK zurück mit empty body
-            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.AKTIV, "4711");
-            val requestPost = createPostWithBody(konfigurierterWahltagDTO);
+      val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
 
-            val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
+      Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
 
-            Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
+      // vorher gesetzten Wahltag lesen -> OK zurück mit empty body weil kein aktiver Wahltag
+      // gefunden
+      val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+      val responseGet = api.perform(requestGet).andExpect(status().isNoContent()).andReturn();
 
-            // vorher gesetzten Wahltag aus DB lesen -> OK zurück mit vorher gesetztem body
-            val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
-            val responseGet = api.perform(requestGet).andExpect(status().isOk()).andReturn();
-            val responseGetBody = objectMapper.readValue(responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
-
-            val expectedResponseGetBody = new KonfigurierterWahltagDTO(konfigurierterWahltagDTO.wahltag(), konfigurierterWahltagDTO.wahltagID(),
-                    konfigurierterWahltagDTO.wahltagStatus(), konfigurierterWahltagDTO.nummer());
-
-            Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
-        )
-        void should_persistAndNotFindData_when_noDataIsPresentInRepository() throws Exception {
-            // Dooffall: DB leer neu setzen mit WahltagStatus.INAKTIV -> OK zurück mit empty body
-            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "1-2-3", WahltagStatus.INAKTIV, "4711");
-            val requestPost = createPostWithBody(konfigurierterWahltagDTO);
-
-            val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
-
-            Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
-
-            // vorher gesetzten Wahltag lesen -> OK zurück mit empty body weil kein aktiver Wahltag gefunden
-            val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
-            val responseGet = api.perform(requestGet).andExpect(status().isNoContent()).andReturn();
-
-            Assertions.assertThat(responseGet.getResponse().getContentAsString()).isEmpty();
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_POST_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTERWAHLTAG,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTERWAHLTAG }
-        )
-        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
-            // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8-", true, "8888");
-            val konfigurierterWahltagExpected = new KonfigurierterWahltag(LocalDate.now(), "9-10-11", true, "0103");
-
-            konfigurierterWahltagRepository.save(konfigurierterWahltag1);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag2);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag3);
-
-            val konfigurierterWahltagPostDTO = new KonfigurierterWahltagDTO(konfigurierterWahltagExpected.getWahltag(),
-                    konfigurierterWahltagExpected.getWahltagID(),
-                    WahltagStatus.AKTIV, konfigurierterWahltagExpected.getNummer());
-            val requestPost = createPostWithBody(konfigurierterWahltagPostDTO);
-
-            val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
-
-            Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
-
-            // überschriebenen Wahltag aus DB lesen -> OK zurück mit vorher gesetztem body
-            val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
-            val responseGet = api.perform(requestGet).andExpect(status().isOk()).andReturn();
-            val responseGetBody = objectMapper.readValue(responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
-
-            val expectedResponseGetBody = new KonfigurierterWahltagDTO(konfigurierterWahltagPostDTO.wahltag(), konfigurierterWahltagPostDTO.wahltagID(),
-                    konfigurierterWahltagPostDTO.wahltagStatus(), konfigurierterWahltagPostDTO.nummer());
-
-            Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
-        }
-
+      Assertions.assertThat(responseGet.getResponse().getContentAsString()).isEmpty();
     }
 
-    private MockHttpServletRequestBuilder createPostWithBody(final KonfigurierterWahltagDTO requestDTO) throws Exception {
-        return MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestDTO));
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_POST_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTERWAHLTAG,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTERWAHLTAG
+        })
+    void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+      // DB hat aktiven Wahltag, überschreiben mit neuem Wahltag -> -> OK zurück mit empty body
+      val konfigurierterWahltag1 =
+          new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+      val konfigurierterWahltag2 =
+          new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+      val konfigurierterWahltag3 =
+          new KonfigurierterWahltag(LocalDate.now(), "6-7-8-", true, "8888");
+      val konfigurierterWahltagExpected =
+          new KonfigurierterWahltag(LocalDate.now(), "9-10-11", true, "0103");
+
+      konfigurierterWahltagRepository.save(konfigurierterWahltag1);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag2);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag3);
+
+      val konfigurierterWahltagPostDTO =
+          new KonfigurierterWahltagDTO(
+              konfigurierterWahltagExpected.getWahltag(),
+              konfigurierterWahltagExpected.getWahltagID(),
+              WahltagStatus.AKTIV,
+              konfigurierterWahltagExpected.getNummer());
+      val requestPost = createPostWithBody(konfigurierterWahltagPostDTO);
+
+      val responsePost = api.perform(requestPost).andExpect(status().isOk()).andReturn();
+
+      Assertions.assertThat(responsePost.getResponse().getContentAsString()).isEmpty();
+
+      // überschriebenen Wahltag aus DB lesen -> OK zurück mit vorher gesetztem body
+      val requestGet = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+      val responseGet = api.perform(requestGet).andExpect(status().isOk()).andReturn();
+      val responseGetBody =
+          objectMapper.readValue(
+              responseGet.getResponse().getContentAsString(), KonfigurierterWahltagDTO.class);
+
+      val expectedResponseGetBody =
+          new KonfigurierterWahltagDTO(
+              konfigurierterWahltagPostDTO.wahltag(),
+              konfigurierterWahltagPostDTO.wahltagID(),
+              konfigurierterWahltagPostDTO.wahltagStatus(),
+              konfigurierterWahltagPostDTO.nummer());
+
+      Assertions.assertThat(responseGetBody).isEqualTo(expectedResponseGetBody);
+    }
+  }
+
+  private MockHttpServletRequestBuilder createPostWithBody(
+      final KonfigurierterWahltagDTO requestDTO) throws Exception {
+    return MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag")
+        .with(csrf())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(requestDTO));
+  }
+
+  @Nested
+  class GetKonfigurierteWahltage {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTEWAHLTAGE,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_READ_KONFIGURIERTEWAHLTAGE
+        })
+    void should_returnOk_when_noDataFoundInRepository() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEqualTo("[]");
     }
 
-    @Nested
-    class GetKonfigurierteWahltage {
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .SERVICE_GET_KONFIGURIERTEWAHLTAGE,
+          Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG
+        })
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val konfigurierterWahltag1 =
+          new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+      val konfigurierterWahltag2 =
+          new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+      val konfigurierterWahltag3 =
+          new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE }
-        )
-        void should_returnOk_when_noDataFoundInRepository() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
+      konfigurierterWahltagRepository.save(konfigurierterWahltag1);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag2);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag3);
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEqualTo("[]");
-        }
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), KonfigurierterWahltagDTO[].class);
 
-        @Test
-        @WithMockUser(
-                authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.SERVICE_GET_KONFIGURIERTEWAHLTAGE,
-                        Authorities.REPOSITORY_READ_KONFIGURIERTEWAHLTAGE,
-                        de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG }
-        )
-        void should_returnData_when_dataIsPresentInRepository() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
+      val expectedResponseBodyDTO =
+          new KonfigurierterWahltagDTO[] {
+            new KonfigurierterWahltagDTO(
+                konfigurierterWahltag1.getWahltag(),
+                konfigurierterWahltag1.getWahltagID(),
+                WahltagStatus.INAKTIV,
+                konfigurierterWahltag1.getNummer()),
+            new KonfigurierterWahltagDTO(
+                konfigurierterWahltag2.getWahltag(),
+                konfigurierterWahltag2.getWahltagID(),
+                WahltagStatus.INAKTIV,
+                konfigurierterWahltag2.getNummer()),
+            new KonfigurierterWahltagDTO(
+                konfigurierterWahltag3.getWahltag(),
+                konfigurierterWahltag3.getWahltagID(),
+                WahltagStatus.AKTIV,
+                konfigurierterWahltag3.getNummer())
+          };
 
-            konfigurierterWahltagRepository.save(konfigurierterWahltag1);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag2);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag3);
+      Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseBodyDTO);
+    }
+  }
 
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
+  @Nested
+  class isWahltagActive {
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), KonfigurierterWahltagDTO[].class);
+    @Test
+    @WithMockUser(authorities = {})
+    void should_returnFalseAndStatusOk_when_noWahltagFound() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/5555");
 
-            val expectedResponseBodyDTO = new KonfigurierterWahltagDTO[] {
-                    new KonfigurierterWahltagDTO(konfigurierterWahltag1.getWahltag(), konfigurierterWahltag1.getWahltagID(),
-                            WahltagStatus.INAKTIV, konfigurierterWahltag1.getNummer()),
-                    new KonfigurierterWahltagDTO(konfigurierterWahltag2.getWahltag(), konfigurierterWahltag2.getWahltagID(),
-                            WahltagStatus.INAKTIV, konfigurierterWahltag2.getNummer()),
-                    new KonfigurierterWahltagDTO(konfigurierterWahltag3.getWahltag(), konfigurierterWahltag3.getWahltagID(),
-                            WahltagStatus.AKTIV, konfigurierterWahltag3.getNummer())
-            };
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
-            Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponseBodyDTO);
-        }
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEqualTo("false");
     }
 
-    @Nested
-    class isWahltagActive {
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG
+        })
+    void should_returnFalseAndStatusOk_when_noActiveWahltagFound() throws Exception {
+      val konfigurierterWahltag1 =
+          new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+      val konfigurierterWahltag2 =
+          new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+      val konfigurierterWahltag3 =
+          new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
 
-        @Test
-        @WithMockUser(authorities = {})
-        void should_returnFalseAndStatusOk_when_noWahltagFound() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/5555");
+      konfigurierterWahltagRepository.save(konfigurierterWahltag1);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag2);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag3);
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      // Wahltag inaktiv
+      val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/1-2-3");
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(response.getResponse().getContentAsString(), String.class);
+      val expectedResponseBody = "false";
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEqualTo("false");
-        }
-
-        @Test
-        @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
-        void should_returnFalseAndStatusOk_when_noActiveWahltagFound() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
-
-            konfigurierterWahltagRepository.save(konfigurierterWahltag1);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag2);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag3);
-
-            // Wahltag inaktiv
-            val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/1-2-3");
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), String.class);
-            val expectedResponseBody = "false";
-
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-        }
-
-        @Test
-        @WithMockUser(authorities = { de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities.REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG })
-        void should_returnTrueAndStatusOk_when_activeWahltagFound() throws Exception {
-            val konfigurierterWahltag1 = new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
-            val konfigurierterWahltag2 = new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
-            val konfigurierterWahltag3 = new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
-
-            konfigurierterWahltagRepository.save(konfigurierterWahltag1);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag2);
-            konfigurierterWahltagRepository.save(konfigurierterWahltag3);
-
-            val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/6-7-8");
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(), String.class);
-            val expectedResponseBody = "true";
-
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-        }
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
     }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          de.muenchen.oss.wahllokalsystem.infomanagementservice.utils.Authorities
+              .REPOSITORY_WRITE_KONFIGURIERTERWAHLTAG
+        })
+    void should_returnTrueAndStatusOk_when_activeWahltagFound() throws Exception {
+      val konfigurierterWahltag1 =
+          new KonfigurierterWahltag(LocalDate.now(), "1-2-3", false, "4711");
+      val konfigurierterWahltag2 =
+          new KonfigurierterWahltag(LocalDate.now(), "3-4-5", false, "0190");
+      val konfigurierterWahltag3 =
+          new KonfigurierterWahltag(LocalDate.now(), "6-7-8", true, "0103");
+
+      konfigurierterWahltagRepository.save(konfigurierterWahltag1);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag2);
+      konfigurierterWahltagRepository.save(konfigurierterWahltag3);
+
+      val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/6-7-8");
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(response.getResponse().getContentAsString(), String.class);
+      val expectedResponseBody = "true";
+
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
+    }
+  }
 }

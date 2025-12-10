@@ -23,22 +23,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Stimmabgabevermerke {
 
-    @EmbeddedId
-    @NotNull
-    private BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer;
+  @EmbeddedId @NotNull private BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer;
 
-    @NotNull
-    private long anzahlBlaetter;
+  @NotNull private long anzahlBlaetter;
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumns(
-        {
-                @JoinColumn(name = "wahlbezirkID", referencedColumnName = "wahlbezirkID"),
-                @JoinColumn(name = "waehlerverzeichnisNummer", referencedColumnName = "waehlerverzeichnisNummer")
-        }
-    )
-    @NotNull
-    @EqualsAndHashCode.Exclude
-    @Size(min = 1)
-    private Set<Wahldaten> wahldaten = new LinkedHashSet<>();
+  @OneToMany(
+      cascade = {CascadeType.ALL},
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
+  @JoinColumns({
+    @JoinColumn(name = "wahlbezirkID", referencedColumnName = "wahlbezirkID"),
+    @JoinColumn(
+        name = "waehlerverzeichnisNummer",
+        referencedColumnName = "waehlerverzeichnisNummer")
+  })
+  @NotNull @EqualsAndHashCode.Exclude
+  @Size(min = 1) private Set<Wahldaten> wahldaten = new LinkedHashSet<>();
 }

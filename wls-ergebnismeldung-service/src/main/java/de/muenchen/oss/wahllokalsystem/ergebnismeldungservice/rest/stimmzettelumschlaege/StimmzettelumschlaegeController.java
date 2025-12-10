@@ -23,41 +23,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StimmzettelumschlaegeController extends AbstractController {
 
-    private final StimmzettelumschlaegeService stimmzettelumschlaegeService;
-    private final StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
+  private final StimmzettelumschlaegeService stimmzettelumschlaegeService;
+  private final StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
 
-    @Operation(description = "Lesen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Es existiert eine Anzahl an Stimmzettelumschlaegen",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StimmzettelumschlaegeDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existiert keine Anzahl an Stimmzettelumschlaegen zu den entsprechenden Kriterien",
-                            content = { @Content() }
-                    )
-            }
-    )
-    @GetMapping("{wahlID}/{wahlbezirkID}")
-    public ResponseEntity<StimmzettelumschlaegeDTO> getStimmzettelumschlaege(@PathVariable("wahlID") final String wahlID,
-            @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val stimmzettelumschlaege = stimmzettelumschlaegeService.getStimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID));
-        return okWithBodyOrNoContent(stimmzettelumschlaege.map(stimmzettelumschlaegeDTOMapper::toDTO));
-    }
+  @Operation(
+      description = "Lesen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es existiert eine Anzahl an Stimmzettelumschlaegen",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = StimmzettelumschlaegeDTO.class))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description =
+                "Es existiert keine Anzahl an Stimmzettelumschlaegen zu den entsprechenden Kriterien",
+            content = {@Content()})
+      })
+  @GetMapping("{wahlID}/{wahlbezirkID}")
+  public ResponseEntity<StimmzettelumschlaegeDTO> getStimmzettelumschlaege(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val stimmzettelumschlaege =
+        stimmzettelumschlaegeService.getStimmzettelumschlaege(
+            new BezirkUndWahlID(wahlID, wahlbezirkID));
+    return okWithBodyOrNoContent(stimmzettelumschlaege.map(stimmzettelumschlaegeDTOMapper::toDTO));
+  }
 
-    @Operation(description = "Setzen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Anzahl an Stimmzettelumschlaegen erfolgreich gespeichert"
-                    )
-            }
-    )
-    @PostMapping("{wahlID}/{wahlbezirkID}")
-    public void postStimmzettelumschlaege(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final StimmzettelumschlaegeDTO stimmzettelumschlaegeDTO) {
-        stimmzettelumschlaegeService.setStimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID),
-                stimmzettelumschlaegeDTOMapper.toModel(stimmzettelumschlaegeDTO));
-    }
+  @Operation(
+      description = "Setzen der Anzahl an Stimmzettelumschlaegen eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Anzahl an Stimmzettelumschlaegen erfolgreich gespeichert")
+      })
+  @PostMapping("{wahlID}/{wahlbezirkID}")
+  public void postStimmzettelumschlaege(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final StimmzettelumschlaegeDTO stimmzettelumschlaegeDTO) {
+    stimmzettelumschlaegeService.setStimmzettelumschlaege(
+        new BezirkUndWahlID(wahlID, wahlbezirkID),
+        stimmzettelumschlaegeDTOMapper.toModel(stimmzettelumschlaegeDTO));
+  }
 }

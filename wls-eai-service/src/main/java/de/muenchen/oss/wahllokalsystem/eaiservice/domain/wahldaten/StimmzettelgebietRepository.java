@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface StimmzettelgebietRepository extends CrudRepository<Stimmzettelgebiet, UUID> {
 
-    List<Stimmzettelgebiet> findByWahlWahltagTagAndWahlWahltagNummer(LocalDate wahltag, String nummer);
+  List<Stimmzettelgebiet> findByWahlWahltagTagAndWahlWahltagNummer(
+      LocalDate wahltag, String nummer);
 }

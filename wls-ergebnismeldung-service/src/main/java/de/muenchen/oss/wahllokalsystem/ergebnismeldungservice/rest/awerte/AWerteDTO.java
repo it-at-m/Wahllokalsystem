@@ -5,8 +5,4 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record AWerteDTO(
-    @NotNull BezirkUndWahlID bezirkUndWahlID,
-    @NotNull long a1,
-    Long a2) {
-}
+public record AWerteDTO(@NotNull BezirkUndWahlID bezirkUndWahlID, @NotNull long a1, Long a2) {}

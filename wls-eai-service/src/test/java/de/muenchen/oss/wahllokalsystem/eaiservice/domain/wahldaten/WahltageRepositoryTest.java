@@ -13,33 +13,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = MicroServiceApplication.class)
 class WahltageRepositoryTest {
 
-    @Autowired
-    WahltageRepository wahltageRepository;
+  @Autowired WahltageRepository wahltageRepository;
 
-    @AfterEach
-    void teardown() {
-        wahltageRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    wahltageRepository.deleteAll();
+  }
+
+  @Nested
+  class FindByTagAfterOrTagEquals {
+
+    @Test
+    void should_returnWahltag_when_givenValidDates() {
+      val equalsDateString = "2024-07-03";
+      val afterDateString = "2024-08-02";
+
+      val wahltag1ToFind =
+          wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-03"), "beschreibung", "1"));
+      val wahltag2ToFind =
+          wahltageRepository.save(new Wahltag(LocalDate.parse("2024-08-03"), "beschreibung", "1"));
+      wahltageRepository.save(new Wahltag(LocalDate.parse("2024-08-02"), "beschreibung", "3"));
+      wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-02"), "beschreibung", "4"));
+      wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-04"), "beschreibung", "5"));
+
+      val result =
+          wahltageRepository.findByTagAfterOrTagEquals(
+              LocalDate.parse(afterDateString), LocalDate.parse(equalsDateString));
+
+      val expectedResult = new Wahltag[] {wahltag1ToFind, wahltag2ToFind};
+
+      Assertions.assertThat(result).containsOnly(expectedResult);
     }
-
-    @Nested
-    class FindByTagAfterOrTagEquals {
-
-        @Test
-        void should_returnWahltag_when_givenValidDates() {
-            val equalsDateString = "2024-07-03";
-            val afterDateString = "2024-08-02";
-
-            val wahltag1ToFind = wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-03"), "beschreibung", "1"));
-            val wahltag2ToFind = wahltageRepository.save(new Wahltag(LocalDate.parse("2024-08-03"), "beschreibung", "1"));
-            wahltageRepository.save(new Wahltag(LocalDate.parse("2024-08-02"), "beschreibung", "3"));
-            wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-02"), "beschreibung", "4"));
-            wahltageRepository.save(new Wahltag(LocalDate.parse("2024-07-04"), "beschreibung", "5"));
-
-            val result = wahltageRepository.findByTagAfterOrTagEquals(LocalDate.parse(afterDateString), LocalDate.parse(equalsDateString));
-
-            val expectedResult = new Wahltag[] { wahltag1ToFind, wahltag2ToFind };
-
-            Assertions.assertThat(result).containsOnly(expectedResult);
-        }
-    }
+  }
 }

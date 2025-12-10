@@ -9,19 +9,19 @@ import org.springframework.util.Assert;
 @Component
 public class JWTDetailRetriever implements AuthDetailRetriever {
 
-    @Override
-    public boolean canHandle(final Authentication authentication) {
-        Assert.notNull(authentication, "authentication must not be null");
-        return authentication instanceof JwtAuthenticationToken;
-    }
+  @Override
+  public boolean canHandle(final Authentication authentication) {
+    Assert.notNull(authentication, "authentication must not be null");
+    return authentication instanceof JwtAuthenticationToken;
+  }
 
-    public Optional<String> getDetail(final String detailKey, final Authentication authentication) {
-        Assert.notNull(authentication, "authentication must not be null");
-        Assert.notNull(detailKey, "detailKey must not be null");
-        if (authentication instanceof JwtAuthenticationToken jwtToken) {
-            return Optional.ofNullable(jwtToken.getToken().getClaimAsString(detailKey));
-        } else {
-            return Optional.empty();
-        }
+  public Optional<String> getDetail(final String detailKey, final Authentication authentication) {
+    Assert.notNull(authentication, "authentication must not be null");
+    Assert.notNull(detailKey, "detailKey must not be null");
+    if (authentication instanceof JwtAuthenticationToken jwtToken) {
+      return Optional.ofNullable(jwtToken.getToken().getClaimAsString(detailKey));
+    } else {
+      return Optional.empty();
     }
+  }
 }

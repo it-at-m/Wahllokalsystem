@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import lombok.val;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,113 +17,124 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 class AuthUtilsTest {
 
-    private static final String USERNAME = "username";
+  private static final String USERNAME = "username";
+
+  @Nested
+  class GetUsername {
 
     @Nested
-    class GetUsername {
+    class WithAuthenticationParameter {
 
-        @Nested
-        class WithAuthenticationParameter {
+      @Test
+      void should_returnUserName_when_jwtAuthenticationTokenIsGiven() {
+        val authentication =
+            new JwtAuthenticationToken(
+                new Jwt(
+                    "tokenValue",
+                    Instant.now(),
+                    Instant.MAX,
+                    Map.of("key", "value"),
+                    Map.of("user_name", USERNAME)));
 
-            @Test
-            void should_returnUserName_when_jwtAuthenticationTokenIsGiven() {
-                val authentication = new JwtAuthenticationToken(
-                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("user_name", USERNAME)));
+        val result = AuthUtils.getUsername(authentication);
+        Assertions.assertThat(result).isEqualTo(USERNAME);
+      }
 
-                val result = AuthUtils.getUsername(authentication);
-                Assertions.assertThat(result).isEqualTo(USERNAME);
-            }
+      @Test
+      void should_returnNull_when_jwtAuthenticationTokenIsGivenButHasNoUsername() {
+        val authentication =
+            new JwtAuthenticationToken(
+                new Jwt(
+                    "tokenValue",
+                    Instant.now(),
+                    Instant.MAX,
+                    Map.of("key", "value"),
+                    Map.of("notTheUsernameClaim", USERNAME)));
 
-            @Test
-            void should_returnNull_when_jwtAuthenticationTokenIsGivenButHasNoUsername() {
-                val authentication = new JwtAuthenticationToken(
-                        new Jwt("tokenValue", Instant.now(), Instant.MAX, Map.of("key", "value"), Map.of("notTheUsernameClaim", USERNAME)));
+        val result = AuthUtils.getUsername(authentication);
+        Assertions.assertThat(result).isNull();
+      }
 
-                val result = AuthUtils.getUsername(authentication);
-                Assertions.assertThat(result).isNull();
-            }
+      @Test
+      void should_returnUsername_when_usernamePasswordAuthenticationTokenIsGiven() {
+        val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
 
-            @Test
-            void should_returnUsername_when_usernamePasswordAuthenticationTokenIsGiven() {
-                val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
+        val result = AuthUtils.getUsername(authentication);
+        Assertions.assertThat(result).isEqualTo(USERNAME);
+      }
 
-                val result = AuthUtils.getUsername(authentication);
-                Assertions.assertThat(result).isEqualTo(USERNAME);
-            }
+      @Test
+      void should_returnNameForUnauthenticatedUser_when_authenticationTokenIsNotSupported() {
+        val result = AuthUtils.getUsername(getNotSupportedAuthentication());
+        Assertions.assertThat(result).isEqualTo("unauthenticated");
+      }
 
-            @Test
-            void should_returnNameForUnauthenticatedUser_when_authenticationTokenIsNotSupported() {
-                val result = AuthUtils.getUsername(getNotSupportedAuthentication());
-                Assertions.assertThat(result).isEqualTo("unauthenticated");
-            }
-
-            @Test
-            void should_returnNameForUnauthenticatedUser_when_authenticationIsNull() {
-                Assertions.assertThat(AuthUtils.getUsername(null)).isEqualTo("unauthenticated");
-            }
-        }
-
-        @Nested
-        class WithoutAuthenticationParameter {
-
-            @Test
-            void should_returnUsername_when_authenticationIsGivenInSecurityContext() {
-                val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                val result = AuthUtils.getUsername();
-                Assertions.assertThat(result).isEqualTo(USERNAME);
-
-                SecurityContextHolder.clearContext();
-            }
-
-            @Test
-            void should_returnNameForUnauthenticatedUser_when_authenticationIsNotGivenInSecurityContext() {
-                SecurityContextHolder.clearContext();
-
-                val result = AuthUtils.getUsername();
-                Assertions.assertThat(result).isEqualTo("unauthenticated");
-            }
-        }
+      @Test
+      void should_returnNameForUnauthenticatedUser_when_authenticationIsNull() {
+        Assertions.assertThat(AuthUtils.getUsername(null)).isEqualTo("unauthenticated");
+      }
     }
 
-    private static Authentication getNotSupportedAuthentication() {
-        return new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return List.of();
-            }
+    @Nested
+    class WithoutAuthenticationParameter {
 
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
+      @Test
+      void should_returnUsername_when_authenticationIsGivenInSecurityContext() {
+        val authentication = new UsernamePasswordAuthenticationToken(USERNAME, "password");
 
-            @Override
-            public Object getDetails() {
-                return null;
-            }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            @Override
-            public Object getPrincipal() {
-                return null;
-            }
+        val result = AuthUtils.getUsername();
+        Assertions.assertThat(result).isEqualTo(USERNAME);
 
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
+        SecurityContextHolder.clearContext();
+      }
 
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) {
+      @Test
+      void
+          should_returnNameForUnauthenticatedUser_when_authenticationIsNotGivenInSecurityContext() {
+        SecurityContextHolder.clearContext();
 
-            }
-
-            @Override
-            public String getName() {
-                return "";
-            }
-        };
+        val result = AuthUtils.getUsername();
+        Assertions.assertThat(result).isEqualTo("unauthenticated");
+      }
     }
+  }
+
+  private static Authentication getNotSupportedAuthentication() {
+    return new Authentication() {
+      @Override
+      public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+      }
+
+      @Override
+      public Object getCredentials() {
+        return null;
+      }
+
+      @Override
+      public Object getDetails() {
+        return null;
+      }
+
+      @Override
+      public Object getPrincipal() {
+        return null;
+      }
+
+      @Override
+      public boolean isAuthenticated() {
+        return false;
+      }
+
+      @Override
+      public void setAuthenticated(boolean isAuthenticated) {}
+
+      @Override
+      public String getName() {
+        return "";
+      }
+    };
+  }
 }

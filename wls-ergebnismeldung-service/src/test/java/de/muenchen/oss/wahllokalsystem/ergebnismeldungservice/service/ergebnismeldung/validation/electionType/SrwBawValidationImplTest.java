@@ -31,123 +31,141 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class SrwBawValidationImplTest {
 
-    @Mock
-    DefaultElectionTypeValidator defaultElectionTypeValidator;
+  @Mock DefaultElectionTypeValidator defaultElectionTypeValidator;
 
-    @InjectMocks
-    SrwBawValidationImpl unitUnderTest;
+  @InjectMocks SrwBawValidationImpl unitUnderTest;
 
-    @Captor
-    ArgumentCaptor<List<Stapelart>> captorStapelList;
+  @Captor ArgumentCaptor<List<Stapelart>> captorStapelList;
 
-    @Nested
-    class SupportsWahlart {
+  @Nested
+  class SupportsWahlart {
 
-        @Test
-        void should_returnTrue_when_wahlartIsSRW() {
-            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.SRW)).isTrue();
-        }
-
-        @Test
-        void should_returnTrue_when_wahlartIsBAW() {
-            Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.BAW)).isTrue();
-        }
-
-        @ParameterizedTest
-        @MethodSource("argumentsForNonSRWOrNonBAWWahlart")
-        void should_returnFalse_when_wahlartIsNotSRWOrBAW(final ArgumentsAccessor arguments) {
-            Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class))).isFalse();
-        }
-
-        public static Stream<Arguments> argumentsForNonSRWOrNonBAWWahlart() {
-            return Arrays.stream(WahlartModel.values())
-                    .filter(wahlart -> !WahlartModel.SRW.equals(wahlart))
-                    .filter(wahlart -> !WahlartModel.BAW.equals(wahlart))
-                    .map(Arguments::of);
-        }
+    @Test
+    void should_returnTrue_when_wahlartIsSRW() {
+      Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.SRW)).isTrue();
     }
 
-    @Nested
-    class IsValidUwb {
-
-        @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Mockito.verify(defaultElectionTypeValidator)
-                    .checkValidation(eq(WahlbezirkArtModel.UWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
-
-            val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> !Stapelart.SRW_BAW_A_B.equals(stapelart))
-                    .filter(stapelart -> !Stapelart.SRW_BAW_D.equals(stapelart))
-                    .filter(stapelart -> !Stapelart.SRW_BAW_B_C.equals(stapelart))
-                    .filter(stapelart -> stapelart.name().startsWith("SRW_BAW_"))
-                    .toList().toArray(new Stapelart[0]);
-
-            Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
-        }
-
-        @Test
-        void should_returnResponseOfDefaultValidator_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            val mockedValidatorResponse = true;
-            Mockito.when(defaultElectionTypeValidator.checkValidation(eq(WahlbezirkArtModel.UWB), anyString(), anyString(), any(), any()))
-                    .thenReturn(mockedValidatorResponse);
-
-            val result = unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
-        }
+    @Test
+    void should_returnTrue_when_wahlartIsBAW() {
+      Assertions.assertThat(unitUnderTest.supportsWahlart(WahlartModel.BAW)).isTrue();
     }
 
-    @Nested
-    class IsValidBwb {
-
-        @Test
-        void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Mockito.verify(defaultElectionTypeValidator)
-                    .checkValidation(eq(WahlbezirkArtModel.BWB), eq(wahlbezirkID), eq(wahlID), eq(waehlerverzeichnisNummer), captorStapelList.capture());
-
-            val expectedStapel = Arrays.stream(Stapelart.values())
-                    .filter(stapelart -> !Stapelart.SRW_BAW_A_B.equals(stapelart))
-                    .filter(stapelart -> !Stapelart.SRW_BAW_D.equals(stapelart))
-                    .filter(stapelart -> !Stapelart.SRW_BAW_B_C.equals(stapelart))
-                    .filter(stapelart -> stapelart.name().startsWith("SRW_BAW_"))
-                    .toList().toArray(new Stapelart[0]);
-
-            Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
-        }
-
-        @Test
-        void should_returnResponseOfDefaultValidator_when_isCalled() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 0L;
-            val meldungsart = MeldungsartModel.V1;
-
-            val mockedValidatorResponse = true;
-            Mockito.when(defaultElectionTypeValidator.checkValidation(eq(WahlbezirkArtModel.BWB), anyString(), anyString(), any(), any()))
-                    .thenReturn(mockedValidatorResponse);
-
-            val result = unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
-
-            Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
-        }
+    @ParameterizedTest
+    @MethodSource("argumentsForNonSRWOrNonBAWWahlart")
+    void should_returnFalse_when_wahlartIsNotSRWOrBAW(final ArgumentsAccessor arguments) {
+      Assertions.assertThat(unitUnderTest.supportsWahlart(arguments.get(0, WahlartModel.class)))
+          .isFalse();
     }
+
+    public static Stream<Arguments> argumentsForNonSRWOrNonBAWWahlart() {
+      return Arrays.stream(WahlartModel.values())
+          .filter(wahlart -> !WahlartModel.SRW.equals(wahlart))
+          .filter(wahlart -> !WahlartModel.BAW.equals(wahlart))
+          .map(Arguments::of);
+    }
+  }
+
+  @Nested
+  class IsValidUwb {
+
+    @Test
+    void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Mockito.verify(defaultElectionTypeValidator)
+          .checkValidation(
+              eq(WahlbezirkArtModel.UWB),
+              eq(wahlbezirkID),
+              eq(wahlID),
+              eq(waehlerverzeichnisNummer),
+              captorStapelList.capture());
+
+      val expectedStapel =
+          Arrays.stream(Stapelart.values())
+              .filter(stapelart -> !Stapelart.SRW_BAW_A_B.equals(stapelart))
+              .filter(stapelart -> !Stapelart.SRW_BAW_D.equals(stapelart))
+              .filter(stapelart -> !Stapelart.SRW_BAW_B_C.equals(stapelart))
+              .filter(stapelart -> stapelart.name().startsWith("SRW_BAW_"))
+              .toList()
+              .toArray(new Stapelart[0]);
+
+      Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
+    }
+
+    @Test
+    void should_returnResponseOfDefaultValidator_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      val mockedValidatorResponse = true;
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  eq(WahlbezirkArtModel.UWB), anyString(), anyString(), any(), any()))
+          .thenReturn(mockedValidatorResponse);
+
+      val result =
+          unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+    }
+  }
+
+  @Nested
+  class IsValidBwb {
+
+    @Test
+    void should_callDefaultValidatorWithBTWStapel_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Mockito.verify(defaultElectionTypeValidator)
+          .checkValidation(
+              eq(WahlbezirkArtModel.BWB),
+              eq(wahlbezirkID),
+              eq(wahlID),
+              eq(waehlerverzeichnisNummer),
+              captorStapelList.capture());
+
+      val expectedStapel =
+          Arrays.stream(Stapelart.values())
+              .filter(stapelart -> !Stapelart.SRW_BAW_A_B.equals(stapelart))
+              .filter(stapelart -> !Stapelart.SRW_BAW_D.equals(stapelart))
+              .filter(stapelart -> !Stapelart.SRW_BAW_B_C.equals(stapelart))
+              .filter(stapelart -> stapelart.name().startsWith("SRW_BAW_"))
+              .toList()
+              .toArray(new Stapelart[0]);
+
+      Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
+    }
+
+    @Test
+    void should_returnResponseOfDefaultValidator_when_isCalled() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 0L;
+      val meldungsart = MeldungsartModel.V1;
+
+      val mockedValidatorResponse = true;
+      Mockito.when(
+              defaultElectionTypeValidator.checkValidation(
+                  eq(WahlbezirkArtModel.BWB), anyString(), anyString(), any(), any()))
+          .thenReturn(mockedValidatorResponse);
+
+      val result =
+          unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
+
+      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+    }
+  }
 }

@@ -9,32 +9,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/**
- * Application class for starting the micro-service.
- */
+/** Application class for starting the micro-service. */
 @EntityScan(
-        basePackages = {
-                "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.broadcastservice"
-        }
-)
-@EnableJpaRepositories(
-        basePackages = {
-                "de.muenchen.oss.wahllokalsystem.broadcastservice"
-        }
-)
+    basePackages = {
+      "org.springframework.data.jpa.convert.threeten",
+      "de.muenchen.oss.wahllokalsystem.broadcastservice"
+    })
+@EnableJpaRepositories(basePackages = {"de.muenchen.oss.wahllokalsystem.broadcastservice"})
 @SpringBootApplication(
-        scanBasePackages = {
-                "org.springframework.data.jpa.convert.threeten",
-                "de.muenchen.oss.wahllokalsystem.broadcastservice",
-                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
-                "de.muenchen.oss.wahllokalsystem.wls.common.swagger"
-        }
-)
+    scanBasePackages = {
+      "org.springframework.data.jpa.convert.threeten",
+      "de.muenchen.oss.wahllokalsystem.broadcastservice",
+      "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+      "de.muenchen.oss.wahllokalsystem.wls.common.swagger"
+    })
 public class MicroServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MicroServiceApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(MicroServiceApplication.class, args);
+  }
 }

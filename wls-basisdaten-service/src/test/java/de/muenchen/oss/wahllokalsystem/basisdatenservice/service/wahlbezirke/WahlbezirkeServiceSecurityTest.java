@@ -36,112 +36,144 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock
 public class WahlbezirkeServiceSecurityTest {
 
-    @Autowired
-    WahlbezirkeService wahlbezirkeService;
+  @Autowired WahlbezirkeService wahlbezirkeService;
 
-    @Autowired
-    WahlbezirkRepository wahlbezirkRepository;
+  @Autowired WahlbezirkRepository wahlbezirkRepository;
 
-    @Autowired
-    WahltagRepository wahltagRepository;
+  @Autowired WahltagRepository wahltagRepository;
 
-    @Autowired
-    WahlRepository wahlRepository;
+  @Autowired WahlRepository wahlRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Nested
-    class GetWahlbezirke {
+  @Nested
+  class GetWahlbezirke {
 
-        @AfterEach
-        void teardown() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBEZIRK, Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_WAHLTAG);
-            wahlbezirkRepository.deleteAll();
-            wahlRepository.deleteAll();
-            wahltagRepository.deleteAll();
-        }
-
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() throws Exception {
-            initRepositoryForSearchingWahlbezirke(true);
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE);
-
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-            val wahltagNummer = "nummerWahltag1";
-
-            val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
-
-            Assertions.assertThatNoException().isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID));
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
-        void should_denyAccess_when_anyAuthorityIsMissingAndRepoIsEmpty(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            initRepositoryForSearchingWahlbezirke(false);
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-            val wahltagNummer = "nummerWahltag1";
-
-            val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
-
-            Assertions.assertThatException().isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID))
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsRepoEmpty() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsRepoHasData")
-        void should_denyAccess_when_anyAuthorityIsMissingAndRepoHasData(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            initRepositoryForSearchingWahlbezirke(true);
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag3";
-            val wahltagNummer = "nummerWahltag1";
-
-            val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
-
-            Assertions.assertThatException().isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID))
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsRepoHasData() {
-            List<String> onlyNecessaryAuthorities = new ArrayList<>(Arrays.asList(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE));
-            onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_WRITE_WAHLBEZIRK);
-            onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_READ_WAHL);
-            onlyNecessaryAuthorities.remove(Authorities.SERVICE_GET_WAHLEN);
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(onlyNecessaryAuthorities.toArray(new String[0]));
-        }
-
-        private void initRepositoryForSearchingWahlbezirke(boolean hasDataWahlbezirkRepo) {
-            SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBEZIRK, Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL,
-                    Authorities.REPOSITORY_WRITE_WAHLBEZIRK);
-            wahlbezirkRepository.deleteAll();
-            if (hasDataWahlbezirkRepo) {
-                wahlbezirkRepository.saveAll(MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now().plusMonths(1)));
-            }
-            val repoWahltage = MockDataFactory.createWahltagList("");
-            wahltagRepository.saveAll(repoWahltage);
-            val wahlen = MockDataFactory.createWahlEntityList();
-            wahlRepository.saveAll(wahlen);
-        }
+    @AfterEach
+    void teardown() {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_DELETE_WAHLBEZIRK,
+          Authorities.REPOSITORY_DELETE_WAHL,
+          Authorities.REPOSITORY_DELETE_WAHLTAG);
+      wahlbezirkRepository.deleteAll();
+      wahlRepository.deleteAll();
+      wahltagRepository.deleteAll();
     }
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      initRepositoryForSearchingWahlbezirke(true);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE);
+
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
+      val wahltagNummer = "nummerWahltag1";
+
+      val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID));
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsRepoEmpty")
+    void should_denyAccess_when_anyAuthorityIsMissingAndRepoIsEmpty(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      initRepositoryForSearchingWahlbezirke(false);
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
+      val wahltagNummer = "nummerWahltag1";
+
+      val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariationsRepoEmpty() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE);
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsRepoHasData")
+    void should_denyAccess_when_anyAuthorityIsMissingAndRepoHasData(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      initRepositoryForSearchingWahlbezirke(true);
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag3";
+      val wahltagNummer = "nummerWahltag1";
+
+      val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahlbezirkeService.getWahlbezirke(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariationsRepoHasData() {
+      List<String> onlyNecessaryAuthorities =
+          new ArrayList<>(Arrays.asList(Authorities.ALL_AUTHORITIES_GET_WAHLBEZIRKE));
+      onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_WRITE_WAHLBEZIRK);
+      onlyNecessaryAuthorities.remove(Authorities.REPOSITORY_READ_WAHL);
+      onlyNecessaryAuthorities.remove(Authorities.SERVICE_GET_WAHLEN);
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          onlyNecessaryAuthorities.toArray(new String[0]));
+    }
+
+    private void initRepositoryForSearchingWahlbezirke(boolean hasDataWahlbezirkRepo) {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_DELETE_WAHLBEZIRK,
+          Authorities.REPOSITORY_WRITE_WAHLTAG,
+          Authorities.REPOSITORY_WRITE_WAHL,
+          Authorities.REPOSITORY_WRITE_WAHLBEZIRK);
+      wahlbezirkRepository.deleteAll();
+      if (hasDataWahlbezirkRepo) {
+        wahlbezirkRepository.saveAll(
+            MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now().plusMonths(1)));
+      }
+      val repoWahltage = MockDataFactory.createWahltagList("");
+      wahltagRepository.saveAll(repoWahltage);
+      val wahlen = MockDataFactory.createWahlEntityList();
+      wahlRepository.saveAll(wahlen);
+    }
+  }
 }

@@ -13,38 +13,42 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public abstract class AbstractAWerteService {
 
-    private final AWerteRepository aWerteRepository;
+  private final AWerteRepository aWerteRepository;
 
-    private final AWerteValidator aWerteValidator;
+  private final AWerteValidator aWerteValidator;
 
-    private final AWerteModelMapper aWerteModelMapper;
+  private final AWerteModelMapper aWerteModelMapper;
 
-    private final AWerteClient aWerteClient;
+  private final AWerteClient aWerteClient;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    protected List<AWerteModel> getAWerte(String wahlbezirkID) {
-        log.info("#getAWerte for wahlbezirkID={}", wahlbezirkID);
+  protected List<AWerteModel> getAWerte(String wahlbezirkID) {
+    log.info("#getAWerte for wahlbezirkID={}", wahlbezirkID);
 
-        aWerteValidator.validWahlbezirkIDParamOrThrow(wahlbezirkID);
+    aWerteValidator.validWahlbezirkIDParamOrThrow(wahlbezirkID);
 
-        List<AWerteModel> aWerteList = aWerteClient.getAWerte(wahlbezirkID);
+    List<AWerteModel> aWerteList = aWerteClient.getAWerte(wahlbezirkID);
 
-        if (aWerteList != null && !aWerteList.isEmpty()) {
-            try {
-                aWerteRepository.saveAll(aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(aWerteList));
-            } catch (Exception e) {
-                log.error("#getAWerte unsaveable: " + e.getMessage(), e);
-            }
-        } else {
-            log.info("Liefere 'alte' A-Werte, weil der Client keine Antwort liefern konnte.");
-            aWerteList = aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID));
+    if (aWerteList != null && !aWerteList.isEmpty()) {
+      try {
+        aWerteRepository.saveAll(
+            aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(aWerteList));
+      } catch (Exception e) {
+        log.error("#getAWerte unsaveable: " + e.getMessage(), e);
+      }
+    } else {
+      log.info("Liefere 'alte' A-Werte, weil der Client keine Antwort liefern konnte.");
+      aWerteList =
+          aWerteModelMapper.fromListOfAWerteEntityToListOfAWerteModel(
+              aWerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID));
 
-            if (aWerteList == null || aWerteList.isEmpty()) {
-                log.error("#getAWerte Keine Daten erhalten und keine gespeicherten A-Werte vorhanden!");
-                throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETAWERTE_UNSAVEABLE);
-            }
-        }
-        return aWerteList;
+      if (aWerteList == null || aWerteList.isEmpty()) {
+        log.error("#getAWerte Keine Daten erhalten und keine gespeicherten A-Werte vorhanden!");
+        throw exceptionFactory.createTechnischeWlsException(
+            ExceptionConstants.GETAWERTE_UNSAVEABLE);
+      }
     }
+    return aWerteList;
+  }
 }

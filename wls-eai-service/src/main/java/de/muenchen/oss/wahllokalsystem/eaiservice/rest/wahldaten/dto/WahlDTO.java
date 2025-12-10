@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record WahlDTO(@NotNull String identifikator,
-                      @NotNull String name,
-                      @NotNull WahlartDTO wahlart,
-                      @NotNull LocalDate wahltag,
-                      @NotNull String nummer) {
-}
+public record WahlDTO(
+    @NotNull String identifikator,
+    @NotNull String name,
+    @NotNull WahlartDTO wahlart,
+    @NotNull LocalDate wahltag,
+    @NotNull String nummer) {}

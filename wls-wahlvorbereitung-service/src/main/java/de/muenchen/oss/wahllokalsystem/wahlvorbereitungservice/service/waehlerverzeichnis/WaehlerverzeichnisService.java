@@ -18,39 +18,45 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WaehlerverzeichnisService {
 
-    private final WaehlerverzeichnisRepository waehlerverzeichnisRepository;
+  private final WaehlerverzeichnisRepository waehlerverzeichnisRepository;
 
-    private final WaehlerverzeichnisValidator waehlerverzeichnisValidator;
+  private final WaehlerverzeichnisValidator waehlerverzeichnisValidator;
 
-    private final WaehlerverzeichnisModelMapper waehlerverzeichnisModelMapper;
+  private final WaehlerverzeichnisModelMapper waehlerverzeichnisModelMapper;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)"
-    )
-    public Optional<WaehlerverzeichnisModel> getWaehlerverzeichnis(@P("ref") final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
-        log.debug("#getWaehlerverzeichnis");
-        log.debug("in: wahlbezirkID & wvzNummer > {}", waehlerverzeichnisReference);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetWaehlerverzeichnis')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#ref.wahlbezirkID, authentication)")
+  public Optional<WaehlerverzeichnisModel> getWaehlerverzeichnis(
+      @P("ref") final BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference) {
+    log.debug("#getWaehlerverzeichnis");
+    log.debug("in: wahlbezirkID & wvzNummer > {}", waehlerverzeichnisReference);
 
-        waehlerverzeichnisValidator.validWaehlerverzeichnisReferenceOrThrow(waehlerverzeichnisReference);
+    waehlerverzeichnisValidator.validWaehlerverzeichnisReferenceOrThrow(
+        waehlerverzeichnisReference);
 
-        val waehlerverzeichnisFromRepo = waehlerverzeichnisRepository.findById(waehlerverzeichnisReference).map(waehlerverzeichnisModelMapper::toModel);
-        log.debug("out: waehlerverzeichnis > {}", waehlerverzeichnisFromRepo.orElse(null));
+    val waehlerverzeichnisFromRepo =
+        waehlerverzeichnisRepository
+            .findById(waehlerverzeichnisReference)
+            .map(waehlerverzeichnisModelMapper::toModel);
+    log.debug("out: waehlerverzeichnis > {}", waehlerverzeichnisFromRepo.orElse(null));
 
-        return waehlerverzeichnisFromRepo;
+    return waehlerverzeichnisFromRepo;
+  }
+
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')")
+  public void setWaehlerverzeichnis(
+      @NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
+    waehlerverzeichnisValidator.validModelToSetOrThrow(waehlververzeichnisToSet);
+
+    try {
+      waehlerverzeichnisRepository.save(
+          waehlerverzeichnisModelMapper.toEntity(waehlververzeichnisToSet));
+    } catch (final Exception onSaveException) {
+      log.error("Fehler beim speichern: ", onSaveException);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')")
-    public void setWaehlerverzeichnis(@NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
-        waehlerverzeichnisValidator.validModelToSetOrThrow(waehlververzeichnisToSet);
-
-        try {
-            waehlerverzeichnisRepository.save(waehlerverzeichnisModelMapper.toEntity(waehlververzeichnisToSet));
-        } catch (final Exception onSaveException) {
-            log.error("Fehler beim speichern: ", onSaveException);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

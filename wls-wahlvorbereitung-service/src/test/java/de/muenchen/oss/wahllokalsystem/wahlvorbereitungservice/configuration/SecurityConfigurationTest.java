@@ -23,106 +23,119 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {TestConstants.SPRING_TEST_PROFILE})
 public class SecurityConfigurationTest {
 
-    @MockitoBean
-    UrnenwahlvorbereitungService urnenwahlvorbereitungService;
+  @MockitoBean UrnenwahlvorbereitungService urnenwahlvorbereitungService;
 
-    @MockitoBean
-    WaehlerverzeichnisService waehlerverzeichnisService;
+  @MockitoBean WaehlerverzeichnisService waehlerverzeichnisService;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
+
+  @Test
+  void should_returnOk_when_accessingApiDocs() throws Exception {
+    mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnOk_when_accessingSwaggerUi() throws Exception {
+    mockMvc.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class Urnenwahlvorbereitung {
 
     @Test
-    void should_returnOk_when_accessingApiDocs() throws Exception {
-        mockMvc.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
+
+      mockMvc.perform(request).andExpect(status().isUnauthorized());
     }
 
     @Test
-    void should_returnOk_when_accessingSwaggerUi() throws Exception {
-        mockMvc.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
+
+      mockMvc.perform(request).andExpect(status().isNoContent());
     }
 
-    @Nested
-    class Urnenwahlvorbereitung {
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{}");
 
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
-
-            mockMvc.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/urnenwahlVorbereitung/wahlbezirkID");
-
-            mockMvc.perform(request).andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-            val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content("{}");
-
-            mockMvc.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
-            val request = MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content("{}");
-
-            mockMvc.perform(request).andExpect(status().isCreated());
-        }
+      mockMvc.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class Waehlerverzeichnis {
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/urnenwahlVorbereitung/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{}");
 
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
-
-            mockMvc.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
-
-            mockMvc.perform(request).andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-            val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
-                    .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
-
-            mockMvc.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
-            val request = MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
-                    .with(csrf()).contentType(MediaType.APPLICATION_JSON).content("{}");
-
-            mockMvc.perform(request).andExpect(status().isCreated());
-        }
+      mockMvc.perform(request).andExpect(status().isCreated());
     }
+  }
+
+  @Nested
+  class Waehlerverzeichnis {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
+
+      mockMvc.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/waehlerverzeichnis/waehlerbezirkID/1");
+
+      mockMvc.perform(request).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{}");
+
+      mockMvc.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/waehlerverzeichnis/waehlerbezirkID/1")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("{}");
+
+      mockMvc.perform(request).andExpect(status().isCreated());
+    }
+  }
 }

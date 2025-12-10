@@ -34,84 +34,98 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock
 public class WahlvorschlaegeServiceSecurityTest {
 
-    @Autowired
-    WahlvorschlaegeService wahlvorschlaegeService;
+  @Autowired WahlvorschlaegeService wahlvorschlaegeService;
 
-    @Autowired
-    WahlvorschlaegeRepository wahlvorschlaegeRepository;
+  @Autowired WahlvorschlaegeRepository wahlvorschlaegeRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Nested
-    class GetWahlvorschlaege {
+  @Nested
+  class GetWahlvorschlaege {
 
-        @AfterEach
-        void teardown() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
-            wahlvorschlaegeRepository.deleteAll();
-        }
-
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
-
-            Assertions.assertThatNoException().isThrownBy(() -> wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)));
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
-
-            Assertions.assertThatException().isThrownBy(() -> wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)))
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
-        }
-
-        private WahlvorschlaegeDTO createClientWahlvorschlaegeDTO() {
-            val dto = new WahlvorschlaegeDTO();
-
-            dto.setStimmzettelgebietID("stimmzettelgebietID");
-            dto.setWahlbezirkID("wahlbezirkID");
-            dto.setWahlID("wahlID");
-
-            val wahlvorschlag1 = new WahlvorschlagDTO();
-            wahlvorschlag1.setIdentifikator("wahlvorschlagID");
-            wahlvorschlag1.setKurzname("kurzname");
-            wahlvorschlag1.setOrdnungszahl(1L);
-            wahlvorschlag1.setErhaeltStimmen(true);
-
-            val kandidat1 = new KandidatDTO();
-            kandidat1.setName("kandidat");
-            kandidat1.setListenposition(1L);
-            kandidat1.setEinzelbewerber(true);
-            kandidat1.setDirektkandidat(true);
-            kandidat1.setIdentifikator("kandidatID");
-            wahlvorschlag1.setKandidaten(Set.of(kandidat1));
-            dto.setWahlvorschlaege(Set.of(wahlvorschlag1));
-
-            return dto;
-        }
+    @AfterEach
+    void teardown() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
+      wahlvorschlaegeRepository.deleteAll();
     }
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
+
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  wahlvorschlaegeService.getWahlvorschlaege(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)));
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor)
+        throws Exception {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO();
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  wahlvorschlaegeService.getWahlvorschlaege(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
+    }
+
+    private WahlvorschlaegeDTO createClientWahlvorschlaegeDTO() {
+      val dto = new WahlvorschlaegeDTO();
+
+      dto.setStimmzettelgebietID("stimmzettelgebietID");
+      dto.setWahlbezirkID("wahlbezirkID");
+      dto.setWahlID("wahlID");
+
+      val wahlvorschlag1 = new WahlvorschlagDTO();
+      wahlvorschlag1.setIdentifikator("wahlvorschlagID");
+      wahlvorschlag1.setKurzname("kurzname");
+      wahlvorschlag1.setOrdnungszahl(1L);
+      wahlvorschlag1.setErhaeltStimmen(true);
+
+      val kandidat1 = new KandidatDTO();
+      kandidat1.setName("kandidat");
+      kandidat1.setListenposition(1L);
+      kandidat1.setEinzelbewerber(true);
+      kandidat1.setDirektkandidat(true);
+      kandidat1.setIdentifikator("kandidatID");
+      wahlvorschlag1.setKandidaten(Set.of(kandidat1));
+      dto.setWahlvorschlaege(Set.of(wahlvorschlag1));
+
+      return dto;
+    }
+  }
 }

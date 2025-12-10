@@ -11,117 +11,136 @@ import org.junit.jupiter.api.Test;
 
 class DummyClientImplTest {
 
-    private final DummyClientImpl unitUnderTest = new DummyClientImpl();
+  private final DummyClientImpl unitUnderTest = new DummyClientImpl();
 
-    @Nested
-    class GetWahlvorschlaege {
+  @Nested
+  class GetWahlvorschlaege {
 
-        @Test
-        void should_returnNonNullObject_when_givenIDs() {
-            val result = unitUnderTest.getWahlvorschlaege(new BezirkUndWahlID("wahlID", "wahlbezirkID"));
+    @Test
+    void should_returnNonNullObject_when_givenIDs() {
+      val result = unitUnderTest.getWahlvorschlaege(new BezirkUndWahlID("wahlID", "wahlbezirkID"));
 
-            Assertions.assertThat(result).hasNoNullFieldsOrProperties();
-        }
+      Assertions.assertThat(result).hasNoNullFieldsOrProperties();
+    }
+  }
+
+  @Nested
+  class GetWahltage {
+
+    @Test
+    void should_returnWahltage_when_wahlIsNotOlderThanThreeMonths() {
+      val result = unitUnderTest.getWahltage(LocalDate.now().minusMonths(3));
+      Assertions.assertThat(result).size().isPositive();
+    }
+  }
+
+  @Nested
+  class GetWahlen {
+
+    @Test
+    void should_returnAtLeastOneObject_when_dataIsPresent() {
+      val result = unitUnderTest.getWahlen(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      Assertions.assertThat(result).size().isPositive();
+    }
+  }
+
+  @Nested
+  class LoadBasisdaten {
+
+    @Test
+    void should_returnNotEmptyObject_when_dataIsPresent() {
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      Assertions.assertThat(result).hasNoNullFieldsOrProperties();
+      Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
+      Assertions.assertThat(result.wahlen()).isNotEmpty();
+      Assertions.assertThat(result.wahlbezirke()).isNotEmpty();
+      Assertions.assertThat(result.stimmzettelgebiete()).isNotEmpty();
     }
 
-    @Nested
-    class GetWahltage {
-
-        @Test
-        void should_returnWahltage_when_wahlIsNotOlderThanThreeMonths() {
-            val result = unitUnderTest.getWahltage(LocalDate.now().minusMonths(3));
-            Assertions.assertThat(result).size().isPositive();
-        }
+    @Test
+    void should_returnBasisdaten_when_atLeastOneWahlbezirkAndStimmzettelgebietMatches() {
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      result
+          .basisstrukturdaten()
+          .forEach(
+              (bsd) -> {
+                Assertions.assertThat(result.wahlen())
+                    .anyMatch(w -> w.wahlID().equals(bsd.wahlID()));
+                Assertions.assertThat(result.wahlbezirke())
+                    .anyMatch(wbz -> wbz.wahlbezirkID().equals(bsd.wahlbezirkID()));
+                Assertions.assertThat(result.stimmzettelgebiete())
+                    .anyMatch(szg -> szg.identifikator().equals(bsd.stimmzettelgebietID()));
+              });
     }
 
-    @Nested
-    class GetWahlen {
-
-        @Test
-        void should_returnAtLeastOneObject_when_dataIsPresent() {
-            val result = unitUnderTest.getWahlen(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            Assertions.assertThat(result).size().isPositive();
-        }
+    @Test
+    void should_returnBasisdaten_when_atLeastOneWahlbezirkAndBasisstrukturdatenMatches() {
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      result
+          .wahlen()
+          .forEach(
+              (wahl) -> {
+                Assertions.assertThat(result.basisstrukturdaten())
+                    .anyMatch(bsd -> bsd.wahlID().equals(wahl.wahlID()));
+                Assertions.assertThat(result.wahlbezirke())
+                    .anyMatch(wbz -> wbz.wahlID().equals(wahl.wahlID()));
+              });
     }
 
-    @Nested
-    class LoadBasisdaten {
-
-        @Test
-        void should_returnNotEmptyObject_when_dataIsPresent() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            Assertions.assertThat(result).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(result.basisstrukturdaten()).isNotEmpty();
-            Assertions.assertThat(result.wahlen()).isNotEmpty();
-            Assertions.assertThat(result.wahlbezirke()).isNotEmpty();
-            Assertions.assertThat(result.stimmzettelgebiete()).isNotEmpty();
-        }
-
-        @Test
-        void should_returnBasisdaten_when_atLeastOneWahlbezirkAndStimmzettelgebietMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            result.basisstrukturdaten().forEach((bsd) -> {
-                Assertions.assertThat(result.wahlen()).anyMatch(w -> w.wahlID().equals(bsd.wahlID()));
-                Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.wahlbezirkID().equals(bsd.wahlbezirkID()));
-                Assertions.assertThat(result.stimmzettelgebiete()).anyMatch(szg -> szg.identifikator().equals(bsd.stimmzettelgebietID()));
-            });
-        }
-
-        @Test
-        void should_returnBasisdaten_when_atLeastOneWahlbezirkAndBasisstrukturdatenMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            result.wahlen().forEach((wahl) -> {
-                Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlID().equals(wahl.wahlID()));
-                Assertions.assertThat(result.wahlbezirke()).anyMatch(wbz -> wbz.wahlID().equals(wahl.wahlID()));
-            });
-        }
-
-        @Test
-        void should_returnBasisdaten_when_atLeastOneWahlAndBasisstrukturdatenMatches() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            result.wahlbezirke().forEach((wbz) -> {
-                Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.wahlbezirkID()));
-                Assertions.assertThat(result.wahlen()).anyMatch(wahl -> wahl.wahlID().equals(wbz.wahlID()));
-            });
-        }
-
-        @Test
-        void should_returnBasisdaten_when_anyBasisstrukturdatenMatchesStimmzettelgebietID() {
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
-            for (StimmzettelgebietModel szg : result.stimmzettelgebiete()) {
-                Assertions.assertThat(result.basisstrukturdaten()).anyMatch(bsd -> bsd.stimmzettelgebietID().equals(szg.identifikator()));
-            }
-        }
-
-        @Test
-        void should_makeSureAllUnderobjectsHaveTheRequestedDate_when_givenProperData() {
-            val aDate = LocalDate.now();
-            val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(aDate, "0"));
-            Assertions.assertThat(result.basisstrukturdaten()).allMatch(bsd -> bsd.wahltag().equals(aDate));
-            Assertions.assertThat(result.wahlen()).allMatch(w -> w.wahltag().equals(aDate));
-            Assertions.assertThat(result.wahlbezirke()).allMatch(wbz -> wbz.wahltag().equals(aDate));
-            Assertions.assertThat(result.stimmzettelgebiete()).allMatch(szg -> szg.wahltag().equals(aDate));
-        }
+    @Test
+    void should_returnBasisdaten_when_atLeastOneWahlAndBasisstrukturdatenMatches() {
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      result
+          .wahlbezirke()
+          .forEach(
+              (wbz) -> {
+                Assertions.assertThat(result.basisstrukturdaten())
+                    .anyMatch(bsd -> bsd.wahlbezirkID().equals(wbz.wahlbezirkID()));
+                Assertions.assertThat(result.wahlen())
+                    .anyMatch(wahl -> wahl.wahlID().equals(wbz.wahlID()));
+              });
     }
 
-    @Nested
-    class GetKonfigurierterWahltag {
-
-        @Test
-        void should_returnNonNullObjectWithActivePropertyTrue_when_callingGet() {
-            val result = unitUnderTest.getKonfigurierterWahltag();
-            Assertions.assertThat(result).hasNoNullFieldsOrProperties();
-            Assertions.assertThat(result.active()).isTrue();
-        }
+    @Test
+    void should_returnBasisdaten_when_anyBasisstrukturdatenMatchesStimmzettelgebietID() {
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(LocalDate.now(), "0"));
+      for (StimmzettelgebietModel szg : result.stimmzettelgebiete()) {
+        Assertions.assertThat(result.basisstrukturdaten())
+            .anyMatch(bsd -> bsd.stimmzettelgebietID().equals(szg.identifikator()));
+      }
     }
 
-    @Nested
-    class LoadWahlbezirke {
-
-        @Test
-        void should_returnNonEmptyField_when_callingGet() {
-            val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
-            Assertions.assertThat(result).isNotEmpty();
-        }
+    @Test
+    void should_makeSureAllUnderobjectsHaveTheRequestedDate_when_givenProperData() {
+      val aDate = LocalDate.now();
+      val result = unitUnderTest.loadBasisdaten(new WahltagWithNummerModel(aDate, "0"));
+      Assertions.assertThat(result.basisstrukturdaten())
+          .allMatch(bsd -> bsd.wahltag().equals(aDate));
+      Assertions.assertThat(result.wahlen()).allMatch(w -> w.wahltag().equals(aDate));
+      Assertions.assertThat(result.wahlbezirke()).allMatch(wbz -> wbz.wahltag().equals(aDate));
+      Assertions.assertThat(result.stimmzettelgebiete())
+          .allMatch(szg -> szg.wahltag().equals(aDate));
     }
+  }
+
+  @Nested
+  class GetKonfigurierterWahltag {
+
+    @Test
+    void should_returnNonNullObjectWithActivePropertyTrue_when_callingGet() {
+      val result = unitUnderTest.getKonfigurierterWahltag();
+      Assertions.assertThat(result).hasNoNullFieldsOrProperties();
+      Assertions.assertThat(result.active()).isTrue();
+    }
+  }
+
+  @Nested
+  class LoadWahlbezirke {
+
+    @Test
+    void should_returnNonEmptyField_when_callingGet() {
+      val result = unitUnderTest.loadWahlbezirke(LocalDate.now(), "0");
+      Assertions.assertThat(result).isNotEmpty();
+    }
+  }
 }

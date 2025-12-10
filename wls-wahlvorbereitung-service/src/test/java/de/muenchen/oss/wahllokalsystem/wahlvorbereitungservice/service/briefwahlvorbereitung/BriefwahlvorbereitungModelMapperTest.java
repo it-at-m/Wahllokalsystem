@@ -12,43 +12,45 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { BriefwahlvorbereitungModelMapperImpl.class })
+@SpringBootTest(classes = {BriefwahlvorbereitungModelMapperImpl.class})
 class BriefwahlvorbereitungModelMapperTest {
 
-    @Autowired
-    private BriefwahlvorbereitungModelMapper unitUnderTest;
+  @Autowired private BriefwahlvorbereitungModelMapper unitUnderTest;
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnBriefwahlvorbereitungModel_when_givenBriefwahlvorbereitungEntity() {
-            val wahlbezirkID = "wahlbezirkID";
-            List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl1);
+    @Test
+    void should_returnBriefwahlvorbereitungModel_when_givenBriefwahlvorbereitungEntity() {
+      val wahlbezirkID = "wahlbezirkID";
+      List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
+      val entityToMap = new Briefwahlvorbereitung(wahlbezirkID, urnenanzahl1);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expecetedResult = new BriefwahlvorbereitungModel(wahlbezirkID, List.of(new WahlurneModel("1234", 1, true)));
+      val expecetedResult =
+          new BriefwahlvorbereitungModel(wahlbezirkID, List.of(new WahlurneModel("1234", 1, true)));
 
-            Assertions.assertThat(result).isEqualTo(expecetedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expecetedResult);
     }
+  }
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnBriefwahlvorbereitungEntity_when_givenBriefwahlvorbereitungModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            List<WahlurneModel> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
-            val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
+    @Test
+    void should_returnBriefwahlvorbereitungEntity_when_givenBriefwahlvorbereitungModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      List<WahlurneModel> urnenanzahl1 =
+          List.of(WahlurneTestdatenfactory.initValidModel("1234").build());
+      val modelToMap = new BriefwahlvorbereitungModel(wahlbezirkID, urnenanzahl1);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new Briefwahlvorbereitung(wahlbezirkID, List.of(new Wahlurne("1234", 0, null)));
+      val expectedResult =
+          new Briefwahlvorbereitung(wahlbezirkID, List.of(new Wahlurne("1234", 0, null)));
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

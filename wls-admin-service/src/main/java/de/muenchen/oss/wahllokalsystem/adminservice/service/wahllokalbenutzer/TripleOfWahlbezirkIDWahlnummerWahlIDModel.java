@@ -5,7 +5,4 @@ import lombok.Builder;
 
 @Builder
 public record TripleOfWahlbezirkIDWahlnummerWahlIDModel(
-    @NotNull String wahlbezirkID,
-    @NotNull String wahlnummer,
-    @NotNull String wahlID){
-}
+    @NotNull String wahlbezirkID, @NotNull String wahlnummer, @NotNull String wahlID) {}

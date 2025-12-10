@@ -13,16 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Ergebnis {
 
-    @Size(max = 1024)
-    private String wahlvorschlagID;
+  @Size(max = 1024) private String wahlvorschlagID;
 
-    @Size(max = 1024)
-    private String kandidatID;
+  @Size(max = 1024) private String kandidatID;
 
-    private Long wahlvorschlagsordnungszahl;
+  private Long wahlvorschlagsordnungszahl;
 
-    @NotNull
-    private long ergebnis;
+  @NotNull private long ergebnis;
 
-    private Long numIndex;
+  private Long numIndex;
 }

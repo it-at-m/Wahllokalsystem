@@ -7,10 +7,9 @@ import lombok.Data;
 @Data
 public class BWerte {
 
-    private Long b;
+  private Long b;
 
-    private Long b1;
+  private Long b1;
 
-    private Long b2;
-
+  private Long b2;
 }

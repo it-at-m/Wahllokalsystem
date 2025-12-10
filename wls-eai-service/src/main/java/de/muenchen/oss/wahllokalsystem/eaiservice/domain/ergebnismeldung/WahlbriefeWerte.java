@@ -7,6 +7,5 @@ import lombok.Data;
 @Embeddable
 public class WahlbriefeWerte {
 
-    private Long zurueckgewiesenGesamt;
-
+  private Long zurueckgewiesenGesamt;
 }

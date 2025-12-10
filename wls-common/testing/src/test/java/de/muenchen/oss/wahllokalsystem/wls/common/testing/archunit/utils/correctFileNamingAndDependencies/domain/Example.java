@@ -6,6 +6,5 @@ import jakarta.persistence.Id;
 @Entity
 public class Example {
 
-    @Id
-    private Long id;
+  @Id private Long id;
 }

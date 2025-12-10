@@ -20,73 +20,85 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 public class StimmabgabevermerkeControllerTest {
 
-    @Mock
-    StimmabgabevermerkeService stimmabgabevermerkeService;
+  @Mock StimmabgabevermerkeService stimmabgabevermerkeService;
 
-    @Mock
-    StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
+  @Mock StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
-    @InjectMocks
-    StimmabgabevermerkeController unitUnderTest;
+  @InjectMocks StimmabgabevermerkeController unitUnderTest;
 
-    @Nested
-    class GetStimmabgabevermerke {
+  @Nested
+  class GetStimmabgabevermerke {
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 1L;
-            val anzahlBlaetter = 4711L;
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 1L;
+      val anzahlBlaetter = 4711L;
 
-            val bezirkUndWaehlerverzeichnisNummer = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-            val mockedServiceResponse = new StimmabgabevermerkeModel(bezirkUndWaehlerverzeichnisNummer, anzahlBlaetter, null);
-            val mockedServiceResponseAsDTO = new StimmabgabevermerkeDTO(wahlbezirkID, waehlerverzeichnisNummer, anzahlBlaetter, null);
+      val bezirkUndWaehlerverzeichnisNummer =
+          new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val mockedServiceResponse =
+          new StimmabgabevermerkeModel(bezirkUndWaehlerverzeichnisNummer, anzahlBlaetter, null);
+      val mockedServiceResponseAsDTO =
+          new StimmabgabevermerkeDTO(wahlbezirkID, waehlerverzeichnisNummer, anzahlBlaetter, null);
 
-            Mockito.when(stimmabgabevermerkeService.getStimmabgabevermerke(bezirkUndWaehlerverzeichnisNummer))
-                    .thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(mockedServiceResponse))
-                    .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(
+              stimmabgabevermerkeService.getStimmabgabevermerke(bezirkUndWaehlerverzeichnisNummer))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
+      val result = unitUnderTest.getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 1L;
-
-            val bezirkUndWaehlerverzeichnisNummer = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-
-            Mockito.when(stimmabgabevermerkeService.getStimmabgabevermerke(bezirkUndWaehlerverzeichnisNummer)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class PostStimmabgabevermerke {
+    @Test
+    void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 1L;
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 1L;
-            val anzahlBlaetter = 4711L;
-            val stimmabgabevermerkeDTO = new StimmabgabevermerkeDTO(wahlbezirkID, waehlerverzeichnisNummer, anzahlBlaetter, null);
+      val bezirkUndWaehlerverzeichnisNummer =
+          new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
 
-            val mockedStimmabgabevermerkeModel = new StimmabgabevermerkeModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                    anzahlBlaetter, null);
-            Mockito.when(stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeModel(stimmabgabevermerkeDTO)).thenReturn(mockedStimmabgabevermerkeModel);
+      Mockito.when(
+              stimmabgabevermerkeService.getStimmabgabevermerke(bezirkUndWaehlerverzeichnisNummer))
+          .thenReturn(Optional.empty());
 
-            unitUnderTest.postStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO);
+      val result = unitUnderTest.getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
 
-            Mockito.verify(stimmabgabevermerkeService).postStimmabgabevermerke(
-                    eq(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)), eq(mockedStimmabgabevermerkeModel));
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+  }
+
+  @Nested
+  class PostStimmabgabevermerke {
+
+    @Test
+    void should_callServiceWithModel_when_calledWithData() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 1L;
+      val anzahlBlaetter = 4711L;
+      val stimmabgabevermerkeDTO =
+          new StimmabgabevermerkeDTO(wahlbezirkID, waehlerverzeichnisNummer, anzahlBlaetter, null);
+
+      val mockedStimmabgabevermerkeModel =
+          new StimmabgabevermerkeModel(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              anzahlBlaetter,
+              null);
+      Mockito.when(stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeModel(stimmabgabevermerkeDTO))
+          .thenReturn(mockedStimmabgabevermerkeModel);
+
+      unitUnderTest.postStimmabgabevermerke(
+          wahlbezirkID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO);
+
+      Mockito.verify(stimmabgabevermerkeService)
+          .postStimmabgabevermerke(
+              eq(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)),
+              eq(mockedStimmabgabevermerkeModel));
+    }
+  }
 }

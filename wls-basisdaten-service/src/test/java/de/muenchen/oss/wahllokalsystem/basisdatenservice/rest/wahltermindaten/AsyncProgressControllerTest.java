@@ -14,26 +14,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AsyncProgressControllerTest {
 
-    @Mock
-    AsyncProgress asyncProgress;
+  @Mock AsyncProgress asyncProgress;
 
-    @Mock
-    AsyncProgressDTOMapper asyncProgressDTOMapper;
+  @Mock AsyncProgressDTOMapper asyncProgressDTOMapper;
 
-    @InjectMocks
-    AsyncProgressController unitUnderTest;
+  @InjectMocks AsyncProgressController unitUnderTest;
 
-    @Nested
-    class GetAsyncProgress {
+  @Nested
+  class GetAsyncProgress {
 
-        @Test
-        void should_returnCurrentProgressStateAsDTO_when_callingAsyncProgress() {
-            val mockedProgressDTO = new AsyncProgressDTO(null, null, null, null, false, 0, 1, null, true, 3, 4, null);
+    @Test
+    void should_returnCurrentProgressStateAsDTO_when_callingAsyncProgress() {
+      val mockedProgressDTO =
+          new AsyncProgressDTO(null, null, null, null, false, 0, 1, null, true, 3, 4, null);
 
-            Mockito.when(asyncProgressDTOMapper.toDto(asyncProgress)).thenReturn(mockedProgressDTO);
+      Mockito.when(asyncProgressDTOMapper.toDto(asyncProgress)).thenReturn(mockedProgressDTO);
 
-            Assertions.assertThat(unitUnderTest.getAsyncProgress()).isEqualTo(mockedProgressDTO);
-        }
-
+      Assertions.assertThat(unitUnderTest.getAsyncProgress()).isEqualTo(mockedProgressDTO);
     }
+  }
 }

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private final WelcomeClient welcomeClient;
+  private final WelcomeClient welcomeClient;
 
-    public String getWelcomeMessage() {
-        return welcomeClient.getWelcomeMessage();
-    }
+  public String getWelcomeMessage() {
+    return welcomeClient.getWelcomeMessage();
+  }
 }

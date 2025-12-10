@@ -10,77 +10,111 @@ import org.mapstruct.factory.Mappers;
 
 class WahlbriefdatenDTOMapperTest {
 
-    private final WahlbriefdatenDTOMapper unitUnderTest = Mappers.getMapper(WahlbriefdatenDTOMapper.class);
+  private final WahlbriefdatenDTOMapper unitUnderTest =
+      Mappers.getMapper(WahlbriefdatenDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnWahlbriefdatenDTO_when_givenWahlbriefdatenModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefe = 12L;
-            val verzeichnisseUngueltig = 3L;
-            val nachtraege = 23L;
-            val nachtraeglichUeberbrachte = 35L;
-            val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
-            val modelToMap = new WahlbriefdatenModel(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
+    @Test
+    void should_returnWahlbriefdatenDTO_when_givenWahlbriefdatenModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlbriefe = 12L;
+      val verzeichnisseUngueltig = 3L;
+      val nachtraege = 23L;
+      val nachtraeglichUeberbrachte = 35L;
+      val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
+      val modelToMap =
+          new WahlbriefdatenModel(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
 
-            val result = unitUnderTest.toDTO(modelToMap);
+      val result = unitUnderTest.toDTO(modelToMap);
 
-            val expectedResult = new WahlbriefdatenDTO(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          new WahlbriefdatenDTO(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 
+  @Nested
+  class ToModel {
+
+    @Test
+    void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTOAndWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlbriefe = 12L;
+      val verzeichnisseUngueltig = 3L;
+      val nachtraege = 23L;
+      val nachtraeglichUeberbrachte = 35L;
+      val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
+      val dtoForMapping =
+          new WahlbriefdatenWriteDTO(
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
+
+      val result = unitUnderTest.toModel(wahlbezirkID, dtoForMapping);
+
+      val expectedResult =
+          new WahlbriefdatenModel(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ToModel {
+    @Test
+    void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTO() {
+      val wahlbriefe = 12L;
+      val verzeichnisseUngueltig = 3L;
+      val nachtraege = 23L;
+      val nachtraeglichUeberbrachte = 35L;
+      val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
+      val dtoForMapping =
+          new WahlbriefdatenWriteDTO(
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
 
-        @Test
-        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTOAndWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefe = 12L;
-            val verzeichnisseUngueltig = 3L;
-            val nachtraege = 23L;
-            val nachtraeglichUeberbrachte = 35L;
-            val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
-            val dtoForMapping = new WahlbriefdatenWriteDTO(wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
+      val result = unitUnderTest.toModel(null, dtoForMapping);
 
-            val result = unitUnderTest.toModel(wahlbezirkID, dtoForMapping);
-
-            val expectedResult = new WahlbriefdatenModel(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenDTO() {
-            val wahlbriefe = 12L;
-            val verzeichnisseUngueltig = 3L;
-            val nachtraege = 23L;
-            val nachtraeglichUeberbrachte = 35L;
-            val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
-            val dtoForMapping = new WahlbriefdatenWriteDTO(wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
-
-            val result = unitUnderTest.toModel(null, dtoForMapping);
-
-            val expectedResult = new WahlbriefdatenModel(null, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWahlbriefdatenModel_when_givenWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val result = unitUnderTest.toModel(wahlbezirkID, null);
-
-            val expectedResult = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          new WahlbriefdatenModel(
+              null,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+
+    @Test
+    void should_returnWahlbriefdatenModel_when_givenWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val result = unitUnderTest.toModel(wahlbezirkID, null);
+
+      val expectedResult = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

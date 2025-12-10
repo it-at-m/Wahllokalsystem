@@ -12,39 +12,43 @@ import org.mapstruct.factory.Mappers;
 
 class UngueltigeWahlscheineModelMapperTest {
 
-    private final UngueltigeWahlscheineModelMapper unitUnderTest = Mappers.getMapper(UngueltigeWahlscheineModelMapper.class);
+  private final UngueltigeWahlscheineModelMapper unitUnderTest =
+      Mappers.getMapper(UngueltigeWahlscheineModelMapper.class);
 
-    @Nested
-    class ToID {
+  @Nested
+  class ToID {
 
-        @Test
-        void should_returnWahltagIdUndWahlbezirksart_when_givenUngueltigeWahlscheineReferenceModel() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_returnWahltagIdUndWahlbezirksart_when_givenUngueltigeWahlscheineReferenceModel() {
+      val wahltagID = "wahltagID";
 
-            val modelToMap = new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.UWB);
+      val modelToMap = new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.UWB);
 
-            val result = unitUnderTest.toID(modelToMap);
+      val result = unitUnderTest.toID(modelToMap);
 
-            val expectedResult = new WahltagIdUndWahlbezirksart(wahltagID, WahlbezirkArt.UWB);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult = new WahltagIdUndWahlbezirksart(wahltagID, WahlbezirkArt.UWB);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnUngueltigeWahlscheineEntity_when_givenUngueltigeWahlscheineWriteModel() {
-            val wahltagID = "wahltagID";
-            val data = "the test data".getBytes();
+    @Test
+    void should_returnUngueltigeWahlscheineEntity_when_givenUngueltigeWahlscheineWriteModel() {
+      val wahltagID = "wahltagID";
+      val data = "the test data".getBytes();
 
-            val modelToMap = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.BWB), data);
+      val modelToMap =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel(wahltagID, WahlbezirkArtModel.BWB), data);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart(wahltagID, WahlbezirkArt.BWB), data);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          new UngueltigeWahlscheine(
+              new WahltagIdUndWahlbezirksart(wahltagID, WahlbezirkArt.BWB), data);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
-
+  }
 }

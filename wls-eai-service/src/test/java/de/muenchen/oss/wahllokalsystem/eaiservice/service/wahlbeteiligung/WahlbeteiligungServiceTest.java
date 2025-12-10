@@ -16,42 +16,42 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlbeteiligungServiceTest {
 
-    @Mock
-    WahlbeteiligungMapper wahlbeteiligungMapper;
+  @Mock WahlbeteiligungMapper wahlbeteiligungMapper;
 
-    @Mock
-    WahlbeteiligungValidator wahlbeteiligungValidator;
+  @Mock WahlbeteiligungValidator wahlbeteiligungValidator;
 
-    @Mock
-    WahlbeteiligungRepository wahlbeteiligungRepository;
+  @Mock WahlbeteiligungRepository wahlbeteiligungRepository;
 
-    @InjectMocks
-    WahlbeteiligungService unitUnderTest;
+  @InjectMocks WahlbeteiligungService unitUnderTest;
 
-    @Nested
-    class SaveWahlbeteiligung {
+  @Nested
+  class SaveWahlbeteiligung {
 
-        @Test
-        void should_saveWahlbeteiligung_when_givenValidModel() {
-            val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
-            val mockedModelAsEntity = new Wahlbeteiligung();
+    @Test
+    void should_saveWahlbeteiligung_when_givenValidModel() {
+      val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
+      val mockedModelAsEntity = new Wahlbeteiligung();
 
-            Mockito.when(wahlbeteiligungMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
-            Mockito.doNothing().when(wahlbeteiligungValidator).validDTOToSetOrThrow(modelToSave);
+      Mockito.when(wahlbeteiligungMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
+      Mockito.doNothing().when(wahlbeteiligungValidator).validDTOToSetOrThrow(modelToSave);
 
-            unitUnderTest.saveWahlbeteiligung(modelToSave);
+      unitUnderTest.saveWahlbeteiligung(modelToSave);
 
-            Mockito.verify(wahlbeteiligungRepository).save(mockedModelAsEntity);
-        }
-
-        @Test
-        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
-            val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahlbeteiligungValidator).validDTOToSetOrThrow(modelToSave);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSave)).isSameAs(mockedValidationException);
-        }
+      Mockito.verify(wahlbeteiligungRepository).save(mockedModelAsEntity);
     }
+
+    @Test
+    void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
+      val modelToSave = WahlbeteiligungsMeldungDTO.builder().build();
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlbeteiligungValidator)
+          .validDTOToSetOrThrow(modelToSave);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSave))
+          .isSameAs(mockedValidationException);
+    }
+  }
 }

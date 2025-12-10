@@ -13,27 +13,40 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExceptionFactory {
 
-    private final ServiceIDFormatter serviceIDFormatter;
+  private final ServiceIDFormatter serviceIDFormatter;
 
-    public FachlicheWlsException createFachlicheWlsException(final ExceptionDataWrapper exceptionDataWrapper) {
-        return finalizeWlsException(FachlicheWlsException.withCode(exceptionDataWrapper.code()), exceptionDataWrapper.message());
-    }
+  public FachlicheWlsException createFachlicheWlsException(
+      final ExceptionDataWrapper exceptionDataWrapper) {
+    return finalizeWlsException(
+        FachlicheWlsException.withCode(exceptionDataWrapper.code()),
+        exceptionDataWrapper.message());
+  }
 
-    public TechnischeWlsException createTechnischeWlsException(final ExceptionDataWrapper exceptionDataWrapper) {
-        return finalizeWlsException(TechnischeWlsException.withCode(exceptionDataWrapper.code()), exceptionDataWrapper.message());
-    }
+  public TechnischeWlsException createTechnischeWlsException(
+      final ExceptionDataWrapper exceptionDataWrapper) {
+    return finalizeWlsException(
+        TechnischeWlsException.withCode(exceptionDataWrapper.code()),
+        exceptionDataWrapper.message());
+  }
 
-    public InfrastrukturelleWlsException createInfrastrukturelleWlsException(final ExceptionDataWrapper exceptionDataWrapper) {
-        return finalizeWlsException(InfrastrukturelleWlsException.withCode(exceptionDataWrapper.code()), exceptionDataWrapper.message());
-    }
+  public InfrastrukturelleWlsException createInfrastrukturelleWlsException(
+      final ExceptionDataWrapper exceptionDataWrapper) {
+    return finalizeWlsException(
+        InfrastrukturelleWlsException.withCode(exceptionDataWrapper.code()),
+        exceptionDataWrapper.message());
+  }
 
-    public SicherheitsWlsException createSicherheitsWlsException(final ExceptionDataWrapper exceptionDataWrapper) {
-        return finalizeWlsException(SicherheitsWlsException.withCode(exceptionDataWrapper.code()), exceptionDataWrapper.message());
-    }
+  public SicherheitsWlsException createSicherheitsWlsException(
+      final ExceptionDataWrapper exceptionDataWrapper) {
+    return finalizeWlsException(
+        SicherheitsWlsException.withCode(exceptionDataWrapper.code()),
+        exceptionDataWrapper.message());
+  }
 
-    private <T extends WlsException> T finalizeWlsException(final CodeIsSet<T> initializedExceptionBuilder, final String message) {
-        return initializedExceptionBuilder
-                .inService(serviceIDFormatter.getId())
-                .buildWithMessage(message);
-    }
+  private <T extends WlsException> T finalizeWlsException(
+      final CodeIsSet<T> initializedExceptionBuilder, final String message) {
+    return initializedExceptionBuilder
+        .inService(serviceIDFormatter.getId())
+        .buildWithMessage(message);
+  }
 }

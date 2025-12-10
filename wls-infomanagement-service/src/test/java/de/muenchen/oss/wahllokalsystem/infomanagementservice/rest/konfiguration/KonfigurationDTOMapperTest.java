@@ -21,83 +21,96 @@ import org.mapstruct.factory.Mappers;
 
 class KonfigurationDTOMapperTest {
 
-    private final KonfigurationDTOMapper unitUnderTest = Mappers.getMapper(KonfigurationDTOMapper.class);
+  private final KonfigurationDTOMapper unitUnderTest =
+      Mappers.getMapper(KonfigurationDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnKonfigurationDTO_when_konfigurationModelIsGiven() {
-            val key = "key";
-            val value = "value";
-            val description = "description";
-            val defaultValue = "defaultValue";
+    @Test
+    void should_returnKonfigurationDTO_when_konfigurationModelIsGiven() {
+      val key = "key";
+      val value = "value";
+      val description = "description";
+      val defaultValue = "defaultValue";
 
-            val modelToMap = new KonfigurationModel(key, value, description, defaultValue);
-            val expectedDTO = new KonfigurationDTO(key, value, description, defaultValue);
+      val modelToMap = new KonfigurationModel(key, value, description, defaultValue);
+      val expectedDTO = new KonfigurationDTO(key, value, description, defaultValue);
 
-            val result = unitUnderTest.toDTO(modelToMap);
+      val result = unitUnderTest.toDTO(modelToMap);
 
-            Assertions.assertThat(result).isEqualTo(expectedDTO);
-        }
-
-        @Test
-        void should_returnKennbuchstabenListenDTO_when_kennbuchstabenListenModelIsGiven() {
-            val kennbuchstaben11 = new KennbuchstabenModel(List.of("11a", "11b"));
-            val kennbuchstaben12 = new KennbuchstabenModel(List.of("12"));
-            val kennbuchstaben21 = new KennbuchstabenModel(List.of("21a", "21b", "21c"));
-            val kennbuchstaben22 = new KennbuchstabenModel(List.of("22a", "22b"));
-
-            val kennbuchstabenListe1 = new KennbuchstabenListeModel(List.of(kennbuchstaben11, kennbuchstaben12));
-            val kennbuchstabenListe2 = new KennbuchstabenListeModel(List.of(kennbuchstaben21, kennbuchstaben22));
-
-            val modelToMap = new KennbuchstabenListenModel(List.of(kennbuchstabenListe1, kennbuchstabenListe2));
-
-            val result = unitUnderTest.toDTO(modelToMap);
-
-            val listeDTO1 = new KennbuchstabenListeDTO(List.of(new KennbuchstabenDTO(List.of("11a", "11b")), new KennbuchstabenDTO(List.of("12"))));
-            var listeDTO2 = new KennbuchstabenListeDTO(
-                    List.of(new KennbuchstabenDTO(List.of("21a", "21b", "21c")), new KennbuchstabenDTO(List.of("22a", "22b"))));
-
-            val expectedResult = new KennbuchstabenListenDTO(List.of(listeDTO1, listeDTO2));
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
+      Assertions.assertThat(result).isEqualTo(expectedDTO);
     }
 
-    @Nested
-    class ToModelKey {
+    @Test
+    void should_returnKennbuchstabenListenDTO_when_kennbuchstabenListenModelIsGiven() {
+      val kennbuchstaben11 = new KennbuchstabenModel(List.of("11a", "11b"));
+      val kennbuchstaben12 = new KennbuchstabenModel(List.of("12"));
+      val kennbuchstaben21 = new KennbuchstabenModel(List.of("21a", "21b", "21c"));
+      val kennbuchstaben22 = new KennbuchstabenModel(List.of("22a", "22b"));
 
-        @ParameterizedTest
-        @EnumSource(KonfigurationKey.class)
-        void should_mapToNotNull_when_givenAllPossibleInputKeysFromKonfigurationKey(final KonfigurationKey key) {
-            Assertions.assertThat(unitUnderTest.toModelKey(key)).isNotNull();
-        }
+      val kennbuchstabenListe1 =
+          new KennbuchstabenListeModel(List.of(kennbuchstaben11, kennbuchstaben12));
+      val kennbuchstabenListe2 =
+          new KennbuchstabenListeModel(List.of(kennbuchstaben21, kennbuchstaben22));
 
-        @ParameterizedTest
-        @EnumSource(KonfigurationKey.class)
-        void should_returnEnumValueWithSameName_when_givenAnyKonfigurationKeyEnumName(final KonfigurationKey key) {
-            val parametersName = key.name();
-            val mappedValuesName = unitUnderTest.toModelKey(key).name();
+      val modelToMap =
+          new KennbuchstabenListenModel(List.of(kennbuchstabenListe1, kennbuchstabenListe2));
 
-            Assertions.assertThat(parametersName).isEqualTo(mappedValuesName);
-        }
+      val result = unitUnderTest.toDTO(modelToMap);
+
+      val listeDTO1 =
+          new KennbuchstabenListeDTO(
+              List.of(
+                  new KennbuchstabenDTO(List.of("11a", "11b")),
+                  new KennbuchstabenDTO(List.of("12"))));
+      var listeDTO2 =
+          new KennbuchstabenListeDTO(
+              List.of(
+                  new KennbuchstabenDTO(List.of("21a", "21b", "21c")),
+                  new KennbuchstabenDTO(List.of("22a", "22b"))));
+
+      val expectedResult = new KennbuchstabenListenDTO(List.of(listeDTO1, listeDTO2));
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class ToModelKey {
+
+    @ParameterizedTest
+    @EnumSource(KonfigurationKey.class)
+    void should_mapToNotNull_when_givenAllPossibleInputKeysFromKonfigurationKey(
+        final KonfigurationKey key) {
+      Assertions.assertThat(unitUnderTest.toModelKey(key)).isNotNull();
     }
 
-    @Nested
-    class ToSetModel {
-        @Test
-        void should_returnKonfigurationSetModel_when_givenKonfigurationSetDTO() {
-            val dtoToMap = new KonfigurationSetDTO("wert", "beschreibung", "standard");
-            val keyToMap = KonfigurationKey.FRUEHESTE_EROEFFNUNGSZEIT;
+    @ParameterizedTest
+    @EnumSource(KonfigurationKey.class)
+    void should_returnEnumValueWithSameName_when_givenAnyKonfigurationKeyEnumName(
+        final KonfigurationKey key) {
+      val parametersName = key.name();
+      val mappedValuesName = unitUnderTest.toModelKey(key).name();
 
-            val expectedResult = new KonfigurationSetModel("FRUEHESTE_EROEFFNUNGSZEIT", "wert", "beschreibung", "standard");
-
-            val result = unitUnderTest.toSetModel(keyToMap, dtoToMap);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(parametersName).isEqualTo(mappedValuesName);
     }
+  }
 
+  @Nested
+  class ToSetModel {
+    @Test
+    void should_returnKonfigurationSetModel_when_givenKonfigurationSetDTO() {
+      val dtoToMap = new KonfigurationSetDTO("wert", "beschreibung", "standard");
+      val keyToMap = KonfigurationKey.FRUEHESTE_EROEFFNUNGSZEIT;
+
+      val expectedResult =
+          new KonfigurationSetModel(
+              "FRUEHESTE_EROEFFNUNGSZEIT", "wert", "beschreibung", "standard");
+
+      val result = unitUnderTest.toSetModel(keyToMap, dtoToMap);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

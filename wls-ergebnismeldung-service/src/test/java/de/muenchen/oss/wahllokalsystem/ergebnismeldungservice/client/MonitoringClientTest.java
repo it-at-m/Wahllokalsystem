@@ -23,211 +23,269 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MonitoringClientTest {
 
-    @Mock
-    WahllokalZustandControllerApi wahllokalZustandControllerApi;
+  @Mock WahllokalZustandControllerApi wahllokalZustandControllerApi;
 
-    @Mock
-    StatusClientMapper statusClientMapper;
+  @Mock StatusClientMapper statusClientMapper;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    MonitoringClient unitUnderTest;
+  @InjectMocks MonitoringClient unitUnderTest;
 
-    @Nested
-    class PostSchnellmeldungSendungsuhrzeit {
+  @Nested
+  class PostSchnellmeldungSendungsuhrzeit {
 
-        @Test
-        void should_sendDataViaController_when_dataIsGiven() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
+    @Test
+    void should_sendDataViaController_when_dataIsGiven() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
 
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
 
-            unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
+      unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
 
-            Mockito.verify(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_apiThrowsWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiException = new RuntimeException("api call failed");
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedWlsException);
-        }
+      Mockito.verify(wahllokalZustandControllerApi)
+          .postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
     }
 
-    @Nested
-    class PostSchnellmeldungDruckuhrzeit {
+    @Test
+    void should_rethrowWlsException_when_apiThrowsWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
 
-        @Test
-        void should_sendDataViaController_when_dataIsGiven() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      val mockedApiWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiWlsException)
+          .when(wahllokalZustandControllerApi)
+          .postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
 
-            unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit);
-
-            Mockito.verify(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_apiThrowsWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiException = new RuntimeException("api call failed");
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedWlsException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedApiWlsException);
     }
 
-    @Nested
-    class PostNiederschriftSendungsuhrzeit {
+    @Test
+    void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
 
-        @Test
-        void should_sendDataViaController_when_dataIsGiven() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      val mockedApiException = new RuntimeException("api call failed");
+      val mockedWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiException)
+          .when(wahllokalZustandControllerApi)
+          .postSchnellmeldungSendungsuhrzeit(mockedDTOToSend);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING))
+          .thenReturn(mockedWlsException);
 
-            unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.postSchnellmeldungSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedWlsException);
+    }
+  }
 
-            Mockito.verify(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
-        }
+  @Nested
+  class PostSchnellmeldungDruckuhrzeit {
 
-        @Test
-        void should_rethrowWlsException_when_apiThrowsWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
+    @Test
+    void should_sendDataViaController_when_dataIsGiven() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
 
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
 
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
+      unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit);
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
-            val mockedApiException = new RuntimeException("api call failed");
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postNiederschriftSendungsuhrzeit(mockedDTOToSend);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedWlsException);
-        }
+      Mockito.verify(wahllokalZustandControllerApi).postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
     }
 
-    @Nested
-    class PostNiederschriftDruckuhrzeit {
+    @Test
+    void should_rethrowWlsException_when_apiThrowsWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
 
-        @Test
-        void should_sendDataViaController_when_dataIsGiven() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      val mockedApiWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
 
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiWlsException)
+          .when(wahllokalZustandControllerApi)
+          .postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
 
-            unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit);
-
-            Mockito.verify(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_apiThrowsWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiWlsException).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedApiWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            val uhrzeit = LocalDateTime.now();
-
-            val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
-            val mockedApiException = new RuntimeException("api call failed");
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("api call failed");
-
-            Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit))).thenReturn(mockedDTOToSend);
-            Mockito.doThrow(mockedApiException).when(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
-                    .isSameAs(mockedWlsException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedApiWlsException);
     }
+
+    @Test
+    void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      val mockedApiException = new RuntimeException("api call failed");
+      val mockedWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiException)
+          .when(wahllokalZustandControllerApi)
+          .postSchnellmeldungDruckuhrzeit(mockedDTOToSend);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.postSchnellmeldungDruckuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class PostNiederschriftSendungsuhrzeit {
+
+    @Test
+    void should_sendDataViaController_when_dataIsGiven() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+
+      unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit);
+
+      Mockito.verify(wahllokalZustandControllerApi)
+          .postNiederschriftSendungsuhrzeit(mockedDTOToSend);
+    }
+
+    @Test
+    void should_rethrowWlsException_when_apiThrowsWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      val mockedApiWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiWlsException)
+          .when(wahllokalZustandControllerApi)
+          .postNiederschriftSendungsuhrzeit(mockedDTOToSend);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedApiWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(SendungsdatenDTO.class);
+      val mockedApiException = new RuntimeException("api call failed");
+      val mockedWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+
+      Mockito.when(statusClientMapper.toSendungsdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiException)
+          .when(wahllokalZustandControllerApi)
+          .postNiederschriftSendungsuhrzeit(mockedDTOToSend);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.postNiederschriftSendungsuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class PostNiederschriftDruckuhrzeit {
+
+    @Test
+    void should_sendDataViaController_when_dataIsGiven() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+
+      unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit);
+
+      Mockito.verify(wahllokalZustandControllerApi).postNiederschriftDruckuhrzeit(mockedDTOToSend);
+    }
+
+    @Test
+    void should_rethrowWlsException_when_apiThrowsWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      val mockedApiWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiWlsException)
+          .when(wahllokalZustandControllerApi)
+          .postNiederschriftDruckuhrzeit(mockedDTOToSend);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedApiWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_apiThrowsNonWlsException() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val uhrzeit = LocalDateTime.now();
+
+      val mockedDTOToSend = Mockito.mock(DruckdatenDTO.class);
+      val mockedApiException = new RuntimeException("api call failed");
+      val mockedWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("api call failed");
+
+      Mockito.when(statusClientMapper.toDruckdatenDTO(eq(bezirkUndWahlID), eq(uhrzeit)))
+          .thenReturn(mockedDTOToSend);
+      Mockito.doThrow(mockedApiException)
+          .when(wahllokalZustandControllerApi)
+          .postNiederschriftDruckuhrzeit(mockedDTOToSend);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.postNiederschriftDruckuhrzeit(bezirkUndWahlID, uhrzeit))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

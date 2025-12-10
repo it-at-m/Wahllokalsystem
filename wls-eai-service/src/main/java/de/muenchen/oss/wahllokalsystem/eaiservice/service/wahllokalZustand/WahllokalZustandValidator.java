@@ -11,16 +11,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class WahllokalZustandValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahllokalZustandOrThrow(final WahllokalZustandDTO zustand) {
-        if (zustand == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
-        }
-
-        if (StringUtils.isBlank(zustand.wahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(
-                    ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
-        }
+  public void validWahllokalZustandOrThrow(final WahllokalZustandDTO zustand) {
+    if (zustand == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
     }
+
+    if (StringUtils.isBlank(zustand.wahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLLOKALZUSTAND_WAHLBEZIRKID_FEHLT);
+    }
+  }
 }

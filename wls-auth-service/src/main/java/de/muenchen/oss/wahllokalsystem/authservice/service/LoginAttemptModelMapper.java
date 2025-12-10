@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface LoginAttemptModelMapper {
 
-    LoginAttemptModel toModel(LoginAttempt loginAttempt);
+  LoginAttemptModel toModel(LoginAttempt loginAttempt);
 }

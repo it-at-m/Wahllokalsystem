@@ -9,42 +9,44 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { UrnenwahlSchliessungsUhrzeitDTOMapperImpl.class })
+@SpringBootTest(classes = {UrnenwahlSchliessungsUhrzeitDTOMapperImpl.class})
 class UrnenwahlSchliessungsUhrzeitDTOMapperTest {
 
-    @Autowired
-    private UrnenwahlSchliessungsUhrzeitDTOMapper unitUnderTest;
+  @Autowired private UrnenwahlSchliessungsUhrzeitDTOMapper unitUnderTest;
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnUrnenwahlSchliessungsuhrzeitDTO_when_givenUrnenwahlSchliessungsuhrzeitModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val schliessungsuhrzeit = LocalDateTime.now();
-            val modelToMap = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, schliessungsuhrzeit);
+    @Test
+    void
+        should_returnUrnenwahlSchliessungsuhrzeitDTO_when_givenUrnenwahlSchliessungsuhrzeitModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val schliessungsuhrzeit = LocalDateTime.now();
+      val modelToMap = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, schliessungsuhrzeit);
 
-            val result = unitUnderTest.toDTO(modelToMap);
-            val expectedResult = new UrnenwahlSchliessungsUhrzeitDTO(wahlbezirkID, schliessungsuhrzeit);
+      val result = unitUnderTest.toDTO(modelToMap);
+      val expectedResult = new UrnenwahlSchliessungsUhrzeitDTO(wahlbezirkID, schliessungsuhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnUrnenwahlSchliessungsuhrzeitModel_when_givenUrnenwahlSchliessungsuhrzeitDTO() {
-            val schliessungsuhrzeit = LocalDateTime.now();
-            val dtoToMap = new UrnenwahlSchliessungsUhrzeitWriteDTO(schliessungsuhrzeit);
-            val wahlbezirkIDToMap = "wahlbezirkID";
+    @Test
+    void
+        should_returnUrnenwahlSchliessungsuhrzeitModel_when_givenUrnenwahlSchliessungsuhrzeitDTO() {
+      val schliessungsuhrzeit = LocalDateTime.now();
+      val dtoToMap = new UrnenwahlSchliessungsUhrzeitWriteDTO(schliessungsuhrzeit);
+      val wahlbezirkIDToMap = "wahlbezirkID";
 
-            val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
+      val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 
-            val expectedResult = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkIDToMap, schliessungsuhrzeit);
+      val expectedResult =
+          new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkIDToMap, schliessungsuhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

@@ -22,26 +22,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Setter
 public class CorsFilter extends OncePerRequestFilter {
 
-    private List<String> allowedOrigins;
+  private List<String> allowedOrigins;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        setHeaderAccessControlAllowOrigin(request, response);
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Request-Method, Access-Control-Request-Headers, X-WLS-SW-STRATEGY");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
+    setHeaderAccessControlAllowOrigin(request, response);
+    response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+    response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
+    response.setHeader("Access-Control-Max-Age", "3600");
+    response.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Request-Method, Access-Control-Request-Headers, X-WLS-SW-STRATEGY");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        filterChain.doFilter(request, response);
+    filterChain.doFilter(request, response);
+  }
+
+  private void setHeaderAccessControlAllowOrigin(
+      HttpServletRequest request, final HttpServletResponse response) {
+    val requestOrigin = request.getHeader("Origin");
+    if (allowedOrigins.contains(requestOrigin)) {
+      response.setHeader("Access-Control-Allow-Origin", requestOrigin);
     }
-
-    private void setHeaderAccessControlAllowOrigin(HttpServletRequest request, final HttpServletResponse response) {
-        val requestOrigin = request.getHeader("Origin");
-        if (allowedOrigins.contains(requestOrigin)) {
-            response.setHeader("Access-Control-Allow-Origin", requestOrigin);
-        }
-
-    }
+  }
 }

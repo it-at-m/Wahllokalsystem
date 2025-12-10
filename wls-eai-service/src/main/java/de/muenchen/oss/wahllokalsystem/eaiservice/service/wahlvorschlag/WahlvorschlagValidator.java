@@ -10,17 +10,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlvorschlagValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validateWahlbezirkIDOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT);
-        }
+  public void validateWahlbezirkIDOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLVORSCHLAEGE_BEZIRKID_FEHLT);
     }
+  }
 
-    public void validateWahlIDOrThrow(final String wahlID) {
-        if (StringUtils.isBlank(wahlID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT);
-        }
+  public void validateWahlIDOrThrow(final String wahlID) {
+    if (StringUtils.isBlank(wahlID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.LOADWAHLVORSCHLAEGE_WAHLID_FEHLT);
     }
+  }
 }

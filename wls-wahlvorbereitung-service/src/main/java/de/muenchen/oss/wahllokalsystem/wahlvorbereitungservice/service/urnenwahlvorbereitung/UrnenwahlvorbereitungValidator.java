@@ -10,18 +10,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UrnenwahlvorbereitungValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
-        if (wahlbezirkID == null || wahlbezirkID.isEmpty()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
-        }
+  public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
+    if (wahlbezirkID == null || wahlbezirkID.isEmpty()) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validModelToSetOrThrow(final UrnenwahlvorbereitungModel modelToValidate) {
-        if (modelToValidate == null || StringUtils.isEmpty(modelToValidate.wahlbezirkID()) || modelToValidate.urnenAnzahl()
-                .isEmpty()) { //urnenanzahl cannot be null because of the records constructor
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
-        }
+  public void validModelToSetOrThrow(final UrnenwahlvorbereitungModel modelToValidate) {
+    if (modelToValidate == null
+        || StringUtils.isEmpty(modelToValidate.wahlbezirkID())
+        || modelToValidate
+            .urnenAnzahl()
+            .isEmpty()) { // urnenanzahl cannot be null because of the records constructor
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG);
     }
+  }
 }

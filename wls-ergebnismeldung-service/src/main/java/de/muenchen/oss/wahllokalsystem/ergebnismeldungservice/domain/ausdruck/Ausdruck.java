@@ -17,15 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Ausdruck {
 
-    @Valid
-    @NotNull
-    @EmbeddedId
-    private WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart;
+  @Valid @NotNull @EmbeddedId private WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart;
 
-    @Lob
-    private String content;
+  @Lob private String content;
 
-    @NotNull
-    @Column(name = "erstellt_am")
-    private Instant erstelltAm;
+  @NotNull @Column(name = "erstellt_am")
+  private Instant erstelltAm;
 }

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface StimmzettelumschlaegeDTOMapper {
 
-    StimmzettelumschlaegeDTO toDTO(StimmzettelumschlaegeModel stimmzettelumschlaegeModel);
+  StimmzettelumschlaegeDTO toDTO(StimmzettelumschlaegeModel stimmzettelumschlaegeModel);
 
-    StimmzettelumschlaegeModel toModel(StimmzettelumschlaegeDTO stimmzettelumschlaegeDTO);
+  StimmzettelumschlaegeModel toModel(StimmzettelumschlaegeDTO stimmzettelumschlaegeDTO);
 }

@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlIDParamOrThrow(final String wahlID) {
-        if (StringUtils.isBlank(wahlID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
-        }
+  public void validWahlIDParamOrThrow(final String wahlID) {
+    if (StringUtils.isBlank(wahlID)) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
     }
+  }
 
-    public void validWahlModelListOrThrow(final List<WahlModel> wahlModelList) {
-        if (wahlModelList == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
-        }
+  public void validWahlModelListOrThrow(final List<WahlModel> wahlModelList) {
+    if (wahlModelList == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
     }
+  }
 }

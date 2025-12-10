@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record BegruendungDTO(@NotNull BezirkUndWahlIDStapelartDTO bezirkUndWahlIDStapelart,
-                             String grund,
-                             String grund2,
-                             boolean nachzaehlung,
-                             boolean unstimmigkeiten) {
-}
+public record BegruendungDTO(
+    @NotNull BezirkUndWahlIDStapelartDTO bezirkUndWahlIDStapelart,
+    String grund,
+    String grund2,
+    boolean nachzaehlung,
+    boolean unstimmigkeiten) {}

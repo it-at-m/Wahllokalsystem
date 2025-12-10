@@ -17,29 +17,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ExceptionFactoryTest {
 
-    @Mock
-    ServiceIDFormatter serviceIDFormatter;
+  @Mock ServiceIDFormatter serviceIDFormatter;
 
-    @InjectMocks
-    ExceptionFactory unitUnderTest;
+  @InjectMocks ExceptionFactory unitUnderTest;
 
-    @Nested
-    class CreateFachlicheWlsException {
+  @Nested
+  class CreateFachlicheWlsException {
 
-        @Test
-        void should_returnWlsExceptionWithGivenData_when_convertedCorrectly() {
-            val code = "0815";
-            val message = "Everything Everywhere All at Once";
-            val wrappedData = new ExceptionDataWrapper(code, message);
+    @Test
+    void should_returnWlsExceptionWithGivenData_when_convertedCorrectly() {
+      val code = "0815";
+      val message = "Everything Everywhere All at Once";
+      val wrappedData = new ExceptionDataWrapper(code, message);
 
-            val serviceID = "serviceID";
-            Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
+      val serviceID = "serviceID";
+      Mockito.when(serviceIDFormatter.getId()).thenReturn(serviceID);
 
-            val result = unitUnderTest.createFachlicheWlsException(wrappedData);
+      val result = unitUnderTest.createFachlicheWlsException(wrappedData);
 
-            val expectedResult = FachlicheWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
+      val expectedResult =
+          FachlicheWlsException.withCode(code).inService(serviceID).buildWithMessage(message);
 
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
+  }
 }

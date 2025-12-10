@@ -20,15 +20,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Wahltag extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    private LocalDate tag;
+  @NotNull @ToString.Include private LocalDate tag;
 
-    @NotNull
-    @ToString.Include
-    private String beschreibung;
+  @NotNull @ToString.Include private String beschreibung;
 
-    @NotNull
-    @ToString.Include
-    private String nummer;
+  @NotNull @ToString.Include private String nummer;
 }

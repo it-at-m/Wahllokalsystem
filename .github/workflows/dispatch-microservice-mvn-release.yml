@@ -27,6 +27,11 @@ on:
           - wls-vorfaelleundvorkommnisse-service
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
+      javaVersion:
+        required: false
+        type: string
+        default: '17'
+        description: "optional: java version für den Build"
 
 jobs:
   run-mvn-release-prepare:
@@ -41,7 +46,7 @@ jobs:
       - name: Install Java and Maven
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
-          java-version: 17
+          java-version: ${{ github.event.inputs.javaVersion }}
           distribution: "temurin"
           cache: 'maven'
           cache-dependency-path: '${{ github.event.inputs.service }}/pom.xml'
@@ -64,6 +69,7 @@ jobs:
       tag: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}
       files: "${{ github.event.inputs.service }}/target/*.jar\n${{ github.event.inputs.service }}/target/openapi.json"
+      javaVersion: ${{ github.event.inputs.javaVersion }}
 
   build-github-container-image:
     permissions:
@@ -75,3 +81,4 @@ jobs:
     with:
       tag: ${{ github.event.inputs.service }}/${{ github.event.inputs.release-version }}
       service: ${{ github.event.inputs.service }}
+      javaVersion: ${{ github.event.inputs.javaVersion }}

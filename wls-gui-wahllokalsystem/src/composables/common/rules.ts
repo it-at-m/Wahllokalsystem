@@ -34,7 +34,7 @@ export function useRules() {
     `Eingabe darf nicht in der Zukunft liegen.`;
 
   const timeGreaterOrEqual = (compareValue: string) => (value: string) => {
-    let formattedErrorValue = _formatToHhMm(compareValue);
+    let formattedErrorValue = _formatTimeStringToHhMm(compareValue);
     return (
       createTodayWithTime(value) >= createTodayWithTime(compareValue) ||
       `Eingabe muss größer oder gleich ${formattedErrorValue} sein.`
@@ -42,7 +42,7 @@ export function useRules() {
   };
 
   const timeLessOrEqual = (compareValue: string) => (value: string) => {
-    let formattedErrorValue = _formatToHhMm(compareValue);
+    let formattedErrorValue = _formatTimeStringToHhMm(compareValue);
     return (
       createTodayWithTime(value) <= createTodayWithTime(compareValue) ||
       `Eingabe muss kleiner oder gleich ${formattedErrorValue} sein.`

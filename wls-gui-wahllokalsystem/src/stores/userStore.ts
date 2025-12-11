@@ -4,11 +4,14 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
+const { importKey } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
@@ -43,6 +46,16 @@ export const useUserStore = defineStore("user", () => {
       } else {
         user.value = defaultUser;
         throw e;
+      }
+    } finally {
+      const cryptoKey = await importKey(user.value.pin);
+      const indexDBSingleton = useIndexDB();
+      indexDBSingleton.setKey(cryptoKey);
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: "PIN",
+          payload: cryptoKey,
+        });
       }
     }
   }

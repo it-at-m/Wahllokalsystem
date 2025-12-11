@@ -8,7 +8,19 @@ import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 
 const { prepareIndexDBValue } = useIndexDBValueTestDataFactory();
 
+const mockDefinitions = vi.hoisted(() => ({
+  decrypt: vi.fn(),
+  encrypt: vi.fn(),
+}));
+
 vi.mock("localforage");
+
+vi.mock("@/composables/crypto/cryptoUtils.ts", () => ({
+  useCryptoUtils: () => ({
+    decrypt: mockDefinitions.decrypt,
+    encrypt: mockDefinitions.encrypt,
+  }),
+}));
 
 describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
@@ -49,7 +61,13 @@ describe("indexDB.ts", () => {
         });
       });
 
+      mockDefinitions.decrypt.mockImplementation((data) => {
+        return data;
+      });
+
       const result = await unitUnderTest.getDirtyItems();
+
+      expect(mockDefinitions.decrypt).toHaveBeenCalledTimes(2);
 
       expect(result).toEqual([
         { key: "key1", item: indexDBValueDirty1 },
@@ -83,7 +101,13 @@ describe("indexDB.ts", () => {
         Promise.resolve(mockItem)
       );
 
+      mockDefinitions.decrypt.mockImplementation((data) => {
+        return data;
+      });
+
       const result = await unitUnderTest.getItemFromIDB(key);
+
+      expect(mockDefinitions.decrypt).toHaveBeenCalled();
 
       expect(result).toEqual(mockItem);
       expect(localforage.getItem).toHaveBeenCalledWith(key);
@@ -124,7 +148,13 @@ describe("indexDB.ts", () => {
       const key = "test";
       const data = prepareIndexDBValue().build();
 
+      mockDefinitions.encrypt.mockImplementation((data) => {
+        return data;
+      });
+
       await unitUnderTest.storeItem(key, data);
+
+      expect(mockDefinitions.encrypt).toHaveBeenCalled();
 
       expect(localforage.setItem).toHaveBeenCalledWith(key, data);
     });

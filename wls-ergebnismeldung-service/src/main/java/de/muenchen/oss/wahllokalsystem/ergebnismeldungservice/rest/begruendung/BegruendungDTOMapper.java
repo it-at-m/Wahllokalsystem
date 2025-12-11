@@ -9,17 +9,18 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface BegruendungDTOMapper {
 
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
-    @Mapping(target = "grund", source = "grund1")
-    BegruendungDTO toDTO(BegruendungModel model);
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
+  @Mapping(target = "grund", source = "grund1")
+  BegruendungDTO toDTO(BegruendungModel model);
 
-    BegruendungReferenceModel toReferenceModel(String wahlbezirkID, String wahlID, StapelartDTO stapelart);
+  BegruendungReferenceModel toReferenceModel(
+      String wahlbezirkID, String wahlID, StapelartDTO stapelart);
 
-    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
-    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
-    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
-    @Mapping(target = "grund1", source = "grund")
-    BegruendungModel toModel(BegruendungDTO dto);
+  @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
+  @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
+  @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
+  @Mapping(target = "grund1", source = "grund")
+  BegruendungModel toModel(BegruendungDTO dto);
 }

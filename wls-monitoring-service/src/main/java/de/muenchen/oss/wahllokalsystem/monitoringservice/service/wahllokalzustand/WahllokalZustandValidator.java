@@ -13,15 +13,20 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahllokalZustandValidator {
 
-    public void validWahlbezirkIDOrThrow(String wahlbezirkID, final FachlicheWlsException wlsException) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw wlsException;
-        }
+  public void validWahlbezirkIDOrThrow(
+      String wahlbezirkID, final FachlicheWlsException wlsException) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw wlsException;
     }
+  }
 
-    public void validWahlIdUndWahlbezirkIDOrThrow(final BezirkUndWahlID bezirkUndWahlID, final FachlicheWlsException wlsException) throws WlsException {
-        if (bezirkUndWahlID == null || StringUtils.isBlank(bezirkUndWahlID.getWahlID()) || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID())) {
-            throw wlsException;
-        }
+  public void validWahlIdUndWahlbezirkIDOrThrow(
+      final BezirkUndWahlID bezirkUndWahlID, final FachlicheWlsException wlsException)
+      throws WlsException {
+    if (bezirkUndWahlID == null
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlID())
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID())) {
+      throw wlsException;
     }
+  }
 }

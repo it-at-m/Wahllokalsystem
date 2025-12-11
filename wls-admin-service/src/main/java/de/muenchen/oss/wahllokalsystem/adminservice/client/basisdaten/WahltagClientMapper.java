@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahltagClientMapper {
 
-    WahltagModel toModel(WahltagDTO wahltagDTO);
+  WahltagModel toModel(WahltagDTO wahltagDTO);
 
-    List<WahltagModel> toModelList(List<WahltagDTO> wahltagDTOs);
+  List<WahltagModel> toModelList(List<WahltagDTO> wahltagDTOs);
 }

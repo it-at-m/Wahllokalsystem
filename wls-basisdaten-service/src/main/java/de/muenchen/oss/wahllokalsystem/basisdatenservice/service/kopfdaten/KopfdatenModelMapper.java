@@ -7,10 +7,9 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface KopfdatenModelMapper {
 
-    Kopfdaten toEntity(KopfdatenModel kopfdatenModel);
+  Kopfdaten toEntity(KopfdatenModel kopfdatenModel);
 
-    KopfdatenModel toModel(Kopfdaten entity);
+  KopfdatenModel toModel(Kopfdaten entity);
 
-    List<KopfdatenModel> fromListOfEntitiesToListOfModels(List<Kopfdaten> kopfdatenEntitiesList);
-
+  List<KopfdatenModel> fromListOfEntitiesToListOfModels(List<Kopfdaten> kopfdatenEntitiesList);
 }

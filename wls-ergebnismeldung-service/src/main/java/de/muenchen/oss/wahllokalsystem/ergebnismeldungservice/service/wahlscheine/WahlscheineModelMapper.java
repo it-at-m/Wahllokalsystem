@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlscheineModelMapper {
 
-    WahlscheineModel toModel(Wahlscheine entity);
+  WahlscheineModel toModel(Wahlscheine entity);
 
-    Wahlscheine toEntity(WahlscheineModel model);
+  Wahlscheine toEntity(WahlscheineModel model);
 }

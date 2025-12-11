@@ -14,17 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Konfiguration {
 
-    @Id
-    @NotNull
-    @Size(max = 255)
-    private String schluessel;
+  @Id
+  @NotNull @Size(max = 255) private String schluessel;
 
-    @Size(max = 1024)
-    private String wert;
+  @Size(max = 1024) private String wert;
 
-    @Size(max = 1024)
-    private String beschreibung;
+  @Size(max = 1024) private String beschreibung;
 
-    @Size(max = 1024)
-    private String standardwert;
+  @Size(max = 1024) private String standardwert;
 }

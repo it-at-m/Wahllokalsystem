@@ -13,25 +13,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceTest {
 
-    @Mock
-    WelcomeClient welcomeClient;
+  @Mock WelcomeClient welcomeClient;
 
-    @InjectMocks
-    LoginService unitUnderTest;
+  @InjectMocks LoginService unitUnderTest;
 
-    @Nested
-    class GetWelcomeMessage {
+  @Nested
+  class GetWelcomeMessage {
 
-        @Test
-        void should_returnMessageOfTheClient_when_requestingTheMessage() {
-            val welcomeMessageFromClient = "hello world";
+    @Test
+    void should_returnMessageOfTheClient_when_requestingTheMessage() {
+      val welcomeMessageFromClient = "hello world";
 
-            Mockito.when(welcomeClient.getWelcomeMessage()).thenReturn(welcomeMessageFromClient);
+      Mockito.when(welcomeClient.getWelcomeMessage()).thenReturn(welcomeMessageFromClient);
 
-            val result = unitUnderTest.getWelcomeMessage();
+      val result = unitUnderTest.getWelcomeMessage();
 
-            Assertions.assertThat(result).isEqualTo(welcomeMessageFromClient);
-        }
+      Assertions.assertThat(result).isEqualTo(welcomeMessageFromClient);
     }
-
+  }
 }

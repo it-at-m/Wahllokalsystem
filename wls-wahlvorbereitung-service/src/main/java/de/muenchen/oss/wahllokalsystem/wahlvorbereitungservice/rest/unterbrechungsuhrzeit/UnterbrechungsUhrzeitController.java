@@ -21,36 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UnterbrechungsUhrzeitController extends AbstractController {
 
-    private final UnterbrechungsUhrzeitService unterbrechungsuhrzeitService;
-    private final UnterbrechungsUhrzeitDTOMapper UnterbrechungsuhrzeitDTOMapper;
+  private final UnterbrechungsUhrzeitService unterbrechungsuhrzeitService;
+  private final UnterbrechungsUhrzeitDTOMapper UnterbrechungsuhrzeitDTOMapper;
 
-    @Operation(
-            description = "Laden der Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Unterbrechungsuhrzeit erfolgreich zurückgegeben."
-                    ) }
-    )
-    @GetMapping("{wahlbezirkID}")
-    public ResponseEntity<UnterbrechungsUhrzeitDTO> getUnterbrechungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val unterbrechungsuhrzeitModel = unterbrechungsuhrzeitService.getUnterbrechungsUhrzeit(wahlbezirkID);
+  @Operation(
+      description = "Laden der Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Unterbrechungsuhrzeit erfolgreich zurückgegeben.")
+      })
+  @GetMapping("{wahlbezirkID}")
+  public ResponseEntity<UnterbrechungsUhrzeitDTO> getUnterbrechungsuhrzeit(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val unterbrechungsuhrzeitModel =
+        unterbrechungsuhrzeitService.getUnterbrechungsUhrzeit(wahlbezirkID);
 
-        return okWithBodyOrNoContent(unterbrechungsuhrzeitModel.map(UnterbrechungsuhrzeitDTOMapper::toDTO));
-    }
+    return okWithBodyOrNoContent(
+        unterbrechungsuhrzeitModel.map(UnterbrechungsuhrzeitDTOMapper::toDTO));
+  }
 
-    @Operation(
-            description = "Aktualisiert die Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201", description = "Unterbrechungsuhrzeit erfolgreich gespeichert."
-                    ) }
-    )
-    @PostMapping("{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void postUnterbrechungsuhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final UnterbrechungsUhrzeitWriteDTO unterbrechungsuhrzeitWriteDTO) {
-        val unterbrechungsuhrzeitToSet = UnterbrechungsuhrzeitDTOMapper.toModel(wahlbezirkID, unterbrechungsuhrzeitWriteDTO);
-        unterbrechungsuhrzeitService.setUnterbrechungsUhrzeit(unterbrechungsuhrzeitToSet);
-    }
-
+  @Operation(
+      description = "Aktualisiert die Unterbrechungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Unterbrechungsuhrzeit erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void postUnterbrechungsuhrzeit(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final UnterbrechungsUhrzeitWriteDTO unterbrechungsuhrzeitWriteDTO) {
+    val unterbrechungsuhrzeitToSet =
+        UnterbrechungsuhrzeitDTOMapper.toModel(wahlbezirkID, unterbrechungsuhrzeitWriteDTO);
+    unterbrechungsuhrzeitService.setUnterbrechungsUhrzeit(unterbrechungsuhrzeitToSet);
+  }
 }

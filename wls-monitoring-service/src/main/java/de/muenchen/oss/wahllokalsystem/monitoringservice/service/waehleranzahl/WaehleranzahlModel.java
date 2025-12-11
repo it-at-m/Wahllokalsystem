@@ -9,5 +9,4 @@ import lombok.Builder;
 public record WaehleranzahlModel(
     @NotNull BezirkUndWahlID bezirkUndWahlID,
     @NotNull long anzahlWaehler,
-    @NotNull LocalDateTime uhrzeit) {
-}
+    @NotNull LocalDateTime uhrzeit) {}

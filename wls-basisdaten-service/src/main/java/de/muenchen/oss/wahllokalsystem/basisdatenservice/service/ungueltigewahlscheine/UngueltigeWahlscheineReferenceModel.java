@@ -5,6 +5,5 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record UngueltigeWahlscheineReferenceModel(@NotNull String wahltagID,
-                                                  @NotNull WahlbezirkArtModel wahlbezirksart) {
-}
+public record UngueltigeWahlscheineReferenceModel(
+    @NotNull String wahltagID, @NotNull WahlbezirkArtModel wahlbezirksart) {}

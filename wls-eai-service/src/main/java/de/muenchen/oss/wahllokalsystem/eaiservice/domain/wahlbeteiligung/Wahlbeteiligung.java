@@ -20,19 +20,11 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Wahlbeteiligung extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    String wahlID;
+  @NotNull @ToString.Include String wahlID;
 
-    @NotNull
-    @ToString.Include
-    String wahlbezirkID;
+  @NotNull @ToString.Include String wahlbezirkID;
 
-    @NotNull
-    @ToString.Include
-    long anzahlWaehler;
+  @NotNull @ToString.Include long anzahlWaehler;
 
-    @NotNull
-    @ToString.Include
-    LocalDateTime meldeZeitpunkt;
+  @NotNull @ToString.Include LocalDateTime meldeZeitpunkt;
 }

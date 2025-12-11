@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AWerteValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlbezirkIDParamOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlbezirkIDParamOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETAWERTE_PARAMETER_UNVOLLSTAENDIG);
     }
-
+  }
 }

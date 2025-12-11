@@ -18,30 +18,57 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MethodRules {
 
-    public static final ArchRule REQUEST_MAPPING_METHODS_SHOULD_USE_ONLY_ANNOTATED_PARAMETERS = methods()
-            .that().areAnnotatedWith(RequestMapping.class)
-            .or().areMetaAnnotatedWith(RequestMapping.class)
-            .should(new RequestMappingMethodParameterAnnotationCondition());
+  public static final ArchRule REQUEST_MAPPING_METHODS_SHOULD_USE_ONLY_ANNOTATED_PARAMETERS =
+      methods()
+          .that()
+          .areAnnotatedWith(RequestMapping.class)
+          .or()
+          .areMetaAnnotatedWith(RequestMapping.class)
+          .should(new RequestMappingMethodParameterAnnotationCondition());
 
-    public static final MethodsShouldConjunction RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED = methods()
-            .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class)
-            .should().haveNameMatching("^should_[a-z].*_when_[a-z].*");
+  public static final MethodsShouldConjunction RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED =
+      methods()
+          .that()
+          .areAnnotatedWith(Test.class)
+          .or()
+          .areAnnotatedWith(ParameterizedTest.class)
+          .should()
+          .haveNameMatching("^should_[a-z].*_when_[a-z].*");
 
-    public static final ArchRule RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(BeforeEach.class).should().haveNameMatching("setup")
-            .allowEmptyShould(true);
+  public static final ArchRule RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED =
+      methods()
+          .that()
+          .areAnnotatedWith(BeforeEach.class)
+          .should()
+          .haveNameMatching("setup")
+          .allowEmptyShould(true);
 
-    public static final ArchRule RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(AfterEach.class).should().haveNameMatching("teardown")
-            .allowEmptyShould(true);
+  public static final ArchRule RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED =
+      methods()
+          .that()
+          .areAnnotatedWith(AfterEach.class)
+          .should()
+          .haveNameMatching("teardown")
+          .allowEmptyShould(true);
 
-    public static final ArchRule RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class).should()
-            .notHaveModifier(JavaModifier.PROTECTED)
-            .andShould().notHaveModifier(JavaModifier.PRIVATE)
-            .andShould().notHaveModifier(JavaModifier.PUBLIC);
+  public static final ArchRule RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED =
+      methods()
+          .that()
+          .areAnnotatedWith(Test.class)
+          .or()
+          .areAnnotatedWith(ParameterizedTest.class)
+          .should()
+          .notHaveModifier(JavaModifier.PROTECTED)
+          .andShould()
+          .notHaveModifier(JavaModifier.PRIVATE)
+          .andShould()
+          .notHaveModifier(JavaModifier.PUBLIC);
 
-    public static final ArchRule RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED = methods()
-            .that().areAnnotatedWith(Test.class).or().areAnnotatedWith(ParameterizedTest.class)
-            .should(haveTopEnclosingClassEndingWithTest);
+  public static final ArchRule RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED =
+      methods()
+          .that()
+          .areAnnotatedWith(Test.class)
+          .or()
+          .areAnnotatedWith(ParameterizedTest.class)
+          .should(haveTopEnclosingClassEndingWithTest);
 }

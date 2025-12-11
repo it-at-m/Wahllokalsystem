@@ -5,6 +5,5 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record WahlvorstandWriteDTO(LocalDateTime anwesenheitBeginn,
-                                   List<WahlvorstandsmitgliedDTO> wahlvorstandsmitglieder) {
-}
+public record WahlvorstandWriteDTO(
+    LocalDateTime anwesenheitBeginn, List<WahlvorstandsmitgliedDTO> wahlvorstandsmitglieder) {}

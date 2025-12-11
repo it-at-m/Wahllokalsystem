@@ -16,32 +16,30 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahllokalZustandServiceTest {
 
-    @Mock
-    WahllokalZustandMapper wahllokalZustandMapper;
+  @Mock WahllokalZustandMapper wahllokalZustandMapper;
 
-    @Mock
-    WahllokalZustandValidator wahllokalZustandValidator;
+  @Mock WahllokalZustandValidator wahllokalZustandValidator;
 
-    @Mock
-    WahllokalZustandRepository wahllokalZustandRepository;
+  @Mock WahllokalZustandRepository wahllokalZustandRepository;
 
-    @InjectMocks
-    WahllokalZustandService unitUnderTest;
+  @InjectMocks WahllokalZustandService unitUnderTest;
 
-    @Nested
-    class SetWahllokalZustand {
+  @Nested
+  class SetWahllokalZustand {
 
-        @Test
-        void should_callValidatorAndRepo_when_dtoIsGiven() {
-            val wahllokalZustand = new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet());
+    @Test
+    void should_callValidatorAndRepo_when_dtoIsGiven() {
+      val wahllokalZustand =
+          new WahllokalZustandDTO("wahlbezirkID", null, null, Collections.emptySet());
 
-            val mockedMappedWahllokalZustand = new WahllokalZustand();
-            Mockito.when(wahllokalZustandMapper.toEntity(wahllokalZustand)).thenReturn(mockedMappedWahllokalZustand);
+      val mockedMappedWahllokalZustand = new WahllokalZustand();
+      Mockito.when(wahllokalZustandMapper.toEntity(wahllokalZustand))
+          .thenReturn(mockedMappedWahllokalZustand);
 
-            unitUnderTest.setWahllokalZustand(wahllokalZustand);
+      unitUnderTest.setWahllokalZustand(wahllokalZustand);
 
-            Mockito.verify(wahllokalZustandValidator).validWahllokalZustandOrThrow(wahllokalZustand);
-            Mockito.verify(wahllokalZustandRepository).save(mockedMappedWahllokalZustand);
-        }
+      Mockito.verify(wahllokalZustandValidator).validWahllokalZustandOrThrow(wahllokalZustand);
+      Mockito.verify(wahllokalZustandRepository).save(mockedMappedWahllokalZustand);
     }
+  }
 }

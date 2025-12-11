@@ -15,20 +15,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class Begruendung {
 
-    @EmbeddedId
-    private BezirkUndWahlIDStapelart bezirkUndWahlIDStapelart;
+  @EmbeddedId private BezirkUndWahlIDStapelart bezirkUndWahlIDStapelart;
 
-    @NotNull
-    @Size(max = 1024)
-    private String grund1;
+  @NotNull @Size(max = 1024) private String grund1;
 
-    @Size(max = 1024)
-    private String grund2;
+  @Size(max = 1024) private String grund2;
 
-    @NotNull
-    private boolean nachzaehlung;
+  @NotNull private boolean nachzaehlung;
 
-    @NotNull
-    private boolean unstimmigkeiten;
-
+  @NotNull private boolean unstimmigkeiten;
 }

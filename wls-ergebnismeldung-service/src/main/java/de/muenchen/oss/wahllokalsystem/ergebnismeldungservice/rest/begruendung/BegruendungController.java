@@ -26,58 +26,68 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BegruendungController {
 
-    private final BegruendungService begruendungService;
+  private final BegruendungService begruendungService;
 
-    private final BegruendungDTOMapper begruendungDTOMapper;
+  private final BegruendungDTOMapper begruendungDTOMapper;
 
-    private final StapelartDTOMapper stapelartDTOMapper;
+  private final StapelartDTOMapper stapelartDTOMapper;
 
-    @Operation(description = "Lesen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Es existiert eine Begruendung.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = BegruendungDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existieren keine Begruendungen zu den entsprechenden Kriterien",
-                            content = { @Content() }
-                    )
-            }
-    )
-    @GetMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
-    public ResponseEntity<BegruendungDTO> getBegruendung(@PathVariable("wahlbezirkID") final String wahlbezirkID, @PathVariable("wahlID") final String wahlID,
-            @PathVariable("stapelart") final StapelartDTO stapelart) {
-        val referenceModel = begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelart);
-        val begruendungFromService = begruendungDTOMapper.toDTO(begruendungService.getBegruendung(referenceModel));
+  @Operation(
+      description =
+          "Lesen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es existiert eine Begruendung.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = BegruendungDTO.class))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es existieren keine Begruendungen zu den entsprechenden Kriterien",
+            content = {@Content()})
+      })
+  @GetMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
+  public ResponseEntity<BegruendungDTO> getBegruendung(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("stapelart") final StapelartDTO stapelart) {
+    val referenceModel = begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelart);
+    val begruendungFromService =
+        begruendungDTOMapper.toDTO(begruendungService.getBegruendung(referenceModel));
 
-        return okWithBodyOrNoContent(begruendungFromService);
+    return okWithBodyOrNoContent(begruendungFromService);
+  }
+
+  @Operation(
+      description =
+          "Setzen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Begruendung erfolgreich gespeichert")
+      })
+  @PostMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
+  @ResponseStatus(HttpStatus.OK)
+  public void postBegruendung(
+      @PathVariable("wahlbezirkID") String wahlbezirkID,
+      @PathVariable("wahlID") String wahlID,
+      @PathVariable("stapelart") StapelartDTO stapelart,
+      @RequestBody BegruendungDTO begruendungDTO) {
+    val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
+    val stapelartForReference = stapelartDTOMapper.toModel(stapelart);
+    val referenceForModel =
+        new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartForReference);
+    begruendungService.postBegruendung(referenceForModel, modelToSave);
+  }
+
+  private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
+    if (body == null) {
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.ok(body);
     }
-
-    @Operation(description = "Setzen der Begruendung einer Meldung von einem Wahlbezirk für eine Wahl auf einem bestimmten Stapel")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Begruendung erfolgreich gespeichert"
-                    )
-            }
-    )
-    @PostMapping("{wahlbezirkID}/{wahlID}/{stapelart}")
-    @ResponseStatus(HttpStatus.OK)
-    public void postBegruendung(@PathVariable("wahlbezirkID") String wahlbezirkID, @PathVariable("wahlID") String wahlID,
-            @PathVariable("stapelart") StapelartDTO stapelart,
-            @RequestBody BegruendungDTO begruendungDTO) {
-        val modelToSave = begruendungDTOMapper.toModel(begruendungDTO);
-        val stapelartForReference = stapelartDTOMapper.toModel(stapelart);
-        val referenceForModel = new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartForReference);
-        begruendungService.postBegruendung(referenceForModel, modelToSave);
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
-        if (body == null) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(body);
-        }
-    }
+  }
 }

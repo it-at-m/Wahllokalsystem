@@ -7,37 +7,34 @@ import org.junit.jupiter.api.Test;
 
 class AsyncProgressTest {
 
-    AsyncProgress unitUnderTest = new AsyncProgress();
+  AsyncProgress unitUnderTest = new AsyncProgress();
 
-    @Nested
-    class IncWahlvorschlaegeFinished {
+  @Nested
+  class IncWahlvorschlaegeFinished {
 
-        @Test
-        void should_increaseNumberOfFinishedWahlvorschlaege_when_callingGet() {
-            val numberOfFinisheBeforeCall = unitUnderTest.getWahlvorschlageFinished();
-            unitUnderTest.incWahlvorschlaegeFinished();
-            val numberOfFinishedAfterCall = unitUnderTest.getWahlvorschlageFinished();
+    @Test
+    void should_increaseNumberOfFinishedWahlvorschlaege_when_callingGet() {
+      val numberOfFinisheBeforeCall = unitUnderTest.getWahlvorschlageFinished();
+      unitUnderTest.incWahlvorschlaegeFinished();
+      val numberOfFinishedAfterCall = unitUnderTest.getWahlvorschlageFinished();
 
-            Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinisheBeforeCall + 1);
-        }
+      Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinisheBeforeCall + 1);
     }
+  }
 
-    @Nested
-    class IncReferendumVorlagenFinished {
+  @Nested
+  class IncReferendumVorlagenFinished {
 
-        @Test
-        void should_increaseNumberOfFinishedReferendumvorlagen_when_callingGet() {
-            val numberOfFinisheBeforeCall = unitUnderTest.getReferendumVorlagenFinished();
-            unitUnderTest.incReferendumVorlagenFinished();
-            val numberOfFinishedAfterCall = unitUnderTest.getReferendumVorlagenFinished();
+    @Test
+    void should_increaseNumberOfFinishedReferendumvorlagen_when_callingGet() {
+      val numberOfFinisheBeforeCall = unitUnderTest.getReferendumVorlagenFinished();
+      unitUnderTest.incReferendumVorlagenFinished();
+      val numberOfFinishedAfterCall = unitUnderTest.getReferendumVorlagenFinished();
 
-            Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinisheBeforeCall + 1);
-        }
+      Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinisheBeforeCall + 1);
     }
+  }
 
-    @Nested
-    class Reset {
-
-    }
-
+  @Nested
+  class Reset {}
 }

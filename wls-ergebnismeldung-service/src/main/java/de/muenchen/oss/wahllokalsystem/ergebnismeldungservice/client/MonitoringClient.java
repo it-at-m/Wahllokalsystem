@@ -20,43 +20,62 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class MonitoringClient implements StatusClient {
 
-    private final WahllokalZustandControllerApi wahllokalZustandControllerApi;
-    private final StatusClientMapper statusClientMapper;
-    private final ExceptionFactory exceptionFactory;
+  private final WahllokalZustandControllerApi wahllokalZustandControllerApi;
+  private final StatusClientMapper statusClientMapper;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public void postSchnellmeldungSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
-            throws WlsException {
-        val schnellmeldungGesendet = statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
-        callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postSchnellmeldungSendungsuhrzeit(schnellmeldungGesendet));
-    }
+  @Override
+  public void postSchnellmeldungSendungsuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungSendungsuhrzeit)
+      throws WlsException {
+    val schnellmeldungGesendet =
+        statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
+    callApiWithExceptionMapping(
+        () ->
+            wahllokalZustandControllerApi.postSchnellmeldungSendungsuhrzeit(
+                schnellmeldungGesendet));
+  }
 
-    @Override
-    public void postSchnellmeldungDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit) throws WlsException {
-        val schellmeldungGedruckt = statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, schnellmeldungDruckuhrzeit);
-        callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postSchnellmeldungDruckuhrzeit(schellmeldungGedruckt));
-    }
+  @Override
+  public void postSchnellmeldungDruckuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime schnellmeldungDruckuhrzeit)
+      throws WlsException {
+    val schellmeldungGedruckt =
+        statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, schnellmeldungDruckuhrzeit);
+    callApiWithExceptionMapping(
+        () -> wahllokalZustandControllerApi.postSchnellmeldungDruckuhrzeit(schellmeldungGedruckt));
+  }
 
-    @Override
-    public void postNiederschriftSendungsuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit) throws WlsException {
-        val niederschriftGesendet = statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, niederschriftSendungsuhrzeit);
-        callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postNiederschriftSendungsuhrzeit(niederschriftGesendet));
-    }
+  @Override
+  public void postNiederschriftSendungsuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftSendungsuhrzeit)
+      throws WlsException {
+    val niederschriftGesendet =
+        statusClientMapper.toSendungsdatenDTO(bezirkUndWahlID, niederschriftSendungsuhrzeit);
+    callApiWithExceptionMapping(
+        () ->
+            wahllokalZustandControllerApi.postNiederschriftSendungsuhrzeit(niederschriftGesendet));
+  }
 
-    @Override
-    public void postNiederschriftDruckuhrzeit(BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit) throws WlsException {
-        val niederschriftGedruckt = statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, niederschriftDruckuhrzeit);
-        callApiWithExceptionMapping(() -> wahllokalZustandControllerApi.postNiederschriftDruckuhrzeit(niederschriftGedruckt));
-    }
+  @Override
+  public void postNiederschriftDruckuhrzeit(
+      BezirkUndWahlID bezirkUndWahlID, LocalDateTime niederschriftDruckuhrzeit)
+      throws WlsException {
+    val niederschriftGedruckt =
+        statusClientMapper.toDruckdatenDTO(bezirkUndWahlID, niederschriftDruckuhrzeit);
+    callApiWithExceptionMapping(
+        () -> wahllokalZustandControllerApi.postNiederschriftDruckuhrzeit(niederschriftGedruckt));
+  }
 
-    private void callApiWithExceptionMapping(final Runnable apiCall) {
-        try {
-            apiCall.run();
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException: {}", wlsException.getMessage());
-            throw wlsException;
-        } catch (final Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING);
-        }
+  private void callApiWithExceptionMapping(final Runnable apiCall) {
+    try {
+      apiCall.run();
+    } catch (final WlsException wlsException) {
+      log.debug("found WlsException: {}", wlsException.getMessage());
+      throw wlsException;
+    } catch (final Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_MONITORING);
     }
+  }
 }

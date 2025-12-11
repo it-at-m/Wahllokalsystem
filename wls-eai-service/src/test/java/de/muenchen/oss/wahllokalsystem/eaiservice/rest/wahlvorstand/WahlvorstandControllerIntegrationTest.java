@@ -39,144 +39,212 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlvorstandControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceInfoOid;
+  @Value("${service.info.oid}")
+  String serviceInfoOid;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WahlvorstandRepository wahlvorstandRepository;
+  @Autowired WahlvorstandRepository wahlvorstandRepository;
 
-    @Autowired
-    WahlvorstandMapper wahlvorstandMapper;
+  @Autowired WahlvorstandMapper wahlvorstandMapper;
 
-    @AfterEach
-    void teardown() {
-        wahlvorstandRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    wahlvorstandRepository.deleteAll();
+  }
+
+  @Nested
+  class LoadWahlvorstand {
+
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
+    void should_returnEmpty_when_noDataFound() throws Exception {
+      val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + UUID.randomUUID());
+
+      val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
 
-    @Nested
-    class LoadWahlvorstand {
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
+    @Transactional
+    void should_returnData_when_dataIsPresentInRepo() throws Exception {
+      val wahlbezirkID1 = UUID.randomUUID();
+      val wahlvorstand1 =
+          new Wahlvorstand(
+              wahlbezirkID1,
+              Set.of(
+                  new Wahlvorstandsmitglied(
+                      "vorname11",
+                      "nachname11",
+                      WahlvorstandsmitgliedsFunktion.B,
+                      true,
+                      LocalDateTime.now()),
+                  new Wahlvorstandsmitglied(
+                      "vorname12",
+                      "nachname12",
+                      WahlvorstandsmitgliedsFunktion.SWB,
+                      false,
+                      LocalDateTime.now())));
+      val wahlvorstandToLoad = wahlvorstandRepository.save(wahlvorstand1);
 
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
-        void should_returnEmpty_when_noDataFound() throws Exception {
-            val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + UUID.randomUUID());
+      val wahlbezirkID2 = UUID.randomUUID();
+      val wahlvorstand2 =
+          new Wahlvorstand(
+              wahlbezirkID2,
+              Set.of(
+                  new Wahlvorstandsmitglied(
+                      "vorname21",
+                      "nachname21",
+                      WahlvorstandsmitgliedsFunktion.B,
+                      true,
+                      LocalDateTime.now()),
+                  new Wahlvorstandsmitglied(
+                      "vorname22",
+                      "nachname22",
+                      WahlvorstandsmitgliedsFunktion.SWB,
+                      false,
+                      LocalDateTime.now())));
+      wahlvorstandRepository.save(wahlvorstand2);
 
-            val response = api.perform(request).andExpect(status().isNotFound()).andReturn();
+      val request =
+          MockMvcRequestBuilders.get(
+              "/wahlvorstaende?wahlbezirkID=" + wahlvorstandToLoad.getWahlbezirkID());
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WahlvorstandDTO.class);
 
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
-        @Transactional
-        void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlbezirkID1 = UUID.randomUUID();
-            val wahlvorstand1 = new Wahlvorstand(wahlbezirkID1,
-                    Set.of(new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, LocalDateTime.now()),
-                            new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, false, LocalDateTime.now())));
-            val wahlvorstandToLoad = wahlvorstandRepository.save(wahlvorstand1);
+      val expectedResponseDTO = wahlvorstandMapper.toDTO(wahlvorstandToLoad);
 
-            val wahlbezirkID2 = UUID.randomUUID();
-            val wahlvorstand2 = new Wahlvorstand(wahlbezirkID2,
-                    Set.of(new Wahlvorstandsmitglied("vorname21", "nachname21", WahlvorstandsmitgliedsFunktion.B, true, LocalDateTime.now()),
-                            new Wahlvorstandsmitglied("vorname22", "nachname22", WahlvorstandsmitgliedsFunktion.SWB, false, LocalDateTime.now())));
-            wahlvorstandRepository.save(wahlvorstand2);
-
-            val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=" + wahlvorstandToLoad.getWahlbezirkID());
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorstandDTO.class);
-
-            val expectedResponseDTO = wahlvorstandMapper.toDTO(wahlvorstandToLoad);
-
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
-        }
-
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
-        void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfInvalidWahlbezirkIDFormat() throws Exception {
-            val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=wrongFormat");
-
-            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val wlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.ID_NICHT_KONVERTIERBAR.code(), serviceInfoOid,
-                    ExceptionConstants.ID_NICHT_KONVERTIERBAR.message());
-
-            Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
-        }
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
     }
 
-    @Nested
-    class SaveAnwesenheit {
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_LOAD_WAHLVORSTAND)
+    void should_returnFachlicheWlsException_when_requestIsInvalidCauseOfInvalidWahlbezirkIDFormat()
+        throws Exception {
+      val request = MockMvcRequestBuilders.get("/wahlvorstaende?wahlbezirkID=wrongFormat");
 
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
-        @Transactional
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val wahlbezirkID = UUID.randomUUID();
-            val oldUpdatedDate = LocalDateTime.now().minusDays(1);
-            val mitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, oldUpdatedDate);
-            val mitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
-            val mitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
-            val wahlvorstand1 = new Wahlvorstand(wahlbezirkID,
-                    Set.of(mitglied1, mitglied2, mitglied3));
-            val wahlvorstandToUpdate = wahlvorstandRepository.save(wahlvorstand1);
+      val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val wlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            val updateDateTime = LocalDateTime.now();
-            val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(mitglied1.getId().toString(), false),
-                    new WahlvorstandsmitgliedAktualisierungDTO(mitglied2.getId().toString(), true));
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitglieder, updateDateTime);
-            val request = MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(aktualisierung));
+      val expectedWlsException =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.ID_NICHT_KONVERTIERBAR.code(),
+              serviceInfoOid,
+              ExceptionConstants.ID_NICHT_KONVERTIERBAR.message());
 
-            api.perform(request).andExpect(status().isOk());
-
-            val updatedEntity = wahlvorstandRepository.findById(wahlvorstandToUpdate.getId());
-            val expectedEntityMitglied1 = new Wahlvorstandsmitglied("vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, false, updateDateTime);
-            expectedEntityMitglied1.setId(mitglied1.getId());
-            val expectedEntityMitglied2 = new Wahlvorstandsmitglied("vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, true, updateDateTime);
-            expectedEntityMitglied2.setId(mitglied2.getId());
-            val expectedEntityMitglied3 = new Wahlvorstandsmitglied("vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
-            expectedEntityMitglied3.setId(mitglied3.getId());
-            val expectedUpdatedEntity = new Wahlvorstand(wahlbezirkID, Set.of(expectedEntityMitglied1, expectedEntityMitglied2, expectedEntityMitglied3));
-            expectedUpdatedEntity.setId(wahlvorstandToUpdate.getId());
-
-            Assertions.assertThat(updatedEntity.get()).usingRecursiveComparison().isEqualTo(expectedUpdatedEntity);
-        }
-
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
-        void should_returnHttpStatusNotFound_when_wahlvorstandDoesNotExists() throws Exception {
-            val updateDateTime = LocalDateTime.now();
-            val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
-                    new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, updateDateTime);
-            val request = MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(aktualisierung));
-
-            api.perform(request).andExpect(status().isNotFound());
-        }
-
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
-        void should_returnHttpStatusBadRequest_when_requestIsInvalid() throws Exception {
-            val mitglieder = Set.of(new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
-                    new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, null);
-            val request = MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(aktualisierung));
-
-            api.perform(request).andExpect(status().isBadRequest());
-        }
+      Assertions.assertThat(wlsExceptionDTO).isEqualTo(expectedWlsException);
     }
+  }
+
+  @Nested
+  class SaveAnwesenheit {
+
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
+    @Transactional
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val wahlbezirkID = UUID.randomUUID();
+      val oldUpdatedDate = LocalDateTime.now().minusDays(1);
+      val mitglied1 =
+          new Wahlvorstandsmitglied(
+              "vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, true, oldUpdatedDate);
+      val mitglied2 =
+          new Wahlvorstandsmitglied(
+              "vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
+      val mitglied3 =
+          new Wahlvorstandsmitglied(
+              "vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
+      val wahlvorstand1 = new Wahlvorstand(wahlbezirkID, Set.of(mitglied1, mitglied2, mitglied3));
+      val wahlvorstandToUpdate = wahlvorstandRepository.save(wahlvorstand1);
+
+      val updateDateTime = LocalDateTime.now();
+      val mitglieder =
+          Set.of(
+              new WahlvorstandsmitgliedAktualisierungDTO(mitglied1.getId().toString(), false),
+              new WahlvorstandsmitgliedAktualisierungDTO(mitglied2.getId().toString(), true));
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitglieder, updateDateTime);
+      val request =
+          MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(aktualisierung));
+
+      api.perform(request).andExpect(status().isOk());
+
+      val updatedEntity = wahlvorstandRepository.findById(wahlvorstandToUpdate.getId());
+      val expectedEntityMitglied1 =
+          new Wahlvorstandsmitglied(
+              "vorname11", "nachname11", WahlvorstandsmitgliedsFunktion.B, false, updateDateTime);
+      expectedEntityMitglied1.setId(mitglied1.getId());
+      val expectedEntityMitglied2 =
+          new Wahlvorstandsmitglied(
+              "vorname12", "nachname12", WahlvorstandsmitgliedsFunktion.SWB, true, updateDateTime);
+      expectedEntityMitglied2.setId(mitglied2.getId());
+      val expectedEntityMitglied3 =
+          new Wahlvorstandsmitglied(
+              "vorname13", "nachname13", WahlvorstandsmitgliedsFunktion.SWB, false, oldUpdatedDate);
+      expectedEntityMitglied3.setId(mitglied3.getId());
+      val expectedUpdatedEntity =
+          new Wahlvorstand(
+              wahlbezirkID,
+              Set.of(expectedEntityMitglied1, expectedEntityMitglied2, expectedEntityMitglied3));
+      expectedUpdatedEntity.setId(wahlvorstandToUpdate.getId());
+
+      Assertions.assertThat(updatedEntity.get())
+          .usingRecursiveComparison()
+          .isEqualTo(expectedUpdatedEntity);
+    }
+
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
+    void should_returnHttpStatusNotFound_when_wahlvorstandDoesNotExists() throws Exception {
+      val updateDateTime = LocalDateTime.now();
+      val mitglieder =
+          Set.of(
+              new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
+              new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(
+              UUID.randomUUID().toString(), mitglieder, updateDateTime);
+      val request =
+          MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(aktualisierung));
+
+      api.perform(request).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_SAVE_ANWESENHEIT)
+    void should_returnHttpStatusBadRequest_when_requestIsInvalid() throws Exception {
+      val mitglieder =
+          Set.of(
+              new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false),
+              new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true));
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), mitglieder, null);
+      val request =
+          MockMvcRequestBuilders.put("/wahlvorstaende/anwesenheit")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(aktualisierung));
+
+      api.perform(request).andExpect(status().isBadRequest());
+    }
+  }
 }

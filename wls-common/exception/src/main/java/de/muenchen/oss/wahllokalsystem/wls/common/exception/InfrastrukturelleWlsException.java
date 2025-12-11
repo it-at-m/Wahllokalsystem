@@ -8,13 +8,14 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionDa
 
 public final class InfrastrukturelleWlsException extends WlsException {
 
-    private static final WlsExceptionCreator<InfrastrukturelleWlsException> exceptionCreation = (InfrastrukturelleWlsException::new);
+  private static final WlsExceptionCreator<InfrastrukturelleWlsException> exceptionCreation =
+      (InfrastrukturelleWlsException::new);
 
-    private InfrastrukturelleWlsException(final WlsExceptionData data) {
-        super(WlsExceptionCategory.INFRASTRUKTUR, data);
-    }
+  private InfrastrukturelleWlsException(final WlsExceptionData data) {
+    super(WlsExceptionCategory.INFRASTRUKTUR, data);
+  }
 
-    public static CodeIsSet<InfrastrukturelleWlsException> withCode(final String code) {
-        return new WlsExceptionFactory<>(exceptionCreation).withCode(code);
-    }
+  public static CodeIsSet<InfrastrukturelleWlsException> withCode(final String code) {
+    return new WlsExceptionFactory<>(exceptionCreation).withCode(code);
+  }
 }

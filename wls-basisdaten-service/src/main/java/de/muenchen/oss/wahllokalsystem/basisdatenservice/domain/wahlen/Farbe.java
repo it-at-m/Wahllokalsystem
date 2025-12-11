@@ -18,18 +18,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Farbe {
 
-    @NotNull
-    @Min(0)
-    @Max(255)
-    private long r;
+  @NotNull @Min(0) @Max(255) private long r;
 
-    @NotNull
-    @Min(0)
-    @Max(255)
-    private long g;
+  @NotNull @Min(0) @Max(255) private long g;
 
-    @NotNull
-    @Min(0)
-    @Max(255)
-    private long b;
+  @NotNull @Min(0) @Max(255) private long b;
 }

@@ -18,30 +18,31 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Status {
 
-    @EmbeddedId
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId private BezirkUndWahlID bezirkUndWahlID;
 
-    @Embedded
-    @NotNull
-    @AttributeOverrides(
-        {
-                @AttributeOverride(name = "validierungsstatus", column = @Column(name = "schnellmeldungValidierungsstatus")),
-                @AttributeOverride(name = "gedruckt", column = @Column(name = "schnellmeldungGedruckt")),
-                @AttributeOverride(name = "uebermittelt", column = @Column(name = "schnellmeldungUebermittelt")),
-                @AttributeOverride(name = "sendeuhrzeit", column = @Column(name = "schnellmeldungSendeuhrzeit")),
-        }
-    )
-    private Meldung schnellmeldung;
+  @Embedded
+  @NotNull @AttributeOverrides({
+    @AttributeOverride(
+        name = "validierungsstatus",
+        column = @Column(name = "schnellmeldungValidierungsstatus")),
+    @AttributeOverride(name = "gedruckt", column = @Column(name = "schnellmeldungGedruckt")),
+    @AttributeOverride(
+        name = "uebermittelt",
+        column = @Column(name = "schnellmeldungUebermittelt")),
+    @AttributeOverride(
+        name = "sendeuhrzeit",
+        column = @Column(name = "schnellmeldungSendeuhrzeit")),
+  })
+  private Meldung schnellmeldung;
 
-    @Embedded
-    @NotNull
-    @AttributeOverrides(
-        {
-                @AttributeOverride(name = "validierungsstatus", column = @Column(name = "niederschriftValidierungsstatus")),
-                @AttributeOverride(name = "gedruckt", column = @Column(name = "niederschriftGedruckt")),
-                @AttributeOverride(name = "uebermittelt", column = @Column(name = "niederschriftUebermittelt")),
-                @AttributeOverride(name = "sendeuhrzeit", column = @Column(name = "niederschriftSendeuhrzeit")),
-        }
-    )
-    private Meldung niederschrift;
+  @Embedded
+  @NotNull @AttributeOverrides({
+    @AttributeOverride(
+        name = "validierungsstatus",
+        column = @Column(name = "niederschriftValidierungsstatus")),
+    @AttributeOverride(name = "gedruckt", column = @Column(name = "niederschriftGedruckt")),
+    @AttributeOverride(name = "uebermittelt", column = @Column(name = "niederschriftUebermittelt")),
+    @AttributeOverride(name = "sendeuhrzeit", column = @Column(name = "niederschriftSendeuhrzeit")),
+  })
+  private Meldung niederschrift;
 }

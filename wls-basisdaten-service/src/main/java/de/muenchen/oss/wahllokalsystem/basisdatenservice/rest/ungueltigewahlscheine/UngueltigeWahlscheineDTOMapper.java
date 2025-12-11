@@ -8,7 +8,9 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UngueltigeWahlscheineDTOMapper {
 
-    UngueltigeWahlscheineReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
+  UngueltigeWahlscheineReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
 
-    UngueltigeWahlscheineWriteModel toModel(UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel, byte[] ungueltigeWahlscheineData);
+  UngueltigeWahlscheineWriteModel toModel(
+      UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel,
+      byte[] ungueltigeWahlscheineData);
 }

@@ -15,18 +15,28 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
+  private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
-    private final ExceptionFactory exceptionFactory;
-    private final Collection<AuthDetailRetriever> authDetailRetrivers;
+  private final ExceptionFactory exceptionFactory;
+  private final Collection<AuthDetailRetriever> authDetailRetrivers;
 
-    public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow() throws FachlicheWlsException {
-        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authDetailRetriver = authDetailRetrivers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
-        val wahlbezirkOfUser = authDetailRetriver
-                .flatMap(retriever -> retriever.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
-                .map(WahlbezirkArtModel::valueOf);
+  public WahlbezirkArtModel getWahlbezirkArtOfCurrentAuthenticationOrThrow()
+      throws FachlicheWlsException {
+    val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+    val authDetailRetriver =
+        authDetailRetrivers.stream()
+            .filter(retriever -> retriever.canHandle(currentAuthentication))
+            .findFirst();
+    val wahlbezirkOfUser =
+        authDetailRetriver
+            .flatMap(
+                retriever ->
+                    retriever.getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication))
+            .map(WahlbezirkArtModel::valueOf);
 
-        return wahlbezirkOfUser.orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE));
-    }
+    return wahlbezirkOfUser.orElseThrow(
+        () ->
+            exceptionFactory.createFachlicheWlsException(
+                ExceptionConstants.WAHLBEZIRKART_NOT_LOADABLE));
+  }
 }

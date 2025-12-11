@@ -36,268 +36,322 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahldatenServiceTest {
 
-    @Mock
-    WahldatenMapper wahldatenMapper;
+  @Mock WahldatenMapper wahldatenMapper;
 
-    @Mock
-    WahldatenValidator wahldatenValidator;
+  @Mock WahldatenValidator wahldatenValidator;
 
-    @Mock
-    IDConverter idConverter;
+  @Mock IDConverter idConverter;
 
-    @Mock
-    WahltageRepository wahltageRepository;
+  @Mock WahltageRepository wahltageRepository;
 
-    @Mock
-    WahlRepository wahlRepository;
+  @Mock WahlRepository wahlRepository;
 
-    @Mock
-    WahlbezirkRepository wahlbezirkRepository;
+  @Mock WahlbezirkRepository wahlbezirkRepository;
 
-    @Mock
-    StimmzettelgebietRepository stimmzettelgebietRepository;
+  @Mock StimmzettelgebietRepository stimmzettelgebietRepository;
 
-    @InjectMocks
-    WahldatenService unitUnderTest;
+  @InjectMocks WahldatenService unitUnderTest;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_returnWahltageDTO_when_givenValidDate() {
-            val dateSince = LocalDate.now();
+    @Test
+    void should_returnWahltageDTO_when_givenValidDate() {
+      val dateSince = LocalDate.now();
 
-            val mockedRepoEntity = new Wahltag();
-            val mockedMappedEntity = WahltagDTO.builder().build();
+      val mockedRepoEntity = new Wahltag();
+      val mockedMappedEntity = WahltagDTO.builder().build();
 
-            Mockito.when(wahltageRepository.findByTagAfterOrTagEquals(eq(dateSince), eq(dateSince))).thenReturn(List.of(mockedRepoEntity));
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
+      Mockito.when(wahltageRepository.findByTagAfterOrTagEquals(eq(dateSince), eq(dateSince)))
+          .thenReturn(List.of(mockedRepoEntity));
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
 
-            val result = unitUnderTest.getWahltage(dateSince);
+      val result = unitUnderTest.getWahltage(dateSince);
 
-            Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val dateSince = LocalDate.now();
-
-            Mockito.when(wahltageRepository.findByTagAfterOrTagEquals(eq(dateSince), eq(dateSince))).thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.getWahltage(dateSince);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val dateSince = LocalDate.now();
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahldatenValidator).validGetWahltageParameterOrThrow(dateSince);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahltage(dateSince)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
     }
 
-    @Nested
-    class GetWahlen {
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val dateSince = LocalDate.now();
 
-        @Test
-        void should_returnWahlDTO_when_givenValidWahltagAndNummer() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
+      Mockito.when(wahltageRepository.findByTagAfterOrTagEquals(eq(dateSince), eq(dateSince)))
+          .thenReturn(Collections.emptyList());
 
-            val mockedRepoEntity = new Wahl();
-            val mockedMappedEntity = WahlDTO.builder().build();
+      val result = unitUnderTest.getWahltage(dateSince);
 
-            Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(List.of(mockedRepoEntity));
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
-
-            val result = unitUnderTest.getWahlen(wahltag, nummer);
-
-            Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
-
-            Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.getWahlen(wahltag, nummer);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahldatenValidator).validGetWahlenParameterOrThrow(wahltag, nummer);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlen(wahltag, nummer)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result).isEmpty();
     }
 
-    @Nested
-    class GetWahlbezirke {
+    @Test
+    void should_throwException_when_validationFailed() {
+      val dateSince = LocalDate.now();
 
-        @Test
-        void should_returnWahlbezirkDTO_when_givenValidWahltagAndNummer() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
+      val mockedValidationException = new RuntimeException("validation failed");
 
-            val mockedRepoEntity = new Wahlbezirk();
-            val mockedMappedEntity = WahlbezirkDTO.builder().build();
+      Mockito.doThrow(mockedValidationException)
+          .when(wahldatenValidator)
+          .validGetWahltageParameterOrThrow(dateSince);
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
-                    .thenReturn(List.of(mockedRepoEntity));
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahltage(dateSince))
+          .isSameAs(mockedValidationException);
+    }
+  }
 
-            val result = unitUnderTest.getWahlbezirke(wahltag, nummer);
+  @Nested
+  class GetWahlen {
 
-            Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
-        }
+    @Test
+    void should_returnWahlDTO_when_givenValidWahltagAndNummer() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
 
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
+      val mockedRepoEntity = new Wahl();
+      val mockedMappedEntity = WahlDTO.builder().build();
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
-                    .thenReturn(Collections.emptyList());
+      Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer)))
+          .thenReturn(List.of(mockedRepoEntity));
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
 
-            val result = unitUnderTest.getWahlbezirke(wahltag, nummer);
+      val result = unitUnderTest.getWahlen(wahltag, nummer);
 
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahldatenValidator).validGetWahlbezirkeParameterOrThrow(wahltag, nummer);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltag, nummer)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
     }
 
-    @Nested
-    class GetWahlberechtigte {
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
 
-        @Test
-        void should_returnWahlberechtigteDTO_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer)))
+          .thenReturn(Collections.emptyList());
 
-            val mockedWahlbezirkAsUUID = UUID.randomUUID();
-            val mockedRepoEntity = new Wahlbezirk();
-            val mockedMappedEntityAsWahlberechtigte = WahlberechtigteDTO.builder().build();
+      val result = unitUnderTest.getWahlen(wahltag, nummer);
 
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).thenReturn(mockedWahlbezirkAsUUID);
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(mockedWahlbezirkAsUUID))
-                    .thenReturn(List.of(mockedRepoEntity));
-            Mockito.when(wahldatenMapper.toWahlberechtigteDTO(mockedRepoEntity)).thenReturn(mockedMappedEntityAsWahlberechtigte);
-
-            val result = unitUnderTest.getWahlberechtigte(wahlbezirkID);
-
-            Assertions.assertThat(result).isEqualTo(List.of(mockedMappedEntityAsWahlberechtigte));
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val mockedWahlbezirkAsUUID = UUID.randomUUID();
-
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID)).thenReturn(mockedWahlbezirkAsUUID);
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(mockedWahlbezirkAsUUID))
-                    .thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.getWahlberechtigte(wahlbezirkID);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahldatenValidator).validGetWahlberechtigteParameterOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlberechtigte(wahlbezirkID)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result).isEmpty();
     }
 
-    @Nested
-    class GetBasisdaten {
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
 
-        @Test
-        void should_returnBasisdatenDTO_when_givenValidWahltagAndNummer() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
+      val mockedValidationException = new RuntimeException("validation failed");
 
-            val mockedRepoWahlbezirk = new Wahlbezirk();
-            val mockedRepoWahlbezirkMappedToDTO = WahlbezirkDTO.builder().build();
-            val mockedRepoWahlbezirkAsStrukturdatemDTO = BasisstrukturdatenDTO.builder().build();
-            val mockedRepoWahl = new Wahl();
-            val mockedRepoWahlMappedToDTO = WahlDTO.builder().build();
-            val mockedRepoStimmzettelgebiet = new Stimmzettelgebiet();
-            val mockedRepoStimmzettelgebietMappedToDTO = StimmzettelgebietDTO.builder().build();
+      Mockito.doThrow(mockedValidationException)
+          .when(wahldatenValidator)
+          .validGetWahlenParameterOrThrow(wahltag, nummer);
 
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
-                    .thenReturn(List.of(mockedRepoWahlbezirk));
-            Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(List.of(mockedRepoWahl));
-            Mockito.when(stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(eq(wahltag), eq(nummer)))
-                    .thenReturn(List.of(mockedRepoStimmzettelgebiet));
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoWahl)).thenReturn(mockedRepoWahlMappedToDTO);
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoWahlbezirk)).thenReturn(mockedRepoWahlbezirkMappedToDTO);
-            Mockito.when(wahldatenMapper.toDTO(mockedRepoStimmzettelgebiet)).thenReturn(mockedRepoStimmzettelgebietMappedToDTO);
-            Mockito.when(wahldatenMapper.toBasisstrukturdatenDTO(mockedRepoWahlbezirk)).thenReturn(mockedRepoWahlbezirkAsStrukturdatemDTO);
-
-            val result = unitUnderTest.getBasisdaten(wahltag, nummer);
-
-            Assertions.assertThat(result)
-                    .isEqualTo(new BasisdatenDTO(Set.of(mockedRepoWahlbezirkAsStrukturdatemDTO), Set.of(mockedRepoWahlMappedToDTO),
-                            Set.of(mockedRepoWahlbezirkMappedToDTO), Set.of(mockedRepoStimmzettelgebietMappedToDTO)));
-        }
-
-        @Test
-        void should_returnBasisdatenDTOWithEmptyParams_when_noDataFound() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
-
-            Mockito.when(wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(eq(wahltag), eq(nummer)))
-                    .thenReturn(Collections.emptyList());
-            Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(Collections.emptyList());
-            Mockito.when(stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(eq(wahltag), eq(nummer))).thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.getBasisdaten(wahltag, nummer);
-
-            Assertions.assertThat(result)
-                    .isEqualTo(new BasisdatenDTO(Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet()));
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahltag = LocalDate.now();
-            val nummer = "nummer";
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahldatenValidator).validGetBasisdatenParameterOrThrow(wahltag, nummer);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getBasisdaten(wahltag, nummer)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlen(wahltag, nummer))
+          .isSameAs(mockedValidationException);
     }
+  }
+
+  @Nested
+  class GetWahlbezirke {
+
+    @Test
+    void should_returnWahlbezirkDTO_when_givenValidWahltagAndNummer() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      val mockedRepoEntity = new Wahlbezirk();
+      val mockedMappedEntity = WahlbezirkDTO.builder().build();
+
+      Mockito.when(
+              wahlbezirkRepository
+                  .findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(
+                      eq(wahltag), eq(nummer)))
+          .thenReturn(List.of(mockedRepoEntity));
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoEntity)).thenReturn(mockedMappedEntity);
+
+      val result = unitUnderTest.getWahlbezirke(wahltag, nummer);
+
+      Assertions.assertThat(result).isEqualTo(Set.of(mockedMappedEntity));
+    }
+
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      Mockito.when(
+              wahlbezirkRepository
+                  .findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(
+                      eq(wahltag), eq(nummer)))
+          .thenReturn(Collections.emptyList());
+
+      val result = unitUnderTest.getWahlbezirke(wahltag, nummer);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahldatenValidator)
+          .validGetWahlbezirkeParameterOrThrow(wahltag, nummer);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltag, nummer))
+          .isSameAs(mockedValidationException);
+    }
+  }
+
+  @Nested
+  class GetWahlberechtigte {
+
+    @Test
+    void should_returnWahlberechtigteDTO_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedWahlbezirkAsUUID = UUID.randomUUID();
+      val mockedRepoEntity = new Wahlbezirk();
+      val mockedMappedEntityAsWahlberechtigte = WahlberechtigteDTO.builder().build();
+
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID))
+          .thenReturn(mockedWahlbezirkAsUUID);
+      Mockito.when(
+              wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(
+                  mockedWahlbezirkAsUUID))
+          .thenReturn(List.of(mockedRepoEntity));
+      Mockito.when(wahldatenMapper.toWahlberechtigteDTO(mockedRepoEntity))
+          .thenReturn(mockedMappedEntityAsWahlberechtigte);
+
+      val result = unitUnderTest.getWahlberechtigte(wahlbezirkID);
+
+      Assertions.assertThat(result).isEqualTo(List.of(mockedMappedEntityAsWahlberechtigte));
+    }
+
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedWahlbezirkAsUUID = UUID.randomUUID();
+
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID))
+          .thenReturn(mockedWahlbezirkAsUUID);
+      Mockito.when(
+              wahlbezirkRepository.findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByID(
+                  mockedWahlbezirkAsUUID))
+          .thenReturn(Collections.emptyList());
+
+      val result = unitUnderTest.getWahlberechtigte(wahlbezirkID);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahldatenValidator)
+          .validGetWahlberechtigteParameterOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlberechtigte(wahlbezirkID))
+          .isSameAs(mockedValidationException);
+    }
+  }
+
+  @Nested
+  class GetBasisdaten {
+
+    @Test
+    void should_returnBasisdatenDTO_when_givenValidWahltagAndNummer() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      val mockedRepoWahlbezirk = new Wahlbezirk();
+      val mockedRepoWahlbezirkMappedToDTO = WahlbezirkDTO.builder().build();
+      val mockedRepoWahlbezirkAsStrukturdatemDTO = BasisstrukturdatenDTO.builder().build();
+      val mockedRepoWahl = new Wahl();
+      val mockedRepoWahlMappedToDTO = WahlDTO.builder().build();
+      val mockedRepoStimmzettelgebiet = new Stimmzettelgebiet();
+      val mockedRepoStimmzettelgebietMappedToDTO = StimmzettelgebietDTO.builder().build();
+
+      Mockito.when(
+              wahlbezirkRepository
+                  .findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(
+                      eq(wahltag), eq(nummer)))
+          .thenReturn(List.of(mockedRepoWahlbezirk));
+      Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer)))
+          .thenReturn(List.of(mockedRepoWahl));
+      Mockito.when(
+              stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(
+                  eq(wahltag), eq(nummer)))
+          .thenReturn(List.of(mockedRepoStimmzettelgebiet));
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoWahl)).thenReturn(mockedRepoWahlMappedToDTO);
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoWahlbezirk))
+          .thenReturn(mockedRepoWahlbezirkMappedToDTO);
+      Mockito.when(wahldatenMapper.toDTO(mockedRepoStimmzettelgebiet))
+          .thenReturn(mockedRepoStimmzettelgebietMappedToDTO);
+      Mockito.when(wahldatenMapper.toBasisstrukturdatenDTO(mockedRepoWahlbezirk))
+          .thenReturn(mockedRepoWahlbezirkAsStrukturdatemDTO);
+
+      val result = unitUnderTest.getBasisdaten(wahltag, nummer);
+
+      Assertions.assertThat(result)
+          .isEqualTo(
+              new BasisdatenDTO(
+                  Set.of(mockedRepoWahlbezirkAsStrukturdatemDTO),
+                  Set.of(mockedRepoWahlMappedToDTO),
+                  Set.of(mockedRepoWahlbezirkMappedToDTO),
+                  Set.of(mockedRepoStimmzettelgebietMappedToDTO)));
+    }
+
+    @Test
+    void should_returnBasisdatenDTOWithEmptyParams_when_noDataFound() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      Mockito.when(
+              wahlbezirkRepository
+                  .findWahlbezirkeWithStimmzettelgebietAndWahlAndWahltagByWahltagAndNummer(
+                      eq(wahltag), eq(nummer)))
+          .thenReturn(Collections.emptyList());
+      Mockito.when(wahlRepository.findByWahltagTagAndWahltagNummer(eq(wahltag), eq(nummer)))
+          .thenReturn(Collections.emptyList());
+      Mockito.when(
+              stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(
+                  eq(wahltag), eq(nummer)))
+          .thenReturn(Collections.emptyList());
+
+      val result = unitUnderTest.getBasisdaten(wahltag, nummer);
+
+      Assertions.assertThat(result)
+          .isEqualTo(
+              new BasisdatenDTO(
+                  Collections.emptySet(),
+                  Collections.emptySet(),
+                  Collections.emptySet(),
+                  Collections.emptySet()));
+    }
+
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahltag = LocalDate.now();
+      val nummer = "nummer";
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahldatenValidator)
+          .validGetBasisdatenParameterOrThrow(wahltag, nummer);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getBasisdaten(wahltag, nummer))
+          .isSameAs(mockedValidationException);
+    }
+  }
 }

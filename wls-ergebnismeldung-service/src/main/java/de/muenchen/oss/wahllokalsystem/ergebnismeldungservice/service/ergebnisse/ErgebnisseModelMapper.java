@@ -8,15 +8,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ErgebnisseModelMapper {
 
-    BezirkUndWahlIDStapelart toEmbeddedId(ErgebnisseReferenceModel reference);
+  BezirkUndWahlIDStapelart toEmbeddedId(ErgebnisseReferenceModel reference);
 
-    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
-    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
-    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
-    ErgebnisseModel toModel(Ergebnisse entity);
+  @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
+  @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
+  @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
+  ErgebnisseModel toModel(Ergebnisse entity);
 
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
-    Ergebnisse toEntity(ErgebnisseModel model);
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
+  Ergebnisse toEntity(ErgebnisseModel model);
 }

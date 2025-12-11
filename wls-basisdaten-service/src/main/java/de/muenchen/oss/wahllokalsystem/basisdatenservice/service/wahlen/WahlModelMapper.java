@@ -8,12 +8,11 @@ import org.mapstruct.Mapper;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlModelMapper {
 
-    Wahl toEntity(WahlModel wahlModel);
+  Wahl toEntity(WahlModel wahlModel);
 
-    WahlModel toModel(Wahl entity);
+  WahlModel toModel(Wahl entity);
 
-    List<Wahl> fromListOfWahlModeltoListOfWahlEntities(List<WahlModel> wahlModelList);
+  List<Wahl> fromListOfWahlModeltoListOfWahlEntities(List<WahlModel> wahlModelList);
 
-    List<WahlModel> fromListOfWahlEntityToListOfWahlModel(List<Wahl> wahlEntityList);
-
+  List<WahlModel> fromListOfWahlEntityToListOfWahlModel(List<Wahl> wahlEntityList);
 }

@@ -26,126 +26,151 @@ import org.mapstruct.factory.Mappers;
 
 class WahldatenMapperTest {
 
-    private final WahldatenMapper unitUnderTest = Mappers.getMapper(WahldatenMapper.class);
+  private final WahldatenMapper unitUnderTest = Mappers.getMapper(WahldatenMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnWahltagDTO_when_givenWahltagEntity() {
-            val tag = LocalDate.now();
-            val beschreibung = "beschreibung";
-            val nummer = "nummer";
-            val id = UUID.randomUUID();
+    @Test
+    void should_returnWahltagDTO_when_givenWahltagEntity() {
+      val tag = LocalDate.now();
+      val beschreibung = "beschreibung";
+      val nummer = "nummer";
+      val id = UUID.randomUUID();
 
-            val entityToMap = new Wahltag(tag, beschreibung, nummer);
-            entityToMap.setId(id);
+      val entityToMap = new Wahltag(tag, beschreibung, nummer);
+      entityToMap.setId(id);
 
-            val result = unitUnderTest.toDTO(entityToMap);
+      val result = unitUnderTest.toDTO(entityToMap);
 
-            val expectedResult = new WahltagDTO(id.toString(), tag, beschreibung, nummer);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWahlDTO_when_givenWahlEntity() {
-            val wahlID = UUID.randomUUID();
-            val wahltag = LocalDate.now();
-            val name = "name";
-            val nummer = "nummer";
-
-            val entityToMap = new Wahl(name, Wahlart.BTW, new Wahltag(wahltag, null, nummer));
-            entityToMap.setId(wahlID);
-
-            val result = unitUnderTest.toDTO(entityToMap);
-
-            val expectedResult = new WahlDTO(wahlID.toString(), name, WahlartDTO.BTW, wahltag, nummer);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWahlbezirkDTO_when_givenWahlbezirkEntity() {
-            val wahlbezirkID = UUID.randomUUID();
-            val wahlID = UUID.randomUUID();
-            val wahltag = LocalDate.now();
-            val wahlbezirkNummer = "wahlbezirkNummer";
-            val wahltagnummer = "wahltagnummer";
-
-            val wahlForWahlbezirk = new Wahl(null, null, new Wahltag(wahltag, null, wahltagnummer));
-            wahlForWahlbezirk.setId(wahlID);
-            val entityToMap = new Wahlbezirk(WahlbezirkArt.UWB, wahlbezirkNummer, new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk), 0, 0, 0);
-            entityToMap.setId(wahlbezirkID);
-
-            val result = unitUnderTest.toDTO(entityToMap);
-
-            val expectedResult = new WahlbezirkDTO(wahlbezirkID.toString(), WahlbezirkArtDTO.UWB, wahlbezirkNummer, wahltag, wahltagnummer, wahlID.toString());
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnStimmzettelgebietDTO_when_givenStimmzettelgebietEntity() {
-            val szgID = UUID.randomUUID();
-            val szgNummer = "szgNummer";
-            val szgName = "szgName";
-            val wahltag = LocalDate.now();
-
-            val entityToMap = new Stimmzettelgebiet(szgNummer, szgName, Stimmzettelgebietsart.SK, new Wahl(null, null, new Wahltag(wahltag, null, null)));
-            entityToMap.setId(szgID);
-
-            val result = unitUnderTest.toDTO(entityToMap);
-
-            val expectedResult = new StimmzettelgebietDTO(szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult = new WahltagDTO(id.toString(), tag, beschreibung, nummer);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ToWahlberechtigteDTO {
+    @Test
+    void should_returnWahlDTO_when_givenWahlEntity() {
+      val wahlID = UUID.randomUUID();
+      val wahltag = LocalDate.now();
+      val name = "name";
+      val nummer = "nummer";
 
-        @Test
-        void should_returnWahlberechtigteDTO_when_givenWahlbezirkEntity() {
-            val wahlID = UUID.randomUUID();
-            val wahlbezirkID = UUID.randomUUID();
-            val a1 = 10;
-            val a2 = 20;
-            val a3 = 30;
+      val entityToMap = new Wahl(name, Wahlart.BTW, new Wahltag(wahltag, null, nummer));
+      entityToMap.setId(wahlID);
 
-            val wahlOfWahlbezirk = new Wahl();
-            wahlOfWahlbezirk.setId(wahlID);
-            val entityToMap = new Wahlbezirk(null, null, new Stimmzettelgebiet(null, null, null, wahlOfWahlbezirk), a1, a2, a3);
-            entityToMap.setId(wahlbezirkID);
+      val result = unitUnderTest.toDTO(entityToMap);
 
-            val result = unitUnderTest.toWahlberechtigteDTO(entityToMap);
-
-            val expectedResult = new WahlberechtigteDTO(wahlID.toString(), wahlbezirkID.toString(), a1, a2, a3);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult = new WahlDTO(wahlID.toString(), name, WahlartDTO.BTW, wahltag, nummer);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ToBasisstrukturdatenDTO {
+    @Test
+    void should_returnWahlbezirkDTO_when_givenWahlbezirkEntity() {
+      val wahlbezirkID = UUID.randomUUID();
+      val wahlID = UUID.randomUUID();
+      val wahltag = LocalDate.now();
+      val wahlbezirkNummer = "wahlbezirkNummer";
+      val wahltagnummer = "wahltagnummer";
 
-        @Test
-        void should_returnBasisstrukturdatenDTO_when_givenWahlbezirkEntity() {
-            val wahlID = UUID.randomUUID();
-            val sgzID = UUID.randomUUID();
-            val wbzID = UUID.randomUUID();
-            val wahltag = LocalDate.now();
+      val wahlForWahlbezirk = new Wahl(null, null, new Wahltag(wahltag, null, wahltagnummer));
+      wahlForWahlbezirk.setId(wahlID);
+      val entityToMap =
+          new Wahlbezirk(
+              WahlbezirkArt.UWB,
+              wahlbezirkNummer,
+              new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk),
+              0,
+              0,
+              0);
+      entityToMap.setId(wahlbezirkID);
 
-            val wahl = new Wahl();
-            wahl.setId(wahlID);
-            wahl.setWahltag(new Wahltag(wahltag, null, null));
-            val stimmzettelgebiet = new Stimmzettelgebiet();
-            stimmzettelgebiet.setId(sgzID);
-            stimmzettelgebiet.setWahl(wahl);
-            val entityToMap = new Wahlbezirk();
-            entityToMap.setStimmzettelgebiet(stimmzettelgebiet);
-            entityToMap.setId(wbzID);
+      val result = unitUnderTest.toDTO(entityToMap);
 
-            val result = unitUnderTest.toBasisstrukturdatenDTO(entityToMap);
-
-            val expectedResult = new BasisstrukturdatenDTO(wahlID.toString(), sgzID.toString(), wbzID.toString(), wahltag);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          new WahlbezirkDTO(
+              wahlbezirkID.toString(),
+              WahlbezirkArtDTO.UWB,
+              wahlbezirkNummer,
+              wahltag,
+              wahltagnummer,
+              wahlID.toString());
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+
+    @Test
+    void should_returnStimmzettelgebietDTO_when_givenStimmzettelgebietEntity() {
+      val szgID = UUID.randomUUID();
+      val szgNummer = "szgNummer";
+      val szgName = "szgName";
+      val wahltag = LocalDate.now();
+
+      val entityToMap =
+          new Stimmzettelgebiet(
+              szgNummer,
+              szgName,
+              Stimmzettelgebietsart.SK,
+              new Wahl(null, null, new Wahltag(wahltag, null, null)));
+      entityToMap.setId(szgID);
+
+      val result = unitUnderTest.toDTO(entityToMap);
+
+      val expectedResult =
+          new StimmzettelgebietDTO(
+              szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class ToWahlberechtigteDTO {
+
+    @Test
+    void should_returnWahlberechtigteDTO_when_givenWahlbezirkEntity() {
+      val wahlID = UUID.randomUUID();
+      val wahlbezirkID = UUID.randomUUID();
+      val a1 = 10;
+      val a2 = 20;
+      val a3 = 30;
+
+      val wahlOfWahlbezirk = new Wahl();
+      wahlOfWahlbezirk.setId(wahlID);
+      val entityToMap =
+          new Wahlbezirk(
+              null, null, new Stimmzettelgebiet(null, null, null, wahlOfWahlbezirk), a1, a2, a3);
+      entityToMap.setId(wahlbezirkID);
+
+      val result = unitUnderTest.toWahlberechtigteDTO(entityToMap);
+
+      val expectedResult =
+          new WahlberechtigteDTO(wahlID.toString(), wahlbezirkID.toString(), a1, a2, a3);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class ToBasisstrukturdatenDTO {
+
+    @Test
+    void should_returnBasisstrukturdatenDTO_when_givenWahlbezirkEntity() {
+      val wahlID = UUID.randomUUID();
+      val sgzID = UUID.randomUUID();
+      val wbzID = UUID.randomUUID();
+      val wahltag = LocalDate.now();
+
+      val wahl = new Wahl();
+      wahl.setId(wahlID);
+      wahl.setWahltag(new Wahltag(wahltag, null, null));
+      val stimmzettelgebiet = new Stimmzettelgebiet();
+      stimmzettelgebiet.setId(sgzID);
+      stimmzettelgebiet.setWahl(wahl);
+      val entityToMap = new Wahlbezirk();
+      entityToMap.setStimmzettelgebiet(stimmzettelgebiet);
+      entityToMap.setId(wbzID);
+
+      val result = unitUnderTest.toBasisstrukturdatenDTO(entityToMap);
+
+      val expectedResult =
+          new BasisstrukturdatenDTO(wahlID.toString(), sgzID.toString(), wbzID.toString(), wahltag);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

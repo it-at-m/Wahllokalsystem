@@ -22,83 +22,94 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 public class WahlvorstandControllerTest {
 
-    @Mock
-    WahlvorstandService wahlvorstandService;
+  @Mock WahlvorstandService wahlvorstandService;
 
-    @Mock
-    WahlvorstandDTOMapper wahlvorstandDTOMapper;
+  @Mock WahlvorstandDTOMapper wahlvorstandDTOMapper;
 
-    @InjectMocks
-    WahlvorstandController unitUnderTest;
+  @InjectMocks WahlvorstandController unitUnderTest;
 
-    @Nested
-    class GetWahlvorstand {
+  @Nested
+  class GetWahlvorstand {
 
-        @ParameterizedTest(name = "{index} - forceUpdate is {0}")
-        @MethodSource("getForceUpdateHeaderVariations")
-        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsFalseorNull(final ArgumentsAccessor argumentsAccessor) {
-            val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = argumentsAccessor.get(0, Boolean.class);
-            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
-            val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
+    @ParameterizedTest(name = "{index} - forceUpdate is {0}")
+    @MethodSource("getForceUpdateHeaderVariations")
+    void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsFalseorNull(
+        final ArgumentsAccessor argumentsAccessor) {
+      val wahlbezirkID = "wahlbezirkID";
+      val forceUpdate = argumentsAccessor.get(0, Boolean.class);
+      val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
+      val expectedWahlvorstandDto =
+          TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
-            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstandModel));
-            Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
+      Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID))
+          .thenReturn(Optional.of(mockedWahlvorstandModel));
+      Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel))
+          .thenReturn(expectedWahlvorstandDto);
 
-            val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
-            Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsTrue() {
-            val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = true;
-            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
-            val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
-
-            Mockito.when(wahlvorstandService.updateWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedWahlvorstandModel));
-            Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
-
-            val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
-            Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnFallbackWahlvorstandDTO_when_wahlvorstandDoesNotExist() {
-            val wahlbezirkID = "wahlbezirkID";
-            val forceUpdate = false;
-            val mockedFallbackWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);
-            val expectedWahlvorstandDto = TestDataFactory.CreateWahlvorstandDto.fromModel(mockedFallbackWahlvorstandModel);
-
-            Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(Optional.empty());
-            Mockito.when(wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID)).thenReturn(Optional.of(mockedFallbackWahlvorstandModel));
-            Mockito.when(wahlvorstandDTOMapper.toDTO(mockedFallbackWahlvorstandModel)).thenReturn(expectedWahlvorstandDto);
-
-            val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
-            Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        private static List<Boolean> getForceUpdateHeaderVariations() {
-            return Arrays.asList(false, null);
-        }
+      val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
+      Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class PostWahlvorstand {
+    @Test
+    void should_returnWahlvorstandDTO_when_givenValidWahlbezirkIdAndForceUpdateIsTrue() {
+      val wahlbezirkID = "wahlbezirkID";
+      val forceUpdate = true;
+      val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
+      val expectedWahlvorstandDto =
+          TestDataFactory.CreateWahlvorstandDto.fromModel(mockedWahlvorstandModel);
 
-        @Test
-        void should_notThrowException_when_newDataSaved() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedWahlvorstandDto = TestDataFactory.CreateWahlvorstandWriteDto.withData();
-            val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDto);
+      Mockito.when(wahlvorstandService.updateWahlvorstand(wahlbezirkID))
+          .thenReturn(Optional.of(mockedWahlvorstandModel));
+      Mockito.when(wahlvorstandDTOMapper.toDTO(mockedWahlvorstandModel))
+          .thenReturn(expectedWahlvorstandDto);
 
-            Mockito.when(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDto)).thenReturn(mockedWahlvorstandModel);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlvorstand(wahlbezirkID, mockedWahlvorstandDto));
-            Mockito.verify(wahlvorstandService).postWahlvorstand(mockedWahlvorstandModel);
-        }
+      val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
+      Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    void should_returnFallbackWahlvorstandDTO_when_wahlvorstandDoesNotExist() {
+      val wahlbezirkID = "wahlbezirkID";
+      val forceUpdate = false;
+      val mockedFallbackWahlvorstandModel =
+          TestDataFactory.CreateWahlvorstandModel.fallback(wahlbezirkID);
+      val expectedWahlvorstandDto =
+          TestDataFactory.CreateWahlvorstandDto.fromModel(mockedFallbackWahlvorstandModel);
+
+      Mockito.when(wahlvorstandService.getWahlvorstand(wahlbezirkID)).thenReturn(Optional.empty());
+      Mockito.when(wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID))
+          .thenReturn(Optional.of(mockedFallbackWahlvorstandModel));
+      Mockito.when(wahlvorstandDTOMapper.toDTO(mockedFallbackWahlvorstandModel))
+          .thenReturn(expectedWahlvorstandDto);
+
+      val result = unitUnderTest.getWahlvorstand(forceUpdate, wahlbezirkID);
+      Assertions.assertThat(result.getBody()).isEqualTo(expectedWahlvorstandDto);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    private static List<Boolean> getForceUpdateHeaderVariations() {
+      return Arrays.asList(false, null);
+    }
+  }
+
+  @Nested
+  class PostWahlvorstand {
+
+    @Test
+    void should_notThrowException_when_newDataSaved() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedWahlvorstandDto = TestDataFactory.CreateWahlvorstandWriteDto.withData();
+      val mockedWahlvorstandModel =
+          TestDataFactory.CreateWahlvorstandModel.fromDto(wahlbezirkID, mockedWahlvorstandDto);
+
+      Mockito.when(wahlvorstandDTOMapper.toModel(wahlbezirkID, mockedWahlvorstandDto))
+          .thenReturn(mockedWahlvorstandModel);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postWahlvorstand(wahlbezirkID, mockedWahlvorstandDto));
+      Mockito.verify(wahlvorstandService).postWahlvorstand(mockedWahlvorstandModel);
+    }
+  }
 }

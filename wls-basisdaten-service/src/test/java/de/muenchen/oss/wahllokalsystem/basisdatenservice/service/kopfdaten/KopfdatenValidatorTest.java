@@ -17,45 +17,61 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KopfdatenValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    KopfdatenValidator unitUnderTest;
+  @InjectMocks KopfdatenValidator unitUnderTest;
 
-    @Nested
-    class ValidWahlIdUndWahlbezirkIDOrThrow {
+  @Nested
+  class ValidWahlIdUndWahlbezirkIDOrThrow {
 
-        final FachlicheWlsException mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+    final FachlicheWlsException mockedWlsException =
+        FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_notThrowException_when_requestParamIsValid() {
-            val requestParam = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam));
-        }
-
-        @Test
-        void should_throwException_when_wahlIDisNullOrEmptyOrBlank() {
-            val requestParam1 = new BezirkUndWahlID(null, "wahlbezirkID");
-            val requestParam2 = new BezirkUndWahlID("", "wahlbezirkID");
-            val requestParam3 = new BezirkUndWahlID("     ", "wahlbezirkID");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam1)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam2)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam3)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDisNullOrEmptyOrBlank() {
-            val requestParam1 = new BezirkUndWahlID("wahlID", null);
-            val requestParam2 = new BezirkUndWahlID("wahlID", "");
-            val requestParam3 = new BezirkUndWahlID("wahlID", "       ");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam1)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam2)).isSameAs(mockedWlsException);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam3)).isSameAs(mockedWlsException);
-        }
+    @Test
+    void should_notThrowException_when_requestParamIsValid() {
+      val requestParam = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam));
     }
+
+    @Test
+    void should_throwException_when_wahlIDisNullOrEmptyOrBlank() {
+      val requestParam1 = new BezirkUndWahlID(null, "wahlbezirkID");
+      val requestParam2 = new BezirkUndWahlID("", "wahlbezirkID");
+      val requestParam3 = new BezirkUndWahlID("     ", "wahlbezirkID");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam1))
+          .isSameAs(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam2))
+          .isSameAs(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam3))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDisNullOrEmptyOrBlank() {
+      val requestParam1 = new BezirkUndWahlID("wahlID", null);
+      val requestParam2 = new BezirkUndWahlID("wahlID", "");
+      val requestParam3 = new BezirkUndWahlID("wahlID", "       ");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam1))
+          .isSameAs(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam2))
+          .isSameAs(mockedWlsException);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(requestParam3))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

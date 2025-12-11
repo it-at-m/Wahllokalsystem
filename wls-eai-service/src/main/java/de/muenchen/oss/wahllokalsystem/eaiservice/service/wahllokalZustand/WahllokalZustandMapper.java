@@ -10,8 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahllokalZustandMapper {
 
-    @Mapping(target = "id", ignore = true)
-    WahllokalZustand toEntity(WahllokalZustandDTO wahllokalZustandDTO);
+  @Mapping(target = "id", ignore = true)
+  WahllokalZustand toEntity(WahllokalZustandDTO wahllokalZustandDTO);
 
-    Druckzustand toEntity(DruckzustandDTO druckzustandDTO);
+  Druckzustand toEntity(DruckzustandDTO druckzustandDTO);
 }

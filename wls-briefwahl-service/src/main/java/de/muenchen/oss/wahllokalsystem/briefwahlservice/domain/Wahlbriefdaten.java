@@ -15,21 +15,19 @@ import lombok.NoArgsConstructor;
 @Data
 public class Wahlbriefdaten {
 
-    // ========= //
-    // Variables //
-    // ========= //
-    @NotNull
-    @Size(max = 1024)
-    @Id
-    private String wahlbezirkID;
+  // ========= //
+  // Variables //
+  // ========= //
+  @NotNull @Size(max = 1024) @Id
+  private String wahlbezirkID;
 
-    private Long wahlbriefe;
+  private Long wahlbriefe;
 
-    private Long verzeichnisseUngueltige;
+  private Long verzeichnisseUngueltige;
 
-    private Long nachtraege;
+  private Long nachtraege;
 
-    private Long nachtraeglichUeberbrachte;
+  private Long nachtraeglichUeberbrachte;
 
-    private LocalDateTime zeitNachtraeglichUeberbrachte;
+  private LocalDateTime zeitNachtraeglichUeberbrachte;
 }

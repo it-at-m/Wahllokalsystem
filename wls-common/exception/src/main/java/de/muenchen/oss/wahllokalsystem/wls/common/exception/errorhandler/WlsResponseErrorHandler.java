@@ -24,56 +24,72 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 @Setter
 public class WlsResponseErrorHandler extends DefaultResponseErrorHandler {
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    @Override
-    public void handleError(@NonNull final ClientHttpResponse response) throws WlsException {
-        final WlsException createdException;
-        try {
-            val wlsExceptionDTO = mapper.readValue(response.getBody(), WlsExceptionDTO.class);
-            log.debug("HttpStatus: {} - {}", response.getStatusCode(), response.getStatusText());
+  @Override
+  public void handleError(@NonNull final ClientHttpResponse response) throws WlsException {
+    final WlsException createdException;
+    try {
+      val wlsExceptionDTO = mapper.readValue(response.getBody(), WlsExceptionDTO.class);
+      log.debug("HttpStatus: {} - {}", response.getStatusCode(), response.getStatusText());
 
-            createdException = createException(wlsExceptionDTO);
-            log.debug("Erstellte Exception: {}", createdException.toString());
-        } catch (Exception e) {
-            log.error("Beim Erzeugen der WLS-Exception kam es zu einem Fehler. Erzeuge einen Standard-WlsException", e);
-            throw createUnknownTechnischeWlsExceptionWithCause(e);
-        }
-
-        throw createdException;
+      createdException = createException(wlsExceptionDTO);
+      log.debug("Erstellte Exception: {}", createdException.toString());
+    } catch (Exception e) {
+      log.error(
+          "Beim Erzeugen der WLS-Exception kam es zu einem Fehler. Erzeuge einen Standard-WlsException",
+          e);
+      throw createUnknownTechnischeWlsExceptionWithCause(e);
     }
 
-    private TechnischeWlsException createUnknownTechnischeWlsExceptionWithCause(final Throwable cause) {
-        return TechnischeWlsException.withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT).inService(ExceptionKonstanten.SERVICE_UNBEKANNT).withCause(cause)
-                .buildWithMessage(buildUndefinedErrorMessageWithCauseMessages(cause));
+    throw createdException;
+  }
+
+  private TechnischeWlsException createUnknownTechnischeWlsExceptionWithCause(
+      final Throwable cause) {
+    return TechnischeWlsException.withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
+        .inService(ExceptionKonstanten.SERVICE_UNBEKANNT)
+        .withCause(cause)
+        .buildWithMessage(buildUndefinedErrorMessageWithCauseMessages(cause));
+  }
+
+  private String buildUndefinedErrorMessageWithCauseMessages(final Throwable cause) {
+    val sb = new StringBuilder(ExceptionKonstanten.MESSAGE_UNBEKANNTER_FEHLER);
+
+    sb.append("\nWegen: ").append(cause.getClass());
+
+    val message = cause.getMessage();
+    if (!message.isBlank()) {
+      sb.append(" mit:\n").append(message);
     }
 
-    private String buildUndefinedErrorMessageWithCauseMessages(final Throwable cause) {
-        val sb = new StringBuilder(ExceptionKonstanten.MESSAGE_UNBEKANNTER_FEHLER);
+    return sb.toString();
+  }
 
-        sb.append("\nWegen: ").append(cause.getClass());
+  private WlsException createException(final WlsExceptionDTO wahlExceptionDTO) {
+    val category = wahlExceptionDTO.category();
+    log.debug("Erzeugen einer Exception aus der Kategorie: {}", category);
 
-        val message = cause.getMessage();
-        if (!message.isBlank()) {
-            sb.append(" mit:\n").append(message);
-        }
+    return switch (category) {
+      case F ->
+          completeWithDTOData(
+              FachlicheWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
+      case I ->
+          completeWithDTOData(
+              InfrastrukturelleWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
+      case S ->
+          completeWithDTOData(
+              SicherheitsWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
+      case T ->
+          completeWithDTOData(
+              TechnischeWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
+    };
+  }
 
-        return sb.toString();
-    }
-
-    private WlsException createException(final WlsExceptionDTO wahlExceptionDTO) {
-        val category = wahlExceptionDTO.category();
-        log.debug("Erzeugen einer Exception aus der Kategorie: {}", category);
-
-        return switch (category) {
-        case F -> completeWithDTOData(FachlicheWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
-        case I -> completeWithDTOData(InfrastrukturelleWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
-        case S -> completeWithDTOData(SicherheitsWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
-        case T -> completeWithDTOData(TechnischeWlsException.withCode(wahlExceptionDTO.code()), wahlExceptionDTO);
-        };
-    }
-
-    private WlsException completeWithDTOData(final CodeIsSet<?> startedWlsExceptionCreation, final WlsExceptionDTO dtoData) {
-        return startedWlsExceptionCreation.inService(dtoData.service()).buildWithMessage(dtoData.message());
-    }
+  private WlsException completeWithDTOData(
+      final CodeIsSet<?> startedWlsExceptionCreation, final WlsExceptionDTO dtoData) {
+    return startedWlsExceptionCreation
+        .inService(dtoData.service())
+        .buildWithMessage(dtoData.message());
+  }
 }

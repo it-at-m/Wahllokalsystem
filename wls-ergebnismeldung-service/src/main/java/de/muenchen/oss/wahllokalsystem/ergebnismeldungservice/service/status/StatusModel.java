@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import jakarta.validation.constraints.NotNull;
 
 public record StatusModel(
-        @NotNull BezirkUndWahlID bezirkUndWahlID,
-        @NotNull MeldungModel schnellmeldung,
-        @NotNull MeldungModel niederschrift) {
-}
+    @NotNull BezirkUndWahlID bezirkUndWahlID,
+    @NotNull MeldungModel schnellmeldung,
+    @NotNull MeldungModel niederschrift) {}

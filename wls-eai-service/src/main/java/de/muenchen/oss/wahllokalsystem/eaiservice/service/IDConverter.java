@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class IDConverter {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    //CHECKSTYLE.OFF: AbbreviationAsWordInName - illegal match cause UUID should not be shortened
-    public UUID convertIDToUUIDOrThrow(final String id) {
-        //CHECKSTYLE.ON: AbbreviationAsWordInName
-        try {
-            return UUID.fromString(id);
-        } catch (final IllegalArgumentException illegalArgumentException) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
-        }
+  // CHECKSTYLE.OFF: AbbreviationAsWordInName - illegal match cause UUID should not be shortened
+  public UUID convertIDToUUIDOrThrow(final String id) {
+    // CHECKSTYLE.ON: AbbreviationAsWordInName
+    try {
+      return UUID.fromString(id);
+    } catch (final IllegalArgumentException illegalArgumentException) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR);
     }
+  }
 }

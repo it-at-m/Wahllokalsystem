@@ -9,23 +9,23 @@ import org.mapstruct.factory.Mappers;
 
 class WahlurneDTOMapperTest {
 
-    private final WahlurneDTOMapper unitUnderTest = Mappers.getMapper(WahlurneDTOMapper.class);
+  private final WahlurneDTOMapper unitUnderTest = Mappers.getMapper(WahlurneDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnWahlurneDTO_when_givenWahlurneModel() {
-            val wahlID = "wahlID";
-            val anzahl = 4711;
-            val urneVersiegelt = true;
-            val modelToMap = new WahlurneModel(wahlID, anzahl, urneVersiegelt);
+    @Test
+    void should_returnWahlurneDTO_when_givenWahlurneModel() {
+      val wahlID = "wahlID";
+      val anzahl = 4711;
+      val urneVersiegelt = true;
+      val modelToMap = new WahlurneModel(wahlID, anzahl, urneVersiegelt);
 
-            val result = unitUnderTest.toDTO(modelToMap);
+      val result = unitUnderTest.toDTO(modelToMap);
 
-            val expectedResult = new WahlurneDTO(wahlID, anzahl, urneVersiegelt);
+      val expectedResult = new WahlurneDTO(wahlID, anzahl, urneVersiegelt);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface StimmzettelumschlaegeModelMapper {
 
-    StimmzettelumschlaegeModel toModel(Stimmzettelumschlaege entity);
+  StimmzettelumschlaegeModel toModel(Stimmzettelumschlaege entity);
 
-    Stimmzettelumschlaege toEntity(StimmzettelumschlaegeModel model);
+  Stimmzettelumschlaege toEntity(StimmzettelumschlaegeModel model);
 }

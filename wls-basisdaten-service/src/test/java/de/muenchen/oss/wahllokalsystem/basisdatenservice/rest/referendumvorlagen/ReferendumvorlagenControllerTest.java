@@ -19,35 +19,34 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ReferendumvorlagenControllerTest {
 
-    @Mock
-    ReferendumvorlagenService referendumvorlagenService;
+  @Mock ReferendumvorlagenService referendumvorlagenService;
 
-    @Mock
-    ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
+  @Mock ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
 
-    @InjectMocks
-    ReferendumvorlagenController unitUnderTest;
+  @InjectMocks ReferendumvorlagenController unitUnderTest;
 
-    @Nested
-    class GetReferendumvorlagen {
+  @Nested
+  class GetReferendumvorlagen {
 
-        @Test
-        void should_returnReferenceDTO_when_serviceIsCalled() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnReferenceDTO_when_serviceIsCalled() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedReferenceModel = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
-            val mockedServiceResponse = new ReferendumvorlagenModel("szgID", Collections.emptySet());
-            val mockedServiceResponseAsDTO = new ReferendumvorlagenDTO("szgID", Collections.emptySet());
+      val mockedReferenceModel = new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID);
+      val mockedServiceResponse = new ReferendumvorlagenModel("szgID", Collections.emptySet());
+      val mockedServiceResponseAsDTO = new ReferendumvorlagenDTO("szgID", Collections.emptySet());
 
-            Mockito.when(referendumvorlagenDTOMapper.toModel(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedReferenceModel);
-            Mockito.when(referendumvorlagenDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-            Mockito.when(referendumvorlagenService.getReferendumvorlagen(mockedReferenceModel)).thenReturn(mockedServiceResponse);
+      Mockito.when(referendumvorlagenDTOMapper.toModel(eq(wahlbezirkID), eq(wahlID)))
+          .thenReturn(mockedReferenceModel);
+      Mockito.when(referendumvorlagenDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(referendumvorlagenService.getReferendumvorlagen(mockedReferenceModel))
+          .thenReturn(mockedServiceResponse);
 
-            val result = unitUnderTest.getReferendumvorlagen(wahlID, wahlbezirkID);
+      val result = unitUnderTest.getReferendumvorlagen(wahlID, wahlbezirkID);
 
-            Assertions.assertThat(result).isSameAs(mockedServiceResponseAsDTO);
-        }
+      Assertions.assertThat(result).isSameAs(mockedServiceResponseAsDTO);
     }
-
+  }
 }

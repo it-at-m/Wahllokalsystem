@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface EroeffnungsUhrzeitModelMapper {
 
-    EroeffnungsUhrzeitModel toModel(EroeffnungsUhrzeit entity);
+  EroeffnungsUhrzeitModel toModel(EroeffnungsUhrzeit entity);
 
-    EroeffnungsUhrzeit toEntity(EroeffnungsUhrzeitModel model);
+  EroeffnungsUhrzeit toEntity(EroeffnungsUhrzeitModel model);
 }

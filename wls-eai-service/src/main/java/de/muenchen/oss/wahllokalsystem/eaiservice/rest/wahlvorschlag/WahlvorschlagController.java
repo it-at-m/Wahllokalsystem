@@ -21,41 +21,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahlvorschlagController {
 
-    private final WahlvorschlagService wahlvorschlagService;
+  private final WahlvorschlagService wahlvorschlagService;
 
-    @Operation(
-            description = "Sucht alle Referendumvorlagen für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Liste aller Referendumvorlagen erfolgreich zurückgegeben.")
-            }
-    )
-    @GetMapping("referendum/{wahlID}/{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.OK)
-    public ReferendumvorlagenDTO loadReferendumvorlagen(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
-        return wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID);
-    }
+  @Operation(
+      description =
+          "Sucht alle Referendumvorlagen für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Liste aller Referendumvorlagen erfolgreich zurückgegeben.")
+      })
+  @GetMapping("referendum/{wahlID}/{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.OK)
+  public ReferendumvorlagenDTO loadReferendumvorlagen(
+      @PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    return wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(wahlID, wahlbezirkID);
+  }
 
-    @Operation(
-            description = "Sucht Wahlvorschlag für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Wahlvorschlag erfolgreich zurückgegeben.")
-            }
-    )
-    @GetMapping("wahl/{wahlID}/{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.OK)
-    public WahlvorschlaegeDTO loadWahlvorschlaege(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
-        return wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID);
-    }
+  @Operation(
+      description =
+          "Sucht Wahlvorschlag für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlvorschlag erfolgreich zurückgegeben.")
+      })
+  @GetMapping("wahl/{wahlID}/{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.OK)
+  public WahlvorschlaegeDTO loadWahlvorschlaege(
+      @PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    return wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(wahlID, wahlbezirkID);
+  }
 
-    @Operation(
-            description = "Sucht alle Wahlvorschlaege für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Liste aller Wahlvorschlaege erfolgreich zurückgegeben.")
-            }
-    )
-    @GetMapping("wahl/{wahlID}/liste")
-    @ResponseStatus(HttpStatus.OK)
-    public WahlvorschlaegeListeDTO loadWahlvorschlaegeListe(@RequestParam("forDate") LocalDate wahltag, @PathVariable("wahlID") String wahlID) {
-        return wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID);
-    }
+  @Operation(
+      description =
+          "Sucht alle Wahlvorschlaege für eine bestimmte Wahl { wahlID } und Wahlbezirk { wahlbezirkID }.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Liste aller Wahlvorschlaege erfolgreich zurückgegeben.")
+      })
+  @GetMapping("wahl/{wahlID}/liste")
+  @ResponseStatus(HttpStatus.OK)
+  public WahlvorschlaegeListeDTO loadWahlvorschlaegeListe(
+      @RequestParam("forDate") LocalDate wahltag, @PathVariable("wahlID") String wahlID) {
+    return wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(wahltag, wahlID);
+  }
 }

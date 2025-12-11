@@ -23,31 +23,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "Wahl")
 public class Wahl {
 
-    @Id
-    @NotNull
-    @Size(max = 1024)
-    private String wahlID;
+  @Id
+  @NotNull @Size(max = 1024) private String wahlID;
 
-    @Size(max = 255)
-    private String name;
+  @Size(max = 255) private String name;
 
-    @Min(0)
-    private long reihenfolge;
+  @Min(0) private long reihenfolge;
 
-    @Min(0)
-    private long waehlerverzeichnisNummer;
+  @Min(0) private long waehlerverzeichnisNummer;
 
-    @NotNull
-    private LocalDate wahltag;
+  @NotNull private LocalDate wahltag;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Wahlart wahlart;
+  @Enumerated(EnumType.STRING)
+  @NotNull private Wahlart wahlart;
 
-    @Embedded
-    @NotNull
-    private Farbe farbe;
+  @Embedded @NotNull private Farbe farbe;
 
-    @Size(max = 255)
-    private String nummer;
+  @Size(max = 255) private String nummer;
 }

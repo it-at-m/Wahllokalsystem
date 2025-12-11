@@ -6,7 +6,8 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UrnenwahlSchliessungsUhrzeitDTOMapper {
 
-    UrnenwahlSchliessungsUhrzeitDTO toDTO(UrnenwahlSchliessungsUhrzeitModel model);
+  UrnenwahlSchliessungsUhrzeitDTO toDTO(UrnenwahlSchliessungsUhrzeitModel model);
 
-    UrnenwahlSchliessungsUhrzeitModel toModel(String wahlbezirkID, UrnenwahlSchliessungsUhrzeitWriteDTO dto);
+  UrnenwahlSchliessungsUhrzeitModel toModel(
+      String wahlbezirkID, UrnenwahlSchliessungsUhrzeitWriteDTO dto);
 }

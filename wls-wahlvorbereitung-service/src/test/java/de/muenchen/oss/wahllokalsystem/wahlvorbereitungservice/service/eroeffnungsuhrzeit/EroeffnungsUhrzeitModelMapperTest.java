@@ -9,44 +9,43 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { EroeffnungsUhrzeitModelMapperImpl.class })
+@SpringBootTest(classes = {EroeffnungsUhrzeitModelMapperImpl.class})
 class EroeffnungsUhrzeitModelMapperTest {
 
-    @Autowired
-    private EroeffnungsUhrzeitModelMapper unitUnderTest;
+  @Autowired private EroeffnungsUhrzeitModelMapper unitUnderTest;
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnEroeffnungsuhrzeitModel_when_givenEroeffnungsuhrzeitEntity() {
-            val wahlbezirkID = "wahlbezirkID";
-            val eroeffnungsUhrzeit = LocalDateTime.now();
-            val entityToMap = new EroeffnungsUhrzeit(wahlbezirkID, eroeffnungsUhrzeit);
+    @Test
+    void should_returnEroeffnungsuhrzeitModel_when_givenEroeffnungsuhrzeitEntity() {
+      val wahlbezirkID = "wahlbezirkID";
+      val eroeffnungsUhrzeit = LocalDateTime.now();
+      val entityToMap = new EroeffnungsUhrzeit(wahlbezirkID, eroeffnungsUhrzeit);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expecetedResult = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
+      val expecetedResult = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expecetedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expecetedResult);
     }
+  }
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnEroeffnungsuhrzeitEntity_when_givenEroeffnungsuhrzeitModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val eroeffnungsUhrzeit = LocalDateTime.now();
+    @Test
+    void should_returnEroeffnungsuhrzeitEntity_when_givenEroeffnungsuhrzeitModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val eroeffnungsUhrzeit = LocalDateTime.now();
 
-            val modelToMap = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
+      val modelToMap = new EroeffnungsUhrzeitModel(wahlbezirkID, eroeffnungsUhrzeit);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new EroeffnungsUhrzeit(wahlbezirkID, eroeffnungsUhrzeit);
+      val expectedResult = new EroeffnungsUhrzeit(wahlbezirkID, eroeffnungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

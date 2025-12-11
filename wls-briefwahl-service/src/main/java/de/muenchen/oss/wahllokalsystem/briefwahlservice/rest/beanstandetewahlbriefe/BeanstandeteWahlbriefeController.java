@@ -19,50 +19,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BeanstandeteWahlbriefeController {
 
-    private final BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
+  private final BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
 
-    private final BeanstandeteWahlbriefeDTOMapper beanstandeteWahlbriefeDTOMapper;
+  private final BeanstandeteWahlbriefeDTOMapper beanstandeteWahlbriefeDTOMapper;
 
-    @Operation(description = "Laden der Beanstandeten Wahlbriefe mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Liste aller beanstandeten Wahlbriefe erfolgreich zurückgegeben."
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine beanstandeten Wahlbriefe gefunden."
-                    )
-            }
-    )
-    @GetMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
-    public ResponseEntity<BeanstandeteWahlbriefeDTO> getBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
-            @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
-        val referenceModel = beanstandeteWahlbriefeDTOMapper.toReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
-        val beanstandeteWahlbriefeFromService = beanstandeteWahlbriefeDTOMapper.toDTO(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(referenceModel));
-        return okWithBodyOrNoContent(beanstandeteWahlbriefeFromService);
+  @Operation(
+      description =
+          "Laden der Beanstandeten Wahlbriefe mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Liste aller beanstandeten Wahlbriefe erfolgreich zurückgegeben."),
+        @ApiResponse(responseCode = "204", description = "Keine beanstandeten Wahlbriefe gefunden.")
+      })
+  @GetMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
+  public ResponseEntity<BeanstandeteWahlbriefeDTO> getBeanstandeteWahlbriefe(
+      @PathVariable("wahlbezirkID") String wahlbezirkID,
+      @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer) {
+    val referenceModel =
+        beanstandeteWahlbriefeDTOMapper.toReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
+    val beanstandeteWahlbriefeFromService =
+        beanstandeteWahlbriefeDTOMapper.toDTO(
+            beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(referenceModel));
+    return okWithBodyOrNoContent(beanstandeteWahlbriefeFromService);
+  }
+
+  @Operation(
+      description =
+          "Speichern von Beanstandeten Wahlbriefen mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Liste aller beanstandeten Wahlbriefe erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
+  public void setBeanstandeteWahlbriefe(
+      @PathVariable("wahlbezirkID") String wahlbezirkID,
+      @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,
+      @RequestBody BeanstandeteWahlbriefeCreateDTO beanstandeteWahlbriefeCreateDTO) {
+    val createModel =
+        beanstandeteWahlbriefeDTOMapper.toCreateModel(
+            beanstandeteWahlbriefeCreateDTO, wahlbezirkID, waehlerverzeichnisNummer);
+    beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(createModel);
+  }
+
+  private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
+    if (body == null) {
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.ok(body);
     }
-
-    @Operation(description = "Speichern von Beanstandeten Wahlbriefen mit { wahlbezirkID} und { waehlerverzeichnisNummer }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Liste aller beanstandeten Wahlbriefe erfolgreich gespeichert."
-                    )
-            }
-    )
-    @PostMapping("{wahlbezirkID}/{waehlerverzeichnisNummer}")
-    public void setBeanstandeteWahlbriefe(@PathVariable("wahlbezirkID") String wahlbezirkID,
-            @PathVariable("waehlerverzeichnisNummer") Long waehlerverzeichnisNummer,
-            @RequestBody BeanstandeteWahlbriefeCreateDTO beanstandeteWahlbriefeCreateDTO) {
-        val createModel = beanstandeteWahlbriefeDTOMapper.toCreateModel(beanstandeteWahlbriefeCreateDTO, wahlbezirkID, waehlerverzeichnisNummer);
-        beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(createModel);
-    }
-
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final T body) {
-        if (body == null) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(body);
-        }
-    }
+  }
 }

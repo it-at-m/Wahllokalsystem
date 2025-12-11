@@ -15,57 +15,58 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class WahltermindatenServiceSecurityTest {
 
-    @Autowired
-    WahltermindatenService unitUnderTest;
+  @Autowired WahltermindatenService unitUnderTest;
 
-    @Nested
-    class LoadWahltermindaten {
+  @Nested
+  class LoadWahltermindaten {
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ADMIN_LOADWAHLTERMINDATEN);
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ADMIN_LOADWAHLTERMINDATEN);
 
-            val wahltagID = "wahltagID";
+      val wahltagID = "wahltagID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.loadWahltermindaten(wahltagID));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
-            SecurityUtils.runWith("wrong_authority");
-
-            val wahltagID = "wahltagID";
-
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.loadWahltermindaten(wahltagID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.loadWahltermindaten(wahltagID));
     }
 
-    @Nested
-    class DeleteWahltermindaten {
+    @Test
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+      SecurityUtils.runWith("wrong_authority");
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ADMIN_DELETEWAHLTERMINDATEN);
+      val wahltagID = "wahltagID";
 
-            val wahltagID = "wahltagID";
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
-            SecurityUtils.runWith("wrong_authority");
-
-            val wahltagID = "wahltagID";
-
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.loadWahltermindaten(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
     }
+  }
+
+  @Nested
+  class DeleteWahltermindaten {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ADMIN_DELETEWAHLTERMINDATEN);
+
+      val wahltagID = "wahltagID";
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_requiredAuthorityIsMissing() {
+      SecurityUtils.runWith("wrong_authority");
+
+      val wahltagID = "wahltagID";
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

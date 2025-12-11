@@ -37,230 +37,257 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AusdruckServiceTest {
 
-    @Mock
-    AusdruckRepository ausdruckRepository;
+  @Mock AusdruckRepository ausdruckRepository;
 
-    @Mock
-    AusdruckModelMapper ausdruckModelMapper;
+  @Mock AusdruckModelMapper ausdruckModelMapper;
 
-    @Mock
-    WahlUndBezirkIDUndMeldungsartValidator wahlUndBezirkIDUndMeldungsartValidator;
+  @Mock WahlUndBezirkIDUndMeldungsartValidator wahlUndBezirkIDUndMeldungsartValidator;
 
-    @Mock
-    Validator validator;
+  @Mock Validator validator;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    AusdruckService unitUnderTest;
+  @InjectMocks AusdruckService unitUnderTest;
 
-    @Nested
-    class GetAusdruck {
+  @Nested
+  class GetAusdruck {
 
-        @Test
-        void should_throwFachlicheWlsExceptionForParameter_when_callingValidator() {
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-            val id = new WahlUndBezirkIDUndMeldungsart("id", "id2", Meldungsart.V1);
+    @Test
+    void should_throwFachlicheWlsExceptionForParameter_when_callingValidator() {
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+      val id = new WahlUndBezirkIDUndMeldungsart("id", "id2", Meldungsart.V1);
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
-            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+      Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
 
-            unitUnderTest.getAusdruck(idModel);
+      unitUnderTest.getAusdruck(idModel);
 
-            Mockito.verify(wahlUndBezirkIDUndMeldungsartValidator).validWahlUndBezirkIDUndMeldungsartOrThrow(eq(id), eq(mockedWlsException));
-        }
-
-        @Test
-        void should_returnAusdruckReadModel_when_ausdruckIsFoundInRepo() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-            val mockedMappedEntityAsModel = new AusdruckReadModel(idModel, null, null);
-            val mockedEntity = new Ausdruck();
-
-            Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
-            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
-            Mockito.when(ausdruckModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
-
-            val result = unitUnderTest.getAusdruck(idModel);
-
-            Assertions.assertThat(result.get()).isEqualTo(mockedMappedEntityAsModel);
-        }
-
-        @Test
-        void should_returnEmptyOptional_when_notFound() {
-            val id = new WahlUndBezirkIDUndMeldungsart();
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-
-            Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.empty());
-            Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
-
-            val result = unitUnderTest.getAusdruck(idModel);
-
-            Assertions.assertThat(result.isEmpty()).isTrue();
-        }
+      Mockito.verify(wahlUndBezirkIDUndMeldungsartValidator)
+          .validWahlUndBezirkIDUndMeldungsartOrThrow(eq(id), eq(mockedWlsException));
     }
 
-    @Nested
-    class GetAllAusdrucke {
+    @Test
+    void should_returnAusdruckReadModel_when_ausdruckIsFoundInRepo() {
+      val id = new WahlUndBezirkIDUndMeldungsart();
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+      val mockedMappedEntityAsModel = new AusdruckReadModel(idModel, null, null);
+      val mockedEntity = new Ausdruck();
 
-        @Test
-        void should_retrieveAllAusdruckeFromRepo_when_dataFound() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val erstelltAm = Instant.now();
-            val content = "Testausdruck";
+      Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.of(mockedEntity));
+      Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
+      Mockito.when(ausdruckModelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntityAsModel);
 
-            val ausdruckEntity1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1), content, erstelltAm);
-            val ausdruckEntity2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3), content, erstelltAm);
-            val ausdruckEntityList = List.of(ausdruckEntity1, ausdruckEntity2);
+      val result = unitUnderTest.getAusdruck(idModel);
 
-            val ausdruckModel1 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1), content, erstelltAm);
-            val ausdruckModel2 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3), content, erstelltAm);
-            val ausdruckModelList = List.of(ausdruckModel1, ausdruckModel2);
-
-            Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
-                    .thenReturn(
-                            ausdruckEntityList);
-            Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity1)).thenReturn(ausdruckModel1);
-            Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity2)).thenReturn(ausdruckModel2);
-
-            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
-
-            Mockito.verify(ausdruckRepository).findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
-            Assertions.assertThat(result).isEqualTo(ausdruckModelList);
-        }
-
-        @Test
-        void should_returnEmptyList_when_noDataFound() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID)).thenReturn(Collections.emptyList());
-            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
-
-            Assertions.assertThat(result).isEmpty();
-        }
+      Assertions.assertThat(result.get()).isEqualTo(mockedMappedEntityAsModel);
     }
 
-    @Nested
-    class SaveAusdruck {
+    @Test
+    void should_returnEmptyOptional_when_notFound() {
+      val id = new WahlUndBezirkIDUndMeldungsart();
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
 
-        private MockedStatic<Instant> mockedStatic = mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+      Mockito.when(ausdruckRepository.findById(id)).thenReturn(Optional.empty());
+      Mockito.when(ausdruckModelMapper.toEntity(idModel)).thenReturn(id);
 
-        @BeforeEach
-        void setup() {
-            var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
-            var mockedInstant = Instant.now(clock);
-            mockedStatic.when(Instant::now).thenReturn(mockedInstant);
-        }
+      val result = unitUnderTest.getAusdruck(idModel);
 
-        @AfterEach
-        void teardown() {
-            mockedStatic.close();
-        }
-
-        @Test
-        void should_saveMappedAusdruckWriteModel_when_called() {
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
-            val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
-            val erstelltAm = Instant.now();
-
-            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, erstelltAm)).thenReturn(mockedModelAsEntity);
-
-            unitUnderTest.saveAusdruck(ausdruckModelToSave);
-
-            Mockito.verify(ausdruckRepository).save(mockedModelAsEntity);
-        }
-
-        @Test
-        void should_throwRepositoryException_when_savingFailed() {
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
-            val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
-
-            val mockedRepositorySaveException = new RuntimeException("saving failed");
-
-            Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, Instant.now())).thenReturn(mockedModelAsEntity);
-            Mockito.doThrow(mockedRepositorySaveException).when(ausdruckRepository).save(mockedModelAsEntity);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedRepositorySaveException);
-        }
-
-        @Test
-        void should_throwFachlicheWlsExceptionForParameter_when_validatorValidationReturnsSetWithViolations() {
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
-            val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
-
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("postAusdruck: Parameter unvollstaendig");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-            Mockito.when(validator.validate(ausdruckModelToSave)).thenReturn(Set.of(new TestConstraintViolation()));
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave)).isSameAs(mockedWlsException);
-        }
-
-        static class TestConstraintViolation implements ConstraintViolation<AusdruckWriteModel> {
-
-            @Override
-            public String getMessage() {
-                return "";
-            }
-
-            @Override
-            public String getMessageTemplate() {
-                return "";
-            }
-
-            @Override
-            public AusdruckWriteModel getRootBean() {
-                return null;
-            }
-
-            @Override
-            public Class<AusdruckWriteModel> getRootBeanClass() {
-                return null;
-            }
-
-            @Override
-            public Object getLeafBean() {
-                return null;
-            }
-
-            @Override
-            public Object[] getExecutableParameters() {
-                return new Object[0];
-            }
-
-            @Override
-            public Object getExecutableReturnValue() {
-                return null;
-            }
-
-            @Override
-            public Path getPropertyPath() {
-                return null;
-            }
-
-            @Override
-            public Object getInvalidValue() {
-                return null;
-            }
-
-            @Override
-            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                return null;
-            }
-
-            @Override
-            public <U> U unwrap(Class<U> aClass) {
-                return null;
-            }
-        }
+      Assertions.assertThat(result.isEmpty()).isTrue();
     }
+  }
+
+  @Nested
+  class GetAllAusdrucke {
+
+    @Test
+    void should_retrieveAllAusdruckeFromRepo_when_dataFound() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val erstelltAm = Instant.now();
+      val content = "Testausdruck";
+
+      val ausdruckEntity1 =
+          new Ausdruck(
+              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V1),
+              content,
+              erstelltAm);
+      val ausdruckEntity2 =
+          new Ausdruck(
+              new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, Meldungsart.V3),
+              content,
+              erstelltAm);
+      val ausdruckEntityList = List.of(ausdruckEntity1, ausdruckEntity2);
+
+      val ausdruckModel1 =
+          new AusdruckReadModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1),
+              content,
+              erstelltAm);
+      val ausdruckModel2 =
+          new AusdruckReadModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3),
+              content,
+              erstelltAm);
+      val ausdruckModelList = List.of(ausdruckModel1, ausdruckModel2);
+
+      Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
+          .thenReturn(ausdruckEntityList);
+      Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity1)).thenReturn(ausdruckModel1);
+      Mockito.when(ausdruckModelMapper.toModel(ausdruckEntity2)).thenReturn(ausdruckModel2);
+
+      val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
+
+      Mockito.verify(ausdruckRepository).findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
+      Assertions.assertThat(result).isEqualTo(ausdruckModelList);
+    }
+
+    @Test
+    void should_returnEmptyList_when_noDataFound() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID))
+          .thenReturn(Collections.emptyList());
+      val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+  }
+
+  @Nested
+  class SaveAusdruck {
+
+    private MockedStatic<Instant> mockedStatic =
+        mockStatic(Instant.class, Mockito.CALLS_REAL_METHODS);
+
+    @BeforeEach
+    void setup() {
+      var clock = Clock.fixed(Instant.now(), ZoneOffset.UTC);
+      var mockedInstant = Instant.now(clock);
+      mockedStatic.when(Instant::now).thenReturn(mockedInstant);
+    }
+
+    @AfterEach
+    void teardown() {
+      mockedStatic.close();
+    }
+
+    @Test
+    void should_saveMappedAusdruckWriteModel_when_called() {
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+      val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
+      val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
+      val erstelltAm = Instant.now();
+
+      Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, erstelltAm))
+          .thenReturn(mockedModelAsEntity);
+
+      unitUnderTest.saveAusdruck(ausdruckModelToSave);
+
+      Mockito.verify(ausdruckRepository).save(mockedModelAsEntity);
+    }
+
+    @Test
+    void should_throwRepositoryException_when_savingFailed() {
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+      val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
+      val mockedModelAsEntity = Mockito.mock(Ausdruck.class);
+
+      val mockedRepositorySaveException = new RuntimeException("saving failed");
+
+      Mockito.when(ausdruckModelMapper.toEntity(ausdruckModelToSave, Instant.now()))
+          .thenReturn(mockedModelAsEntity);
+      Mockito.doThrow(mockedRepositorySaveException)
+          .when(ausdruckRepository)
+          .save(mockedModelAsEntity);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave))
+          .isSameAs(mockedRepositorySaveException);
+    }
+
+    @Test
+    void
+        should_throwFachlicheWlsExceptionForParameter_when_validatorValidationReturnsSetWithViolations() {
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel("id", "id2", MeldungsartModel.V1);
+      val ausdruckModelToSave = new AusdruckWriteModel(idModel, null);
+
+      val mockedWlsException =
+          FachlicheWlsException.withCode("")
+              .buildWithMessage("postAusdruck: Parameter unvollstaendig");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+      Mockito.when(validator.validate(ausdruckModelToSave))
+          .thenReturn(Set.of(new TestConstraintViolation()));
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModelToSave))
+          .isSameAs(mockedWlsException);
+    }
+
+    static class TestConstraintViolation implements ConstraintViolation<AusdruckWriteModel> {
+
+      @Override
+      public String getMessage() {
+        return "";
+      }
+
+      @Override
+      public String getMessageTemplate() {
+        return "";
+      }
+
+      @Override
+      public AusdruckWriteModel getRootBean() {
+        return null;
+      }
+
+      @Override
+      public Class<AusdruckWriteModel> getRootBeanClass() {
+        return null;
+      }
+
+      @Override
+      public Object getLeafBean() {
+        return null;
+      }
+
+      @Override
+      public Object[] getExecutableParameters() {
+        return new Object[0];
+      }
+
+      @Override
+      public Object getExecutableReturnValue() {
+        return null;
+      }
+
+      @Override
+      public Path getPropertyPath() {
+        return null;
+      }
+
+      @Override
+      public Object getInvalidValue() {
+        return null;
+      }
+
+      @Override
+      public ConstraintDescriptor<?> getConstraintDescriptor() {
+        return null;
+      }
+
+      @Override
+      public <U> U unwrap(Class<U> aClass) {
+        return null;
+      }
+    }
+  }
 }

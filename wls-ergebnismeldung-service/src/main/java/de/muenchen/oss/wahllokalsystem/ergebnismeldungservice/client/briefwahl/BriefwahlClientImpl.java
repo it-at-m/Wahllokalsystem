@@ -20,39 +20,47 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BriefwahlClientImpl implements BriefwahlClient {
 
-    private final BeanstandeteWahlbriefeControllerApi beanstandeteWahlbriefeControllerApi;
+  private final BeanstandeteWahlbriefeControllerApi beanstandeteWahlbriefeControllerApi;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public long getAnzahlZurueckgewiesenerWahlbriefe(final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
-        val beanstandeteWahlbriefe = getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
+  @Override
+  public long getAnzahlZurueckgewiesenerWahlbriefe(
+      final String wahlbezirkID, final String wahlID, final long waehlerverzeichnisNummer) {
+    val beanstandeteWahlbriefe = getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
 
-        val beanstandeteWahlbriefeOfWahl = beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID);
-        if (beanstandeteWahlbriefeOfWahl == null) {
-            return 0;
-        } else {
-            return beanstandeteWahlbriefeOfWahl.stream()
-                    .filter(zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN))
-                    .count();
-        }
+    val beanstandeteWahlbriefeOfWahl =
+        beanstandeteWahlbriefe.getBeanstandeteWahlbriefe().get(wahlID);
+    if (beanstandeteWahlbriefeOfWahl == null) {
+      return 0;
+    } else {
+      return beanstandeteWahlbriefeOfWahl.stream()
+          .filter(
+              zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN))
+          .count();
+    }
+  }
+
+  private BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefe(
+      final String wahlbezirkID, final long waehlerverzeichnisNummer) {
+    final BeanstandeteWahlbriefeDTO beanstandeteWahlbriefeDTO;
+    try {
+      beanstandeteWahlbriefeDTO =
+          beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(
+              wahlbezirkID, waehlerverzeichnisNummer);
+    } catch (final WlsException wlsException) {
+      log.debug("found WlsException", wlsException);
+      throw wlsException;
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BRIEFWAHL);
     }
 
-    private BeanstandeteWahlbriefeDTO getBeanstandeteWahlbriefe(final String wahlbezirkID, final long waehlerverzeichnisNummer) {
-        final BeanstandeteWahlbriefeDTO beanstandeteWahlbriefeDTO;
-        try {
-            beanstandeteWahlbriefeDTO = beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(wahlbezirkID, waehlerverzeichnisNummer);
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException", wlsException);
-            throw wlsException;
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BRIEFWAHL);
-        }
-
-        if (beanstandeteWahlbriefeDTO == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BRIEFWAHL_BEANSTANDETEWAHLBRIEFE_NULL_OR_EMPTY);
-        }
-
-        return beanstandeteWahlbriefeDTO;
+    if (beanstandeteWahlbriefeDTO == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.BRIEFWAHL_BEANSTANDETEWAHLBRIEFE_NULL_OR_EMPTY);
     }
+
+    return beanstandeteWahlbriefeDTO;
+  }
 }

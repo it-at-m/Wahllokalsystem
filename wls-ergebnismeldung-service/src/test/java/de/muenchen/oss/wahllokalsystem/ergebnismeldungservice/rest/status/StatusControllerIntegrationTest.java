@@ -39,191 +39,234 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
 @ActiveProfiles(
-        profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE,
-                de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK }
-)
+    profiles = {
+      SPRING_TEST_PROFILE,
+      SPRING_NO_SECURITY_PROFILE,
+      de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK
+    })
 public class StatusControllerIntegrationTest {
 
-    @Autowired
-    StatusRepository statusRepository;
+  @Autowired StatusRepository statusRepository;
 
-    @Autowired
-    StatusModelMapper statusModelMapper;
+  @Autowired StatusModelMapper statusModelMapper;
 
-    @Autowired
-    StatusDTOMapper statusDTOMapper;
+  @Autowired StatusDTOMapper statusDTOMapper;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @BeforeEach
-    void setup() {
-        statusRepository.deleteAll();
+  @BeforeEach
+  void setup() {
+    statusRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStatus {
+
+    @Test
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
+
+      val schnellMeldung = createMeldung();
+      val niederschrift = createMeldung();
+      val entityToFind =
+          new Status(new BezirkUndWahlID(wahlID, wahlbezirkID), schnellMeldung, niederschrift);
+      statusRepository.save(entityToFind);
+
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val responseBodyAsDTO =
+          objectMapper.readValue(response.getContentAsString(), StatusDTO.class);
+
+      val expectedResult = statusDTOMapper.toDTO(statusModelMapper.toModel(entityToFind));
+
+      Assertions.assertThat(responseBodyAsDTO)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
+          .isEqualTo(expectedResult);
     }
 
-    @Nested
-    class GetStatus {
+    @Test
+    void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
 
-        @Test
-        void should_returnData_when_dataIsPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
+      val response =
+          mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
 
-            val schnellMeldung = createMeldung();
-            val niederschrift = createMeldung();
-            val entityToFind = new Status(new BezirkUndWahlID(wahlID, wahlbezirkID), schnellMeldung, niederschrift);
-            statusRepository.save(entityToFind);
-
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-            val responseBodyAsDTO = objectMapper.readValue(response.getContentAsString(), StatusDTO.class);
-
-            val expectedResult = statusDTOMapper.toDTO(statusModelMapper.toModel(entityToFind));
-
-            Assertions.assertThat(responseBodyAsDTO)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
-
-            val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
-
-            Assertions.assertThat(response.getContentAsString()).isEmpty();
-        }
-
-        @Test
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val wahlID = "    ";
-            val wahlbezirkID = "wahlbezirkID";
-            val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
-            val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.code(),
-                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(response.getContentAsString()).isEmpty();
     }
 
-    @Nested
-    class PostStatus {
+    @Test
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlID = "    ";
+      val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
 
-        @Test
-        void should_persistData_when_noDataIsPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = new StatusDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
+      val response =
+          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+      val receivedWlsException =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
-            val request = MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.code(),
+              "WLS-ERGEBNISMELDUNG",
+              ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 
-            WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+  @Nested
+  class PostStatus {
 
-            mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+    @Test
+    void should_persistData_when_noDataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new StatusDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-            val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
-            val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
-            Assertions.assertThat(entityFromRepo)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedEntity);
-        }
+      val request =
+          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-        @Test
-        void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = new StatusDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
+      WireMock.stubFor(
+          WireMock.post(UrlPattern.ANY)
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-            val request = MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
-            val schnellmeldung = createMeldung();
-            schnellmeldung.setGedruckt(!requestBody.schnellmeldung().gedruckt());
-            val niederschrift = createMeldung();
-            niederschrift.setGedruckt(!requestBody.niederschrift().gedruckt());
-            val entityToReplace = new Status(requestBody.bezirkUndWahlID(), schnellmeldung, niederschrift);
-            Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
-            statusRepository.save(entityToReplace);
-
-            WireMock.stubFor(WireMock.post(UrlPattern.ANY).willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-
-            mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-
-            val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
-            val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
-            Assertions.assertThat(entityFromRepo)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedEntity);
-        }
-
-        @Test
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val wahlID = "    ";
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = new StatusDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
-
-            val request = MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
-            val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG.code(),
-                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        @Test
-        void should_notifyAllSenders_when_newDataIsSet() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = new StatusDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
-
-            val request = MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
-
-            WireMock.stubFor(WireMock.post("/businessActions/niederschriftDruckuhrzeit").willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-            WireMock.stubFor(WireMock.post("/businessActions/niederschriftSendungsuhrzeit").willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-            WireMock.stubFor(WireMock.post("/businessActions/schnellmeldungDruckuhrzeit").willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-            WireMock.stubFor(
-                    WireMock.post("/businessActions/schnellmeldungSendungsuhrzeit").willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
-
-            mockMvc.perform(request).andExpect(status().isOk());
-        }
-
-        private MeldungDTO createMeldungDTO() {
-            return new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now());
-        }
+      val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
+      val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
+      Assertions.assertThat(entityFromRepo)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
+          .isEqualTo(expectedEntity);
     }
 
-    private Meldung createMeldung() {
-        val meldung = new Meldung();
+    @Test
+    void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new StatusDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-        meldung.setSendeuhrzeit(LocalDateTime.now());
-        meldung.setUebermittelt(true);
-        meldung.setValidierungsstatus(Validierungsstatus.VALIDE);
-        meldung.setGedruckt(true);
+      val request =
+          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-        return meldung;
+      val schnellmeldung = createMeldung();
+      schnellmeldung.setGedruckt(!requestBody.schnellmeldung().gedruckt());
+      val niederschrift = createMeldung();
+      niederschrift.setGedruckt(!requestBody.niederschrift().gedruckt());
+      val entityToReplace =
+          new Status(requestBody.bezirkUndWahlID(), schnellmeldung, niederschrift);
+      Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
+      statusRepository.save(entityToReplace);
+
+      WireMock.stubFor(
+          WireMock.post(UrlPattern.ANY)
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+
+      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+
+      val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
+      val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
+      Assertions.assertThat(entityFromRepo)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
+          .isEqualTo(expectedEntity);
     }
 
-    private String buildStatusURI(final String wahlID, final String wahlbezirkID) {
-        return "/businessActions/status/" + wahlID + "/" + wahlbezirkID;
+    @Test
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlID = "    ";
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new StatusDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
+
+      val request =
+          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+      val receivedWlsException =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG.code(),
+              "WLS-ERGEBNISMELDUNG",
+              ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
     }
+
+    @Test
+    void should_notifyAllSenders_when_newDataIsSet() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new StatusDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
+
+      val request =
+          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      WireMock.stubFor(
+          WireMock.post("/businessActions/niederschriftDruckuhrzeit")
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+      WireMock.stubFor(
+          WireMock.post("/businessActions/niederschriftSendungsuhrzeit")
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+      WireMock.stubFor(
+          WireMock.post("/businessActions/schnellmeldungDruckuhrzeit")
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+      WireMock.stubFor(
+          WireMock.post("/businessActions/schnellmeldungSendungsuhrzeit")
+              .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
+
+      mockMvc.perform(request).andExpect(status().isOk());
+    }
+
+    private MeldungDTO createMeldungDTO() {
+      return new MeldungDTO(ValidierungsstatusDTO.VALIDE, true, true, LocalDateTime.now());
+    }
+  }
+
+  private Meldung createMeldung() {
+    val meldung = new Meldung();
+
+    meldung.setSendeuhrzeit(LocalDateTime.now());
+    meldung.setUebermittelt(true);
+    meldung.setValidierungsstatus(Validierungsstatus.VALIDE);
+    meldung.setGedruckt(true);
+
+    return meldung;
+  }
+
+  private String buildStatusURI(final String wahlID, final String wahlbezirkID) {
+    return "/businessActions/status/" + wahlID + "/" + wahlbezirkID;
+  }
 }

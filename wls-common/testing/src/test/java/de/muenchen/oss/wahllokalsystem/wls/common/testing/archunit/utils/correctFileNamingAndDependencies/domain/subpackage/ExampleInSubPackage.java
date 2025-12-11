@@ -3,5 +3,4 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correc
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class ExampleInSubPackage {
-}
+public class ExampleInSubPackage {}

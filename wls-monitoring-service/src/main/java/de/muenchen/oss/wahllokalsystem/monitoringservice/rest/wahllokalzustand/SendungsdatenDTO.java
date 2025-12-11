@@ -7,6 +7,4 @@ import lombok.Builder;
 
 @Builder
 public record SendungsdatenDTO(
-        @NotNull BezirkUndWahlID bezirkUndWahlID,
-        @NotNull LocalDateTime sendungsuhrzeit) {
-}
+    @NotNull BezirkUndWahlID bezirkUndWahlID, @NotNull LocalDateTime sendungsuhrzeit) {}

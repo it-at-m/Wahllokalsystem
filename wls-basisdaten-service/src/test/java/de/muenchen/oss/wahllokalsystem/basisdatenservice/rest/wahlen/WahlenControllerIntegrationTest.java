@@ -51,343 +51,461 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 public class WahlenControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceID;
+  @Value("${service.info.oid}")
+  String serviceID;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WahlDTOMapper dtoMapper;
+  @Autowired WahlDTOMapper dtoMapper;
 
-    @Autowired
-    WahlModelMapper wahlModelMapper;
+  @Autowired WahlModelMapper wahlModelMapper;
 
-    @Autowired
-    WahlenClientMapper wahlenClientMapper;
+  @Autowired WahlenClientMapper wahlenClientMapper;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    WahlRepository wahlRepository;
+  @Autowired WahlRepository wahlRepository;
 
-    @Autowired
-    WahltagRepository wahltagRepository;
+  @Autowired WahltagRepository wahltagRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_WAHLEN, Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE));
-        wahlRepository.deleteAll();
-        wahltagRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(
+        ArrayUtils.addAll(
+            Authorities.ALL_AUTHORITIES_WAHLEN, Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE));
+    wahlRepository.deleteAll();
+    wahltagRepository.deleteAll();
+  }
+
+  @BeforeEach
+  void setup() {
+    WireMock.resetAllRequests();
+  }
+
+  @Nested
+  class GetWahlen {
+
+    @Test
+    void should_returnWahlDTOList_when_loadedFromExternal() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
+      val requestDate = LocalDate.now().toString();
+
+      val eaiWahlen = createClientSetOfWahlDTO(searchingForWahltag);
+      WireMock.stubFor(
+          WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+      wahltagRepository.save(searchingForWahltag);
+
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO[].class);
+
+      val expectedResponseBody =
+          dtoMapper.fromListOfWahlModelToListOfWahlDTO(
+              wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(eaiWahlen));
+
+      Assertions.assertThat(responseBodyAsDTO)
+          .containsExactlyInAnyOrderElementsOf(expectedResponseBody);
     }
 
-    @BeforeEach
-    void setup() {
-        WireMock.resetAllRequests();
+    @Test
+    @Transactional
+    void should_returnWahlList_when_externalDataIsPersisted() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung2", "1");
+      val requestDate = LocalDate.now().toString();
+
+      val eaiWahlen = createClientSetOfWahlDTO(searchingForWahltag);
+      WireMock.stubFor(
+          WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
+      wahltagRepository.save(searchingForWahltag);
+
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
+
+      api.perform(request).andExpect(status().isOk());
+
+      val dataFromRepo =
+          wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag());
+
+      val expectedEntities =
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+              wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(eaiWahlen));
+
+      Assertions.assertThat(dataFromRepo).isEqualTo(expectedEntities);
     }
 
-    @Nested
-    class GetWahlen {
+    @Test
+    void should_returnWahlDTOList_when_loadFromRepository() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung3", "1");
+      wahltagRepository.save(searchingForWahltag);
 
-        @Test
-        void should_returnWahlDTOList_when_loadedFromExternal() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung1", "1");
-            val requestDate = LocalDate.now().toString();
+      val entitiesToFind =
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+              wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(
+                  createClientSetOfWahlDTO(searchingForWahltag)));
+      val savedEntities = (List<Wahl>) wahlRepository.saveAll(entitiesToFind);
 
-            val eaiWahlen = createClientSetOfWahlDTO(searchingForWahltag);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                            .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
-            wahltagRepository.save(searchingForWahltag);
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
 
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTOs =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO[].class);
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val expectedResponseBody =
+          dtoMapper.fromListOfWahlModelToListOfWahlDTO(
+              wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(savedEntities));
 
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO[].class);
-
-            val expectedResponseBody = dtoMapper
-                    .fromListOfWahlModelToListOfWahlDTO(wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(eaiWahlen));
-
-            Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
-        }
-
-        @Test
-        @Transactional
-        void should_returnWahlList_when_externalDataIsPersisted() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung2", "1");
-            val requestDate = LocalDate.now().toString();
-
-            val eaiWahlen = createClientSetOfWahlDTO(searchingForWahltag);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
-            wahltagRepository.save(searchingForWahltag);
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
-
-            api.perform(request).andExpect(status().isOk());
-
-            val dataFromRepo = wahlRepository.findByWahltagOrderByReihenfolge(searchingForWahltag.getWahltag());
-
-            val expectedEntities = wahlModelMapper
-                    .fromListOfWahlModeltoListOfWahlEntities(wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(eaiWahlen));
-
-            Assertions.assertThat(dataFromRepo).isEqualTo(expectedEntities);
-        }
-
-        @Test
-        void should_returnWahlDTOList_when_loadFromRepository() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung3", "1");
-            wahltagRepository.save(searchingForWahltag);
-
-            val entitiesToFind = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
-                    wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(createClientSetOfWahlDTO(searchingForWahltag)));
-            val savedEntities = (List<Wahl>) wahlRepository.saveAll(entitiesToFind);
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTOs = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO[].class);
-
-            val expectedResponseBody = dtoMapper.fromListOfWahlModelToListOfWahlDTO(wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(savedEntities));
-
-            Assertions.assertThat(responseBodyAsDTOs).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
-            WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung4", "1");
-            val requestDate = LocalDate.now().toString();
-            wahltagRepository.save(searchingForWahltag);
-
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
-
-            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(), serviceID,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(responseBodyAsDTOs)
+          .containsExactlyInAnyOrderElementsOf(expectedResponseBody);
+      WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
     }
 
-    @Nested
-    class PostWahlen {
+    @Test
+    void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung4", "1");
+      val requestDate = LocalDate.now().toString();
+      wahltagRepository.save(searchingForWahltag);
 
-        @ParameterizedTest(name = "{1}")
-        @MethodSource("createSavableData")
-        void should_saveNewData_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val newData = List.of(arguments.get(0, de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO.class));
+      WireMock.stubFor(
+          WireMock.get("/wahldaten/wahlen?forDate=" + requestDate + "&withNummer=1")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.NOT_FOUND.value())));
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(newData));
-            api.perform(request).andExpect(status().isOk());
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlen/" + searchingForWahltag.getWahltagID());
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
-            val savedWahlen = wahlRepository.findAll();
+      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            Assertions.assertThat(savedWahlen)
-                    .isEqualTo(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newData)));
-        }
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(),
+              serviceID,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 
-        @Test
-        void should_saveNewData_when_existingWahlenAreReplaced() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung6", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val oldData = createControllerListOfWahlDTO(searchingForWahltag, "");
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            val requestFirst = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(oldData));
-            api.perform(requestFirst).andExpect(status().isOk());
-            val expectedPostedWahlen_old = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(oldData));
-            val oldSavedWahlen = wahlRepository.findAll();
+  @Nested
+  class PostWahlen {
 
-            Assertions.assertThat(oldSavedWahlen).isEqualTo(expectedPostedWahlen_old);
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("createSavableData")
+    void should_saveNewData_when_repoIsEmpty(final ArgumentsAccessor arguments) throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung5", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val newData =
+          List.of(
+              arguments.get(
+                  0, de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO.class));
 
-            val newWahlen = createControllerListOfWahlDTO(searchingForWahltag, "newWahlen");
-            val requestSecond = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(newWahlen));
-            api.perform(requestSecond).andExpect(status().isOk());
-            val expectedPostedWahlen_new = wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newWahlen));
-            val newSavedWahlen = wahlRepository.findAll();
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN);
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/wahlen/" + searchingForWahltag.getWahltagID())
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(newData));
+      api.perform(request).andExpect(status().isOk());
 
-            Assertions.assertThat(newSavedWahlen).isEqualTo(expectedPostedWahlen_new);
-        }
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
+      val savedWahlen = wahlRepository.findAll();
 
-        @Test
-        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung7", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + "     ").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(newData));
-            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.code(),
-                    serviceID, ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.message());
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        @Test
-        void should_returnFachlicheWlsException_when_notSaveableCauseOfMissingRequestbody() throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL, Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung8", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + searchingForWahltag.getWahltagID()).with(csrf());
-            val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
-                    serviceID, "");
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        public static Stream<Arguments> createSavableData() {
-            return Stream.of(
-                    Arguments.of(createMinimalWahlDTO(), "with minimal wahlDTO"),
-                    Arguments.of(createFullWahlDTO(), "with full wahlDTO"));
-        }
+      Assertions.assertThat(savedWahlen)
+          .isEqualTo(
+              wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+                  dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newData)));
     }
 
-    @Nested
-    class ResetWahlen {
+    @Test
+    void should_saveNewData_when_existingWahlenAreReplaced() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung6", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val oldData = createControllerListOfWahlDTO(searchingForWahltag, "");
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHL,
+          Authorities.SERVICE_POST_WAHLEN,
+          Authorities.REPOSITORY_READ_WAHL);
+      val requestFirst =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/wahlen/" + searchingForWahltag.getWahltagID())
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(oldData));
+      api.perform(requestFirst).andExpect(status().isOk());
+      val expectedPostedWahlen_old =
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+              dtoMapper.fromListOfWahlDTOtoListOfWahlModel(oldData));
+      val oldSavedWahlen = wahlRepository.findAll();
 
-        @Test
-        void should_resetExistingWahlen_when_wahlenArePresentInRepo() throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
-            val oldRepositoryWahlen = createWahlEntities();
-            wahlRepository.saveAll(oldRepositoryWahlen);
+      Assertions.assertThat(oldSavedWahlen).isEqualTo(expectedPostedWahlen_old);
 
-            SecurityUtils.runWith(Authorities.SERVICE_RESET_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
-            val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
-            api.perform(request).andExpect(status().isOk());
+      val newWahlen = createControllerListOfWahlDTO(searchingForWahltag, "newWahlen");
+      val requestSecond =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/wahlen/" + searchingForWahltag.getWahltagID())
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(newWahlen));
+      api.perform(requestSecond).andExpect(status().isOk());
+      val expectedPostedWahlen_new =
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+              dtoMapper.fromListOfWahlDTOtoListOfWahlModel(newWahlen));
+      val newSavedWahlen = wahlRepository.findAll();
 
-            val expectedResetedWahlen = createWahlEntities().stream().map((WahlenControllerIntegrationTest.this::resetWahl)).toList();
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
-            val savedWahlen = wahlRepository.findAll();
-
-            Assertions.assertThat(savedWahlen).isEqualTo(expectedResetedWahlen);
-        }
+      Assertions.assertThat(newSavedWahlen).isEqualTo(expectedPostedWahlen_new);
     }
 
-    private Set<WahlDTO> createClientSetOfWahlDTO(Wahltag searchingForWahltag) {
-        val wahl1 = new WahlDTO();
-        wahl1.setIdentifikator("wahlid1");
-        wahl1.setName("wahl1");
-        wahl1.setNummer("0");
-        wahl1.setWahlart(WahlDTO.WahlartEnum.BAW);
-        wahl1.setWahltag(searchingForWahltag.getWahltag());
+    @Test
+    void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung7", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val newData = createControllerListOfWahlDTO(searchingForWahltag, "");
 
-        val wahl2 = new WahlDTO();
-        wahl2.setIdentifikator("wahlid2");
-        wahl2.setName("wahl2");
-        wahl2.setNummer("1");
-        wahl2.setWahlart(WahlDTO.WahlartEnum.LTW);
-        wahl2.setWahltag(searchingForWahltag.getWahltag());
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHL,
+          Authorities.SERVICE_POST_WAHLEN,
+          Authorities.REPOSITORY_READ_WAHL);
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/wahlen/" + "     ")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(newData));
+      val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-        val wahl3 = new WahlDTO();
-        wahl3.setIdentifikator("wahlid3");
-        wahl3.setName("wahl3");
-        wahl3.setNummer("2");
-        wahl3.setWahlart(WahlDTO.WahlartEnum.EUW);
-        wahl3.setWahltag(LocalDate.now().plusMonths(2));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.code(),
+              serviceID,
+              ExceptionConstants.POSTWAHLEN_PARAMETER_UNVOLLSTAENDIG.message());
 
-        return Set.of(wahl1, wahl2, wahl3).stream().filter(wahl -> (wahl.getWahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toSet());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
     }
 
-    private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO> createControllerListOfWahlDTO(Wahltag searchingForWahltag,
-            final String namePraefix) {
-        val wahl1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID1", namePraefix + "name1", 3L, 1L,
-                searchingForWahltag.getWahltag(),
-                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "1");
-        val wahl2 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID2", namePraefix + "name2", 3L, 1L,
-                searchingForWahltag.getWahltag(),
-                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "2");
-        val wahl3 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID3", namePraefix + "name3", 3L, 1L,
-                LocalDate.now().plusMonths(2),
-                WahlartDTO.BAW, new FarbeDTO(1, 1, 1), "3");
+    @Test
+    void should_returnFachlicheWlsException_when_notSaveableCauseOfMissingRequestbody()
+        throws Exception {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHL,
+          Authorities.SERVICE_POST_WAHLEN,
+          Authorities.REPOSITORY_READ_WAHL);
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung8", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val request =
+          MockMvcRequestBuilders.post(
+                  "/businessActions/wahlen/" + searchingForWahltag.getWahltagID())
+              .with(csrf());
+      val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-        return Stream.of(wahl1, wahl2, wahl3).filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag()))).collect(Collectors.toList());
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
+              serviceID,
+              "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
     }
 
-    private List<Wahl> createWahlEntities() {
-        val wahl1 = new Wahl();
-        wahl1.setWahlID("wahlid1");
-        wahl1.setName("wahl1");
-        wahl1.setNummer("0");
-        wahl1.setFarbe(new Farbe(1, 1, 1));
-        wahl1.setWahlart(Wahlart.BAW);
-        wahl1.setReihenfolge(1);
-        wahl1.setWaehlerverzeichnisNummer(1);
-        wahl1.setWahltag(LocalDate.now().plusMonths(1));
-
-        val wahl2 = new Wahl();
-        wahl2.setWahlID("wahlid2");
-        wahl2.setName("wahl2");
-        wahl2.setNummer("1");
-        wahl2.setFarbe(new Farbe(2, 2, 2));
-        wahl2.setWahlart(Wahlart.LTW);
-        wahl2.setReihenfolge(2);
-        wahl2.setWaehlerverzeichnisNummer(2);
-        wahl2.setWahltag(LocalDate.now().plusMonths(2));
-
-        val wahl3 = new Wahl();
-        wahl3.setWahlID("wahlid3");
-        wahl3.setName("wahl3");
-        wahl3.setNummer("2");
-        wahl3.setFarbe(new Farbe(3, 3, 3));
-        wahl3.setWahlart(Wahlart.EUW);
-        wahl3.setReihenfolge(3);
-        wahl3.setWaehlerverzeichnisNummer(3);
-        wahl3.setWahltag(LocalDate.now().plusMonths(3));
-
-        return List.of(wahl1, wahl2, wahl3);
+    public static Stream<Arguments> createSavableData() {
+      return Stream.of(
+          Arguments.of(createMinimalWahlDTO(), "with minimal wahlDTO"),
+          Arguments.of(createFullWahlDTO(), "with full wahlDTO"));
     }
+  }
 
-    private Wahl resetWahl(Wahl wahl) {
-        wahl.setFarbe(new Farbe(0, 0, 0));
-        wahl.setReihenfolge(0);
-        wahl.setWaehlerverzeichnisNummer(1);
-        return wahl;
-    }
+  @Nested
+  class ResetWahlen {
 
-    private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO createMinimalWahlDTO() {
-        return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW,
-                new FarbeDTO(0, 1, 2),
-                null);
-    }
+    @Test
+    void should_resetExistingWahlen_when_wahlenArePresentInRepo() throws Exception {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
+      val oldRepositoryWahlen = createWahlEntities();
+      wahlRepository.saveAll(oldRepositoryWahlen);
 
-    private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO createFullWahlDTO() {
-        return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO("wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW,
-                new FarbeDTO(0, 1, 2),
-                "nummer");
+      SecurityUtils.runWith(Authorities.SERVICE_RESET_WAHLEN, Authorities.REPOSITORY_READ_WAHL);
+      val request = MockMvcRequestBuilders.post("/businessActions/resetWahlen");
+      api.perform(request).andExpect(status().isOk());
+
+      val expectedResetedWahlen =
+          createWahlEntities().stream()
+              .map((WahlenControllerIntegrationTest.this::resetWahl))
+              .toList();
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL);
+      val savedWahlen = wahlRepository.findAll();
+
+      Assertions.assertThat(savedWahlen).isEqualTo(expectedResetedWahlen);
     }
+  }
+
+  private Set<WahlDTO> createClientSetOfWahlDTO(Wahltag searchingForWahltag) {
+    val wahl1 = new WahlDTO();
+    wahl1.setIdentifikator("wahlid1");
+    wahl1.setName("wahl1");
+    wahl1.setNummer("0");
+    wahl1.setWahlart(WahlDTO.WahlartEnum.BAW);
+    wahl1.setWahltag(searchingForWahltag.getWahltag());
+
+    val wahl2 = new WahlDTO();
+    wahl2.setIdentifikator("wahlid2");
+    wahl2.setName("wahl2");
+    wahl2.setNummer("1");
+    wahl2.setWahlart(WahlDTO.WahlartEnum.LTW);
+    wahl2.setWahltag(searchingForWahltag.getWahltag());
+
+    val wahl3 = new WahlDTO();
+    wahl3.setIdentifikator("wahlid3");
+    wahl3.setName("wahl3");
+    wahl3.setNummer("2");
+    wahl3.setWahlart(WahlDTO.WahlartEnum.EUW);
+    wahl3.setWahltag(LocalDate.now().plusMonths(2));
+
+    return Set.of(wahl1, wahl2, wahl3).stream()
+        .filter(wahl -> (wahl.getWahltag().equals(searchingForWahltag.getWahltag())))
+        .collect(Collectors.toSet());
+  }
+
+  private List<de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO>
+      createControllerListOfWahlDTO(Wahltag searchingForWahltag, final String namePraefix) {
+    val wahl1 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
+            "wahlID1",
+            namePraefix + "name1",
+            3L,
+            1L,
+            searchingForWahltag.getWahltag(),
+            WahlartDTO.BAW,
+            new FarbeDTO(1, 1, 1),
+            "1");
+    val wahl2 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
+            "wahlID2",
+            namePraefix + "name2",
+            3L,
+            1L,
+            searchingForWahltag.getWahltag(),
+            WahlartDTO.BAW,
+            new FarbeDTO(1, 1, 1),
+            "2");
+    val wahl3 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
+            "wahlID3",
+            namePraefix + "name3",
+            3L,
+            1L,
+            LocalDate.now().plusMonths(2),
+            WahlartDTO.BAW,
+            new FarbeDTO(1, 1, 1),
+            "3");
+
+    return Stream.of(wahl1, wahl2, wahl3)
+        .filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag())))
+        .collect(Collectors.toList());
+  }
+
+  private List<Wahl> createWahlEntities() {
+    val wahl1 = new Wahl();
+    wahl1.setWahlID("wahlid1");
+    wahl1.setName("wahl1");
+    wahl1.setNummer("0");
+    wahl1.setFarbe(new Farbe(1, 1, 1));
+    wahl1.setWahlart(Wahlart.BAW);
+    wahl1.setReihenfolge(1);
+    wahl1.setWaehlerverzeichnisNummer(1);
+    wahl1.setWahltag(LocalDate.now().plusMonths(1));
+
+    val wahl2 = new Wahl();
+    wahl2.setWahlID("wahlid2");
+    wahl2.setName("wahl2");
+    wahl2.setNummer("1");
+    wahl2.setFarbe(new Farbe(2, 2, 2));
+    wahl2.setWahlart(Wahlart.LTW);
+    wahl2.setReihenfolge(2);
+    wahl2.setWaehlerverzeichnisNummer(2);
+    wahl2.setWahltag(LocalDate.now().plusMonths(2));
+
+    val wahl3 = new Wahl();
+    wahl3.setWahlID("wahlid3");
+    wahl3.setName("wahl3");
+    wahl3.setNummer("2");
+    wahl3.setFarbe(new Farbe(3, 3, 3));
+    wahl3.setWahlart(Wahlart.EUW);
+    wahl3.setReihenfolge(3);
+    wahl3.setWaehlerverzeichnisNummer(3);
+    wahl3.setWahltag(LocalDate.now().plusMonths(3));
+
+    return List.of(wahl1, wahl2, wahl3);
+  }
+
+  private Wahl resetWahl(Wahl wahl) {
+    wahl.setFarbe(new Farbe(0, 0, 0));
+    wahl.setReihenfolge(0);
+    wahl.setWaehlerverzeichnisNummer(1);
+    return wahl;
+  }
+
+  private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO
+      createMinimalWahlDTO() {
+    return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
+        "wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW, new FarbeDTO(0, 1, 2), null);
+  }
+
+  private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO
+      createFullWahlDTO() {
+    return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
+        "wahlID",
+        "wahlname",
+        0L,
+        1L,
+        LocalDate.now(),
+        WahlartDTO.LTW,
+        new FarbeDTO(0, 1, 2),
+        "nummer");
+  }
 }

@@ -6,17 +6,17 @@ import java.util.UUID;
 
 public interface UserRepository {
 
-    Optional<User> findByUsername(final String username);
+  Optional<User> findByUsername(final String username);
 
-    Collection<User> findByWahltagID(final String wahltagID);
+  Collection<User> findByWahltagID(final String wahltagID);
 
-    Optional<User> findById(final UUID oid);
+  Optional<User> findById(final UUID oid);
 
-    boolean exists(final String username);
+  boolean exists(final String username);
 
-    User save(final User user);
+  User save(final User user);
 
-    Iterable<User> saveAll(final Iterable<User> users);
+  Iterable<User> saveAll(final Iterable<User> users);
 
-    void deleteUsersByWahltagID(final String wahltagid);
+  void deleteUsersByWahltagID(final String wahltagid);
 }

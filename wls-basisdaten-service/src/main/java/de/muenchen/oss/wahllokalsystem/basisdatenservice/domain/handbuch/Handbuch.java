@@ -21,11 +21,7 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Handbuch {
 
-    @EmbeddedId
-    @ToString.Include
-    private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
+  @EmbeddedId @ToString.Include private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
 
-    @NotNull
-    @Lob
-    private byte[] handbuch;
+  @NotNull @Lob private byte[] handbuch;
 }

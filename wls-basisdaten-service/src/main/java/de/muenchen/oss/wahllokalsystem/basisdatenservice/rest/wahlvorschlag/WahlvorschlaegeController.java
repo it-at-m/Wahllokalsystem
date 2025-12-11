@@ -18,20 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahlvorschlaegeController {
 
-    private final WahlvorschlaegeService wahlvorschlaegeService;
-    private final WahlvorschlaegeDTOMapper wahlvorschlaegeDTOMapper;
+  private final WahlvorschlaegeService wahlvorschlaegeService;
+  private final WahlvorschlaegeDTOMapper wahlvorschlaegeDTOMapper;
 
-    @Operation(description = "Laden der Wahlvorschlaege des Wahllokals {wahlbezirkID} für die Wahl {wahlID}.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorschläge erfolgreich zurückgegeben."
-                    )
-            }
-    )
-    @GetMapping("/{wahlID}/{wahlbezirkID}")
-    public WahlvorschlaegeDTO getWahlvorschlaege(@PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
-        return wahlvorschlaegeDTOMapper.toDTO(
-                wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)));
-    }
+  @Operation(
+      description =
+          "Laden der Wahlvorschlaege des Wahllokals {wahlbezirkID} für die Wahl {wahlID}.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlvorschläge erfolgreich zurückgegeben.")
+      })
+  @GetMapping("/{wahlID}/{wahlbezirkID}")
+  public WahlvorschlaegeDTO getWahlvorschlaege(
+      @PathVariable("wahlID") String wahlID, @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    return wahlvorschlaegeDTOMapper.toDTO(
+        wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)));
+  }
 }

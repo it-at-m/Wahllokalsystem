@@ -10,23 +10,25 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-
 public class StimmabgabevermerkeValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validBezirkIDUndWaehlerverzeichnisnummerOrThrow(final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer,
-            final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (bezirkIDUndWaehlerverzeichnisNummer == null || StringUtils.isBlank(bezirkIDUndWaehlerverzeichnisNummer.getWahlbezirkID())
-                || (bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer()) == null) {
-            throw exceptionOnInvalid;
-        }
+  public void validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
+      final BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer,
+      final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (bezirkIDUndWaehlerverzeichnisNummer == null
+        || StringUtils.isBlank(bezirkIDUndWaehlerverzeichnisNummer.getWahlbezirkID())
+        || (bezirkIDUndWaehlerverzeichnisNummer.getWaehlerverzeichnisNummer()) == null) {
+      throw exceptionOnInvalid;
     }
+  }
 
-    public void validStimmabgabevermerkeOrThrow(final StimmabgabevermerkeModel stimmabgabevermerke) {
-        if (stimmabgabevermerke == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validStimmabgabevermerkeOrThrow(final StimmabgabevermerkeModel stimmabgabevermerke) {
+    if (stimmabgabevermerke == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

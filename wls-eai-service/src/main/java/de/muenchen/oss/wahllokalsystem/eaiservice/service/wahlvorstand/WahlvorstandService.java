@@ -19,46 +19,65 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WahlvorstandService {
 
-    private final WahlvorstandRepository wahlvorstandRepository;
+  private final WahlvorstandRepository wahlvorstandRepository;
 
-    private final WahlvorstandMapper wahlvorstandMapper;
+  private final WahlvorstandMapper wahlvorstandMapper;
 
-    private final WahlvorstandValidator wahlvorstandValidator;
+  private final WahlvorstandValidator wahlvorstandValidator;
 
-    private final IDConverter idConverter;
+  private final IDConverter idConverter;
 
-    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
-    public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
-        wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
-        val wahlbezirkUUID = idConverter.convertIDToUUIDOrThrow(wahlbezirkID);
-        return wahlvorstandMapper.toDTO(findByWahlbezirkIDOrThrow(wahlbezirkUUID));
-    }
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_LoadWahlvorstand')")
+  public WahlvorstandDTO getWahlvorstandForWahlbezirk(final String wahlbezirkID) {
+    wahlvorstandValidator.validateWahlbezirkIDOrThrow(wahlbezirkID);
+    val wahlbezirkUUID = idConverter.convertIDToUUIDOrThrow(wahlbezirkID);
+    return wahlvorstandMapper.toDTO(findByWahlbezirkIDOrThrow(wahlbezirkUUID));
+  }
 
-    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
-    public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
-        wahlvorstandValidator.validateSaveAnwesenheitDataOrThrow(aktualisierung);
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveAnwesenheit')")
+  public void setAnwesenheit(final WahlvorstandsaktualisierungDTO aktualisierung) {
+    wahlvorstandValidator.validateSaveAnwesenheitDataOrThrow(aktualisierung);
 
-        val wahlvorstandToUpdate = findByWahlbezirkIDOrThrow(idConverter.convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
-        updateAnwesenheitOfWahlvorstand(aktualisierung, wahlvorstandToUpdate);
-        wahlvorstandRepository.save(wahlvorstandToUpdate);
-    }
+    val wahlvorstandToUpdate =
+        findByWahlbezirkIDOrThrow(
+            idConverter.convertIDToUUIDOrThrow(aktualisierung.wahlbezirkID()));
+    updateAnwesenheitOfWahlvorstand(aktualisierung, wahlvorstandToUpdate);
+    wahlvorstandRepository.save(wahlvorstandToUpdate);
+  }
 
-    private void updateAnwesenheitOfWahlvorstand(final WahlvorstandsaktualisierungDTO updateData, final Wahlvorstand existingWahlvorstand) {
-        updateData.mitglieder().forEach(mitgliedUpdateData -> {
-            val mitgliedToUpdate = existingWahlvorstand.getMitglieder().stream()
-                    .filter(setElement -> setElement.getId().toString().equals(mitgliedUpdateData.identifikator())).findFirst();
-            mitgliedToUpdate.ifPresent(mitglied -> updateAnwesenheitOfWahlvorstandsmitglied(updateData.anwesenheitBeginn(), mitgliedUpdateData, mitglied));
-        });
-    }
+  private void updateAnwesenheitOfWahlvorstand(
+      final WahlvorstandsaktualisierungDTO updateData, final Wahlvorstand existingWahlvorstand) {
+    updateData
+        .mitglieder()
+        .forEach(
+            mitgliedUpdateData -> {
+              val mitgliedToUpdate =
+                  existingWahlvorstand.getMitglieder().stream()
+                      .filter(
+                          setElement ->
+                              setElement
+                                  .getId()
+                                  .toString()
+                                  .equals(mitgliedUpdateData.identifikator()))
+                      .findFirst();
+              mitgliedToUpdate.ifPresent(
+                  mitglied ->
+                      updateAnwesenheitOfWahlvorstandsmitglied(
+                          updateData.anwesenheitBeginn(), mitgliedUpdateData, mitglied));
+            });
+  }
 
-    private void updateAnwesenheitOfWahlvorstandsmitglied(final LocalDateTime timeOfUpdate, WahlvorstandsmitgliedAktualisierungDTO mitgliedUpdateData,
-            Wahlvorstandsmitglied mitglied) {
-        mitglied.setAnwesenheitUpdatedOn(timeOfUpdate);
-        mitglied.setAnwesend(mitgliedUpdateData.anwesend());
-    }
+  private void updateAnwesenheitOfWahlvorstandsmitglied(
+      final LocalDateTime timeOfUpdate,
+      WahlvorstandsmitgliedAktualisierungDTO mitgliedUpdateData,
+      Wahlvorstandsmitglied mitglied) {
+    mitglied.setAnwesenheitUpdatedOn(timeOfUpdate);
+    mitglied.setAnwesend(mitgliedUpdateData.anwesend());
+  }
 
-    private Wahlvorstand findByWahlbezirkIDOrThrow(final UUID wahlbezirkID) {
-        return wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID).orElseThrow(() -> new NotFoundException(wahlbezirkID, Wahlvorstand.class));
-    }
-
+  private Wahlvorstand findByWahlbezirkIDOrThrow(final UUID wahlbezirkID) {
+    return wahlvorstandRepository
+        .findFirstByWahlbezirkID(wahlbezirkID)
+        .orElseThrow(() -> new NotFoundException(wahlbezirkID, Wahlvorstand.class));
+  }
 }

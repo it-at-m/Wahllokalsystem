@@ -4,5 +4,4 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record KennbuchstabenListenModel(List<KennbuchstabenListeModel> kennbuchstabenListen) {
-}
+public record KennbuchstabenListenModel(List<KennbuchstabenListeModel> kennbuchstabenListen) {}

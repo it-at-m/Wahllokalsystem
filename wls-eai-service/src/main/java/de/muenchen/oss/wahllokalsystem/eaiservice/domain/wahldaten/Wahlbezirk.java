@@ -23,26 +23,19 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Wahlbezirk extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private WahlbezirkArt wahlbezirkArt;
+  @NotNull @ToString.Include
+  @Enumerated(EnumType.STRING)
+  private WahlbezirkArt wahlbezirkArt;
 
-    @NotNull
-    @ToString.Include
-    private String nummer;
+  @NotNull @ToString.Include private String nummer;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "stimmzettelgebietID")
-    private Stimmzettelgebiet stimmzettelgebiet;
+  @NotNull @ManyToOne
+  @JoinColumn(name = "stimmzettelgebietID")
+  private Stimmzettelgebiet stimmzettelgebiet;
 
-    @ToString.Include
-    private long a1;
+  @ToString.Include private long a1;
 
-    @ToString.Include
-    private long a2;
+  @ToString.Include private long a2;
 
-    @ToString.Include
-    private long a3;
+  @ToString.Include private long a3;
 }

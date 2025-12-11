@@ -4,9 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record MeldungModel(
-        @NotNull ValidierungsstatusModel validierungsstatus,
-        @NotNull boolean gedruckt,
-        Boolean uebermittelt,
-        LocalDateTime sendeuhrzeit
-) {
-}
+    @NotNull ValidierungsstatusModel validierungsstatus,
+    @NotNull boolean gedruckt,
+    Boolean uebermittelt,
+    LocalDateTime sendeuhrzeit) {}

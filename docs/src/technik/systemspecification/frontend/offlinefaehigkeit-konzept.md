@@ -35,6 +35,28 @@ Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags]
 
 Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisierung des `Values` unter dem gleichen `Key`.
 
+### Verschlüsselung der Offline-Daten
+
+Um die Sicherheit der in der IndexedDB gespeicherten Offline-Daten zu gewährleisten,
+werden diese mithilfe der Web Crypto API (Subtle Crypto) verschlüsselt.
+Die Ver- und Entschlüsselungsoperationen sind im zugehörigen Composable gekapselt.
+Der Crypto-Key wird basierend auf einem PIN, der dem Benutzer zugeordnet ist, generiert.
+
+Bei der Nutzung der Crypto-Funktionen wird auf die Verwendung eines zufälligen
+Initialisierungsvektors (IV) sowie auf einen zufälligen Salt bei der Erstellung des Crypto-Keys verzichtet.
+Obwohl beide Konzepte entscheidend sind, um die Sicherheit des Verschlüsselungsverfahrens zu erhöhen, würde dies dazu führen,
+dass trotz eines konstanten Benutzer-PINs bei jedem Seiten-Refresh ein neuer, sich unterscheidender Crypto-Key generiert wird.
+Dies hat zur Folge, dass bereits verschlüsselte Offline-Daten mit dem neuen Key nicht mehr entschlüsselt werden können.
+
+Das Composable wird als Singleton implementiert, jedoch wird in den verschiedenen Kontexten
+(Vue und Service Worker) jeweils eine separate Instanz verwendet.
+Im Vue-Kontext erfolgt die Initialisierung des CryptoKeys im User-Store,
+sobald das User-Objekt geladen wird. Hierbei wird der CryptoKey über eine Nachricht an den
+Service Worker gesendet, indem die Methode `navigator.serviceWorker.controller.postMessage` verwendet wird.
+
+Im Kontext des Service Workers erfolgt die erste Verwendung des IndexDB-Composables innerhalb der Request-Strategien.
+Hier wird auf das Event aus dem User Store gehört, um den CryptoKey zu empfangen, der dann für die Verarbeitung von Anfragen genutzt wird.
+
 ### Strategien
 
 Es gibt drei unterschiedliche Strategien zum Lesen von Daten, mit denen der Service-Worker umgehen kann. Bei `POST`-Requests gibt es nur
@@ -390,25 +412,3 @@ await ereignisControllerApi.postEreignisse(
     ereignisseWriteDto
 );
 ```
-
-### Verschlüsselung der Offline-Daten
-
-Um die Sicherheit der in der IndexedDB gespeicherten Offline-Daten zu gewährleisten,
-werden diese mithilfe der Web Crypto API (Subtle Crypto) verschlüsselt.
-Die Ver- und Entschlüsselungsoperationen sind im zugehörigen Composable gekapselt.
-Der Crypto-Key wird basierend auf einem PIN, der dem Benutzer zugeordnet ist, generiert.
-
-Bei der Nutzung der Crypto-Funktionen wird auf die Verwendung eines zufälligen
-Initialisierungsvektors (IV) sowie auf einen zufälligen Salt bei der Erstellung des Crypto-Keys verzichtet.
-Obwohl beide Konzepte entscheidend sind, um die Sicherheit des Verschlüsselungsverfahrens zu erhöhen, würde dies dazu führen,
-dass trotz eines konstanten Benutzer-PINs bei jedem Seiten-Refresh ein neuer, sich unterscheidender Crypto-Key generiert wird.
-Dies hat zur Folge, dass bereits verschlüsselte Offline-Daten mit dem neuen Key nicht mehr entschlüsselt werden können.
-
-Das Composable wird als Singleton implementiert, jedoch wird in den verschiedenen Kontexten
-(Vue und Service Worker) jeweils eine separate Instanz verwendet.
-Im Vue-Kontext erfolgt die Initialisierung des CryptoKeys im User-Store,
-sobald das User-Objekt geladen wird. Hierbei wird der CryptoKey über eine Nachricht an den
-Service Worker gesendet, indem die Methode `navigator.serviceWorker.controller.postMessage` verwendet wird.
-
-Im Kontext des Service Workers erfolgt die erste Verwendung des IndexDB-Composables innerhalb der Request-Strategien.
-Hier wird auf das Event aus dem User Store gehört, um den CryptoKey zu empfangen, der dann für die Verarbeitung von Anfragen genutzt wird.

@@ -41,10 +41,18 @@ describe("cryptoUtils.ts", () => {
         new TextEncoder().encode(data)
       );
     });
+
+    it("should_throwAnError_when_cryptoKeyIsMissing", async () => {
+      const data = "Hello, World!";
+
+      await expect(encrypt(data, null)).rejects.toThrow(
+        "Verschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+      );
+    });
   });
 
   describe("decrypt", () => {
-    it("should_decryptData_whenKeyIsValid", async () => {
+    it("should_decryptData_when_KeyIsValid", async () => {
       const key = {} as CryptoKey;
       const mockEncryptedData = new ArrayBuffer(16);
       const mockDecryptedData = new ArrayBuffer(16);
@@ -65,7 +73,7 @@ describe("cryptoUtils.ts", () => {
       );
     });
 
-    it("should_throwAnError_when_crptoKeyIsMissing", async () => {
+    it("should_throwAnError_when_cryptoKeyIsMissing", async () => {
       const mockEncryptedData = new ArrayBuffer(16);
 
       await expect(decrypt(mockEncryptedData, null)).rejects.toThrow(

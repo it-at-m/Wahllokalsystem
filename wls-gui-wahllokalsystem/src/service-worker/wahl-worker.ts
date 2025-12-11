@@ -12,7 +12,7 @@ import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
 
-const { setupIndexDB } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 const { handleRequestWithStrategy } = useRequestStrategyManager();
 const { log } = useLogging("wahl-worker");
 
@@ -33,7 +33,7 @@ log(`iteration - 10.3`);
 /*****************************************************************************************************************
  * configuration
  ****************************************************************************************************************/
-setupIndexDB();
+indexDBSingleton.setupIndexDB();
 
 /*****************************************************************************************************************
  * event listeners

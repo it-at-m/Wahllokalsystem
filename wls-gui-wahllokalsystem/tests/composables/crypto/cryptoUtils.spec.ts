@@ -46,7 +46,7 @@ describe("cryptoUtils.ts", () => {
       const data = "Hello, World!";
 
       await expect(encrypt(data, null)).rejects.toThrow(
-        "Verschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+        "Verschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     });
   });
@@ -77,7 +77,7 @@ describe("cryptoUtils.ts", () => {
       const mockEncryptedData = new ArrayBuffer(16);
 
       await expect(decrypt(mockEncryptedData, null)).rejects.toThrow(
-        "Entschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+        "Entschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     });
   });

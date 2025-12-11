@@ -4,7 +4,7 @@ export function useCryptoUtils() {
   async function encrypt(data: string | undefined, key: CryptoKey | null) {
     if (!key) {
       throw new Error(
-        "Verschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+        "Verschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     }
     return await crypto.subtle.encrypt(
@@ -20,7 +20,7 @@ export function useCryptoUtils() {
   ) {
     if (!key) {
       throw new Error(
-        "Entschlüsselung kann ohne CryptKey nicht durchgeführt werden."
+        "Entschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     }
     let dataBuffer: ArrayBuffer;

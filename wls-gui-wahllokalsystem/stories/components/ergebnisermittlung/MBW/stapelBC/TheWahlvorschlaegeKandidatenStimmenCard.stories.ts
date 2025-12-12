@@ -37,57 +37,21 @@ const meta = {
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwBC}`,
           async () => {
             await delay(500);
-            return new HttpResponse(
-              JSON.stringify({
-                bezirkUndWahlIDStapelart: {
-                  wahlID,
-                  wahlbezirkID,
-                  stapelart: StapelArtEnum.MbwBC,
-                },
-                ergebnisse: [],
-              } as ErgebnisseDTO),
-              {
-                status: 200,
-              }
-            );
+            return getDefaultHttpResponse();
           }
         ),
         http.get(
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwA}`,
           async () => {
             await delay(500);
-            return new HttpResponse(
-              JSON.stringify({
-                bezirkUndWahlIDStapelart: {
-                  wahlID,
-                  wahlbezirkID,
-                  stapelart: StapelArtEnum.MbwA,
-                },
-                ergebnisse: [],
-              } as ErgebnisseDTO),
-              {
-                status: 200,
-              }
-            );
+            return getDefaultHttpResponse();
           }
         ),
         http.get(
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwB}`,
           async () => {
             await delay(500);
-            return new HttpResponse(
-              JSON.stringify({
-                bezirkUndWahlIDStapelart: {
-                  wahlID,
-                  wahlbezirkID,
-                  stapelart: StapelArtEnum.MbwB,
-                },
-                ergebnisse: [],
-              } as ErgebnisseDTO),
-              {
-                status: 200,
-              }
-            );
+            return getDefaultHttpResponse();
           }
         ),
 
@@ -107,6 +71,22 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
 };
+
+function getDefaultHttpResponse() {
+  return new HttpResponse(
+    JSON.stringify({
+      bezirkUndWahlIDStapelart: {
+        wahlID,
+        wahlbezirkID,
+        stapelart: StapelArtEnum.MbwB,
+      },
+      ergebnisse: [],
+    } as ErgebnisseDTO),
+    {
+      status: 200,
+    }
+  );
+}
 
 function createWahlvorschlaege(): WahlvorschlaegeDTO {
   return {

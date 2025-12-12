@@ -67,9 +67,9 @@
               <td class="text-right">
                 {{
                   (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelA
-                    .ergebnis || 0) +
+                    .ergebnis ?? 0) +
                   (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelB
-                    .ergebnis || 0)
+                    .ergebnis ?? 0)
                 }}
               </td>
               <td class="text-right">

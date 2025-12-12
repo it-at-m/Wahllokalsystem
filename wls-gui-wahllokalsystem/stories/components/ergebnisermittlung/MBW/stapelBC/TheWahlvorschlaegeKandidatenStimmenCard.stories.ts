@@ -37,21 +37,21 @@ const meta = {
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwBC}`,
           async () => {
             await delay(500);
-            return getDefaultHttpResponse();
+            return getDefaultHttpResponse(StapelArtEnum.MbwBC);
           }
         ),
         http.get(
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwA}`,
           async () => {
             await delay(500);
-            return getDefaultHttpResponse();
+            return getDefaultHttpResponse(StapelArtEnum.MbwA);
           }
         ),
         http.get(
           `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwB}`,
           async () => {
             await delay(500);
-            return getDefaultHttpResponse();
+            return getDefaultHttpResponse(StapelArtEnum.MbwB);
           }
         ),
 
@@ -72,13 +72,13 @@ export const Default: Story = {
   args: {},
 };
 
-function getDefaultHttpResponse() {
+function getDefaultHttpResponse(stapel: StapelArtEnum) {
   return new HttpResponse(
     JSON.stringify({
       bezirkUndWahlIDStapelart: {
         wahlID,
         wahlbezirkID,
-        stapelart: StapelArtEnum.MbwB,
+        stapelart: stapel,
       },
       ergebnisse: [],
     } as ErgebnisseDTO),

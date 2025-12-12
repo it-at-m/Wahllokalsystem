@@ -3,7 +3,14 @@
     <v-card-title> Wähler </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody class="bottom-border-black">
+        <thead>
+          <tr>
+            <th class="index-column" />
+            <th />
+            <th class="font-weight-bold text-right">Insgesamt</th>
+          </tr>
+        </thead>
+        <tbody>
           <tr
             v-for="(row, idx) in rows"
             :key="idx"
@@ -26,6 +33,7 @@
               v-for="(value, index2) in resultRow"
               :key="index2"
               :class="[
+                { 'index-column': index2 === 0 },
                 { 'font-weight-bold': true },
                 { 'text-right': index2 === 2 },
               ]"
@@ -76,8 +84,8 @@ const rows = computed(() =>
 );
 const resultRow = computed(() =>
   isUWB.value
-    ? ["B1 + B2", "Wähler insgesamt", b1.value + b2.value]
-    : ["B", "Wähler insgesamt", b.value]
+    ? ["B1 + B2", "Wähler", b1.value + b2.value]
+    : ["B", "Wähler", b.value]
 );
 
 onActivated(async () => {

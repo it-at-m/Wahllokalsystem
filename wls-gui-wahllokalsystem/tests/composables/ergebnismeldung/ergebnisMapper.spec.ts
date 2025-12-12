@@ -87,7 +87,7 @@ describe("ergebnisMapper.ts", () => {
       [DtoStapelArtEnum.MbwAB, StapelArtEnum.MbwAB],
       [DtoStapelArtEnum.MbwB, StapelArtEnum.MbwB],
       [DtoStapelArtEnum.MbwBC, StapelArtEnum.MbwBC],
-      [DtoStapelArtEnum.MbwD, StapelArtEnum.MbwD],
+      [DtoStapelArtEnum.MbwDUngueltig, StapelArtEnum.MbwDUngueltig],
     ])(
       "should_mapDtoStapelart%s_when_givenModelStapelart%s",
       (dtoStapelart, modelStapelart) => {
@@ -174,7 +174,7 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.MbwAB, DtoStapelArtEnum.MbwAB],
       [StapelArtEnum.MbwB, DtoStapelArtEnum.MbwB],
       [StapelArtEnum.MbwBC, DtoStapelArtEnum.MbwBC],
-      [StapelArtEnum.MbwD, DtoStapelArtEnum.MbwD],
+      [StapelArtEnum.MbwDUngueltig, DtoStapelArtEnum.MbwDUngueltig],
     ])(
       "should_mapDtoStapelart%s_when_givenModelStapelart%s",
       (modelStapelart, dtoStapelart) => {
@@ -226,7 +226,7 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.MbwAB, PostErgebnisseStapelartEnum.MbwAB],
       [StapelArtEnum.MbwB, PostErgebnisseStapelartEnum.MbwB],
       [StapelArtEnum.MbwBC, PostErgebnisseStapelartEnum.MbwBC],
-      [StapelArtEnum.MbwD, PostErgebnisseStapelartEnum.MbwD],
+      [StapelArtEnum.MbwDUngueltig, PostErgebnisseStapelartEnum.MbwDUngueltig],
       [
         StapelArtEnum.StimmzettelUmschlaege,
         PostErgebnisseStapelartEnum.StimmzettelUmschlaege,
@@ -279,7 +279,7 @@ describe("ergebnisMapper.ts", () => {
       [StapelArtEnum.MbwAB, GetErgebnisseStapelartEnum.MbwAB],
       [StapelArtEnum.MbwB, GetErgebnisseStapelartEnum.MbwB],
       [StapelArtEnum.MbwBC, GetErgebnisseStapelartEnum.MbwBC],
-      [StapelArtEnum.MbwD, GetErgebnisseStapelartEnum.MbwD],
+      [StapelArtEnum.MbwDUngueltig, GetErgebnisseStapelartEnum.MbwDUngueltig],
       [
         StapelArtEnum.StimmzettelUmschlaege,
         GetErgebnisseStapelartEnum.StimmzettelUmschlaege,

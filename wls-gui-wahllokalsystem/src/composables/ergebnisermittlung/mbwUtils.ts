@@ -2,25 +2,35 @@ import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useLogging } from "@/composables/common/logging.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
-const { postErgebnisse, getErgebnisse } = useErgebnisService();
+const { postErgebnisse, getErgebnisse, postSchnellmeldung } =
+  useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 const { getAWerte } = useAWerteService();
+const { logError } = useLogging("mbwUtils");
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
     useMbwErgebnisAndWahlvorschlagMapper(wahlID, wahlbezirkID);
 
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { wahlenActions } = useWahlenStore();
+
   const isErgebnisseSaving = ref<boolean>(false);
+  const isSendingSchnellmeldung = ref<boolean>(false);
 
   async function saveGueltigeErgebnisse(
     ergebnisse: MbwErgebnisseAndWahlvorschlag[]
@@ -108,6 +118,26 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return filteredAWert;
   }
 
+  async function sendSchnellmeldung() {
+    isSendingSchnellmeldung.value = true;
+
+    try {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      if (!wahl) {
+        logError(`zur wahlID ${wahlID} existiert keine Wahl`);
+      } else {
+        await postSchnellmeldung(
+          wahlID,
+          wahlbezirkID,
+          currentUserWahlbezirkID.value,
+          wahl.waehlerverzeichnisNummer
+        );
+      }
+    } finally {
+      isSendingSchnellmeldung.value = false;
+    }
+  }
+
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -140,8 +170,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
   return {
     isErgebnisseSaving,
+    isSendingSchnellmeldung,
     saveGueltigeErgebnisse,
     loadAndCombineErgebnisseAndWahlvorschlaege,
     getAWerteForWahlbezirkAndWahl,
+    sendSchnellmeldung,
   };
 }

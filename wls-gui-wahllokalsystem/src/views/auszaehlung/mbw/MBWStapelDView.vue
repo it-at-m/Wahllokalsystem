@@ -33,7 +33,7 @@ const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 
-const stapelArt = StapelArtEnum.MbwD;
+const stapelArt = StapelArtEnum.MbwDUngueltig;
 const isErgebnisSaving = ref(false);
 const ergebnis = ref<Ergebnis>({
   wahlvorschlagID: null,

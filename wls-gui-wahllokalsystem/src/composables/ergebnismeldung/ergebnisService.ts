@@ -3,7 +3,9 @@ import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 import {
   Configuration,
+  ErgebnismeldungControllerApi,
   ErgebnisseControllerApi,
+  SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
@@ -23,6 +25,11 @@ const { addNotification } = useUserNotificationService();
 export function useErgebnisService() {
   const ergebnisseControllerAPI = new ErgebnisseControllerApi(
     new Configuration({ basePath: ERGEBNISMELDUNG_SERVICE_API_URL })
+  );
+  const ergebenismeldungsControllerApi = new ErgebnismeldungControllerApi(
+    new Configuration({
+      basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
+    })
   );
 
   async function getErgebnisse(
@@ -89,5 +96,38 @@ export function useErgebnisService() {
     }
   }
 
-  return { getErgebnisse, postErgebnisse };
+  async function postSchnellmeldung(
+    wahlID: string,
+    wahlbezirkID: string,
+    hauptwahlbezirkID: string,
+    waehlerverzeichnisNummer: number,
+    sendNotification = true
+  ) {
+    try {
+      await ergebenismeldungsControllerApi.sendErgebnisse(
+        wahlID,
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        SendErgebnisseMeldungsartEnum.V3,
+        hauptwahlbezirkID
+      );
+
+      if (sendNotification) {
+        addNotification(
+          "Ergebnismeldung erfolgreich versendet",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          "Ergebnismeldung konnte nicht versendet werden",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
+  return { getErgebnisse, postErgebnisse, postSchnellmeldung };
 }

@@ -63,7 +63,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
     expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
       wahlbezirkId,
       wahlId,
-      StapelArtEnum.MbwD,
+      StapelArtEnum.MbwDUngueltig,
       false
     );
     expect(
@@ -93,7 +93,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
     expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
       wahlbezirkId,
       wahlId,
-      StapelArtEnum.MbwD,
+      StapelArtEnum.MbwDUngueltig,
       false
     );
     expect(

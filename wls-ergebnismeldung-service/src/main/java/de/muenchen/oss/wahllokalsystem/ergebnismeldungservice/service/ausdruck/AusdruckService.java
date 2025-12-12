@@ -23,48 +23,52 @@ import org.springframework.validation.annotation.Validated;
 @Slf4j
 public class AusdruckService {
 
-    private final AusdruckRepository ausdruckRepository;
-    private final AusdruckModelMapper ausdruckModelMapper;
-    private final ExceptionFactory exceptionFactory;
-    private final WahlUndBezirkIDUndMeldungsartValidator wahlUndBezirkIDUndMeldungsartValidator;
-    private final Validator validator;
+  private final AusdruckRepository ausdruckRepository;
+  private final AusdruckModelMapper ausdruckModelMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final WahlUndBezirkIDUndMeldungsartValidator wahlUndBezirkIDUndMeldungsartValidator;
+  private final Validator validator;
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public List<AusdruckReadModel> getAllAusdrucke(@NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
-        val ausdrucke = ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
+  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
+  public List<AusdruckReadModel> getAllAusdrucke(
+      @NotBlank final String wahlID, @NotBlank final String wahlbezirkID) {
+    val ausdrucke = ausdruckRepository.findByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
 
-        return ausdrucke.stream().map(ausdruckModelMapper::toModel).toList();
+    return ausdrucke.stream().map(ausdruckModelMapper::toModel).toList();
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)")
+  public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
+    log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());
+
+    if (!validator.validate(ausdruck).isEmpty()) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
     }
 
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostAusdruck') and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlUndBezirkIDUndMeldungsartModel.wahlbezirkID, authentication)"
-    )
-    public void saveAusdruck(@P("param") @NotNull final AusdruckWriteModel ausdruck) {
-        log.debug("Saving printout {}", ausdruck.wahlUndBezirkIDUndMeldungsartModel().meldungsart());
+    ausdruckRepository.save(ausdruckModelMapper.toEntity(ausdruck, Instant.now()));
+    log.info("Saved printout: {}", ausdruck);
+  }
 
-        if (!validator.validate(ausdruck).isEmpty()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG);
-        }
+  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
+  public Optional<AusdruckReadModel> getAusdruck(
+      @NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
+    log.debug("Loading printout {}", idModel.meldungsart());
 
-        ausdruckRepository.save(ausdruckModelMapper.toEntity(ausdruck, Instant.now()));
-        log.info("Saved printout: {}", ausdruck);
+    val id = ausdruckModelMapper.toEntity(idModel);
+
+    wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
+
+    val result = ausdruckRepository.findById(id);
+
+    if (result.isEmpty()) {
+      log.info("Printout not found for: {}", idModel);
     }
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAusdruck')")
-    public Optional<AusdruckReadModel> getAusdruck(@NotNull WahlUndBezirkIDUndMeldungsartModel idModel) {
-        log.debug("Loading printout {}", idModel.meldungsart());
-
-        val id = ausdruckModelMapper.toEntity(idModel);
-
-        wahlUndBezirkIDUndMeldungsartValidator.validWahlUndBezirkIDUndMeldungsartOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_AUSDRUCK_PARAMETER_UNVOLLSTAENDIG));
-
-        val result = ausdruckRepository.findById(id);
-
-        if (result.isEmpty()) {
-            log.info("Printout not found for: {}", idModel);
-        }
-
-        return result.map(ausdruckModelMapper::toModel);
-    }
+    return result.map(ausdruckModelMapper::toModel);
+  }
 }

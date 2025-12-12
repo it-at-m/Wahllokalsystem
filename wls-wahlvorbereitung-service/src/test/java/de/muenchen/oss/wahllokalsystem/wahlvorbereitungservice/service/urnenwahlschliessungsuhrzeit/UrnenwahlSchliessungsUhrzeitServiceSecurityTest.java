@@ -26,115 +26,141 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class UrnenwahlSchliessungsUhrzeitServiceSecurityTest {
 
-    @MockitoBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @Autowired
-    UrnenwahlSchliessungsUhrzeitService unitUnderTest;
+  @Autowired UrnenwahlSchliessungsUhrzeitService unitUnderTest;
 
-    @BeforeEach
-    void setup() {
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setup() {
+    SecurityContextHolder.clearContext();
+  }
+
+  @Nested
+  class GetUrnenwahlSchliessungsUhrzeit {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID));
     }
 
-    @Nested
-    class GetUrnenwahlSchliessungsUhrzeit {
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
-
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val wahlbezirkID = "wahlbezirkID";
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class SetUrnenwahlSchliessungsUhrzeit {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+      val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
 
-            val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(false);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.eq(wahlbezirkID), Mockito.any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
-                    .isExactlyInstanceOf(TechnischeWlsException.class);
-        }
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
     }
+
+    private static Stream<Arguments> getAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_URNENWAHLSCHLIESSUNGSUHRZEIT);
+    }
+  }
+
+  @Nested
+  class SetUrnenwahlSchliessungsUhrzeit {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_REPO_URNENWAHLSCHLIESSUNGSUHRZEIT);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val modelToSet = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, LocalDateTime.now());
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setUrnenwahlSchliessungsUhrzeit(modelToSet))
+          .isExactlyInstanceOf(TechnischeWlsException.class);
+    }
+  }
 }

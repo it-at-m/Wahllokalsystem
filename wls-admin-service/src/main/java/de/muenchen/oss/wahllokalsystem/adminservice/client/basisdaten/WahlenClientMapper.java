@@ -9,12 +9,12 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlenClientMapper {
 
-    @Mapping(target = "nummer", ignore = true)
-    WahlDTO toDto(WahlModel wahl);
+  @Mapping(target = "nummer", ignore = true)
+  WahlDTO toDto(WahlModel wahl);
 
-    WahlModel toModel(WahlDTO wahl);
+  WahlModel toModel(WahlDTO wahl);
 
-    List<WahlModel> toModelList(List<WahlDTO> wahlenDTOs);
+  List<WahlModel> toModelList(List<WahlDTO> wahlenDTOs);
 
-    List<WahlDTO> toDtoList(List<WahlModel> wahlen);
+  List<WahlDTO> toDtoList(List<WahlModel> wahlen);
 }

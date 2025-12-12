@@ -14,17 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KonfigurierterWahltag {
 
-    @NotNull
-    private java.time.LocalDate wahltag;
+  @NotNull private java.time.LocalDate wahltag;
 
-    @Id
-    @NotNull
-    @Size(max = 255)
-    private String wahltagID;
+  @Id
+  @NotNull @Size(max = 255) private String wahltagID;
 
-    private boolean active;
+  private boolean active;
 
-    @NotNull
-    @Size(max = 255)
-    private String nummer;
+  @NotNull @Size(max = 255) private String nummer;
 }

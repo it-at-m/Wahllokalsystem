@@ -11,67 +11,83 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 class AnonymousDetailRetrieverTest {
 
-    private final AnonymousDetailRetriever unitUnderTest = new AnonymousDetailRetriever();
+  private final AnonymousDetailRetriever unitUnderTest = new AnonymousDetailRetriever();
 
-    @Nested
-    class CanHandle {
+  @Nested
+  class CanHandle {
 
-        @Test
-        void should_throwIllegalArgumentException_when_authenticationIsNull() {
-            Assertions.assertThatThrownBy(() -> unitUnderTest.canHandle(null)).isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
-        void should_returnTrue_when_authenticationIsAnonymousAuthenticationToken() {
-            Assertions.assertThat(unitUnderTest.canHandle(new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
-                    .isTrue();
-        }
-
-        @Test
-        void should_returnTrue_when_authenticationSubclassOfJwtAuthenticationToken() {
-            Assertions.assertThat(unitUnderTest.canHandle(new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role"))) {
-            })).isTrue();
-        }
-
-        @Test
-        void should_returnFalse_when_authenticationIsNotJwtAuthenticationToken() {
-            Assertions.assertThat(unitUnderTest.canHandle(new AbstractAuthenticationToken(List.of(new SimpleGrantedAuthority("role"))) {
-                @Override
-                public Object getCredentials() {
-                    return null;
-                }
-
-                @Override
-                public Object getPrincipal() {
-                    return null;
-                }
-            })).isFalse();
-        }
+    @Test
+    void should_throwIllegalArgumentException_when_authenticationIsNull() {
+      Assertions.assertThatThrownBy(() -> unitUnderTest.canHandle(null))
+          .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Nested
-    class GetDetail {
-
-        @Test
-        void should_returnEmptyOptional_when_called() {
-            val authentication = new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")));
-
-            val result = unitUnderTest.getDetail("key", authentication);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_throwIllegalArgumentException_when_authenticationIsNull() {
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getDetail("key", null)).isInstanceOf(IllegalArgumentException.class);
-        }
-
-        @Test
-        void should_throwIllegalArgumentException_when_detailKeyIsNull() {
-            Assertions.assertThatThrownBy(
-                    () -> unitUnderTest.getDetail(null, new AnonymousAuthenticationToken("key", "principal", List.of(new SimpleGrantedAuthority("role")))))
-                    .isInstanceOf(IllegalArgumentException.class);
-        }
+    @Test
+    void should_returnTrue_when_authenticationIsAnonymousAuthenticationToken() {
+      Assertions.assertThat(
+              unitUnderTest.canHandle(
+                  new AnonymousAuthenticationToken(
+                      "key", "principal", List.of(new SimpleGrantedAuthority("role")))))
+          .isTrue();
     }
 
+    @Test
+    void should_returnTrue_when_authenticationSubclassOfJwtAuthenticationToken() {
+      Assertions.assertThat(
+              unitUnderTest.canHandle(
+                  new AnonymousAuthenticationToken(
+                      "key", "principal", List.of(new SimpleGrantedAuthority("role"))) {}))
+          .isTrue();
+    }
+
+    @Test
+    void should_returnFalse_when_authenticationIsNotJwtAuthenticationToken() {
+      Assertions.assertThat(
+              unitUnderTest.canHandle(
+                  new AbstractAuthenticationToken(List.of(new SimpleGrantedAuthority("role"))) {
+                    @Override
+                    public Object getCredentials() {
+                      return null;
+                    }
+
+                    @Override
+                    public Object getPrincipal() {
+                      return null;
+                    }
+                  }))
+          .isFalse();
+    }
+  }
+
+  @Nested
+  class GetDetail {
+
+    @Test
+    void should_returnEmptyOptional_when_called() {
+      val authentication =
+          new AnonymousAuthenticationToken(
+              "key", "principal", List.of(new SimpleGrantedAuthority("role")));
+
+      val result = unitUnderTest.getDetail("key", authentication);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void should_throwIllegalArgumentException_when_authenticationIsNull() {
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getDetail("key", null))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void should_throwIllegalArgumentException_when_detailKeyIsNull() {
+      Assertions.assertThatThrownBy(
+              () ->
+                  unitUnderTest.getDetail(
+                      null,
+                      new AnonymousAuthenticationToken(
+                          "key", "principal", List.of(new SimpleGrantedAuthority("role")))))
+          .isInstanceOf(IllegalArgumentException.class);
+    }
+  }
 }

@@ -27,270 +27,315 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 @AutoConfigureWireMock
 @DirtiesContext
 public class WahllokalZustandServiceSecurityTest {
 
-    @Autowired
-    WahllokalZustandService wahllokalZustandService;
+  @Autowired WahllokalZustandService wahllokalZustandService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-        clearContext();
+  @BeforeEach
+  void setup() {
+    clearContext();
+  }
+
+  @Nested
+  class PostLastSeen {
+
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+      String wahlbezirkID = "wahlbezirkID01";
+
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
+
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID));
     }
 
-    @Nested
-    class PostLastSeen {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
+      String wahlbezirkID = "wahlbezirkID01";
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-            String wahlbezirkID = "wahlbezirkID01";
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
+      Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+  @Nested
+  class PostLetzteAbmeldung {
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID));
-        }
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
+      String wahlbezirkID = "wahlbezirkID01";
 
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
-            String wahlbezirkID = "wahlbezirkID01";
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setLetzteAbmeldung(LocalDateTime.now());
 
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
-            Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLastSeen(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID));
     }
 
-    @Nested
-    class PostLetzteAbmeldung {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+      String wahlbezirkID = "wahlbezirkID01";
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LAST_LOGOUT);
-            String wahlbezirkID = "wahlbezirkID01";
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
 
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setLetzteAbmeldung(LocalDateTime.now());
+      Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+  @Nested
+  class PostSchnellmeldungSendungsuhrzeit {
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID));
-        }
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT);
 
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-            String wahlbezirkID = "wahlbezirkID01";
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setZuletztGesehen(LocalDateTime.now());
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            Assertions.assertThatThrownBy(() -> wahllokalZustandService.postLetzteAbmeldung(wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
-        }
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
     }
 
-    @Nested
-    class PostSchnellmeldungSendungsuhrzeit {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT);
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      Assertions.assertThatThrownBy(
+              () ->
+                  wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
+  @Nested
+  class PostSchnellmeldungDruckuhrzeit {
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
 
-            Assertions.assertThatNoException().isThrownBy(
-                    () -> wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
-        }
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungSendenUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
-            Assertions
-                    .assertThatThrownBy(
-                            () -> wahllokalZustandService.postSchnellmeldungSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  wahllokalZustandService.postSchnellmeldungDruckuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
     }
 
-    @Nested
-    class PostSchnellmeldungDruckuhrzeit {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT);
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      Assertions.assertThatThrownBy(
+              () ->
+                  wahllokalZustandService.postSchnellmeldungDruckuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
+  @Nested
+  class PostNiederschriftSendungsuhrzeit {
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
 
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> wahllokalZustandService.postSchnellmeldungDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
-        }
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setSchnellmeldungDruckUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
-            Assertions
-                    .assertThatThrownBy(
-                            () -> wahllokalZustandService.postSchnellmeldungDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  wahllokalZustandService.postNiederschriftSendungsuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
     }
 
-    @Nested
-    class PostNiederschriftSendungsuhrzeit {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT);
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
+      Assertions.assertThatThrownBy(
+              () ->
+                  wahllokalZustandService.postNiederschriftSendungsuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+  @Nested
+  class PostNiederschriftDruckuhrzeit {
 
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT);
 
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> wahllokalZustandService.postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
-        }
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      WireMock.stubFor(
+          WireMock.post("/wahllokalzustand")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftSendenUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            Assertions
-                    .assertThatThrownBy(
-                            () -> wahllokalZustandService.postNiederschriftSendungsuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  wahllokalZustandService.postNiederschriftDruckuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
     }
 
-    @Nested
-    class PostNiederschriftDruckuhrzeit {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT);
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      val druckZustandDTO = new DruckzustandDTO();
+      druckZustandDTO.setWahlID(wahlID);
+      druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
+      val wahllokalZustandDTO = new WahllokalZustandDTO();
+      wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
+      wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
 
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            WireMock.stubFor(WireMock.post("/wahllokalzustand")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(wahllokalZustandDTO))));
-
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> wahllokalZustandService.postNiederschriftDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()));
-        }
-
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_LASTSEEN);
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val druckZustandDTO = new DruckzustandDTO();
-            druckZustandDTO.setWahlID(wahlID);
-            druckZustandDTO.setNiederschriftDruckUhrzeit(LocalDateTime.now());
-            val wahllokalZustandDTO = new WahllokalZustandDTO();
-            wahllokalZustandDTO.setWahlbezirkID(wahlbezirkID);
-            wahllokalZustandDTO.setDruckzustaende(Set.of(druckZustandDTO));
-
-            Assertions
-                    .assertThatThrownBy(
-                            () -> wahllokalZustandService.postSchnellmeldungDruckuhrzeit(new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatThrownBy(
+              () ->
+                  wahllokalZustandService.postSchnellmeldungDruckuhrzeit(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), LocalDateTime.now()))
+          .isInstanceOf(AccessDeniedException.class);
     }
-
+  }
 }

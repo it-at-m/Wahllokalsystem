@@ -8,6 +8,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { describe, expect, it } from "vitest";
 
 import {
+  BezirkUndWahlIDStapelartDTOStapelartEnum,
   BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
   GetErgebnisseStapelartEnum,
   PostErgebnisseStapelartEnum,
@@ -21,6 +22,7 @@ const {
   toPostErgebnisseStapelartEnum,
   toGetErgebnisseStapelartEnum,
   toBegruendungModel,
+  toBegruendungDto,
 } = useErgebnisMapper();
 const {
   prepareErgebnisseDTO,
@@ -330,6 +332,75 @@ describe("ergebnisMapper.ts", () => {
       const result = toBegruendungModel(dtoBegruendung);
 
       expect(result).toStrictEqual(modelBegruendung);
+    });
+  });
+
+  describe("toBegruendungDto", () => {
+    it("should_returnDto_when_givenModel", () => {
+      const modelBegruendung: Begruendung = prepareBegruendung()
+        .wahlID("wahlID")
+        .stapelart(StapelArtEnum.StimmzettelUmschlaege)
+        .grund("so halt")
+        .nachzaehlung(undefined)
+        .unstimmigkeiten(undefined)
+        .build();
+
+      const expectedDto: BegruendungDTO = {
+        bezirkUndWahlIDStapelart: {
+          wahlID: modelBegruendung.wahlID,
+          wahlbezirkID: "wahlbezirkID",
+          stapelart:
+            BezirkUndWahlIDStapelartDTOStapelartEnum.StimmzettelUmschlaege,
+        },
+        grund: modelBegruendung.grund,
+        nachzaehlung: modelBegruendung.nachzaehlung,
+        unstimmigkeiten: modelBegruendung.unstimmigkeiten,
+      };
+
+      const result = toBegruendungDto(modelBegruendung, "wahlbezirkID");
+
+      expect(result).toStrictEqual(expectedDto);
+      expect(result).not.toBe(expectedDto);
+    });
+
+    it("should_mapAllFieldsCorrectly_when_givenCompleteModel", () => {
+      const modelBegruendung: Begruendung = prepareBegruendung()
+        .wahlID("wahlID")
+        .stapelart(StapelArtEnum.MbwA)
+        .grund("So halt")
+        .nachzaehlung(true)
+        .unstimmigkeiten(true)
+        .build();
+
+      const expectedDto: BegruendungDTO = {
+        bezirkUndWahlIDStapelart: {
+          wahlID: modelBegruendung.wahlID,
+          wahlbezirkID: "wahlbezirkID",
+          stapelart: BezirkUndWahlIDStapelartDTOStapelartEnum.MbwA,
+        },
+        grund: modelBegruendung.grund,
+        nachzaehlung: modelBegruendung.nachzaehlung,
+        unstimmigkeiten: modelBegruendung.unstimmigkeiten,
+      };
+
+      const result = toBegruendungDto(modelBegruendung, "wahlbezirkID");
+
+      expect(result).toStrictEqual(expectedDto);
+      expect(result).not.toBe(expectedDto);
+    });
+
+    it("should_throwError_when_givenInvalidStapelart", () => {
+      const modelBegruendung: Begruendung = prepareBegruendung()
+        .wahlID("wahlID")
+        .stapelart("UNKNOWN" as unknown as StapelArtEnum)
+        .grund("So halt")
+        .nachzaehlung(undefined)
+        .unstimmigkeiten(undefined)
+        .build();
+
+      expect(() => toBegruendungDto(modelBegruendung, "wahlbezirkID")).toThrow(
+        "Stapelart nicht gefunden"
+      );
     });
   });
 });

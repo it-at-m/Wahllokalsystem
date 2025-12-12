@@ -29,77 +29,92 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class WahltageControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @AfterEach
-    void teardown() {
-        reset();
+  @AfterEach
+  void teardown() {
+    reset();
+  }
+
+  @Nested
+  class GetWahltage {
+
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GETWAHLTAGE})
+    void should_returnData_when_wahltageClientReturnsData() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
+      val nowDate = LocalDate.now();
+      val mockedWahltage =
+          List.of(
+              new WahltagDTO()
+                  .wahltagID("wahltagID1")
+                  .wahltag(nowDate)
+                  .beschreibung("beschreibung")
+                  .nummer("1"),
+              new WahltagDTO()
+                  .wahltagID("wahltagID2")
+                  .wahltag(nowDate)
+                  .beschreibung("beschreibung")
+                  .nummer("2"));
+
+      stubFor(
+          WireMock.get("/businessActions/wahltage")
+              .willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO[].class);
+
+      val expectedResponseBody =
+          new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO[] {
+            new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO(
+                mockedWahltage.get(0).getWahltagID(),
+                mockedWahltage.get(0).getWahltag(),
+                mockedWahltage.get(0).getBeschreibung(),
+                mockedWahltage.get(0).getNummer()),
+            new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO(
+                mockedWahltage.get(1).getWahltagID(),
+                mockedWahltage.get(1).getWahltag(),
+                mockedWahltage.get(1).getBeschreibung(),
+                mockedWahltage.get(1).getNummer())
+          };
+
+      Assertions.assertThat(responseBody)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class GetWahltage {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GETWAHLTAGE})
+    void should_returnNoContent_when_wahltageClientReturnsEmptyList() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
+      val mockedWahltage = List.of();
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.ADMIN_GETWAHLTAGE }
-        )
-        void should_returnData_when_wahltageClientReturnsData() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
-            val nowDate = LocalDate.now();
-            val mockedWahltage = List.of(
-                    new WahltagDTO().wahltagID("wahltagID1").wahltag(nowDate).beschreibung("beschreibung").nummer("1"),
-                    new WahltagDTO().wahltagID("wahltagID2").wahltag(nowDate).beschreibung("beschreibung").nummer("2"));
+      stubFor(
+          WireMock.get("/businessActions/wahltage")
+              .willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
 
-            stubFor(WireMock.get("/businessActions/wahltage").willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO[].class);
-
-            val expectedResponseBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO[] {
-                    new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO(
-                            mockedWahltage.get(0).getWahltagID(),
-                            mockedWahltage.get(0).getWahltag(),
-                            mockedWahltage.get(0).getBeschreibung(),
-                            mockedWahltage.get(0).getNummer()),
-                    new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahltage.WahltagDTO(
-                            mockedWahltage.get(1).getWahltagID(),
-                            mockedWahltage.get(1).getWahltag(),
-                            mockedWahltage.get(1).getBeschreibung(),
-                            mockedWahltage.get(1).getNummer())
-            };
-
-            Assertions.assertThat(responseBody).usingRecursiveComparison().isEqualTo(expectedResponseBody);
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.ADMIN_GETWAHLTAGE }
-        )
-        void should_returnNoContent_when_wahltageClientReturnsEmptyList() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
-            val mockedWahltage = List.of();
-
-            stubFor(WireMock.get("/businessActions/wahltage").willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
-
-            api.perform(request).andExpect(status().isNoContent()).andReturn();
-        }
+      api.perform(request).andExpect(status().isNoContent()).andReturn();
     }
+  }
 
-    private ResponseDefinitionBuilder createWireMockResponse(final Object responseBody, final HttpStatus responseStatus) throws Exception {
-        return aResponse()
-                .withBody(objectMapper.writeValueAsString(responseBody))
-                .withHeader("Content-Type", "application/json")
-                .withStatus(responseStatus.value());
-    }
+  private ResponseDefinitionBuilder createWireMockResponse(
+      final Object responseBody, final HttpStatus responseStatus) throws Exception {
+    return aResponse()
+        .withBody(objectMapper.writeValueAsString(responseBody))
+        .withHeader("Content-Type", "application/json")
+        .withStatus(responseStatus.value());
+  }
 }

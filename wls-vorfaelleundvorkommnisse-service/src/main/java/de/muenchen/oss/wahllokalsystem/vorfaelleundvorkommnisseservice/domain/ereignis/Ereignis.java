@@ -19,15 +19,12 @@ import lombok.ToString;
 @Builder
 public class Ereignis {
 
-    @Size(max = 1024)
-    @ToString.Include
-    private String beschreibung;
+  @Size(max = 1024) @ToString.Include
+  private String beschreibung;
 
-    @ToString.Include
-    private LocalDateTime uhrzeit;
+  @ToString.Include private LocalDateTime uhrzeit;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @ToString.Include
-    private Ereignisart ereignisart;
+  @Enumerated(EnumType.STRING)
+  @NotNull @ToString.Include
+  private Ereignisart ereignisart;
 }

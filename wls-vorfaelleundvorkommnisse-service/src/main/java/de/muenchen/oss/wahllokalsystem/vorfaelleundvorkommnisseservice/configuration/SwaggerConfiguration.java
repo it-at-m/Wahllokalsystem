@@ -14,30 +14,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
-    @Value("${info.application.version:unknown}")
-    String version;
+  @Value("${info.application.version:unknown}")
+  String version;
 
-    @Bean
-    GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("public-apis")
-                .pathsToMatch("/**")
-                .build();
-    }
+  @Bean
+  GroupedOpenApi publicApi() {
+    return GroupedOpenApi.builder().group("public-apis").pathsToMatch("/**").build();
+  }
 
-    @Bean
-    OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(
-                        new Info().title("Vorfälle und Vorkommnisse Service")
-                                .version(version)
-                                .contact(new Contact().name("Your Name").email("Your E-Mail-Address")))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-                .components(
-                        new Components()
-                                .addSecuritySchemes("bearerAuth", new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")));
-    }
+  @Bean
+  OpenAPI customOpenAPI() {
+    return new OpenAPI()
+        .info(
+            new Info()
+                .title("Vorfälle und Vorkommnisse Service")
+                .version(version)
+                .contact(new Contact().name("Your Name").email("Your E-Mail-Address")))
+        .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+        .components(
+            new Components()
+                .addSecuritySchemes(
+                    "bearerAuth",
+                    new SecurityScheme()
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")));
+  }
 }

@@ -17,38 +17,37 @@ import org.springframework.stereotype.Component;
 @Builder
 public class AsyncProgress {
 
-    public static final Logger LOG = LoggerFactory.getLogger(AsyncProgress.class);
+  public static final Logger LOG = LoggerFactory.getLogger(AsyncProgress.class);
 
-    private LocalDate forWahltag;
-    private String wahlNummer = "";
-    private LocalDateTime lastStartTime;
-    private LocalDateTime lastFinishTime = null;
-    private int wahlvorschlaegeTotal = 0;
-    private int wahlvorschlageFinished = 0;
-    private String wahlvorschlaegeNext = "";
-    private int referendumVorlagenTotal = 0;
-    private int referendumVorlagenFinished = 0;
-    private String referendumVorlagenNext = "";
+  private LocalDate forWahltag;
+  private String wahlNummer = "";
+  private LocalDateTime lastStartTime;
+  private LocalDateTime lastFinishTime = null;
+  private int wahlvorschlaegeTotal = 0;
+  private int wahlvorschlageFinished = 0;
+  private String wahlvorschlaegeNext = "";
+  private int referendumVorlagenTotal = 0;
+  private int referendumVorlagenFinished = 0;
+  private String referendumVorlagenNext = "";
 
-    public synchronized void incWahlvorschlaegeFinished() {
-        wahlvorschlageFinished++;
-        LOG.info("#incWahlvorschlaegeFinished: {}", wahlvorschlageFinished);
-    }
+  public synchronized void incWahlvorschlaegeFinished() {
+    wahlvorschlageFinished++;
+    LOG.info("#incWahlvorschlaegeFinished: {}", wahlvorschlageFinished);
+  }
 
-    public synchronized void incReferendumVorlagenFinished() {
-        referendumVorlagenFinished++;
-        LOG.info("#incReferendumVorlagenFinished: {}", referendumVorlagenFinished);
-    }
+  public synchronized void incReferendumVorlagenFinished() {
+    referendumVorlagenFinished++;
+    LOG.info("#incReferendumVorlagenFinished: {}", referendumVorlagenFinished);
+  }
 
-    public void reset(LocalDate forWahltag, String wahlNummer) {
-        this.forWahltag = forWahltag;
-        this.wahlNummer = wahlNummer;
-        lastStartTime = LocalDateTime.now();
-        lastFinishTime = null;
-        wahlvorschlageFinished = 0;
-        wahlvorschlaegeTotal = 0;
-        referendumVorlagenFinished = 0;
-        referendumVorlagenTotal = 0;
-    }
-
+  public void reset(LocalDate forWahltag, String wahlNummer) {
+    this.forWahltag = forWahltag;
+    this.wahlNummer = wahlNummer;
+    lastStartTime = LocalDateTime.now();
+    lastFinishTime = null;
+    wahlvorschlageFinished = 0;
+    wahlvorschlaegeTotal = 0;
+    referendumVorlagenFinished = 0;
+    referendumVorlagenTotal = 0;
+  }
 }

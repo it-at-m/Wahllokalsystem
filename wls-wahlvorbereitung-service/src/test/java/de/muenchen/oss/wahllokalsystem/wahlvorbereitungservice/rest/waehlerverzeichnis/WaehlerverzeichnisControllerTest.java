@@ -20,71 +20,96 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class WaehlerverzeichnisControllerTest {
 
-    @Mock
-    WaehlerverzeichnisDTOMapper waehlerverzeichnisDTOMapper;
+  @Mock WaehlerverzeichnisDTOMapper waehlerverzeichnisDTOMapper;
 
-    @Mock
-    WaehlerverzeichnisService waehlerverzeichnisService;
+  @Mock WaehlerverzeichnisService waehlerverzeichnisService;
 
-    @InjectMocks
-    WaehlerverzeichnisController unitUnderTest;
+  @InjectMocks WaehlerverzeichnisController unitUnderTest;
 
-    @Nested
-    class PostWaehlerverzeichnis {
+  @Nested
+  class PostWaehlerverzeichnis {
 
-        @Test
-        void should_postWaehlerverzeichnis_when_calledAndMappedCorrectly() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 13L;
-            val requestDTO = new WaehlerverzeichnisWriteDTO(true, true, true, true);
+    @Test
+    void should_postWaehlerverzeichnis_when_calledAndMappedCorrectly() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 13L;
+      val requestDTO = new WaehlerverzeichnisWriteDTO(true, true, true, true);
 
-            val mockedDTOMappedToModel = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false,
-                    false, false, false);
-            Mockito.when(
-                    waehlerverzeichnisDTOMapper.toModel(eq(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)), eq(requestDTO)))
-                    .thenReturn(mockedDTOMappedToModel);
+      val mockedDTOMappedToModel =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              false,
+              false);
+      Mockito.when(
+              waehlerverzeichnisDTOMapper.toModel(
+                  eq(
+                      new BezirkIDUndWaehlerverzeichnisNummer(
+                          wahlbezirkID, waehlerverzeichnisNummer)),
+                  eq(requestDTO)))
+          .thenReturn(mockedDTOMappedToModel);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWaehlerverzeichnis(wahlbezirkID, waehlerverzeichnisNummer, requestDTO));
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.postWaehlerverzeichnis(
+                      wahlbezirkID, waehlerverzeichnisNummer, requestDTO));
 
-            Mockito.verify(waehlerverzeichnisService).setWaehlerverzeichnis(mockedDTOMappedToModel);
-        }
+      Mockito.verify(waehlerverzeichnisService).setWaehlerverzeichnis(mockedDTOMappedToModel);
+    }
+  }
+
+  @Nested
+  class GetWaehlerverzeichnis {
+
+    @Test
+    void should_returnWaehlerverzeichnis_when_dataIsPresentInRepo() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 13L;
+
+      val mockedServiceResponse =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              false,
+              false);
+      val mockedServiceResponseAsDTO =
+          new WaehlerverzeichnisDTO(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              false,
+              false);
+
+      Mockito.when(
+              waehlerverzeichnisService.getWaehlerverzeichnis(
+                  new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(waehlerverzeichnisDTOMapper.toDto(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
+
+      val result = unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, waehlerverzeichnisNummer);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isSameAs(mockedServiceResponseAsDTO);
     }
 
-    @Nested
-    class GetWaehlerverzeichnis {
+    @Test
+    void should_returnNoContent_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 13L;
 
-        @Test
-        void should_returnWaehlerverzeichnis_when_dataIsPresentInRepo() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 13L;
+      Mockito.when(
+              waehlerverzeichnisService.getWaehlerverzeichnis(
+                  new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
+          .thenReturn(Optional.empty());
 
-            val mockedServiceResponse = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false,
-                    false, false, false);
-            val mockedServiceResponseAsDTO = new WaehlerverzeichnisDTO(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false,
-                    false, false, false);
+      val result = unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, waehlerverzeichnisNummer);
 
-            Mockito.when(waehlerverzeichnisService.getWaehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                    .thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(waehlerverzeichnisDTOMapper.toDto(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-
-            val result = unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, waehlerverzeichnisNummer);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isSameAs(mockedServiceResponseAsDTO);
-        }
-
-        @Test
-        void should_returnNoContent_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 13L;
-
-            Mockito.when(waehlerverzeichnisService.getWaehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                    .thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, waehlerverzeichnisNummer);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
+  }
 }

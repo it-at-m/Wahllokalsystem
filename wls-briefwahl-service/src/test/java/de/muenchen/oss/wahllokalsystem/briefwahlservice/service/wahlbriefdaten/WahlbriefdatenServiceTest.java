@@ -16,89 +16,99 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlbriefdatenServiceTest {
 
-    @Mock
-    WahlbriefdatenRepository wahlbriefdatenRepository;
+  @Mock WahlbriefdatenRepository wahlbriefdatenRepository;
 
-    @Mock
-    WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
+  @Mock WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
 
-    @Mock
-    WahlbriefdatenValidator wahlbriefdatenValidator;
+  @Mock WahlbriefdatenValidator wahlbriefdatenValidator;
 
-    @InjectMocks
-    WahlbriefdatenService unitUnderTest;
+  @InjectMocks WahlbriefdatenService unitUnderTest;
 
-    @Nested
-    class GetWahlbriefdaten {
+  @Nested
+  class GetWahlbriefdaten {
 
-        @Test
-        void should_returnWahlbriefdatenModel_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnWahlbriefdatenModel_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedRepoEntity = new Wahlbriefdaten();
-            val mockedMappedRepoEntityAsModel = WahlbriefdatenModel.builder().build();
+      val mockedRepoEntity = new Wahlbriefdaten();
+      val mockedMappedRepoEntityAsModel = WahlbriefdatenModel.builder().build();
 
-            Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(wahlbriefdatenRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedRepoEntity));
-            Mockito.when(wahlbriefdatenModelMapper.toModel(mockedRepoEntity)).thenReturn(mockedMappedRepoEntityAsModel);
+      Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(wahlbriefdatenRepository.findById(wahlbezirkID))
+          .thenReturn(Optional.of(mockedRepoEntity));
+      Mockito.when(wahlbriefdatenModelMapper.toModel(mockedRepoEntity))
+          .thenReturn(mockedMappedRepoEntityAsModel);
 
-            val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
+      val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
 
-            Assertions.assertThat(result.get()).isSameAs(mockedMappedRepoEntityAsModel);
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(wahlbriefdatenRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
-        @Test
-        void should_notSaveWahlbriefdaten_when_validationFailed() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID)).isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result.get()).isSameAs(mockedMappedRepoEntityAsModel);
     }
 
-    @Nested
-    class SetWahlbriefdaten {
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_saveWahlbriefdaten_when_givenValidModel() {
-            val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
+      Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(wahlbriefdatenRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
 
-            val mockedModelMappedAsEntity = new Wahlbriefdaten();
+      val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
 
-            Mockito.doNothing().when(wahlbriefdatenValidator).validWahlbriefdatenToSetOrThrow(wahlbriefdatenModelToSet);
-            Mockito.when(wahlbriefdatenModelMapper.toEntity(wahlbriefdatenModelToSet)).thenReturn(mockedModelMappedAsEntity);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenModelToSet));
-
-            Mockito.verify(wahlbriefdatenRepository).save(mockedModelMappedAsEntity);
-        }
-
-        @Test
-        void should_notSaveWahlbriefdaten_when_validationFailed() {
-            val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahlbriefdatenValidator).validWahlbriefdatenToSetOrThrow(wahlbriefdatenModelToSet);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenModelToSet)).isSameAs(mockedValidationException);
-
-            Mockito.verifyNoInteractions(wahlbriefdatenRepository);
-        }
+      Assertions.assertThat(result).isEmpty();
     }
+
+    @Test
+    void should_notSaveWahlbriefdaten_when_validationFailed() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlbriefdatenValidator)
+          .validWahlbezirkIDOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlbriefdaten(wahlbezirkID))
+          .isSameAs(mockedValidationException);
+    }
+  }
+
+  @Nested
+  class SetWahlbriefdaten {
+
+    @Test
+    void should_saveWahlbriefdaten_when_givenValidModel() {
+      val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
+
+      val mockedModelMappedAsEntity = new Wahlbriefdaten();
+
+      Mockito.doNothing()
+          .when(wahlbriefdatenValidator)
+          .validWahlbriefdatenToSetOrThrow(wahlbriefdatenModelToSet);
+      Mockito.when(wahlbriefdatenModelMapper.toEntity(wahlbriefdatenModelToSet))
+          .thenReturn(mockedModelMappedAsEntity);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenModelToSet));
+
+      Mockito.verify(wahlbriefdatenRepository).save(mockedModelMappedAsEntity);
+    }
+
+    @Test
+    void should_notSaveWahlbriefdaten_when_validationFailed() {
+      val wahlbriefdatenModelToSet = WahlbriefdatenModel.builder().build();
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlbriefdatenValidator)
+          .validWahlbriefdatenToSetOrThrow(wahlbriefdatenModelToSet);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setWahlbriefdaten(wahlbriefdatenModelToSet))
+          .isSameAs(mockedValidationException);
+
+      Mockito.verifyNoInteractions(wahlbriefdatenRepository);
+    }
+  }
 }

@@ -11,5 +11,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties
 public class FunktionsnamenMappingProperties {
 
-    private final Map<WahlbezirkArtModel, Map<String, Map<String, String>>> mapping = new EnumMap<>(WahlbezirkArtModel.class);
+  private final Map<WahlbezirkArtModel, Map<String, Map<String, String>>> mapping =
+      new EnumMap<>(WahlbezirkArtModel.class);
 }

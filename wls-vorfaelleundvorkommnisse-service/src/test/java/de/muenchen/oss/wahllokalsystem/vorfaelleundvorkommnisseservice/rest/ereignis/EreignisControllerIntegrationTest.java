@@ -30,124 +30,150 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
 public class EreignisControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    EreignisseRepository ereignisRepository;
+  @Autowired EreignisseRepository ereignisRepository;
 
-    @Autowired
-    EreignisDTOMapper ereignisDTOMapper;
+  @Autowired EreignisDTOMapper ereignisDTOMapper;
 
-    @Autowired
-    EreignisseModelMapper ereignisModelMapper;
+  @Autowired EreignisseModelMapper ereignisModelMapper;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_EREIGNISSE);
-        ereignisRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_EREIGNISSE);
+    ereignisRepository.deleteAll();
+  }
+
+  @Nested
+  class GetEreignisse {
+
+    @Test
+    @WithMockUser(
+        authorities = {Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE})
+    @Transactional
+    void should_returnEmptyResponse_when_noDataFound() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
+      val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
 
-    @Nested
-    class GetEreignisse {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_EREIGNISSE,
+          Authorities.REPOSITORY_READ_EREIGNISSE,
+          Authorities.REPOSITORY_WRITE_EREIGNISSE
+        })
+    @Transactional
+    void should_returnPersistedWahlbezirkEreignisseDTO_when_dataFound() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE })
-        @Transactional
-        void should_returnEmptyResponse_when_noDataFound() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+      val ereignisList =
+          Set.of(
+              TestdataFactory.CreateEreignisEntity.withData("beschreibung1"),
+              TestdataFactory.CreateEreignisEntity.withData("beschreibung2"));
+      val ereignisse = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
+      ereignisRepository.save(ereignisse);
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
+      val mockedEreignisseModel = ereignisModelMapper.toModel(ereignisse);
+      val expectedResponseDTO = ereignisDTOMapper.toDTO(mockedEreignisseModel);
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        @Transactional
-        void should_returnPersistedWahlbezirkEreignisseDTO_when_dataFound() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WahlbezirkEreignisseDTO.class);
 
-            val ereignisList = Set.of(
-                    TestdataFactory.CreateEreignisEntity.withData("beschreibung1"),
-                    TestdataFactory.CreateEreignisEntity.withData("beschreibung2"));
-            val ereignisse = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
-            ereignisRepository.save(ereignisse);
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
+    }
+  }
 
-            val mockedEreignisseModel = ereignisModelMapper.toModel(ereignisse);
-            val expectedResponseDTO = ereignisDTOMapper.toDTO(mockedEreignisseModel);
+  @Nested
+  class PostEreignisse {
 
-            val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID");
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlbezirkEreignisseDTO.class);
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_EREIGNISSE,
+          Authorities.REPOSITORY_DELETE_EREIGNISSE,
+          Authorities.REPOSITORY_WRITE_EREIGNISSE
+        })
+    void should_saveEreignisse_when_newDataIsPosted() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
 
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseDTO);
-        }
+      val mockedEreignisDtoList =
+          List.of(
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData());
+      val mockedEreignisseWriteDto =
+          TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
+      val expectedSavedEreignisse =
+          ereignisModelMapper.toEntity(
+              ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto));
+
+      val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
+      val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+      Assertions.assertThat(savedEreignisse.get()).isEqualTo(expectedSavedEreignisse);
     }
 
-    @Nested
-    class PostEreignisse {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_EREIGNISSE,
+          Authorities.REPOSITORY_DELETE_EREIGNISSE,
+          Authorities.REPOSITORY_WRITE_EREIGNISSE
+        })
+    void should_overrideExistingEreignisse_when_newDataIsPosted() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void should_saveEreignisse_when_newDataIsPosted() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
+      val ereignisList = Set.of(TestdataFactory.CreateEreignisEntity.withData("beschreibung1"));
+      val ereignisseToOverride =
+          TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
+      ereignisRepository.save(ereignisseToOverride);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
 
-            val mockedEreignisDtoList = List.of(
-                    TestdataFactory.CreateEreignisDto.withData(),
-                    TestdataFactory.CreateEreignisDto.withData(),
-                    TestdataFactory.CreateEreignisDto.withData());
-            val mockedEreignisseWriteDto = TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
-            val expectedSavedEreignisse = ereignisModelMapper.toEntity(ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto));
+      val mockedEreignisDtoList =
+          List.of(
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData());
+      val mockedEreignisseWriteDto =
+          TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
+      val expectedSavedEreignisse =
+          ereignisModelMapper.toEntity(
+              ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto));
 
-            val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
+      val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
+      api.perform(request).andExpect(status().isOk()).andReturn();
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
-            val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-            Assertions.assertThat(savedEreignisse.get()).isEqualTo(expectedSavedEreignisse);
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_EREIGNISSE, Authorities.REPOSITORY_DELETE_EREIGNISSE, Authorities.REPOSITORY_WRITE_EREIGNISSE })
-        void should_overrideExistingEreignisse_when_newDataIsPosted() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val ereignisList = Set.of(
-                    TestdataFactory.CreateEreignisEntity.withData("beschreibung1"));
-            val ereignisseToOverride = TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
-            ereignisRepository.save(ereignisseToOverride);
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
-
-            val mockedEreignisDtoList = List.of(
-                    TestdataFactory.CreateEreignisDto.withData(),
-                    TestdataFactory.CreateEreignisDto.withData(),
-                    TestdataFactory.CreateEreignisDto.withData());
-            val mockedEreignisseWriteDto = TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
-            val expectedSavedEreignisse = ereignisModelMapper.toEntity(ereignisDTOMapper.toModel(wahlbezirkID, mockedEreignisseWriteDto));
-
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_EREIGNISSE);
-            val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
-            api.perform(request).andExpect(status().isOk()).andReturn();
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
-            val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-            Assertions.assertThat(savedEreignisse.get()).isEqualTo(expectedSavedEreignisse);
-        }
-
-        private MockHttpServletRequestBuilder createPostWithBody(final String wahlbezirkID, final EreignisseWriteDTO ereignisseWriteDTO) throws Exception {
-            return MockMvcRequestBuilders.post("/businessActions/ereignisse/" + wahlbezirkID)
-                    .with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ereignisseWriteDTO));
-        }
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);
+      val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
+      Assertions.assertThat(savedEreignisse.get()).isEqualTo(expectedSavedEreignisse);
     }
+
+    private MockHttpServletRequestBuilder createPostWithBody(
+        final String wahlbezirkID, final EreignisseWriteDTO ereignisseWriteDTO) throws Exception {
+      return MockMvcRequestBuilders.post("/businessActions/ereignisse/" + wahlbezirkID)
+          .with(csrf())
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(ereignisseWriteDTO));
+    }
+  }
 }

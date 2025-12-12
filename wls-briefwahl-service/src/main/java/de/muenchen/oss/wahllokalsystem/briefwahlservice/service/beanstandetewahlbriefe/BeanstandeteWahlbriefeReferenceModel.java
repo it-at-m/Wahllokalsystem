@@ -4,5 +4,5 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record BeanstandeteWahlbriefeReferenceModel(@NotNull String wahlbezirkID, @NotNull Long waehlerverzeichnisNummer) {
-}
+public record BeanstandeteWahlbriefeReferenceModel(
+    @NotNull String wahlbezirkID, @NotNull Long waehlerverzeichnisNummer) {}

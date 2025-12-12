@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record WahlvorstandModel(String wahlbezirkID,
-                                LocalDateTime anwesenheitBeginn,
-                                List<WahlvorstandsmitgliedModel> wahlvorstandsmitglieder) {
-}
+public record WahlvorstandModel(
+    String wahlbezirkID,
+    LocalDateTime anwesenheitBeginn,
+    List<WahlvorstandsmitgliedModel> wahlvorstandsmitglieder) {}

@@ -24,46 +24,54 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/businessActions/ereignisse")
 public class EreignisController {
 
-    private final EreignisDTOMapper ereignisDTOMapper;
+  private final EreignisDTOMapper ereignisDTOMapper;
 
-    private final EreignisService ereignisService;
+  private final EreignisService ereignisService;
 
-    @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Ereignisse des Wahllokals erfolgreich geladen.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
-                            content = @Content(schema = @Schema())
-                    )
-            }
-    )
-    @GetMapping("/{wahlbezirkID}")
-    public ResponseEntity<WahlbezirkEreignisseDTO> getEreignisse(@PathVariable("wahlbezirkID") String wahlbezirkID) {
-        val ereignisFromService = ereignisService.getEreignisse(wahlbezirkID);
-        return okWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
-    }
+  @Operation(description = "Laden der Ereignisse des Wahllokals {wahlbezirkID}.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ereignisse des Wahllokals erfolgreich geladen.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = WahlbezirkEreignisseDTO.class))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Keine Daten vom Fremdsystem geliefert",
+            content = @Content(schema = @Schema()))
+      })
+  @GetMapping("/{wahlbezirkID}")
+  public ResponseEntity<WahlbezirkEreignisseDTO> getEreignisse(
+      @PathVariable("wahlbezirkID") String wahlbezirkID) {
+    val ereignisFromService = ereignisService.getEreignisse(wahlbezirkID);
+    return okWithBodyOrNoContent(ereignisFromService.map(ereignisDTOMapper::toDTO));
+  }
 
-    @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Ereignisse des Wahllokals erfolgreich gespeichert.",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlbezirkEreignisseDTO.class)) }
-                    )
-            }
-    )
-    @PostMapping("/{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void postEreignisse(@PathVariable("wahlbezirkID") String wahlbezirkID,
-            @RequestBody EreignisseWriteDTO ereignisseBody) {
-        ereignisService.postEreignisse(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
-    }
+  @Operation(description = "Speichern der Ereignisse des Wahllokals {wahlbezirkID}.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Ereignisse des Wahllokals erfolgreich gespeichert.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = WahlbezirkEreignisseDTO.class))
+            })
+      })
+  @PostMapping("/{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void postEreignisse(
+      @PathVariable("wahlbezirkID") String wahlbezirkID,
+      @RequestBody EreignisseWriteDTO ereignisseBody) {
+    ereignisService.postEreignisse(ereignisDTOMapper.toModel(wahlbezirkID, ereignisseBody));
+  }
 
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
-        return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
+  private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
+    return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+  }
 }

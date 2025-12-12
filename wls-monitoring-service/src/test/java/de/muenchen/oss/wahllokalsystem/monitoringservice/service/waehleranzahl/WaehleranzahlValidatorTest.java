@@ -16,60 +16,90 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WaehleranzahlValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    WaehleranzahlValidator unitUnderTest;
+  @InjectMocks WaehleranzahlValidator unitUnderTest;
 
-    @Nested
-    class ValidWahlIdUndWahlbezirkIDOrThrow {
+  @Nested
+  class ValidWahlIdUndWahlbezirkIDOrThrow {
 
-        private final FachlicheWlsException mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+    private final FachlicheWlsException mockedFachlicheWlsException =
+        FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_throwNoException_when_valid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", "wahlbezirkID")));
-        }
-
-        @Test
-        void should_throwException_when_parameterIsNull() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(null)).isSameAs(mockedFachlicheWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlIDIsNull() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID(null, "wahlbezirkID")))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlIDIsEmptyString() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("", "wahlbezirkID")))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDIsNull() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", null)))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDIsEmptyString() {
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(new BezirkUndWahlID("wahlID", "")))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
+    @Test
+    void should_throwNoException_when_valid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(
+                      new BezirkUndWahlID("wahlID", "wahlbezirkID")));
     }
 
+    @Test
+    void should_throwException_when_parameterIsNull() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(null))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlIDIsNull() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(
+                      new BezirkUndWahlID(null, "wahlbezirkID")))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlIDIsEmptyString() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(
+                      new BezirkUndWahlID("", "wahlbezirkID")))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDIsNull() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(
+                      new BezirkUndWahlID("wahlID", null)))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDIsEmptyString() {
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETWAHLBETEILIGUNG_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validWahlIdUndWahlbezirkIDOrThrow(
+                      new BezirkUndWahlID("wahlID", "")))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+  }
 }

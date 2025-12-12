@@ -16,44 +16,45 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UrnenwahlvorbereitungService {
 
-    private final UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
+  private final UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
 
-    private final UrnenwahlvorbereitungModelMapper urnenwahlvorbereitungModelMapper;
+  private final UrnenwahlvorbereitungModelMapper urnenwahlvorbereitungModelMapper;
 
-    private final UrnenwahlvorbereitungValidator urnenwahlvorbereitungValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final UrnenwahlvorbereitungValidator urnenwahlvorbereitungValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<UrnenwahlvorbereitungModel> getUrnenwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getUrnenwahlVorbereitung");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetUrnenwahlVorbereitung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<UrnenwahlvorbereitungModel> getUrnenwahlvorbereitung(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getUrnenwahlVorbereitung");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        urnenwahlvorbereitungValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    urnenwahlvorbereitungValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID);
-        log.debug("out: urnenwahlVorbereitung > {}", dataFromRepo.orElse(null));
+    val dataFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID);
+    log.debug("out: urnenwahlVorbereitung > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(urnenwahlvorbereitungModelMapper::toModel);
+    return dataFromRepo.map(urnenwahlvorbereitungModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#vorbereitungToSet.wahlbezirkID, authentication)")
+  public void setUrnenwahlvorbereitung(
+      @P("vorbereitungToSet") final UrnenwahlvorbereitungModel vorbereitungToSet) {
+    log.debug("#postUrnenwahlVorbereitung");
+    log.debug("in: urnenwahlVorbereitung > {}", vorbereitungToSet);
+
+    urnenwahlvorbereitungValidator.validModelToSetOrThrow(vorbereitungToSet);
+
+    try {
+      urnenwahlVorbereitungRepository.save(
+          urnenwahlvorbereitungModelMapper.toEntity(vorbereitungToSet));
+    } catch (final Exception onSaveException) {
+      log.error("Fehler beim speichern: ", onSaveException);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostUrnenwahlVorbereitung')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#vorbereitungToSet.wahlbezirkID, authentication)"
-    )
-    public void setUrnenwahlvorbereitung(@P("vorbereitungToSet") final UrnenwahlvorbereitungModel vorbereitungToSet) {
-        log.debug("#postUrnenwahlVorbereitung");
-        log.debug("in: urnenwahlVorbereitung > {}", vorbereitungToSet);
-
-        urnenwahlvorbereitungValidator.validModelToSetOrThrow(vorbereitungToSet);
-
-        try {
-            urnenwahlVorbereitungRepository.save(urnenwahlvorbereitungModelMapper.toEntity(vorbereitungToSet));
-        } catch (final Exception onSaveException) {
-            log.error("Fehler beim speichern: ", onSaveException);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

@@ -11,37 +11,44 @@ import org.mapstruct.factory.Mappers;
 
 class KonfigurierterWahltagClientMapperTest {
 
-    private final KonfigurierterWahltagClientMapper unitUnderTest = Mappers.getMapper(KonfigurierterWahltagClientMapper.class);
+  private final KonfigurierterWahltagClientMapper unitUnderTest =
+      Mappers.getMapper(KonfigurierterWahltagClientMapper.class);
 
-    @Nested
-    class FromRemoteClientDTOToModel {
+  @Nested
+  class FromRemoteClientDTOToModel {
 
-        @Test
-        void should_mapRemoteClientDTOToModel_when_statusIsActive() {
-            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
-                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+    @Test
+    void should_mapRemoteClientDTOToModel_when_statusIsActive() {
+      val konfigurierterWahltagDTO =
+          MockDataFactory.createClientKonfigurierterWahltagDTO(
+              LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
 
-            Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
+      Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
 
-            val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+      val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
 
-            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1), true);
+      val expectedKonfigurieterWahltag =
+          MockDataFactory.createClientKonfigurierterWahltagModel(
+              LocalDate.now().plusMonths(1), true);
 
-            Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
-        }
-
-        @Test
-        void should_mapRemoteClientDTOToModel_when_statusIsInactive() {
-            val konfigurierterWahltagDTO = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
-                    KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
-
-            Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
-
-            val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
-
-            val expectedKonfigurieterWahltag = MockDataFactory.createClientKonfigurierterWahltagModel(LocalDate.now().plusMonths(1), false);
-
-            Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
     }
+
+    @Test
+    void should_mapRemoteClientDTOToModel_when_statusIsInactive() {
+      val konfigurierterWahltagDTO =
+          MockDataFactory.createClientKonfigurierterWahltagDTO(
+              LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.INAKTIV);
+
+      Assertions.assertThat(konfigurierterWahltagDTO).hasNoNullFieldsOrProperties();
+
+      val result = unitUnderTest.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+
+      val expectedKonfigurieterWahltag =
+          MockDataFactory.createClientKonfigurierterWahltagModel(
+              LocalDate.now().plusMonths(1), false);
+
+      Assertions.assertThat(result).isEqualTo(expectedKonfigurieterWahltag);
+    }
+  }
 }

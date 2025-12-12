@@ -13,18 +13,18 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.DUMMY_CLIENTS)
 public class DummyClient implements WelcomeClient, LoginTimeClient, WahltagClient {
 
-    @Override
-    public String getWelcomeMessage() {
-        return "greetings - powered by dummy client";
-    }
+  @Override
+  public String getWelcomeMessage() {
+    return "greetings - powered by dummy client";
+  }
 
-    @Override
-    public LegalLoginIntervalModel getLegalLoginInterval() {
-        return new LegalLoginIntervalModel(LocalDateTime.MIN, LocalDateTime.MAX);
-    }
+  @Override
+  public LegalLoginIntervalModel getLegalLoginInterval() {
+    return new LegalLoginIntervalModel(LocalDateTime.MIN, LocalDateTime.MAX);
+  }
 
-    @Override
-    public boolean isWahltagActive(final String wahltagID) {
-        return true;
-    }
+  @Override
+  public boolean isWahltagActive(final String wahltagID) {
+    return true;
+  }
 }

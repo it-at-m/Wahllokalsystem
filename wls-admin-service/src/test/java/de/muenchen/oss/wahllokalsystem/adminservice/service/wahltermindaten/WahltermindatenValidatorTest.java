@@ -21,40 +21,43 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahltermindatenValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    private WahltermindatenValidator unitUnderTest;
+  @InjectMocks private WahltermindatenValidator unitUnderTest;
 
-    @Nested
-    class ValidWahltagIDParamOrThrow {
+  @Nested
+  class ValidWahltagIDParamOrThrow {
 
-        @Test
-        void should_notThrowException_when_wahltagIDIsValid() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_notThrowException_when_wahltagIDIsValid() {
+      val wahltagID = "wahltagID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(wahltagID));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidWahltagIDArgumentsWithTestcaseNameAppendix")
-        void should_throwFachlicheWlsException_when_wahltagIDIsNotValid(final ArgumentsAccessor arguments) {
-
-            val mockedException = FachlicheWlsException.withCode("165").buildWithMessage("Parameter fehlt.");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT)).thenReturn(mockedException);
-
-            Assertions.assertThatException()
-                    .isThrownBy(
-                            () -> unitUnderTest.validWahltagIDParamOrThrow(arguments.get(0, String.class)))
-                    .isSameAs(mockedException);
-        }
-
-        public static Stream<Arguments> invalidWahltagIDArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(null, "wahltagID is null"),
-                    Arguments.of((""), "wahltagID is empty"),
-                    Arguments.of(("   "), "wahltagID is blank"));
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWahltagIDParamOrThrow(wahltagID));
     }
+
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidWahltagIDArgumentsWithTestcaseNameAppendix")
+    void should_throwFachlicheWlsException_when_wahltagIDIsNotValid(
+        final ArgumentsAccessor arguments) {
+
+      val mockedException =
+          FachlicheWlsException.withCode("165").buildWithMessage("Parameter fehlt.");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.validWahltagIDParamOrThrow(arguments.get(0, String.class)))
+          .isSameAs(mockedException);
+    }
+
+    public static Stream<Arguments> invalidWahltagIDArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(null, "wahltagID is null"),
+          Arguments.of((""), "wahltagID is empty"),
+          Arguments.of(("   "), "wahltagID is blank"));
+    }
+  }
 }

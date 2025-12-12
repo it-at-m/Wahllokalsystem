@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlurneDTOMapper {
 
-    WahlurneDTO toDTO(WahlurneModel wahlurneModel);
+  WahlurneDTO toDTO(WahlurneModel wahlurneModel);
 }

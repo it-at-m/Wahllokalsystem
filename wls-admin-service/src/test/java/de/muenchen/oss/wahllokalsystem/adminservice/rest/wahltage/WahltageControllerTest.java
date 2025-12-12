@@ -18,52 +18,53 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class WahltageControllerTest {
 
-    @Mock
-    WahltageService wahltageService;
+  @Mock WahltageService wahltageService;
 
-    @Mock
-    WahltagDTOMapper wahltageDTOMapper;
+  @Mock WahltagDTOMapper wahltageDTOMapper;
 
-    @InjectMocks
-    WahltageController unitUnderTest;
+  @InjectMocks WahltageController unitUnderTest;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_returnDtoWithHttpStatusOk_when_serviceReturnedData() {
-            val mockedServiceResponse = List.of(Mockito.mock(WahltagModel.class), Mockito.mock(WahltagModel.class));
-            val mockedServiceResponseAsDTO = List.of(Mockito.mock(WahltagDTO.class), Mockito.mock(WahltagDTO.class));
+    @Test
+    void should_returnDtoWithHttpStatusOk_when_serviceReturnedData() {
+      val mockedServiceResponse =
+          List.of(Mockito.mock(WahltagModel.class), Mockito.mock(WahltagModel.class));
+      val mockedServiceResponseAsDTO =
+          List.of(Mockito.mock(WahltagDTO.class), Mockito.mock(WahltagDTO.class));
 
-            Mockito.when(wahltageService.getWahltage()).thenReturn(mockedServiceResponse);
-            Mockito.when(wahltageDTOMapper.toDtoList(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(wahltageService.getWahltage()).thenReturn(mockedServiceResponse);
+      Mockito.when(wahltageDTOMapper.toDtoList(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getWahltage();
+      val result = unitUnderTest.getWahltage();
 
-            Assertions.assertThat(result.getBody()).isSameAs(mockedServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnEmptyBodyWithHttpStatusNoContent_when_serviceReturnedNull() {
-            Mockito.when(wahltageService.getWahltage()).thenReturn(null);
-            Mockito.when(wahltageDTOMapper.toDtoList(null)).thenReturn(null);
-
-            val result = unitUnderTest.getWahltage();
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
-
-        @Test
-        void should_returnEmptyBodyWithHttpStatusNoContent_when_serviceReturnedEmptyList() {
-            Mockito.when(wahltageService.getWahltage()).thenReturn(Collections.emptyList());
-            Mockito.when(wahltageDTOMapper.toDtoList(Collections.emptyList())).thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.getWahltage();
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isSameAs(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    void should_returnEmptyBodyWithHttpStatusNoContent_when_serviceReturnedNull() {
+      Mockito.when(wahltageService.getWahltage()).thenReturn(null);
+      Mockito.when(wahltageDTOMapper.toDtoList(null)).thenReturn(null);
+
+      val result = unitUnderTest.getWahltage();
+
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void should_returnEmptyBodyWithHttpStatusNoContent_when_serviceReturnedEmptyList() {
+      Mockito.when(wahltageService.getWahltage()).thenReturn(Collections.emptyList());
+      Mockito.when(wahltageDTOMapper.toDtoList(Collections.emptyList()))
+          .thenReturn(Collections.emptyList());
+
+      val result = unitUnderTest.getWahltage();
+
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+  }
 }

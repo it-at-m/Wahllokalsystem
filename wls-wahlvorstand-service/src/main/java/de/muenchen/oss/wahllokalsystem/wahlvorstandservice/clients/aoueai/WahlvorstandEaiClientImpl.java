@@ -20,33 +20,35 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahlvorstandEaiClientImpl implements WahlvorstandEaiClient {
 
-    private final ExceptionFactory exceptionFactory;
-    private final WahlvorstandControllerApi wahlvorstandControllerApi;
-    private final WahlvorstandClientMapper wahlvorstandClientMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final WahlvorstandControllerApi wahlvorstandControllerApi;
+  private final WahlvorstandClientMapper wahlvorstandClientMapper;
 
-    @Override
-    public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {
-        WahlvorstandDTO wahlvorstandDTO;
-        try {
-            wahlvorstandDTO = wahlvorstandControllerApi.loadWahlvorstand(wahlbezirkID);
-        } catch (final Exception exception) {
-            log.error("Bei der Kommunikation mit der AOUEAI kam es zu einem Fehler: ", exception);
-            return null;
-        }
-        if (wahlvorstandDTO == null) {
-            log.error("Der geladene Wahlvorstand für den Bezirk {} ist null.", wahlbezirkID);
-            return null;
-        }
-        return wahlvorstandClientMapper.toModel(wahlvorstandDTO);
+  @Override
+  public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {
+    WahlvorstandDTO wahlvorstandDTO;
+    try {
+      wahlvorstandDTO = wahlvorstandControllerApi.loadWahlvorstand(wahlbezirkID);
+    } catch (final Exception exception) {
+      log.error("Bei der Kommunikation mit der AOUEAI kam es zu einem Fehler: ", exception);
+      return null;
     }
+    if (wahlvorstandDTO == null) {
+      log.error("Der geladene Wahlvorstand für den Bezirk {} ist null.", wahlbezirkID);
+      return null;
+    }
+    return wahlvorstandClientMapper.toModel(wahlvorstandDTO);
+  }
 
-    @Override
-    public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
-        val aktualisierungsDTO = wahlvorstandClientMapper.toWahlvorstandsaktualisierungDTO(wahlvorstand);
-        try {
-            wahlvorstandControllerApi.saveAnwesenheit(aktualisierungsDTO);
-        } catch (Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
-        }
+  @Override
+  public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
+    val aktualisierungsDTO =
+        wahlvorstandClientMapper.toWahlvorstandsaktualisierungDTO(wahlvorstand);
+    try {
+      wahlvorstandControllerApi.saveAnwesenheit(aktualisierungsDTO);
+    } catch (Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_AOUEAI);
     }
+  }
 }

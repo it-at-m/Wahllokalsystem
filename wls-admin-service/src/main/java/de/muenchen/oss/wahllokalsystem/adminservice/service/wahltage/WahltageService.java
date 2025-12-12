@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahltageService {
 
-    private final WahltageClient wahltageClient;
+  private final WahltageClient wahltageClient;
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahltage')")
-    public List<WahltagModel> getWahltage() {
-        return wahltageClient.getWahltage();
-    }
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_GetWahltage')")
+  public List<WahltagModel> getWahltage() {
+    return wahltageClient.getWahltage();
+  }
 }

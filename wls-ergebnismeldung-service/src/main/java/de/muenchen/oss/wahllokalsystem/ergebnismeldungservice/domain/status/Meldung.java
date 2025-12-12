@@ -11,14 +11,12 @@ import lombok.Data;
 @Data
 public class Meldung {
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Validierungsstatus validierungsstatus;
+  @Enumerated(EnumType.STRING)
+  @NotNull private Validierungsstatus validierungsstatus;
 
-    @NotNull
-    private boolean gedruckt;
+  @NotNull private boolean gedruckt;
 
-    private Boolean uebermittelt;
+  private Boolean uebermittelt;
 
-    private LocalDateTime sendeuhrzeit;
+  private LocalDateTime sendeuhrzeit;
 }

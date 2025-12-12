@@ -20,56 +20,60 @@ import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 @ExtendWith(MockitoExtension.class)
 class OAuth2TokenInterceptorTest {
 
-    @Mock
-    HttpRequest httpRequest;
+  @Mock HttpRequest httpRequest;
 
-    byte[] body = new byte[0];
+  byte[] body = new byte[0];
 
-    @Mock
-    ClientHttpRequestExecution clientHttpRequestExecution;
+  @Mock ClientHttpRequestExecution clientHttpRequestExecution;
 
-    @InjectMocks
-    OAuth2TokenInterceptor unitUnderTest;
+  @InjectMocks OAuth2TokenInterceptor unitUnderTest;
 
-    @Nested
-    class Intercept {
+  @Nested
+  class Intercept {
 
-        @Test
-        void should_callExecuteWithoutChange_when_authenticationIsNull() throws IOException {
-            SecurityContextHolder.getContext().setAuthentication(null);
+    @Test
+    void should_callExecuteWithoutChange_when_authenticationIsNull() throws IOException {
+      SecurityContextHolder.getContext().setAuthentication(null);
 
-            unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
+      unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
 
-            Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
-            Mockito.verifyNoInteractions(httpRequest);
-            Assertions.assertThat(body).isEmpty();
-        }
-
-        @Test
-        void should_callExecuteWithoutChange_when_authenticationCredentialsIsNotInstanceOfAbstractOAuth2Token() throws IOException {
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("principal", "credentials"));
-
-            unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
-
-            Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
-            Mockito.verifyNoInteractions(httpRequest);
-            Assertions.assertThat(body).isEmpty();
-        }
-
-        @Test
-        void should_callExecuteBearerToken_when_authenticationCredentialsIsInstanceOfOAuth2Token() throws IOException {
-            val tokenValue = "tokenValue";
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("principal", new AbstractOAuth2Token(tokenValue) {
-            }));
-
-            val mockedHttpHeaders = new HttpHeaders();
-            Mockito.when(httpRequest.getHeaders()).thenReturn(mockedHttpHeaders);
-
-            unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
-
-            Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
-            Assertions.assertThat(mockedHttpHeaders.get("Authorization")).containsExactly("Bearer " + tokenValue);
-            Assertions.assertThat(body).isEmpty();
-        }
+      Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
+      Mockito.verifyNoInteractions(httpRequest);
+      Assertions.assertThat(body).isEmpty();
     }
+
+    @Test
+    void
+        should_callExecuteWithoutChange_when_authenticationCredentialsIsNotInstanceOfAbstractOAuth2Token()
+            throws IOException {
+      SecurityContextHolder.getContext()
+          .setAuthentication(new UsernamePasswordAuthenticationToken("principal", "credentials"));
+
+      unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
+
+      Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
+      Mockito.verifyNoInteractions(httpRequest);
+      Assertions.assertThat(body).isEmpty();
+    }
+
+    @Test
+    void should_callExecuteBearerToken_when_authenticationCredentialsIsInstanceOfOAuth2Token()
+        throws IOException {
+      val tokenValue = "tokenValue";
+      SecurityContextHolder.getContext()
+          .setAuthentication(
+              new UsernamePasswordAuthenticationToken(
+                  "principal", new AbstractOAuth2Token(tokenValue) {}));
+
+      val mockedHttpHeaders = new HttpHeaders();
+      Mockito.when(httpRequest.getHeaders()).thenReturn(mockedHttpHeaders);
+
+      unitUnderTest.intercept(httpRequest, body, clientHttpRequestExecution);
+
+      Mockito.verify(clientHttpRequestExecution).execute(httpRequest, body);
+      Assertions.assertThat(mockedHttpHeaders.get("Authorization"))
+          .containsExactly("Bearer " + tokenValue);
+      Assertions.assertThat(body).isEmpty();
+    }
+  }
 }

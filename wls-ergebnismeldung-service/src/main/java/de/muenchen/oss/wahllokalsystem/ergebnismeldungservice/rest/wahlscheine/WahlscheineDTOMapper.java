@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlscheineDTOMapper {
 
-    WahlscheineDTO toDTO(WahlscheineModel wahlscheineModel);
+  WahlscheineDTO toDTO(WahlscheineModel wahlscheineModel);
 
-    WahlscheineModel toModel(WahlscheineDTO wahlscheineDTO);
+  WahlscheineModel toModel(WahlscheineDTO wahlscheineDTO);
 }

@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WahllokalZustandService {
 
-    private final WahllokalZustandValidator wahllokalZustandValidator;
-    private final WahllokalZustandMapper wahllokalZustandMapper;
-    private final WahllokalZustandRepository wahllokalZustandRepository;
+  private final WahllokalZustandValidator wahllokalZustandValidator;
+  private final WahllokalZustandMapper wahllokalZustandMapper;
+  private final WahllokalZustandRepository wahllokalZustandRepository;
 
-    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
-    public void setWahllokalZustand(final WahllokalZustandDTO wahllokalZustandToSet) {
-        wahllokalZustandValidator.validWahllokalZustandOrThrow(wahllokalZustandToSet);
-        wahllokalZustandRepository.save(wahllokalZustandMapper.toEntity(wahllokalZustandToSet));
-    }
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahllokalZustand')")
+  public void setWahllokalZustand(final WahllokalZustandDTO wahllokalZustandToSet) {
+    wahllokalZustandValidator.validWahllokalZustandOrThrow(wahllokalZustandToSet);
+    wahllokalZustandRepository.save(wahllokalZustandMapper.toEntity(wahllokalZustandToSet));
+  }
 }

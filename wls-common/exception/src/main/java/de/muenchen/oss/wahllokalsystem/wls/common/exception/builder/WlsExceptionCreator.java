@@ -5,5 +5,5 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionDa
 
 @FunctionalInterface
 public interface WlsExceptionCreator<T extends WlsException> {
-    T createWlsException(WlsExceptionData wlsExceptionData);
+  T createWlsException(WlsExceptionData wlsExceptionData);
 }

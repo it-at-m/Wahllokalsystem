@@ -13,11 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WahltagIdUndWahlbezirksart {
 
-    @NotNull
-    @Size(max = 1024)
-    private String wahltagID;
+  @NotNull @Size(max = 1024) private String wahltagID;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private WahlbezirkArt wahlbezirksart;
+  @Enumerated(EnumType.STRING)
+  @NotNull private WahlbezirkArt wahlbezirksart;
 }

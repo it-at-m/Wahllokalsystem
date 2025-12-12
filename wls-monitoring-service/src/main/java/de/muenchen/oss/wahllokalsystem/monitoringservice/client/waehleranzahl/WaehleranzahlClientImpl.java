@@ -17,16 +17,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WaehleranzahlClientImpl implements WaehleranzahlClient {
 
-    private final WahlbeteiligungControllerApi wahlbeteiligungControllerApi;
-    private final WaehleranzahlClientMapper waehleranzahlClientMapper;
+  private final WahlbeteiligungControllerApi wahlbeteiligungControllerApi;
+  private final WaehleranzahlClientMapper waehleranzahlClientMapper;
 
-    @Override
-    public void postWahlbeteiligung(final WaehleranzahlModel waehleranzahlModel) throws WlsException {
-        val wahlbeteiligungsMeldungDTO = waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel);
-        try {
-            wahlbeteiligungControllerApi.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
-        } catch (final Exception exception) {
-            log.error("Wahllokalzustand nicht gesendet. Exception: ", exception);
-        }
+  @Override
+  public void postWahlbeteiligung(final WaehleranzahlModel waehleranzahlModel) throws WlsException {
+    val wahlbeteiligungsMeldungDTO =
+        waehleranzahlClientMapper.fromModelToRemoteClientDTO(waehleranzahlModel);
+    try {
+      wahlbeteiligungControllerApi.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
+    } catch (final Exception exception) {
+      log.error("Wahllokalzustand nicht gesendet. Exception: ", exception);
     }
+  }
 }

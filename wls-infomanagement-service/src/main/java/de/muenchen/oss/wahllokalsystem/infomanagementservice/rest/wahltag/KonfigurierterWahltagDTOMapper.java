@@ -8,20 +8,19 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface KonfigurierterWahltagDTOMapper {
 
-    @Mapping(target = "active", source = "wahltagStatus")
-    KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO konfigurierteWahltag);
+  @Mapping(target = "active", source = "wahltagStatus")
+  KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO konfigurierteWahltag);
 
-    @Mapping(target = "wahltagStatus", source = "active")
-    KonfigurierterWahltagDTO toDTO(KonfigurierterWahltagModel konfigurierteWahltag);
+  @Mapping(target = "wahltagStatus", source = "active")
+  KonfigurierterWahltagDTO toDTO(KonfigurierterWahltagModel konfigurierteWahltag);
 
-    List<KonfigurierterWahltagDTO> toDTOList(List<KonfigurierterWahltagModel> konfigurierteWahltage);
+  List<KonfigurierterWahltagDTO> toDTOList(List<KonfigurierterWahltagModel> konfigurierteWahltage);
 
-    default boolean statusToActiveFlag(final WahltagStatus wahltagStatus) {
-        return wahltagStatus == WahltagStatus.AKTIV;
-    }
+  default boolean statusToActiveFlag(final WahltagStatus wahltagStatus) {
+    return wahltagStatus == WahltagStatus.AKTIV;
+  }
 
-    default WahltagStatus activeFlagToStatus(final boolean activeFlag) {
-        return activeFlag ? WahltagStatus.AKTIV : WahltagStatus.INAKTIV;
-    }
-
+  default WahltagStatus activeFlagToStatus(final boolean activeFlag) {
+    return activeFlag ? WahltagStatus.AKTIV : WahltagStatus.INAKTIV;
+  }
 }

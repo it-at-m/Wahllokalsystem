@@ -8,15 +8,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface BegruendungModelMapper {
 
-    BezirkUndWahlIDStapelart toEmbeddedId(BegruendungReferenceModel reference);
+  BezirkUndWahlIDStapelart toEmbeddedId(BegruendungReferenceModel reference);
 
-    @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
-    @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
-    @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
-    BegruendungModel toModel(Begruendung entity);
+  @Mapping(target = "wahlbezirkID", source = "bezirkUndWahlIDStapelart.wahlbezirkID")
+  @Mapping(target = "wahlID", source = "bezirkUndWahlIDStapelart.wahlID")
+  @Mapping(target = "stapelart", source = "bezirkUndWahlIDStapelart.stapelart")
+  BegruendungModel toModel(Begruendung entity);
 
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
-    Begruendung toEntity(BegruendungModel model);
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlbezirkID", source = "wahlbezirkID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.wahlID", source = "wahlID")
+  @Mapping(target = "bezirkUndWahlIDStapelart.stapelart", source = "stapelart")
+  Begruendung toEntity(BegruendungModel model);
 }

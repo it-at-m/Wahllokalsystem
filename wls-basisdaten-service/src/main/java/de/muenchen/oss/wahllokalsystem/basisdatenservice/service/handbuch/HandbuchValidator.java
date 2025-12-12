@@ -11,21 +11,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class HandbuchValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validHandbuchReferenceOrThrow(final HandbuchReferenceModel handbuchReference) {
-        if (handbuchReference == null || StringUtils.isBlank(handbuchReference.wahltagID()) || handbuchReference.wahlbezirksart() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETHANDBUCH_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validHandbuchReferenceOrThrow(final HandbuchReferenceModel handbuchReference) {
+    if (handbuchReference == null
+        || StringUtils.isBlank(handbuchReference.wahltagID())
+        || handbuchReference.wahlbezirksart() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETHANDBUCH_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validHandbuchWriteModelOrThrow(final HandbuchWriteModel handbuchWriteModel) {
-        if (handbuchWriteModel == null || handbuchWriteModel.handbuchReferenceModel() == null || StringUtils.isBlank(
-                handbuchWriteModel.handbuchReferenceModel().wahltagID())
-                || handbuchWriteModel.handbuchReferenceModel()
-                        .wahlbezirksart() == null
-                || ArrayUtils.isEmpty(handbuchWriteModel.handbuchData())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validHandbuchWriteModelOrThrow(final HandbuchWriteModel handbuchWriteModel) {
+    if (handbuchWriteModel == null
+        || handbuchWriteModel.handbuchReferenceModel() == null
+        || StringUtils.isBlank(handbuchWriteModel.handbuchReferenceModel().wahltagID())
+        || handbuchWriteModel.handbuchReferenceModel().wahlbezirksart() == null
+        || ArrayUtils.isEmpty(handbuchWriteModel.handbuchData())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POSTHANDBUCH_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

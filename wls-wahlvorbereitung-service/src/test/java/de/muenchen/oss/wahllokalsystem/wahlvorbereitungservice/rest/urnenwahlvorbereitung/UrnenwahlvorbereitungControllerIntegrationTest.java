@@ -37,160 +37,239 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
 public class UrnenwahlvorbereitungControllerIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    UrnenwahlvorbereitungModelMapper urnenwahlvorbereitungModelMapper;
+  @Autowired UrnenwahlvorbereitungModelMapper urnenwahlvorbereitungModelMapper;
 
-    @Autowired
-    UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
+  @Autowired UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
 
-    @Autowired
-    UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
+  @Autowired UrnenwahlVorbereitungRepository urnenwahlVorbereitungRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
-        urnenwahlVorbereitungRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_URNENWAHLVORBEREITUNG);
+    urnenwahlVorbereitungRepository.deleteAll();
+  }
+
+  @Nested
+  class GetUrnenwahlVorbereitung {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG
+        })
+    void should_returnData_when_dataIsPresentInRepo() throws Exception {
+      val wahlbezirkIDToFind = "wahlbezirkIDToFind";
+
+      val wahlbezirk1 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
+      val wahlbezirk2 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk2", "wahlID2").build();
+      val wahlbezirkToFind =
+          UrnenwahlVorbereitungTestdatenfactory.initValid(wahlbezirkIDToFind, "wahlID3").build();
+      val wahlbezirk4 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
+      urnenwahlVorbereitungRepository.saveAll(
+          List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
+
+      val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToFind);
+
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), UrnenwahlvorbereitungDTO.class);
+
+      val expectedResponseBody =
+          urnenwahlvorbereitungDTOMapper.toDTO(
+              urnenwahlvorbereitungModelMapper.toModel(wahlbezirkToFind));
+
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class GetUrnenwahlVorbereitung {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG
+        })
+    void should_returnNoContent_when_noDataFound() throws Exception {
+      val wahlbezirkIDToLookup = "wahlbezirkIDToFind";
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
-        void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlbezirkIDToFind = "wahlbezirkIDToFind";
+      val wahlbezirk1 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
+      val wahlbezirk2 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk2", "wahlID2").build();
+      val wahlbezirkToFind =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk3", "wahlID3").build();
+      val wahlbezirk4 =
+          UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
+      urnenwahlVorbereitungRepository.saveAll(
+          List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
 
-            val wahlbezirk1 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
-            val wahlbezirk2 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk2", "wahlID2").build();
-            val wahlbezirkToFind = UrnenwahlVorbereitungTestdatenfactory.initValid(wahlbezirkIDToFind, "wahlID3").build();
-            val wahlbezirk4 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
-            urnenwahlVorbereitungRepository.saveAll(List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
+      val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToLookup);
 
-            val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToFind);
+      val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), UrnenwahlvorbereitungDTO.class);
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+    }
+  }
 
-            val expectedResponseBody = urnenwahlvorbereitungDTOMapper.toDTO(urnenwahlvorbereitungModelMapper.toModel(wahlbezirkToFind));
+  @Nested
+  class PostUrnenwahlvorbereitung {
 
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
-        }
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG
+        })
+    void should_setNewData_when_callingPost() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
+      val request = buildPostRequest(wahlbezirkID, requestBody);
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG })
-        void should_returnNoContent_when_noDataFound() throws Exception {
-            val wahlbezirkIDToLookup = "wahlbezirkIDToFind";
+      mockMvc.perform(request).andExpect(status().isCreated());
 
-            val wahlbezirk1 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk1", "wahlID1").build();
-            val wahlbezirk2 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk2", "wahlID2").build();
-            val wahlbezirkToFind = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk3", "wahlID3").build();
-            val wahlbezirk4 = UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
-            urnenwahlVorbereitungRepository.saveAll(List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
-            val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToLookup);
+      val expectedVorbereitung =
+          urnenwahlvorbereitungModelMapper.toEntity(
+              urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
 
-            val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
-
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
+      Assertions.assertThat(vorbereitungFromRepo)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedVorbereitung);
     }
 
-    @Nested
-    class PostUrnenwahlvorbereitung {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG
+        })
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void should_setNewData_when_callingPost() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
-            val request = buildPostRequest(wahlbezirkID, requestBody);
+      val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
+      val request = buildPostRequest(wahlbezirkID, requestBody);
 
-            mockMvc.perform(request).andExpect(status().isCreated());
+      val firstNewWahlurne = requestBody.urnenAnzahl().get(0);
+      val oldUrnen =
+          List.of(
+              new Wahlurne(
+                  firstNewWahlurne.wahlID() + "Old",
+                  firstNewWahlurne.anzahl() + 2,
+                  firstNewWahlurne.urneVersiegelt()));
+      val entityToWriteOver =
+          new UrnenwahlVorbereitung(
+              wahlbezirkID,
+              oldUrnen,
+              requestBody.anzahlWahlkabinen(),
+              requestBody.anzahlWahltische(),
+              requestBody.anzahlNebenraeume());
+      urnenwahlVorbereitungRepository.save(entityToWriteOver);
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
-            val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
+      mockMvc.perform(request).andExpect(status().isCreated());
 
-            val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
 
-            Assertions.assertThat(vorbereitungFromRepo).usingRecursiveComparison().isEqualTo(expectedVorbereitung);
-        }
+      val expectedVorbereitung =
+          urnenwahlvorbereitungModelMapper.toEntity(
+              urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
 
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
-            val request = buildPostRequest(wahlbezirkID, requestBody);
-
-            val firstNewWahlurne = requestBody.urnenAnzahl().get(0);
-            val oldUrnen = List.of(new Wahlurne(firstNewWahlurne.wahlID() + "Old", firstNewWahlurne.anzahl() + 2, firstNewWahlurne.urneVersiegelt()));
-            val entityToWriteOver = new UrnenwahlVorbereitung(wahlbezirkID, oldUrnen, requestBody.anzahlWahlkabinen(), requestBody.anzahlWahltische(),
-                    requestBody.anzahlNebenraeume());
-            urnenwahlVorbereitungRepository.save(entityToWriteOver);
-
-            mockMvc.perform(request).andExpect(status().isCreated());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
-            val vorbereitungFromRepo = urnenwahlVorbereitungRepository.findById(wahlbezirkID).get();
-
-            val expectedVorbereitung = urnenwahlvorbereitungModelMapper.toEntity(urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, requestBody));
-
-            Assertions.assertThat(vorbereitungFromRepo).usingRecursiveComparison().isEqualTo(expectedVorbereitung);
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").urnenAnzahl(Collections.emptyList()).build();
-            val request = buildPostRequest(wahlbezirkID, requestBody);
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
-            Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
-
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
-                    ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(exceptionBodyFromRepsonse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG })
-        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
-            val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
-
-            val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
-            val request = buildPostRequest(wahlbezirkID, requestBody);
-
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val exceptionBodyFromRepsonse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
-            Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
-
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
-                    ExceptionConstants.UNSAVEABLE.message());
-            Assertions.assertThat(exceptionBodyFromRepsonse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
-        }
-
-        private RequestBuilder buildPostRequest(final String wahlbezirkID, final UrnenwahlvorbereitungWriteDTO requestBody) throws Exception {
-            return post("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-        }
+      Assertions.assertThat(vorbereitungFromRepo)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedVorbereitung);
     }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG
+        })
+    void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val requestBody =
+          UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID")
+              .urnenAnzahl(Collections.emptyList())
+              .build();
+      val request = buildPostRequest(wahlbezirkID, requestBody);
+
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val exceptionBodyFromRepsonse =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(StandardCharsets.UTF_8),
+              WlsExceptionDTO.class);
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
+
+      val expectedExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(),
+              "WLS-WAHLVORBEREITUNG",
+              ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(exceptionBodyFromRepsonse)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedExceptionDTO);
+    }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG
+        })
+    void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
+      val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
+
+      val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
+      val request = buildPostRequest(wahlbezirkID, requestBody);
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val exceptionBodyFromRepsonse =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(StandardCharsets.UTF_8),
+              WlsExceptionDTO.class);
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      Assertions.assertThat(urnenwahlVorbereitungRepository.findById(wahlbezirkID)).isEmpty();
+
+      val expectedExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.UNSAVEABLE.code(),
+              "WLS-WAHLVORBEREITUNG",
+              ExceptionConstants.UNSAVEABLE.message());
+      Assertions.assertThat(exceptionBodyFromRepsonse)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedExceptionDTO);
+    }
+
+    private RequestBuilder buildPostRequest(
+        final String wahlbezirkID, final UrnenwahlvorbereitungWriteDTO requestBody)
+        throws Exception {
+      return post("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID)
+          .with(csrf())
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
+    }
+  }
 }

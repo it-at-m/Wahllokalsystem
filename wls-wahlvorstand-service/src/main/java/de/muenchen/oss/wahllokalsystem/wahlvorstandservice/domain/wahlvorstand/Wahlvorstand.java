@@ -21,16 +21,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Wahlvorstand {
 
-    @Id
-    @NotNull
-    @Size(max = 1024)
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 1024) private String wahlbezirkID;
 
-    private LocalDateTime anwesenheitBeginn;
+  private LocalDateTime anwesenheitBeginn;
 
-    @NotNull
-    @Size(min = 1)
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "Wahlvorstandsmitglied", joinColumns = @JoinColumn(name = "wahlvorstand_wahlbezirkID"))
-    private List<Wahlvorstandsmitglied> wahlvorstandsmitglieder = new ArrayList<>();
+  @NotNull @Size(min = 1) @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+      name = "Wahlvorstandsmitglied",
+      joinColumns = @JoinColumn(name = "wahlvorstand_wahlbezirkID"))
+  private List<Wahlvorstandsmitglied> wahlvorstandsmitglieder = new ArrayList<>();
 }

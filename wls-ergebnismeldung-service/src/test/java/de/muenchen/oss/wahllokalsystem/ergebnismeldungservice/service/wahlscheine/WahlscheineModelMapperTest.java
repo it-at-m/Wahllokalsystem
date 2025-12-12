@@ -10,45 +10,45 @@ import org.mapstruct.factory.Mappers;
 
 class WahlscheineModelMapperTest {
 
-    private WahlscheineModelMapper unitUnderTest = Mappers.getMapper(WahlscheineModelMapper.class);
+  private WahlscheineModelMapper unitUnderTest = Mappers.getMapper(WahlscheineModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-        }
-
-        @Test
-        void should_returnWahlscheineModel_when_givenWahlscheineEntity() {
-            val wahlscheineEntity = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
-
-            val result = unitUnderTest.toModel(wahlscheineEntity);
-
-            val expectedResult = new WahlscheineModel(
-                    new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33L);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
-    @Nested
-    class ToEntity {
+    @Test
+    void should_returnWahlscheineModel_when_givenWahlscheineEntity() {
+      val wahlscheineEntity = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
-        }
+      val result = unitUnderTest.toModel(wahlscheineEntity);
 
-        @Test
-        void should_returnWahlscheineEntity_when_givenWahlscheineModel() {
-            val wahlscheineModel = new WahlscheineModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33L);
-
-            val result = unitUnderTest.toEntity(wahlscheineModel);
-
-            val expectedResult = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult = new WahlscheineModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33L);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @Nested
+  class ToEntity {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
+    }
+
+    @Test
+    void should_returnWahlscheineEntity_when_givenWahlscheineModel() {
+      val wahlscheineModel =
+          new WahlscheineModel(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33L);
+
+      val result = unitUnderTest.toEntity(wahlscheineModel);
+
+      val expectedResult = new Wahlscheine(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 33);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

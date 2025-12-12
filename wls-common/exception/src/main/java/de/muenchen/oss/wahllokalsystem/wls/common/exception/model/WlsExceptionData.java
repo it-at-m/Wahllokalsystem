@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WlsExceptionData {
 
-    private String message;
-    private String serviceName;
-    private String code;
-    private Throwable cause;
+  private String message;
+  private String serviceName;
+  private String code;
+  private Throwable cause;
 }

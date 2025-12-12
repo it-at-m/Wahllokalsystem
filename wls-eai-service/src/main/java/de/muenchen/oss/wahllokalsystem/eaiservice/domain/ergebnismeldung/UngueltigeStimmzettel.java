@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UngueltigeStimmzettel {
 
-    private String stimmenart;
+  private String stimmenart;
 
-    private Long anzahl;
+  private Long anzahl;
 
-    private String wahlvorschlagID;
-
+  private String wahlvorschlagID;
 }

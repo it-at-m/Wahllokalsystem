@@ -11,57 +11,74 @@ import org.mapstruct.factory.Mappers;
 
 class StimmzettelumschlaegeModelMapperTest {
 
-    private final StimmzettelumschlaegeModelMapper unitUnderTest = Mappers.getMapper(StimmzettelumschlaegeModelMapper.class);
+  private final StimmzettelumschlaegeModelMapper unitUnderTest =
+      Mappers.getMapper(StimmzettelumschlaegeModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-        }
-
-        @Test
-        void should_returnStimmzettelumschlaegeModel_when_givenStimmzettelumschlaegeEntity() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11;
-            val wahlscheineEntity = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                    (long) anzahlWaehler2);
-
-            val result = unitUnderTest.toModel(wahlscheineEntity);
-            val expectedResult = new StimmzettelumschlaegeModel(
-                    new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
-    @Nested
-    class ToEntity {
+    @Test
+    void should_returnStimmzettelumschlaegeModel_when_givenStimmzettelumschlaegeEntity() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11;
+      val wahlscheineEntity =
+          new Stimmzettelumschlaege(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              (long) anzahlWaehler2);
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
-        }
+      val result = unitUnderTest.toModel(wahlscheineEntity);
+      val expectedResult =
+          new StimmzettelumschlaegeModel(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              anzahlWaehler2);
 
-        @Test
-        void should_returnStimmzettelumschlaegeEntity_when_givenStimmzettelumschlaegeModel() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11;
-            val wahlscheineModel = new StimmzettelumschlaegeModel(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                    anzahlWaehler2);
-
-            val result = unitUnderTest.toEntity(wahlscheineModel);
-            val expectedResult = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler,
-                    (long) anzahlWaehler2);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @Nested
+  class ToEntity {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
+    }
+
+    @Test
+    void should_returnStimmzettelumschlaegeEntity_when_givenStimmzettelumschlaegeModel() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11;
+      val wahlscheineModel =
+          new StimmzettelumschlaegeModel(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              anzahlWaehler2);
+
+      val result = unitUnderTest.toEntity(wahlscheineModel);
+      val expectedResult =
+          new Stimmzettelumschlaege(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              (long) anzahlWaehler2);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

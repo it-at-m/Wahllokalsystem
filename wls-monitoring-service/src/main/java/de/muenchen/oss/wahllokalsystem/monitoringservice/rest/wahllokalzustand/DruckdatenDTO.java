@@ -7,7 +7,4 @@ import lombok.Builder;
 
 @Builder
 public record DruckdatenDTO(
-        @NotNull BezirkUndWahlID bezirkUndWahlID,
-        @NotNull LocalDateTime druckuhrzeit
-) {
-}
+    @NotNull BezirkUndWahlID bezirkUndWahlID, @NotNull LocalDateTime druckuhrzeit) {}

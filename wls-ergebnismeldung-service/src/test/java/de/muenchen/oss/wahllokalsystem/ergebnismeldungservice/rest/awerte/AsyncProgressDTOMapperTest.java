@@ -10,52 +10,41 @@ import org.mapstruct.factory.Mappers;
 
 class AsyncProgressDTOMapperTest {
 
-    private final AsyncProgressDTOMapper mapper = Mappers.getMapper(AsyncProgressDTOMapper.class);
+  private final AsyncProgressDTOMapper mapper = Mappers.getMapper(AsyncProgressDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_mapCorrectly_when_validAsyncProgressGiven() {
-            val lastStartTime = LocalDateTime.now().minusHours(1);
-            val lastFinishTime = LocalDateTime.now();
-            val asyncProgress = new AsyncProgress(lastStartTime, lastFinishTime, true, 10, 5, "NextValue");
+    @Test
+    void should_mapCorrectly_when_validAsyncProgressGiven() {
+      val lastStartTime = LocalDateTime.now().minusHours(1);
+      val lastFinishTime = LocalDateTime.now();
+      val asyncProgress =
+          new AsyncProgress(lastStartTime, lastFinishTime, true, 10, 5, "NextValue");
 
-            val result = mapper.toDTO(asyncProgress);
+      val result = mapper.toDTO(asyncProgress);
 
-            val expected = new AsyncProgressDTO(
-                    lastStartTime,
-                    lastFinishTime,
-                    true,
-                    10,
-                    5,
-                    "NextValue");
+      val expected = new AsyncProgressDTO(lastStartTime, lastFinishTime, true, 10, 5, "NextValue");
 
-            Assertions.assertThat(result).isEqualTo(expected);
-        }
-
-        @Test
-        void should_returnNull_when_nullAsyncProgressGiven() {
-            val dto = mapper.toDTO(null);
-
-            Assertions.assertThat(dto).isNull();
-        }
-
-        @Test
-        void should_handleNullFieldsCorrectly_when_asyncProgressWithNullFieldsGiven() {
-            val asyncProgress = new AsyncProgress(null, null, false, 0, 0, null);
-
-            val result = mapper.toDTO(asyncProgress);
-
-            val expected = new AsyncProgressDTO(
-                    null,
-                    null,
-                    false,
-                    0,
-                    0,
-                    null);
-
-            Assertions.assertThat(result).isEqualTo(expected);
-        }
+      Assertions.assertThat(result).isEqualTo(expected);
     }
+
+    @Test
+    void should_returnNull_when_nullAsyncProgressGiven() {
+      val dto = mapper.toDTO(null);
+
+      Assertions.assertThat(dto).isNull();
+    }
+
+    @Test
+    void should_handleNullFieldsCorrectly_when_asyncProgressWithNullFieldsGiven() {
+      val asyncProgress = new AsyncProgress(null, null, false, 0, 0, null);
+
+      val result = mapper.toDTO(asyncProgress);
+
+      val expected = new AsyncProgressDTO(null, null, false, 0, 0, null);
+
+      Assertions.assertThat(result).isEqualTo(expected);
+    }
+  }
 }

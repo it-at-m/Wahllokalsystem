@@ -24,14 +24,12 @@ import lombok.ToString;
 @AllArgsConstructor
 public class UngueltigeWahlscheine {
 
-    // ========= //
-    // Variables //
-    // ========= //
-    @EmbeddedId
-    private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
+  // ========= //
+  // Variables //
+  // ========= //
+  @EmbeddedId private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
 
-    @Column(name = "ungueltigews")
-    @NotNull
-    @Lob
-    private byte[] ungueltigeWahlscheine;
+  @Column(name = "ungueltigews")
+  @NotNull @Lob
+  private byte[] ungueltigeWahlscheine;
 }

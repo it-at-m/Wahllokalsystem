@@ -7,9 +7,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface AsyncProgressDTOMapper {
 
-    @Mapping(target = "aWerteLoadingActive", source = "AWerteLoadingActive")
-    @Mapping(target = "aWerteTotal", source = "AWerteTotal")
-    @Mapping(target = "aWerteFinished", source = "AWerteFinished")
-    @Mapping(target = "aWerteNext", source = "AWerteNext")
-    AsyncProgressDTO toDTO(AsyncProgress asyncProgress);
+  @Mapping(target = "aWerteLoadingActive", source = "AWerteLoadingActive")
+  @Mapping(target = "aWerteTotal", source = "AWerteTotal")
+  @Mapping(target = "aWerteFinished", source = "AWerteFinished")
+  @Mapping(target = "aWerteNext", source = "AWerteNext")
+  AsyncProgressDTO toDTO(AsyncProgress asyncProgress);
 }

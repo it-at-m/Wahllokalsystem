@@ -6,6 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface LoginAttemptRepository extends CrudRepository<LoginAttempt, UUID> {
 
-    Optional<LoginAttempt> findByUsername(String username);
-
+  Optional<LoginAttempt> findByUsername(String username);
 }

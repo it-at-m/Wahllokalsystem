@@ -5,7 +5,4 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record AWerteModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                          @NotNull long a1,
-                          Long a2) {
-}
+public record AWerteModel(@NotNull BezirkUndWahlID bezirkUndWahlID, @NotNull long a1, Long a2) {}

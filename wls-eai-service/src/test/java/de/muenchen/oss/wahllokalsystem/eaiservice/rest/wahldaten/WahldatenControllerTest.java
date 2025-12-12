@@ -24,81 +24,89 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahldatenControllerTest {
 
-    @Mock
-    WahldatenService wahldatenService;
+  @Mock WahldatenService wahldatenService;
 
-    @InjectMocks
-    WahldatenController unitUnderTest;
+  @InjectMocks WahldatenController unitUnderTest;
 
-    @Nested
-    class LoadWahlberechtigte {
+  @Nested
+  class LoadWahlberechtigte {
 
-        @Test
-        void should_loadWahlberechtigte_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_loadWahlberechtigte_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedServiceResponse = List.of(WahlberechtigteDTO.builder().build());
-            Mockito.when(wahldatenService.getWahlberechtigte(wahlbezirkID)).thenReturn(mockedServiceResponse);
+      val mockedServiceResponse = List.of(WahlberechtigteDTO.builder().build());
+      Mockito.when(wahldatenService.getWahlberechtigte(wahlbezirkID))
+          .thenReturn(mockedServiceResponse);
 
-            Assertions.assertThat(unitUnderTest.loadWahlberechtigte(wahlbezirkID)).isSameAs(mockedServiceResponse);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahlberechtigte(wahlbezirkID))
+          .isSameAs(mockedServiceResponse);
     }
+  }
 
-    @Nested
-    class LoadWahltageSinceIncluding {
-        @Test
-        void should_loadWahltageSinceIncluding_when_givenValidDate() {
-            val includingSince = LocalDate.now();
+  @Nested
+  class LoadWahltageSinceIncluding {
+    @Test
+    void should_loadWahltageSinceIncluding_when_givenValidDate() {
+      val includingSince = LocalDate.now();
 
-            val mockedServiceResponse = Set.of(WahltagDTO.builder().build());
-            Mockito.when(wahldatenService.getWahltage(eq(includingSince))).thenReturn(mockedServiceResponse);
+      val mockedServiceResponse = Set.of(WahltagDTO.builder().build());
+      Mockito.when(wahldatenService.getWahltage(eq(includingSince)))
+          .thenReturn(mockedServiceResponse);
 
-            Assertions.assertThat(unitUnderTest.loadWahltageSinceIncluding(includingSince)).isSameAs(mockedServiceResponse);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahltageSinceIncluding(includingSince))
+          .isSameAs(mockedServiceResponse);
     }
+  }
 
-    @Nested
-    class LoadWahlbezirke {
+  @Nested
+  class LoadWahlbezirke {
 
-        @Test
-        void should_loadWahlbezirke_when_givenValidDateAndNummer() {
-            val forDate = LocalDate.now();
-            val nummer = "nummer";
+    @Test
+    void should_loadWahlbezirke_when_givenValidDateAndNummer() {
+      val forDate = LocalDate.now();
+      val nummer = "nummer";
 
-            val mockedServiceResponse = Set.of(WahlbezirkDTO.builder().build());
-            Mockito.when(wahldatenService.getWahlbezirke(eq(forDate), eq(nummer))).thenReturn(mockedServiceResponse);
+      val mockedServiceResponse = Set.of(WahlbezirkDTO.builder().build());
+      Mockito.when(wahldatenService.getWahlbezirke(eq(forDate), eq(nummer)))
+          .thenReturn(mockedServiceResponse);
 
-            Assertions.assertThat(unitUnderTest.loadWahlbezirke(forDate, nummer)).isSameAs(mockedServiceResponse);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahlbezirke(forDate, nummer))
+          .isSameAs(mockedServiceResponse);
     }
+  }
 
-    @Nested
-    class LoadWahlen {
+  @Nested
+  class LoadWahlen {
 
-        @Test
-        void should_loadWahlen_when_givenValidDateAndNummer() {
-            val forDate = LocalDate.now();
-            val nummer = "nummer";
+    @Test
+    void should_loadWahlen_when_givenValidDateAndNummer() {
+      val forDate = LocalDate.now();
+      val nummer = "nummer";
 
-            val mockedServiceResponse = Set.of(WahlDTO.builder().build());
-            Mockito.when(wahldatenService.getWahlen(eq(forDate), eq(nummer))).thenReturn(mockedServiceResponse);
+      val mockedServiceResponse = Set.of(WahlDTO.builder().build());
+      Mockito.when(wahldatenService.getWahlen(eq(forDate), eq(nummer)))
+          .thenReturn(mockedServiceResponse);
 
-            Assertions.assertThat(unitUnderTest.loadWahlen(forDate, nummer)).isSameAs(mockedServiceResponse);
-        }
+      Assertions.assertThat(unitUnderTest.loadWahlen(forDate, nummer))
+          .isSameAs(mockedServiceResponse);
     }
+  }
 
-    @Nested
-    class LoadBasisdaten {
+  @Nested
+  class LoadBasisdaten {
 
-        @Test
-        void should_loadBasisdaten_when_givenValidDateAndNummer() {
-            val forDate = LocalDate.now();
-            val nummer = "nummer";
+    @Test
+    void should_loadBasisdaten_when_givenValidDateAndNummer() {
+      val forDate = LocalDate.now();
+      val nummer = "nummer";
 
-            val mockedServicResponse = new BasisdatenDTO(null, null, null, null);
-            Mockito.when(wahldatenService.getBasisdaten(eq(forDate), eq(nummer))).thenReturn(mockedServicResponse);
+      val mockedServicResponse = new BasisdatenDTO(null, null, null, null);
+      Mockito.when(wahldatenService.getBasisdaten(eq(forDate), eq(nummer)))
+          .thenReturn(mockedServicResponse);
 
-            Assertions.assertThat(unitUnderTest.loadBasisdaten(forDate, nummer)).isSameAs(mockedServicResponse);
-        }
+      Assertions.assertThat(unitUnderTest.loadBasisdaten(forDate, nummer))
+          .isSameAs(mockedServicResponse);
     }
+  }
 }

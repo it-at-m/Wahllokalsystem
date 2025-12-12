@@ -32,26 +32,22 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Referendumvorlagen {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    @ToString.Include
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  @ToString.Include
+  private UUID id;
 
-    @NaturalId
-    @Embedded
-    private BezirkUndWahlID bezirkUndWahlID;
+  @NaturalId @Embedded private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    private String stimmzettelgebietID;
+  @NotNull private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    @NotNull
-    private Set<Referendumvorlage> referendumvorlagen = new HashSet<>();
+  @OneToMany(mappedBy = "referendumvorlagen", orphanRemoval = true, cascade = CascadeType.PERSIST)
+  @NotNull private Set<Referendumvorlage> referendumvorlagen = new HashSet<>();
 
-    public void addReferendumvorlage(Referendumvorlage referendumvorlage) {
-        referendumvorlage.setReferendumvorlagen(this);
-        referendumvorlagen.add(referendumvorlage);
-    }
+  public void addReferendumvorlage(Referendumvorlage referendumvorlage) {
+    referendumvorlage.setReferendumvorlagen(this);
+    referendumvorlagen.add(referendumvorlage);
+  }
 }

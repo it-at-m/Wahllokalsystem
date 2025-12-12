@@ -1,6 +1,14 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -20,6 +28,17 @@ const { prepareUser } = useUserTestDataFactory();
 
 describe("userStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserStore>;
+
+  beforeAll(() => {
+    const mockPostMessage = vi.fn();
+    const mockController = { postMessage: mockPostMessage };
+    Object.defineProperty(navigator, "serviceWorker", {
+      value: {
+        controller: mockController,
+      },
+      writable: true,
+    });
+  });
 
   beforeEach(() => {
     setActivePinia(createPinia());

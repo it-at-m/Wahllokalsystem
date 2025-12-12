@@ -10,24 +10,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AESEncryptionConfiguration {
 
-    private static final String AES = "AES";
+  private static final String AES = "AES";
 
-    @Value("${service.config.crypto.key}")
-    String key;
+  @Value("${service.config.crypto.key}")
+  String key;
 
-    @Bean
-    Cipher encryptionCipher() throws Exception {
-        val secret = new SecretKeySpec(key.getBytes(), 0, 16, AES);
-        val encryptCipher = Cipher.getInstance(AES);
-        encryptCipher.init(Cipher.ENCRYPT_MODE, secret);
-        return encryptCipher;
-    }
+  @Bean
+  Cipher encryptionCipher() throws Exception {
+    val secret = new SecretKeySpec(key.getBytes(), 0, 16, AES);
+    val encryptCipher = Cipher.getInstance(AES);
+    encryptCipher.init(Cipher.ENCRYPT_MODE, secret);
+    return encryptCipher;
+  }
 
-    @Bean
-    Cipher decryptionCipher() throws Exception {
-        val secret = new SecretKeySpec(key.getBytes(), 0, 16, AES);
-        val decryptCipher = Cipher.getInstance(AES);
-        decryptCipher.init(Cipher.DECRYPT_MODE, secret);
-        return decryptCipher;
-    }
+  @Bean
+  Cipher decryptionCipher() throws Exception {
+    val secret = new SecretKeySpec(key.getBytes(), 0, 16, AES);
+    val decryptCipher = Cipher.getInstance(AES);
+    decryptCipher.init(Cipher.DECRYPT_MODE, secret);
+    return decryptCipher;
+  }
 }

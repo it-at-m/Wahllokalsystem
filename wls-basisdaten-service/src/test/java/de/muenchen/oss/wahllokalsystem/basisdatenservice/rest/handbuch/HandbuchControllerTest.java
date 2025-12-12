@@ -28,83 +28,88 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 @ExtendWith(MockitoExtension.class)
 class HandbuchControllerTest {
 
-    @Mock
-    HandbuchService handbuchService;
+  @Mock HandbuchService handbuchService;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    HandbuchDTOMapper handbuchDTOMapper;
+  @Mock HandbuchDTOMapper handbuchDTOMapper;
 
-    @Mock
-    FileMapper fileMapper;
+  @Mock FileMapper fileMapper;
 
-    @InjectMocks
-    HandbuchController unitUnderTest;
+  @InjectMocks HandbuchController unitUnderTest;
 
-    @Nested
-    class GetHandbuch {
+  @Nested
+  class GetHandbuch {
 
-        @Test
-        void should_callService_when_callingGetHandbuch() {
-            val filenameSuffix = "file.pdf";
-            val wahltagID = "wahltagID";
-            val wahlbezirkArt = WahlbezirkArtDTO.UWB;
+    @Test
+    void should_callService_when_callingGetHandbuch() {
+      val filenameSuffix = "file.pdf";
+      val wahltagID = "wahltagID";
+      val wahlbezirkArt = WahlbezirkArtDTO.UWB;
 
-            val mockedHandbuchReferenceModel = HandbuchReferenceModel.builder().build();
-            val mockedServiceResponse = "response".getBytes();
-            val mockedResponseEntity = ResponseEntity.ok(mockedServiceResponse);
+      val mockedHandbuchReferenceModel = HandbuchReferenceModel.builder().build();
+      val mockedServiceResponse = "response".getBytes();
+      val mockedResponseEntity = ResponseEntity.ok(mockedServiceResponse);
 
-            Mockito.when(handbuchDTOMapper.toModel(eq(wahltagID), eq(wahlbezirkArt))).thenReturn(mockedHandbuchReferenceModel);
-            Mockito.when(handbuchService.getHandbuch(mockedHandbuchReferenceModel)).thenReturn(mockedServiceResponse);
-            Mockito.when(fileMapper.toResponseEntity(new FileResponseEntityModel(mockedServiceResponse, "application/pdf", "UWBfile.pdf")))
-                    .thenReturn(mockedResponseEntity);
+      Mockito.when(handbuchDTOMapper.toModel(eq(wahltagID), eq(wahlbezirkArt)))
+          .thenReturn(mockedHandbuchReferenceModel);
+      Mockito.when(handbuchService.getHandbuch(mockedHandbuchReferenceModel))
+          .thenReturn(mockedServiceResponse);
+      Mockito.when(
+              fileMapper.toResponseEntity(
+                  new FileResponseEntityModel(
+                      mockedServiceResponse, "application/pdf", "UWBfile.pdf")))
+          .thenReturn(mockedResponseEntity);
 
-            unitUnderTest.manualFileNameSuffix = filenameSuffix;
+      unitUnderTest.manualFileNameSuffix = filenameSuffix;
 
-            val result = unitUnderTest.getHandbuch(wahltagID, wahlbezirkArt);
+      val result = unitUnderTest.getHandbuch(wahltagID, wahlbezirkArt);
 
-            Assertions.assertThat(result).isEqualTo(mockedResponseEntity);
-        }
+      Assertions.assertThat(result).isEqualTo(mockedResponseEntity);
+    }
+  }
+
+  @Nested
+  class SetHandbuch {
+
+    @Test
+    void should_throwNoException_when_requestIsSentToService() throws IOException {
+      final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+      val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
+
+      val mockedHandbuchReferenceModel = HandbuchReferenceModel.builder().build();
+      val mockedHandbuchWriteModel = HandbuchWriteModel.builder().build();
+      val mockedRequestContent = "helloMyLovelyTestcase".getBytes();
+
+      Mockito.when(handbuchDTOMapper.toModel(eq("wahltagID"), eq(WahlbezirkArtDTO.UWB)))
+          .thenReturn(mockedHandbuchReferenceModel);
+      Mockito.when(
+              handbuchDTOMapper.toModel(eq(mockedHandbuchReferenceModel), eq(mockedRequestContent)))
+          .thenReturn(mockedHandbuchWriteModel);
+      Mockito.when(fileMapper.fromRequest(servletRequest)).thenReturn(mockedRequestContent);
+
+      unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest);
+
+      Mockito.verify(handbuchService).setHandbuch(mockedHandbuchWriteModel);
     }
 
-    @Nested
-    class SetHandbuch {
+    @Test
+    void should_returnTechnischeWlsException_when_ioExceptionIsThrown() throws IOException {
+      final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+      val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
 
-        @Test
-        void should_throwNoException_when_requestIsSentToService() throws IOException {
-            final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
-            val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
+      val mockedFileMapperException = new IOException("ioException of fileMapper");
+      val mockedMappedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
-            val mockedHandbuchReferenceModel = HandbuchReferenceModel.builder().build();
-            val mockedHandbuchWriteModel = HandbuchWriteModel.builder().build();
-            val mockedRequestContent = "helloMyLovelyTestcase".getBytes();
+      Mockito.doThrow(mockedFileMapperException).when(fileMapper).fromRequest(servletRequest);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH))
+          .thenReturn(mockedMappedWlsException);
 
-            Mockito.when(handbuchDTOMapper.toModel(eq("wahltagID"), eq(WahlbezirkArtDTO.UWB))).thenReturn(mockedHandbuchReferenceModel);
-            Mockito.when(handbuchDTOMapper.toModel(eq(mockedHandbuchReferenceModel), eq(mockedRequestContent))).thenReturn(mockedHandbuchWriteModel);
-            Mockito.when(fileMapper.fromRequest(servletRequest)).thenReturn(mockedRequestContent);
-
-            unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest);
-
-            Mockito.verify(handbuchService).setHandbuch(mockedHandbuchWriteModel);
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_ioExceptionIsThrown() throws IOException {
-            final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
-            val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);
-
-            val mockedFileMapperException = new IOException("ioException of fileMapper");
-            val mockedMappedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-
-            Mockito.doThrow(mockedFileMapperException).when(fileMapper).fromRequest(servletRequest);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH))
-                    .thenReturn(mockedMappedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest))
-                    .isSameAs(mockedMappedWlsException);
-        }
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.setHandbuch("wahltagID", WahlbezirkArtDTO.UWB, servletRequest))
+          .isSameAs(mockedMappedWlsException);
     }
-
+  }
 }

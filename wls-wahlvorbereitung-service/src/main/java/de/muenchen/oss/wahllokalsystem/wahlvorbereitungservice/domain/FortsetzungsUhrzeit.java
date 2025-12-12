@@ -16,11 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FortsetzungsUhrzeit {
 
-    @Id
-    @NotNull
-    @Size(max = 255)
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 255) private String wahlbezirkID;
 
-    @NotNull
-    private java.time.LocalDateTime fortsetzungsUhrzeit;
+  @NotNull private java.time.LocalDateTime fortsetzungsUhrzeit;
 }

@@ -5,8 +5,8 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record WahlbezirkEreignisseDTO(@NotNull String wahlbezirkID,
-                                      boolean keineVorfaelle,
-                                      boolean keineVorkommnisse,
-                                      List<EreignisDTO> ereigniseintraege) {
-}
+public record WahlbezirkEreignisseDTO(
+    @NotNull String wahlbezirkID,
+    boolean keineVorfaelle,
+    boolean keineVorkommnisse,
+    List<EreignisDTO> ereigniseintraege) {}

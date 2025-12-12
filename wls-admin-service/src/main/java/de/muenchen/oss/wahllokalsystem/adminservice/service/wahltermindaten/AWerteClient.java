@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface AWerteClient {
 
-    /**
-     * @param wahlbezirkIDs reference to a list of Wahlbezirke
-     * @throws WlsException
-     *             {@link de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException}
-     *             if there were trouble during communication
-     */
-    void initialiseAWerte(List<String> wahlbezirkIDs);
+  /**
+   * @param wahlbezirkIDs reference to a list of Wahlbezirke
+   * @throws WlsException {@link
+   *     de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException} if there were
+   *     trouble during communication
+   */
+  void initialiseAWerte(List<String> wahlbezirkIDs);
 }

@@ -35,113 +35,135 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class WahlenControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @AfterEach
-    void teardown() {
-        reset();
+  @AfterEach
+  void teardown() {
+    reset();
+  }
+
+  @Nested
+  class GetWahlen {
+
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GETWAHLEN})
+    void should_returnData_when_wahlenClientReturnsData() throws Exception {
+      val wahltagID = "wahltagID";
+      val wahlID = "wahlID";
+      val nowDate = LocalDate.now();
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
+      val mockedWahlen =
+          List.of(new WahlDTO().wahltag(nowDate).wahlart(WahlDTO.WahlartEnum.BTW).wahlID(wahlID));
+
+      stubFor(
+          WireMock.get("/businessActions/wahlen/" + wahltagID)
+              .willReturn(createWireMockResponse(mockedWahlen, HttpStatus.OK)));
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO[].class);
+
+      val expectedResponseBody =
+          new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO(
+              wahlID, null, null, null, nowDate, WahlartDTO.BTW, null);
+
+      Assertions.assertThat(responseBody)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class GetWahlen {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GETWAHLEN})
+    void should_returnNoContent_when_wahlenClientReturnsEmptyList() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
+      val mockedWahltage = List.of();
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.ADMIN_GETWAHLEN }
-        )
-        void should_returnData_when_wahlenClientReturnsData() throws Exception {
-            val wahltagID = "wahltagID";
-            val wahlID = "wahlID";
-            val nowDate = LocalDate.now();
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
-            val mockedWahlen = List.of(
-                    new WahlDTO().wahltag(nowDate)
-                            .wahlart(WahlDTO.WahlartEnum.BTW)
-                            .wahlID(wahlID));
+      stubFor(
+          WireMock.get("/businessActions/wahlen/" + wahltagID)
+              .willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
 
-            stubFor(WireMock.get("/businessActions/wahlen/" + wahltagID).willReturn(createWireMockResponse(mockedWahlen, HttpStatus.OK)));
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO[].class);
-
-            val expectedResponseBody = new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO(wahlID, null, null, null, nowDate, WahlartDTO.BTW,
-                    null);
-
-            Assertions.assertThat(responseBody).usingRecursiveComparison().isEqualTo(expectedResponseBody);
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.ADMIN_GETWAHLEN }
-        )
-        void should_returnNoContent_when_wahlenClientReturnsEmptyList() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
-            val mockedWahltage = List.of();
-
-            stubFor(WireMock.get("/businessActions/wahlen/" + wahltagID).willReturn(createWireMockResponse(mockedWahltage, HttpStatus.OK)));
-
-            api.perform(request).andExpect(status().isNoContent()).andReturn();
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_GETWAHLEN })
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val invalidWahltagID = " ";
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + invalidWahltagID);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
-
-            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
-        }
-
+      api.perform(request).andExpect(status().isNoContent()).andReturn();
     }
 
-    @Nested
-    class UpdateWahlen {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GETWAHLEN})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val invalidWahltagID = " ";
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + invalidWahltagID);
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_UPDATEWAHLEN })
-        void should_returnOK_when_allRemoteClientsAreCalledSuccessfully() throws Exception {
-            val wahltagID = "wahltagID";
-            val wahlen = List.of(new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(),
-                    WahlartDTO.BAW, new FarbeDTO(1, 1, 1)));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.MISSING_ARGUMENT.code(),
+              "WLS-ADMIN",
+              ExceptionConstants.MISSING_ARGUMENT.message());
 
-            val request = post("/businessActions/wahlen/" + wahltagID).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(wahlen));
+      val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val resultBodyAsWlsExceptionDTO =
+          objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            stubFor(WireMock.post("/businessActions/wahlen/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            api.perform(request).andExpect(status().isOk()).andReturn();
-        }
-
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
     }
+  }
 
-    private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
-        return aResponse()
-                .withStatus(responseStatus.value());
-    }
+  @Nested
+  class UpdateWahlen {
 
-    private ResponseDefinitionBuilder createWireMockResponse(final Object responseBody, final HttpStatus responseStatus) throws Exception {
-        return aResponse()
-                .withBody(objectMapper.writeValueAsString(responseBody))
-                .withHeader("Content-Type", "application/json")
-                .withStatus(responseStatus.value());
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_UPDATEWAHLEN})
+    void should_returnOK_when_allRemoteClientsAreCalledSuccessfully() throws Exception {
+      val wahltagID = "wahltagID";
+      val wahlen =
+          List.of(
+              new de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO(
+                  "wahlID1",
+                  "name1",
+                  3L,
+                  1L,
+                  LocalDate.now(),
+                  WahlartDTO.BAW,
+                  new FarbeDTO(1, 1, 1)));
+
+      val request =
+          post("/businessActions/wahlen/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(wahlen));
+
+      stubFor(
+          WireMock.post("/businessActions/wahlen/" + wahltagID)
+              .willReturn(createWireMockResponse(HttpStatus.OK)));
+
+      api.perform(request).andExpect(status().isOk()).andReturn();
     }
+  }
+
+  private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
+    return aResponse().withStatus(responseStatus.value());
+  }
+
+  private ResponseDefinitionBuilder createWireMockResponse(
+      final Object responseBody, final HttpStatus responseStatus) throws Exception {
+    return aResponse()
+        .withBody(objectMapper.writeValueAsString(responseBody))
+        .withHeader("Content-Type", "application/json")
+        .withStatus(responseStatus.value());
+  }
 }

@@ -21,14 +21,14 @@ const storeID = "ergebnismeldung";
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
   const { getErgebnisse, postErgebnisse } = useErgebnisService();
-  const { getBegruendungStimmzettelumschlaege } =
+  const { getBegruendungStimmzettelumschlaege, postBegruendung } =
     useErgebnisermittlungService();
   const { getStimmzettelTermForWahl } = useTextFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
   const isErgebnisseSaving = ref<boolean>(false);
-
   const begruendungen = ref<Begruendung[]>([]);
+  const isBegruendungSaving = ref<boolean>(false);
 
   function deleteErgebnisseWithNumIndexAbove(
     ergebnisseWahlID: string,
@@ -215,11 +215,39 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveBegruendung(
+    begruendung: Begruendung,
+    sendNotification = true
+  ) {
+    try {
+      isBegruendungSaving.value = true;
+      const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(
+        begruendung.wahlID
+      );
+      if (wahlbezirkID) {
+        const existingBegruendungIndex = begruendungen.value.findIndex(
+          (b) => b.wahlID === begruendung.wahlID
+        );
+        if (existingBegruendungIndex >= 0) {
+          begruendungen.value[existingBegruendungIndex] = begruendung;
+        } else {
+          begruendungen.value.push(begruendung);
+        }
+        await postBegruendung(begruendung, wahlbezirkID, sendNotification);
+      }
+    } catch {
+      throw new Error(`Fehler beim Speichern der Begründung.`);
+    } finally {
+      isBegruendungSaving.value = false;
+    }
+  }
+
   return {
     ergebnisse,
     begruendungen,
     deleteErgebnisseWithNumIndexAbove,
     isErgebnisseSaving,
+    isBegruendungSaving,
     getErgebnisseByWahlIdAndStapelartOrUndefined,
     getErgebnisseAndCreateIfMissing,
     findAndUpdateErgebnisseByWahlIdAndStapelArt,
@@ -227,6 +255,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     sendErgebnisseByStapelArt,
     switchStapelOfErgebnis,
     loadBegruendungForWahl,
+    saveBegruendung,
   };
 });
 

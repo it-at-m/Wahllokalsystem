@@ -34,135 +34,182 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @AutoConfigureMockMvc
 public class UngueltigeWahlscheineControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceOid;
+  @Value("${service.info.oid}")
+  String serviceOid;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
+  @Autowired UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE);
-        ungueltigeWahlscheineRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE);
+    ungueltigeWahlscheineRepository.deleteAll();
+  }
+
+  @Nested
+  class GetUngueltigeWahlscheine {
+
+    @Test
+    void should_returnUngueltigeWahlscheine_when_dataIsPresentInRepo() throws Exception {
+      val ungueltigeWahlscheineData = "csv-data".getBytes();
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
+      ungueltigeWahlscheineRepository.save(
+          new UngueltigeWahlscheine(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB),
+              ungueltigeWahlscheineData));
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
+      val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/wahltagID/UWB");
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsByteArray())
+          .isEqualTo(ungueltigeWahlscheineData);
+      Assertions.assertThat(response.getResponse().getHeader("Content-Type")).isEqualTo("text/csv");
+      Assertions.assertThat(response.getResponse().getHeader("Content-Disposition"))
+          .isEqualTo("attachment; filename=UWBUngueltigews.csv");
     }
 
-    @Nested
-    class GetUngueltigeWahlscheine {
+    @Test
+    void should_returnTechnischeWlsException_when_noDataFound() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
+      val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/wahltagID/UWB");
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-        @Test
-        void should_returnUngueltigeWahlscheine_when_dataIsPresentInRepo() throws Exception {
-            val ungueltigeWahlscheineData = "csv-data".getBytes();
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN.code(),
+              serviceOid,
+              ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN.message());
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
-            ungueltigeWahlscheineRepository.save(
-                    new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), ungueltigeWahlscheineData));
-
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/wahltagID/UWB");
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-
-            Assertions.assertThat(response.getResponse().getContentAsByteArray()).isEqualTo(ungueltigeWahlscheineData);
-            Assertions.assertThat(response.getResponse().getHeader("Content-Type")).isEqualTo("text/csv");
-            Assertions.assertThat(response.getResponse().getHeader("Content-Disposition")).isEqualTo("attachment; filename=UWBUngueltigews.csv");
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_noDataFound() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/wahltagID/UWB");
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN.code(),
-                    serviceOid, ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN.message());
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        @Test
-        void should_returnFachlicheWlsException_when_pathVariableIsInvalid() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/   /UWB");
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
-                    serviceOid, ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
     }
 
-    @Nested
-    class SetUngueltigeWahlscheine {
+    @Test
+    void should_returnFachlicheWlsException_when_pathVariableIsInvalid() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
+      val request = MockMvcRequestBuilders.get("/businessActions/ungueltigews/   /UWB");
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-        @Test
-        void should_setNewData_when_callingPost() throws Exception {
-            val newData = "csv-data".getBytes();
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.code(),
+              serviceOid,
+              ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB").file("ungueltigeWahlscheine", newData).with(csrf());
-            mockMvc.perform(request).andExpect(status().isOk());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE);
-            val savedUngueltigeWahlscheine = ungueltigeWahlscheineRepository.findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB)).get();
+  @Nested
+  class SetUngueltigeWahlscheine {
 
-            Assertions.assertThat(savedUngueltigeWahlscheine.getUngueltigeWahlscheine()).isEqualTo(newData);
-        }
+    @Test
+    void should_setNewData_when_callingPost() throws Exception {
+      val newData = "csv-data".getBytes();
 
-        @Test
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val newData = "csv-data".getBytes();
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB")
+              .file("ungueltigeWahlscheine", newData)
+              .with(csrf());
+      mockMvc.perform(request).andExpect(status().isOk());
 
-            val oldData = "old-csv-data".getBytes();
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
-            ungueltigeWahlscheineRepository.save(new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), oldData));
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE);
+      val savedUngueltigeWahlscheine =
+          ungueltigeWahlscheineRepository
+              .findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB))
+              .get();
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB").file("ungueltigeWahlscheine", newData).with(csrf());
-            mockMvc.perform(request).andExpect(status().isOk());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE);
-            val savedUngueltigeWahlscheine = ungueltigeWahlscheineRepository.findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB)).get();
-
-            Assertions.assertThat(savedUngueltigeWahlscheine.getUngueltigeWahlscheine()).isEqualTo(newData);
-            Assertions.assertThat(ungueltigeWahlscheineRepository.count()).isEqualTo(1);
-        }
-
-        @Test
-        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
-            val newData = "csv-data".getBytes();
-
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/    /UWB").file("ungueltigeWahlscheine", newData).with(csrf());
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG.code(),
-                    serviceOid, ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG.message());
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_notSaveableCauseOfMissingAttachment() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB").with(csrf());
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT,
-                    serviceOid, "");
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(savedUngueltigeWahlscheine.getUngueltigeWahlscheine())
+          .isEqualTo(newData);
     }
 
+    @Test
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val newData = "csv-data".getBytes();
+
+      val oldData = "old-csv-data".getBytes();
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
+      ungueltigeWahlscheineRepository.save(
+          new UngueltigeWahlscheine(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), oldData));
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB")
+              .file("ungueltigeWahlscheine", newData)
+              .with(csrf());
+      mockMvc.perform(request).andExpect(status().isOk());
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNGUELTIGEWAHLSCHEINE);
+      val savedUngueltigeWahlscheine =
+          ungueltigeWahlscheineRepository
+              .findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB))
+              .get();
+
+      Assertions.assertThat(savedUngueltigeWahlscheine.getUngueltigeWahlscheine())
+          .isEqualTo(newData);
+      Assertions.assertThat(ungueltigeWahlscheineRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
+      val newData = "csv-data".getBytes();
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/    /UWB")
+              .file("ungueltigeWahlscheine", newData)
+              .with(csrf());
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG.code(),
+              serviceOid,
+              ExceptionConstants.POSTUNGUELTIGEWS_PARAMETER_UNVOLLSTAENDIG.message());
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_returnTechnischeWlsException_when_notSaveableCauseOfMissingAttachment()
+        throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/ungueltigews/wahltagID/UWB")
+              .with(csrf());
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, serviceOid, "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 }

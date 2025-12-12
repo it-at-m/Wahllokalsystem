@@ -12,53 +12,66 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { UrnenwahlvorbereitungDTOMapperImpl.class, WahlurneDTOMapperImpl.class })
+@SpringBootTest(classes = {UrnenwahlvorbereitungDTOMapperImpl.class, WahlurneDTOMapperImpl.class})
 class UrnenwahlvorbereitungDTOMapperTest {
 
-    @Autowired
-    private UrnenwahlvorbereitungDTOMapper unitUnderTest;
+  @Autowired private UrnenwahlvorbereitungDTOMapper unitUnderTest;
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnUrnenwahlvorbereitungDTO_when_givenUrnenwahlvorbereitungModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val anzahlKabinen = 12;
-            val anzahlWahltische = 21;
-            val anzahlNebenraeume = 4;
-            val urne1 = new WahlurneModel("wahlID1", 2, true);
-            val urne2 = new WahlurneModel("wahlID2", 4, false);
-            val urnen = List.of(urne1, urne2);
-            val modelToMap = new UrnenwahlvorbereitungModel(wahlbezirkID, anzahlKabinen, anzahlWahltische, anzahlNebenraeume, urnen);
+    @Test
+    void should_returnUrnenwahlvorbereitungDTO_when_givenUrnenwahlvorbereitungModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val anzahlKabinen = 12;
+      val anzahlWahltische = 21;
+      val anzahlNebenraeume = 4;
+      val urne1 = new WahlurneModel("wahlID1", 2, true);
+      val urne2 = new WahlurneModel("wahlID2", 4, false);
+      val urnen = List.of(urne1, urne2);
+      val modelToMap =
+          new UrnenwahlvorbereitungModel(
+              wahlbezirkID, anzahlKabinen, anzahlWahltische, anzahlNebenraeume, urnen);
 
-            val result = unitUnderTest.toDTO(modelToMap);
+      val result = unitUnderTest.toDTO(modelToMap);
 
-            val expectedUrnen = List.of(new WahlurneDTO("wahlID1", 2, true), new WahlurneDTO("wahlID2", 4, false));
-            val expectedResult = new UrnenwahlvorbereitungDTO(wahlbezirkID, anzahlKabinen, anzahlWahltische, anzahlNebenraeume, expectedUrnen);
+      val expectedUrnen =
+          List.of(new WahlurneDTO("wahlID1", 2, true), new WahlurneDTO("wahlID2", 4, false));
+      val expectedResult =
+          new UrnenwahlvorbereitungDTO(
+              wahlbezirkID, anzahlKabinen, anzahlWahltische, anzahlNebenraeume, expectedUrnen);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnUrnenwahlvorbereitungModel_when_givenUrnenwahlvorbereitungDTO() {
-            val anzahlKabinen = 12;
-            val anzahlWahltische = 21;
-            val anzahlNebenraeume = 4;
-            val urnen = List.of(new WahlurneDTO("wahlID1", 2, true), new WahlurneDTO("wahlID2", 4, false));
-            val dtoToMap = new UrnenwahlvorbereitungWriteDTO(anzahlKabinen, anzahlWahltische, anzahlNebenraeume, urnen);
-            val wahlbezirkIDToMap = "wahlbezirkID";
+    @Test
+    void should_returnUrnenwahlvorbereitungModel_when_givenUrnenwahlvorbereitungDTO() {
+      val anzahlKabinen = 12;
+      val anzahlWahltische = 21;
+      val anzahlNebenraeume = 4;
+      val urnen =
+          List.of(new WahlurneDTO("wahlID1", 2, true), new WahlurneDTO("wahlID2", 4, false));
+      val dtoToMap =
+          new UrnenwahlvorbereitungWriteDTO(
+              anzahlKabinen, anzahlWahltische, anzahlNebenraeume, urnen);
+      val wahlbezirkIDToMap = "wahlbezirkID";
 
-            val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
+      val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 
-            val expectedResult = new UrnenwahlvorbereitungModel(wahlbezirkIDToMap, anzahlKabinen, anzahlWahltische, anzahlNebenraeume,
-                    List.of(new WahlurneModel("wahlID1", 2, true), new WahlurneModel("wahlID2", 4, false)));
+      val expectedResult =
+          new UrnenwahlvorbereitungModel(
+              wahlbezirkIDToMap,
+              anzahlKabinen,
+              anzahlWahltische,
+              anzahlNebenraeume,
+              List.of(
+                  new WahlurneModel("wahlID1", 2, true), new WahlurneModel("wahlID2", 4, false)));
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

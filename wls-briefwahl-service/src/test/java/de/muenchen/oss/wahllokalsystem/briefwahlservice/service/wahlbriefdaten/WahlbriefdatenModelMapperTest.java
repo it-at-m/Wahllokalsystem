@@ -10,50 +10,75 @@ import org.mapstruct.factory.Mappers;
 
 class WahlbriefdatenModelMapperTest {
 
-    private final WahlbriefdatenModelMapper unitUnderTest = Mappers.getMapper(WahlbriefdatenModelMapper.class);
+  private final WahlbriefdatenModelMapper unitUnderTest =
+      Mappers.getMapper(WahlbriefdatenModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenEntity() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefe = 12L;
-            val verzeichnisseUngueltig = 3L;
-            val nachtraege = 23L;
-            val nachtraeglichUeberbrachte = 35L;
-            val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
-            val entityToMap = new Wahlbriefdaten(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
+    @Test
+    void should_returnWahlbriefdatenModel_when_givenWahlbriefdatenEntity() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlbriefe = 12L;
+      val verzeichnisseUngueltig = 3L;
+      val nachtraege = 23L;
+      val nachtraeglichUeberbrachte = 35L;
+      val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
+      val entityToMap =
+          new Wahlbriefdaten(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expectedResult = new WahlbriefdatenModel(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
+      val expectedResult =
+          new WahlbriefdatenModel(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnWahlbriefdatenEntity_when_givenWahlbriefdatenModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlbriefe = 12L;
-            val verzeichnisseUngueltig = 3L;
-            val nachtraege = 23L;
-            val nachtraeglichUeberbrachte = 35L;
-            val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
-            val modelToMap = new WahlbriefdatenModel(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
+    @Test
+    void should_returnWahlbriefdatenEntity_when_givenWahlbriefdatenModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlbriefe = 12L;
+      val verzeichnisseUngueltig = 3L;
+      val nachtraege = 23L;
+      val nachtraeglichUeberbrachte = 35L;
+      val zeitNachtraeglichUeberbrachte = LocalDateTime.now();
+      val modelToMap =
+          new WahlbriefdatenModel(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new Wahlbriefdaten(wahlbezirkID, wahlbriefe, verzeichnisseUngueltig, nachtraege, nachtraeglichUeberbrachte,
-                    zeitNachtraeglichUeberbrachte);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          new Wahlbriefdaten(
+              wahlbezirkID,
+              wahlbriefe,
+              verzeichnisseUngueltig,
+              nachtraege,
+              nachtraeglichUeberbrachte,
+              zeitNachtraeglichUeberbrachte);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

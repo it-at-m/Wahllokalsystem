@@ -33,29 +33,21 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Wahlvorschlaege {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  private UUID id;
 
-    @Embedded
-    @NaturalId
-    @NotNull
-    @ToString.Include
-    private BezirkUndWahlID bezirkUndWahlID;
+  @Embedded @NaturalId @NotNull @ToString.Include private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    @ToString.Include
-    private String stimmzettelgebietID;
+  @NotNull @ToString.Include private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    @NotNull
-    @Size(min = 1)
-    private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
+  @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
+  @NotNull @Size(min = 1) private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
 
-    public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
-        wahlvorschlag.setWahlvorschlaeage(this);
-        wahlvorschlaege.add(wahlvorschlag);
-    }
+  public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
+    wahlvorschlag.setWahlvorschlaeage(this);
+    wahlvorschlaege.add(wahlvorschlag);
+  }
 }

@@ -22,61 +22,71 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class StatusValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    StatusValidator unitUnderTest;
+  @InjectMocks StatusValidator unitUnderTest;
 
-    @Nested
-    class ValidBezirkUndWahlIdOrThrow {
+  @Nested
+  class ValidBezirkUndWahlIdOrThrow {
 
-        final FachlicheWlsException providedException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+    final FachlicheWlsException providedException =
+        FachlicheWlsException.withCode("").buildWithMessage("sth failed");
 
-        @Test
-        void should_notThrowException_when_bezirkUndWahlIDIsValid() {
-            val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+    @Test
+    void should_notThrowException_when_bezirkUndWahlIDIsValid() {
+      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validBezirkUndWahlIdOrThrow(id, null));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
-        void should_throwProvidedException_when_bezirkUndWahlIdIsNotValid(final ArgumentsAccessor arguments) {
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validBezirkUndWahlIdOrThrow(arguments.get(0, BezirkUndWahlID.class), providedException))
-                    .isSameAs(providedException);
-        }
-
-        public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(null, "argument is null"),
-                    Arguments.of(new BezirkUndWahlID(null, "wahlbezirkID"), "wahlID is null"),
-                    Arguments.of(new BezirkUndWahlID("", "wahlbezirkID"), "wahlID is empty"),
-                    Arguments.of(new BezirkUndWahlID("   ", "wahlbezirkID"), "wahlID is blank"),
-                    Arguments.of(new BezirkUndWahlID("wahlID", null), "wahlbezirkID is null"),
-                    Arguments.of(new BezirkUndWahlID("wahlID", ""), "wahlbezirkID is is empty"),
-                    Arguments.of(new BezirkUndWahlID("wahlID", "   "), "wahlbezirkID is blank"));
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validBezirkUndWahlIdOrThrow(id, null));
     }
 
-    @Nested
-    class ValidStatusOrThrow {
-
-        @Test
-        void should_notThrowException_when_statusIsEmptyButNotNull() {
-            val statusModelToValidate = new StatusModel(null, null, null);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validStatusOrThrow(statusModelToValidate));
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_statusIsNull() {
-            val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validStatusOrThrow(null)).isSameAs(mockedFachlicheWlsException);
-        }
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
+    void should_throwProvidedException_when_bezirkUndWahlIdIsNotValid(
+        final ArgumentsAccessor arguments) {
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validBezirkUndWahlIdOrThrow(
+                      arguments.get(0, BezirkUndWahlID.class), providedException))
+          .isSameAs(providedException);
     }
+
+    public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(null, "argument is null"),
+          Arguments.of(new BezirkUndWahlID(null, "wahlbezirkID"), "wahlID is null"),
+          Arguments.of(new BezirkUndWahlID("", "wahlbezirkID"), "wahlID is empty"),
+          Arguments.of(new BezirkUndWahlID("   ", "wahlbezirkID"), "wahlID is blank"),
+          Arguments.of(new BezirkUndWahlID("wahlID", null), "wahlbezirkID is null"),
+          Arguments.of(new BezirkUndWahlID("wahlID", ""), "wahlbezirkID is is empty"),
+          Arguments.of(new BezirkUndWahlID("wahlID", "   "), "wahlbezirkID is blank"));
+    }
+  }
+
+  @Nested
+  class ValidStatusOrThrow {
+
+    @Test
+    void should_notThrowException_when_statusIsEmptyButNotNull() {
+      val statusModelToValidate = new StatusModel(null, null, null);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validStatusOrThrow(statusModelToValidate));
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_statusIsNull() {
+      val mockedFachlicheWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validStatusOrThrow(null))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+  }
 }

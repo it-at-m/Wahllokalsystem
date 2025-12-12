@@ -27,13 +27,12 @@ import org.hibernate.annotations.UuidGenerator;
 @EqualsAndHashCode
 public abstract class BaseEntity implements Cloneable, Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    @ToString.Include
-    private UUID id;
-
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  @ToString.Include
+  private UUID id;
 }

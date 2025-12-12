@@ -11,20 +11,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ErgebnismeldungValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validDTOToSetOrThrow(ErgebnismeldungDTO ergebnismeldungToSet) {
-        if (ergebnismeldungToSet == null) {
-            throw exceptionFactory.createFachlicheWlsException(
-                    ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
-        }
-
-        if (StringUtils.isBlank(ergebnismeldungToSet.wahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLERGEBNISMELDUNG_WAHLBEZIRKID_FEHLT);
-        }
-
-        if (StringUtils.isBlank(ergebnismeldungToSet.wahlID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.SAVEWAHLERGEBNISMELDUNG_WAHLID_FEHLT);
-        }
+  public void validDTOToSetOrThrow(ErgebnismeldungDTO ergebnismeldungToSet) {
+    if (ergebnismeldungToSet == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
     }
+
+    if (StringUtils.isBlank(ergebnismeldungToSet.wahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLERGEBNISMELDUNG_WAHLBEZIRKID_FEHLT);
+    }
+
+    if (StringUtils.isBlank(ergebnismeldungToSet.wahlID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.SAVEWAHLERGEBNISMELDUNG_WAHLID_FEHLT);
+    }
+  }
 }

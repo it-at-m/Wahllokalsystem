@@ -19,60 +19,63 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class WahlbriefdatenControllerTest {
 
-    @Mock
-    WahlbriefdatenService wahlbriefdatenService;
+  @Mock WahlbriefdatenService wahlbriefdatenService;
 
-    @Mock
-    WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
+  @Mock WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
 
-    @InjectMocks
-    WahlbriefdatenController unitUnderTest;
+  @InjectMocks WahlbriefdatenController unitUnderTest;
 
-    @Nested
-    class GetWahlbriefdaten {
+  @Nested
+  class GetWahlbriefdaten {
 
-        @Test
-        void should_returnWahlbriefdaten_when_dataFound() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnWahlbriefdaten_when_dataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedServiceResponse = new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
-            val mockedServiceResponseAsDTO = WahlbriefdatenDTO.builder().build();
-            Mockito.when(wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID)).thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(wahlbriefdatenDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      val mockedServiceResponse =
+          new WahlbriefdatenModel(wahlbezirkID, null, null, null, null, null);
+      val mockedServiceResponseAsDTO = WahlbriefdatenDTO.builder().build();
+      Mockito.when(wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(wahlbriefdatenDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
+      val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
-        }
-
-        @Test
-        void should_returnNoContent_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
     }
 
-    @Nested
-    class PostWahlbriefdaten {
+    @Test
+    void should_returnNoContent_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_postWahlbriefdaten_when_calledAndMappedCorrectly() {
-            val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
-            val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID))
+          .thenReturn(Optional.empty());
 
-            val mockedServiceRequest = WahlbriefdatenModel.builder().build();
+      val result = unitUnderTest.getWahlbriefdaten(wahlbezirkID);
 
-            Mockito.when(wahlbriefdatenDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedServiceRequest);
-            Mockito.doNothing().when(wahlbriefdatenService).setWahlbriefdaten(mockedServiceRequest);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postWahlbriefdaten(wahlbezirkID, requestBody));
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
+  }
+
+  @Nested
+  class PostWahlbriefdaten {
+
+    @Test
+    void should_postWahlbriefdaten_when_calledAndMappedCorrectly() {
+      val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedServiceRequest = WahlbriefdatenModel.builder().build();
+
+      Mockito.when(wahlbriefdatenDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody)))
+          .thenReturn(mockedServiceRequest);
+      Mockito.doNothing().when(wahlbriefdatenService).setWahlbriefdaten(mockedServiceRequest);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postWahlbriefdaten(wahlbezirkID, requestBody));
+    }
+  }
 }

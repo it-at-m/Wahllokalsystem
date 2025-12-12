@@ -13,35 +13,33 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahltermindatenControllerTest {
 
-    @Mock
-    WahltermindatenService wahltermindatenService;
+  @Mock WahltermindatenService wahltermindatenService;
 
-    @InjectMocks
-    WahltermindatenController unitUnderTest;
+  @InjectMocks WahltermindatenController unitUnderTest;
 
-    @Nested
-    class LoadWahltermindaten {
+  @Nested
+  class LoadWahltermindaten {
 
-        @Test
-        void should_callServiceWithWahltagID_when_calledWithWahltagID() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_callServiceWithWahltagID_when_calledWithWahltagID() {
+      val wahltagID = "wahltagID";
 
-            unitUnderTest.loadWahltermindaten(wahltagID);
+      unitUnderTest.loadWahltermindaten(wahltagID);
 
-            Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
-        }
+      Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
     }
+  }
 
-    @Nested
-    class DeleteWahltermindaten {
+  @Nested
+  class DeleteWahltermindaten {
 
-        @Test
-        void should_callServiceWithWahltagID_when_calledWithWahltagID() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_callServiceWithWahltagID_when_calledWithWahltagID() {
+      val wahltagID = "wahltagID";
 
-            unitUnderTest.deleteWahltermindaten(wahltagID);
+      unitUnderTest.deleteWahltermindaten(wahltagID);
 
-            Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
-        }
+      Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
     }
+  }
 }

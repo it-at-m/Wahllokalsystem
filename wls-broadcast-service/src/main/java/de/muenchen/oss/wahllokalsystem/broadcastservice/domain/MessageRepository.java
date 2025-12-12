@@ -12,41 +12,41 @@ import org.springframework.stereotype.Repository;
 @PreAuthorize("hasAuthority('Broadcast_READ_Message')")
 public interface MessageRepository extends CrudRepository<Message, UUID> {
 
-    String CACHE = "MESSAGE_CACHE";
+  String CACHE = "MESSAGE_CACHE";
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.oid")
-    @PreAuthorize("hasAuthority('Broadcast_WRITE_Message')")
-    <S extends Message> S save(S message);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.oid")
+  @PreAuthorize("hasAuthority('Broadcast_WRITE_Message')")
+  <S extends Message> S save(S message);
 
-    @Override
-    @PreAuthorize("hasAuthority('Broadcast_WRITE_Message')")
-    <S extends Message> Iterable<S> saveAll(Iterable<S> messages);
+  @Override
+  @PreAuthorize("hasAuthority('Broadcast_WRITE_Message')")
+  <S extends Message> Iterable<S> saveAll(Iterable<S> messages);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
-    void deleteById(UUID oid);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
+  void deleteById(UUID oid);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
-    void deleteAllById(Iterable<? extends UUID> ids);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
+  void deleteAllById(Iterable<? extends UUID> ids);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.oid")
-    @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
-    void delete(Message entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.oid")
+  @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
+  void delete(Message entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
-    void deleteAll(Iterable<? extends Message> messages);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
+  void deleteAll(Iterable<? extends Message> messages);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Broadcast_DELETE_Message')")
+  void deleteAll();
 
-    Optional<Message> findFirstByWahlbezirkIDOrderByEmpfangsZeit(String wahlbezirkID);
+  Optional<Message> findFirstByWahlbezirkIDOrderByEmpfangsZeit(String wahlbezirkID);
 }

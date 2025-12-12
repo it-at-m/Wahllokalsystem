@@ -52,6 +52,44 @@ const meta = {
             );
           }
         ),
+        http.get(
+          `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwA}`,
+          async () => {
+            await delay(500);
+            return new HttpResponse(
+              JSON.stringify({
+                bezirkUndWahlIDStapelart: {
+                  wahlID,
+                  wahlbezirkID,
+                  stapelart: StapelArtEnum.MbwA,
+                },
+                ergebnisse: [],
+              } as ErgebnisseDTO),
+              {
+                status: 200,
+              }
+            );
+          }
+        ),
+        http.get(
+          `${ERGEBNISMELDUNG_SERVICE_API_URL}/businessActions/ergebnisse/${wahlbezirkID}/${wahlID}/${StapelArtEnum.MbwB}`,
+          async () => {
+            await delay(500);
+            return new HttpResponse(
+              JSON.stringify({
+                bezirkUndWahlIDStapelart: {
+                  wahlID,
+                  wahlbezirkID,
+                  stapelart: StapelArtEnum.MbwB,
+                },
+                ergebnisse: [],
+              } as ErgebnisseDTO),
+              {
+                status: 200,
+              }
+            );
+          }
+        ),
 
         http.post(`/api/*`, async () => {
           await delay(2000);

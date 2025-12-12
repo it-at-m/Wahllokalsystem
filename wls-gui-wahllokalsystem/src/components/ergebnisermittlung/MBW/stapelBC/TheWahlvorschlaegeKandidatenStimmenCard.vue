@@ -12,7 +12,31 @@
             <th><!-- fold/expand action --></th>
             <th><!-- Ordnungszahl --></th>
             <th class="font-weight-bold">Wahlvorschlag</th>
+            <th
+              colspan="3"
+              style="text-align: center"
+              class="font-weight-bold"
+            >
+              Gültige Stimmzettel
+            </th>
             <th class="font-weight-bold text-right">Gültige Stimmen</th>
+          </tr>
+          <tr>
+            <th><!-- fold/expand action --></th>
+            <th><!-- Ordnungszahl --></th>
+            <th><!-- Wahlvorschlag --></th>
+            <th class="font-weight-bold smallText">
+              Wahlvorschlag unverändert gekennzeichnet
+            </th>
+            <th class="font-weight-bold smallText">
+              Innerhalb eines Wahlvorschlag verändert
+            </th>
+            <th class="font-weight-bold smallText">
+              Gültige Stimmzettel für genau einen Wahlvorschlag
+            </th>
+            <th class="font-weight-bold smallText">
+              Gültig kumulierte und panaschierte insgesamt
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +54,24 @@
                 D{{ wahlvorschlag.ordnungszahl }}
               </td>
               <td>{{ wahlvorschlag.kurzname }}</td>
+              <td class="text-right">
+                {{
+                  ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelA.ergebnis
+                }}
+              </td>
+              <td class="text-right">
+                {{
+                  ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelB.ergebnis
+                }}
+              </td>
+              <td class="text-right">
+                {{
+                  (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelA
+                    .ergebnis || 0) +
+                  (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelB
+                    .ergebnis || 0)
+                }}
+              </td>
               <td class="text-right">
                 {{ summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse) }}
               </td>
@@ -54,6 +96,15 @@
               Gültige Stimmen insgesamt
             </td>
             <td class="font-weight-bold text-right">
+              {{ totalSumUnveraendert }}
+            </td>
+            <td class="font-weight-bold text-right">
+              {{ totalSumVeraendert }}
+            </td>
+            <td class="font-weight-bold text-right">
+              {{ totalSumUnveraendert + totalSumVeraendert }}
+            </td>
+            <td class="font-weight-bold text-right">
               {{ totalSumErgebnisse }}
             </td>
           </tr>
@@ -64,16 +115,18 @@
 </template>
 
 <script setup lang="ts">
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
 
-const COLUMN_COUNT_FULL_COL_SPAN = 4;
+const COLUMN_COUNT_FULL_COL_SPAN = 7;
 
 const props = defineProps({
   wahlbezirkID: {
@@ -94,19 +147,40 @@ const {
   saveErgebnisse,
 } = useMwbStapelBCUtils(props.wahlbezirkID, props.wahlID);
 const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
+const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
+  props.wahlID,
+  props.wahlbezirkID
+);
 
+const ergebnisseAndWahlvorschlaege = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
 const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;
 
-onMounted(() => {
-  loadWahlvorschlaegeAndErgebnisse();
+onActivated(async () => {
+  await loadWahlvorschlaegeAndErgebnisse();
+  ergebnisseAndWahlvorschlaege.value =
+    await loadAndCombineErgebnisseAndWahlvorschlaege();
 });
 
 const totalSumErgebnisse = computed(() => {
   return wahlvorschlaegeWithKandidatenErgebnissen.value.reduce(
     (sum, wahlvorschlag) =>
       sum + summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse),
+    0
+  );
+});
+
+const totalSumUnveraendert = computed(() => {
+  return ergebnisseAndWahlvorschlaege.value.reduce(
+    (sum, ergebnis) => sum + (ergebnis.ergebnisStapelA.ergebnis ?? 0),
+    0
+  );
+});
+
+const totalSumVeraendert = computed(() => {
+  return ergebnisseAndWahlvorschlaege.value.reduce(
+    (sum, ergebnis) => sum + (ergebnis.ergebnisStapelB.ergebnis ?? 0),
     0
   );
 });
@@ -122,5 +196,9 @@ function onSaveWahlvorschlag() {
 }
 .ordnungszahlColumn {
   width: 5em;
+}
+.smallText {
+  font-size: 12px !important;
+  text-align: right !important;
 }
 </style>

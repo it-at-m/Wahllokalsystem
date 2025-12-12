@@ -1,7 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.domain.ergebnismeldung;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

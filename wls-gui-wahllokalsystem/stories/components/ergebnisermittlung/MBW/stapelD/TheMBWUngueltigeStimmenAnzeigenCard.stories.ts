@@ -19,7 +19,7 @@ const body = JSON.stringify(
   prepareErgebnisseDTO()
     .bezirkUndWahlIDStapelart(
       createBezirkUndWahlIDStapelartDTO(
-        BezirkUndWahlIDStapelartDTOStapelartEnum.MbwD
+        BezirkUndWahlIDStapelartDTOStapelartEnum.MbwDUngueltig
       )
     )
     .ergebnisse([prepareErgebnisDTO().ergebnis(3).build()])

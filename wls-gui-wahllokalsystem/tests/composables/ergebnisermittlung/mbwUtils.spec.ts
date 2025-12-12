@@ -1,17 +1,24 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
+import { createTestingPinia } from "@pinia/testing";
+import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),
   getErgebnisse: vi.fn(),
+  postSchnellmeldung: vi.fn(),
+  getWahlOrUndefinedById: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
   sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
@@ -21,6 +28,7 @@ vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
     getErgebnisse: mockDefinitions.getErgebnisse,
+    postSchnellmeldung: mockDefinitions.postSchnellmeldung,
   }),
 }));
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
@@ -43,6 +51,13 @@ vi.mock(
     }),
   })
 );
+vi.mock("@/stores/wahlenStore.ts", () => ({
+  useWahlenStore: () => ({
+    wahlenActions: {
+      getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
+    },
+  }),
+}));
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
@@ -53,6 +68,8 @@ const {
   prepareWahlvorschlag,
   prepareWahlvorschlaege,
 } = useWahlvorschlaegeTestDataFactory();
+const { createWahl } = useWahlTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -61,6 +78,7 @@ describe("mbwUtils", () => {
   let unitUnderTest: ReturnType<typeof useMbwUtils>;
 
   beforeEach(() => {
+    createTestingPinia({ createSpy: vi.fn, stubActions: false });
     unitUnderTest = useMbwUtils(wahlID, wahlbezirkID);
   });
 
@@ -409,6 +427,111 @@ describe("mbwUtils", () => {
         await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege();
 
       expect(result).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe("sendSchnellmeldung", () => {
+    it("should_callPostSchnellmeldung_when_wahlForWahlIdIsGiven", async () => {
+      mockDefinitions.postSchnellmeldung.mockResolvedValueOnce(null);
+
+      const mockedWahl = createWahl();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingSchnellmeldung = spyOn(
+        unitUnderTest.isSendingSchnellmeldung,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSendingSchnellmeldung.value).toStrictEqual(false);
+
+      await unitUnderTest.sendSchnellmeldung();
+
+      expect(
+        spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
+      ).toStrictEqual([[true], [false]]);
+      expect(mockDefinitions.postSchnellmeldung.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          userWahlbezirkID,
+          mockedWahl.waehlerverzeichnisNummer,
+        ],
+      ]);
+
+      spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
+    });
+
+    it("should_notCallPostSchnellmeldung_when_wahlForWahlIdIsNotGiven", async () => {
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(undefined);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingSchnellmeldung = spyOn(
+        unitUnderTest.isSendingSchnellmeldung,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSendingSchnellmeldung.value).toStrictEqual(false);
+
+      await unitUnderTest.sendSchnellmeldung();
+
+      expect(
+        spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
+      ).toStrictEqual([[true], [false]]);
+      expect(
+        mockDefinitions.postSchnellmeldung.mock.calls.length
+      ).toStrictEqual(0);
+
+      spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
+    });
+
+    it("should_updateIsSendingSchnellmeldung_when_apiCallFailed", async () => {
+      const mockedServiceError = new Error("mocked service call failed");
+      mockDefinitions.postSchnellmeldung.mockRejectedValue(mockedServiceError);
+
+      const mockedWahl = createWahl();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingSchnellmeldung = spyOn(
+        unitUnderTest.isSendingSchnellmeldung,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSendingSchnellmeldung.value).toStrictEqual(false);
+
+      await expect(unitUnderTest.sendSchnellmeldung()).rejects.toThrowError(
+        mockedServiceError
+      );
+
+      expect(
+        spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
+      ).toStrictEqual([[true], [false]]);
+      expect(mockDefinitions.postSchnellmeldung.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          userWahlbezirkID,
+          mockedWahl.waehlerverzeichnisNummer,
+        ],
+      ]);
+
+      spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
     });
   });
 });

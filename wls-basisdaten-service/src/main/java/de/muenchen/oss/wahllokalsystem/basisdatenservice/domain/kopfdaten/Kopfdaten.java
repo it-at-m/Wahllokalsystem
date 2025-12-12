@@ -22,26 +22,18 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Kopfdaten {
 
-    @EmbeddedId
-    @NotNull
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId @NotNull private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    private String gemeinde;
+  @NotNull private String gemeinde;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Stimmzettelgebietsart stimmzettelgebietsart;
+  @Enumerated(EnumType.STRING)
+  @NotNull private Stimmzettelgebietsart stimmzettelgebietsart;
 
-    @NotNull
-    private String stimmzettelgebietsnummer;
+  @NotNull private String stimmzettelgebietsnummer;
 
-    @NotNull
-    private String stimmzettelgebietsname;
+  @NotNull private String stimmzettelgebietsname;
 
-    @NotNull
-    private String wahlname;
+  @NotNull private String wahlname;
 
-    @NotNull
-    private String wahlbezirknummer;
+  @NotNull private String wahlbezirknummer;
 }

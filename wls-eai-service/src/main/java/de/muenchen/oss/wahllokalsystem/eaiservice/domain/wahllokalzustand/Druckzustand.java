@@ -17,15 +17,14 @@ import org.hibernate.annotations.JdbcTypeCode;
 @AllArgsConstructor
 public class Druckzustand {
 
-    @JdbcTypeCode(VARCHAR)
-    @NotNull
-    private UUID wahlID;
+  @JdbcTypeCode(VARCHAR)
+  @NotNull private UUID wahlID;
 
-    private LocalDateTime schnellmeldungSendenUhrzeit;
+  private LocalDateTime schnellmeldungSendenUhrzeit;
 
-    private LocalDateTime niederschriftSendenUhrzeit;
+  private LocalDateTime niederschriftSendenUhrzeit;
 
-    private LocalDateTime schnellmeldungDruckUhrzeit;
+  private LocalDateTime schnellmeldungDruckUhrzeit;
 
-    private LocalDateTime niederschriftDruckUhrzeit;
+  private LocalDateTime niederschriftDruckUhrzeit;
 }

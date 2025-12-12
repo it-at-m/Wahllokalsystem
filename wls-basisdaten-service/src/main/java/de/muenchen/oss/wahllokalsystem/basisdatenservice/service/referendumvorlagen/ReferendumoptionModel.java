@@ -2,7 +2,4 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorl
 
 import jakarta.validation.constraints.NotNull;
 
-public record ReferendumoptionModel(@NotNull String id,
-                                    @NotNull String name,
-                                    Long position) {
-}
+public record ReferendumoptionModel(@NotNull String id, @NotNull String name, Long position) {}

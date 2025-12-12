@@ -14,51 +14,64 @@ import org.mapstruct.factory.Mappers;
 
 class HandbuchModelMapperTest {
 
-    private final HandbuchModelMapper unitUnderTest = Mappers.getMapper(HandbuchModelMapper.class);
+  private final HandbuchModelMapper unitUnderTest = Mappers.getMapper(HandbuchModelMapper.class);
 
-    @Nested
-    class ToEntityID {
+  @Nested
+  class ToEntityID {
 
-        @Test
-        void should_returnWahltagIdUndWahlbezirksart_when_givenHandbuchReferenceModel() {
-            val modelToMap = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+    @Test
+    void should_returnWahltagIdUndWahlbezirksart_when_givenHandbuchReferenceModel() {
+      val modelToMap = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
-            val result = unitUnderTest.toEntityID(modelToMap);
+      val result = unitUnderTest.toEntityID(modelToMap);
 
-            val expectedResult = new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @ParameterizedTest
-        @EnumSource(WahlbezirkArtModel.class)
-        void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchReferenceModel(final WahlbezirkArtModel wahlbezirkArtModel) {
-            Assertions.assertThat(unitUnderTest.toEntityID(new HandbuchReferenceModel("", wahlbezirkArtModel)).getWahlbezirksart().toString())
-                    .isEqualTo(wahlbezirkArtModel.toString());
-        }
+      val expectedResult = new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ToEntity {
+    @ParameterizedTest
+    @EnumSource(WahlbezirkArtModel.class)
+    void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchReferenceModel(
+        final WahlbezirkArtModel wahlbezirkArtModel) {
+      Assertions.assertThat(
+              unitUnderTest
+                  .toEntityID(new HandbuchReferenceModel("", wahlbezirkArtModel))
+                  .getWahlbezirksart()
+                  .toString())
+          .isEqualTo(wahlbezirkArtModel.toString());
+    }
+  }
 
-        @Test
-        void should_returnHandbuchEntity_when_givenHandbuchWriteModel() {
-            val modelToMap = new HandbuchWriteModel(new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.BWB), "helloWorld".getBytes());
+  @Nested
+  class ToEntity {
 
-            val result = unitUnderTest.toEntity(modelToMap);
+    @Test
+    void should_returnHandbuchEntity_when_givenHandbuchWriteModel() {
+      val modelToMap =
+          new HandbuchWriteModel(
+              new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
+              "helloWorld".getBytes());
 
-            val expectedResult = new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.BWB), "helloWorld".getBytes());
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val result = unitUnderTest.toEntity(modelToMap);
 
-        @ParameterizedTest
-        @EnumSource(WahlbezirkArtModel.class)
-        void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchWriteModel(final WahlbezirkArtModel wahlbezirkArtModel) {
-            val modelToMap = new HandbuchWriteModel(new HandbuchReferenceModel("", wahlbezirkArtModel), "".getBytes());
-
-            val result = unitUnderTest.toEntity(modelToMap);
-
-            Assertions.assertThat(result.getWahltagIdUndWahlbezirksart().getWahlbezirksart().toString()).isEqualTo(wahlbezirkArtModel.toString());
-        }
+      val expectedResult =
+          new Handbuch(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.BWB),
+              "helloWorld".getBytes());
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
+    @ParameterizedTest
+    @EnumSource(WahlbezirkArtModel.class)
+    void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchWriteModel(
+        final WahlbezirkArtModel wahlbezirkArtModel) {
+      val modelToMap =
+          new HandbuchWriteModel(new HandbuchReferenceModel("", wahlbezirkArtModel), "".getBytes());
+
+      val result = unitUnderTest.toEntity(modelToMap);
+
+      Assertions.assertThat(result.getWahltagIdUndWahlbezirksart().getWahlbezirksart().toString())
+          .isEqualTo(wahlbezirkArtModel.toString());
+    }
+  }
 }

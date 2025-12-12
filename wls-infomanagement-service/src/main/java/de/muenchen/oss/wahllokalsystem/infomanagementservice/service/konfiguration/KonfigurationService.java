@@ -26,97 +26,122 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KonfigurationService {
 
-    private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
-    private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
+  private static final WahlbezirkArt WAHLBEZIRK_ART_FALLBACK = WahlbezirkArt.UWB;
+  private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
-    private static final String KONFIGURATION_KEY_KENNBUCHSTABEN = KonfigurationKonfigKey.KENNBUCHSTABEN.name();
+  private static final String KONFIGURATION_KEY_KENNBUCHSTABEN =
+      KonfigurationKonfigKey.KENNBUCHSTABEN.name();
 
-    private final KonfigurationRepository konfigurationRepository;
+  private final KonfigurationRepository konfigurationRepository;
 
-    private final KonfigurationModelMapper konfigurationModelMapper;
+  private final KonfigurationModelMapper konfigurationModelMapper;
 
-    private final KonfigurationModelValidator konfigurationModelValidator;
+  private final KonfigurationModelValidator konfigurationModelValidator;
 
-    private final Collection<AuthDetailRetriever> authDetailRetrievers;
+  private final Collection<AuthDetailRetriever> authDetailRetrievers;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
-    public Optional<KonfigurationModel> getKonfiguration(@NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
-        log.info("#getKonfiguration");
+  @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfiguration')")
+  public Optional<KonfigurationModel> getKonfiguration(
+      @NotNull final KonfigurationKonfigKey konfigurationKonfigKey) {
+    log.info("#getKonfiguration");
 
-        konfigurationModelValidator.validOrThrowGetKonfigurationByKey(konfigurationKonfigKey);
+    konfigurationModelValidator.validOrThrowGetKonfigurationByKey(konfigurationKonfigKey);
 
-        val wahlbezirkArtOfRequest = getWahlbezirkArt();
-        val alternativeKey = konfigurationModelMapper.getAlternativeKey(konfigurationKonfigKey, wahlbezirkArtOfRequest);
+    val wahlbezirkArtOfRequest = getWahlbezirkArt();
+    val alternativeKey =
+        konfigurationModelMapper.getAlternativeKey(konfigurationKonfigKey, wahlbezirkArtOfRequest);
 
-        val repositoryLookupKey = alternativeKey.orElse(konfigurationKonfigKey);
-        val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
+    val repositoryLookupKey = alternativeKey.orElse(konfigurationKonfigKey);
+    val konfigurationFromRepo = konfigurationRepository.findById(repositoryLookupKey.name());
 
-        return konfigurationFromRepo.map(konfigurationModelMapper::toModel);
+    return konfigurationFromRepo.map(konfigurationModelMapper::toModel);
+  }
+
+  public Optional<KonfigurationModel> getKonfigurationUnauthorized(
+      final KonfigurationKonfigKey konfigurationKonfigKey) {
+    log.info("#getKonfigurationUnauthorized");
+
+    if (konfigurationKonfigKey == null) {
+      return Optional.empty();
     }
 
-    public Optional<KonfigurationModel> getKonfigurationUnauthorized(final KonfigurationKonfigKey konfigurationKonfigKey) {
-        log.info("#getKonfigurationUnauthorized");
-
-        if (konfigurationKonfigKey == null) {
-            return Optional.empty();
-        }
-
-        final Optional<Konfiguration> konfiguration = switch (konfigurationKonfigKey) {
-        case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
-        case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
-        case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
-        default -> Optional.empty();
+    final Optional<Konfiguration> konfiguration =
+        switch (konfigurationKonfigKey) {
+          case FRUEHESTE_LOGIN_UHRZEIT -> konfigurationRepository.getFruehesteLoginUhrzeit();
+          case SPAETESTE_LOGIN_UHRZEIT -> konfigurationRepository.getSpaetesteLoginUhrzeit();
+          case WILLKOMMENSTEXT -> konfigurationRepository.getWillkommenstext();
+          default -> Optional.empty();
         };
 
-        return konfiguration.map(konfigurationModelMapper::toModel);
+    return konfiguration.map(konfigurationModelMapper::toModel);
+  }
+
+  @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurationen')")
+  public List<KonfigurationModel> getAllKonfigurations() {
+    log.info("#getKonfigurationen");
+
+    return konfigurationRepository.findAll().stream()
+        .map(konfigurationModelMapper::toModel)
+        .toList();
+  }
+
+  @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfiguration')")
+  public void setKonfiguration(@NotNull final KonfigurationSetModel konfigurationSetModel) {
+    log.info("#postKonfiguration");
+
+    konfigurationModelValidator.validOrThrowSetKonfiguration(konfigurationSetModel);
+
+    val entityToSave = konfigurationModelMapper.toEntity(konfigurationSetModel);
+
+    try {
+      konfigurationRepository.save(entityToSave);
+    } catch (final Exception onSaveException) {
+      log.error("#setKonfiguration unsaveable: ", onSaveException);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE);
     }
+  }
 
-    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKonfigurationen')")
-    public List<KonfigurationModel> getAllKonfigurations() {
-        log.info("#getKonfigurationen");
+  @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKennbuchstabenListen')")
+  public KennbuchstabenListenModel getKennbuchstabenListen() {
+    val kennbuchstaben =
+        konfigurationRepository
+            .findById(KONFIGURATION_KEY_KENNBUCHSTABEN)
+            .orElseThrow(
+                () ->
+                    exceptionFactory.createFachlicheWlsException(
+                        ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND));
 
-        return konfigurationRepository.findAll().stream().map(konfigurationModelMapper::toModel).toList();
-    }
+    return konfigurationModelMapper.toKennbuchstabenListenModel(kennbuchstaben.getWert());
+  }
 
-    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_PostKonfiguration')")
-    public void setKonfiguration(@NotNull final KonfigurationSetModel konfigurationSetModel) {
-        log.info("#postKonfiguration");
-
-        konfigurationModelValidator.validOrThrowSetKonfiguration(konfigurationSetModel);
-
-        val entityToSave = konfigurationModelMapper.toEntity(konfigurationSetModel);
-
-        try {
-            konfigurationRepository.save(entityToSave);
-        } catch (final Exception onSaveException) {
-            log.error("#setKonfiguration unsaveable: ", onSaveException);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTKONFIGURATION_NOT_SAVEABLE);
-        }
-    }
-
-    @PreAuthorize("hasAuthority('Infomanagement_BUSINESSACTION_GetKennbuchstabenListen')")
-    public KennbuchstabenListenModel getKennbuchstabenListen() {
-        val kennbuchstaben = konfigurationRepository.findById(KONFIGURATION_KEY_KENNBUCHSTABEN).orElseThrow(
-                () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKENNBUCHSTABENLISTEN_KONFIGURATION_NOT_FOUND));
-
-        return konfigurationModelMapper.toKennbuchstabenListenModel(kennbuchstaben.getWert());
-    }
-
-    private WahlbezirkArt getWahlbezirkArt() {
-        val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        val authDetailRetriever = authDetailRetrievers.stream().filter(retriever -> retriever.canHandle(currentAuthentication)).findFirst();
-        if (authDetailRetriever.isPresent()) {
-            val wahlbezirkOfUser = authDetailRetriever.get().getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
-            return wahlbezirkOfUser.map(WahlbezirkArt::valueOf).orElseGet(() -> {
-                log.error("#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
+  private WahlbezirkArt getWahlbezirkArt() {
+    val currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+    val authDetailRetriever =
+        authDetailRetrievers.stream()
+            .filter(retriever -> retriever.canHandle(currentAuthentication))
+            .findFirst();
+    if (authDetailRetriever.isPresent()) {
+      val wahlbezirkOfUser =
+          authDetailRetriever
+              .get()
+              .getDetail(WAHLBEZIRK_ART_USER_DETAIL_KEY, currentAuthentication);
+      return wahlbezirkOfUser
+          .map(WahlbezirkArt::valueOf)
+          .orElseGet(
+              () -> {
+                log.error(
+                    "#getKonfiguration Error: Wahlbezirkart konnte nicht erkannt werden. UWB wurde als Standardwert angenommen");
                 return WAHLBEZIRK_ART_FALLBACK;
-            });
-        } else {
-            log.error("kein handler für authentication class {} vorhanden. Verwende Wahlbezirksart-Fallback {}", currentAuthentication.getClass(),
-                    WAHLBEZIRK_ART_FALLBACK);
-            return WAHLBEZIRK_ART_FALLBACK;
-        }
+              });
+    } else {
+      log.error(
+          "kein handler für authentication class {} vorhanden. Verwende Wahlbezirksart-Fallback {}",
+          currentAuthentication.getClass(),
+          WAHLBEZIRK_ART_FALLBACK);
+      return WAHLBEZIRK_ART_FALLBACK;
     }
+  }
 }

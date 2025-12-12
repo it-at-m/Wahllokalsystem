@@ -23,48 +23,52 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahllokalBenutzerController {
 
-    private final WahllokalBenutzerService wahllokalBenutzerService;
-    private final CsvFileDTOMapper csvFileDTOMapper;
+  private final WahllokalBenutzerService wahllokalBenutzerService;
+  private final CsvFileDTOMapper csvFileDTOMapper;
 
-    @Operation(
-            description = "Generiert die Benutzer fuer den gegebenen Wahltag.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Benutzer erfolgreich generiert.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CsvFileDTO.class))
-                    )
-            }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("generateWahllokalbenutzer/{wahltagID}")
-    public CsvFileDTO generateWahllokalbenutzer(@PathVariable("wahltagID") final String wahltagID) {
-        return csvFileDTOMapper.toDTO(wahllokalBenutzerService.generateWahllokalbenutzer(wahltagID));
-    }
+  @Operation(
+      description = "Generiert die Benutzer fuer den gegebenen Wahltag.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Benutzer erfolgreich generiert.",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = CsvFileDTO.class)))
+      })
+  @ResponseStatus(HttpStatus.OK)
+  @PostMapping("generateWahllokalbenutzer/{wahltagID}")
+  public CsvFileDTO generateWahllokalbenutzer(@PathVariable("wahltagID") final String wahltagID) {
+    return csvFileDTOMapper.toDTO(wahllokalBenutzerService.generateWahllokalbenutzer(wahltagID));
+  }
 
-    @Operation(description = "Export der WahllokalBenutzer für WahltagID { wahltagID }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Benutzer erfolgreich exportiert.",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CsvFileDTO.class))) }
-                    )
-            }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("exportWahllokalBenutzer/{wahltagID}")
-    public CsvFileDTO exportWahllokalBenutzer(@PathVariable("wahltagID") final String wahltagID) {
-        return csvFileDTOMapper.toDTO(wahllokalBenutzerService.exportWahllokalBenutzer(wahltagID));
-    }
+  @Operation(description = "Export der WahllokalBenutzer für WahltagID { wahltagID }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Benutzer erfolgreich exportiert.",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = CsvFileDTO.class)))
+            })
+      })
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("exportWahllokalBenutzer/{wahltagID}")
+  public CsvFileDTO exportWahllokalBenutzer(@PathVariable("wahltagID") final String wahltagID) {
+    return csvFileDTOMapper.toDTO(wahllokalBenutzerService.exportWahllokalBenutzer(wahltagID));
+  }
 
-    @Operation(description = "Löscht alle Benutzerdaten aller Wahllokale fuer eine WahlId mithilfe einer wahltagID.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht.")
-            }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("deleteWahllokalBenutzer/{wahltagID}")
-    public void deleteWahllokalBenutzer(@PathVariable("wahltagID") final String wahltagID) {
-        wahllokalBenutzerService.deleteWahllokalBenutzer(wahltagID);
-    }
+  @Operation(
+      description =
+          "Löscht alle Benutzerdaten aller Wahllokale fuer eine WahlId mithilfe einer wahltagID.")
+  @ApiResponses(
+      value = {@ApiResponse(responseCode = "200", description = "Benutzer erfolgreich gelöscht.")})
+  @ResponseStatus(HttpStatus.OK)
+  @PostMapping("deleteWahllokalBenutzer/{wahltagID}")
+  public void deleteWahllokalBenutzer(@PathVariable("wahltagID") final String wahltagID) {
+    wahllokalBenutzerService.deleteWahllokalBenutzer(wahltagID);
+  }
 }

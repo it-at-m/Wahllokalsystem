@@ -23,56 +23,66 @@ import org.springframework.web.client.RestClientException;
 @ExtendWith(MockitoExtension.class)
 class KonfigurierterWahltagClientImplTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  @Mock KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
 
-    @Mock
-    KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
+  @Mock KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    @InjectMocks
-    KonfigurierterWahltagClientImpl unitUnderTest;
+  @InjectMocks KonfigurierterWahltagClientImpl unitUnderTest;
 
-    @Nested
-    class GetKonfigurierterWahltag {
+  @Nested
+  class GetKonfigurierterWahltag {
 
-        @Test
-        void should_mapClientResponse_when_callingGet() {
-            val mockedClientResponse = MockDataFactory.createClientKonfigurierterWahltagDTO(LocalDate.now().plusMonths(1),
-                    KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
-            val mockedMappedClientResponse = KonfigurierterWahltagModel.builder().build();
+    @Test
+    void should_mapClientResponse_when_callingGet() {
+      val mockedClientResponse =
+          MockDataFactory.createClientKonfigurierterWahltagDTO(
+              LocalDate.now().plusMonths(1), KonfigurierterWahltagDTO.WahltagStatusEnum.AKTIV);
+      val mockedMappedClientResponse = KonfigurierterWahltagModel.builder().build();
 
-            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag())
-                    .thenReturn(mockedClientResponse);
-            Mockito.when(konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(mockedClientResponse))
-                    .thenReturn(mockedMappedClientResponse);
+      Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag())
+          .thenReturn(mockedClientResponse);
+      Mockito.when(
+              konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(mockedClientResponse))
+          .thenReturn(mockedMappedClientResponse);
 
-            val result = unitUnderTest.getKonfigurierterWahltag();
+      val result = unitUnderTest.getKonfigurierterWahltag();
 
-            Assertions.assertThat(result).isSameAs(mockedMappedClientResponse);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_givenNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag()).thenReturn(null);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getKonfigurierterWahltag()).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiInvocationFailed() {
-            val mockedException = TechnischeWlsException.withCode("100")
-                    .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
-
-            Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag())
-                    .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE)).thenThrow(mockedException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getKonfigurierterWahltag()).isSameAs(mockedException);
-        }
+      Assertions.assertThat(result).isSameAs(mockedMappedClientResponse);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_givenNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag()).thenReturn(null);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getKonfigurierterWahltag())
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_apiInvocationFailed() {
+      val mockedException =
+          TechnischeWlsException.withCode("100")
+              .buildWithMessage(
+                  "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
+
+      Mockito.when(konfigurierterWahltagControllerApi.getKonfigurierterWahltag())
+          .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE))
+          .thenThrow(mockedException);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getKonfigurierterWahltag())
+          .isSameAs(mockedException);
+    }
+  }
 }

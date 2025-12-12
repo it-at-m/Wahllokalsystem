@@ -4,5 +4,5 @@ import org.springframework.security.core.Authentication;
 
 public interface BezirkIDPermissionEvaluator {
 
-    boolean tokenUserBezirkIdMatches(String bezirkId, Authentication authentication);
+  boolean tokenUserBezirkIdMatches(String bezirkId, Authentication authentication);
 }

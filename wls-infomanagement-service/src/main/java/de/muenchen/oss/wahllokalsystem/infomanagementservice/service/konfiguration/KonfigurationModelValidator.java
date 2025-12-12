@@ -11,17 +11,20 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KonfigurationModelValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validOrThrowGetKonfigurationByKey(final KonfigurationKonfigKey konfigurationKonfigKey) {
-        if (konfigurationKonfigKey == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validOrThrowGetKonfigurationByKey(
+      final KonfigurationKonfigKey konfigurationKonfigKey) {
+    if (konfigurationKonfigKey == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validOrThrowSetKonfiguration(final KonfigurationSetModel konfigurationSetModel) {
-        if (konfigurationSetModel == null || konfigurationSetModel.schluessel() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validOrThrowSetKonfiguration(final KonfigurationSetModel konfigurationSetModel) {
+    if (konfigurationSetModel == null || konfigurationSetModel.schluessel() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

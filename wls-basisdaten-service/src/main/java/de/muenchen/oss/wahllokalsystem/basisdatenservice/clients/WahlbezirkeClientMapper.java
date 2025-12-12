@@ -9,10 +9,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlbezirkeClientMapper {
 
-    @Mapping(source = "identifikator", target = "wahlbezirkID")
-    @Mapping(source = "wahlbezirkArt", target = "wahlbezirkart")
-    WahlbezirkModel fromClientDTOToModel(WahlbezirkDTO clientDTO);
+  @Mapping(source = "identifikator", target = "wahlbezirkID")
+  @Mapping(source = "wahlbezirkArt", target = "wahlbezirkart")
+  WahlbezirkModel fromClientDTOToModel(WahlbezirkDTO clientDTO);
 
-    Set<WahlbezirkModel> fromRemoteSetOfDTOsToSetOfModels(Set<WahlbezirkDTO> wahlbezirkDTOs);
-
+  Set<WahlbezirkModel> fromRemoteSetOfDTOsToSetOfModels(Set<WahlbezirkDTO> wahlbezirkDTOs);
 }

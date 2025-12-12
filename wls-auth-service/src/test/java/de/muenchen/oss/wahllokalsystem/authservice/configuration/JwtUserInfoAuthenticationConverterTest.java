@@ -22,30 +22,34 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @ExtendWith(MockitoExtension.class)
 class JwtUserInfoAuthenticationConverterTest {
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @InjectMocks
-    JwtUserInfoAuthenticationConverter unitUnderTest;
+  @InjectMocks JwtUserInfoAuthenticationConverter unitUnderTest;
 
-    @Nested
-    class Convert {
+  @Nested
+  class Convert {
 
-        @Test
-        void should_returnJwtAuthenticationTokenWithAuthorities_when_convertingGivenJwt() {
-            val username = "username";
-            val now = Instant.now();
-            val jwt = new Jwt("tokenValue", now, now.plus(30, ChronoUnit.DAYS), Map.of("key1", "value1"), Map.of("sub", username));
+    @Test
+    void should_returnJwtAuthenticationTokenWithAuthorities_when_convertingGivenJwt() {
+      val username = "username";
+      val now = Instant.now();
+      val jwt =
+          new Jwt(
+              "tokenValue",
+              now,
+              now.plus(30, ChronoUnit.DAYS),
+              Map.of("key1", "value1"),
+              Map.of("sub", username));
 
-            val mockedUserAuthorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-            val mockedUserDetails = new User(username, "password", mockedUserAuthorities);
+      val mockedUserAuthorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+      val mockedUserDetails = new User(username, "password", mockedUserAuthorities);
 
-            Mockito.when(userService.getUserDetails(username)).thenReturn(mockedUserDetails);
+      Mockito.when(userService.getUserDetails(username)).thenReturn(mockedUserDetails);
 
-            val result = unitUnderTest.convert(jwt);
+      val result = unitUnderTest.convert(jwt);
 
-            Assertions.assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
-            Assertions.assertThat(result.getAuthorities()).isEqualTo(mockedUserAuthorities);
-        }
+      Assertions.assertThat(result).isInstanceOf(JwtAuthenticationToken.class);
+      Assertions.assertThat(result.getAuthorities()).isEqualTo(mockedUserAuthorities);
     }
+  }
 }

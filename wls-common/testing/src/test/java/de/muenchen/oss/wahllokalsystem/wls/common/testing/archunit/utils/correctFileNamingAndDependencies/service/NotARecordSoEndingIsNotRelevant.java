@@ -3,11 +3,9 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correc
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.domain.Example;
 
 public class NotARecordSoEndingIsNotRelevant {
-    static Example example = new Example();
+  static Example example = new Example();
 
-    public void publicMethodName() {
-    }
+  public void publicMethodName() {}
 
-    public void anotherPublicMethod() {
-    }
+  public void anotherPublicMethod() {}
 }

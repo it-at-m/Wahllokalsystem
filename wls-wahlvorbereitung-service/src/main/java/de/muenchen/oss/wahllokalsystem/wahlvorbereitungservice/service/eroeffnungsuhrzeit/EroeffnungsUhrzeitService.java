@@ -17,53 +17,54 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EroeffnungsUhrzeitService {
 
-    private final EroeffnungsUhrzeitRepository eroeffnungsUhrzeitRepository;
-    private final EroeffnungsUhrzeitModelMapper eroeffnungsUhrzeitModelMapper;
-    private final EroeffnungsUhrzeitValidator eroeffnungsUhrzeitValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final EroeffnungsUhrzeitRepository eroeffnungsUhrzeitRepository;
+  private final EroeffnungsUhrzeitModelMapper eroeffnungsUhrzeitModelMapper;
+  private final EroeffnungsUhrzeitValidator eroeffnungsUhrzeitValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<EroeffnungsUhrzeitModel> getEroeffnungsUhrzeit(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getEroeffnungsUhrzeit");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetEroeffnungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<EroeffnungsUhrzeitModel> getEroeffnungsUhrzeit(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getEroeffnungsUhrzeit");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        eroeffnungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    eroeffnungsUhrzeitValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = eroeffnungsUhrzeitRepository.findById(wahlbezirkID);
+    val dataFromRepo = eroeffnungsUhrzeitRepository.findById(wahlbezirkID);
 
-        log.debug("out: eroeffnungsuhrzeit > {}", dataFromRepo.orElse(null));
+    log.debug("out: eroeffnungsuhrzeit > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(eroeffnungsUhrzeitModelMapper::toModel);
+    return dataFromRepo.map(eroeffnungsUhrzeitModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#eroeffnungsuhrzeitToSet.wahlbezirkID(), authentication)")
+  public void setEroeffnungsUhrzeit(
+      @P("eroeffnungsuhrzeitToSet") final EroeffnungsUhrzeitModel eroeffnungsuhrzeitToSet) {
+    log.debug("#postEroeffnungsuhrzeit");
+    log.debug("in: eroeffnungsUhrzeit > {}", eroeffnungsuhrzeitToSet);
+
+    eroeffnungsUhrzeitValidator.validModelToSetOrThrow(eroeffnungsuhrzeitToSet);
+
+    try {
+      val eroeffnungsuhrzeitToSave =
+          eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsuhrzeitToSet);
+      eroeffnungsUhrzeitRepository.save(eroeffnungsuhrzeitToSave);
+      // Fachliches Logging mit  SIEM
+      try {
+        MDC.put("eid", "EROEFFNUNG");
+        MDC.put("result", "0");
+        log.info("openingTime={}|", eroeffnungsuhrzeitToSave.getEroeffnungsuhrzeit());
+      } finally {
+        MDC.remove("eid");
+        MDC.remove("result");
+      }
+    } catch (Exception e) {
+      log.error("Fehler beim speichern: ", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostEroeffnungsuhrzeit')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#eroeffnungsuhrzeitToSet.wahlbezirkID(), authentication)"
-    )
-    public void setEroeffnungsUhrzeit(@P("eroeffnungsuhrzeitToSet") final EroeffnungsUhrzeitModel eroeffnungsuhrzeitToSet) {
-        log.debug("#postEroeffnungsuhrzeit");
-        log.debug("in: eroeffnungsUhrzeit > {}", eroeffnungsuhrzeitToSet);
-
-        eroeffnungsUhrzeitValidator.validModelToSetOrThrow(eroeffnungsuhrzeitToSet);
-
-        try {
-            val eroeffnungsuhrzeitToSave = eroeffnungsUhrzeitModelMapper.toEntity(eroeffnungsuhrzeitToSet);
-            eroeffnungsUhrzeitRepository.save(eroeffnungsuhrzeitToSave);
-            // Fachliches Logging mit  SIEM
-            try {
-                MDC.put("eid", "EROEFFNUNG");
-                MDC.put("result", "0");
-                log.info("openingTime={}|", eroeffnungsuhrzeitToSave.getEroeffnungsuhrzeit());
-            } finally {
-                MDC.remove("eid");
-                MDC.remove("result");
-            }
-        } catch (Exception e) {
-            log.error("Fehler beim speichern: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

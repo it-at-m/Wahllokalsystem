@@ -21,22 +21,24 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahlbezirkeClientImpl implements WahlbezirkeClient {
 
-    private final ExceptionFactory exceptionFactory;
-    private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahlbezirkeClientMapper wahlbezirkeClientMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final WahldatenControllerApi wahldatenControllerApi;
+  private final WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
-    @Override
-    public Set<WahlbezirkModel> loadWahlbezirke(LocalDate forDate, String wahltagNummer) throws WlsException {
-        final Set<WahlbezirkDTO> wahlbezirkDTOS;
-        try {
-            wahlbezirkDTOS = wahldatenControllerApi.loadWahlbezirke(forDate, wahltagNummer);
-        } catch (final Exception exception) {
-            log.info("exception on loadWahlbezirke from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
-        }
-        if (wahlbezirkDTOS == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
-        }
-        return wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(wahlbezirkDTOS);
+  @Override
+  public Set<WahlbezirkModel> loadWahlbezirke(LocalDate forDate, String wahltagNummer)
+      throws WlsException {
+    final Set<WahlbezirkDTO> wahlbezirkDTOS;
+    try {
+      wahlbezirkDTOS = wahldatenControllerApi.loadWahlbezirke(forDate, wahltagNummer);
+    } catch (final Exception exception) {
+      log.info("exception on loadWahlbezirke from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }
+    if (wahlbezirkDTOS == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+    }
+    return wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(wahlbezirkDTOS);
+  }
 }

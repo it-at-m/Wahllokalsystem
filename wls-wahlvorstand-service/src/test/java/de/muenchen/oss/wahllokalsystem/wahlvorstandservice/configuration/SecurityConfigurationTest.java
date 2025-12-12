@@ -24,98 +24,93 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @MockitoBean
-    private WahlvorstandService wahlvorstandService;
+  @MockitoBean private WahlvorstandService wahlvorstandService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
+
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
+    api.perform(get("/")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
+    api.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
+    api.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
+    api.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
+    api.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
+    api.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
+    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class Wahlvorstand {
 
     @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
-        api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
+    @WithAnonymousUser
+    void should_returnStatusUnauthorized_when_accessingBusinessActionsWahlvorstand()
+        throws Exception {
+      api.perform(get("/businessActions/wahlvorstand")).andExpect(status().isUnauthorized());
     }
 
     @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
-        api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
+    @WithMockUser
+    void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1");
+
+      api.perform(request).andExpect(status().isNoContent());
     }
 
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
-        api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
+    @WithAnonymousUser
+    void should_returnStatusUnauthorized_when_postingBusinessActionsWahlvorstand()
+        throws Exception {
+      val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand").with(csrf());
+
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
-        api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
+    @WithMockUser
+    void should_returnStatusOk_when_postingBusinessActionsWahlvorstand() throws Exception {
+      val requestBody = new WahlvorstandDTO("wahlbezirkID", null, null);
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/wahlvorstand/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      api.perform(request).andExpect(status().isOk());
     }
-
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
-        api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
-        api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-        api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
-    }
-
-    @Nested
-    class Wahlvorstand {
-
-        @Test
-        @WithAnonymousUser
-        void should_returnStatusUnauthorized_when_accessingBusinessActionsWahlvorstand() throws Exception {
-            api.perform(get("/businessActions/wahlvorstand"))
-                    .andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_returnStatusNoContent_when_accessingBusinessActionsWahlvorstand() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/1");
-
-            api.perform(request).andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_returnStatusUnauthorized_when_postingBusinessActionsWahlvorstand() throws Exception {
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand").with(csrf());
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_returnStatusOk_when_postingBusinessActionsWahlvorstand() throws Exception {
-            val requestBody = new WahlvorstandDTO("wahlbezirkID", null, null);
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlvorstand/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
-
-            api.perform(request).andExpect(status().isOk());
-        }
-    }
-
+  }
 }

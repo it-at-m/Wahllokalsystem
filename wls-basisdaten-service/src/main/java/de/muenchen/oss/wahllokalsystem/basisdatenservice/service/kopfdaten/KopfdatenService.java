@@ -15,33 +15,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class KopfdatenService {
 
-    private final KopfdatenValidator kopfdatenValidator;
-    private final KonfigurierterWahltagClient konfigurierterWahltagClient;
-    private final WahldatenClient wahldatenClient;
-    private final KopfdatenRepository kopfdatenRepository;
-    private final KopfdatenModelMapper kopfdatenModelMapper;
-    private final KopfdatenMapper kopfDataInitializer;
+  private final KopfdatenValidator kopfdatenValidator;
+  private final KonfigurierterWahltagClient konfigurierterWahltagClient;
+  private final WahldatenClient wahldatenClient;
+  private final KopfdatenRepository kopfdatenRepository;
+  private final KopfdatenModelMapper kopfdatenModelMapper;
+  private final KopfdatenMapper kopfDataInitializer;
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
-    @Transactional
-    public KopfdatenModel getKopfdaten(BezirkUndWahlID bezirkUndWahlID) {
-        final KopfdatenModel kopfdatenModel;
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
+  @Transactional
+  public KopfdatenModel getKopfdaten(BezirkUndWahlID bezirkUndWahlID) {
+    final KopfdatenModel kopfdatenModel;
 
-        kopfdatenValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
+    kopfdatenValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
 
-        val kopfdaten = kopfdatenRepository.findById(bezirkUndWahlID);
+    val kopfdaten = kopfdatenRepository.findById(bezirkUndWahlID);
 
-        if (kopfdaten.isPresent()) {
-            kopfdatenModel = kopfdatenModelMapper.toModel(kopfdaten.get());
-        } else {
-            log.error("#getKopfdaten: Für Wahlbezirk {} mit WahlID {} waren keine Kopfdaten in der Datenbank", bezirkUndWahlID.getWahlbezirkID(),
-                    bezirkUndWahlID.getWahlID());
-            KonfigurierterWahltagModel konfigurierterWahltagModel = konfigurierterWahltagClient.getKonfigurierterWahltag();
-            BasisdatenModel basisdatenModel = wahldatenClient.loadBasisdaten(
-                    new WahltagWithNummerModel(konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer()));
-            kopfdatenModel = kopfDataInitializer.initKopfdata(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
-            kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
-        }
-        return kopfdatenModel;
+    if (kopfdaten.isPresent()) {
+      kopfdatenModel = kopfdatenModelMapper.toModel(kopfdaten.get());
+    } else {
+      log.error(
+          "#getKopfdaten: Für Wahlbezirk {} mit WahlID {} waren keine Kopfdaten in der Datenbank",
+          bezirkUndWahlID.getWahlbezirkID(),
+          bezirkUndWahlID.getWahlID());
+      KonfigurierterWahltagModel konfigurierterWahltagModel =
+          konfigurierterWahltagClient.getKonfigurierterWahltag();
+      BasisdatenModel basisdatenModel =
+          wahldatenClient.loadBasisdaten(
+              new WahltagWithNummerModel(
+                  konfigurierterWahltagModel.wahltag(), konfigurierterWahltagModel.nummer()));
+      kopfdatenModel =
+          kopfDataInitializer.initKopfdata(
+              bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID(), basisdatenModel);
+      kopfdatenRepository.save(kopfdatenModelMapper.toEntity(kopfdatenModel));
     }
+    return kopfdatenModel;
+  }
 }

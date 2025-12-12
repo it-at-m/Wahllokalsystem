@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-    @Value("${app.clients.eai.basePath}")
-    String eaiBasePath;
+  @Value("${app.clients.eai.basePath}")
+  String eaiBasePath;
 
-    private final ApiClient eaiApiClient;
+  private final ApiClient eaiApiClient;
 
-    @PostConstruct
-    public void updateBasePaths() {
-        eaiApiClient.setBasePath(eaiBasePath);
-    }
+  @PostConstruct
+  public void updateBasePaths() {
+    eaiApiClient.setBasePath(eaiBasePath);
+  }
 }

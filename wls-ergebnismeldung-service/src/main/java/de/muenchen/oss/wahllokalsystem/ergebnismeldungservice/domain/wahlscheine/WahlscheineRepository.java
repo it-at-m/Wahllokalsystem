@@ -11,37 +11,37 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Wahlscheine')")
 public interface WahlscheineRepository extends CrudRepository<Wahlscheine, BezirkUndWahlID> {
 
-    String CACHE = "WAHLSCHEINE_CACHE";
+  String CACHE = "WAHLSCHEINE_CACHE";
 
-    @Override
-    Iterable<Wahlscheine> findAll();
+  @Override
+  Iterable<Wahlscheine> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Wahlscheine> findById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Wahlscheine> findById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Wahlscheine')")
-    <S extends Wahlscheine> S save(S entity);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Wahlscheine')")
+  <S extends Wahlscheine> S save(S entity);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
-    void deleteById(BezirkUndWahlID bezirkUndWahlID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
+  void deleteById(BezirkUndWahlID bezirkUndWahlID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
-    void delete(Wahlscheine entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlID")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
+  void delete(Wahlscheine entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
-    void deleteAll(Iterable<? extends Wahlscheine> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
+  void deleteAll(Iterable<? extends Wahlscheine> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Wahlscheine')")
+  void deleteAll();
 }

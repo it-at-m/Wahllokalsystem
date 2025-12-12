@@ -15,81 +15,82 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahllokalBenutzerControllerTest {
 
-    @Mock
-    WahllokalBenutzerService wahllokalBenutzerService;
+  @Mock WahllokalBenutzerService wahllokalBenutzerService;
 
-    @Mock
-    CsvFileDTOMapper csvFileDTOMapper;
+  @Mock CsvFileDTOMapper csvFileDTOMapper;
 
-    @InjectMocks
-    WahllokalBenutzerController unitUnderTest;
+  @InjectMocks WahllokalBenutzerController unitUnderTest;
 
-    @Nested
-    class GenerateWahllokalbenutzer {
+  @Nested
+  class GenerateWahllokalbenutzer {
 
-        @Test
-        void should_callServiceWithWahltagID_when_calledWithWahltagID() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_callServiceWithWahltagID_when_calledWithWahltagID() {
+      val wahltagID = "wahltagID";
 
-            unitUnderTest.generateWahllokalbenutzer(wahltagID);
+      unitUnderTest.generateWahllokalbenutzer(wahltagID);
 
-            Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
-        }
-
-        @Test
-        void should_returnCsvFileDTO_when_serviceIsCalledWithValidWahltagID() {
-            val wahltagID = "wahltagID";
-
-            val mockedServiceResponse = new CsvFileModel("mockedUsernameList");
-            val mockedMappedServiceResponse = new CsvFileDTO("mockedUsernameList");
-
-            Mockito.when(wahllokalBenutzerService.generateWahllokalbenutzer(wahltagID)).thenReturn(mockedServiceResponse);
-            Mockito.when(csvFileDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedMappedServiceResponse);
-
-            val result = unitUnderTest.generateWahllokalbenutzer(wahltagID);
-
-            Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
-        }
+      Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
     }
 
-    @Nested
-    class ExportWahllokalBenutzer {
+    @Test
+    void should_returnCsvFileDTO_when_serviceIsCalledWithValidWahltagID() {
+      val wahltagID = "wahltagID";
 
-        @Test
-        void should_callServiceWithWahltagID_when_calledWithWahltagID() {
-            val wahltagID = "wahltagID";
+      val mockedServiceResponse = new CsvFileModel("mockedUsernameList");
+      val mockedMappedServiceResponse = new CsvFileDTO("mockedUsernameList");
 
-            unitUnderTest.exportWahllokalBenutzer(wahltagID);
+      Mockito.when(wahllokalBenutzerService.generateWahllokalbenutzer(wahltagID))
+          .thenReturn(mockedServiceResponse);
+      Mockito.when(csvFileDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedMappedServiceResponse);
 
-            Mockito.verify(wahllokalBenutzerService).exportWahllokalBenutzer(wahltagID);
-        }
+      val result = unitUnderTest.generateWahllokalbenutzer(wahltagID);
 
-        @Test
-        void should_returnCsvFileDTO_when_serviceIsCalledWithValidWahltagID() {
-            val wahltagID = "wahltagID";
+      Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
+    }
+  }
 
-            val mockedServiceResponse = new CsvFileModel("mockedUsernameList");
-            val mockedMappedServiceResponse = new CsvFileDTO("mockedUsernameList");
+  @Nested
+  class ExportWahllokalBenutzer {
 
-            Mockito.when(wahllokalBenutzerService.exportWahllokalBenutzer(wahltagID)).thenReturn(mockedServiceResponse);
-            Mockito.when(csvFileDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedMappedServiceResponse);
+    @Test
+    void should_callServiceWithWahltagID_when_calledWithWahltagID() {
+      val wahltagID = "wahltagID";
 
-            val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+      unitUnderTest.exportWahllokalBenutzer(wahltagID);
 
-            Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
-        }
+      Mockito.verify(wahllokalBenutzerService).exportWahllokalBenutzer(wahltagID);
     }
 
-    @Nested
-    class DeleteWahllokalBenutzer {
+    @Test
+    void should_returnCsvFileDTO_when_serviceIsCalledWithValidWahltagID() {
+      val wahltagID = "wahltagID";
 
-        @Test
-        void should_callServiceWithWahltagID_when_givenWahltagID() {
-            val wahltagID = "wahltagID";
+      val mockedServiceResponse = new CsvFileModel("mockedUsernameList");
+      val mockedMappedServiceResponse = new CsvFileDTO("mockedUsernameList");
 
-            unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+      Mockito.when(wahllokalBenutzerService.exportWahllokalBenutzer(wahltagID))
+          .thenReturn(mockedServiceResponse);
+      Mockito.when(csvFileDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedMappedServiceResponse);
 
-            Mockito.verify(wahllokalBenutzerService).deleteWahllokalBenutzer(wahltagID);
-        }
+      val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+
+      Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
     }
+  }
+
+  @Nested
+  class DeleteWahllokalBenutzer {
+
+    @Test
+    void should_callServiceWithWahltagID_when_givenWahltagID() {
+      val wahltagID = "wahltagID";
+
+      unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+
+      Mockito.verify(wahllokalBenutzerService).deleteWahllokalBenutzer(wahltagID);
+    }
+  }
 }

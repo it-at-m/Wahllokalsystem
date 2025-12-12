@@ -9,45 +9,45 @@ import org.mapstruct.factory.Mappers;
 
 public class StapelartDTOMapperTest {
 
-    private final StapelartDTOMapper unitUnderTest = Mappers.getMapper(StapelartDTOMapper.class);
+  private final StapelartDTOMapper unitUnderTest = Mappers.getMapper(StapelartDTOMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertNull(unitUnderTest.toModel(null));
-        }
-
-        @Test
-        void should_returnStapelartModel_when_givenStapelartDto() {
-            val stapelartDTO = StapelartDTO.BTW_A;
-
-            val result = unitUnderTest.toModel(stapelartDTO);
-
-            val expectedResult = StapelartModel.BTW_A;
-
-            Assertions.assertEquals(expectedResult, result);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertNull(unitUnderTest.toModel(null));
     }
 
-    @Nested
-    class ToDTO {
+    @Test
+    void should_returnStapelartModel_when_givenStapelartDto() {
+      val stapelartDTO = StapelartDTO.BTW_A;
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertNull(unitUnderTest.toDTO(null));
-        }
+      val result = unitUnderTest.toModel(stapelartDTO);
 
-        @Test
-        void should_returnStapelartDto_when_givenStapelartModel() {
-            val stapelartModel = StapelartModel.BTW_A;
+      val expectedResult = StapelartModel.BTW_A;
 
-            val result = unitUnderTest.toDTO(stapelartModel);
-
-            val expectedResult = StapelartDTO.BTW_A;
-
-            Assertions.assertEquals(expectedResult, result);
-        }
+      Assertions.assertEquals(expectedResult, result);
     }
+  }
+
+  @Nested
+  class ToDTO {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertNull(unitUnderTest.toDTO(null));
+    }
+
+    @Test
+    void should_returnStapelartDto_when_givenStapelartModel() {
+      val stapelartModel = StapelartModel.BTW_A;
+
+      val result = unitUnderTest.toDTO(stapelartModel);
+
+      val expectedResult = StapelartDTO.BTW_A;
+
+      Assertions.assertEquals(expectedResult, result);
+    }
+  }
 }

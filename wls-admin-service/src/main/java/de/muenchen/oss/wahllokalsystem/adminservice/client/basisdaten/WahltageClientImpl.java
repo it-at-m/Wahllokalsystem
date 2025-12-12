@@ -20,32 +20,33 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahltageClientImpl implements WahltageClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahltageControllerApi wahltageControllerApi;
+  private final WahltageControllerApi wahltageControllerApi;
 
-    private final WahltagClientMapper wahltagClientMapper;
+  private final WahltagClientMapper wahltagClientMapper;
 
-    @Override
-    public List<WahltagModel> getWahltage() {
-        log.debug("#getWahltage");
+  @Override
+  public List<WahltagModel> getWahltage() {
+    log.debug("#getWahltage");
 
-        final List<WahltagModel> wahltage;
-        try {
-            val wahltageDTO = wahltageControllerApi.getWahltage();
+    final List<WahltagModel> wahltage;
+    try {
+      val wahltageDTO = wahltageControllerApi.getWahltage();
 
-            if (wahltageDTO == null) {
-                return null;
-            }
+      if (wahltageDTO == null) {
+        return null;
+      }
 
-            wahltage = wahltagClientMapper.toModelList(wahltageDTO);
-            log.debug("#getWahltage response from basisdaten: {}", wahltage);
-        } catch (final WlsException wlsException) {
-            log.debug("#getWahltage found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
-        return wahltage;
+      wahltage = wahltagClientMapper.toModelList(wahltageDTO);
+      log.debug("#getWahltage response from basisdaten: {}", wahltage);
+    } catch (final WlsException wlsException) {
+      log.debug("#getWahltage found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+    return wahltage;
+  }
 }

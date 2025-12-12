@@ -7,11 +7,11 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlDTOMapper {
 
-    WahlDTO toDTO(WahlModel wahlModel);
+  WahlDTO toDTO(WahlModel wahlModel);
 
-    WahlModel toModel(WahlDTO wahlDTO);
+  WahlModel toModel(WahlDTO wahlDTO);
 
-    List<WahlDTO> fromListOfWahlModelToListOfWahlDTO(List<WahlModel> wahlen);
+  List<WahlDTO> fromListOfWahlModelToListOfWahlDTO(List<WahlModel> wahlen);
 
-    List<WahlModel> fromListOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTOs);
+  List<WahlModel> fromListOfWahlDTOtoListOfWahlModel(List<WahlDTO> wahlDTOs);
 }

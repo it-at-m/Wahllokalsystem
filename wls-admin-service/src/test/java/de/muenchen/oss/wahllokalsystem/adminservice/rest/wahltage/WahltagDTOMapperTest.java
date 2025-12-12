@@ -11,57 +11,87 @@ import org.mapstruct.factory.Mappers;
 
 class WahltagDTOMapperTest {
 
-    private final WahltagDTOMapper unitUnderTest = Mappers.getMapper(WahltagDTOMapper.class);
+  private final WahltagDTOMapper unitUnderTest = Mappers.getMapper(WahltagDTOMapper.class);
 
-    @Nested
-    class ToDtoList {
+  @Nested
+  class ToDtoList {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDtoList(null)).isNull();
-        }
-
-        @Test
-        void should_returnDtoList_when_givenModelList() {
-            val modelsInput = createWahltagModelList();
-            val dtosExpected = createWahltagDTOList();
-
-            val result = unitUnderTest.toDtoList(modelsInput);
-            Assertions.assertThat(result).isEqualTo(dtosExpected);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toDtoList(null)).isNull();
     }
 
-    @Nested
-    class ToModelList {
+    @Test
+    void should_returnDtoList_when_givenModelList() {
+      val modelsInput = createWahltagModelList();
+      val dtosExpected = createWahltagDTOList();
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
-        }
+      val result = unitUnderTest.toDtoList(modelsInput);
+      Assertions.assertThat(result).isEqualTo(dtosExpected);
+    }
+  }
 
-        @Test
-        void should_returnModelList_when_givenDtoList() {
-            val dtosInput = createWahltagDTOList();
-            val modelsExpected = createWahltagModelList();
+  @Nested
+  class ToModelList {
 
-            val result = unitUnderTest.toModelList(dtosInput);
-            Assertions.assertThat(result).isEqualTo(modelsExpected);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModelList(null)).isNull();
     }
 
-    private List<WahltagDTO> createWahltagDTOList() {
-        val wahltag1 = new WahltagDTO("identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-        val wahltag2 = new WahltagDTO("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
-        val wahltag3 = new WahltagDTO("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+    @Test
+    void should_returnModelList_when_givenDtoList() {
+      val dtosInput = createWahltagDTOList();
+      val modelsExpected = createWahltagModelList();
 
-        return List.of(wahltag1, wahltag2, wahltag3);
+      val result = unitUnderTest.toModelList(dtosInput);
+      Assertions.assertThat(result).isEqualTo(modelsExpected);
     }
+  }
 
-    private List<WahltagModel> createWahltagModelList() {
-        val wahltag1 = new WahltagModel("identifikatorWahltag1", LocalDate.now().minusMonths(2), "beschreibungWahltag1", "nummerWahltag1");
-        val wahltag2 = new WahltagModel("identifikatorWahltag2", LocalDate.now().minusMonths(1), "beschreibungWahltag2", "nummerWahltag2");
-        val wahltag3 = new WahltagModel("identifikatorWahltag3", LocalDate.now().plusMonths(1), "beschreibungWahltag3", "nummerWahltag3");
+  private List<WahltagDTO> createWahltagDTOList() {
+    val wahltag1 =
+        new WahltagDTO(
+            "identifikatorWahltag1",
+            LocalDate.now().minusMonths(2),
+            "beschreibungWahltag1",
+            "nummerWahltag1");
+    val wahltag2 =
+        new WahltagDTO(
+            "identifikatorWahltag2",
+            LocalDate.now().minusMonths(1),
+            "beschreibungWahltag2",
+            "nummerWahltag2");
+    val wahltag3 =
+        new WahltagDTO(
+            "identifikatorWahltag3",
+            LocalDate.now().plusMonths(1),
+            "beschreibungWahltag3",
+            "nummerWahltag3");
 
-        return List.of(wahltag1, wahltag2, wahltag3);
-    }
+    return List.of(wahltag1, wahltag2, wahltag3);
+  }
+
+  private List<WahltagModel> createWahltagModelList() {
+    val wahltag1 =
+        new WahltagModel(
+            "identifikatorWahltag1",
+            LocalDate.now().minusMonths(2),
+            "beschreibungWahltag1",
+            "nummerWahltag1");
+    val wahltag2 =
+        new WahltagModel(
+            "identifikatorWahltag2",
+            LocalDate.now().minusMonths(1),
+            "beschreibungWahltag2",
+            "nummerWahltag2");
+    val wahltag3 =
+        new WahltagModel(
+            "identifikatorWahltag3",
+            LocalDate.now().plusMonths(1),
+            "beschreibungWahltag3",
+            "nummerWahltag3");
+
+    return List.of(wahltag1, wahltag2, wahltag3);
+  }
 }

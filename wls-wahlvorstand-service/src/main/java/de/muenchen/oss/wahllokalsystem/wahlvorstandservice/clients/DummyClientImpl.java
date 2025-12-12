@@ -21,30 +21,42 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Profile(Profiles.DUMMY_CLIENTS)
-public class DummyClientImpl implements WahlvorstandEaiClient, WahlenClient, KonfigurierterWahltagClient {
-    @Override
-    public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {
-        return new WahlvorstandModel(wahlbezirkID, LocalDateTime.now(), List.of(
-                new WahlvorstandsmitgliedModel("id1", "müller", "max", FunktionModel.B, "Beisitzer*in", true),
-                new WahlvorstandsmitgliedModel("id2", "meier", "max", FunktionModel.W, "Wahlvorsteher*in", true),
-                new WahlvorstandsmitgliedModel("id3", "mustermann", "max", FunktionModel.SWB, "Stellvertretung Wahlvorsteher*in", true)));
-    }
+public class DummyClientImpl
+    implements WahlvorstandEaiClient, WahlenClient, KonfigurierterWahltagClient {
+  @Override
+  public WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag) {
+    return new WahlvorstandModel(
+        wahlbezirkID,
+        LocalDateTime.now(),
+        List.of(
+            new WahlvorstandsmitgliedModel(
+                "id1", "müller", "max", FunktionModel.B, "Beisitzer*in", true),
+            new WahlvorstandsmitgliedModel(
+                "id2", "meier", "max", FunktionModel.W, "Wahlvorsteher*in", true),
+            new WahlvorstandsmitgliedModel(
+                "id3",
+                "mustermann",
+                "max",
+                FunktionModel.SWB,
+                "Stellvertretung Wahlvorsteher*in",
+                true)));
+  }
 
-    @Override
-    public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
-        log.info("Dummy client postWahlvorstand() called instead of EAI with: {}", wahlvorstand);
-    }
+  @Override
+  public void postWahlvorstand(WahlvorstandModel wahlvorstand) {
+    log.info("Dummy client postWahlvorstand() called instead of EAI with: {}", wahlvorstand);
+  }
 
-    @Override
-    public List<WahlModel> getWahlen(KonfigurierterWahltagModel wahltag) throws WlsException {
-        return List.of(
-                new WahlModel(1L, WahlartModel.BTW),
-                new WahlModel(2L, WahlartModel.EUW),
-                new WahlModel(3L, WahlartModel.LTW));
-    }
+  @Override
+  public List<WahlModel> getWahlen(KonfigurierterWahltagModel wahltag) throws WlsException {
+    return List.of(
+        new WahlModel(1L, WahlartModel.BTW),
+        new WahlModel(2L, WahlartModel.EUW),
+        new WahlModel(3L, WahlartModel.LTW));
+  }
 
-    @Override
-    public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-        return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID", "1");
-    }
+  @Override
+  public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
+    return new KonfigurierterWahltagModel(LocalDate.now().plusMonths(1), "wahltagID", "1");
+  }
 }

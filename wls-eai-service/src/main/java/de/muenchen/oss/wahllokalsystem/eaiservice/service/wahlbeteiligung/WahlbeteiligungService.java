@@ -13,18 +13,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class WahlbeteiligungService {
 
-    private final WahlbeteiligungRepository wahlbeteiligungRepository;
+  private final WahlbeteiligungRepository wahlbeteiligungRepository;
 
-    private final WahlbeteiligungMapper wahlbeteiligungMapper;
+  private final WahlbeteiligungMapper wahlbeteiligungMapper;
 
-    private final WahlbeteiligungValidator wahlbeteiligungValidator;
+  private final WahlbeteiligungValidator wahlbeteiligungValidator;
 
-    @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahlbeteiligung')")
-    public void saveWahlbeteiligung(@P("wahlbeteiligungToSet") final WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
-        log.debug("#saveWahlbeteiligung");
+  @PreAuthorize("hasAuthority('aoueai_BUSINESSACTION_SaveWahlbeteiligung')")
+  public void saveWahlbeteiligung(
+      @P("wahlbeteiligungToSet") final WahlbeteiligungsMeldungDTO wahlbeteiligungToSet) {
+    log.debug("#saveWahlbeteiligung");
 
-        wahlbeteiligungValidator.validDTOToSetOrThrow(wahlbeteiligungToSet);
+    wahlbeteiligungValidator.validDTOToSetOrThrow(wahlbeteiligungToSet);
 
-        wahlbeteiligungRepository.save(wahlbeteiligungMapper.toEntity(wahlbeteiligungToSet));
-    }
+    wahlbeteiligungRepository.save(wahlbeteiligungMapper.toEntity(wahlbeteiligungToSet));
+  }
 }

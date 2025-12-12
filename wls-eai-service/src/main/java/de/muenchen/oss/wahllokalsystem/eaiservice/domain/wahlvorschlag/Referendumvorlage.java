@@ -23,24 +23,15 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class Referendumvorlage extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    private String wahlvorschlagID;
+  @NotNull @ToString.Include private String wahlvorschlagID;
 
-    @NotNull
-    @ToString.Include
-    private long ordnungszahl;
+  @NotNull @ToString.Include private long ordnungszahl;
 
-    @NotNull
-    @ToString.Include
-    private String kurzname;
+  @NotNull @ToString.Include private String kurzname;
 
-    @NotNull
-    @ToString.Include
-    private String frage;
+  @NotNull @ToString.Include private String frage;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "referendumvorlageid")
-    private Set<Referendumoption> referendumoptionen;
-
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "referendumvorlageid")
+  private Set<Referendumoption> referendumoptionen;
 }

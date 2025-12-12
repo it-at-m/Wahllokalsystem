@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface WahlvorstandRepository extends CrudRepository<Wahlvorstand, UUID> {
 
-    Optional<Wahlvorstand> findFirstByWahlbezirkID(UUID wahlbezirkID);
+  Optional<Wahlvorstand> findFirstByWahlbezirkID(UUID wahlbezirkID);
 }

@@ -23,103 +23,128 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 class AusdruckServiceSecurityTest {
 
-    @MockitoBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @Autowired
-    AusdruckService unitUnderTest;
+  @Autowired AusdruckService unitUnderTest;
 
-    @Autowired
-    AusdruckRepository ausdruckRepository;
+  @Autowired AusdruckRepository ausdruckRepository;
 
-    @AfterEach
-    void teardown() {
-        ausdruckRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    ausdruckRepository.deleteAll();
+  }
+
+  @Nested
+  class GetAusdruck {
+
+    @Test
+    void should_getAccess_when_requiredAuthorityIsPresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
+
+      val idModel =
+          new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel));
     }
 
-    @Nested
-    class GetAusdruck {
+    @Test
+    @WithMockUser
+    void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
+      val idModel =
+          new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
 
-        @Test
-        void should_getAccess_when_requiredAuthorityIsPresent() {
-            SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getAusdruck(idModel))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+  @Nested
+  class GetAllAusdrucke {
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel));
-        }
+    @Test
+    void should_getAccess_when_requiredAuthorityIsPresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
 
-        @Test
-        @WithMockUser
-        void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel("wahlbezirkID", "wahlID", MeldungsartModel.V1);
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAusdruck(idModel)).isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID));
     }
 
-    @Nested
-    class GetAllAusdrucke {
+    @Test
+    @WithMockUser
+    void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
 
-        @Test
-        void should_getAccess_when_requiredAuthorityIsPresent() {
-            SecurityUtils.runWith(Authorities.SERVICE_GET_AUSDRUCK);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
+  @Nested
+  class SaveAusdruck {
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID));
-        }
+    @Test
+    void should_getAccess_when_requiredAuthorityIsPresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_AUSDRUCK);
 
-        @Test
-        @WithMockUser
-        void should_throwAccessDeniedException_when_serviceGetAusdruckAuthorityIsMissing() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val ausdruckModel =
+          new AusdruckWriteModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              "content");
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID)).isInstanceOf(AccessDeniedException.class);
-        }
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel));
     }
 
-    @Nested
-    class SaveAusdruck {
+    @Test
+    void
+        should_throwAccessDeniedException_when_requiredAuthorityIsPresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_AUSDRUCK);
 
-        @Test
-        void should_getAccess_when_requiredAuthorityIsPresent() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_AUSDRUCK);
+      val wahlbezirkID = "wahlbezirkID";
+      val ausdruckModel =
+          new AusdruckWriteModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              "content");
 
-            val wahlbezirkID = "wahlbezirkID";
-            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1), "content");
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
 
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_requiredAuthorityIsPresentButBezirkIDEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_AUSDRUCK);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1), "content");
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        @WithMockUser
-        void should_throwAccessDeniedException_when_servicePostAusdruckAuthorityIsMissing() {
-            val wahlbezirkID = "wahlbezirkID";
-            val ausdruckModel = new AusdruckWriteModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1), "content");
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel)).isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel))
+          .isInstanceOf(AccessDeniedException.class);
     }
+
+    @Test
+    @WithMockUser
+    void should_throwAccessDeniedException_when_servicePostAusdruckAuthorityIsMissing() {
+      val wahlbezirkID = "wahlbezirkID";
+      val ausdruckModel =
+          new AusdruckWriteModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, "wahlID", MeldungsartModel.V1),
+              "content");
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.saveAusdruck(ausdruckModel))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

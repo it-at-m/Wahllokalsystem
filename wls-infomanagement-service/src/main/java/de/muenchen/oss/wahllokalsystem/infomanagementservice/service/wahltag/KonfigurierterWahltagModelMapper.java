@@ -7,9 +7,10 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface KonfigurierterWahltagModelMapper {
 
-    KonfigurierterWahltagModel toModel(KonfigurierterWahltag entity);
+  KonfigurierterWahltagModel toModel(KonfigurierterWahltag entity);
 
-    KonfigurierterWahltag toEntity(KonfigurierterWahltagModel model);
+  KonfigurierterWahltag toEntity(KonfigurierterWahltagModel model);
 
-    List<KonfigurierterWahltagModel> toModelList(Iterable<KonfigurierterWahltag> konfigurierteWahltage);
+  List<KonfigurierterWahltagModel> toModelList(
+      Iterable<KonfigurierterWahltag> konfigurierteWahltage);
 }

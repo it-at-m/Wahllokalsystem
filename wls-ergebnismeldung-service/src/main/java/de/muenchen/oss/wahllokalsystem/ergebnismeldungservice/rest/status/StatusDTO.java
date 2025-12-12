@@ -4,8 +4,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import jakarta.validation.constraints.NotNull;
 
 public record StatusDTO(
-        @NotNull BezirkUndWahlID bezirkUndWahlID,
-        @NotNull MeldungDTO schnellmeldung,
-        @NotNull MeldungDTO niederschrift
-) {
-}
+    @NotNull BezirkUndWahlID bezirkUndWahlID,
+    @NotNull MeldungDTO schnellmeldung,
+    @NotNull MeldungDTO niederschrift) {}

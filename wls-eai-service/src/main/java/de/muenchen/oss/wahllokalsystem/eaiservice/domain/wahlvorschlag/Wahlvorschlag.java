@@ -22,19 +22,13 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class Wahlvorschlag extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    private long ordnungszahl;
+  @NotNull @ToString.Include private long ordnungszahl;
 
-    @NotNull
-    @ToString.Include
-    private String kurzname;
+  @NotNull @ToString.Include private String kurzname;
 
-    @NotNull
-    @ToString.Include
-    private boolean erhaeltStimmen;
+  @NotNull @ToString.Include private boolean erhaeltStimmen;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlagID")
-    private java.util.Set<Kandidat> kandidaten;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "wahlvorschlagID")
+  private java.util.Set<Kandidat> kandidaten;
 }

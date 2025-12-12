@@ -33,50 +33,59 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @Test
-    void should_returnComposedString_when_givenDecomposedString() throws Exception {
-        val wahlID = "\u0041\u0308";
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() throws Exception {
+    val wahlID = "\u0041\u0308";
 
-        val wahlenStubbing = stubFor(
-                WireMock.post("/businessActions/wahlen/wahltagID1").willReturn(createWireMockResponse(HttpStatus.OK)));
+    val wahlenStubbing =
+        stubFor(
+            WireMock.post("/businessActions/wahlen/wahltagID1")
+                .willReturn(createWireMockResponse(HttpStatus.OK)));
 
-        List<de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO> wahlenDTOListEai = new ArrayList<>();
-        val wahlenDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
-        wahlenDTO.wahlID(wahlID);
-        wahlenDTOListEai.add(wahlenDTO);
+    List<de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO>
+        wahlenDTOListEai = new ArrayList<>();
+    val wahlenDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+    wahlenDTO.wahlID(wahlID);
+    wahlenDTOListEai.add(wahlenDTO);
 
-        val request = MockMvcRequestBuilders.post("/businessActions/wahlen/wahltagID1").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(wahlenDTOListEai));
+    val request =
+        MockMvcRequestBuilders.post("/businessActions/wahlen/wahltagID1")
+            .with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(wahlenDTOListEai));
 
-        api.perform(request).andExpect(status().isOk());
+    api.perform(request).andExpect(status().isOk());
 
-        val wahlenRequest = getAllServeEvents(ServeEventQuery.forStubMapping(wahlenStubbing)).get(0);
-        List<WahlDTO> wahlenRequestList = objectMapper.readValue(
-                wahlenRequest.getRequest().getBody(),
-                objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class));
-        val requestedWahlenDTO = wahlenRequestList.get(0);
+    val wahlenRequest = getAllServeEvents(ServeEventQuery.forStubMapping(wahlenStubbing)).get(0);
+    List<WahlDTO> wahlenRequestList =
+        objectMapper.readValue(
+            wahlenRequest.getRequest().getBody(),
+            objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class));
+    val requestedWahlenDTO = wahlenRequestList.get(0);
 
-        val expectedWahlenRequestBodyAsDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
-        expectedWahlenRequestBodyAsDTO.wahlID("\u00c4");
+    val expectedWahlenRequestBodyAsDTO =
+        new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+    expectedWahlenRequestBodyAsDTO.wahlID("\u00c4");
 
-        Assertions.assertThat(requestedWahlenDTO).usingRecursiveComparison().ignoringActualNullFields().isEqualTo(expectedWahlenRequestBodyAsDTO);
-    }
+    Assertions.assertThat(requestedWahlenDTO)
+        .usingRecursiveComparison()
+        .ignoringActualNullFields()
+        .isEqualTo(expectedWahlenRequestBodyAsDTO);
+  }
 
-    private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
-        return aResponse()
-                .withStatus(responseStatus.value());
-    }
+  private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
+    return aResponse().withStatus(responseStatus.value());
+  }
 }

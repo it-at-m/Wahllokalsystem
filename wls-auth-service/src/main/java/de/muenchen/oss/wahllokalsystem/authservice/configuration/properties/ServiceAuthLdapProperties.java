@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Data
 public class ServiceAuthLdapProperties {
 
-    private String userDn;
-    private String userDnPassword;
-    private String contextSource;
-    private String userSearchBase;
-    private String userSearchFilter;
-    private boolean anonymousReadOnly = false;
-    private boolean cacheEnvironmentProperties = false;
+  private String userDn;
+  private String userDnPassword;
+  private String contextSource;
+  private String userSearchBase;
+  private String userSearchFilter;
+  private boolean anonymousReadOnly = false;
+  private boolean cacheEnvironmentProperties = false;
 }

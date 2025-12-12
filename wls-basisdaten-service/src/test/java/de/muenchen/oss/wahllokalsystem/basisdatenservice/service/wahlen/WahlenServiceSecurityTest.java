@@ -40,181 +40,220 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock
 public class WahlenServiceSecurityTest {
 
-    @Autowired
-    WahlenService wahlenService;
+  @Autowired WahlenService wahlenService;
 
-    @Autowired
-    WahltagRepository wahltagRepository;
+  @Autowired WahltagRepository wahltagRepository;
 
-    @Autowired
-    WahlRepository wahlRepository;
+  @Autowired WahlRepository wahlRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHL);
-        wahlRepository.deleteAll();
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setup() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHL);
+    wahlRepository.deleteAll();
+    SecurityContextHolder.clearContext();
+  }
+
+  @Nested
+  class GetWahlen {
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHLTAG,
+          Authorities.REPOSITORY_READ_WAHLTAG,
+          Authorities.REPOSITORY_WRITE_WAHL);
+      var searchingForWahltag =
+          new Wahltag("wahltagID", LocalDate.now().plusMonths(1), "beschreibung1", "1");
+      List<Wahl> mockedListOfEntities = createWahlEntities();
+      wahltagRepository.save(searchingForWahltag);
+      wahlRepository.saveAll(mockedListOfEntities);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()));
     }
 
-    @Nested
-    class GetWahlen {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor)
+        throws Exception {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung10", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val mockedListOfEntities = createWahlEntities();
+      wahlRepository.saveAll(mockedListOfEntities);
+      val eaiWahlen = createWahlModels();
 
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_READ_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now().plusMonths(1), "beschreibung1", "1");
-            List<Wahl> mockedListOfEntities = createWahlEntities();
-            wahltagRepository.save(searchingForWahltag);
-            wahlRepository.saveAll(mockedListOfEntities);
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
-            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()));
-        }
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              argumentsAccessor.get(0, String[].class),
+              Authorities.REPOSITORY_READ_WAHLTAG,
+              Authorities.REPOSITORY_WRITE_WAHLTAG));
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlen?forDate="
+                      + searchingForWahltag.getWahltag().toString()
+                      + "&withNummer=1")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
 
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
-            var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung10", "1");
-            wahltagRepository.save(searchingForWahltag);
-            val mockedListOfEntities = createWahlEntities();
-            wahlRepository.saveAll(mockedListOfEntities);
-            val eaiWahlen = createWahlModels();
-
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(argumentsAccessor.get(0, String[].class), Authorities.REPOSITORY_READ_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHLTAG));
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlen?forDate=" + searchingForWahltag.getWahltag().toString() + "&withNummer=1")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                            .withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlen))));
-
-            Assertions.assertThatThrownBy(() -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
-        }
+      Assertions.assertThatThrownBy(
+              () -> wahlenService.getWahlen(searchingForWahltag.getWahltagID()))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class PostWahlen {
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAHLEN);
+    }
+  }
 
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_WRITE_WAHL);
-            val wahltagID = "wahltagID";
-            List<WahlModel> mockedListOfModels = createWahlModels();
-            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
-            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.postWahlen(wahlenToWrite));
-        }
+  @Nested
+  class PostWahlen {
 
-        @Test
-        void should_denyAccess_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
-            val wahltagID = "wahltagID";
-            List<WahlModel> mockedListOfModels = createWahlModels();
-            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
-
-            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
-            val wahltagID = "wahltagID";
-            List<WahlModel> mockedListOfModels = createWahlModels();
-            val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
-
-            Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite)).isInstanceOf(
-                    TechnischeWlsException.class);
-        }
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN, Authorities.REPOSITORY_WRITE_WAHL);
+      val wahltagID = "wahltagID";
+      List<WahlModel> mockedListOfModels = createWahlModels();
+      val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
+      Assertions.assertThatNoException().isThrownBy(() -> wahlenService.postWahlen(wahlenToWrite));
     }
 
-    @Nested
-    class ResetWahlen {
+    @Test
+    void should_denyAccess_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHL);
+      val wahltagID = "wahltagID";
+      List<WahlModel> mockedListOfModels = createWahlModels();
+      val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
-            Assertions.assertThatNoException().isThrownBy(() -> wahlenService.resetWahlen());
-        }
-
-        @Test
-        void should_denyAccess_when_serviceAuthoritiyIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
-            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingRepoAuthoritiesVariations")
-        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(ArrayUtils.add(argumentsAccessor.get(0, String[].class), Authorities.SERVICE_RESET_WAHLEN));
-            Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen()).isInstanceOf(TechnischeWlsException.class);
-        }
-
-        private static Stream<Arguments> getMissingRepoAuthoritiesVariations() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(new String[] { Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL });
-        }
+      Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    private List<Wahl> createWahlEntities() {
-        Wahl wahl1 = new Wahl();
-        wahl1.setWahlID("wahlid1");
-        wahl1.setName("wahl1");
-        wahl1.setNummer("0");
-        wahl1.setFarbe(new Farbe(1, 1, 1));
-        wahl1.setWahlart(Wahlart.BAW);
-        wahl1.setReihenfolge(1);
-        wahl1.setWaehlerverzeichnisNummer(1);
-        wahl1.setWahltag(LocalDate.now().plusMonths(1));
+    @Test
+    void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLEN);
+      val wahltagID = "wahltagID";
+      List<WahlModel> mockedListOfModels = createWahlModels();
+      val wahlenToWrite = new WahlenWriteModel(wahltagID, mockedListOfModels);
 
-        Wahl wahl2 = new Wahl();
-        wahl2.setWahlID("wahlid2");
-        wahl2.setName("wahl2");
-        wahl2.setNummer("1");
-        wahl2.setFarbe(new Farbe(2, 2, 2));
-        wahl2.setWahlart(Wahlart.LTW);
-        wahl2.setReihenfolge(2);
-        wahl2.setWaehlerverzeichnisNummer(2);
-        wahl2.setWahltag(LocalDate.now().plusMonths(2));
+      Assertions.assertThatThrownBy(() -> wahlenService.postWahlen(wahlenToWrite))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+  }
 
-        Wahl wahl3 = new Wahl();
-        wahl3.setWahlID("wahlid3");
-        wahl3.setName("wahl3");
-        wahl3.setNummer("2");
-        wahl3.setFarbe(new Farbe(3, 3, 3));
-        wahl3.setWahlart(Wahlart.EUW);
-        wahl3.setReihenfolge(3);
-        wahl3.setWaehlerverzeichnisNummer(3);
-        wahl3.setWahltag(LocalDate.now().plusMonths(3));
-        List<Wahl> lw = new ArrayList<>();
-        lw.add(wahl1);
-        lw.add(wahl2);
-        lw.add(wahl3);
+  @Nested
+  class ResetWahlen {
 
-        return lw;
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_RESET_WAHLEN);
+      Assertions.assertThatNoException().isThrownBy(() -> wahlenService.resetWahlen());
     }
 
-    private List<WahlModel> createWahlModels() {
-        WahlModel wahl1 = new WahlModel("wahlid1", "wahl1", 1L,
-                1L, LocalDate.now().plusMonths(1),
-                WahlartModel.BAW, new FarbeModel(1, 1, 1), "0");
-        WahlModel wahl2 = new WahlModel("wahlid2", "wahl2", 2L,
-                2L, LocalDate.now().plusMonths(2),
-                WahlartModel.LTW, new FarbeModel(2, 2, 2), "1");
-        WahlModel wahl3 = new WahlModel("wahlid3", "wahl3", 3L,
-                3L, LocalDate.now().plusMonths(3),
-                WahlartModel.LTW, new FarbeModel(3, 3, 3), "2");
-        List<WahlModel> lw = new ArrayList<>();
-        lw.add(wahl1);
-        lw.add(wahl2);
-        lw.add(wahl3);
-        return lw;
+    @Test
+    void should_denyAccess_when_serviceAuthoritiyIsMissing() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHL, Authorities.REPOSITORY_WRITE_WAHL);
+      Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen())
+          .isInstanceOf(AccessDeniedException.class);
     }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingRepoAuthoritiesVariations")
+    void should_throwTechnischeWlsException_when_repoAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(
+          ArrayUtils.add(
+              argumentsAccessor.get(0, String[].class), Authorities.SERVICE_RESET_WAHLEN));
+      Assertions.assertThatThrownBy(() -> wahlenService.resetWahlen())
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    private static Stream<Arguments> getMissingRepoAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          new String[] {Authorities.REPOSITORY_WRITE_WAHL, Authorities.REPOSITORY_READ_WAHL});
+    }
+  }
+
+  private List<Wahl> createWahlEntities() {
+    Wahl wahl1 = new Wahl();
+    wahl1.setWahlID("wahlid1");
+    wahl1.setName("wahl1");
+    wahl1.setNummer("0");
+    wahl1.setFarbe(new Farbe(1, 1, 1));
+    wahl1.setWahlart(Wahlart.BAW);
+    wahl1.setReihenfolge(1);
+    wahl1.setWaehlerverzeichnisNummer(1);
+    wahl1.setWahltag(LocalDate.now().plusMonths(1));
+
+    Wahl wahl2 = new Wahl();
+    wahl2.setWahlID("wahlid2");
+    wahl2.setName("wahl2");
+    wahl2.setNummer("1");
+    wahl2.setFarbe(new Farbe(2, 2, 2));
+    wahl2.setWahlart(Wahlart.LTW);
+    wahl2.setReihenfolge(2);
+    wahl2.setWaehlerverzeichnisNummer(2);
+    wahl2.setWahltag(LocalDate.now().plusMonths(2));
+
+    Wahl wahl3 = new Wahl();
+    wahl3.setWahlID("wahlid3");
+    wahl3.setName("wahl3");
+    wahl3.setNummer("2");
+    wahl3.setFarbe(new Farbe(3, 3, 3));
+    wahl3.setWahlart(Wahlart.EUW);
+    wahl3.setReihenfolge(3);
+    wahl3.setWaehlerverzeichnisNummer(3);
+    wahl3.setWahltag(LocalDate.now().plusMonths(3));
+    List<Wahl> lw = new ArrayList<>();
+    lw.add(wahl1);
+    lw.add(wahl2);
+    lw.add(wahl3);
+
+    return lw;
+  }
+
+  private List<WahlModel> createWahlModels() {
+    WahlModel wahl1 =
+        new WahlModel(
+            "wahlid1",
+            "wahl1",
+            1L,
+            1L,
+            LocalDate.now().plusMonths(1),
+            WahlartModel.BAW,
+            new FarbeModel(1, 1, 1),
+            "0");
+    WahlModel wahl2 =
+        new WahlModel(
+            "wahlid2",
+            "wahl2",
+            2L,
+            2L,
+            LocalDate.now().plusMonths(2),
+            WahlartModel.LTW,
+            new FarbeModel(2, 2, 2),
+            "1");
+    WahlModel wahl3 =
+        new WahlModel(
+            "wahlid3",
+            "wahl3",
+            3L,
+            3L,
+            LocalDate.now().plusMonths(3),
+            WahlartModel.LTW,
+            new FarbeModel(3, 3, 3),
+            "2");
+    List<WahlModel> lw = new ArrayList<>();
+    lw.add(wahl1);
+    lw.add(wahl2);
+    lw.add(wahl3);
+    return lw;
+  }
 }

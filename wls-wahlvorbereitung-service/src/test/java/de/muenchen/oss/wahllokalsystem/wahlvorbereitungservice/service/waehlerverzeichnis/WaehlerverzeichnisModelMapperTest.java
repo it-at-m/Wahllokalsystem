@@ -10,44 +10,64 @@ import org.mapstruct.factory.Mappers;
 
 class WaehlerverzeichnisModelMapperTest {
 
-    private final WaehlerverzeichnisModelMapper unitUnderTest = Mappers.getMapper(WaehlerverzeichnisModelMapper.class);
+  private final WaehlerverzeichnisModelMapper unitUnderTest =
+      Mappers.getMapper(WaehlerverzeichnisModelMapper.class);
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisEntity() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 3L;
-            val modelToMap = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, true,
-                    true);
+    @Test
+    void should_returnWaehlerverzeichnisModel_when_givenWaehlerverzeichnisEntity() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 3L;
+      val modelToMap =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              true,
+              true);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, true,
-                    true);
+      val expectedResult =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              true,
+              true);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnWaehlerverzeichnisEntity_when_givenWaehlerverzeichnisModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 3L;
-            val entityToMap = new Waehlerverzeichnis(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false, true,
-                    true);
+    @Test
+    void should_returnWaehlerverzeichnisEntity_when_givenWaehlerverzeichnisModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 3L;
+      val entityToMap =
+          new Waehlerverzeichnis(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              true,
+              true);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expectedResult = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), false, false,
-                    true,
-                    true);
+      val expectedResult =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              false,
+              false,
+              true,
+              true);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

@@ -13,44 +13,45 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class PermissionRepositoryTest {
 
-    @Autowired
-    private PermissionRepository permissionRepository;
+  @Autowired private PermissionRepository permissionRepository;
 
-    @AfterEach
-    void teardown() {
-        permissionRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    permissionRepository.deleteAll();
+  }
+
+  @Nested
+  class FindByPermission {
+
+    @Test
+    void should_returnOptionalWithPermission_when_found() {
+      val permissionString = "permission";
+      val permissionToFind =
+          permissionRepository.save(createPermissionWithPermission(permissionString));
+
+      val findByResult = permissionRepository.findByPermission(permissionString);
+
+      Assertions.assertThat(findByResult.get())
+          .usingRecursiveComparison()
+          .isEqualTo(permissionToFind);
     }
 
-    @Nested
-    class FindByPermission {
+    @Test
+    void should_returnEmptyOptional_when_notFound() {
+      val findByResult = permissionRepository.findByPermission("not-found");
 
-        @Test
-        void should_returnOptionalWithPermission_when_found() {
-            val permissionString = "permission";
-            val permissionToFind = permissionRepository.save(createPermissionWithPermission(permissionString));
-
-            val findByResult = permissionRepository.findByPermission(permissionString);
-
-            Assertions.assertThat(findByResult.get()).usingRecursiveComparison().isEqualTo(permissionToFind);
-        }
-
-        @Test
-        void should_returnEmptyOptional_when_notFound() {
-            val findByResult = permissionRepository.findByPermission("not-found");
-
-            Assertions.assertThat(findByResult).isEmpty();
-        }
+      Assertions.assertThat(findByResult).isEmpty();
     }
+  }
 
-    private Permission createPermissionWithPermission(final String permission) {
-        val permissionObject = new Permission();
+  private Permission createPermissionWithPermission(final String permission) {
+    val permissionObject = new Permission();
 
-        permissionObject.setPermission(permission);
+    permissionObject.setPermission(permission);
 
-        return permissionObject;
-    }
-
+    return permissionObject;
+  }
 }

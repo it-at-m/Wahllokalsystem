@@ -7,8 +7,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlvorschlaegeDTOMapper {
 
-    @Mapping(source = "bezirkUndWahlID.wahlID", target = "wahlID")
-    @Mapping(source = "bezirkUndWahlID.wahlbezirkID", target = "wahlbezirkID")
-    WahlvorschlaegeDTO toDTO(WahlvorschlaegeModel wahlvorschlaegeModel);
-
+  @Mapping(source = "bezirkUndWahlID.wahlID", target = "wahlID")
+  @Mapping(source = "bezirkUndWahlID.wahlbezirkID", target = "wahlbezirkID")
+  WahlvorschlaegeDTO toDTO(WahlvorschlaegeModel wahlvorschlaegeModel);
 }

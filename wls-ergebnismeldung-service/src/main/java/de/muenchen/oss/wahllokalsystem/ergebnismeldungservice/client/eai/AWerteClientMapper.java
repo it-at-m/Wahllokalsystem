@@ -9,9 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface AWerteClientMapper {
 
-    @Mapping(target = "bezirkUndWahlID.wahlID", source = "wahlID")
-    @Mapping(target = "bezirkUndWahlID.wahlbezirkID", source = "wahlbezirkID")
-    AWerteModel fromRemoteClientWahlberechtigteDtoToAWerteModel(WahlberechtigteDTO wahlberechtigteDTO);
+  @Mapping(target = "bezirkUndWahlID.wahlID", source = "wahlID")
+  @Mapping(target = "bezirkUndWahlID.wahlbezirkID", source = "wahlbezirkID")
+  AWerteModel fromRemoteClientWahlberechtigteDtoToAWerteModel(
+      WahlberechtigteDTO wahlberechtigteDTO);
 
-    List<AWerteModel> fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(List<WahlberechtigteDTO> wahlberechtigteDTO);
+  List<AWerteModel> fromRemoteClientListOfWahlberechtigteDtoToListOfAWerteModel(
+      List<WahlberechtigteDTO> wahlberechtigteDTO);
 }

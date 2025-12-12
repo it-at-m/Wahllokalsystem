@@ -7,7 +7,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.Erge
 
 public interface EAIClientMapper {
 
-    AWerteDTO toDTO(AWerte awerte);
+  AWerteDTO toDTO(AWerte awerte);
 
-    ErgebnisDTO toDTO(Ergebnisse ergebnis);
+  ErgebnisDTO toDTO(Ergebnisse ergebnis);
 }

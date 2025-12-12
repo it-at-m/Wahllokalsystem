@@ -3,7 +3,5 @@ package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.fortsetzung
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public record FortsetzungsUhrzeitDTO(@NotNull String wahlbezirkID,
-                                     @NotNull LocalDateTime fortsetzungsUhrzeit) {
-
-}
+public record FortsetzungsUhrzeitDTO(
+    @NotNull String wahlbezirkID, @NotNull LocalDateTime fortsetzungsUhrzeit) {}

@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface EroeffnungsUhrzeitDTOMapper {
 
-    EroeffnungsUhrzeitDTO toDTO(EroeffnungsUhrzeitModel model);
+  EroeffnungsUhrzeitDTO toDTO(EroeffnungsUhrzeitModel model);
 
-    EroeffnungsUhrzeitModel toModel(String wahlbezirkID, EroeffnungsUhrzeitWriteDTO dto);
+  EroeffnungsUhrzeitModel toModel(String wahlbezirkID, EroeffnungsUhrzeitWriteDTO dto);
 }

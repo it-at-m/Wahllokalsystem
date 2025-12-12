@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WahlbriefdatenModelMapper {
 
-    WahlbriefdatenModel toModel(final Wahlbriefdaten entity);
+  WahlbriefdatenModel toModel(final Wahlbriefdaten entity);
 
-    Wahlbriefdaten toEntity(final WahlbriefdatenModel model);
+  Wahlbriefdaten toEntity(final WahlbriefdatenModel model);
 }

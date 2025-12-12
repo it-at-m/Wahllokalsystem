@@ -7,6 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface AWerteDTOMapper {
 
-    List<AWerteDTO> fromListOfAWerteModelToListOfAWerteDTO(List<AWerteModel> aWerteModelList);
-
+  List<AWerteDTO> fromListOfAWerteModelToListOfAWerteDTO(List<AWerteModel> aWerteModelList);
 }

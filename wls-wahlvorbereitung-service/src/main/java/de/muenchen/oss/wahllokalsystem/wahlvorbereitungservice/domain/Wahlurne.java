@@ -15,13 +15,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Wahlurne {
 
-    @NotNull
-    @Size(max = 255)
-    private String wahlID;
+  @NotNull @Size(max = 255) private String wahlID;
 
-    @NotNull
-    private long anzahl;
+  @NotNull private long anzahl;
 
-    private Boolean urneVersiegelt;
-
+  private Boolean urneVersiegelt;
 }

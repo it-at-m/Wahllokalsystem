@@ -10,18 +10,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KonfigurierterWahltagValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validPostModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
-        if (konfigurierterWahltag == null || konfigurierterWahltag.wahltag() == null || konfigurierterWahltag.wahltagID() == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validPostModelOrThrow(KonfigurierterWahltagModel konfigurierterWahltag) {
+    if (konfigurierterWahltag == null
+        || konfigurierterWahltag.wahltag() == null
+        || konfigurierterWahltag.wahltagID() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validDeleteModelOrThrow(final String wahltagID) {
-        if (StringUtils.isEmpty(wahltagID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validDeleteModelOrThrow(final String wahltagID) {
+    if (StringUtils.isEmpty(wahltagID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.DELETE_KONFIGURIERTERWAHLTAG_PARAMETER_UNVOLLSTAENDIG);
     }
-
+  }
 }

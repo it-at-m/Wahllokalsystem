@@ -14,21 +14,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class OAuth2TokenInterceptor implements ClientHttpRequestInterceptor {
 
-    @Override
-    @NonNull
-    public ClientHttpResponse intercept(@NonNull final HttpRequest request, @NonNull final byte[] body, @NonNull ClientHttpRequestExecution execution)
-            throws IOException {
-        val authentication = SecurityContextHolder.getContext().getAuthentication();
+  @Override
+  @NonNull public ClientHttpResponse intercept(
+      @NonNull final HttpRequest request,
+      @NonNull final byte[] body,
+      @NonNull ClientHttpRequestExecution execution)
+      throws IOException {
+    val authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null) {
-            return execution.execute(request, body);
-        }
-
-        if (!(authentication.getCredentials() instanceof AbstractOAuth2Token token)) {
-            return execution.execute(request, body);
-        }
-
-        request.getHeaders().setBearerAuth(token.getTokenValue());
-        return execution.execute(request, body);
+    if (authentication == null) {
+      return execution.execute(request, body);
     }
+
+    if (!(authentication.getCredentials() instanceof AbstractOAuth2Token token)) {
+      return execution.execute(request, body);
+    }
+
+    request.getHeaders().setBearerAuth(token.getTokenValue());
+    return execution.execute(request, body);
+  }
 }

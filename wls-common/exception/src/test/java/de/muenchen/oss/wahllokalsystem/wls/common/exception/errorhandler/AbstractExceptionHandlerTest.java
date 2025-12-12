@@ -22,215 +22,264 @@ import org.springframework.security.access.AccessDeniedException;
 @ExtendWith(MockitoExtension.class)
 class AbstractExceptionHandlerTest {
 
-    private static final String GET_SERVICE_RESULT = "theService";
+  private static final String GET_SERVICE_RESULT = "theService";
 
-    private final DTOMapper dtoMapper = Mockito.mock(DTOMapper.class);
+  private final DTOMapper dtoMapper = Mockito.mock(DTOMapper.class);
 
-    final AbstractExceptionHandler unitUnderTest = new AbstractExceptionHandler(dtoMapper) {
+  final AbstractExceptionHandler unitUnderTest =
+      new AbstractExceptionHandler(dtoMapper) {
         @Override
         protected String getService() {
-            return GET_SERVICE_RESULT;
+          return GET_SERVICE_RESULT;
         }
-    };
+      };
 
-    @Nested
-    class GetWahlExceptionDTO {
+  @Nested
+  class GetWahlExceptionDTO {
 
-        @Test
-        void should_returnWlsExceptionDTOWithExceptionData_when_parameterIsWlsException() {
-            val code = "089";
-            val serviceName = "service name";
-            val cause = new NullPointerException("sth null");
-            val message = "message for exception";
-            val exceptionToHandle = SicherheitsWlsException.withCode(code).inService(serviceName).withCause(cause).buildWithMessage(message);
+    @Test
+    void should_returnWlsExceptionDTOWithExceptionData_when_parameterIsWlsException() {
+      val code = "089";
+      val serviceName = "service name";
+      val cause = new NullPointerException("sth null");
+      val message = "message for exception";
+      val exceptionToHandle =
+          SicherheitsWlsException.withCode(code)
+              .inService(serviceName)
+              .withCause(cause)
+              .buildWithMessage(message);
 
-            val mappedDTO = new WlsExceptionDTO(WlsExceptionCategory.S, code, serviceName, message);
-            Mockito.when(dtoMapper.toDTO(exceptionToHandle)).thenReturn(mappedDTO);
+      val mappedDTO = new WlsExceptionDTO(WlsExceptionCategory.S, code, serviceName, message);
+      Mockito.when(dtoMapper.toDTO(exceptionToHandle)).thenReturn(mappedDTO);
 
-            val result = unitUnderTest.getWahlExceptionDTO(exceptionToHandle);
+      val result = unitUnderTest.getWahlExceptionDTO(exceptionToHandle);
 
-            Assertions.assertThat(result).isSameAs(mappedDTO);
-        }
-
-        @Test
-        void should_returnWlsExceptionDTOWithSecurityData_when_parameterIsAccessDeniedException() {
-            val causingException = new NullPointerException("some was null");
-            val accessDeniedException = new AccessDeniedException("you shall not pass", causingException);
-
-            val result = unitUnderTest.getWahlExceptionDTO(accessDeniedException);
-
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.S, ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED, GET_SERVICE_RESULT,
-                    accessDeniedException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-
-        }
-
-        @Test
-        void should_returnWlsExceptionDTOWithFachlicheData_when_parameterIsHttpMessageNotReadableException() {
-            val cause = new IllegalArgumentException("text is not a fax");
-            final HttpInputMessage inputMessage = (null);
-            val messageNotReadableException = new HttpMessageNotReadableException("wrong type of message", cause, inputMessage);
-
-            val result = unitUnderTest.getWahlExceptionDTO(messageNotReadableException);
-
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE, GET_SERVICE_RESULT,
-                    "HTTP-Nachricht nicht lesbar: " + messageNotReadableException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWlsExceptionDTOWithTechnischeData_when_parameterIsTransientDataAccessException() {
-            val causingException = new NullPointerException("some was null");
-            val transientException = new TransientDataAccessException("my TransientDataAccessException message", causingException) {
-
-            };
-
-            val result = unitUnderTest.getWahlExceptionDTO(transientException);
-
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT, GET_SERVICE_RESULT,
-                    "Temporäres Problem, Ursache: " + transientException.getClass() + ", Nachricht: " + transientException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnWlsExceptionDTOWithDataForUnknownException_when_parameterDoesNotHaveExplicitHandling() {
-            val nullPointerException = new NullPointerException("object was null");
-
-            val result = unitUnderTest.getWahlExceptionDTO(nullPointerException);
-
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, GET_SERVICE_RESULT,
-                    "Ursache: " + nullPointerException.getClass() + ", Nachricht: " + nullPointerException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isSameAs(mappedDTO);
     }
 
-    @Nested
-    class CreateForTransientException {
+    @Test
+    void should_returnWlsExceptionDTOWithSecurityData_when_parameterIsAccessDeniedException() {
+      val causingException = new NullPointerException("some was null");
+      val accessDeniedException = new AccessDeniedException("you shall not pass", causingException);
 
-        @Test
-        void should_returnWlsExceptionDTOMessageFromThrowable_when_throwableIsGiven() {
-            val causingException = new NullPointerException("some was null");
-            val transientException = new TransientDataAccessException("my TransientDataAccessException message", causingException) {
+      val result = unitUnderTest.getWahlExceptionDTO(accessDeniedException);
 
-            };
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.S,
+              ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED,
+              GET_SERVICE_RESULT,
+              accessDeniedException.getMessage());
 
-            val result = unitUnderTest.createForTransientException(transientException);
-
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT, GET_SERVICE_RESULT,
-                    "Temporäres Problem, Ursache: " + transientException.getClass() + ", Nachricht: " + transientException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class CreateForAccessDeniedException {
+    @Test
+    void
+        should_returnWlsExceptionDTOWithFachlicheData_when_parameterIsHttpMessageNotReadableException() {
+      val cause = new IllegalArgumentException("text is not a fax");
+      final HttpInputMessage inputMessage = (null);
+      val messageNotReadableException =
+          new HttpMessageNotReadableException("wrong type of message", cause, inputMessage);
 
-        @Test
-        void should_returnWlsExceptionForAccessDenied_when_throwableIsGiven() {
-            val causingException = new NullPointerException("some was null");
-            val accessDeniedException = new AccessDeniedException("you shall not pass", causingException);
+      val result = unitUnderTest.getWahlExceptionDTO(messageNotReadableException);
 
-            val result = unitUnderTest.createForAccessDeniedException(accessDeniedException);
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionKonstanten.CODE_HTTP_MESSAGE_NOT_READABLE,
+              GET_SERVICE_RESULT,
+              "HTTP-Nachricht nicht lesbar: " + messageNotReadableException.getMessage());
 
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.S, ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED, GET_SERVICE_RESULT,
-                    accessDeniedException.getMessage());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class CreateResponse {
+    @Test
+    void
+        should_returnWlsExceptionDTOWithTechnischeData_when_parameterIsTransientDataAccessException() {
+      val causingException = new NullPointerException("some was null");
+      val transientException =
+          new TransientDataAccessException(
+              "my TransientDataAccessException message", causingException) {};
 
-        @Test
-        void should_createInternalServerError_when_exceptionDTOCategoryIsNull() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategory(null);
+      val result = unitUnderTest.getWahlExceptionDTO(transientException);
 
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionKonstanten.CODE_TRANSIENT,
+              GET_SERVICE_RESULT,
+              "Temporäres Problem, Ursache: "
+                  + transientException.getClass()
+                  + ", Nachricht: "
+                  + transientException.getMessage());
 
-            val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnNotFound_when_exceptionIsCategoryIsFachlichAndCodeEntityNotFound() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategoryAndCode(WlsExceptionCategory.F, ExceptionKonstanten.CODE_ENTITY_NOT_FOUND);
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.noContent().build();
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnBadRequest_when_exceptionIsCategoryIsFachlichAndButCodeIsNotEntityNotFound() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategoryAndCode(WlsExceptionCategory.F, ExceptionKonstanten.CODE_ENTITY_NOT_FOUND + "ABC");
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.badRequest().body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnInternalServerError_when_categoryIsTechnischAndCodeIsNotTransient() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategoryAndCode(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT + "ABC");
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnConflict_when_categoryIsTechnischAndCodeIsTransient() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategoryAndCode(WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT);
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.status(HttpStatus.CONFLICT).body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnForbidden_when_categoryIsSicherheit() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategory(WlsExceptionCategory.S);
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.status(HttpStatus.FORBIDDEN).body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnInternalServerError_when_categoryIsInfrastruktur() {
-            val wlsExceptionDTO = createWlsExceptionDTOWithCategory(WlsExceptionCategory.I);
-
-            val result = unitUnderTest.createResponse(wlsExceptionDTO);
-
-            val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        private WlsExceptionDTO createWlsExceptionDTOWithCategory(final WlsExceptionCategory category) {
-            return createWlsExceptionDTOWithCategoryAndCode(category, "code");
-        }
-
-        private WlsExceptionDTO createWlsExceptionDTOWithCategoryAndCode(final WlsExceptionCategory category, final String code) {
-            return new WlsExceptionDTO(category, code, "service", "message");
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
+    @Test
+    void
+        should_returnWlsExceptionDTOWithDataForUnknownException_when_parameterDoesNotHaveExplicitHandling() {
+      val nullPointerException = new NullPointerException("object was null");
+
+      val result = unitUnderTest.getWahlExceptionDTO(nullPointerException);
+
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT,
+              GET_SERVICE_RESULT,
+              "Ursache: "
+                  + nullPointerException.getClass()
+                  + ", Nachricht: "
+                  + nullPointerException.getMessage());
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class CreateForTransientException {
+
+    @Test
+    void should_returnWlsExceptionDTOMessageFromThrowable_when_throwableIsGiven() {
+      val causingException = new NullPointerException("some was null");
+      val transientException =
+          new TransientDataAccessException(
+              "my TransientDataAccessException message", causingException) {};
+
+      val result = unitUnderTest.createForTransientException(transientException);
+
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionKonstanten.CODE_TRANSIENT,
+              GET_SERVICE_RESULT,
+              "Temporäres Problem, Ursache: "
+                  + transientException.getClass()
+                  + ", Nachricht: "
+                  + transientException.getMessage());
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class CreateForAccessDeniedException {
+
+    @Test
+    void should_returnWlsExceptionForAccessDenied_when_throwableIsGiven() {
+      val causingException = new NullPointerException("some was null");
+      val accessDeniedException = new AccessDeniedException("you shall not pass", causingException);
+
+      val result = unitUnderTest.createForAccessDeniedException(accessDeniedException);
+
+      val expectedResult =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.S,
+              ExceptionKonstanten.CODE_SECURITY_ACCESS_DENIED,
+              GET_SERVICE_RESULT,
+              accessDeniedException.getMessage());
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class CreateResponse {
+
+    @Test
+    void should_createInternalServerError_when_exceptionDTOCategoryIsNull() {
+      val wlsExceptionDTO = createWlsExceptionDTOWithCategory(null);
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnNotFound_when_exceptionIsCategoryIsFachlichAndCodeEntityNotFound() {
+      val wlsExceptionDTO =
+          createWlsExceptionDTOWithCategoryAndCode(
+              WlsExceptionCategory.F, ExceptionKonstanten.CODE_ENTITY_NOT_FOUND);
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.noContent().build();
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnBadRequest_when_exceptionIsCategoryIsFachlichAndButCodeIsNotEntityNotFound() {
+      val wlsExceptionDTO =
+          createWlsExceptionDTOWithCategoryAndCode(
+              WlsExceptionCategory.F, ExceptionKonstanten.CODE_ENTITY_NOT_FOUND + "ABC");
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.badRequest().body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnInternalServerError_when_categoryIsTechnischAndCodeIsNotTransient() {
+      val wlsExceptionDTO =
+          createWlsExceptionDTOWithCategoryAndCode(
+              WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT + "ABC");
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnConflict_when_categoryIsTechnischAndCodeIsTransient() {
+      val wlsExceptionDTO =
+          createWlsExceptionDTOWithCategoryAndCode(
+              WlsExceptionCategory.T, ExceptionKonstanten.CODE_TRANSIENT);
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.status(HttpStatus.CONFLICT).body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnForbidden_when_categoryIsSicherheit() {
+      val wlsExceptionDTO = createWlsExceptionDTOWithCategory(WlsExceptionCategory.S);
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.status(HttpStatus.FORBIDDEN).body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_returnInternalServerError_when_categoryIsInfrastruktur() {
+      val wlsExceptionDTO = createWlsExceptionDTOWithCategory(WlsExceptionCategory.I);
+
+      val result = unitUnderTest.createResponse(wlsExceptionDTO);
+
+      val expectedResult = ResponseEntity.internalServerError().body(wlsExceptionDTO);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    private WlsExceptionDTO createWlsExceptionDTOWithCategory(final WlsExceptionCategory category) {
+      return createWlsExceptionDTOWithCategoryAndCode(category, "code");
+    }
+
+    private WlsExceptionDTO createWlsExceptionDTOWithCategoryAndCode(
+        final WlsExceptionCategory category, final String code) {
+      return new WlsExceptionDTO(category, code, "service", "message");
+    }
+  }
 }

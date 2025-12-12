@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 public class OAuthServerSessions {
 
-    private List<OAuthServerSession> sessions;
-
+  private List<OAuthServerSession> sessions;
 }

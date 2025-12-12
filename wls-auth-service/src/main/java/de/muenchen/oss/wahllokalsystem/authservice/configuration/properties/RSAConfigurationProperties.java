@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix = "service.config.rsa", ignoreInvalidFields = true)
 public class RSAConfigurationProperties {
-    private RSAPrivateKey privateKey;
-    private RSAPublicKey publicKey;
-    private RSAKeySetting rsaKeySetting = RSAKeySetting.STATIC_KEY;
+  private RSAPrivateKey privateKey;
+  private RSAPublicKey publicKey;
+  private RSAKeySetting rsaKeySetting = RSAKeySetting.STATIC_KEY;
 }

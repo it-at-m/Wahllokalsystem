@@ -19,6 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
+  postBegruendung: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
@@ -33,6 +34,7 @@ vi.mock(
     useErgebnisermittlungService: () => ({
       getBegruendungStimmzettelumschlaege:
         mockDefinitions.getBegruendungStimmzettelumschlaege,
+      postBegruendung: mockDefinitions.postBegruendung,
     }),
   })
 );
@@ -686,6 +688,128 @@ describe("ergebnismeldungStore.ts", () => {
       await expect(
         unitUnderTest.loadBegruendungForWahl(wahl)
       ).rejects.toThrow();
+    });
+  });
+
+  describe("saveBegruendung", () => {
+    it("should_saveBegruendung_when_serviceReturnsSuccessfully", async () => {
+      const begruendung = createBegruendung();
+      const wahlbezirkID = generateRandomString(10);
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID, wahlID: begruendung.wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.postBegruendung.mockResolvedValue({}); // Mock successful response
+
+      await unitUnderTest.saveBegruendung(begruendung);
+
+      expect(mockDefinitions.postBegruendung).toHaveBeenCalledWith(
+        begruendung,
+        wahlbezirkID,
+        true
+      );
+      expect(unitUnderTest.begruendungen).toContainEqual(begruendung);
+      expect(unitUnderTest.isBegruendungSaving).toBe(false);
+    });
+
+    it("should_replaceExistingBegruendung_when_savingNewBegruendungWithSameWahlID", async () => {
+      const begruendung1 = createBegruendung();
+      const begruendung2 = createBegruendung();
+      const updatedBegruendung2 = {
+        ...begruendung2,
+        text: "Updated Text",
+      };
+      const wahlbezirkID = generateRandomString(10);
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            {
+              wahlbezirkID,
+              wahlID: begruendung2.wahlID,
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
+
+      unitUnderTest.begruendungen.push(begruendung1);
+      unitUnderTest.begruendungen.push(begruendung2);
+
+      mockDefinitions.postBegruendung.mockResolvedValue({});
+
+      await unitUnderTest.saveBegruendung(updatedBegruendung2);
+
+      expect(mockDefinitions.postBegruendung).toHaveBeenCalledWith(
+        updatedBegruendung2,
+        wahlbezirkID,
+        true
+      );
+      expect(unitUnderTest.begruendungen).toContainEqual(begruendung1);
+      expect(unitUnderTest.begruendungen).toContainEqual(updatedBegruendung2);
+      expect(unitUnderTest.begruendungen).not.toContainEqual(begruendung2);
+    });
+
+    it("should_throwError_when_serviceThrowsError", async () => {
+      const begruendung = createBegruendung();
+      const wahlbezirkID = generateRandomString(10);
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID, wahlID: begruendung.wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.postBegruendung.mockRejectedValue(
+        new Error("service call failed")
+      );
+
+      await expect(unitUnderTest.saveBegruendung(begruendung)).rejects.toThrow(
+        "Fehler beim Speichern der Begründung."
+      );
+
+      expect(mockDefinitions.postBegruendung).toHaveBeenCalledWith(
+        begruendung,
+        wahlbezirkID,
+        true
+      );
+      expect(unitUnderTest.isBegruendungSaving).toBe(false);
+    });
+
+    it("should_setIsBegruendungSavingToTrue_when_saving", async () => {
+      const begruendung = createBegruendung();
+      const wahlbezirkID = generateRandomString(10);
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID, wahlID: begruendung.wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.postBegruendung.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            setTimeout(() => resolve({}), 100);
+          })
+      );
+
+      const savePromise = unitUnderTest.saveBegruendung(begruendung);
+
+      expect(unitUnderTest.isBegruendungSaving).toBe(true);
+      await savePromise;
+      expect(unitUnderTest.isBegruendungSaving).toBe(false);
     });
   });
 });

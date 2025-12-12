@@ -9,44 +9,43 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { FortsetzungsUhrzeitModelMapperImpl.class })
+@SpringBootTest(classes = {FortsetzungsUhrzeitModelMapperImpl.class})
 class FortsetzungsUhrzeitModelMapperTest {
 
-    @Autowired
-    private FortsetzungsUhrzeitModelMapper unitUnderTest;
+  @Autowired private FortsetzungsUhrzeitModelMapper unitUnderTest;
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnFortsetzungsuhrzeitModel_when_givenFortsetzungsuhrzeitEntity() {
-            val wahlbezirkID = "wahlbezirkID";
-            val fortsetzungsUhrzeit = LocalDateTime.now();
-            val entityToMap = new FortsetzungsUhrzeit(wahlbezirkID, fortsetzungsUhrzeit);
+    @Test
+    void should_returnFortsetzungsuhrzeitModel_when_givenFortsetzungsuhrzeitEntity() {
+      val wahlbezirkID = "wahlbezirkID";
+      val fortsetzungsUhrzeit = LocalDateTime.now();
+      val entityToMap = new FortsetzungsUhrzeit(wahlbezirkID, fortsetzungsUhrzeit);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expecetedResult = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
+      val expecetedResult = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expecetedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expecetedResult);
     }
+  }
 
-    @Nested
-    class ToEntity {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnFortsetzungsuhrzeitEntity_when_givenFortsetzungsuhrzeitModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val fortsetzungsUhrzeit = LocalDateTime.now();
+    @Test
+    void should_returnFortsetzungsuhrzeitEntity_when_givenFortsetzungsuhrzeitModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val fortsetzungsUhrzeit = LocalDateTime.now();
 
-            val modelToMap = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
+      val modelToMap = new FortsetzungsUhrzeitModel(wahlbezirkID, fortsetzungsUhrzeit);
 
-            val result = unitUnderTest.toEntity(modelToMap);
+      val result = unitUnderTest.toEntity(modelToMap);
 
-            val expectedResult = new FortsetzungsUhrzeit(wahlbezirkID, fortsetzungsUhrzeit);
+      val expectedResult = new FortsetzungsUhrzeit(wahlbezirkID, fortsetzungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

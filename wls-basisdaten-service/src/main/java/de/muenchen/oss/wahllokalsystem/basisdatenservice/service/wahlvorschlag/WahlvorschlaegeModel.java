@@ -6,8 +6,7 @@ import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record WahlvorschlaegeModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                                   @NotNull String stimmzettelgebietID,
-                                   @NotNull Set<WahlvorschlagModel> wahlvorschlaege) {
-
-}
+public record WahlvorschlaegeModel(
+    @NotNull BezirkUndWahlID bezirkUndWahlID,
+    @NotNull String stimmzettelgebietID,
+    @NotNull Set<WahlvorschlagModel> wahlvorschlaege) {}

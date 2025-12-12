@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 
 class DummyClientImplTest {
 
-    private final DummyClientImpl unitUnderTest = new DummyClientImpl();
+  private final DummyClientImpl unitUnderTest = new DummyClientImpl();
 
-    @Nested
-    class GetAWerte {
+  @Nested
+  class GetAWerte {
 
-        @Test
-        void should_returnListOfAWerteModelWithTwoEntries_when_calledWithWahlbezirkID() {
-            val result = unitUnderTest.getAWerte("wahlbezirkID");
-            Assertions.assertThat(result).hasSize(1);
-        }
+    @Test
+    void should_returnListOfAWerteModelWithTwoEntries_when_calledWithWahlbezirkID() {
+      val result = unitUnderTest.getAWerte("wahlbezirkID");
+      Assertions.assertThat(result).hasSize(1);
     }
+  }
 }

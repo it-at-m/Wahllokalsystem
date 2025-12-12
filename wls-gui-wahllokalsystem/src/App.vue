@@ -47,7 +47,7 @@ const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
-const { setupIndexDB } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 
 onMounted(async () => {
   try {
@@ -61,7 +61,7 @@ onMounted(async () => {
   }
 
   // config for service worker indexed db (same config as in wahl-worker.js !)
-  setupIndexDB();
+  indexDBSingleton.setupIndexDB();
 });
 
 onUnmounted(() => {

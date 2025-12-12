@@ -6,14 +6,14 @@ import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record ErgebnismeldungDTO(@NotNull String wahlbezirkID,
-                                 @NotNull String wahlID,
-                                 MeldungsartDTO meldungsart,
-                                 AWerteDTO aWerte,
-                                 BWerteDTO bWerte,
-                                 WahlbriefeWerteDTO wahlbriefeWerte,
-                                 Set<UngueltigeStimmzettelDTO> ungueltigeStimmzettels,
-                                 Long ungueltigeStimmzettelAnzahl,
-                                 Set<ErgebnisDTO> ergebnisse,
-                                 WahlartDTO wahlart) {
-}
+public record ErgebnismeldungDTO(
+    @NotNull String wahlbezirkID,
+    @NotNull String wahlID,
+    MeldungsartDTO meldungsart,
+    AWerteDTO aWerte,
+    BWerteDTO bWerte,
+    WahlbriefeWerteDTO wahlbriefeWerte,
+    Set<UngueltigeStimmzettelDTO> ungueltigeStimmzettels,
+    Long ungueltigeStimmzettelAnzahl,
+    Set<ErgebnisDTO> ergebnisse,
+    WahlartDTO wahlart) {}

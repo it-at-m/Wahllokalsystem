@@ -15,102 +15,113 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class WahldatenServiceSecurityTest {
 
-    @Autowired
-    WahldatenService wahldatenService;
+  @Autowired WahldatenService wahldatenService;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLTAGE);
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLTAGE);
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahldatenService.getWahltage(LocalDate.now()));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
-
-            Assertions.assertThatException().isThrownBy(() -> wahldatenService.getWahltage(LocalDate.now())).isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahldatenService.getWahltage(LocalDate.now()));
     }
 
-    @Nested
-    class GetWahlen {
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLEN);
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahldatenService.getWahltage(LocalDate.now()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahldatenService.getWahlen(LocalDate.now(), "nummer"));
-        }
+  @Nested
+  class GetWahlen {
 
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLEN);
 
-            Assertions.assertThatException().isThrownBy(() -> wahldatenService.getWahlen(LocalDate.now(), "nummer")).isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahldatenService.getWahlen(LocalDate.now(), "nummer"));
     }
 
-    @Nested
-    class GetWahlbezirke {
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLBEZIRKE);
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahldatenService.getWahlen(LocalDate.now(), "nummer"))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahldatenService.getWahlbezirke(LocalDate.now(), "nummer"));
-        }
+  @Nested
+  class GetWahlbezirke {
 
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLBEZIRKE);
 
-            Assertions.assertThatException().isThrownBy(() -> wahldatenService.getWahlbezirke(LocalDate.now(), "nummer"))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahldatenService.getWahlbezirke(LocalDate.now(), "nummer"));
     }
 
-    @Nested
-    class GetWahlberechtigte {
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLBERECHTIGTE);
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahldatenService.getWahlbezirke(LocalDate.now(), "nummer"))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> wahldatenService.getWahlberechtigte(UUID.randomUUID().toString()));
-        }
+  @Nested
+  class GetWahlberechtigte {
 
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLBERECHTIGTE);
 
-            Assertions.assertThatException().isThrownBy(() -> wahldatenService.getWahlberechtigte(UUID.randomUUID().toString()))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahldatenService.getWahlberechtigte(UUID.randomUUID().toString()));
     }
 
-    @Nested
-    class GetBasisdaten {
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_LOAD_BASISDATEN);
-
-            Assertions.assertThatNoException().isThrownBy(() -> wahldatenService.getBasisdaten(LocalDate.now(), "nummer"));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
-
-            Assertions.assertThatException().isThrownBy(() -> wahldatenService.getBasisdaten(LocalDate.now(), "nummer"))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahldatenService.getWahlberechtigte(UUID.randomUUID().toString()))
+          .isInstanceOf(AccessDeniedException.class);
     }
+  }
+
+  @Nested
+  class GetBasisdaten {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_BASISDATEN);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahldatenService.getBasisdaten(LocalDate.now(), "nummer"));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahldatenService.getBasisdaten(LocalDate.now(), "nummer"))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

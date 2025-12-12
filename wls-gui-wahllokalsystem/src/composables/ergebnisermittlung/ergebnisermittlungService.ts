@@ -1,3 +1,4 @@
+import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
@@ -15,7 +16,8 @@ import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toDto, toModel } = useErgebnisermittlungMapper();
-const { toBegruendungModel } = useErgebnisMapper();
+const { toBegruendungModel, toBegruendungDto, toPostErgebnisseStapelartEnum } =
+  useErgebnisMapper();
 const { addNotification } = useUserNotificationService();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
@@ -123,9 +125,39 @@ export function useErgebnisermittlungService() {
     }
   }
 
+  async function postBegruendung(
+    begruendung: Begruendung,
+    wahlbezirkID: string,
+    sendNotification = true
+  ): Promise<void> {
+    try {
+      await begruendungControllerApi.postBegruendung(
+        wahlbezirkID,
+        begruendung.wahlID,
+        toPostErgebnisseStapelartEnum(begruendung.stapelart),
+        toBegruendungDto(begruendung, wahlbezirkID)
+      );
+      if (sendNotification) {
+        addNotification(
+          `Begründung erfolgreich gespeichert.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          `Speichern der Begründung fehlgeschlagen.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     postStimmzettelumschlaege,
     getStimmzettelumschlaege,
     getBegruendungStimmzettelumschlaege,
+    postBegruendung,
   };
 }

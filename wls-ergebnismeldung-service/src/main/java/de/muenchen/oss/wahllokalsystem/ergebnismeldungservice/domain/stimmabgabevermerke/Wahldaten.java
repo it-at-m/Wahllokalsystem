@@ -36,32 +36,28 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Wahldaten {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    @ToString.Include
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  @ToString.Include
+  private UUID id;
 
-    @Embedded
-    @NaturalId
-    @NotNull
-    @ToString.Include
-    private BezirkUndWahlIDUndWaehlerverzeichnisnummer bezirkUndWahlIDUndWaehlerverzeichnisnummer;
+  @Embedded @NaturalId @NotNull @ToString.Include
+  private BezirkUndWahlIDUndWaehlerverzeichnisnummer bezirkUndWahlIDUndWaehlerverzeichnisnummer;
 
-    @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.ALL)
-    @NotNull
-    private Set<Vermerk> vermerke = new LinkedHashSet<>();
+  @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.ALL)
+  @NotNull private Set<Vermerk> vermerke = new LinkedHashSet<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "EingenommeneWahlscheine", joinColumns = @JoinColumn(name = "wahldatenID", referencedColumnName = "id"))
-    @NotNull
-    @Size(min = 1)
-    @ToString.Include
-    private Set<EingenommenerWahlschein> eingenommeneWahlscheine = new LinkedHashSet<>();
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+      name = "EingenommeneWahlscheine",
+      joinColumns = @JoinColumn(name = "wahldatenID", referencedColumnName = "id"))
+  @NotNull @Size(min = 1) @ToString.Include
+  private Set<EingenommenerWahlschein> eingenommeneWahlscheine = new LinkedHashSet<>();
 
-    public void addVermerk(Vermerk vermerk) {
-        vermerke.add(vermerk);
-        vermerk.setWahldaten(this);
-    }
+  public void addVermerk(Vermerk vermerk) {
+    vermerke.add(vermerk);
+    vermerk.setWahldaten(this);
+  }
 }

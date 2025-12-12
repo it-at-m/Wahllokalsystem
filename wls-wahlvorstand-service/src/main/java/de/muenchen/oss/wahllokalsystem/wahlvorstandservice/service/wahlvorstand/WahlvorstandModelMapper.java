@@ -9,11 +9,11 @@ import org.mapstruct.Mapper;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface WahlvorstandModelMapper {
 
-    WahlvorstandModel toModel(final Wahlvorstand entity);
+  WahlvorstandModel toModel(final Wahlvorstand entity);
 
-    Wahlvorstandsmitglied toEntity(final WahlvorstandsmitgliedModel model);
+  Wahlvorstandsmitglied toEntity(final WahlvorstandsmitgliedModel model);
 
-    Funktion toEntity(final FunktionModel model);
+  Funktion toEntity(final FunktionModel model);
 
-    Wahlvorstand toEntity(final WahlvorstandModel model);
+  Wahlvorstand toEntity(final WahlvorstandModel model);
 }

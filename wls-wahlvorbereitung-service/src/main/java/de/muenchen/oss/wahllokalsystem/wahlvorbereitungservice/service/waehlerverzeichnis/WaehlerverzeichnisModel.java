@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record WaehlerverzeichnisModel(@NotNull BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference,
-                                      Boolean verzeichnisLagVor,
-                                      Boolean berichtigungVorBeginnDerAbstimmung,
-                                      Boolean nachtraeglicheBerichtigung,
-                                      Boolean mitteilungUeberUngueltigeWahlscheineErhalten) {
-}
+public record WaehlerverzeichnisModel(
+    @NotNull BezirkIDUndWaehlerverzeichnisNummer waehlerverzeichnisReference,
+    Boolean verzeichnisLagVor,
+    Boolean berichtigungVorBeginnDerAbstimmung,
+    Boolean nachtraeglicheBerichtigung,
+    Boolean mitteilungUeberUngueltigeWahlscheineErhalten) {}

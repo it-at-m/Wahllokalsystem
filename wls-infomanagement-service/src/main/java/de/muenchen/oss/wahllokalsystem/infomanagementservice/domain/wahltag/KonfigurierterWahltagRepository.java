@@ -12,47 +12,47 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface KonfigurierterWahltagRepository
-        extends CrudRepository<KonfigurierterWahltag, String>, PagingAndSortingRepository<KonfigurierterWahltag, String> {
+    extends CrudRepository<KonfigurierterWahltag, String>,
+        PagingAndSortingRepository<KonfigurierterWahltag, String> {
 
-    String CACHE = "KonfigurierterWahltagCACHE";
+  String CACHE = "KonfigurierterWahltagCACHE";
 
-    @Override
-    List<KonfigurierterWahltag> findAll();
+  @Override
+  List<KonfigurierterWahltag> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<KonfigurierterWahltag> findById(String key);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<KonfigurierterWahltag> findById(String key);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.wahltagID")
-    @PreAuthorize("hasAuthority('Infomanagement_WRITE_KonfigurierterWahltag')")
-    <S extends KonfigurierterWahltag> S save(S konfigurierterWahltag);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.wahltagID")
+  @PreAuthorize("hasAuthority('Infomanagement_WRITE_KonfigurierterWahltag')")
+  <S extends KonfigurierterWahltag> S save(S konfigurierterWahltag);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
-    void deleteById(String wahltagID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
+  void deleteById(String wahltagID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.wahltagID")
-    @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
-    void delete(KonfigurierterWahltag entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.wahltagID")
+  @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
+  void delete(KonfigurierterWahltag entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
-    void deleteAll(Iterable<? extends KonfigurierterWahltag> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
+  void deleteAll(Iterable<? extends KonfigurierterWahltag> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Infomanagement_DELETE_KonfigurierterWahltag')")
+  void deleteAll();
 
-    KonfigurierterWahltag findByActive(boolean isActive);
+  KonfigurierterWahltag findByActive(boolean isActive);
 
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
-    @Query("UPDATE KonfigurierterWahltag w SET w.active = false")
-    @PreAuthorize("hasAuthority('Infomanagement_WRITE_KonfigurierterWahltag')")
-    void setExistingKonfigurierteWahltageInaktiv();
-
+  @Modifying(flushAutomatically = true, clearAutomatically = true)
+  @Query("UPDATE KonfigurierterWahltag w SET w.active = false")
+  @PreAuthorize("hasAuthority('Infomanagement_WRITE_KonfigurierterWahltag')")
+  void setExistingKonfigurierteWahltageInaktiv();
 }

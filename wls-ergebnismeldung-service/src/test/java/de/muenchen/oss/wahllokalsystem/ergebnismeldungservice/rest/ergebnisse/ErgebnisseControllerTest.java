@@ -24,121 +24,137 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class ErgebnisseControllerTest {
 
-    @Mock
-    ErgebnisseService ergebnisseService;
+  @Mock ErgebnisseService ergebnisseService;
 
-    @Mock
-    ErgebnisseDTOMapper ergebnisseDTOMapper;
+  @Mock ErgebnisseDTOMapper ergebnisseDTOMapper;
 
-    @Mock
-    StapelartDTOMapper stapelArtDTOMapper;
+  @Mock StapelartDTOMapper stapelArtDTOMapper;
 
-    @InjectMocks
-    ErgebnisseController unitUnderTest;
+  @InjectMocks ErgebnisseController unitUnderTest;
 
-    @Nested
-    class GetErgebnisse {
+  @Nested
+  class GetErgebnisse {
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
-            val stapelartModel = StapelartModel.LTW_BZW_A;
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
+      val stapelartModel = StapelartModel.LTW_BZW_A;
 
-            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
-            val bezirkUndWahlIDStapelartDTO = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
-            val mockedServiceResponse = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
-            val mockedServiceResponseAsDTO = new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
+      val mockedErgebnisseReference =
+          new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
+      val bezirkUndWahlIDStapelartDTO =
+          new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
+      val mockedServiceResponse =
+          new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
+      val mockedServiceResponseAsDTO =
+          new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
 
-            Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
-            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
+      Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
 
-            val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
+      val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
-
-        @Test
-        void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelartModel = StapelartModel.LTW_BZW_A;
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
-
-            val mockedErgebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
-
-            Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference)).thenReturn(Optional.empty());
-            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
-            val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class GetAllErgebnisse {
+    @Test
+    void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartModel = StapelartModel.LTW_BZW_A;
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
+      val mockedErgebnisseReference =
+          new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
-            val bezirkUndWahlIDStapelartDTO = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
+      Mockito.when(ergebnisseService.getErgebnisse(mockedErgebnisseReference))
+          .thenReturn(Optional.empty());
+      Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
+      val result = unitUnderTest.getErgebnisse(wahlbezirkID, wahlID, stapelartDTO);
 
-            val mockedServiceResponse = new ErgebnisseModel(wahlbezirkID, wahlID, null, Collections.emptyList());
-            val mockedListServiceResponse = List.of(mockedServiceResponse);
-            val mockedServiceResponseAsDTO = new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
-            val mockedListServiceResponseAsDTO = List.of(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+  }
 
-            Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID)).thenReturn(mockedListServiceResponse);
-            Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+  @Nested
+  class GetAllErgebnisse {
 
-            val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedListServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
+      val bezirkUndWahlIDStapelartDTO =
+          new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
 
-        @Test
-        void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+      val mockedServiceResponse =
+          new ErgebnisseModel(wahlbezirkID, wahlID, null, Collections.emptyList());
+      val mockedListServiceResponse = List.of(mockedServiceResponse);
+      val mockedServiceResponseAsDTO =
+          new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, Collections.emptyList());
+      val mockedListServiceResponseAsDTO = List.of(mockedServiceResponseAsDTO);
 
-            Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID)).thenReturn(Collections.emptyList());
+      Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID))
+          .thenReturn(mockedListServiceResponse);
+      Mockito.when(ergebnisseDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
+      val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
 
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedListServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class PostErgebnisse {
+    @Test
+    void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
-            val stapelartModel = StapelartModel.LTW_BZW_A;
+      Mockito.when(ergebnisseService.getAllErgebnisse(wahlID, wahlbezirkID))
+          .thenReturn(Collections.emptyList());
 
-            val ergebnisseDTO = new ErgebnisseDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO), Collections.emptyList());
-            val ergebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
+      val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
 
-            val mockedErgebnisseModel = new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
-            Mockito.when(ergebnisseDTOMapper.toModel(ergebnisseDTO)).thenReturn(mockedErgebnisseModel);
-            Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
-
-            unitUnderTest.postErgebnisse(wahlbezirkID, wahlID, stapelartDTO, ergebnisseDTO);
-
-            Mockito.verify(ergebnisseService).postErgebnisse(ergebnisseReference,
-                    new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList()));
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+  }
+
+  @Nested
+  class PostErgebnisse {
+
+    @Test
+    void should_callServiceWithModel_when_calledWithData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
+      val stapelartModel = StapelartModel.LTW_BZW_A;
+
+      val ergebnisseDTO =
+          new ErgebnisseDTO(
+              new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO),
+              Collections.emptyList());
+      val ergebnisseReference = new ErgebnisseReferenceModel(wahlbezirkID, wahlID, stapelartModel);
+
+      val mockedErgebnisseModel =
+          new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList());
+      Mockito.when(ergebnisseDTOMapper.toModel(ergebnisseDTO)).thenReturn(mockedErgebnisseModel);
+      Mockito.when(stapelArtDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
+
+      unitUnderTest.postErgebnisse(wahlbezirkID, wahlID, stapelartDTO, ergebnisseDTO);
+
+      Mockito.verify(ergebnisseService)
+          .postErgebnisse(
+              ergebnisseReference,
+              new ErgebnisseModel(wahlbezirkID, wahlID, stapelartModel, Collections.emptyList()));
+    }
+  }
 }

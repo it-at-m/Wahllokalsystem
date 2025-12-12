@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface StapelartModelMapper {
-    StapelartModel toModel(Stapelart stapelart);
+  StapelartModel toModel(Stapelart stapelart);
 
-    Stapelart toEntity(StapelartModel stapelartModel);
+  Stapelart toEntity(StapelartModel stapelartModel);
 }

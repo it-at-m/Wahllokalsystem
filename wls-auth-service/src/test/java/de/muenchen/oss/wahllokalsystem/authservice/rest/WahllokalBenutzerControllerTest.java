@@ -22,96 +22,106 @@ import org.springframework.http.ResponseEntity;
 @ExtendWith(MockitoExtension.class)
 class WahllokalBenutzerControllerTest {
 
-    @Mock
-    UserDTOMapper userDTOMapper;
+  @Mock UserDTOMapper userDTOMapper;
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @InjectMocks
-    WahllokalBenutzerController unitUnderTest;
+  @InjectMocks WahllokalBenutzerController unitUnderTest;
 
-    @Nested
-    class CreateAndExportWahllokalBenutzer {
+  @Nested
+  class CreateAndExportWahllokalBenutzer {
 
-        @Test
-        void should_returnCreatedResponseWithUsersAsString_when_serviceWorkedSuccessfully() {
-            val wahltagID = "wahltagID";
-            val wahllokalUser = new WahllokalUserInfoDTO("wahlbezirknummer", LocalDate.now(), "wbzID", WahlbezirksartDTO.UWB, "nummer");
+    @Test
+    void should_returnCreatedResponseWithUsersAsString_when_serviceWorkedSuccessfully() {
+      val wahltagID = "wahltagID";
+      val wahllokalUser =
+          new WahllokalUserInfoDTO(
+              "wahlbezirknummer", LocalDate.now(), "wbzID", WahlbezirksartDTO.UWB, "nummer");
 
-            val mockedWahllokalUserAsModel = new UsersOfWahltagModel(wahltagID, Collections.emptyList());
-            val mockedServiceResponse = "users as string";
+      val mockedWahllokalUserAsModel = new UsersOfWahltagModel(wahltagID, Collections.emptyList());
+      val mockedServiceResponse = "users as string";
 
-            Mockito.when(userDTOMapper.toModel(eq(wahltagID), eq(List.of(wahllokalUser)))).thenReturn(mockedWahllokalUserAsModel);
-            Mockito.when(userService.generateWahllokalBenutzer(mockedWahllokalUserAsModel)).thenReturn(mockedServiceResponse);
+      Mockito.when(userDTOMapper.toModel(eq(wahltagID), eq(List.of(wahllokalUser))))
+          .thenReturn(mockedWahllokalUserAsModel);
+      Mockito.when(userService.generateWahllokalBenutzer(mockedWahllokalUserAsModel))
+          .thenReturn(mockedServiceResponse);
 
-            val result = unitUnderTest.createAndExportWahllokalBenutzer(wahltagID, List.of(wahllokalUser));
+      val result =
+          unitUnderTest.createAndExportWahllokalBenutzer(wahltagID, List.of(wahllokalUser));
 
-            val expectedResult = ResponseEntity.status(HttpStatus.CREATED).body(mockedServiceResponse);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
-            val wahltagID = "wahltagID";
-            val wahllokalUser = new WahllokalUserInfoDTO("wahlbezirknummer", LocalDate.now(), "wbzID", WahlbezirksartDTO.UWB, "nummer");
-
-            val mockedWahllokalUserAsModel = new UsersOfWahltagModel(wahltagID, Collections.emptyList());
-            val mockedServiceException = new RuntimeException("mocked exception");
-
-            Mockito.when(userDTOMapper.toModel(eq(wahltagID), eq(List.of(wahllokalUser)))).thenReturn(mockedWahllokalUserAsModel);
-            Mockito.doThrow(mockedServiceException).when(userService).generateWahllokalBenutzer(mockedWahllokalUserAsModel);
-
-            val result = unitUnderTest.createAndExportWahllokalBenutzer(wahltagID, List.of(wahllokalUser));
-
-            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("createAndExportWahllokalBenutzer error");
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult = ResponseEntity.status(HttpStatus.CREATED).body(mockedServiceResponse);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ExportWahllokalBenutzer {
+    @Test
+    void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
+      val wahltagID = "wahltagID";
+      val wahllokalUser =
+          new WahllokalUserInfoDTO(
+              "wahlbezirknummer", LocalDate.now(), "wbzID", WahlbezirksartDTO.UWB, "nummer");
 
-        @Test
-        void should_returnCreatedResponseWithExistingUsersAsString_when_serviceWorkedSuccessfully() {
-            val wahltagID = "wahltagID";
+      val mockedWahllokalUserAsModel = new UsersOfWahltagModel(wahltagID, Collections.emptyList());
+      val mockedServiceException = new RuntimeException("mocked exception");
 
-            val mockedServiceResponse = "exported users";
-            Mockito.when(userService.exportWahllokalBenutzer(wahltagID)).thenReturn(mockedServiceResponse);
+      Mockito.when(userDTOMapper.toModel(eq(wahltagID), eq(List.of(wahllokalUser))))
+          .thenReturn(mockedWahllokalUserAsModel);
+      Mockito.doThrow(mockedServiceException)
+          .when(userService)
+          .generateWahllokalBenutzer(mockedWahllokalUserAsModel);
 
-            val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+      val result =
+          unitUnderTest.createAndExportWahllokalBenutzer(wahltagID, List.of(wahllokalUser));
 
-            val expectedResult = ResponseEntity.status(HttpStatus.CREATED).body(mockedServiceResponse);
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val expectedResult =
+          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body("createAndExportWahllokalBenutzer error");
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 
-        @Test
-        void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
-            val wahltagID = "wahltagID";
+  @Nested
+  class ExportWahllokalBenutzer {
 
-            val mockedServiceException = new RuntimeException("mocked exception");
-            Mockito.doThrow(mockedServiceException).when(userService).exportWahllokalBenutzer(wahltagID);
+    @Test
+    void should_returnCreatedResponseWithExistingUsersAsString_when_serviceWorkedSuccessfully() {
+      val wahltagID = "wahltagID";
 
-            val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+      val mockedServiceResponse = "exported users";
+      Mockito.when(userService.exportWahllokalBenutzer(wahltagID))
+          .thenReturn(mockedServiceResponse);
 
-            val expectedResult = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("exportWahllokalBenutzer error");
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
 
+      val expectedResult = ResponseEntity.status(HttpStatus.CREATED).body(mockedServiceResponse);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    @Nested
-    class DeleteWahllokalBenutzer {
+    @Test
+    void should_returnInternalServerErrorResponse_when_exceptionInServiceOccurred() {
+      val wahltagID = "wahltagID";
 
-        @Test
-        void should_callServiceWithWahltagID_when_controllerIsCalled() {
-            val wahltagID = "wahltagID";
+      val mockedServiceException = new RuntimeException("mocked exception");
+      Mockito.doThrow(mockedServiceException).when(userService).exportWahllokalBenutzer(wahltagID);
 
-            unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+      val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
 
-            Mockito.verify(userService).deleteWahllokalBenutzer(wahltagID);
-        }
-
+      val expectedResult =
+          ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .body("exportWahllokalBenutzer error");
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
+  @Nested
+  class DeleteWahllokalBenutzer {
+
+    @Test
+    void should_callServiceWithWahltagID_when_controllerIsCalled() {
+      val wahltagID = "wahltagID";
+
+      unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+
+      Mockito.verify(userService).deleteWahllokalBenutzer(wahltagID);
+    }
+  }
 }

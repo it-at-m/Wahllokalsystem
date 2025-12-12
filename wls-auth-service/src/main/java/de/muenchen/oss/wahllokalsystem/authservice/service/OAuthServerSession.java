@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public final class OAuthServerSession {
 
-    private String username;
-    private String sessionId;
+  private String username;
+  private String sessionId;
 }

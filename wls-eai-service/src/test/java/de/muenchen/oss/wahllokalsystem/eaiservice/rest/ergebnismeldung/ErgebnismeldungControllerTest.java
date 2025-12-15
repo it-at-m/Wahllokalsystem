@@ -14,22 +14,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ErgebnismeldungControllerTest {
 
-    @Mock
-    ErgebnismeldungService ergebnismeldungService;
+  @Mock ErgebnismeldungService ergebnismeldungService;
 
-    @InjectMocks
-    ErgebnismeldungController unitUnderTest;
+  @InjectMocks ErgebnismeldungController unitUnderTest;
 
-    @Nested
-    class SaveErgebnismeldung {
+  @Nested
+  class SaveErgebnismeldung {
 
-        @Test
-        void should_saveErgebnismeldung_when_called() {
-            val ergebnismeldungDTO = ErgebnismeldungDTO.builder().build();
+    @Test
+    void should_saveErgebnismeldung_when_called() {
+      val ergebnismeldungDTO = ErgebnismeldungDTO.builder().build();
 
-            unitUnderTest.saveErgebnismeldung(ergebnismeldungDTO);
+      unitUnderTest.saveErgebnismeldung(ergebnismeldungDTO);
 
-            Mockito.verify(ergebnismeldungService).saveErgebnismeldung(ergebnismeldungDTO);
-        }
+      Mockito.verify(ergebnismeldungService).saveErgebnismeldung(ergebnismeldungDTO);
     }
+  }
 }

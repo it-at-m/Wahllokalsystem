@@ -16,11 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UnterbrechungsUhrzeit {
 
-    @Id
-    @NotNull
-    @Size(max = 255)
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 255) private String wahlbezirkID;
 
-    @NotNull
-    private java.time.LocalDateTime unterbrechungsUhrzeit;
+  @NotNull private java.time.LocalDateTime unterbrechungsUhrzeit;
 }

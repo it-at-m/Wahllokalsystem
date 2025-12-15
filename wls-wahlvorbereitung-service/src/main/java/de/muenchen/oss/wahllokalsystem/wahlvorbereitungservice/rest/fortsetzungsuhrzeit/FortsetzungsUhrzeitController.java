@@ -21,36 +21,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FortsetzungsUhrzeitController extends AbstractController {
 
-    private final FortsetzungsUhrzeitService fortsetzungsUhrzeitService;
-    private final FortsetzungsUhrzeitDTOMapper fortsetzungsUhrzeitDTOMapper;
+  private final FortsetzungsUhrzeitService fortsetzungsUhrzeitService;
+  private final FortsetzungsUhrzeitDTOMapper fortsetzungsUhrzeitDTOMapper;
 
-    @Operation(
-            description = "Laden der Fortsetzungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Fortsetzungsuhrzeit erfolgreich zurückgegeben."
-                    ) }
-    )
-    @GetMapping("{wahlbezirkID}")
-    public ResponseEntity<FortsetzungsUhrzeitDTO> getFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val fortsetzungsUhrzeitModel = fortsetzungsUhrzeitService.getFortsetzungsUhrzeit(wahlbezirkID);
+  @Operation(
+      description = "Laden der Fortsetzungsuhrzeit des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Fortsetzungsuhrzeit erfolgreich zurückgegeben.")
+      })
+  @GetMapping("{wahlbezirkID}")
+  public ResponseEntity<FortsetzungsUhrzeitDTO> getFortsetzungsUhrzeit(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val fortsetzungsUhrzeitModel = fortsetzungsUhrzeitService.getFortsetzungsUhrzeit(wahlbezirkID);
 
-        return okWithBodyOrNoContent(fortsetzungsUhrzeitModel.map(fortsetzungsUhrzeitDTOMapper::toDTO));
-    }
+    return okWithBodyOrNoContent(fortsetzungsUhrzeitModel.map(fortsetzungsUhrzeitDTOMapper::toDTO));
+  }
 
-    @Operation(
-            description = "Aktualisiert die FortsetzungsUhrzeit des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201", description = "Fortsetzungsuhrzeit erfolgreich gespeichert."
-                    ) }
-    )
-    @PostMapping("{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void postFortsetzungsUhrzeit(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final FortsetzungsUhrzeitWriteDTO fortsetzungsUhrzeitWriteDTO) {
-        val fortsetzungsUhrzeitToSet = fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, fortsetzungsUhrzeitWriteDTO);
-        fortsetzungsUhrzeitService.setFortsetzungsUhrzeit(fortsetzungsUhrzeitToSet);
-    }
-
+  @Operation(
+      description = "Aktualisiert die FortsetzungsUhrzeit des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Fortsetzungsuhrzeit erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void postFortsetzungsUhrzeit(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final FortsetzungsUhrzeitWriteDTO fortsetzungsUhrzeitWriteDTO) {
+    val fortsetzungsUhrzeitToSet =
+        fortsetzungsUhrzeitDTOMapper.toModel(wahlbezirkID, fortsetzungsUhrzeitWriteDTO);
+    fortsetzungsUhrzeitService.setFortsetzungsUhrzeit(fortsetzungsUhrzeitToSet);
+  }
 }

@@ -11,32 +11,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- * Checks that the at least one of the {@link #requiredAnnotations} is given on each parameter
- */
+/** Checks that the at least one of the {@link #requiredAnnotations} is given on each parameter */
 public class RequestMappingMethodParameterAnnotationCondition extends ArchCondition<JavaMethod> {
 
-    final Set<Object> requiredAnnotations = Set.of(PathVariable.class, RequestBody.class, RequestParam.class, RequestHeader.class);
+  final Set<Object> requiredAnnotations =
+      Set.of(PathVariable.class, RequestBody.class, RequestParam.class, RequestHeader.class);
 
-    public RequestMappingMethodParameterAnnotationCondition() {
-        super("Checks that the at least one of the requiredAnnotations is given on each parameter");
-    }
+  public RequestMappingMethodParameterAnnotationCondition() {
+    super("Checks that the at least one of the requiredAnnotations is given on each parameter");
+  }
 
-    @Override
-    public void check(JavaMethod item, ConditionEvents events) {
-        val methodParameters = item.getParameters();
-        methodParameters.forEach(parameter -> {
-            val rawAnnotationsOfParameter = parameter.getAnnotations().stream().map(archUnitAnnotation -> archUnitAnnotation.getRawType().reflect())
-                    .toList();
-            val parameterHasOneOfRequireAnnotations = requiredAnnotations.stream().anyMatch(rawAnnotationsOfParameter::contains);
+  @Override
+  public void check(JavaMethod item, ConditionEvents events) {
+    val methodParameters = item.getParameters();
+    methodParameters.forEach(
+        parameter -> {
+          val rawAnnotationsOfParameter =
+              parameter.getAnnotations().stream()
+                  .map(archUnitAnnotation -> archUnitAnnotation.getRawType().reflect())
+                  .toList();
+          val parameterHasOneOfRequireAnnotations =
+              requiredAnnotations.stream().anyMatch(rawAnnotationsOfParameter::contains);
 
-            val message = String.format("parameter #%d of method %s in class %s has not one the required annotations %s", parameter.getIndex(),
-                    item.getName(),
-                    item.reflect().getDeclaringClass().getName(), requiredAnnotations);
+          val message =
+              String.format(
+                  "parameter #%d of method %s in class %s has not one the required annotations %s",
+                  parameter.getIndex(),
+                  item.getName(),
+                  item.reflect().getDeclaringClass().getName(),
+                  requiredAnnotations);
 
-            if (!parameterHasOneOfRequireAnnotations) {
-                events.add(SimpleConditionEvent.violated(item, message));
-            }
+          if (!parameterHasOneOfRequireAnnotations) {
+            events.add(SimpleConditionEvent.violated(item, message));
+          }
         });
-    }
+  }
 }

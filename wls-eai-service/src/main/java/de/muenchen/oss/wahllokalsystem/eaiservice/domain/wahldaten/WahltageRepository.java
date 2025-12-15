@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface WahltageRepository extends CrudRepository<Wahltag, UUID> {
 
-    List<Wahltag> findByTagAfterOrTagEquals(LocalDate afterDate, LocalDate equalsDate);
+  List<Wahltag> findByTagAfterOrTagEquals(LocalDate afterDate, LocalDate equalsDate);
 }

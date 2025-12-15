@@ -1,4 +1,3 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correctFileNamingAndDependencies.test.utils;
 
-public class Authorities {
-}
+public class Authorities {}

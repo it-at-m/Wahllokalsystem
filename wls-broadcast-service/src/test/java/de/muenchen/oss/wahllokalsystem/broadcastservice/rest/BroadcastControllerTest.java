@@ -18,50 +18,52 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BroadcastControllerTest {
 
-    @Mock
-    BroadcastService broadcastService;
+  @Mock BroadcastService broadcastService;
 
-    @InjectMocks
-    BroadcastController unitUnderTest;
+  @InjectMocks BroadcastController unitUnderTest;
 
-    @Nested
-    class Broadcast {
+  @Nested
+  class Broadcast {
 
-        @Test
-        void should_notThrowException_when_newBroadcastSent() {
-            val wahlbezirkIds = Arrays.asList("1", "2", "3", "4");
-            val mockedBroadcastMessageDTO = TestdataFactory.CreateBroadcastMessageDto.withCustomParams(wahlbezirkIds, "nachricht");
+    @Test
+    void should_notThrowException_when_newBroadcastSent() {
+      val wahlbezirkIds = Arrays.asList("1", "2", "3", "4");
+      val mockedBroadcastMessageDTO =
+          TestdataFactory.CreateBroadcastMessageDto.withCustomParams(wahlbezirkIds, "nachricht");
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.broadcast(mockedBroadcastMessageDTO));
-            Mockito.verify(broadcastService).broadcast(mockedBroadcastMessageDTO);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.broadcast(mockedBroadcastMessageDTO));
+      Mockito.verify(broadcastService).broadcast(mockedBroadcastMessageDTO);
     }
+  }
 
-    @Nested
-    class GetMessage {
+  @Nested
+  class GetMessage {
 
-        @Test
-        void should_returnMessageDTO_when_givenValidWahlbezirkId() {
-            val wahlbezirkId = "wahlbezirkID";
-            val empfangsZeit = LocalDateTime.now().withNano(0);
-            val mockedMessageDTO = TestdataFactory.CreateMessageDto.withCustomParams(UUID.randomUUID(), wahlbezirkId, "nachricht", empfangsZeit);
+    @Test
+    void should_returnMessageDTO_when_givenValidWahlbezirkId() {
+      val wahlbezirkId = "wahlbezirkID";
+      val empfangsZeit = LocalDateTime.now().withNano(0);
+      val mockedMessageDTO =
+          TestdataFactory.CreateMessageDto.withCustomParams(
+              UUID.randomUUID(), wahlbezirkId, "nachricht", empfangsZeit);
 
-            Mockito.when(broadcastService.getOldestMessage(wahlbezirkId)).thenReturn(mockedMessageDTO);
+      Mockito.when(broadcastService.getOldestMessage(wahlbezirkId)).thenReturn(mockedMessageDTO);
 
-            val result = unitUnderTest.getMessage(wahlbezirkId);
-            Assertions.assertThat(result).isEqualTo(mockedMessageDTO);
-        }
+      val result = unitUnderTest.getMessage(wahlbezirkId);
+      Assertions.assertThat(result).isEqualTo(mockedMessageDTO);
     }
+  }
 
-    @Nested
-    class DeleteMessage {
+  @Nested
+  class DeleteMessage {
 
-        @Test
-        void should_notThrowException_when_messageDeleted() {
-            val messageId = "id";
+    @Test
+    void should_notThrowException_when_messageDeleted() {
+      val messageId = "id";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteMessage(messageId));
-            Mockito.verify(broadcastService).deleteMessage(messageId);
-        }
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteMessage(messageId));
+      Mockito.verify(broadcastService).deleteMessage(messageId);
     }
+  }
 }

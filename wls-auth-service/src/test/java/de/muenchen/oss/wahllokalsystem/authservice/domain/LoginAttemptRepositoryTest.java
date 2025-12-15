@@ -13,43 +13,45 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class LoginAttemptRepositoryTest {
 
-    @Autowired
-    LoginAttemptRepository loginAttemptRepository;
+  @Autowired LoginAttemptRepository loginAttemptRepository;
 
-    @AfterEach
-    void teardown() {
-        loginAttemptRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    loginAttemptRepository.deleteAll();
+  }
+
+  @Nested
+  class FindByUsername {
+
+    @Test
+    void should_returnLoginAttempt_when_attempWithUsernameExists() {
+      val username = "username";
+      val loginAttemptToFind =
+          loginAttemptRepository.save(createLoginAttemptWithUsername(username));
+
+      val findByResult = loginAttemptRepository.findByUsername(username);
+
+      Assertions.assertThat(findByResult.get())
+          .usingRecursiveComparison()
+          .isEqualTo(loginAttemptToFind);
     }
 
-    @Nested
-    class FindByUsername {
+    @Test
+    void should_returnEmptyOptional_when_noAttempWithUsernameExists() {
+      val findByResult = loginAttemptRepository.findByUsername("username");
 
-        @Test
-        void should_returnLoginAttempt_when_attempWithUsernameExists() {
-            val username = "username";
-            val loginAttemptToFind = loginAttemptRepository.save(createLoginAttemptWithUsername(username));
-
-            val findByResult = loginAttemptRepository.findByUsername(username);
-
-            Assertions.assertThat(findByResult.get()).usingRecursiveComparison().isEqualTo(loginAttemptToFind);
-        }
-
-        @Test
-        void should_returnEmptyOptional_when_noAttempWithUsernameExists() {
-            val findByResult = loginAttemptRepository.findByUsername("username");
-
-            Assertions.assertThat(findByResult).isEmpty();
-        }
+      Assertions.assertThat(findByResult).isEmpty();
     }
+  }
 
-    private LoginAttempt createLoginAttemptWithUsername(final String username) {
-        val loginAttempt = new LoginAttempt();
+  private LoginAttempt createLoginAttemptWithUsername(final String username) {
+    val loginAttempt = new LoginAttempt();
 
-        loginAttempt.setUsername(username);
+    loginAttempt.setUsername(username);
 
-        return loginAttempt;
-    }
+    return loginAttempt;
+  }
 }

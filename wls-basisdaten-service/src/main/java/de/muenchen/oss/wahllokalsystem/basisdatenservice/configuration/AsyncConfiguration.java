@@ -12,31 +12,32 @@ import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecu
 @Configuration
 public class AsyncConfiguration {
 
-    @Value("${service.config.async.corePoolSize}")
-    public int corePoolSize;
+  @Value("${service.config.async.corePoolSize}")
+  public int corePoolSize;
 
-    @Value("${service.config.async.maxPoolSize}")
-    public int maxPoolSize;
+  @Value("${service.config.async.maxPoolSize}")
+  public int maxPoolSize;
 
-    @Value("${service.config.async.queueCapacity}")
-    public int queueCapacity;
+  @Value("${service.config.async.queueCapacity}")
+  public int queueCapacity;
 
-    @Value("${service.config.async.threadNamePrefix}")
-    public String threadNamePrefix;
+  @Value("${service.config.async.threadNamePrefix}")
+  public String threadNamePrefix;
 
-    @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        val executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(corePoolSize);
-        executor.setMaxPoolSize(maxPoolSize);
-        executor.setQueueCapacity(queueCapacity);
-        executor.setThreadNamePrefix(threadNamePrefix);
-        executor.initialize();
-        return executor;
-    }
+  @Bean
+  public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+    val executor = new ThreadPoolTaskExecutor();
+    executor.setCorePoolSize(corePoolSize);
+    executor.setMaxPoolSize(maxPoolSize);
+    executor.setQueueCapacity(queueCapacity);
+    executor.setThreadNamePrefix(threadNamePrefix);
+    executor.initialize();
+    return executor;
+  }
 
-    @Bean
-    public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(final ThreadPoolTaskExecutor threadPoolTaskExecutor) {
-        return new DelegatingSecurityContextAsyncTaskExecutor(threadPoolTaskExecutor);
-    }
+  @Bean
+  public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(
+      final ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+    return new DelegatingSecurityContextAsyncTaskExecutor(threadPoolTaskExecutor);
+  }
 }

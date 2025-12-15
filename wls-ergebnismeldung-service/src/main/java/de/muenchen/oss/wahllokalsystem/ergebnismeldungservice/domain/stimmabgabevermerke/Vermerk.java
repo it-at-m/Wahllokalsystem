@@ -31,26 +31,24 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Vermerk {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    @ToString.Include
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  @ToString.Include
+  private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "wahldatenID")
-    @NotNull
-    @EqualsAndHashCode.Exclude
-    private Wahldaten wahldaten;
+  @ManyToOne
+  @JoinColumn(name = "wahldatenID")
+  @NotNull @EqualsAndHashCode.Exclude
+  private Wahldaten wahldaten;
 
-    @NotNull
-    @ToString.Include
-    private long blattnummer;
+  @NotNull @ToString.Include private long blattnummer;
 
-    @ElementCollection
-    @CollectionTable(name = "Stimmzettel", joinColumns = @JoinColumn(name = "vermerkID", referencedColumnName = "id"))
-    @NotNull
-    @ToString.Include
-    private Set<Stimmzettel> stimmzettel = new LinkedHashSet<>();
+  @ElementCollection
+  @CollectionTable(
+      name = "Stimmzettel",
+      joinColumns = @JoinColumn(name = "vermerkID", referencedColumnName = "id"))
+  @NotNull @ToString.Include
+  private Set<Stimmzettel> stimmzettel = new LinkedHashSet<>();
 }

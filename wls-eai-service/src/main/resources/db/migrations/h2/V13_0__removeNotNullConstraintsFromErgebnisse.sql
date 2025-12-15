@@ -1,0 +1,5 @@
+ALTER TABLE Ergebnisse
+    ALTER COLUMN kandidatID DROP NOT NULL;
+
+ALTER TABLE Ergebnisse
+    ALTER COLUMN wahlvorschlagID DROP NOT NULL;

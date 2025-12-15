@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WaehleranzahlDTOMapper {
 
-    WaehleranzahlDTO toDTO(WaehleranzahlModel waehleranzahlModel);
+  WaehleranzahlDTO toDTO(WaehleranzahlModel waehleranzahlModel);
 
-    WaehleranzahlModel toSetModel(BezirkUndWahlID bezirkUndWahlID, WaehleranzahlDTO waehleranzahlDTO);
+  WaehleranzahlModel toSetModel(BezirkUndWahlID bezirkUndWahlID, WaehleranzahlDTO waehleranzahlDTO);
 }

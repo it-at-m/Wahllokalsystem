@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -32,39 +31,30 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Wahlvorschlag {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  private UUID id;
 
-    @NotNull
-    @ToString.Include
-    private String identifikator;
+  @NotNull @ToString.Include private String identifikator;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "wahlvorschlaegeID")
-    @EqualsAndHashCode.Exclude
-    private Wahlvorschlaege wahlvorschlaeage;
+  @ManyToOne
+  @NotNull @JoinColumn(name = "wahlvorschlaegeID")
+  @EqualsAndHashCode.Exclude
+  private Wahlvorschlaege wahlvorschlaeage;
 
-    @NotNull
-    @ToString.Include
-    private long ordnungszahl;
+  @NotNull @ToString.Include private long ordnungszahl;
 
-    @NotNull
-    private String kurzname;
+  @NotNull private String kurzname;
 
-    @NotNull
-    @ToString.Include
-    private boolean erhaeltStimmen;
+  @NotNull @ToString.Include private boolean erhaeltStimmen;
 
-    @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    @NotNull
-    private Set<Kandidat> kandidaten = new LinkedHashSet<>();
+  @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.PERSIST)
+  @NotNull private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 
-    public void addKandidat(final Kandidat kandidat) {
-        kandidat.setWahlvorschlag(this);
-        kandidaten.add(kandidat);
-    }
+  public void addKandidat(final Kandidat kandidat) {
+    kandidat.setWahlvorschlag(this);
+    kandidaten.add(kandidat);
+  }
 }

@@ -7,8 +7,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface KopfdatenDTOMapper {
 
-    @Mapping(source = "bezirkUndWahlID.wahlID", target = "wahlID")
-    @Mapping(source = "bezirkUndWahlID.wahlbezirkID", target = "wahlbezirkID")
-    KopfdatenDTO toDTO(KopfdatenModel kopfdatenModel);
-
+  @Mapping(source = "bezirkUndWahlID.wahlID", target = "wahlID")
+  @Mapping(source = "bezirkUndWahlID.wahlbezirkID", target = "wahlbezirkID")
+  KopfdatenDTO toDTO(KopfdatenModel kopfdatenModel);
 }

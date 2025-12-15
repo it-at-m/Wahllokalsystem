@@ -16,32 +16,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlvorschlaegeControllerTest {
 
-    @Mock
-    WahlvorschlaegeService wahlvorschlaegeService;
+  @Mock WahlvorschlaegeService wahlvorschlaegeService;
 
-    @Mock
-    WahlvorschlaegeDTOMapper wahlvorschlaegeDTOMapper;
+  @Mock WahlvorschlaegeDTOMapper wahlvorschlaegeDTOMapper;
 
-    @InjectMocks
-    WahlvorschlaegeController wahlvorschlaegeController;
+  @InjectMocks WahlvorschlaegeController wahlvorschlaegeController;
 
-    @Nested
-    class GetWahlvorschlaege {
+  @Nested
+  class GetWahlvorschlaege {
 
-        @Test
-        void should_returnWahlvorschlaegeDTO_when_serviceIsCalled() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnWahlvorschlaegeDTO_when_serviceIsCalled() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
-            val wahlvorschlaegeDTO = WahlvorschlaegeDTO.builder().build();
+      val wahlvorschlaegeModel = WahlvorschlaegeModel.builder().build();
+      val wahlvorschlaegeDTO = WahlvorschlaegeDTO.builder().build();
 
-            Mockito.when(wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(wahlvorschlaegeModel);
-            Mockito.when(wahlvorschlaegeDTOMapper.toDTO(wahlvorschlaegeModel)).thenReturn(wahlvorschlaegeDTO);
+      Mockito.when(
+              wahlvorschlaegeService.getWahlvorschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .thenReturn(wahlvorschlaegeModel);
+      Mockito.when(wahlvorschlaegeDTOMapper.toDTO(wahlvorschlaegeModel))
+          .thenReturn(wahlvorschlaegeDTO);
 
-            val result = wahlvorschlaegeController.getWahlvorschlaege(wahlID, wahlbezirkID);
+      val result = wahlvorschlaegeController.getWahlvorschlaege(wahlID, wahlbezirkID);
 
-            Assertions.assertThat(result).isEqualTo(wahlvorschlaegeDTO);
-        }
+      Assertions.assertThat(result).isEqualTo(wahlvorschlaegeDTO);
     }
+  }
 }

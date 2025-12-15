@@ -14,45 +14,49 @@ import org.mapstruct.factory.Mappers;
 
 class UngueltigeWahlscheineDTOMapperTest {
 
-    private final UngueltigeWahlscheineDTOMapper unitUnderTest = Mappers.getMapper(UngueltigeWahlscheineDTOMapper.class);
+  private final UngueltigeWahlscheineDTOMapper unitUnderTest =
+      Mappers.getMapper(UngueltigeWahlscheineDTOMapper.class);
+
+  @Nested
+  class ToModel {
 
     @Nested
-    class ToModel {
+    class ToUngueltigeWahlscheineReferenceModel {
 
-        @Nested
-        class ToUngueltigeWahlscheineReferenceModel {
+      @Test
+      void
+          should_returnUngueltigeWahlscheineReferenceModel_when_givenWahltagIDAndWahlbezirkartDTO() {
+        val result = unitUnderTest.toModel("wahltagID", WahlbezirkArtDTO.BWB);
 
-            @Test
-            void should_returnUngueltigeWahlscheineReferenceModel_when_givenWahltagIDAndWahlbezirkartDTO() {
-                val result = unitUnderTest.toModel("wahltagID", WahlbezirkArtDTO.BWB);
+        val expectedResult =
+            new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB);
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
 
-                val expectedResult = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB);
-                Assertions.assertThat(result).isEqualTo(expectedResult);
-            }
+      @ParameterizedTest
+      @EnumSource(WahlbezirkArtDTO.class)
+      void should_returnWahlbezirkModel_when_givenWahlbezirkArtDTOs(final WahlbezirkArtDTO art) {
+        val result = unitUnderTest.toModel(null, art);
 
-            @ParameterizedTest
-            @EnumSource(WahlbezirkArtDTO.class)
-            void should_returnWahlbezirkModel_when_givenWahlbezirkArtDTOs(final WahlbezirkArtDTO art) {
-                val result = unitUnderTest.toModel(null, art);
-
-                Assertions.assertThat(result.wahlbezirksart().toString()).isEqualTo(art.toString());
-            }
-        }
-
-        @Nested
-        class ToUngueltigeWahlscheineWriteModel {
-
-            @Test
-            void should_returnUngueltigeWahlscheineWriteModel_when_givenUngueltigeWahlscheineReferenceModel() {
-                val referenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
-                val data = "data".getBytes();
-
-                val result = unitUnderTest.toModel(referenceModel, data);
-
-                val expectedResult = new UngueltigeWahlscheineWriteModel(referenceModel, data);
-                Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-            }
-        }
+        Assertions.assertThat(result.wahlbezirksart().toString()).isEqualTo(art.toString());
+      }
     }
 
+    @Nested
+    class ToUngueltigeWahlscheineWriteModel {
+
+      @Test
+      void
+          should_returnUngueltigeWahlscheineWriteModel_when_givenUngueltigeWahlscheineReferenceModel() {
+        val referenceModel =
+            new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+        val data = "data".getBytes();
+
+        val result = unitUnderTest.toModel(referenceModel, data);
+
+        val expectedResult = new UngueltigeWahlscheineWriteModel(referenceModel, data);
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+      }
+    }
+  }
 }

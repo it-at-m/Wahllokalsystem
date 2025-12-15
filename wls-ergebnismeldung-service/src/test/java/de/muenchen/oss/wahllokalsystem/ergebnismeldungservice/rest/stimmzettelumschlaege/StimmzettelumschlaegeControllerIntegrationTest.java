@@ -36,201 +36,245 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(
-        profiles = { SPRING_TEST_PROFILE, NO_BEZIRKS_ID_CHECK }
-)
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, NO_BEZIRKS_ID_CHECK})
 public class StimmzettelumschlaegeControllerIntegrationTest {
 
-    @Autowired
-    StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
+  @Autowired StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
 
-    @Autowired
-    StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
+  @Autowired StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
 
-    @Autowired
-    StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
+  @Autowired StimmzettelumschlaegeDTOMapper stimmzettelumschlaegeDTOMapper;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
-        stimmzettelumschlaegeRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMZETTELUMSCHLAEGE);
+    stimmzettelumschlaegeRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStimmzettelumschlaege {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE
+        })
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11L;
+      val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
+
+      val entityToFind =
+          new Stimmzettelumschlaege(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              anzahlWaehler2);
+      stimmzettelumschlaegeRepository.save(entityToFind);
+
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val responseBodyAsDTO =
+          objectMapper.readValue(response.getContentAsString(), StimmzettelumschlaegeDTO.class);
+
+      val expectedResult =
+          stimmzettelumschlaegeDTOMapper.toDTO(
+              stimmzettelumschlaegeModelMapper.toModel(entityToFind));
+
+      Assertions.assertThat(responseBodyAsDTO)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
+          .isEqualTo(expectedResult);
+    }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE
+        })
+    void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
+
+      Assertions.assertThat(response.getContentAsString()).isEmpty();
+    }
+
+    @Test
+    @WithMockUser(authorities = {Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlID = "    ";
+      val wahlbezirkID = "wahlbezirkID";
+      val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+      val receivedWlsException =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
+              "WLS-ERGEBNISMELDUNG",
+              ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
+
+  @Nested
+  class PostStimmzettelumschlaege {
+
+    @Test
+    @WithMockUserAsJwt(
+        authorities = {
+          Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+          Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+        },
+        claimProperties = {"wahlbezirksArt=BWB"})
+    void should_persistData_when_noDataIsPresentInRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11L;
+      val requestBody =
+          new StimmzettelumschlaegeDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              anzahlWaehler2);
+
+      val request =
+          MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
+      val entityFromRepo =
+          stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
+
+      val expectedEntity =
+          stimmzettelumschlaegeModelMapper.toEntity(
+              stimmzettelumschlaegeDTOMapper.toModel(requestBody));
+      Assertions.assertThat(entityFromRepo)
+          .usingRecursiveComparison()
+          .withComparatorForType(
+              TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
+          .isEqualTo(expectedEntity);
+    }
+
+    @Test
+    @WithMockUserAsJwt(authorities = {Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlID = "    ";
+      val wahlbezirkID = "wahlbezirkID";
+      val urneneroeffnungsUhrzeit = LocalDateTime.now();
+      val anzahlWaehler = 47;
+      val anzahlWaehler2 = 11L;
+      val requestBody =
+          new StimmzettelumschlaegeDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID),
+              urneneroeffnungsUhrzeit,
+              anzahlWaehler,
+              anzahlWaehler2);
+
+      val request =
+          MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+      val receivedWlsException =
+          objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
+              "WLS-ERGEBNISMELDUNG",
+              ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
     }
 
     @Nested
-    class GetStimmzettelumschlaege {
+    class PostStimmzettelumschlaegeWithExistingSetupData {
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE,
-                        Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE,
-                        Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE }
-        )
-        void should_returnData_when_dataIsPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11L;
-            val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
+      private Stimmzettelumschlaege entityFromRepo;
 
-            val entityToFind = new Stimmzettelumschlaege(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
-            stimmzettelumschlaegeRepository.save(entityToFind);
+      @BeforeEach()
+      void setup() {
+        val entityToReplace =
+            new Stimmzettelumschlaege(
+                new BezirkUndWahlID("wahlID", "wahlbezirkID"), LocalDateTime.now(), 47, 11L);
+        // uses the security context created by the tests
+        entityFromRepo = stimmzettelumschlaegeRepository.save(entityToReplace);
+      }
 
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-            val responseBodyAsDTO = objectMapper.readValue(response.getContentAsString(), StimmzettelumschlaegeDTO.class);
+      @Test
+      @WithMockUserAsJwt(
+          authorities = {
+            Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE,
+            Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE
+          },
+          claimProperties = {"wahlbezirksArt=BWB"})
+      void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
+        val urneneroeffnungsUhrzeit = LocalDateTime.now();
+        val anzahlWaehlerToReplace = 8;
+        val anzahlWaehler2ToReplace = 15L;
+        val requestBody =
+            new StimmzettelumschlaegeDTO(
+                new BezirkUndWahlID("wahlID", "wahlbezirkID"),
+                urneneroeffnungsUhrzeit,
+                anzahlWaehlerToReplace,
+                anzahlWaehler2ToReplace);
 
-            val expectedResult = stimmzettelumschlaegeDTOMapper.toDTO(stimmzettelumschlaegeModelMapper.toModel(entityToFind));
+        val request =
+            MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI("wahlID", "wahlbezirkID"))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody));
 
-            Assertions.assertThat(responseBodyAsDTO)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedResult);
-        }
+        Assertions.assertThat(entityFromRepo).usingRecursiveComparison().isNotEqualTo(requestBody);
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE,
-                        Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE }
-        )
-        void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
+        mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
-            val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
+        SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
+        val replacedEntityFromRepo =
+            stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
 
-            Assertions.assertThat(response.getContentAsString()).isEmpty();
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE }
-        )
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val wahlID = "    ";
-            val wahlbezirkID = "wahlbezirkID";
-            val request = MockMvcRequestBuilders.get(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID));
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
-            val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
-                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
-        }
+        val expectedEntity =
+            stimmzettelumschlaegeModelMapper.toEntity(
+                stimmzettelumschlaegeDTOMapper.toModel(requestBody));
+        Assertions.assertThat(replacedEntityFromRepo)
+            .usingRecursiveComparison()
+            .withComparatorForType(
+                TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS,
+                LocalDateTime.class)
+            .isEqualTo(expectedEntity);
+      }
     }
+  }
 
-    @Nested
-    class PostStimmzettelumschlaege {
-
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
-                claimProperties = { "wahlbezirksArt=BWB" }
-        )
-        void should_persistData_when_noDataIsPresentInRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11L;
-            val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
-
-            val request = MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
-
-            mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
-            val entityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
-
-            val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
-            Assertions.assertThat(entityFromRepo)
-                    .usingRecursiveComparison()
-                    .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                    .isEqualTo(expectedEntity);
-        }
-
-        @Test
-        @WithMockUserAsJwt(
-                authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE }
-        )
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val wahlID = "    ";
-            val wahlbezirkID = "wahlbezirkID";
-            val urneneroeffnungsUhrzeit = LocalDateTime.now();
-            val anzahlWaehler = 47;
-            val anzahlWaehler2 = 11L;
-            val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), urneneroeffnungsUhrzeit, anzahlWaehler, anzahlWaehler2);
-
-            val request = MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI(wahlID, wahlbezirkID)).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
-            val receivedWlsException = objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F,
-                    ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.code(),
-                    "WLS-ERGEBNISMELDUNG", ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
-        }
-
-        @Nested
-        class PostStimmzettelumschlaegeWithExistingSetupData {
-
-            private Stimmzettelumschlaege entityFromRepo;
-
-            @BeforeEach()
-            void setup() {
-                val entityToReplace = new Stimmzettelumschlaege(
-                        new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                        LocalDateTime.now(), 47, 11L);
-                //uses the security context created by the tests
-                entityFromRepo = stimmzettelumschlaegeRepository.save(entityToReplace);
-            }
-
-            @Test
-            @WithMockUserAsJwt(
-                    authorities = { Authorities.SERVICE_SET_STIMMZETTELUMSCHLAEGE, Authorities.REPOSITORY_WRITE_STIMMZETTELUMSCHLAEGE },
-                    claimProperties = { "wahlbezirksArt=BWB" }
-            )
-            void should_replaceOldData_when_dataIsPresentInRepository() throws Exception {
-                val urneneroeffnungsUhrzeit = LocalDateTime.now();
-                val anzahlWaehlerToReplace = 8;
-                val anzahlWaehler2ToReplace = 15L;
-                val requestBody = new StimmzettelumschlaegeDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"),
-                        urneneroeffnungsUhrzeit, anzahlWaehlerToReplace, anzahlWaehler2ToReplace);
-
-                val request = MockMvcRequestBuilders.post(buildStimmzettelumschlaegeURI("wahlID", "wahlbezirkID")).with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody));
-
-                Assertions.assertThat(entityFromRepo).usingRecursiveComparison().isNotEqualTo(requestBody);
-
-                mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-
-                SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE);
-                val replacedEntityFromRepo = stimmzettelumschlaegeRepository.findById(requestBody.bezirkUndWahlID()).get();
-
-                val expectedEntity = stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaegeDTOMapper.toModel(requestBody));
-                Assertions.assertThat(replacedEntityFromRepo)
-                        .usingRecursiveComparison()
-                        .withComparatorForType(TimePrecisionComparators.LOCAL_DATE_TIME_PRECISION_MILLISECONDS, LocalDateTime.class)
-                        .isEqualTo(expectedEntity);
-            }
-        }
-    }
-
-    private String buildStimmzettelumschlaegeURI(final String wahlID, final String wahlbezirkID) {
-        return "/businessActions/stimmzettelumschlaege/" + wahlID + "/" + wahlbezirkID;
-    }
+  private String buildStimmzettelumschlaegeURI(final String wahlID, final String wahlbezirkID) {
+    return "/businessActions/stimmzettelumschlaege/" + wahlID + "/" + wahlbezirkID;
+  }
 }

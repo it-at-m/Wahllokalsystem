@@ -17,122 +17,170 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WaehlerverzeichnisValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    WaehlerverzeichnisValidator unitUnderTest;
+  @InjectMocks WaehlerverzeichnisValidator unitUnderTest;
 
-    @Nested
-    class ValidWaehlerverzeichnisReferenceOrThrow {
+  @Nested
+  class ValidWaehlerverzeichnisReferenceOrThrow {
 
-        @Test
-        void should_notThrowException_when_referenceIsValid() {
-            val validReference = initValid();
+    @Test
+    void should_notThrowException_when_referenceIsValid() {
+      val validReference = initValid();
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(validReference));
-        }
-
-        @Test
-        void should_throwException_when_referenceIsNull() {
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(null)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsNull() {
-            val invalidReference = initValid();
-            invalidReference.setWahlbezirkID(null);
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
-                    .isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
-            val invalidReference = initValid();
-            invalidReference.setWahlbezirkID("");
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
-                    .isSameAs(mockedException);
-        }
-
-        private BezirkIDUndWaehlerverzeichnisNummer initValid() {
-            return new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 12L);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(validReference));
     }
 
-    @Nested
-    class ValidModelToSetOrThrow {
+    @Test
+    void should_throwException_when_referenceIsNull() {
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
 
-        @Test
-        void should_notThrowException_when_modelIsValid() {
-            val validModel = initValidModel().build();
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
-        }
-
-        @Test
-        void should_throwException_when_modelIsNull() {
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(null)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDAndWaehlerverzeichnisNummerIsNull() {
-            val invalidModel = initValidModel().waehlerverzeichnisReference(null).build();
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_waehlerverzeichnisNummerIsNull() {
-            val invalidModel = initValidModel().build();
-            invalidModel.waehlerverzeichnisReference().setWaehlerverzeichnisNummer(null);
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsNull() {
-            val invalidModel = initValidModel().build();
-            invalidModel.waehlerverzeichnisReference().setWahlbezirkID(null);
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
-            val invalidModel = initValidModel().build();
-            invalidModel.waehlerverzeichnisReference().setWahlbezirkID("");
-
-            val mockedException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedException);
-        }
-
-        private WaehlerverzeichnisModel.WaehlerverzeichnisModelBuilder initValidModel() {
-            return WaehlerverzeichnisModel.builder().waehlerverzeichnisReference(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L));
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(null))
+          .isSameAs(mockedException);
     }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsNull() {
+      val invalidReference = initValid();
+      invalidReference.setWahlbezirkID(null);
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
+      val invalidReference = initValid();
+      invalidReference.setWahlbezirkID("");
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWaehlerverzeichnisReferenceOrThrow(invalidReference))
+          .isSameAs(mockedException);
+    }
+
+    private BezirkIDUndWaehlerverzeichnisNummer initValid() {
+      return new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 12L);
+    }
+  }
+
+  @Nested
+  class ValidModelToSetOrThrow {
+
+    @Test
+    void should_notThrowException_when_modelIsValid() {
+      val validModel = initValidModel().build();
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
+    }
+
+    @Test
+    void should_throwException_when_modelIsNull() {
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(null))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDAndWaehlerverzeichnisNummerIsNull() {
+      val invalidModel = initValidModel().waehlerverzeichnisReference(null).build();
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwWlsException_when_waehlerverzeichnisNummerIsNull() {
+      val invalidModel = initValidModel().build();
+      invalidModel.waehlerverzeichnisReference().setWaehlerverzeichnisNummer(null);
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsNull() {
+      val invalidModel = initValidModel().build();
+      invalidModel.waehlerverzeichnisReference().setWahlbezirkID(null);
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
+      val invalidModel = initValidModel().build();
+      invalidModel.waehlerverzeichnisReference().setWahlbezirkID("");
+
+      val mockedException =
+          FachlicheWlsException.withCode("000").inService("service").buildWithMessage("message");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedException);
+    }
+
+    private WaehlerverzeichnisModel.WaehlerverzeichnisModelBuilder initValidModel() {
+      return WaehlerverzeichnisModel.builder()
+          .waehlerverzeichnisReference(
+              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L));
+    }
+  }
 }

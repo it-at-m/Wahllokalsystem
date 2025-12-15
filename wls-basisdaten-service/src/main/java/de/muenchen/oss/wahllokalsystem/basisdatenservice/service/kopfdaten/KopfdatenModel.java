@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record KopfdatenModel(@NotNull BezirkUndWahlID bezirkUndWahlID,
-                             @NotNull String gemeinde,
-                             @NotNull StimmzettelgebietsartModel stimmzettelgebietsart,
-                             @NotNull String stimmzettelgebietsnummer,
-                             @NotNull String stimmzettelgebietsname,
-                             @NotNull String wahlname,
-                             @NotNull String wahlbezirknummer) {
-}
+public record KopfdatenModel(
+    @NotNull BezirkUndWahlID bezirkUndWahlID,
+    @NotNull String gemeinde,
+    @NotNull StimmzettelgebietsartModel stimmzettelgebietsart,
+    @NotNull String stimmzettelgebietsnummer,
+    @NotNull String stimmzettelgebietsname,
+    @NotNull String wahlname,
+    @NotNull String wahlbezirknummer) {}

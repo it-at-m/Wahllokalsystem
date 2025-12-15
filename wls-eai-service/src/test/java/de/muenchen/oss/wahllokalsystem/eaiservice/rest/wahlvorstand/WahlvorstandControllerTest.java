@@ -18,32 +18,33 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlvorstandControllerTest {
 
-    @Mock
-    WahlvorstandService wahlvorstandService;
+  @Mock WahlvorstandService wahlvorstandService;
 
-    @InjectMocks
-    WahlvorstandController unitUnderTest;
+  @InjectMocks WahlvorstandController unitUnderTest;
 
-    @Nested
-    class LoadWahlvorstand {
-
-        @Test
-        void should_loadWahlvorstand_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
-
-            Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID)).thenReturn(wahlvorstandFromService);
-
-            Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID)).isSameAs(wahlvorstandFromService);
-        }
-    }
+  @Nested
+  class LoadWahlvorstand {
 
     @Test
-    void should_saveAnwesenheit_when_called() {
-        val updateData = new WahlvorstandsaktualisierungDTO("id", Collections.emptySet(), LocalDateTime.now());
+    void should_loadWahlvorstand_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlvorstandFromService = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
 
-        unitUnderTest.saveAnwesenheit(updateData);
+      Mockito.when(wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID))
+          .thenReturn(wahlvorstandFromService);
 
-        Mockito.verify(wahlvorstandService).setAnwesenheit(updateData);
+      Assertions.assertThat(unitUnderTest.loadWahlvorstand(wahlbezirkID))
+          .isSameAs(wahlvorstandFromService);
     }
+  }
+
+  @Test
+  void should_saveAnwesenheit_when_called() {
+    val updateData =
+        new WahlvorstandsaktualisierungDTO("id", Collections.emptySet(), LocalDateTime.now());
+
+    unitUnderTest.saveAnwesenheit(updateData);
+
+    Mockito.verify(wahlvorstandService).setAnwesenheit(updateData);
+  }
 }

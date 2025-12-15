@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface EreignisDTOMapper {
 
-    WahlbezirkEreignisseDTO toDTO(EreignisseModel model);
+  WahlbezirkEreignisseDTO toDTO(EreignisseModel model);
 
-    EreignisseModel toModel(String wahlbezirkID, EreignisseWriteDTO dto);
+  EreignisseModel toModel(String wahlbezirkID, EreignisseWriteDTO dto);
 }

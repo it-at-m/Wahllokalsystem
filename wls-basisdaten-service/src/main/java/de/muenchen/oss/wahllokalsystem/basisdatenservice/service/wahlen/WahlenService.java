@@ -20,72 +20,76 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class WahlenService {
 
-    private final WahlRepository wahlRepository;
+  private final WahlRepository wahlRepository;
 
-    private final WahltageService wahltageService;
+  private final WahltageService wahltageService;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahlModelMapper wahlModelMapper;
+  private final WahlModelMapper wahlModelMapper;
 
-    private final WahlenClient wahlenClient;
+  private final WahlenClient wahlenClient;
 
-    private final WahlenValidator wahlenValidator;
+  private final WahlenValidator wahlenValidator;
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
-    @Transactional
-    public List<WahlModel> getWahlen(String wahltagID) {
-        wahlenValidator.validWahlenCriteriaOrThrow(wahltagID);
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
+  @Transactional
+  public List<WahlModel> getWahlen(String wahltagID) {
+    wahlenValidator.validWahlenCriteriaOrThrow(wahltagID);
 
-        val wahltagValue = wahltageService.getWahltagByID(wahltagID);
+    val wahltagValue = wahltageService.getWahltagByID(wahltagID);
 
-        if (!wahlRepository.existsByWahltag(wahltagValue.wahltag())) {
-            log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
-            List<Wahl> wahlEntities = wahlModelMapper
-                    .fromListOfWahlModeltoListOfWahlEntities(
-                            wahlenClient.getWahlen(new WahltagWithNummerModel(wahltagValue.wahltag(), wahltagValue.nummer())));
-            wahlRepository.saveAll(wahlEntities);
-        }
-        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
+    if (!wahlRepository.existsByWahltag(wahltagValue.wahltag())) {
+      log.info("#getWahlen: Für wahltagID {} waren keine Wahlen in der Datenbank", wahltagID);
+      List<Wahl> wahlEntities =
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(
+              wahlenClient.getWahlen(
+                  new WahltagWithNummerModel(wahltagValue.wahltag(), wahltagValue.nummer())));
+      wahlRepository.saveAll(wahlEntities);
     }
+    return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(
+        wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
+  }
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
-    public List<WahlModel> getExistingWahlenOrderedByReihenfolge(final String wahltagID) {
-        val wahltagValue = wahltageService.getWahltagByID(wahltagID);
-        return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
-    }
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlen')")
+  public List<WahlModel> getExistingWahlenOrderedByReihenfolge(final String wahltagID) {
+    val wahltagValue = wahltageService.getWahltagByID(wahltagID);
+    return wahlModelMapper.fromListOfWahlEntityToListOfWahlModel(
+        wahlRepository.findByWahltagOrderByReihenfolge(wahltagValue.wahltag()));
+  }
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
-    @Transactional
-    public void postWahlen(final WahlenWriteModel wahlenWriteModel) {
-        log.info("#postWahlen");
-        wahlenValidator.validWahlenWriteModelOrThrow(wahlenWriteModel);
-        try {
-            wahlRepository.saveAll(wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenWriteModel.wahlen()));
-        } catch (Exception e) {
-            log.error("#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE);
-        }
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostWahlen')")
+  @Transactional
+  public void postWahlen(final WahlenWriteModel wahlenWriteModel) {
+    log.info("#postWahlen");
+    wahlenValidator.validWahlenWriteModelOrThrow(wahlenWriteModel);
+    try {
+      wahlRepository.saveAll(
+          wahlModelMapper.fromListOfWahlModeltoListOfWahlEntities(wahlenWriteModel.wahlen()));
+    } catch (Exception e) {
+      log.error(
+          "#postWahlen: Die Wahlen konnten aufgrund eines Fehlers nicht gespeichert werden:", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTWAHLEN_UNSAVEABLE);
     }
+  }
 
-    @PreAuthorize(
-        "hasAuthority('Basisdaten_BUSINESSACTION_ResetWahlen')"
-    )
-    @Transactional
-    public void resetWahlen() {
-        log.info("#resetWahlen");
-        try {
-            val existingWahlenToReset = wahlRepository.findAll();
-            existingWahlenToReset.forEach(this::resetWahl);
-            wahlRepository.saveAll(existingWahlenToReset);
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.RESET_WAHLEN_NICHT_ERFOLGREICH);
-        }
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_ResetWahlen')")
+  @Transactional
+  public void resetWahlen() {
+    log.info("#resetWahlen");
+    try {
+      val existingWahlenToReset = wahlRepository.findAll();
+      existingWahlenToReset.forEach(this::resetWahl);
+      wahlRepository.saveAll(existingWahlenToReset);
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.RESET_WAHLEN_NICHT_ERFOLGREICH);
     }
+  }
 
-    private void resetWahl(final Wahl wahl) {
-        wahl.setFarbe(new Farbe(0, 0, 0));
-        wahl.setReihenfolge(0);
-        wahl.setWaehlerverzeichnisNummer(1);
-    }
+  private void resetWahl(final Wahl wahl) {
+    wahl.setFarbe(new Farbe(0, 0, 0));
+    wahl.setReihenfolge(0);
+    wahl.setWaehlerverzeichnisNummer(1);
+  }
 }

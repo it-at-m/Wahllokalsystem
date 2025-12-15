@@ -8,24 +8,28 @@ import org.junit.jupiter.api.Test;
 
 class TechnischeWlsExceptionTest {
 
-    @Nested
-    class WithCode {
+  @Nested
+  class WithCode {
 
-        @Test
-        void should_returnTechnischeWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {
-            val code = "089";
-            val message = "very useful message";
-            val serviceName = "testService";
-            val causingException = new NullPointerException("something was null");
+    @Test
+    void should_returnTechnischeWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {
+      val code = "089";
+      val message = "very useful message";
+      val serviceName = "testService";
+      val causingException = new NullPointerException("something was null");
 
-            val technischeWlsException = TechnischeWlsException.withCode(code).inService(serviceName).withCause(causingException)
-                    .buildWithMessage(message);
+      val technischeWlsException =
+          TechnischeWlsException.withCode(code)
+              .inService(serviceName)
+              .withCause(causingException)
+              .buildWithMessage(message);
 
-            Assertions.assertThat(technischeWlsException.getCategory()).isSameAs(WlsExceptionCategory.TECHNISCH);
-            Assertions.assertThat(technischeWlsException.getCode()).isSameAs(code);
-            Assertions.assertThat(technischeWlsException.getMessage()).isSameAs(message);
-            Assertions.assertThat(technischeWlsException.getServiceName()).isSameAs(serviceName);
-            Assertions.assertThat(technischeWlsException.getCause()).isSameAs(causingException);
-        }
+      Assertions.assertThat(technischeWlsException.getCategory())
+          .isSameAs(WlsExceptionCategory.TECHNISCH);
+      Assertions.assertThat(technischeWlsException.getCode()).isSameAs(code);
+      Assertions.assertThat(technischeWlsException.getMessage()).isSameAs(message);
+      Assertions.assertThat(technischeWlsException.getServiceName()).isSameAs(serviceName);
+      Assertions.assertThat(technischeWlsException.getCause()).isSameAs(causingException);
     }
+  }
 }

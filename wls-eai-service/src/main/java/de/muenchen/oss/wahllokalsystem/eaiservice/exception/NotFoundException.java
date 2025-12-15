@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 public class NotFoundException extends RuntimeException {
 
-    private final UUID requestedID;
+  private final UUID requestedID;
 
-    private final Class<?> entityClass;
+  private final Class<?> entityClass;
 
-    public NotFoundException(UUID requestID, Class<?> entityClass) {
-        this.requestedID = requestID;
-        this.entityClass = entityClass;
-    }
+  public NotFoundException(UUID requestID, Class<?> entityClass) {
+    this.requestedID = requestID;
+    this.entityClass = entityClass;
+  }
 }

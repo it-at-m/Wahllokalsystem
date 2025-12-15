@@ -24,15 +24,11 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class WahlvorschlaegeListe extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    LocalDate wahltag;
+  @NotNull @ToString.Include LocalDate wahltag;
 
-    @NotNull
-    @ToString.Include
-    String wahlID;
+  @NotNull @ToString.Include String wahlID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorschlaegelisteID")
-    Set<Wahlvorschlaege> wahlvorschlaegeliste;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "wahlvorschlaegelisteID")
+  Set<Wahlvorschlaege> wahlvorschlaegeliste;
 }

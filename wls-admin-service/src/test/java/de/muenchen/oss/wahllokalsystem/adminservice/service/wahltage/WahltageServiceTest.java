@@ -14,20 +14,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class WahltageServiceTest {
 
-    @Mock
-    WahltageClient wahltageClient;
+  @Mock WahltageClient wahltageClient;
 
-    @InjectMocks
-    WahltageService unitUnderTest;
+  @InjectMocks WahltageService unitUnderTest;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_verifyApiCall_when_serviceIsCalled() {
-            unitUnderTest.getWahltage();
+    @Test
+    void should_verifyApiCall_when_serviceIsCalled() {
+      unitUnderTest.getWahltage();
 
-            Mockito.verify(wahltageClient, times(1)).getWahltage();
-        }
+      Mockito.verify(wahltageClient, times(1)).getWahltage();
     }
+  }
 }

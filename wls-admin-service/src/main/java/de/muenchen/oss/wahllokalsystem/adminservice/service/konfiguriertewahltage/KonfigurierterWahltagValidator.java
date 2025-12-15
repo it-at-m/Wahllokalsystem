@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KonfigurierterWahltagValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validateModel(final KonfigurierterWahltagModel konfigurierterWahltagModel) {
-        if (konfigurierterWahltagModel == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
-        }
+  public void validateModel(final KonfigurierterWahltagModel konfigurierterWahltagModel) {
+    if (konfigurierterWahltagModel == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
     }
+  }
 }

@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NO_BEZIRKS_ID_CHECK)
 public class DummyBezirkIdPermissionEvaluatorImpl implements BezirkIDPermissionEvaluator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DummyBezirkIdPermissionEvaluatorImpl.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(DummyBezirkIdPermissionEvaluatorImpl.class);
 
-    @Override
-    public boolean tokenUserBezirkIdMatches(String bezirkId, Authentication auth) {
-        LOG.info("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
-        return true;
-    }
+  @Override
+  public boolean tokenUserBezirkIdMatches(String bezirkId, Authentication auth) {
+    LOG.info("tokenUserBezirkIdMatches {}, {}", bezirkId, auth.getPrincipal());
+    return true;
+  }
 }

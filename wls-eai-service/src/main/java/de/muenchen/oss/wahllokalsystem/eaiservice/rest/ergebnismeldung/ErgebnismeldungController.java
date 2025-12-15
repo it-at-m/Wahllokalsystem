@@ -18,17 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ErgebnismeldungController {
 
-    private final ErgebnismeldungService ergebnismeldungService;
+  private final ErgebnismeldungService ergebnismeldungService;
 
-    @Operation(
-            description = "Speichert die Ergebnismeldung.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Ergebnismeldung erfolgreich gespeichert.")
-            }
-    )
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void saveErgebnismeldung(@Valid @RequestBody ErgebnismeldungDTO ergebnismeldung) {
-        ergebnismeldungService.saveErgebnismeldung(ergebnismeldung);
-    }
+  @Operation(
+      description = "Speichert die Ergebnismeldung.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Ergebnismeldung erfolgreich gespeichert.")
+      })
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public void saveErgebnismeldung(@Valid @RequestBody ErgebnismeldungDTO ergebnismeldung) {
+    ergebnismeldungService.saveErgebnismeldung(ergebnismeldung);
+  }
 }

@@ -23,39 +23,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahlscheineController extends AbstractController {
 
-    private final WahlscheineService wahlscheineService;
-    private final WahlscheineDTOMapper wahlscheineDTOMapper;
+  private final WahlscheineService wahlscheineService;
+  private final WahlscheineDTOMapper wahlscheineDTOMapper;
 
-    @Operation(description = "Lesen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Es existieren Stimmabgabevermerke",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = WahlscheineDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existieren keine Stimmabgabevermerke zu den entsprechenden Kriterien",
-                            content = { @Content() }
-                    )
-            }
-    )
-    @GetMapping("{wahlID}/{wahlbezirkID}")
-    public ResponseEntity<WahlscheineDTO> getWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val wahlscheine = wahlscheineService.getWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID));
-        return okWithBodyOrNoContent(wahlscheine.map(wahlscheineDTOMapper::toDTO));
-    }
+  @Operation(
+      description =
+          "Lesen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es existieren Stimmabgabevermerke",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = WahlscheineDTO.class))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es existieren keine Stimmabgabevermerke zu den entsprechenden Kriterien",
+            content = {@Content()})
+      })
+  @GetMapping("{wahlID}/{wahlbezirkID}")
+  public ResponseEntity<WahlscheineDTO> getWahlscheine(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val wahlscheine = wahlscheineService.getWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID));
+    return okWithBodyOrNoContent(wahlscheine.map(wahlscheineDTOMapper::toDTO));
+  }
 
-    @Operation(description = "Setzen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Stimmabgabevermerke erfolgreich gespeichert"
-                    )
-            }
-    )
-    @PostMapping("{wahlID}/{wahlbezirkID}")
-    public void postWahlscheine(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final WahlscheineDTO wahlscheineDTO) {
-        wahlscheineService.setWahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID), wahlscheineDTOMapper.toModel(wahlscheineDTO));
-    }
+  @Operation(
+      description =
+          "Setzen der Anzahl an Stimmabgabevermerken mit Wahlschein eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Stimmabgabevermerke erfolgreich gespeichert")
+      })
+  @PostMapping("{wahlID}/{wahlbezirkID}")
+  public void postWahlscheine(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final WahlscheineDTO wahlscheineDTO) {
+    wahlscheineService.setWahlscheine(
+        new BezirkUndWahlID(wahlID, wahlbezirkID), wahlscheineDTOMapper.toModel(wahlscheineDTO));
+  }
 }

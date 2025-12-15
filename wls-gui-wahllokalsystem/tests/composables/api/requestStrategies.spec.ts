@@ -28,6 +28,7 @@ vi.mock("@/composables/indexDB/indexDB.ts", () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getItemFromIDB: mockDefinitions.getItemFromIDB,
     storeItem: mockDefinitions.storeItem,
+    setKey: vi.fn(),
   })),
 }));
 

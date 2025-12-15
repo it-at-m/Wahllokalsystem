@@ -12,21 +12,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class FunktionsamenMappingPropertiesTest {
 
-    @Autowired
-    private FunktionsnamenMappingProperties mappingProperties;
+  @Autowired private FunktionsnamenMappingProperties mappingProperties;
 
-    @Test
-    void should_displayNamesOfFunktionenAndNoPlaceholders_when_mappedCorrectly() {
-        Map<WahlbezirkArtModel, Map<String, Map<String, String>>> mapping = mappingProperties.getMapping();
+  @Test
+  void should_displayNamesOfFunktionenAndNoPlaceholders_when_mappedCorrectly() {
+    Map<WahlbezirkArtModel, Map<String, Map<String, String>>> mapping =
+        mappingProperties.getMapping();
 
-        Arrays.stream(WahlbezirkArtModel.values()).forEach(wahlbezirkArt -> {
-            Arrays.stream(WahlartModel.values()).forEach(wahlart -> {
-                Arrays.stream(FunktionModel.values()).forEach(funktion -> {
-                    val mappedValue = mapping.get(wahlbezirkArt).get(wahlart.name()).get(funktion.name());
-                    assertThat(mappedValue).doesNotContain("${");
-                    assertThat(mappedValue).isNotBlank();
-                });
+    Arrays.stream(WahlbezirkArtModel.values())
+        .forEach(
+            wahlbezirkArt -> {
+              Arrays.stream(WahlartModel.values())
+                  .forEach(
+                      wahlart -> {
+                        Arrays.stream(FunktionModel.values())
+                            .forEach(
+                                funktion -> {
+                                  val mappedValue =
+                                      mapping
+                                          .get(wahlbezirkArt)
+                                          .get(wahlart.name())
+                                          .get(funktion.name());
+                                  assertThat(mappedValue).doesNotContain("${");
+                                  assertThat(mappedValue).isNotBlank();
+                                });
+                      });
             });
-        });
-    }
+  }
 }

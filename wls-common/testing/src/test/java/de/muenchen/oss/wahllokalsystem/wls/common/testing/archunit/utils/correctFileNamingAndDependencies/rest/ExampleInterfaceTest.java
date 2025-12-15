@@ -4,27 +4,23 @@ import org.junit.jupiter.api.Nested;
 
 public class ExampleInterfaceTest {
 
-    @Nested
-    class MethodWithOverload {
-
-        @Nested
-        class ToString {
-        }
-
-        @Nested
-        class ToListOfStrings {
-        }
-    }
+  @Nested
+  class MethodWithOverload {
 
     @Nested
-    class AnotherMethodWithOverload {
+    class ToString {}
 
-        @Nested
-        class ToInteger {
-        }
+    @Nested
+    class ToListOfStrings {}
+  }
 
-        @Nested
-        class ToListOfIntegers {
-        }
-    }
+  @Nested
+  class AnotherMethodWithOverload {
+
+    @Nested
+    class ToInteger {}
+
+    @Nested
+    class ToListOfIntegers {}
+  }
 }

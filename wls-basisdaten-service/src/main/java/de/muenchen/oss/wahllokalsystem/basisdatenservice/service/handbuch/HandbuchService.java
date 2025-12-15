@@ -17,39 +17,44 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class HandbuchService {
 
-    private final HandbuchValidator handbuchValidator;
+  private final HandbuchValidator handbuchValidator;
 
-    private final HandbuchModelMapper handbuchModelMapper;
+  private final HandbuchModelMapper handbuchModelMapper;
 
-    private final HandbuchRepository handbuchRepository;
+  private final HandbuchRepository handbuchRepository;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetHandbuch')")
-    public byte[] getHandbuch(final HandbuchReferenceModel handbuchReference) {
-        log.info("#getHandbuch - handbuchReference > {}", handbuchReference);
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetHandbuch')")
+  public byte[] getHandbuch(final HandbuchReferenceModel handbuchReference) {
+    log.info("#getHandbuch - handbuchReference > {}", handbuchReference);
 
-        handbuchValidator.validHandbuchReferenceOrThrow(handbuchReference);
-        val handbuchID = handbuchModelMapper.toEntityID(handbuchReference);
+    handbuchValidator.validHandbuchReferenceOrThrow(handbuchReference);
+    val handbuchID = handbuchModelMapper.toEntityID(handbuchReference);
 
-        val handbuchData = findByIDOrThrowNoData(handbuchID).getHandbuch();
-        return Arrays.copyOf(handbuchData, handbuchData.length);
+    val handbuchData = findByIDOrThrowNoData(handbuchID).getHandbuch();
+    return Arrays.copyOf(handbuchData, handbuchData.length);
+  }
+
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostHandbuch')")
+  public void setHandbuch(final HandbuchWriteModel handbuchWriteModel) {
+    log.info("postHandbuch - handbuchWriteModel> {}", handbuchWriteModel);
+    handbuchValidator.validHandbuchWriteModelOrThrow(handbuchWriteModel);
+    val entityToSave = handbuchModelMapper.toEntity(handbuchWriteModel);
+    try {
+      handbuchRepository.save(entityToSave);
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH);
     }
+  }
 
-    @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_PostHandbuch')")
-    public void setHandbuch(final HandbuchWriteModel handbuchWriteModel) {
-        log.info("postHandbuch - handbuchWriteModel> {}", handbuchWriteModel);
-        handbuchValidator.validHandbuchWriteModelOrThrow(handbuchWriteModel);
-        val entityToSave = handbuchModelMapper.toEntity(handbuchWriteModel);
-        try {
-            handbuchRepository.save(entityToSave);
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH);
-        }
-    }
-
-    private Handbuch findByIDOrThrowNoData(final WahltagIdUndWahlbezirksart handbuchReference) {
-        return handbuchRepository.findById(handbuchReference)
-                .orElseThrow(() -> exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETHANDBUCH_KEINE_DATEN));
-    }
+  private Handbuch findByIDOrThrowNoData(final WahltagIdUndWahlbezirksart handbuchReference) {
+    return handbuchRepository
+        .findById(handbuchReference)
+        .orElseThrow(
+            () ->
+                exceptionFactory.createTechnischeWlsException(
+                    ExceptionConstants.GETHANDBUCH_KEINE_DATEN));
+  }
 }

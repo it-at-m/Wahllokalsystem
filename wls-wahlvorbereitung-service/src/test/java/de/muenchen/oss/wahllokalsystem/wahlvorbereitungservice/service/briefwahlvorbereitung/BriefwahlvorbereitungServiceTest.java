@@ -22,109 +22,127 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BriefwahlvorbereitungServiceTest {
 
-    @Mock
-    BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
+  @Mock BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
 
-    @Mock
-    BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
+  @Mock BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
 
-    @Mock
-    BriefwahlvorbereitungValidator briefwahlvorbereitungValidator;
+  @Mock BriefwahlvorbereitungValidator briefwahlvorbereitungValidator;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    BriefwahlvorbereitungService unitUnderTest;
+  @InjectMocks BriefwahlvorbereitungService unitUnderTest;
 
-    @Nested
-    class GetBriefwahlvorbereitung {
+  @Nested
+  class GetBriefwahlvorbereitung {
 
-        @Test
-        void should_returnBriefwahlvorbereitung_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnBriefwahlvorbereitung_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedRepoResponse = new Briefwahlvorbereitung();
-            val mockedMappedRepoResponseAsModel = BriefwahlvorbereitungModel.builder().build();
+      val mockedRepoResponse = new Briefwahlvorbereitung();
+      val mockedMappedRepoResponseAsModel = BriefwahlvorbereitungModel.builder().build();
 
-            Mockito.doNothing().when(briefwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(briefwahlvorbereitungRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedRepoResponse));
-            Mockito.when(briefwahlvorbereitungModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedRepoResponseAsModel);
+      Mockito.doNothing()
+          .when(briefwahlvorbereitungValidator)
+          .validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(briefwahlvorbereitungRepository.findById(wahlbezirkID))
+          .thenReturn(Optional.of(mockedRepoResponse));
+      Mockito.when(briefwahlvorbereitungModelMapper.toModel(mockedRepoResponse))
+          .thenReturn(mockedMappedRepoResponseAsModel);
 
-            val result = unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID);
+      val result = unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID);
 
-            Assertions.assertThat(result.get()).isEqualTo(mockedMappedRepoResponseAsModel);
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.doNothing().when(briefwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(briefwahlvorbereitungRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID);
-
-            Assertions.assertThat(result).isEmpty();
-
-            Mockito.verify(briefwahlvorbereitungModelMapper, times(0)).toModel(any());
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val mockedValidatorException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidatorException).when(briefwahlvorbereitungValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID)).isSameAs(mockedValidatorException);
-        }
+      Assertions.assertThat(result.get()).isEqualTo(mockedMappedRepoResponseAsModel);
     }
 
-    @Nested
-    class SetBriefwahlvorbereitung {
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_saveBriefwahlvorbereitung_when_givenValidModel() {
-            val modelToSave = BriefwahlvorbereitungModel.builder().build();
+      Mockito.doNothing()
+          .when(briefwahlvorbereitungValidator)
+          .validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(briefwahlvorbereitungRepository.findById(wahlbezirkID))
+          .thenReturn(Optional.empty());
 
-            val mockedModelAsEntity = new Briefwahlvorbereitung();
-            Mockito.when(briefwahlvorbereitungModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
+      val result = unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID);
 
-            Mockito.doNothing().when(briefwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+      Assertions.assertThat(result).isEmpty();
 
-            unitUnderTest.setBriefwahlvorbereitung(modelToSave);
-
-            Mockito.verify(briefwahlvorbereitungRepository).save(mockedModelAsEntity);
-        }
-
-        @Test
-        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
-            val modelToSave = BriefwahlvorbereitungModel.builder().build();
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(briefwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSave)).isSameAs(mockedValidationException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_savingFailed() {
-            val modelToSave = BriefwahlvorbereitungModel.builder().build();
-
-            val mockedModelAsEntity = new Briefwahlvorbereitung();
-            val mockedSaveException = new RuntimeException("fail on save");
-            val mockedFactoryException = TechnischeWlsException.withCode("code").buildWithMessage("message");
-
-            Mockito.when(briefwahlvorbereitungModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
-            Mockito.doThrow(mockedSaveException).when(briefwahlvorbereitungRepository).save(mockedModelAsEntity);
-            Mockito.doNothing().when(briefwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSave)).usingRecursiveComparison()
-                    .isSameAs(mockedFactoryException);
-        }
+      Mockito.verify(briefwahlvorbereitungModelMapper, times(0)).toModel(any());
     }
+
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedValidatorException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidatorException)
+          .when(briefwahlvorbereitungValidator)
+          .validWahlbezirkIDOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getBriefwahlvorbereitung(wahlbezirkID))
+          .isSameAs(mockedValidatorException);
+    }
+  }
+
+  @Nested
+  class SetBriefwahlvorbereitung {
+
+    @Test
+    void should_saveBriefwahlvorbereitung_when_givenValidModel() {
+      val modelToSave = BriefwahlvorbereitungModel.builder().build();
+
+      val mockedModelAsEntity = new Briefwahlvorbereitung();
+      Mockito.when(briefwahlvorbereitungModelMapper.toEntity(modelToSave))
+          .thenReturn(mockedModelAsEntity);
+
+      Mockito.doNothing().when(briefwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+
+      unitUnderTest.setBriefwahlvorbereitung(modelToSave);
+
+      Mockito.verify(briefwahlvorbereitungRepository).save(mockedModelAsEntity);
+    }
+
+    @Test
+    void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
+      val modelToSave = BriefwahlvorbereitungModel.builder().build();
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(briefwahlvorbereitungValidator)
+          .validModelToSetOrThrow(modelToSave);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSave))
+          .isSameAs(mockedValidationException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_savingFailed() {
+      val modelToSave = BriefwahlvorbereitungModel.builder().build();
+
+      val mockedModelAsEntity = new Briefwahlvorbereitung();
+      val mockedSaveException = new RuntimeException("fail on save");
+      val mockedFactoryException =
+          TechnischeWlsException.withCode("code").buildWithMessage("message");
+
+      Mockito.when(briefwahlvorbereitungModelMapper.toEntity(modelToSave))
+          .thenReturn(mockedModelAsEntity);
+      Mockito.doThrow(mockedSaveException)
+          .when(briefwahlvorbereitungRepository)
+          .save(mockedModelAsEntity);
+      Mockito.doNothing().when(briefwahlvorbereitungValidator).validModelToSetOrThrow(modelToSave);
+      Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setBriefwahlvorbereitung(modelToSave))
+          .usingRecursiveComparison()
+          .isSameAs(mockedFactoryException);
+    }
+  }
 }

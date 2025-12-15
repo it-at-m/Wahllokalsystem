@@ -13,19 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AsyncProgressController {
 
-    private final AsyncProgress asyncProgress;
-    private final AsyncProgressDTOMapper asyncProgressDTOMapper;
+  private final AsyncProgress asyncProgress;
+  private final AsyncProgressDTOMapper asyncProgressDTOMapper;
 
-    @Operation(
-            description = "Abrufen des Fortschrittes bei der Importierung der Wahltermindaten.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Importfortschritt wurde geliefert."
-                    )
-            }
-    )
-    @GetMapping
-    public AsyncProgressDTO getAsyncProgress() {
-        return asyncProgressDTOMapper.toDto(asyncProgress);
-    }
+  @Operation(
+      description = "Abrufen des Fortschrittes bei der Importierung der Wahltermindaten.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Importfortschritt wurde geliefert.")
+      })
+  @GetMapping
+  public AsyncProgressDTO getAsyncProgress() {
+    return asyncProgressDTOMapper.toDto(asyncProgress);
+  }
 }

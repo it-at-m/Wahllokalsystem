@@ -20,17 +20,11 @@ import org.hibernate.annotations.NaturalId;
 @ToString(onlyExplicitlyIncluded = true)
 public class LoginAttempt extends BaseEntity {
 
-    @NaturalId
-    @NotNull
-    @Pattern(regexp = "[a-zA-Z0-9_\\.-]*")
-    @Size(min = 1)
-    @ToString.Include
-    private String username;
+  @NaturalId
+  @NotNull @Pattern(regexp = "[a-zA-Z0-9_\\.-]*") @Size(min = 1) @ToString.Include
+  private String username;
 
-    @NotNull
-    @ToString.Include
-    private int attempts;
+  @NotNull @ToString.Include private int attempts;
 
-    @ToString.Include
-    private LocalDateTime lastModified;
+  @ToString.Include private LocalDateTime lastModified;
 }

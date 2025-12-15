@@ -19,46 +19,46 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class LoginController {
 
-    private final LoginService loginService;
+  private final LoginService loginService;
 
-    @Operation(
-            description = "Liefert die Login Ansicht zurück",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Login Ansicht erfolgreich geliefert."
-                    )
-            }
-    )
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
-        val loginView = new ModelAndView();
+  @Operation(
+      description = "Liefert die Login Ansicht zurück",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Login Ansicht erfolgreich geliefert.")
+      })
+  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
+    val loginView = new ModelAndView();
 
-        if (hasParameterValue(request, response, "admin")) {
-            loginView.setViewName("loginat");
-        } else if (hasParameterValue(request, response, "no")) {
-            loginView.setViewName("nologin");
-        } else if (hasParameterValue(request, response, "error")) {
-            loginView.addObject("error", new RuntimeException("sth failed"));
-            loginView.setViewName("error");
-        } else {
-            setupLoginWLS(loginView);
-        }
-
-        return loginView;
+    if (hasParameterValue(request, response, "admin")) {
+      loginView.setViewName("loginat");
+    } else if (hasParameterValue(request, response, "no")) {
+      loginView.setViewName("nologin");
+    } else if (hasParameterValue(request, response, "error")) {
+      loginView.addObject("error", new RuntimeException("sth failed"));
+      loginView.setViewName("error");
+    } else {
+      setupLoginWLS(loginView);
     }
 
-    private boolean hasParameterValue(final HttpServletRequest request, final HttpServletResponse response, final String parameterValue) {
-        val cacheHttpSessionRequest = new HttpSessionRequestCache().getRequest(request, response);
+    return loginView;
+  }
 
-        if (cacheHttpSessionRequest != null) {
-            return cacheHttpSessionRequest.getParameterValues(parameterValue) != null;
-        } else {
-            return request.getParameterValues(parameterValue) != null;
-        }
-    }
+  private boolean hasParameterValue(
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final String parameterValue) {
+    val cacheHttpSessionRequest = new HttpSessionRequestCache().getRequest(request, response);
 
-    private void setupLoginWLS(final ModelAndView modelAndView) {
-        modelAndView.addObject("willkommensnachricht", loginService.getWelcomeMessage());
-        modelAndView.setViewName("loginwls");
+    if (cacheHttpSessionRequest != null) {
+      return cacheHttpSessionRequest.getParameterValues(parameterValue) != null;
+    } else {
+      return request.getParameterValues(parameterValue) != null;
     }
+  }
+
+  private void setupLoginWLS(final ModelAndView modelAndView) {
+    modelAndView.addObject("willkommensnachricht", loginService.getWelcomeMessage());
+    modelAndView.setViewName("loginwls");
+  }
 }

@@ -29,153 +29,193 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlvorstandServiceTest {
 
-    @Mock
-    WahlvorstandRepository wahlvorstandRepository;
+  @Mock WahlvorstandRepository wahlvorstandRepository;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    WahlvorstandMapper wahlvorstandMapper;
+  @Mock WahlvorstandMapper wahlvorstandMapper;
 
-    @Mock
-    WahlvorstandValidator wahlvorstandValidator;
+  @Mock WahlvorstandValidator wahlvorstandValidator;
 
-    @Mock
-    IDConverter idConverter;
+  @Mock IDConverter idConverter;
 
-    @InjectMocks
-    WahlvorstandService unitUnderTest;
+  @InjectMocks WahlvorstandService unitUnderTest;
 
-    @Nested
-    class GetWahlvorstandForWahlbezirk {
+  @Nested
+  class GetWahlvorstandForWahlbezirk {
 
-        @Test
-        void should_returnWahlvorstandDTO_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = UUID.randomUUID();
+    @Test
+    void should_returnWahlvorstandDTO_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = UUID.randomUUID();
 
-            val mockedEntity = new Wahlvorstand();
-            val mockedMappedEntity = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
+      val mockedEntity = new Wahlvorstand();
+      val mockedMappedEntity = new WahlvorstandDTO("wahlbezirkID", Collections.emptySet());
 
-            Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.of(mockedEntity));
-            Mockito.when(wahlvorstandMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString())).thenReturn(wahlbezirkID);
+      Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID))
+          .thenReturn(Optional.of(mockedEntity));
+      Mockito.when(wahlvorstandMapper.toDTO(mockedEntity)).thenReturn(mockedMappedEntity);
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString()))
+          .thenReturn(wahlbezirkID);
 
-            val result = unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString());
+      val result = unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString());
 
-            Assertions.assertThat(result).isSameAs(mockedMappedEntity);
-        }
-
-        @Test
-        void should_throwNotFoundException_when_noDataFound() {
-            val wahlbezirkID = UUID.randomUUID();
-
-            Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString())).thenReturn(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString()))
-                    .usingRecursiveComparison().isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
-        }
-
-        @Test
-        void should_throwException_when_whalbezirkIDIsNoUUID() {
-            val wahlbezirkID = "noAUUID";
-
-            val idConverterException = new RuntimeException("id convert failed");
-
-            Mockito.doThrow(idConverterException).when(idConverter).convertIDToUUIDOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID)).isSameAs(idConverterException);
-        }
-
-        @Test
-        void should_throwException_when_whalbezirkIDIsNotValid() {
-            val wahlbezirkID = UUID.randomUUID();
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahlvorstandValidator).validateWahlbezirkIDOrThrow(wahlbezirkID.toString());
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString()))
-                    .isSameAs(mockedValidationException);
-        }
+      Assertions.assertThat(result).isSameAs(mockedMappedEntity);
     }
 
-    @Nested
-    class SetAnwesenheit {
+    @Test
+    void should_throwNotFoundException_when_noDataFound() {
+      val wahlbezirkID = UUID.randomUUID();
 
-        @Test
-        void should_saveAnwesenheit_when_givenValidWahlvorstandsaktualisierungDTO() {
-            val wahlbezirkID = UUID.randomUUID();
-            val mitglied1 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
-            val mitglied2 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
-            val mitgliederAktualisierung = Set.of(mitglied1, mitglied2);
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitgliederAktualisierung, LocalDateTime.now());
+      Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID))
+          .thenReturn(Optional.empty());
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString()))
+          .thenReturn(wahlbezirkID);
 
-            val mockedEntityLastSavedDateTime = LocalDateTime.now().minusDays(1);
-            val mockedEntityMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.B, false, mockedEntityLastSavedDateTime);
-            mockedEntityMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
-            // no mitglied2 is intended because request should match only a subset of existing data
-            val mockedEntityMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
-            mockedEntityMitglied3.setId(UUID.randomUUID());
-            val mockedEntity = new Wahlvorstand(wahlbezirkID, Set.of(mockedEntityMitglied1, mockedEntityMitglied3));
-
-            Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.of(mockedEntity));
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString())).thenReturn(wahlbezirkID);
-
-            unitUnderTest.setAnwesenheit(aktualisierung);
-
-            val saveArgumentCaptor = ArgumentCaptor.forClass(Wahlvorstand.class);
-            Mockito.verify(wahlvorstandRepository).save(saveArgumentCaptor.capture());
-
-            val capturedSavedArgument = saveArgumentCaptor.getValue();
-            val expectedMitglied1 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.B, true, aktualisierung.anwesenheitBeginn());
-            expectedMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
-            val expectedMitglied3 = new Wahlvorstandsmitglied("", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
-            expectedMitglied3.setId(mockedEntityMitglied3.getId());
-            val expectedSavedArgument = new Wahlvorstand(wahlbezirkID, Set.of(expectedMitglied1, expectedMitglied3));
-            Assertions.assertThat(capturedSavedArgument).isEqualTo(expectedSavedArgument);
-        }
-
-        @Test
-        void should_throwException_when_wahlvorstandDoesNotExists() {
-            val wahlbezirkID = UUID.randomUUID();
-            val mitglied1 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
-            val mitglied2 = new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
-            val mitgliederAktualisierung = Set.of(mitglied1, mitglied2);
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(wahlbezirkID.toString(), mitgliederAktualisierung, LocalDateTime.now());
-
-            Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID)).thenReturn(Optional.empty());
-            Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString())).thenReturn(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung)).usingRecursiveComparison()
-                    .isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
-
-            Mockito.verify(wahlvorstandRepository, Mockito.times(0)).save(Mockito.any(Wahlvorstand.class));
-        }
-
-        @Test
-        void should_notSaveAnwesenheit_when_validationFailed() {
-            val aktualisierung = new WahlvorstandsaktualisierungDTO(UUID.randomUUID().toString(), Collections.emptySet(), LocalDateTime.now());
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(wahlvorstandValidator).validateSaveAnwesenheitDataOrThrow(aktualisierung);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung)).isSameAs(mockedValidationException);
-        }
-
-        @Test
-        void should_throwException_when_wahlbezirkIDIsInvalid() {
-            val wahlbezirkID = "malformedID";
-
-            val idConverterException = new RuntimeException("id convert failed");
-
-            Mockito.doThrow(idConverterException).when(idConverter).convertIDToUUIDOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(
-                    () -> unitUnderTest.setAnwesenheit(new WahlvorstandsaktualisierungDTO(wahlbezirkID, Collections.emptySet(), LocalDateTime.now())))
-                    .isSameAs(idConverterException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString()))
+          .usingRecursiveComparison()
+          .isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
     }
+
+    @Test
+    void should_throwException_when_whalbezirkIDIsNoUUID() {
+      val wahlbezirkID = "noAUUID";
+
+      val idConverterException = new RuntimeException("id convert failed");
+
+      Mockito.doThrow(idConverterException).when(idConverter).convertIDToUUIDOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID))
+          .isSameAs(idConverterException);
+    }
+
+    @Test
+    void should_throwException_when_whalbezirkIDIsNotValid() {
+      val wahlbezirkID = UUID.randomUUID();
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlvorstandValidator)
+          .validateWahlbezirkIDOrThrow(wahlbezirkID.toString());
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlvorstandForWahlbezirk(wahlbezirkID.toString()))
+          .isSameAs(mockedValidationException);
+    }
+  }
+
+  @Nested
+  class SetAnwesenheit {
+
+    @Test
+    void should_saveAnwesenheit_when_givenValidWahlvorstandsaktualisierungDTO() {
+      val wahlbezirkID = UUID.randomUUID();
+      val mitglied1 =
+          new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
+      val mitglied2 =
+          new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
+      val mitgliederAktualisierung = Set.of(mitglied1, mitglied2);
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(
+              wahlbezirkID.toString(), mitgliederAktualisierung, LocalDateTime.now());
+
+      val mockedEntityLastSavedDateTime = LocalDateTime.now().minusDays(1);
+      val mockedEntityMitglied1 =
+          new Wahlvorstandsmitglied(
+              "", "", WahlvorstandsmitgliedsFunktion.B, false, mockedEntityLastSavedDateTime);
+      mockedEntityMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
+      // no mitglied2 is intended because request should match only a subset of existing data
+      val mockedEntityMitglied3 =
+          new Wahlvorstandsmitglied(
+              "", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
+      mockedEntityMitglied3.setId(UUID.randomUUID());
+      val mockedEntity =
+          new Wahlvorstand(wahlbezirkID, Set.of(mockedEntityMitglied1, mockedEntityMitglied3));
+
+      Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID))
+          .thenReturn(Optional.of(mockedEntity));
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString()))
+          .thenReturn(wahlbezirkID);
+
+      unitUnderTest.setAnwesenheit(aktualisierung);
+
+      val saveArgumentCaptor = ArgumentCaptor.forClass(Wahlvorstand.class);
+      Mockito.verify(wahlvorstandRepository).save(saveArgumentCaptor.capture());
+
+      val capturedSavedArgument = saveArgumentCaptor.getValue();
+      val expectedMitglied1 =
+          new Wahlvorstandsmitglied(
+              "", "", WahlvorstandsmitgliedsFunktion.B, true, aktualisierung.anwesenheitBeginn());
+      expectedMitglied1.setId(UUID.fromString(mitglied1.identifikator()));
+      val expectedMitglied3 =
+          new Wahlvorstandsmitglied(
+              "", "", WahlvorstandsmitgliedsFunktion.SWB, true, mockedEntityLastSavedDateTime);
+      expectedMitglied3.setId(mockedEntityMitglied3.getId());
+      val expectedSavedArgument =
+          new Wahlvorstand(wahlbezirkID, Set.of(expectedMitglied1, expectedMitglied3));
+      Assertions.assertThat(capturedSavedArgument).isEqualTo(expectedSavedArgument);
+    }
+
+    @Test
+    void should_throwException_when_wahlvorstandDoesNotExists() {
+      val wahlbezirkID = UUID.randomUUID();
+      val mitglied1 =
+          new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), true);
+      val mitglied2 =
+          new WahlvorstandsmitgliedAktualisierungDTO(UUID.randomUUID().toString(), false);
+      val mitgliederAktualisierung = Set.of(mitglied1, mitglied2);
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(
+              wahlbezirkID.toString(), mitgliederAktualisierung, LocalDateTime.now());
+
+      Mockito.when(wahlvorstandRepository.findFirstByWahlbezirkID(wahlbezirkID))
+          .thenReturn(Optional.empty());
+      Mockito.when(idConverter.convertIDToUUIDOrThrow(wahlbezirkID.toString()))
+          .thenReturn(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung))
+          .usingRecursiveComparison()
+          .isEqualTo(new NotFoundException(wahlbezirkID, Wahlvorstand.class));
+
+      Mockito.verify(wahlvorstandRepository, Mockito.times(0))
+          .save(Mockito.any(Wahlvorstand.class));
+    }
+
+    @Test
+    void should_notSaveAnwesenheit_when_validationFailed() {
+      val aktualisierung =
+          new WahlvorstandsaktualisierungDTO(
+              UUID.randomUUID().toString(), Collections.emptySet(), LocalDateTime.now());
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlvorstandValidator)
+          .validateSaveAnwesenheitDataOrThrow(aktualisierung);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setAnwesenheit(aktualisierung))
+          .isSameAs(mockedValidationException);
+    }
+
+    @Test
+    void should_throwException_when_wahlbezirkIDIsInvalid() {
+      val wahlbezirkID = "malformedID";
+
+      val idConverterException = new RuntimeException("id convert failed");
+
+      Mockito.doThrow(idConverterException).when(idConverter).convertIDToUUIDOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.setAnwesenheit(
+                      new WahlvorstandsaktualisierungDTO(
+                          wahlbezirkID, Collections.emptySet(), LocalDateTime.now())))
+          .isSameAs(idConverterException);
+    }
+  }
 }

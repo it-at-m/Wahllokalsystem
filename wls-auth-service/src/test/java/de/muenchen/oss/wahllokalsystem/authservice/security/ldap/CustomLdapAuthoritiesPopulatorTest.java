@@ -20,39 +20,41 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @ExtendWith(MockitoExtension.class)
 class CustomLdapAuthoritiesPopulatorTest {
 
-    @Mock
-    UserRepository userRepository;
+  @Mock UserRepository userRepository;
 
-    @InjectMocks
-    CustomLdapAuthoritiesPopulator unitUnderTest;
+  @InjectMocks CustomLdapAuthoritiesPopulator unitUnderTest;
 
-    @Nested
-    class GetGrantedAuthorities {
+  @Nested
+  class GetGrantedAuthorities {
 
-        @Test
-        void should_returnCollectionOfGrantedAuthorities_when_userIsFound() {
-            val username = "username";
+    @Test
+    void should_returnCollectionOfGrantedAuthorities_when_userIsFound() {
+      val username = "username";
 
-            val mockedUser = new User();
-            mockedUser.setAuthorities(Set.of(new Authority("auth1", null, null), new Authority("auth2", null, null)));
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
+      val mockedUser = new User();
+      mockedUser.setAuthorities(
+          Set.of(new Authority("auth1", null, null), new Authority("auth2", null, null)));
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
 
-            val result = unitUnderTest.getGrantedAuthorities(null, username);
+      val result = unitUnderTest.getGrantedAuthorities(null, username);
 
-            val expectedResult = List.of(new SimpleGrantedAuthority("auth1"), new SimpleGrantedAuthority("auth2"));
-            Assertions.assertThat(result).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnEmptyCollectionOfGrantedAuthorities_when_userIsNotFound() {
-            val username = "username";
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getGrantedAuthorities(null, username);
-
-            Assertions.assertThat(result).isEmpty();
-        }
+      val expectedResult =
+          List.of(new SimpleGrantedAuthority("auth1"), new SimpleGrantedAuthority("auth2"));
+      Assertions.assertThat(result)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .isEqualTo(expectedResult);
     }
 
+    @Test
+    void should_returnEmptyCollectionOfGrantedAuthorities_when_userIsNotFound() {
+      val username = "username";
+
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+      val result = unitUnderTest.getGrantedAuthorities(null, username);
+
+      Assertions.assertThat(result).isEmpty();
+    }
+  }
 }

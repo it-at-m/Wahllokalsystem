@@ -11,29 +11,42 @@ import org.mapstruct.factory.Mappers;
 
 class KopfdatenDTOMapperTest {
 
-    private final KopfdatenDTOMapper unitUnderTest = Mappers.getMapper(KopfdatenDTOMapper.class);
+  private final KopfdatenDTOMapper unitUnderTest = Mappers.getMapper(KopfdatenDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnKopfdatenDTO_when_givenKopfdatenModel() {
-
-            val kopfdatenModel = new KopfdatenModel(new BezirkUndWahlID("wahlID1", "wahlbezirkID1"),
-                    "LHM", StimmzettelgebietsartModel.SK, "szgNummer1", "szgName1",
-                    "wahlName1", "wbzNummer1");
-
-            val dtoExpected = new KopfdatenDTO("wahlID1", "wahlbezirkID1", "LHM",
-                    StimmzettelgebietsartDTO.SK, "szgNummer1", "szgName1",
-                    "wahlName1", "wbzNummer1");
-
-            val result = unitUnderTest.toDTO(kopfdatenModel);
-            Assertions.assertThat(result).isEqualTo(dtoExpected);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
     }
+
+    @Test
+    void should_returnKopfdatenDTO_when_givenKopfdatenModel() {
+
+      val kopfdatenModel =
+          new KopfdatenModel(
+              new BezirkUndWahlID("wahlID1", "wahlbezirkID1"),
+              "LHM",
+              StimmzettelgebietsartModel.SK,
+              "szgNummer1",
+              "szgName1",
+              "wahlName1",
+              "wbzNummer1");
+
+      val dtoExpected =
+          new KopfdatenDTO(
+              "wahlID1",
+              "wahlbezirkID1",
+              "LHM",
+              StimmzettelgebietsartDTO.SK,
+              "szgNummer1",
+              "szgName1",
+              "wahlName1",
+              "wbzNummer1");
+
+      val result = unitUnderTest.toDTO(kopfdatenModel);
+      Assertions.assertThat(result).isEqualTo(dtoExpected);
+    }
+  }
 }

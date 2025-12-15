@@ -13,44 +13,58 @@ import org.mapstruct.factory.Mappers;
 
 class DTOMapperTest {
 
-    private final DTOMapper unitUnderTest = Mappers.getMapper(DTOMapper.class);
+  private final DTOMapper unitUnderTest = Mappers.getMapper(DTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
-
-        @Test
-        void should_returnDTO_when_exceptionIsGiven() {
-            val code = "089";
-            val serviceName = "dto mapper test";
-            val message = "lets check the mapping";
-            val source = FachlicheWlsException.withCode(code).inService(serviceName).buildWithMessage(message);
-            val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.F, code, serviceName, message);
-
-            val result = unitUnderTest.toDTO(source);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
+    @Test
+    void should_returnNull_when_nullIsGiven() {
+      Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
     }
 
-    @ParameterizedTest(name = "expected: {0} input: {1}")
-    @MethodSource
-    void should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven(final WlsExceptionCategory expectedResult,
-            final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory categoryToMap) {
-        Assertions.assertThat(unitUnderTest.toDTOCategory(categoryToMap)).isEqualTo(expectedResult);
-    }
+    @Test
+    void should_returnDTO_when_exceptionIsGiven() {
+      val code = "089";
+      val serviceName = "dto mapper test";
+      val message = "lets check the mapping";
+      val source =
+          FachlicheWlsException.withCode(code).inService(serviceName).buildWithMessage(message);
+      val expectedResult = new WlsExceptionDTO(WlsExceptionCategory.F, code, serviceName, message);
 
-    private static Stream<Arguments> should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven() {
-        return Stream.of(
-                Arguments.of(WlsExceptionCategory.F, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.FACHLICH),
-                Arguments.of(WlsExceptionCategory.I, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.INFRASTRUKTUR),
-                Arguments.of(WlsExceptionCategory.S, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.SECURITY),
-                Arguments.of(WlsExceptionCategory.T, de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory.TECHNISCH),
-                Arguments.of(null, null));
+      val result = unitUnderTest.toDTO(source);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @ParameterizedTest(name = "expected: {0} input: {1}")
+  @MethodSource
+  void should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven(
+      final WlsExceptionCategory expectedResult,
+      final de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory
+          categoryToMap) {
+    Assertions.assertThat(unitUnderTest.toDTOCategory(categoryToMap)).isEqualTo(expectedResult);
+  }
+
+  private static Stream<Arguments> should_returnWlsExceptionCategory_when_restDTOCategoryIsGiven() {
+    return Stream.of(
+        Arguments.of(
+            WlsExceptionCategory.F,
+            de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory
+                .FACHLICH),
+        Arguments.of(
+            WlsExceptionCategory.I,
+            de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory
+                .INFRASTRUKTUR),
+        Arguments.of(
+            WlsExceptionCategory.S,
+            de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory
+                .SECURITY),
+        Arguments.of(
+            WlsExceptionCategory.T,
+            de.muenchen.oss.wahllokalsystem.wls.common.exception.model.WlsExceptionCategory
+                .TECHNISCH),
+        Arguments.of(null, null));
+  }
 }

@@ -3,16 +3,16 @@
     <v-card-title> Ungültige Stimmen </v-card-title>
     <v-card-text>
       <v-table>
-        <tbody class="bottom-border-black">
+        <thead>
           <tr>
-            <td class="index-column" />
-            <td />
-            <td class="font-weight-bold text-right">Insgesamt</td>
+            <th class="index-column" />
+            <th />
+            <th class="font-weight-bold text-right">Insgesamt</th>
           </tr>
-        </tbody>
+        </thead>
         <tfoot>
           <tr>
-            <td class="font-weight-bold">C</td>
+            <td class="font-weight-bold index-column">C</td>
             <td class="font-weight-bold">Ungültige Stimmen</td>
             <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>
           </tr>
@@ -41,7 +41,7 @@ onActivated(async () => {
   const result = await getErgebnisse(
     props.wahlbezirkId,
     props.wahlId,
-    StapelArtEnum.MbwD,
+    StapelArtEnum.MbwDUngueltig,
     false
   );
   ungueltigeStimmen.value = result?.ergebnisse[0]?.ergebnis || 0;

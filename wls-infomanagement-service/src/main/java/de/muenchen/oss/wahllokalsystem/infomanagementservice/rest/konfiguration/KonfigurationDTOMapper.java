@@ -13,12 +13,13 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface KonfigurationDTOMapper {
 
-    KonfigurationDTO toDTO(KonfigurationModel konfigurationModel);
+  KonfigurationDTO toDTO(KonfigurationModel konfigurationModel);
 
-    KennbuchstabenListenDTO toDTO(KennbuchstabenListenModel kennbuchstabenListenModel);
+  KennbuchstabenListenDTO toDTO(KennbuchstabenListenModel kennbuchstabenListenModel);
 
-    KonfigurationKonfigKey toModelKey(KonfigurationKey konfigurationKey);
+  KonfigurationKonfigKey toModelKey(KonfigurationKey konfigurationKey);
 
-    @Mapping(target = "schluessel", source = "konfigurationKey")
-    KonfigurationSetModel toSetModel(KonfigurationKey konfigurationKey, KonfigurationSetDTO konfigurationSetDTO);
+  @Mapping(target = "schluessel", source = "konfigurationKey")
+  KonfigurationSetModel toSetModel(
+      KonfigurationKey konfigurationKey, KonfigurationSetDTO konfigurationSetDTO);
 }

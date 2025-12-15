@@ -14,22 +14,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlbeteiligungControllerTest {
 
-    @Mock
-    WahlbeteiligungService wahlbeteiligungService;
+  @Mock WahlbeteiligungService wahlbeteiligungService;
 
-    @InjectMocks
-    WahlbeteiligungController unitUnderTest;
+  @InjectMocks WahlbeteiligungController unitUnderTest;
 
-    @Nested
-    class SaveWahlbeteiligung {
+  @Nested
+  class SaveWahlbeteiligung {
 
-        @Test
-        void should_saveWahlbeteiligung_when_called() {
-            val wahlbeteiligungsMeldungDTO = WahlbeteiligungsMeldungDTO.builder().build();
+    @Test
+    void should_saveWahlbeteiligung_when_called() {
+      val wahlbeteiligungsMeldungDTO = WahlbeteiligungsMeldungDTO.builder().build();
 
-            unitUnderTest.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
+      unitUnderTest.saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
 
-            Mockito.verify(wahlbeteiligungService).saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
-        }
+      Mockito.verify(wahlbeteiligungService).saveWahlbeteiligung(wahlbeteiligungsMeldungDTO);
     }
+  }
 }

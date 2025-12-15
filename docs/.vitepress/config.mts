@@ -152,6 +152,10 @@ export default withMermaid({
                   text: "Anordnung des active Button",
                   link: `${PATH_ADR_UI}adr007-active-button-positioning.md`,
                 },
+                {
+                  text: "Styling von Tabellen",
+                  link: `${PATH_ADR_UI}adr008-tabellen-styling.md`,
+                },
               ],
             },
           ],

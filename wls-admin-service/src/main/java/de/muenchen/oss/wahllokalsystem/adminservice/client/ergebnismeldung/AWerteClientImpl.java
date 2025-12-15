@@ -18,20 +18,21 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class AWerteClientImpl implements AWerteClient {
 
-    private final AWerteControllerApi awerteControllerApi;
+  private final AWerteControllerApi awerteControllerApi;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @Override
-    public void initialiseAWerte(final List<String> wahlbezirkIDs) {
-        try {
-            awerteControllerApi.initialiseAWerte(wahlbezirkIDs);
-        } catch (final WlsException wlsException) {
-            log.debug("#initialiseAWerte found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            log.error("Error beim A-Werte initialisieren: ", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_ERGEBNISMELDUNG);
-        }
+  @Override
+  public void initialiseAWerte(final List<String> wahlbezirkIDs) {
+    try {
+      awerteControllerApi.initialiseAWerte(wahlbezirkIDs);
+    } catch (final WlsException wlsException) {
+      log.debug("#initialiseAWerte found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      log.error("Error beim A-Werte initialisieren: ", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_ERGEBNISMELDUNG);
     }
+  }
 }

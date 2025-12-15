@@ -20,19 +20,22 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 @EnableWebSecurity
 public class NoSecurityConfiguration {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // @formatter:off
-        http
-                .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .authorizeHttpRequests(requests -> requests.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**"))
-                        .permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .anyRequest()
-                        .permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
-        // @formatter:on
-        return http.build();
-    }
-
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    // @formatter:off
+    http.headers(
+            customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .authorizeHttpRequests(
+            requests ->
+                requests
+                    .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**"))
+                    .permitAll()
+                    .requestMatchers(PathRequest.toH2Console())
+                    .permitAll()
+                    .anyRequest()
+                    .permitAll())
+        .csrf(AbstractHttpConfigurer::disable);
+    // @formatter:on
+    return http.build();
+  }
 }

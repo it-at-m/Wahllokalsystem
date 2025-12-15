@@ -19,64 +19,80 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlenServiceTest {
 
-    @Mock
-    WahlenClient wahlenClient;
+  @Mock WahlenClient wahlenClient;
 
-    @Mock
-    WahlenValidator wahlenValidator;
+  @Mock WahlenValidator wahlenValidator;
 
-    @InjectMocks
-    WahlenService unitUnderTest;
+  @InjectMocks WahlenService unitUnderTest;
 
-    @Nested
-    class GetWahlen {
+  @Nested
+  class GetWahlen {
 
-        @Test
-        void should_callGetWahlenClient_when_serviceIsCalled() {
-            val wahlID = "wahlID";
+    @Test
+    void should_callGetWahlenClient_when_serviceIsCalled() {
+      val wahlID = "wahlID";
 
-            unitUnderTest.getWahlen(wahlID);
+      unitUnderTest.getWahlen(wahlID);
 
-            Mockito.verify(wahlenValidator, times(1)).validWahlIDParamOrThrow(wahlID);
-            Mockito.verify(wahlenClient, times(1)).getWahlen(wahlID);
-        }
+      Mockito.verify(wahlenValidator, times(1)).validWahlIDParamOrThrow(wahlID);
+      Mockito.verify(wahlenClient, times(1)).getWahlen(wahlID);
+    }
+  }
+
+  @Nested
+  class UpdateWahlen {
+
+    @Test
+    void should_callPostWahlenClient_when_serviceIsCalled() {
+      val wahlID = "wahlID";
+      List<WahlModel> mockedListOfModel = createWahlModelList("name");
+
+      unitUnderTest.updateWahlen(mockedListOfModel, wahlID);
+
+      Mockito.verify(wahlenClient, times(1)).postWahlen(wahlID, mockedListOfModel);
     }
 
-    @Nested
-    class UpdateWahlen {
+    @Test
+    void should_throwFachlicheWlsException_when_serviceParameterWahlenIsNull() {
+      val wahlID = "wahlID";
 
-        @Test
-        void should_callPostWahlenClient_when_serviceIsCalled() {
-            val wahlID = "wahlID";
-            List<WahlModel> mockedListOfModel = createWahlModelList("name");
+      val mockedFachlicheWlsException =
+          FachlicheWlsException.withCode("000").buildWithMessage("missing argument");
+      Mockito.doThrow(mockedFachlicheWlsException)
+          .when(wahlenValidator)
+          .validWahlModelListOrThrow(null);
 
-            unitUnderTest.updateWahlen(mockedListOfModel, wahlID);
-
-            Mockito.verify(wahlenClient, times(1)).postWahlen(wahlID, mockedListOfModel);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_serviceParameterWahlenIsNull() {
-            val wahlID = "wahlID";
-
-            val mockedFachlicheWlsException = FachlicheWlsException.withCode("000").buildWithMessage("missing argument");
-            Mockito.doThrow(mockedFachlicheWlsException).when(wahlenValidator).validWahlModelListOrThrow(null);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.updateWahlen(null, wahlID))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.updateWahlen(null, wahlID))
+          .isSameAs(mockedFachlicheWlsException);
     }
+  }
 
-    private List<WahlModel> createWahlModelList(final String namePraefix) {
-        return List.of(
-                new WahlModel("wahlID", namePraefix + "wahl1", 1L,
-                        1L, LocalDate.now().plusMonths(1),
-                        WahlartModel.BAW, new FarbeModel(1, 1, 1)),
-                new WahlModel("wahlID", namePraefix + "wahl2", 2L,
-                        2L, LocalDate.now().plusMonths(2),
-                        WahlartModel.LTW, new FarbeModel(2, 2, 2)),
-                new WahlModel("wahlID", namePraefix + "wahl3", 3L,
-                        3L, LocalDate.now().plusMonths(3),
-                        WahlartModel.LTW, new FarbeModel(3, 3, 3)));
-    }
+  private List<WahlModel> createWahlModelList(final String namePraefix) {
+    return List.of(
+        new WahlModel(
+            "wahlID",
+            namePraefix + "wahl1",
+            1L,
+            1L,
+            LocalDate.now().plusMonths(1),
+            WahlartModel.BAW,
+            new FarbeModel(1, 1, 1)),
+        new WahlModel(
+            "wahlID",
+            namePraefix + "wahl2",
+            2L,
+            2L,
+            LocalDate.now().plusMonths(2),
+            WahlartModel.LTW,
+            new FarbeModel(2, 2, 2)),
+        new WahlModel(
+            "wahlID",
+            namePraefix + "wahl3",
+            3L,
+            3L,
+            LocalDate.now().plusMonths(3),
+            WahlartModel.LTW,
+            new FarbeModel(3, 3, 3)));
+  }
 }

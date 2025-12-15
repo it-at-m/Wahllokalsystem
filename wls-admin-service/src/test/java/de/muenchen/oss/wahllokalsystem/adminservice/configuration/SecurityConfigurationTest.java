@@ -36,274 +36,297 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean
-    WahltermindatenService wahltermindatenService;
+  @MockitoBean WahltermindatenService wahltermindatenService;
 
-    @MockitoBean
-    WahllokalBenutzerService wahllokalBenutzerService;
+  @MockitoBean WahllokalBenutzerService wahllokalBenutzerService;
 
-    @MockitoBean
-    KonfigurierteWahltageService konfigurierteWahltageService;
+  @MockitoBean KonfigurierteWahltageService konfigurierteWahltageService;
 
-    @MockitoBean
-    WahltageService wahltageService;
+  @MockitoBean WahltageService wahltageService;
 
-    @MockitoBean
-    WahlenService wahlenService;
+  @MockitoBean WahlenService wahlenService;
 
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
+    api.perform(get("/")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
+    api.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
+    api.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
+    api.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
+    api.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
+    api.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
+    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class LoadWahltermindaten {
+
+    @WithAnonymousUser
     @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
-        api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
+
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
+    @WithMockUser
     @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
-        api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
-    }
+    void should_returnOk_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
+      api.perform(request).andExpect(status().isOk());
+
+      Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
+    }
+  }
+
+  @Nested
+  class GenerateWahllokalbenutzer {
+
+    @WithAnonymousUser
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
-        api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
+
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
+    @WithMockUser
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
-        api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
-    }
+    void should_returnOk_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
+      api.perform(request).andExpect(status().isOk());
+
+      Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
+    }
+  }
+
+  @Nested
+  class GetKonfigurierteWahltage {
+
+    @WithAnonymousUser
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
-        api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
+
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
+    @WithMockUser
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceV3ApiDocs() throws Exception {
-        api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
-    }
+    void should_returnNoContent_when_callingAuthenticated() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
+      api.perform(request).andExpect(status().isNoContent());
+
+      Mockito.verify(konfigurierteWahltageService).getKonfigurierteWahltage();
+    }
+  }
+
+  @Nested
+  class PostKonfigurierterWahltag {
+
+    @WithAnonymousUser
     @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-        api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val requestBody =
+          new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class LoadWahltermindaten {
+    @WithMockUser
+    @Test
+    void should_returnNoContent_when_callingAuthenticated() throws Exception {
+      val requestBody =
+          new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+      api.perform(request).andExpect(status().isOk());
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
+      Mockito.verify(konfigurierteWahltageService).postKonfigurierterWahltag(notNull());
+    }
+  }
 
-        @WithMockUser
-        @Test
-        void should_returnOk_when_callingAuthenticated() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/importWahltermindaten/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+  @Nested
+  class GetWahltage {
 
-            api.perform(request).andExpect(status().isOk());
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
 
-            Mockito.verify(wahltermindatenService).loadWahltermindaten(wahltagID);
-        }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class GenerateWahllokalbenutzer {
+    @WithMockUser
+    @Test
+    void should_returnNoContent_when_callingAuthenticated() throws Exception {
+      val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
 
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+      api.perform(request).andExpect(status().isNoContent());
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
+      Mockito.verify(wahltageService).getWahltage();
+    }
+  }
 
-        @WithMockUser
-        @Test
-        void should_returnOk_when_callingAuthenticated() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+  @Nested
+  class GetWahlen {
 
-            api.perform(request).andExpect(status().isOk());
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
 
-            Mockito.verify(wahllokalBenutzerService).generateWahllokalbenutzer(wahltagID);
-        }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class GetKonfigurierteWahltage {
+    @WithMockUser
+    @Test
+    void should_returnNoContent_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
 
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+      api.perform(request).andExpect(status().isNoContent());
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
+      Mockito.verify(wahlenService).getWahlen(wahltagID);
+    }
+  }
 
-        @WithMockUser
-        @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage").with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
+  @Nested
+  class UpdateWahlen {
 
-            api.perform(request).andExpect(status().isNoContent());
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/wahlen/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
-            Mockito.verify(konfigurierteWahltageService).getKonfigurierteWahltage();
-        }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class PostKonfigurierterWahltag {
+    @WithMockUser
+    @Test
+    void should_returnOk_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/wahlen/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(
+                  objectMapper.writeValueAsBytes(
+                      List.of(
+                          new WahlDTO(
+                              "wahlID1",
+                              "name1",
+                              3L,
+                              1L,
+                              LocalDate.now(),
+                              WahlartDTO.BAW,
+                              new FarbeDTO(1, 1, 1)))));
 
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val requestBody = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
-            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+      api.perform(request).andExpect(status().isOk());
+    }
+  }
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
+  @Nested
+  class DeleteWahltermindaten {
 
-        @WithMockUser
-        @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
-            val requestBody = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
-            val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody));
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
-            api.perform(request).andExpect(status().isOk());
-
-            Mockito.verify(konfigurierteWahltageService).postKonfigurierterWahltag(notNull());
-        }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class GetWahltage {
+    @WithMockUser
+    @Test
+    void should_returnOk_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID)
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON);
 
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
+      api.perform(request).andExpect(status().isOk());
 
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @WithMockUser
-        @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
-            val request = MockMvcRequestBuilders.get("/businessActions/wahltage");
-
-            api.perform(request).andExpect(status().isNoContent());
-
-            Mockito.verify(wahltageService).getWahltage();
-        }
+      Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
     }
-
-    @Nested
-    class GetWahlen {
-
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @WithMockUser
-        @Test
-        void should_returnNoContent_when_callingAuthenticated() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlen/" + wahltagID);
-
-            api.perform(request).andExpect(status().isNoContent());
-
-            Mockito.verify(wahlenService).getWahlen(wahltagID);
-        }
-    }
-
-    @Nested
-    class UpdateWahlen {
-
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + wahltagID)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @WithMockUser
-        @Test
-        void should_returnOk_when_callingAuthenticated() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/wahlen/" + wahltagID)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(List.of(
-                            new WahlDTO("wahlID1", "name1", 3L, 1L, LocalDate.now(), WahlartDTO.BAW, new FarbeDTO(1, 1, 1)))));
-
-            api.perform(request).andExpect(status().isOk());
-        }
-    }
-
-    @Nested
-    class DeleteWahltermindaten {
-
-        @WithAnonymousUser
-        @Test
-        void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @WithMockUser
-        @Test
-        void should_returnOk_when_callingAuthenticated() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = MockMvcRequestBuilders.post("/businessActions/deleteWahltermindaten/" + wahltagID).with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON);
-
-            api.perform(request).andExpect(status().isOk());
-
-            Mockito.verify(wahltermindatenService).deleteWahltermindaten(wahltagID);
-        }
-    }
+  }
 }

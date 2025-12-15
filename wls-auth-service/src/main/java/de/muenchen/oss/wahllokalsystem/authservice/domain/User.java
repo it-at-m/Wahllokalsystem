@@ -21,7 +21,7 @@ import lombok.ToString;
 import lombok.val;
 
 @Entity
-@Table(name = "Wlsuser") //user as table name is already in use by h2
+@Table(name = "Wlsuser") // user as table name is already in use by h2
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,56 +29,58 @@ import lombok.val;
 @ToString(onlyExplicitlyIncluded = true)
 public class User extends BaseEntity {
 
-    public static User flatCopyOf(final User user) {
-        val copy = new User(user.getUsername(), user.getPassword(), user.getEmail(), user.isUserEnabled(), user.isAccountNonLocked(), user.getWahltagID(),
-                user.getWahltag(), user.getWahlbezirkID(), user.getWahlbezirkNummer(), user.getWahlbezirksArt(), user.getPin(), user.getAuthorities(),
-                user.getWbid_wahlnummer());
-        copy.setId(user.getId());
+  public static User flatCopyOf(final User user) {
+    val copy =
+        new User(
+            user.getUsername(),
+            user.getPassword(),
+            user.getEmail(),
+            user.isUserEnabled(),
+            user.isAccountNonLocked(),
+            user.getWahltagID(),
+            user.getWahltag(),
+            user.getWahlbezirkID(),
+            user.getWahlbezirkNummer(),
+            user.getWahlbezirksArt(),
+            user.getPin(),
+            user.getAuthorities(),
+            user.getWbid_wahlnummer());
+    copy.setId(user.getId());
 
-        return copy;
-    }
+    return copy;
+  }
 
-    @NotNull
-    @Size(min = 1)
-    @ToString.Include
-    private String username;
+  @NotNull @Size(min = 1) @ToString.Include
+  private String username;
 
-    @ToString.Include
-    private String password;
+  @ToString.Include private String password;
 
-    @Email
-    @ToString.Include
-    private String email;
+  @Email @ToString.Include private String email;
 
-    @ToString.Include
-    private boolean userEnabled;
+  @ToString.Include private boolean userEnabled;
 
-    @ToString.Include
-    private boolean accountNonLocked;
+  @ToString.Include private boolean accountNonLocked;
 
-    @ToString.Include
-    private String wahltagID;
+  @ToString.Include private String wahltagID;
 
-    @ToString.Include
-    private LocalDate wahltag;
+  @ToString.Include private LocalDate wahltag;
 
-    @ToString.Include
-    private String wahlbezirkID;
+  @ToString.Include private String wahlbezirkID;
 
-    @ToString.Include
-    private String wahlbezirkNummer;
+  @ToString.Include private String wahlbezirkNummer;
 
-    @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private Wahlbezirksart wahlbezirksArt;
+  @ToString.Include
+  @Enumerated(EnumType.STRING)
+  private Wahlbezirksart wahlbezirksArt;
 
-    @ToString.Include
-    private String pin;
+  @ToString.Include private String pin;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "Secusers_Secauthorities", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "authority_oid") })
-    private Set<Authority> authorities;
+  @ManyToMany(cascade = CascadeType.PERSIST)
+  @JoinTable(
+      name = "Secusers_Secauthorities",
+      joinColumns = {@JoinColumn(name = "user_oid")},
+      inverseJoinColumns = {@JoinColumn(name = "authority_oid")})
+  private Set<Authority> authorities;
 
-    @ToString.Include
-    private String wbid_wahlnummer;
+  @ToString.Include private String wbid_wahlnummer;
 }

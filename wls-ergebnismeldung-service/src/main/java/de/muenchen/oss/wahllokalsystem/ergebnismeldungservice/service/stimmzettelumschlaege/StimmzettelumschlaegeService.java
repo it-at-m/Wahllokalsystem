@@ -18,44 +18,52 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmzettelumschlaegeService {
 
-    private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
+  private static final String WAHLBEZIRK_ART_USER_DETAIL_KEY = "wahlbezirksArt";
 
-    private final StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
-    private final StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
-    private final StimmzettelumschlaegeValidator stimmzettelumschlaegeValidator;
-    private final ExceptionFactory exceptionFactory;
-    private final AuthenticationService authenticationService;
+  private final StimmzettelumschlaegeRepository stimmzettelumschlaegeRepository;
+  private final StimmzettelumschlaegeModelMapper stimmzettelumschlaegeModelMapper;
+  private final StimmzettelumschlaegeValidator stimmzettelumschlaegeValidator;
+  private final ExceptionFactory exceptionFactory;
+  private final AuthenticationService authenticationService;
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege')")
-    public Optional<StimmzettelumschlaegeModel> getStimmzettelumschlaege(final BezirkUndWahlID id) {
-        log.info("#getStimmzettelumschlaege");
+  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege')")
+  public Optional<StimmzettelumschlaegeModel> getStimmzettelumschlaege(final BezirkUndWahlID id) {
+    log.info("#getStimmzettelumschlaege");
 
-        stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG));
+    stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG));
 
-        val stimmzettelumschlaegeFromRepo = stimmzettelumschlaegeRepository.findById(id);
-        return stimmzettelumschlaegeFromRepo.map(stimmzettelumschlaegeModelMapper::toModel);
+    val stimmzettelumschlaegeFromRepo = stimmzettelumschlaegeRepository.findById(id);
+    return stimmzettelumschlaegeFromRepo.map(stimmzettelumschlaegeModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public void setStimmzettelumschlaege(
+      @P("param") final BezirkUndWahlID id,
+      final StimmzettelumschlaegeModel stimmzettelumschlaege) {
+    log.info("#postStimmzettelumschlaege");
+
+    stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG));
+    stimmzettelumschlaegeValidator.validStimmzettelumschlaegeOrThrow(stimmzettelumschlaege);
+    val wahlbezirkArtOfRequest =
+        authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
+    stimmzettelumschlaegeValidator.validHasBWBRequiredEroeffnungsUhrzeitOrThrow(
+        wahlbezirkArtOfRequest, stimmzettelumschlaege.urneneroeffnungsUhrzeit());
+
+    try {
+      stimmzettelumschlaegeRepository.save(
+          stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaege));
+    } catch (Exception e) {
+      log.error("#postStimmzettelumschlaege unsaveable:", e);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmzettelumschlaege')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
-    )
-    public void setStimmzettelumschlaege(@P("param") final BezirkUndWahlID id, final StimmzettelumschlaegeModel stimmzettelumschlaege) {
-        log.info("#postStimmzettelumschlaege");
-
-        stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMZETTELUMSCHLAEGE_PARAMETER_UNVOLLSTAENDIG));
-        stimmzettelumschlaegeValidator.validStimmzettelumschlaegeOrThrow(stimmzettelumschlaege);
-        val wahlbezirkArtOfRequest = authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow();
-        stimmzettelumschlaegeValidator.validHasBWBRequiredEroeffnungsUhrzeitOrThrow(wahlbezirkArtOfRequest,
-                stimmzettelumschlaege.urneneroeffnungsUhrzeit());
-
-        try {
-            stimmzettelumschlaegeRepository.save(stimmzettelumschlaegeModelMapper.toEntity(stimmzettelumschlaege));
-        } catch (Exception e) {
-            log.error("#postStimmzettelumschlaege unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMZETTELUMSCHLAEGE_UNSAVEABLE);
-        }
-    }
+  }
 }

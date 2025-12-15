@@ -18,29 +18,30 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, properties = "service.config.oauth2.logoutUri=http://test.local")
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    properties = "service.config.oauth2.logoutUri=http://test.local")
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class AuthServerControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Nested
-    class GetLogoutUrl {
+  @Nested
+  class GetLogoutUrl {
 
-        @WithMockUser(username = "authenticated user")
-        @Test
-        void should_returnLogoutUri_when_propertyIsSet() throws Exception {
-            val request = MockMvcRequestBuilders.get("/authserver/logouturl");
-            val result = api.perform(request).andExpect(status().isOk()).andReturn();
+    @WithMockUser(username = "authenticated user")
+    @Test
+    void should_returnLogoutUri_when_propertyIsSet() throws Exception {
+      val request = MockMvcRequestBuilders.get("/authserver/logouturl");
+      val result = api.perform(request).andExpect(status().isOk()).andReturn();
 
-            val responseAsDTO = objectMapper.readValue(result.getResponse().getContentAsString(), ResolvedUrlDTO.class);
+      val responseAsDTO =
+          objectMapper.readValue(result.getResponse().getContentAsString(), ResolvedUrlDTO.class);
 
-            Assertions.assertThat(responseAsDTO.url()).isEqualTo("http://test.local");
-        }
+      Assertions.assertThat(responseAsDTO.url()).isEqualTo("http://test.local");
     }
+  }
 }

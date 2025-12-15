@@ -27,18 +27,18 @@ import org.hibernate.annotations.JdbcTypeCode;
 @AllArgsConstructor
 public class WahllokalZustand extends BaseEntity {
 
-    @JdbcTypeCode(VARCHAR)
-    private UUID wahlbezirkID;
+  @JdbcTypeCode(VARCHAR)
+  private UUID wahlbezirkID;
 
-    private LocalDateTime zuletztGesehen;
+  private LocalDateTime zuletztGesehen;
 
-    private LocalDateTime letzteAbmeldung;
+  private LocalDateTime letzteAbmeldung;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "Druckzustand", joinColumns = {
-                    @JoinColumn(name = "wahllokalzustandID"),
-            }
-    )
-    private Set<Druckzustand> druckzustaende;
+  @ElementCollection
+  @CollectionTable(
+      name = "Druckzustand",
+      joinColumns = {
+        @JoinColumn(name = "wahllokalzustandID"),
+      })
+  private Set<Druckzustand> druckzustaende;
 }

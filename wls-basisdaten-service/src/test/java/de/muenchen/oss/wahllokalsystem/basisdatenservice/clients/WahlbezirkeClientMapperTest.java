@@ -14,97 +14,101 @@ import org.mapstruct.factory.Mappers;
 
 class WahlbezirkeClientMapperTest {
 
-    private final WahlbezirkeClientMapper unitUnderTest = Mappers.getMapper(WahlbezirkeClientMapper.class);
+  private final WahlbezirkeClientMapper unitUnderTest =
+      Mappers.getMapper(WahlbezirkeClientMapper.class);
 
-    @Nested
-    class FromClientDTOToModel {
+  @Nested
+  class FromClientDTOToModel {
 
-        @Test
-        void should_returnWahlbezirkModel_when_givenWahlbezirkDTO() {
-            val dtoToMap = new WahlbezirkDTO();
-            dtoToMap.setIdentifikator("identifikatorWahlbezirk1");
-            dtoToMap.setWahlID("wahlID1");
-            dtoToMap.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
-            dtoToMap.setWahlnummer("wahlnummer1");
-            dtoToMap.setNummer("nummerWahlbezirk1");
-            dtoToMap.setWahltag(LocalDate.now().minusMonths(2));
+    @Test
+    void should_returnWahlbezirkModel_when_givenWahlbezirkDTO() {
+      val dtoToMap = new WahlbezirkDTO();
+      dtoToMap.setIdentifikator("identifikatorWahlbezirk1");
+      dtoToMap.setWahlID("wahlID1");
+      dtoToMap.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
+      dtoToMap.setWahlnummer("wahlnummer1");
+      dtoToMap.setNummer("nummerWahlbezirk1");
+      dtoToMap.setWahltag(LocalDate.now().minusMonths(2));
 
-            Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
+      Assertions.assertThat(dtoToMap).hasNoNullFieldsOrProperties();
 
-            val result = unitUnderTest.fromClientDTOToModel(dtoToMap);
+      val result = unitUnderTest.fromClientDTOToModel(dtoToMap);
 
-            val expectedWahlbezirk = new WahlbezirkModel(
-                    "identifikatorWahlbezirk1",
-                    WahlbezirkArtModel.UWB,
-                    "nummerWahlbezirk1",
-                    LocalDate.now().minusMonths(2),
-                    "wahlnummer1",
-                    "wahlID1");
+      val expectedWahlbezirk =
+          new WahlbezirkModel(
+              "identifikatorWahlbezirk1",
+              WahlbezirkArtModel.UWB,
+              "nummerWahlbezirk1",
+              LocalDate.now().minusMonths(2),
+              "wahlnummer1",
+              "wahlID1");
 
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahlbezirk);
-        }
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahlbezirk);
     }
+  }
 
-    @Nested
-    class FromRemoteSetOfDTOsToSetOfModels {
+  @Nested
+  class FromRemoteSetOfDTOsToSetOfModels {
 
-        @Test
-        void should_returnSetOfWahlbezirkModels_when_givenWahlbezirkDTOS() {
-            val wahlbezirk1 = new WahlbezirkDTO();
-            wahlbezirk1.setIdentifikator("identifikatorWahlbezirk1");
-            wahlbezirk1.setWahlID("wahlID1");
-            wahlbezirk1.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
-            wahlbezirk1.setWahlnummer("wahlnummer1");
-            wahlbezirk1.setNummer("nummerWahlbezirk1");
-            wahlbezirk1.setWahltag(LocalDate.now().minusMonths(2));
+    @Test
+    void should_returnSetOfWahlbezirkModels_when_givenWahlbezirkDTOS() {
+      val wahlbezirk1 = new WahlbezirkDTO();
+      wahlbezirk1.setIdentifikator("identifikatorWahlbezirk1");
+      wahlbezirk1.setWahlID("wahlID1");
+      wahlbezirk1.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
+      wahlbezirk1.setWahlnummer("wahlnummer1");
+      wahlbezirk1.setNummer("nummerWahlbezirk1");
+      wahlbezirk1.setWahltag(LocalDate.now().minusMonths(2));
 
-            val wahlbezirk2 = new WahlbezirkDTO();
-            wahlbezirk2.setIdentifikator("identifikatorWahlbezirk2");
-            wahlbezirk2.setWahlID("wahlID2");
-            wahlbezirk2.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.BWB);
-            wahlbezirk2.setWahlnummer("wahlnummer2");
-            wahlbezirk2.setNummer("nummerWahlbezirk2");
-            wahlbezirk2.setWahltag(LocalDate.now());
+      val wahlbezirk2 = new WahlbezirkDTO();
+      wahlbezirk2.setIdentifikator("identifikatorWahlbezirk2");
+      wahlbezirk2.setWahlID("wahlID2");
+      wahlbezirk2.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.BWB);
+      wahlbezirk2.setWahlnummer("wahlnummer2");
+      wahlbezirk2.setNummer("nummerWahlbezirk2");
+      wahlbezirk2.setWahltag(LocalDate.now());
 
-            val wahlbezirk3 = new WahlbezirkDTO();
-            wahlbezirk3.setIdentifikator("identifikatorWahlbezirk3");
-            wahlbezirk3.setWahlID("wahlID1");
-            wahlbezirk3.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
-            wahlbezirk3.setWahlnummer("wahlnummer1");
-            wahlbezirk3.setNummer("nummerWahlbezirk3");
-            wahlbezirk3.setWahltag(LocalDate.now().minusMonths(2));
+      val wahlbezirk3 = new WahlbezirkDTO();
+      wahlbezirk3.setIdentifikator("identifikatorWahlbezirk3");
+      wahlbezirk3.setWahlID("wahlID1");
+      wahlbezirk3.setWahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB);
+      wahlbezirk3.setWahlnummer("wahlnummer1");
+      wahlbezirk3.setNummer("nummerWahlbezirk3");
+      wahlbezirk3.setWahltag(LocalDate.now().minusMonths(2));
 
-            val dtosToMap = Set.of(wahlbezirk1, wahlbezirk2, wahlbezirk3);
+      val dtosToMap = Set.of(wahlbezirk1, wahlbezirk2, wahlbezirk3);
 
-            Assertions.assertThat(dtosToMap).size().isEqualTo(3);
-            dtosToMap.forEach(wahlbezirk -> Assertions.assertThat(wahlbezirk).hasNoNullFieldsOrProperties());
+      Assertions.assertThat(dtosToMap).size().isEqualTo(3);
+      dtosToMap.forEach(
+          wahlbezirk -> Assertions.assertThat(wahlbezirk).hasNoNullFieldsOrProperties());
 
-            val result = unitUnderTest.fromRemoteSetOfDTOsToSetOfModels(dtosToMap);
+      val result = unitUnderTest.fromRemoteSetOfDTOsToSetOfModels(dtosToMap);
 
-            val expectedWahlbezirke = List.of(
-                    new WahlbezirkModel(
-                            "identifikatorWahlbezirk1",
-                            WahlbezirkArtModel.UWB,
-                            "nummerWahlbezirk1",
-                            LocalDate.now().minusMonths(2),
-                            "wahlnummer1",
-                            "wahlID1"),
-                    new WahlbezirkModel(
-                            "identifikatorWahlbezirk2",
-                            WahlbezirkArtModel.BWB,
-                            "nummerWahlbezirk2",
-                            LocalDate.now(),
-                            "wahlnummer2",
-                            "wahlID2"),
-                    new WahlbezirkModel(
-                            "identifikatorWahlbezirk3",
-                            WahlbezirkArtModel.UWB,
-                            "nummerWahlbezirk3",
-                            LocalDate.now().minusMonths(2),
-                            "wahlnummer1",
-                            "wahlID1"));
+      val expectedWahlbezirke =
+          List.of(
+              new WahlbezirkModel(
+                  "identifikatorWahlbezirk1",
+                  WahlbezirkArtModel.UWB,
+                  "nummerWahlbezirk1",
+                  LocalDate.now().minusMonths(2),
+                  "wahlnummer1",
+                  "wahlID1"),
+              new WahlbezirkModel(
+                  "identifikatorWahlbezirk2",
+                  WahlbezirkArtModel.BWB,
+                  "nummerWahlbezirk2",
+                  LocalDate.now(),
+                  "wahlnummer2",
+                  "wahlID2"),
+              new WahlbezirkModel(
+                  "identifikatorWahlbezirk3",
+                  WahlbezirkArtModel.UWB,
+                  "nummerWahlbezirk3",
+                  LocalDate.now().minusMonths(2),
+                  "wahlnummer1",
+                  "wahlID1"));
 
-            Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahlbezirke);
-        }
+      Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahlbezirke);
     }
+  }
 }

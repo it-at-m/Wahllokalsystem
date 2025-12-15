@@ -34,499 +34,547 @@ import org.springframework.web.client.HttpServerErrorException;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    UserRepository userRepository;
+  @Mock UserRepository userRepository;
 
-    @Mock
-    AuthorityRepository authorityRepository;
+  @Mock AuthorityRepository authorityRepository;
 
-    @Mock
-    LoginAttemptRepository loginAttemptRepository;
+  @Mock LoginAttemptRepository loginAttemptRepository;
 
-    @Mock
-    LoginAttemptModelMapper loginAttemptModelMapper;
+  @Mock LoginAttemptModelMapper loginAttemptModelMapper;
 
-    @Mock
-    UserModelMapper userModelMapper;
+  @Mock UserModelMapper userModelMapper;
 
-    @InjectMocks
-    UserService unitUnderTest;
+  @InjectMocks UserService unitUnderTest;
 
-    @Captor
-    ArgumentCaptor<LoginAttempt> loginAttemptCaptor;
+  @Captor ArgumentCaptor<LoginAttempt> loginAttemptCaptor;
 
-    @Captor
-    ArgumentCaptor<User> userCaptor;
+  @Captor ArgumentCaptor<User> userCaptor;
 
-    @Nested
-    class UpdateFailAttempts {
+  @Nested
+  class UpdateFailAttempts {
 
-        @Test
-        void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
-            val username = "username";
+    @Test
+    void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
+      val username = "username";
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.updateFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
-        }
-
-        @Test
-        void should_createNewLoginAttemptInRepo_when_userWithUsernameExistsButHasNoLoginAttempt() {
-            val username = "username";
-
-            val mockedUserFromRepo = new User();
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            unitUnderTest.updateFailAttempts(username);
-
-            Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
-
-            val expectedLoginAttempt = new LoginAttempt(username, 1, null);
-            Assertions.assertThat(loginAttemptCaptor.getValue()).usingRecursiveComparison().isEqualTo(expectedLoginAttempt);
-
-        }
-
-        @Test
-        void should_updateExistingLoginAttemptInRepo_when_userWithUsernameExistsWithLoginAttempt() {
-            val username = "username";
-
-            val mockedUserFromRepo = new User();
-            val mockedLoginAttemptFromRepo = new LoginAttempt(username, 1, null);
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.of(mockedLoginAttemptFromRepo));
-
-            unitUnderTest.updateFailAttempts(username);
-
-            Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
-
-            val expectedLoginAttempt = new LoginAttempt(username, 2, null);
-            Assertions.assertThat(loginAttemptCaptor.getValue()).usingRecursiveComparison().ignoringFields("lastModified").isEqualTo(expectedLoginAttempt);
-            Assertions.assertThat(loginAttemptCaptor.getValue().getLastModified()).isNotNull();
-        }
-
-        @Test
-        void should_updateUserAsLocked_when_existingLoginAttemptsReachesMaxLoginAttempts() {
-            val username = "username";
-            unitUnderTest.setMaxLoginAttempts(3);
-
-            val mockedUserFromRepo = new User();
-            val mockedLoginAttemptFromRepo = new LoginAttempt();
-            mockedLoginAttemptFromRepo.setAttempts(2);
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.of(mockedLoginAttemptFromRepo));
-
-            unitUnderTest.updateFailAttempts(username);
-
-            Mockito.verify(userRepository).save(userCaptor.capture());
-
-            Assertions.assertThat(userCaptor.getValue().isAccountNonLocked()).isFalse();
-        }
-
-        @Test
-        void should_notUpdateUserAsLocked_when_existingLoginAttemptsNotReachesMaxLoginAttempts() {
-            val username = "username";
-            unitUnderTest.setMaxLoginAttempts(4);
-
-            val mockedUserFromRepo = new User();
-            val mockedLoginAttemptFromRepo = new LoginAttempt();
-            mockedLoginAttemptFromRepo.setAttempts(2);
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            unitUnderTest.updateFailAttempts(username);
-
-            Mockito.verifyNoMoreInteractions(userRepository);
-        }
-
+      Assertions.assertThatThrownBy(() -> unitUnderTest.updateFailAttempts(username))
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining(username);
     }
 
-    @Nested
-    class ResetFailAttempts {
+    @Test
+    void should_createNewLoginAttemptInRepo_when_userWithUsernameExistsButHasNoLoginAttempt() {
+      val username = "username";
 
-        @Test
-        void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
-            val username = "username";
+      val mockedUserFromRepo = new User();
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.resetFailAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
-        }
+      unitUnderTest.updateFailAttempts(username);
 
-        @Test
-        void should_updateExistingLoginAttemptInRepo_when_userWithUsernameExistsWithLoginAttempt() {
-            val username = "username";
+      Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
 
-            val mockedUserFromRepo = createUserWithNonLocked(false);
-            val mockedLoginAttemptFromRepo = new LoginAttempt();
-            mockedLoginAttemptFromRepo.setLastModified(LocalDateTime.now());
-            mockedLoginAttemptFromRepo.setAttempts(10);
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.of(mockedLoginAttemptFromRepo));
-
-            unitUnderTest.resetFailAttempts(username);
-
-            Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
-            Assertions.assertThat(loginAttemptCaptor.getValue().getLastModified()).isNull();
-            Assertions.assertThat(loginAttemptCaptor.getValue().getAttempts()).isEqualTo(0);
-        }
-
-        @Test
-        void should_unlockUser_when_userWithUsernameDoesExist() {
-            val username = "username";
-
-            val mockedUserFromRepo = createUserWithNonLocked(false);
-            val mockedLoginAttemptFromRepo = new LoginAttempt();
-
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUserFromRepo));
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.of(mockedLoginAttemptFromRepo));
-
-            unitUnderTest.resetFailAttempts(username);
-
-            Mockito.verify(userRepository).save(userCaptor.capture());
-            Assertions.assertThat(userCaptor.getValue().isAccountNonLocked()).isTrue();
-        }
+      val expectedLoginAttempt = new LoginAttempt(username, 1, null);
+      Assertions.assertThat(loginAttemptCaptor.getValue())
+          .usingRecursiveComparison()
+          .isEqualTo(expectedLoginAttempt);
     }
 
-    @Nested
-    class GetUserAttempts {
+    @Test
+    void should_updateExistingLoginAttemptInRepo_when_userWithUsernameExistsWithLoginAttempt() {
+      val username = "username";
 
-        @Test
-        void should_returnLoginAttemptModel_when_userAndAttemptExistsForThatUsername() {
-            val username = "username";
+      val mockedUserFromRepo = new User();
+      val mockedLoginAttemptFromRepo = new LoginAttempt(username, 1, null);
 
-            val mockedLoginAttemptFromRepo = new LoginAttempt();
-            val mockedLoginAttemptAsModel = createLoginAttemptModel();
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedLoginAttemptFromRepo));
 
-            Mockito.when(userRepository.exists(username)).thenReturn(true);
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.of(mockedLoginAttemptFromRepo));
-            Mockito.when(loginAttemptModelMapper.toModel(mockedLoginAttemptFromRepo)).thenReturn(mockedLoginAttemptAsModel);
+      unitUnderTest.updateFailAttempts(username);
 
-            val result = unitUnderTest.getUserAttempts(username);
+      Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
 
-            Assertions.assertThat(result.get()).isEqualTo(mockedLoginAttemptAsModel);
-        }
-
-        @Test
-        void should_throwExceptionWithUsername_when_userWithThatUsernameDoesNotExist() {
-            val username = "username";
-
-            Mockito.when(userRepository.exists(username)).thenReturn(false);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUserAttempts(username)).isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining(username);
-        }
-
-        @Test
-        void should_returnEmptyOptional_when_userUserExistsButHasNoLoginAttempt() {
-            val username = "username";
-
-            Mockito.when(userRepository.exists(username)).thenReturn(true);
-            Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getUserAttempts(username);
-
-            Assertions.assertThat(result).isEmpty();
-        }
-
+      val expectedLoginAttempt = new LoginAttempt(username, 2, null);
+      Assertions.assertThat(loginAttemptCaptor.getValue())
+          .usingRecursiveComparison()
+          .ignoringFields("lastModified")
+          .isEqualTo(expectedLoginAttempt);
+      Assertions.assertThat(loginAttemptCaptor.getValue().getLastModified()).isNotNull();
     }
 
-    @Nested
-    class DoesUserExist {
+    @Test
+    void should_updateUserAsLocked_when_existingLoginAttemptsReachesMaxLoginAttempts() {
+      val username = "username";
+      unitUnderTest.setMaxLoginAttempts(3);
 
-        @Test
-        void should_returnTrue_when_userExists() {
-            val username = "username";
+      val mockedUserFromRepo = new User();
+      val mockedLoginAttemptFromRepo = new LoginAttempt();
+      mockedLoginAttemptFromRepo.setAttempts(2);
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User()));
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedLoginAttemptFromRepo));
 
-            Assertions.assertThat(unitUnderTest.doesUserExist(username)).isTrue();
-        }
+      unitUnderTest.updateFailAttempts(username);
 
-        @Test
-        void should_returnFalse_when_userDoesNotExist() {
-            val username = "username";
+      Mockito.verify(userRepository).save(userCaptor.capture());
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            Assertions.assertThat(unitUnderTest.doesUserExist(username)).isFalse();
-        }
+      Assertions.assertThat(userCaptor.getValue().isAccountNonLocked()).isFalse();
     }
 
-    @Nested
-    class IsLocked {
+    @Test
+    void should_notUpdateUserAsLocked_when_existingLoginAttemptsNotReachesMaxLoginAttempts() {
+      val username = "username";
+      unitUnderTest.setMaxLoginAttempts(4);
 
-        @Test
-        void should_returnTrue_when_userNonLockedIsFalse() {
-            val username = "username";
+      val mockedUserFromRepo = new User();
+      val mockedLoginAttemptFromRepo = new LoginAttempt();
+      mockedLoginAttemptFromRepo.setAttempts(2);
 
-            val mockedRepoUser = createUserWithNonLocked(false);
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedRepoUser));
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            val result = unitUnderTest.isLocked(username);
+      unitUnderTest.updateFailAttempts(username);
 
-            Assertions.assertThat(result).isTrue();
-        }
+      Mockito.verifyNoMoreInteractions(userRepository);
+    }
+  }
 
-        @Test
-        void should_returnFalse_when_userDoesNotExist() {
-            val username = "username";
+  @Nested
+  class ResetFailAttempts {
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+    @Test
+    void should_throwExceptionWithUsername_when_userWithUsernameDoesNotExist() {
+      val username = "username";
 
-            val result = unitUnderTest.isLocked(username);
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            Assertions.assertThat(result).isFalse();
-        }
-
-        @Test
-        void should_returnFalse_when_userNonLockedIsTrue() {
-            val username = "username";
-
-            val mockedRepoUser = createUserWithNonLocked(true);
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedRepoUser));
-
-            val result = unitUnderTest.isLocked(username);
-
-            Assertions.assertThat(result).isFalse();
-        }
+      Assertions.assertThatThrownBy(() -> unitUnderTest.resetFailAttempts(username))
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining(username);
     }
 
-    @Nested
-    class GetUser {
+    @Test
+    void should_updateExistingLoginAttemptInRepo_when_userWithUsernameExistsWithLoginAttempt() {
+      val username = "username";
 
-        @Test
-        void should_returnUserModel_when_userExistsForGivenUsername() {
-            val username = "Hansi";
-            val mockedUser = new User();
-            val mockedUserModel = createUserModel();
+      val mockedUserFromRepo = createUserWithNonLocked(false);
+      val mockedLoginAttemptFromRepo = new LoginAttempt();
+      mockedLoginAttemptFromRepo.setLastModified(LocalDateTime.now());
+      mockedLoginAttemptFromRepo.setAttempts(10);
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
-            Mockito.when(userModelMapper.toModel(mockedUser)).thenReturn(mockedUserModel);
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedLoginAttemptFromRepo));
 
-            val result = unitUnderTest.getUser(username);
+      unitUnderTest.resetFailAttempts(username);
 
-            Assertions.assertThat(result.get()).isEqualTo(mockedUserModel);
-        }
+      Mockito.verify(loginAttemptRepository).save(loginAttemptCaptor.capture());
+      Assertions.assertThat(loginAttemptCaptor.getValue().getLastModified()).isNull();
+      Assertions.assertThat(loginAttemptCaptor.getValue().getAttempts()).isEqualTo(0);
     }
 
-    @Nested
-    class DeleteWahllokalBenutzer {
+    @Test
+    void should_unlockUser_when_userWithUsernameDoesExist() {
+      val username = "username";
 
-        @Test
-        void should_callRepoWithWahltagID_when_wahltagIDIsGiven() {
-            val wahltagID = "wahltagID";
+      val mockedUserFromRepo = createUserWithNonLocked(false);
+      val mockedLoginAttemptFromRepo = new LoginAttempt();
 
-            unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+      Mockito.when(userRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedUserFromRepo));
+      Mockito.when(loginAttemptRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedLoginAttemptFromRepo));
 
-            Mockito.verify(userRepository).deleteUsersByWahltagID(wahltagID);
-        }
+      unitUnderTest.resetFailAttempts(username);
+
+      Mockito.verify(userRepository).save(userCaptor.capture());
+      Assertions.assertThat(userCaptor.getValue().isAccountNonLocked()).isTrue();
+    }
+  }
+
+  @Nested
+  class GetUserAttempts {
+
+    @Test
+    void should_returnLoginAttemptModel_when_userAndAttemptExistsForThatUsername() {
+      val username = "username";
+
+      val mockedLoginAttemptFromRepo = new LoginAttempt();
+      val mockedLoginAttemptAsModel = createLoginAttemptModel();
+
+      Mockito.when(userRepository.exists(username)).thenReturn(true);
+      Mockito.when(loginAttemptRepository.findByUsername(username))
+          .thenReturn(Optional.of(mockedLoginAttemptFromRepo));
+      Mockito.when(loginAttemptModelMapper.toModel(mockedLoginAttemptFromRepo))
+          .thenReturn(mockedLoginAttemptAsModel);
+
+      val result = unitUnderTest.getUserAttempts(username);
+
+      Assertions.assertThat(result.get()).isEqualTo(mockedLoginAttemptAsModel);
     }
 
-    @Nested
-    class ExportWahllokalBenutzer {
+    @Test
+    void should_throwExceptionWithUsername_when_userWithThatUsernameDoesNotExist() {
+      val username = "username";
 
-        @Test
-        void should_returnListWithUsers_when_usersForWahltagIDExists() {
-            val wahltagID = "wahltagID";
+      Mockito.when(userRepository.exists(username)).thenReturn(false);
 
-            unitUnderTest.EOL = ";";
-
-            val mockedRepoUsers = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"), createUserWithUsername("user3"));
-            Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(mockedRepoUsers);
-
-            val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
-
-            val expectedResult = "user1;user2;user3";
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnDefaultString_when_noUsersForWahltagIDExists() {
-            val wahltagID = "wahltagID";
-
-            Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(Collections.emptyList());
-
-            val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
-
-            val expectedResult = "Keine Nutzer zum angegebenen Wahltag gefunden.";
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-
-        }
-
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getUserAttempts(username))
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessageContaining(username);
     }
 
-    @Nested
-    class GenerateWahllokalBenutzer {
+    @Test
+    void should_returnEmptyOptional_when_userUserExistsButHasNoLoginAttempt() {
+      val username = "username";
 
-        @Test
-        void should_throwException_when_authorityToLinkToUserDoesNotExist() {
-            val wahltagID = "wahltagID";
-            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
-            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+      Mockito.when(userRepository.exists(username)).thenReturn(true);
+      Mockito.when(loginAttemptRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      val result = unitUnderTest.getUserAttempts(username);
 
-            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.empty());
+      Assertions.assertThat(result).isEmpty();
+    }
+  }
 
-            val expectedException = new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Keine Authority <WahlvorstandAuthorityName> gefunden, kann keine Benutzer für Wahltag-ID <wahltagID> anlegen");
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.generateWahllokalBenutzer(usersOfWahltag)).usingRecursiveComparison()
-                    .isEqualTo(expectedException);
-        }
+  @Nested
+  class DoesUserExist {
 
-        @Test
-        void should_deleteUsersOfWahltag_when_wahltagIDIsGiven() {
-            val wahltagID = "wahltagID";
-            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
-            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+    @Test
+    void should_returnTrue_when_userExists() {
+      val username = "username";
 
-            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User()));
 
-            val mockedAuthority = new Authority();
-            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
-
-            unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
-
-            Mockito.verify(userRepository).deleteUsersByWahltagID(wahltagID);
-        }
-
-        @Test
-        void should_returnStringWithCreatedUsers_when_wahltagIDIsGiven() {
-            val wahltagID = "wahltagID";
-            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
-            val user2 = new WahllokalUserInfoModel("102", LocalDate.now(), "wbzID2", WahlbezirksartModel.UWB, "1_2");
-            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1, user2));
-
-            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
-            unitUnderTest.EOL = ";";
-
-            val mockedAuthority = new Authority();
-            val mockedPersistedUsers = List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
-
-            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
-            Mockito.when(userRepository.saveAll(any())).thenReturn(mockedPersistedUsers);
-
-            val result = unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
-
-            val expectedResult = "user1;user2";
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_createPin_when_creatingUserEntity() {
-            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
-            unitUnderTest.countNumbersPin = 4;
-            unitUnderTest.anzahlPinBloecke = 3;
-
-            val wahltagID = "wahltagID";
-            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
-            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
-
-            val mockedAuthority = new Authority();
-            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
-
-            unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
-
-            val pinCaptor = ArgumentCaptor.forClass(String.class);
-            Mockito.verify(userModelMapper).toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any());
-
-            Assertions.assertThat(pinCaptor.getValue()).matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d");
-        }
-
-        @Test
-        void should_createUsername_when_creatingUserEntity() {
-            unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
-            unitUnderTest.prefixChars = "0123456789";
-            unitUnderTest.countCharsPrefix = 6;
-
-            val wahltagID = "wahltagID";
-            val user1 = new WahllokalUserInfoModel("101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
-            val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
-
-            val mockedAuthority = new Authority();
-            Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName")).thenReturn(Optional.of(mockedAuthority));
-
-            unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
-
-            val usernameCaptor = ArgumentCaptor.forClass(String.class);
-            Mockito.verify(userModelMapper).toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture());
-
-            Assertions.assertThat(usernameCaptor.getValue()).matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer());
-        }
-
+      Assertions.assertThat(unitUnderTest.doesUserExist(username)).isTrue();
     }
 
-    @Nested
-    class GetUserDetails {
+    @Test
+    void should_returnFalse_when_userDoesNotExist() {
+      val username = "username";
 
-        @Test
-        void should_returnUserDetails_when_userIstFoundByName() {
-            val username = "username";
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-            val mockedUser = new User();
-            val mockedUserMappedToUserDetails = new org.springframework.security.core.userdetails.User(username, "", Collections.emptyList());
+      Assertions.assertThat(unitUnderTest.doesUserExist(username)).isFalse();
+    }
+  }
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
-            Mockito.when(userModelMapper.toSpringSecurityUser(mockedUser)).thenReturn(mockedUserMappedToUserDetails);
+  @Nested
+  class IsLocked {
 
-            val result = unitUnderTest.getUserDetails(username);
+    @Test
+    void should_returnTrue_when_userNonLockedIsFalse() {
+      val username = "username";
 
-            Assertions.assertThat(result).isSameAs(mockedUserMappedToUserDetails);
-        }
+      val mockedRepoUser = createUserWithNonLocked(false);
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedRepoUser));
 
-        @Test
-        void should_throwUserNotFoundException_when_userNotFound() {
-            val username = "username";
+      val result = unitUnderTest.isLocked(username);
 
-            Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUserDetails(username))
-                    .isInstanceOf(UsernameNotFoundException.class)
-                    .hasMessageContaining(username.toUpperCase());
-        }
+      Assertions.assertThat(result).isTrue();
     }
 
-    private User createUserWithNonLocked(final boolean nonLocked) {
-        val user = new User();
+    @Test
+    void should_returnFalse_when_userDoesNotExist() {
+      val username = "username";
 
-        user.setAccountNonLocked(nonLocked);
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        return user;
+      val result = unitUnderTest.isLocked(username);
+
+      Assertions.assertThat(result).isFalse();
     }
 
-    private User createUserWithUsername(final String username) {
-        val user = new User();
+    @Test
+    void should_returnFalse_when_userNonLockedIsTrue() {
+      val username = "username";
 
-        user.setUsername(username);
+      val mockedRepoUser = createUserWithNonLocked(true);
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedRepoUser));
 
-        return user;
+      val result = unitUnderTest.isLocked(username);
+
+      Assertions.assertThat(result).isFalse();
+    }
+  }
+
+  @Nested
+  class GetUser {
+
+    @Test
+    void should_returnUserModel_when_userExistsForGivenUsername() {
+      val username = "Hansi";
+      val mockedUser = new User();
+      val mockedUserModel = createUserModel();
+
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
+      Mockito.when(userModelMapper.toModel(mockedUser)).thenReturn(mockedUserModel);
+
+      val result = unitUnderTest.getUser(username);
+
+      Assertions.assertThat(result.get()).isEqualTo(mockedUserModel);
+    }
+  }
+
+  @Nested
+  class DeleteWahllokalBenutzer {
+
+    @Test
+    void should_callRepoWithWahltagID_when_wahltagIDIsGiven() {
+      val wahltagID = "wahltagID";
+
+      unitUnderTest.deleteWahllokalBenutzer(wahltagID);
+
+      Mockito.verify(userRepository).deleteUsersByWahltagID(wahltagID);
+    }
+  }
+
+  @Nested
+  class ExportWahllokalBenutzer {
+
+    @Test
+    void should_returnListWithUsers_when_usersForWahltagIDExists() {
+      val wahltagID = "wahltagID";
+
+      unitUnderTest.EOL = ";";
+
+      val mockedRepoUsers =
+          List.of(
+              createUserWithUsername("user1"),
+              createUserWithUsername("user2"),
+              createUserWithUsername("user3"));
+      Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(mockedRepoUsers);
+
+      val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+
+      val expectedResult = "user1;user2;user3";
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
-    private LoginAttemptModel createLoginAttemptModel() {
-        return new LoginAttemptModel(UUID.randomUUID(), "", 0, LocalDateTime.now());
+    @Test
+    void should_returnDefaultString_when_noUsersForWahltagIDExists() {
+      val wahltagID = "wahltagID";
+
+      Mockito.when(userRepository.findByWahltagID(wahltagID)).thenReturn(Collections.emptyList());
+
+      val result = unitUnderTest.exportWahllokalBenutzer(wahltagID);
+
+      val expectedResult = "Keine Nutzer zum angegebenen Wahltag gefunden.";
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
+
+  @Nested
+  class GenerateWahllokalBenutzer {
+
+    @Test
+    void should_throwException_when_authorityToLinkToUserDoesNotExist() {
+      val wahltagID = "wahltagID";
+      val user1 =
+          new WahllokalUserInfoModel(
+              "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+      val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+
+      Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
+          .thenReturn(Optional.empty());
+
+      val expectedException =
+          new HttpServerErrorException(
+              HttpStatus.INTERNAL_SERVER_ERROR,
+              "Keine Authority <WahlvorstandAuthorityName> gefunden, kann keine Benutzer für Wahltag-ID <wahltagID> anlegen");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.generateWahllokalBenutzer(usersOfWahltag))
+          .usingRecursiveComparison()
+          .isEqualTo(expectedException);
     }
 
-    private UserModel createUserModel() {
-        val username = "Hansi";
-        val email = "hansi@nixda.com";
-        val userEnabled = true;
-        val wahltagID = "wahltagID";
-        val wahltag = LocalDate.now();
-        val wahlbezirkID = "wahlbezirkID";
-        val wahlbezirkNummer = "wahlbezirkNummer";
-        val wahlbezirksArt = WahlbezirksartModel.BWB;
-        val pin = "123";
-        val authorities = Set.of("auth1", "auth2");
-        val wbid_wahlnummer = "wbid_wahlnummer";
-        return new UserModel(username, email, userEnabled, wahltagID, wahltag, wahlbezirkID, wahlbezirkNummer,
-                wahlbezirksArt, pin, authorities, wbid_wahlnummer);
+    @Test
+    void should_deleteUsersOfWahltag_when_wahltagIDIsGiven() {
+      val wahltagID = "wahltagID";
+      val user1 =
+          new WahllokalUserInfoModel(
+              "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+      val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+
+      val mockedAuthority = new Authority();
+      Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
+          .thenReturn(Optional.of(mockedAuthority));
+
+      unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+      Mockito.verify(userRepository).deleteUsersByWahltagID(wahltagID);
     }
+
+    @Test
+    void should_returnStringWithCreatedUsers_when_wahltagIDIsGiven() {
+      val wahltagID = "wahltagID";
+      val user1 =
+          new WahllokalUserInfoModel(
+              "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+      val user2 =
+          new WahllokalUserInfoModel(
+              "102", LocalDate.now(), "wbzID2", WahlbezirksartModel.UWB, "1_2");
+      val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1, user2));
+
+      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.EOL = ";";
+
+      val mockedAuthority = new Authority();
+      val mockedPersistedUsers =
+          List.of(createUserWithUsername("user1"), createUserWithUsername("user2"));
+
+      Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
+          .thenReturn(Optional.of(mockedAuthority));
+      Mockito.when(userRepository.saveAll(any())).thenReturn(mockedPersistedUsers);
+
+      val result = unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+      val expectedResult = "user1;user2";
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void should_createPin_when_creatingUserEntity() {
+      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.countNumbersPin = 4;
+      unitUnderTest.anzahlPinBloecke = 3;
+
+      val wahltagID = "wahltagID";
+      val user1 =
+          new WahllokalUserInfoModel(
+              "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+      val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+      val mockedAuthority = new Authority();
+      Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
+          .thenReturn(Optional.of(mockedAuthority));
+
+      unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+      val pinCaptor = ArgumentCaptor.forClass(String.class);
+      Mockito.verify(userModelMapper)
+          .toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any());
+
+      Assertions.assertThat(pinCaptor.getValue()).matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d");
+    }
+
+    @Test
+    void should_createUsername_when_creatingUserEntity() {
+      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.prefixChars = "0123456789";
+      unitUnderTest.countCharsPrefix = 6;
+
+      val wahltagID = "wahltagID";
+      val user1 =
+          new WahllokalUserInfoModel(
+              "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
+      val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
+
+      val mockedAuthority = new Authority();
+      Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
+          .thenReturn(Optional.of(mockedAuthority));
+
+      unitUnderTest.generateWahllokalBenutzer(usersOfWahltag);
+
+      val usernameCaptor = ArgumentCaptor.forClass(String.class);
+      Mockito.verify(userModelMapper)
+          .toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture());
+
+      Assertions.assertThat(usernameCaptor.getValue())
+          .matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer());
+    }
+  }
+
+  @Nested
+  class GetUserDetails {
+
+    @Test
+    void should_returnUserDetails_when_userIstFoundByName() {
+      val username = "username";
+
+      val mockedUser = new User();
+      val mockedUserMappedToUserDetails =
+          new org.springframework.security.core.userdetails.User(
+              username, "", Collections.emptyList());
+
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockedUser));
+      Mockito.when(userModelMapper.toSpringSecurityUser(mockedUser))
+          .thenReturn(mockedUserMappedToUserDetails);
+
+      val result = unitUnderTest.getUserDetails(username);
+
+      Assertions.assertThat(result).isSameAs(mockedUserMappedToUserDetails);
+    }
+
+    @Test
+    void should_throwUserNotFoundException_when_userNotFound() {
+      val username = "username";
+
+      Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getUserDetails(username))
+          .isInstanceOf(UsernameNotFoundException.class)
+          .hasMessageContaining(username.toUpperCase());
+    }
+  }
+
+  private User createUserWithNonLocked(final boolean nonLocked) {
+    val user = new User();
+
+    user.setAccountNonLocked(nonLocked);
+
+    return user;
+  }
+
+  private User createUserWithUsername(final String username) {
+    val user = new User();
+
+    user.setUsername(username);
+
+    return user;
+  }
+
+  private LoginAttemptModel createLoginAttemptModel() {
+    return new LoginAttemptModel(UUID.randomUUID(), "", 0, LocalDateTime.now());
+  }
+
+  private UserModel createUserModel() {
+    val username = "Hansi";
+    val email = "hansi@nixda.com";
+    val userEnabled = true;
+    val wahltagID = "wahltagID";
+    val wahltag = LocalDate.now();
+    val wahlbezirkID = "wahlbezirkID";
+    val wahlbezirkNummer = "wahlbezirkNummer";
+    val wahlbezirksArt = WahlbezirksartModel.BWB;
+    val pin = "123";
+    val authorities = Set.of("auth1", "auth2");
+    val wbid_wahlnummer = "wbid_wahlnummer";
+    return new UserModel(
+        username,
+        email,
+        userEnabled,
+        wahltagID,
+        wahltag,
+        wahlbezirkID,
+        wahlbezirkNummer,
+        wahlbezirksArt,
+        pin,
+        authorities,
+        wbid_wahlnummer);
+  }
 }

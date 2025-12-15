@@ -8,24 +8,29 @@ import org.junit.jupiter.api.Test;
 
 class InfrastrukturelleWlsExceptionTest {
 
-    @Nested
-    class WithCode {
+  @Nested
+  class WithCode {
 
-        @Test
-        void should_returnInfrastrukturelleWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {
-            val code = "089";
-            val message = "very useful message";
-            val serviceName = "testService";
-            val causingException = new NullPointerException("something was null");
+    @Test
+    void
+        should_returnInfrastrukturelleWlsExceptionWithAllPropertiesSet_when_buildWithAllStepsOfBuilder() {
+      val code = "089";
+      val message = "very useful message";
+      val serviceName = "testService";
+      val causingException = new NullPointerException("something was null");
 
-            val infrastrukturelleWlsException = InfrastrukturelleWlsException.withCode(code).inService(serviceName).withCause(causingException)
-                    .buildWithMessage(message);
+      val infrastrukturelleWlsException =
+          InfrastrukturelleWlsException.withCode(code)
+              .inService(serviceName)
+              .withCause(causingException)
+              .buildWithMessage(message);
 
-            Assertions.assertThat(infrastrukturelleWlsException.getCategory()).isSameAs(WlsExceptionCategory.INFRASTRUKTUR);
-            Assertions.assertThat(infrastrukturelleWlsException.getCode()).isSameAs(code);
-            Assertions.assertThat(infrastrukturelleWlsException.getMessage()).isSameAs(message);
-            Assertions.assertThat(infrastrukturelleWlsException.getServiceName()).isSameAs(serviceName);
-            Assertions.assertThat(infrastrukturelleWlsException.getCause()).isSameAs(causingException);
-        }
+      Assertions.assertThat(infrastrukturelleWlsException.getCategory())
+          .isSameAs(WlsExceptionCategory.INFRASTRUKTUR);
+      Assertions.assertThat(infrastrukturelleWlsException.getCode()).isSameAs(code);
+      Assertions.assertThat(infrastrukturelleWlsException.getMessage()).isSameAs(message);
+      Assertions.assertThat(infrastrukturelleWlsException.getServiceName()).isSameAs(serviceName);
+      Assertions.assertThat(infrastrukturelleWlsException.getCause()).isSameAs(causingException);
     }
+  }
 }

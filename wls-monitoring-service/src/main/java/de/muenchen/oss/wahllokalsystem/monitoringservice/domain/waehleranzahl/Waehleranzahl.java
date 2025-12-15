@@ -21,14 +21,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Waehleranzahl {
 
-    @EmbeddedId
-    @NotNull
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId @NotNull private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    private long anzahlWaehler;
+  @NotNull private long anzahlWaehler;
 
-    @NotNull
-    private LocalDateTime uhrzeit;
-
+  @NotNull private LocalDateTime uhrzeit;
 }

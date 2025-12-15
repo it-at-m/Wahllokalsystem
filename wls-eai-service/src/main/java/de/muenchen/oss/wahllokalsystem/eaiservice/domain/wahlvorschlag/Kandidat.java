@@ -19,23 +19,13 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class Kandidat extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    String name;
+  @NotNull @ToString.Include String name;
 
-    @NotNull
-    @ToString.Include
-    long listenposition;
+  @NotNull @ToString.Include long listenposition;
 
-    @NotNull
-    @ToString.Include
-    boolean direktkandidat;
+  @NotNull @ToString.Include boolean direktkandidat;
 
-    @NotNull
-    @ToString.Include
-    long tabellenSpalteInNiederschrift;
+  @NotNull @ToString.Include long tabellenSpalteInNiederschrift;
 
-    @NotNull
-    @ToString.Include
-    boolean einzelbewerber;
+  @NotNull @ToString.Include boolean einzelbewerber;
 }

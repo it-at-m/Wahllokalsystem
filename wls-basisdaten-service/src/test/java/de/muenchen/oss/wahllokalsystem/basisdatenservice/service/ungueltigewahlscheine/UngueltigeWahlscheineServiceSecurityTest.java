@@ -26,81 +26,97 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class UngueltigeWahlscheineServiceSecurityTest {
 
-    @Autowired
-    UngueltigeWahlscheineService unitUnderTest;
+  @Autowired UngueltigeWahlscheineService unitUnderTest;
 
-    @Autowired
-    UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
+  @Autowired UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE);
-        ungueltigeWahlscheineRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_UNGUELTIGEWAHLSCHEINE);
+    ungueltigeWahlscheineRepository.deleteAll();
+  }
+
+  @Nested
+  class GetUngueltigeWahlscheine {
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
+      val ungueltigeWahlscheineToGet =
+          new UngueltigeWahlscheine(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
+      ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
+
+      val ungueltigeWahlscheineReferenceModel =
+          new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel));
     }
 
-    @Nested
-    class GetUngueltigeWahlscheine {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
+      val ungueltigeWahlscheineToGet =
+          new UngueltigeWahlscheine(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
+      ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
 
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
-            val ungueltigeWahlscheineToGet = new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
-            ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
-
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
-
-            val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel));
-
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
-            val ungueltigeWahlscheineToGet = new UngueltigeWahlscheine(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "data".getBytes());
-            ungueltigeWahlscheineRepository.save(ungueltigeWahlscheineToGet);
-
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-            val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
-        }
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+      val ungueltigeWahlscheineReferenceModel =
+          new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class SetUngueltigeWahlscheine {
-
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
-            val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
-                    "data".getBytes());
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel));
-        }
-
-        @Test
-        void should_denyAccess_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
-            val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
-                    "data".getBytes());
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_UNGUELTIGEWAHLSCHEINE);
-            val writeModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
-                    "data".getBytes());
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel)).isInstanceOf(TechnischeWlsException.class);
-        }
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_UNGUELTIGEWAHLSCHEINE);
     }
+  }
+
+  @Nested
+  class SetUngueltigeWahlscheine {
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_UNGUELTIGEWAHLSCHEINE);
+      val writeModel =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
+              "data".getBytes());
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel));
+    }
+
+    @Test
+    void should_denyAccess_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNGUELTIGEWAHLSCHEINE);
+      val writeModel =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
+              "data".getBytes());
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_repoAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_UNGUELTIGEWAHLSCHEINE);
+      val writeModel =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
+              "data".getBytes());
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(writeModel))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+  }
 }

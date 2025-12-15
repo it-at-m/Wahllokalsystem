@@ -32,123 +32,157 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class StatusServiceSecurityTest {
 
-    @MockitoBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @Autowired
-    StatusService unitUnderTest;
+  @Autowired StatusService unitUnderTest;
 
-    @Autowired
-    StatusRepository statusRepository;
+  @Autowired StatusRepository statusRepository;
 
-    @BeforeEach
-    void setup() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STATUS);
-        statusRepository.deleteAll();
+  @BeforeEach
+  void setup() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STATUS);
+    statusRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStatus {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STATUS);
+
+      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStatus(id));
     }
 
-    @Nested
-    class GetStatus {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(arguments.get(0, String[].class));
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STATUS);
+      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStatus(id));
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(arguments.get(0, String[].class));
-
-            val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getStatus(id)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_STATUS);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getStatus(id))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class SetStatus {
-
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STATUS);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val newStatus = new StatusModel(id, new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
-                    new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setStatus(id, newStatus));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STATUS);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val newStatus = new StatusModel(id, new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
-                    new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(false);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStatus(id, newStatus)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThrowingAccessDenied")
-        void should_throwAccessDeniedException_when_anyRequiredServiceAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION, arguments.get(0, String[].class)));
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val newStatus = new StatusModel(id, new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
-                    new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStatus(id, newStatus)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThrowingTechnischeWlsException")
-        void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_ACCESS_DENIED, arguments.get(0, String[].class)));
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
-            val newStatus = new StatusModel(id, new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
-                    new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull())).thenReturn(true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setStatus(id, newStatus)).isInstanceOf(TechnischeWlsException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingAccessDenied() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_ACCESS_DENIED);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingTechnischeWlsException() {
-            return SecurityUtils
-                    .buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
-        }
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_STATUS);
     }
+  }
+
+  @Nested
+  class SetStatus {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STATUS);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val newStatus =
+          new StatusModel(
+              id,
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setStatus(id, newStatus));
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STATUS);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val newStatus =
+          new StatusModel(
+              id,
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStatus(id, newStatus))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsThrowingAccessDenied")
+    void should_throwAccessDeniedException_when_anyRequiredServiceAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION,
+              arguments.get(0, String[].class)));
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val newStatus =
+          new StatusModel(
+              id,
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStatus(id, newStatus))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsThrowingTechnischeWlsException")
+    void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
+              arguments.get(0, String[].class)));
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+      val newStatus =
+          new StatusModel(
+              id,
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()),
+              new MeldungModel(ValidierungsstatusModel.VALIDE, false, false, LocalDateTime.now()));
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setStatus(id, newStatus))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariationsThrowingAccessDenied() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_ACCESS_DENIED);
+    }
+
+    private static Stream<Arguments>
+        getMissingAuthoritiesVariationsThrowingTechnischeWlsException() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_SET_STATUS_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
+    }
+  }
 }

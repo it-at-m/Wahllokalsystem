@@ -20,63 +20,72 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 public class UrnenwahlSchliessungsUhrzeitControllerTest {
 
-    @Mock
-    UrnenwahlSchliessungsUhrzeitService urnenwahlSchliessungsUhrzeitService;
+  @Mock UrnenwahlSchliessungsUhrzeitService urnenwahlSchliessungsUhrzeitService;
 
-    @Mock
-    UrnenwahlSchliessungsUhrzeitDTOMapper urnenwahlSchliessungsUhrzeitDTOMapper;
+  @Mock UrnenwahlSchliessungsUhrzeitDTOMapper urnenwahlSchliessungsUhrzeitDTOMapper;
 
-    @InjectMocks
-    UrnenwahlSchliessungsUhrzeitController unitUnderTest;
+  @InjectMocks UrnenwahlSchliessungsUhrzeitController unitUnderTest;
 
-    @Nested
-    class GetUrnenwahlSchliessungsUhrzeit {
+  @Nested
+  class GetUrnenwahlSchliessungsUhrzeit {
 
-        @Test
-        void should_returnUrnenwahlSchliessungsuhrzeit_when_dataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-            val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
+    @Test
+    void should_returnUrnenwahlSchliessungsuhrzeit_when_dataFound() {
+      val wahlbezirkID = "wahlbezirkID";
+      val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
 
-            val mockedServiceOptionalBody = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
-            val mockedMappedServiceResponseAsDTO = new UrnenwahlSchliessungsUhrzeitDTO(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+      val mockedServiceOptionalBody =
+          new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+      val mockedMappedServiceResponseAsDTO =
+          new UrnenwahlSchliessungsUhrzeitDTO(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
 
-            Mockito.when(urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)).thenReturn(Optional.of(mockedServiceOptionalBody));
-            Mockito.when(urnenwahlSchliessungsUhrzeitDTOMapper.toDTO(mockedServiceOptionalBody)).thenReturn(mockedMappedServiceResponseAsDTO);
+      Mockito.when(
+              urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+          .thenReturn(Optional.of(mockedServiceOptionalBody));
+      Mockito.when(urnenwahlSchliessungsUhrzeitDTOMapper.toDTO(mockedServiceOptionalBody))
+          .thenReturn(mockedMappedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+      val result = unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
-        }
-
-        @Test
-        void should_returnNoContent_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.when(urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceResponseAsDTO);
     }
 
-    @Nested
-    class PostUrnenwahlSchliessungsUhrzeit {
+    @Test
+    void should_returnNoContent_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_postUrnenwahlSchliessungsuhrzeit_when_calledAndMappedCorrectly() {
-            val wahlbezirkID = "wahlbezirkID";
-            val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
-            val requestBody = new UrnenwahlSchliessungsUhrzeitWriteDTO(urnenwahlSchliessungsUhrzeit);
+      Mockito.when(
+              urnenwahlSchliessungsUhrzeitService.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+          .thenReturn(Optional.empty());
 
-            val mockedMappedRequest = new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+      val result = unitUnderTest.getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
 
-            Mockito.when(urnenwahlSchliessungsUhrzeitDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody))).thenReturn(mockedMappedRequest);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postUrnenwahlSchliessungsUhrzeit(wahlbezirkID, requestBody));
-            Mockito.verify(urnenwahlSchliessungsUhrzeitService).setUrnenwahlSchliessungsUhrzeit(mockedMappedRequest);
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
+  }
+
+  @Nested
+  class PostUrnenwahlSchliessungsUhrzeit {
+
+    @Test
+    void should_postUrnenwahlSchliessungsuhrzeit_when_calledAndMappedCorrectly() {
+      val wahlbezirkID = "wahlbezirkID";
+      val urnenwahlSchliessungsUhrzeit = LocalDateTime.now();
+      val requestBody = new UrnenwahlSchliessungsUhrzeitWriteDTO(urnenwahlSchliessungsUhrzeit);
+
+      val mockedMappedRequest =
+          new UrnenwahlSchliessungsUhrzeitModel(wahlbezirkID, urnenwahlSchliessungsUhrzeit);
+
+      Mockito.when(urnenwahlSchliessungsUhrzeitDTOMapper.toModel(eq(wahlbezirkID), eq(requestBody)))
+          .thenReturn(mockedMappedRequest);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.postUrnenwahlSchliessungsUhrzeit(wahlbezirkID, requestBody));
+      Mockito.verify(urnenwahlSchliessungsUhrzeitService)
+          .setUrnenwahlSchliessungsUhrzeit(mockedMappedRequest);
+    }
+  }
 }

@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record WahlvorstandsmitgliedDTO(@NotNull String identifikator,
-                                       @NotNull String vorname,
-                                       @NotNull String nachname,
-                                       @NotNull WahlvorstandsmitgliedsFunktionDTO funktion,
-                                       @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean anwesend) {
-}
+public record WahlvorstandsmitgliedDTO(
+    @NotNull String identifikator,
+    @NotNull String vorname,
+    @NotNull String nachname,
+    @NotNull WahlvorstandsmitgliedsFunktionDTO funktion,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean anwesend) {}

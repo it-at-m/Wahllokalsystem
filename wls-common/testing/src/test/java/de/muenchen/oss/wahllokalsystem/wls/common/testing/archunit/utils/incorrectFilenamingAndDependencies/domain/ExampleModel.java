@@ -1,4 +1,3 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.incorrectFilenamingAndDependencies.domain;
 
-public class ExampleModel {
-}
+public class ExampleModel {}

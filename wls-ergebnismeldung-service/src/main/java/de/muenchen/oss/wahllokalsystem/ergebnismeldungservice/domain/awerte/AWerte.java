@@ -14,13 +14,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AWerte {
 
-    @EmbeddedId
-    @NotNull
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId @NotNull private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    private long a1;
+  @NotNull private long a1;
 
-    private Long a2;
-
+  private Long a2;
 }

@@ -30,69 +30,77 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+    classes = {MicroServiceApplication.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+      "refarch.gracefulshutdown.pre-wait-seconds=0"
+    })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/ergebnismeldung";
+  private static final String ENTITY_ENDPOINT_URL = "/ergebnismeldung";
 
-    /**
-     * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
-     */
-    private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
+  /** Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́" */
+  private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
 
-    /**
-     * Composed string: String "Ä-é" represented with unicode letters "Ä-é".
-     */
-    private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
+  /** Composed string: String "Ä-é" represented with unicode letters "Ä-é". */
+  private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private ErgebnismeldungRepository ergebnismeldungRepository;
+  @Autowired private ErgebnismeldungRepository ergebnismeldungRepository;
 
-    @BeforeEach
-    void setup() {
-        ergebnismeldungRepository.deleteAll();
-    }
+  @BeforeEach
+  void setup() {
+    ergebnismeldungRepository.deleteAll();
+  }
 
-    @Test
-    void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
-        final ErgebnismeldungDTO ergebnisMeldungDto = getErgebnismeldungDTO(TEXT_ATTRIBUTE_DECOMPOSED);
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() {
+    // Persist entity with decomposed string.
+    final ErgebnismeldungDTO ergebnisMeldungDto = getErgebnismeldungDTO(TEXT_ATTRIBUTE_DECOMPOSED);
 
-        Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length()).isEqualTo(ergebnisMeldungDto.wahlbezirkID().length());
+    Assertions.assertThat(TEXT_ATTRIBUTE_DECOMPOSED.length())
+        .isEqualTo(ergebnisMeldungDto.wahlbezirkID().length());
 
-        // store Ergebnismeldung
-        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), ergebnisMeldungDto, Void.class);
+    // store Ergebnismeldung
+    testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), ergebnisMeldungDto, Void.class);
 
-        // Check persisted entity contains a composed string via JPA repository.
-        final Ergebnismeldung ergebnismeldung = ergebnismeldungRepository.findAll().iterator().next();
-        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(ergebnismeldung.getWahlbezirkID());
-        Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length()).isEqualTo(ergebnismeldung.getWahlbezirkID().length());
-    }
+    // Check persisted entity contains a composed string via JPA repository.
+    final Ergebnismeldung ergebnismeldung = ergebnismeldungRepository.findAll().iterator().next();
+    Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED).isEqualTo(ergebnismeldung.getWahlbezirkID());
+    Assertions.assertThat(TEXT_ATTRIBUTE_COMPOSED.length())
+        .isEqualTo(ergebnismeldung.getWahlbezirkID().length());
+  }
 
-    private ErgebnismeldungDTO getErgebnismeldungDTO(String wahlbezirkID) {
-        val wahlID = "wahlID1";
-        val meldungsart = MeldungsartDTO.NIEDERSCHRIFT;
-        val aWerte = new AWerteDTO(3L, 2L);
-        val bWerte = new BWerteDTO(4L, 3L, 2L);
-        val wahlbriefeWerte = new WahlbriefeWerteDTO(3L);
-        val ungueltigeStimmzettelDTOList = Set.of(new UngueltigeStimmzettelDTO("test1", 4L, "wahlvorschlagID1"),
-                new UngueltigeStimmzettelDTO("test2", 5L, "wahlvorschlagID2"));
-        val ungueltigeStimmzettelAnzahl = 4L;
-        val ergebnisse = Set.of(new ErgebnisDTO("test1", 5L, 3L, "wahlvorschlagID1", "kandidatID1"),
-                new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
-        val wahlart = WahlartDTO.BTW;
+  private ErgebnismeldungDTO getErgebnismeldungDTO(String wahlbezirkID) {
+    val wahlID = "wahlID1";
+    val meldungsart = MeldungsartDTO.NIEDERSCHRIFT;
+    val aWerte = new AWerteDTO(3L, 2L);
+    val bWerte = new BWerteDTO(4L, 3L, 2L);
+    val wahlbriefeWerte = new WahlbriefeWerteDTO(3L);
+    val ungueltigeStimmzettelDTOList =
+        Set.of(
+            new UngueltigeStimmzettelDTO("test1", 4L, "wahlvorschlagID1"),
+            new UngueltigeStimmzettelDTO("test2", 5L, "wahlvorschlagID2"));
+    val ungueltigeStimmzettelAnzahl = 4L;
+    val ergebnisse =
+        Set.of(
+            new ErgebnisDTO("test1", 5L, 3L, "wahlvorschlagID1", "kandidatID1"),
+            new ErgebnisDTO("test2", 6L, 4L, "wahlvorschlagID2", "kandidatID2"));
+    val wahlart = WahlartDTO.BTW;
 
-        return new ErgebnismeldungDTO(wahlbezirkID, wahlID, meldungsart, aWerte, bWerte, wahlbriefeWerte, ungueltigeStimmzettelDTOList,
-                ungueltigeStimmzettelAnzahl, ergebnisse, wahlart);
-    }
+    return new ErgebnismeldungDTO(
+        wahlbezirkID,
+        wahlID,
+        meldungsart,
+        aWerte,
+        bWerte,
+        wahlbriefeWerte,
+        ungueltigeStimmzettelDTOList,
+        ungueltigeStimmzettelAnzahl,
+        ergebnisse,
+        wahlart);
+  }
 }

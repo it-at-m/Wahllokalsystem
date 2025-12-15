@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Data
 public class AuthServerController {
 
-    @Value("${service.config.oauth2.logoutUri}")
-    private String logoutUri;
+  @Value("${service.config.oauth2.logoutUri}")
+  private String logoutUri;
 
-    @GetMapping("logouturl")
-    public ResolvedUrlDTO getLogoutUrl() {
-        return new ResolvedUrlDTO(logoutUri);
-    }
+  @GetMapping("logouturl")
+  public ResolvedUrlDTO getLogoutUrl() {
+    return new ResolvedUrlDTO(logoutUri);
+  }
 }

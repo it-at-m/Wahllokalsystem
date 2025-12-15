@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { MeldungDTOValidierungsstatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useStatusMapper } from "@/composables/ergebnismeldung/common/statusMapper.ts";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 const { prepareStatusDTO, prepareMeldungDTO, prepareStatus, prepareMeldung } =
   useStatusTestDataFactory();

@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -20,7 +20,7 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebni
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const route = useRoute();
 const router = useRouter();

@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { PropType } from "vue";
 import type { VAutocomplete } from "vuetify/components";
@@ -30,7 +30,7 @@ import type { VAutocomplete } from "vuetify/components";
 import { computed, useTemplateRef, watchEffect } from "vue";
 
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const STAPELART_FOR_INVALID = StapelArtEnum.ObwCUngueltig;
 const REF_AUTOCOMPLETE_WAHLVORSCHLAG = "wahlvorschlagSelection";

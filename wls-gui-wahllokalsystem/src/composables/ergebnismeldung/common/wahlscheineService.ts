@@ -1,4 +1,4 @@
-import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/common/Wahlscheine.ts";
 
 import {
   Configuration,

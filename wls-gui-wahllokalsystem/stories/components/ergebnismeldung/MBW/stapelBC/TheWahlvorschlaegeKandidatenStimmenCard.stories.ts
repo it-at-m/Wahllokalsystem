@@ -9,7 +9,7 @@ import {
   BASISDATEN_SERVICE_API_URL,
   ERGEBNISMELDUNG_SERVICE_API_URL,
 } from "@/constants.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const wahlbezirkID = "wahlbezirkID";
 const wahlID = "wahlID";

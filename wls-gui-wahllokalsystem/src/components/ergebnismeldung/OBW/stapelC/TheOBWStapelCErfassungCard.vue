@@ -57,9 +57,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
-import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnisermittlung/ErgebnisWithNumIndexAndStapel.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { ErgebnisAndStapelArt } from "@/types/ergebnismeldung/common/ErgebnisAndStapelArt.ts";
+import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnismeldung/common/ErgebnisWithNumIndexAndStapel.ts";
 
 import { computed, onMounted, ref, useTemplateRef } from "vue";
 

@@ -7,7 +7,7 @@
   />
 </template>
 <script setup lang="ts">
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";

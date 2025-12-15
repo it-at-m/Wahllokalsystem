@@ -1,5 +1,5 @@
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 import {
   Configuration,

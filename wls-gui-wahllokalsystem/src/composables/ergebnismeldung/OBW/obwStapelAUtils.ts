@@ -1,5 +1,5 @@
-import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnismeldung/common/ErgebnisAndWahlvorschlag.ts";
 import type { ComputedRef } from "vue";
 
 import { computed } from "vue";
@@ -8,7 +8,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useOBWStapelAUtils(
   wahlID: ComputedRef<string>,

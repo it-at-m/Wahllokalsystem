@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { PropType } from "vue";
 
 import { ref } from "vue";

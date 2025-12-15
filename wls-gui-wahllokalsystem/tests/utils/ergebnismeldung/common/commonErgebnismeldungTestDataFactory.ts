@@ -2,15 +2,15 @@ import type {
   BezirkUndWahlIDStapelartDTO,
   BezirkUndWahlID as BezirkUndWahlIDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
-import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/common/BezirkUndWahlID.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/common/BezirkUndWahlIDStapelArt.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 
 import { BezirkUndWahlIDStapelartDTOStapelartEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 

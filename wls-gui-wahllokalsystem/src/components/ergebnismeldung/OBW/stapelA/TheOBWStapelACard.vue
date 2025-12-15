@@ -57,7 +57,7 @@ import BaseRowObwStapelA from "@/components/ergebnismeldung/OBW/stapelA/BaseRowO
 import { useOBWStapelAUtils } from "@/composables/ergebnismeldung/OBW/obwStapelAUtils.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { sendErgebnisseByStapelArt } = useErgebnismeldungStore();
 

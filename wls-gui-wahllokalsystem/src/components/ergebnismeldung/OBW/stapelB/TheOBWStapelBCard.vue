@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
@@ -54,7 +54,7 @@ import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelBUtils } from "@/composables/ergebnismeldung/OBW/obwStapelBUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { maxNumber, minNumber, required } = useRules();
 

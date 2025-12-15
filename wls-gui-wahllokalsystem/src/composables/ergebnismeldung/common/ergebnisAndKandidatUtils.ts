@@ -1,4 +1,4 @@
-import type { ErgebnisAndKandidat } from "@/types/ergebnisermittlung/ErgebnisAndKandidat.ts";
+import type { ErgebnisAndKandidat } from "@/types/ergebnismeldung/common/ErgebnisAndKandidat.ts";
 
 export function useErgebnisAndKandidatUtils() {
   function summeKandidatenStimmen(

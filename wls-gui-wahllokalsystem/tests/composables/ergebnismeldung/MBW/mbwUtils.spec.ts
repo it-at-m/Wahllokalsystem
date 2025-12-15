@@ -1,5 +1,5 @@
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),

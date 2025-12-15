@@ -1,4 +1,4 @@
-import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import type { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export interface Begruendung {
   wahlID: string;

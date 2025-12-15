@@ -5,7 +5,7 @@ import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

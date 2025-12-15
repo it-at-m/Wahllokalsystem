@@ -1,4 +1,4 @@
-import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
@@ -9,7 +9,7 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebni
 import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnismeldung/common/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
   const StapelArt_BC = StapelArtEnum.MbwBC;

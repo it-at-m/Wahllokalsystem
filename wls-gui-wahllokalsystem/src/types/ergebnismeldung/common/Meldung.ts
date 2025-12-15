@@ -1,4 +1,4 @@
-import type { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import type { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 export interface Meldung {
   validierungsstatus: MeldungValidierungsstatusEnum;

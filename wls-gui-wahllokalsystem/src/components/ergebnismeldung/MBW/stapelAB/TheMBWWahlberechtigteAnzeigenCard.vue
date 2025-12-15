@@ -9,7 +9,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 
 import { storeToRefs } from "pinia";
 import { onActivated, ref } from "vue";

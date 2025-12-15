@@ -9,7 +9,7 @@ import {
   SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

@@ -2,7 +2,7 @@ import type {
   BezirkUndWahlID,
   StimmzettelumschlaegeDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 

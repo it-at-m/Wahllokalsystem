@@ -1,5 +1,5 @@
-import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
-import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
+import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import {
@@ -12,7 +12,7 @@ import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/er
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toDto, toModel } = useErgebnisermittlungMapper();

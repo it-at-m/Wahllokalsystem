@@ -2,8 +2,8 @@ import type {
   BezirkUndWahlID as BezirkUndWahlIdDTO,
   WahlscheineDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
-import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/common/BezirkUndWahlID.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/common/Wahlscheine.ts";
 
 export function useWahlscheineMapper() {
   function toModel(dto: WahlscheineDTO): Wahlscheine {

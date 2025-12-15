@@ -3,12 +3,12 @@ import type {
   MeldungDTO,
   StatusDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BezirkUndWahlID } from "@/types/ergebnismeldung/BezirkUndWahlID.ts";
-import type { Meldung } from "@/types/ergebnismeldung/Meldung.ts";
-import type { Status } from "@/types/ergebnismeldung/Status.ts";
+import type { BezirkUndWahlID } from "@/types/ergebnismeldung/common/BezirkUndWahlID.ts";
+import type { Meldung } from "@/types/ergebnismeldung/common/Meldung.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
 import { MeldungDTOValidierungsstatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 export function useStatusMapper() {
   function toModel(dto: StatusDTO): Status {

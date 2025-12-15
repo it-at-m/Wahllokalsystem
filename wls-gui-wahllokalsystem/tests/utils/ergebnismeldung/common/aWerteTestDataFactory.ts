@@ -1,5 +1,5 @@
 import type { AWerteDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";

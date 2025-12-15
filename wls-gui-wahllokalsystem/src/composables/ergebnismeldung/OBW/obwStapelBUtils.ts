@@ -3,7 +3,7 @@ import type { ComputedRef } from "vue";
 import { computed } from "vue";
 
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useOBWStapelBUtils(wahlID: ComputedRef<string>) {
   const { getErgebnisseByWahlIdAndStapelartOrUndefined } =

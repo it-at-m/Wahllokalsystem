@@ -34,7 +34,7 @@
   </v-table>
 </template>
 <script setup lang="ts">
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";

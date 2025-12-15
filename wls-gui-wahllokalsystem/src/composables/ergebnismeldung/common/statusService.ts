@@ -1,4 +1,4 @@
-import type { Status } from "@/types/ergebnismeldung/Status.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
 import {
   Configuration,

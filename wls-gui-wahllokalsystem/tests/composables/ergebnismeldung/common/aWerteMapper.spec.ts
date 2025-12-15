@@ -1,4 +1,4 @@
-import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";

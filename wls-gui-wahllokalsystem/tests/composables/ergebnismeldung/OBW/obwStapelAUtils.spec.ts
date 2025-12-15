@@ -1,4 +1,4 @@
-import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnisermittlung/ErgebnisAndWahlvorschlag.ts";
+import type { ErgebnisAndWahlvorschlag } from "@/types/ergebnismeldung/common/ErgebnisAndWahlvorschlag.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
@@ -15,7 +15,7 @@ import {
 import { computed } from "vue";
 
 import { useOBWStapelAUtils } from "@/composables/ergebnismeldung/OBW/obwStapelAUtils.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),

@@ -12,7 +12,7 @@ import {
 import { computed } from "vue";
 
 import { useOBWStapelBUtils } from "@/composables/ergebnismeldung/OBW/obwStapelBUtils.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),

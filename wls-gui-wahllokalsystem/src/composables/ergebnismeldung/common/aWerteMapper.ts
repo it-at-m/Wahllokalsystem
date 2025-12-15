@@ -1,5 +1,5 @@
 import type { AWerteDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 
 export function useAWerteMapper() {
   function toModel(aWerteDto: AWerteDTO): AWerte {

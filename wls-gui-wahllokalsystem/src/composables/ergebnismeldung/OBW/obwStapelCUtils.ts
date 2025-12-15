@@ -1,5 +1,5 @@
-import type { ErgebnisAndStapelArt } from "@/types/ergebnisermittlung/ErgebnisAndStapelArt.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { ErgebnisAndStapelArt } from "@/types/ergebnismeldung/common/ErgebnisAndStapelArt.ts";
 import type { ComputedRef } from "vue";
 
 import { computed, ref } from "vue";
@@ -9,7 +9,7 @@ import { useMathUtils } from "@/composables/common/mathUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 type WahlvorschlagID = string;
 type ErgebnisSum = number;

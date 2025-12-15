@@ -6,7 +6,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/commo
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
 import BaseRowStapelC from "@/components/ergebnismeldung/OBW/stapelC/BaseRowStapelC.vue";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { generateRandomNumber } = useCommonTestDataFactory();
 const { prepareErgebnis } = useErgebnisseTestDataFactory();

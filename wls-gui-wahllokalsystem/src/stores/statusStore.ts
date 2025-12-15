@@ -1,11 +1,11 @@
-import type { Status } from "@/types/ergebnismeldung/Status.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 export const storeID = "status";
 

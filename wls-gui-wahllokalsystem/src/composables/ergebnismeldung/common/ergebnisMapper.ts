@@ -4,17 +4,17 @@ import type {
   ErgebnisDTO,
   ErgebnisseDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
-import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/common/BezirkUndWahlIDStapelArt.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum,
   GetErgebnisseStapelartEnum,
   PostErgebnisseStapelartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useErgebnisMapper() {
   function toModel(dto: ErgebnisseDTO): Ergebnisse {

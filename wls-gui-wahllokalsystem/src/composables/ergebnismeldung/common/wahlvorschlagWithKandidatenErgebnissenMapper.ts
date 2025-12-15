@@ -1,7 +1,7 @@
-import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnisermittlung/WahlvorschlagWithKandidatenErgebnissen.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
-import type { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 

@@ -1,4 +1,4 @@
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 
 export function useErgebnisUtils() {
   function orderedByNumIndexWithNullAtEnd(a: Ergebnis, b: Ergebnis) {

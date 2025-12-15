@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ErgebnisAndKandidat } from "@/types/ergebnisermittlung/ErgebnisAndKandidat.ts";
+import type { ErgebnisAndKandidat } from "@/types/ergebnismeldung/common/ErgebnisAndKandidat.ts";
 
 import { computed } from "vue";
 

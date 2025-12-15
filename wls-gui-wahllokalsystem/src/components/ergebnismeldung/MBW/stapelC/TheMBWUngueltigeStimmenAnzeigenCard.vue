@@ -26,7 +26,7 @@
 import { onActivated, ref } from "vue";
 
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { getErgebnisse } = useErgebnisService();
 

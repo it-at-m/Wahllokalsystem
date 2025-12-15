@@ -10,7 +10,7 @@ import pinia from "@/plugins/pinia.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { prepareUser } = useUserTestDataFactory();
 const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();

@@ -1,5 +1,5 @@
-import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
 import { storeToRefs } from "pinia";
@@ -13,7 +13,7 @@ import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvor
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { postErgebnisse, getErgebnisse, postSchnellmeldung } =
   useErgebnisService();

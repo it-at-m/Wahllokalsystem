@@ -20,7 +20,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { ref } from "vue";

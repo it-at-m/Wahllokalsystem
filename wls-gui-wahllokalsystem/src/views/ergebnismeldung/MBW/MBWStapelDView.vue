@@ -17,7 +17,7 @@ import { useRoute, useRouter } from "vue-router";
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
@@ -45,7 +45,7 @@ const ergebnis = ref<Ergebnis>({
 
 if (!wahl) {
   router.push({
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
   });
 }
 

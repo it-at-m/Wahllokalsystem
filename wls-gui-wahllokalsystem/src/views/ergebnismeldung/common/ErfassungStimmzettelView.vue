@@ -13,7 +13,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -28,7 +28,7 @@ const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
 if (!wahl) {
   router.push({
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
   });
 }
 </script>

@@ -2,12 +2,12 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import {
-  EXAMPLE_ROUTES_NOTFOUND,
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_NIEDERSCHRIFT,
+  ROUTE_NOTFOUND,
   ROUTE_SCHNELLMELDUNG,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_A_AND_B,
@@ -170,7 +170,7 @@ const routes = [
   },
   {
     path: "/notFound",
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
     component: ExampleError404View,
   },
   {

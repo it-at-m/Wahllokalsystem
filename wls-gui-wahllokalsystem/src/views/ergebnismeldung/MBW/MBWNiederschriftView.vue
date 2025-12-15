@@ -37,7 +37,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
@@ -51,7 +51,7 @@ const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
 if (!wahl) {
   router.push({
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
   });
 }
 

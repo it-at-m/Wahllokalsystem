@@ -1,4 +1,4 @@
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
 import {
   enableAutoUnmount,

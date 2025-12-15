@@ -1,7 +1,7 @@
 import type { AWerte } from "@/types/ergebnisermittlung/AWerte.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useAWerteMapper } from "@/composables/ergebnismeldung/common/aWerteMapper.ts";

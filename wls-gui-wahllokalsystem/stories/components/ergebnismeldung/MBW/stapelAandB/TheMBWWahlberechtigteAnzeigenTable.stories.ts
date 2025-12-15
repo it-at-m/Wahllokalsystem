@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 
 import TheMBWWahlberechtigteAnzeigenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
 

@@ -1,7 +1,7 @@
 import type { WahlscheineDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 
-import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahlscheineTestDataFactory.ts";
+import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useWahlscheineMapper } from "@/composables/ergebnismeldung/common/wahlscheineMapper.ts";

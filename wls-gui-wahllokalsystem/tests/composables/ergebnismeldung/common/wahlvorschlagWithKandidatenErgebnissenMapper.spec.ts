@@ -2,7 +2,7 @@ import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebniserm
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
 import BaseRowKandidatStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseRowKandidatStimmenErfassen.vue";

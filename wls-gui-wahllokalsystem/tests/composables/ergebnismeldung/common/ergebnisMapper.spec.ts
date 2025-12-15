@@ -3,8 +3,8 @@ import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
 
-import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/begruendungTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
 import {

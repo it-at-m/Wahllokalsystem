@@ -1,6 +1,6 @@
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import {
   afterAll,
   afterEach,

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { fn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
 import BaseRowStapelC from "@/components/ergebnismeldung/OBW/stapelC/BaseRowStapelC.vue";

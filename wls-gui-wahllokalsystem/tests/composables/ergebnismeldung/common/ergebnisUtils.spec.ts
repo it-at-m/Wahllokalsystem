@@ -1,5 +1,5 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";

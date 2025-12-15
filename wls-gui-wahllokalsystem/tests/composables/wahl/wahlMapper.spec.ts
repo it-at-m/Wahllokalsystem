@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { useWahlMapper } from "@/composables/wahl/wahlMapper.ts";
-import { StimmzettelumschlaegeBuilder } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import { StimmzettelumschlaegeBuilder } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 describe("wahlMapper", () => {

@@ -3,7 +3,7 @@ import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
-import { useAWerteService } from "@/composables/ergebnismeldung/aWerteService.ts";
+import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useAWerteTaskFactory(): TaskFactory {

@@ -1,10 +1,10 @@
 import { createTestingPinia } from "@pinia/testing";
-import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/statusTestDataFactory.ts";
+import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStatusStore } from "@/stores/statusStore.ts";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 const { createStatus } = useStatusTestDataFactory();
 
@@ -13,7 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
   postStatus: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/statusService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/statusService.ts", () => ({
   useStatusService: () => ({
     getStatus: mockDefinitions.getStatus,
     postStatus: mockDefinitions.postStatus,

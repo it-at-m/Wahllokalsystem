@@ -1,5 +1,5 @@
 import type { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
-import type { Stimmzettelumschlaege } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import type { Farbe } from "@/types/wahl/Farbe.ts";
 
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";

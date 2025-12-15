@@ -1,7 +1,7 @@
-import type { Begruendung } from "@/types/ergebnisermittlung/Begruendung.ts";
-import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Ergebnisse } from "@/types/ergebnismeldung/Ergebnisse.ts";
+import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/common/BezirkUndWahlIDStapelArt.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { defineStore } from "pinia";
@@ -9,10 +9,9 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 
@@ -20,9 +19,12 @@ const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-  const { getErgebnisse, postErgebnisse } = useErgebnisService();
-  const { getBegruendungStimmzettelumschlaege, postBegruendung } =
-    useErgebnisermittlungService();
+  const {
+    getErgebnisse,
+    postErgebnisse,
+    getBegruendungStimmzettelumschlaege,
+    postBegruendung,
+  } = useErgebnisService();
   const { getStimmzettelTermForWahl } = useTextFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);

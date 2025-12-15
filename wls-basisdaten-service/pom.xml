@@ -396,7 +396,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.7.0.json</inputSpec>
+                            <inputSpec>${project.baseUri}/src/main/resources/openapis/openapi.eai.0.8.6.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

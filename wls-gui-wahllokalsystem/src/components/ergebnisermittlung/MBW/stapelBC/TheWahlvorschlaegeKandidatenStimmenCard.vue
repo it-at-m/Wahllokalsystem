@@ -55,21 +55,15 @@
               </td>
               <td>{{ wahlvorschlag.kurzname }}</td>
               <td class="text-right">
-                {{
-                  ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelA.ergebnis
-                }}
+                {{ getStapelAErgebnisForWahlvorschlagIndex(index) }}
+              </td>
+              <td class="text-right">
+                {{ getStapelBErgebnisForWahlvorschlagIndex(index) }}
               </td>
               <td class="text-right">
                 {{
-                  ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelB.ergebnis
-                }}
-              </td>
-              <td class="text-right">
-                {{
-                  (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelA
-                    .ergebnis ?? 0) +
-                  (ergebnisseAndWahlvorschlaege[index]?.ergebnisStapelB
-                    .ergebnis ?? 0)
+                  getStapelAErgebnisForWahlvorschlagIndex(index) +
+                  getStapelBErgebnisForWahlvorschlagIndex(index)
                 }}
               </td>
               <td class="text-right">
@@ -184,6 +178,18 @@ const totalSumVeraendert = computed(() => {
     0
   );
 });
+
+function getStapelAErgebnisForWahlvorschlagIndex(index: number) {
+  return (
+    ergebnisseAndWahlvorschlaege.value[index]?.ergebnisStapelA.ergebnis ?? 0
+  );
+}
+
+function getStapelBErgebnisForWahlvorschlagIndex(index: number) {
+  return (
+    ergebnisseAndWahlvorschlaege.value[index]?.ergebnisStapelB.ergebnis ?? 0
+  );
+}
 
 function onSaveWahlvorschlag() {
   saveErgebnisse();

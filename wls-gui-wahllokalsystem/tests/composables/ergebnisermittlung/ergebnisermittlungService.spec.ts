@@ -14,8 +14,8 @@ const mockDefinitions = vi.hoisted(() => ({
   getBegruendung: vi.fn(),
   postBegruendung: vi.fn(),
   addNotification: vi.fn(),
-  toDto: vi.fn(),
-  toModel: vi.fn(),
+  toStimmzettelumschlaegeDto: vi.fn(),
+  toStimmzettelumschlaegeModel: vi.fn(),
   toBegruendungModel: vi.fn(),
   toBegruendungDto: vi.fn(),
   toPostErgebnisseStapelartEnum: vi.fn(),
@@ -40,18 +40,14 @@ vi.mock(
     };
   }
 );
-vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
-  useErgebnisermittlungMapper: () => ({
-    toDto: mockDefinitions.toDto,
-    toModel: mockDefinitions.toModel,
-  }),
-}));
 vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
     toBegruendungModel: mockDefinitions.toBegruendungModel,
     toBegruendungDto: mockDefinitions.toBegruendungDto,
     toPostErgebnisseStapelartEnum:
       mockDefinitions.toPostErgebnisseStapelartEnum,
+    toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
+    toStimmzettelumschlaegeModel: mockDefinitions.toStimmzettelumschlaegeModel,
   }),
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
@@ -97,9 +93,9 @@ describe("ergebnisermittlungService", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
-      expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
-      ]);
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeDto.mock.calls
+      ).toStrictEqual([[stimmzettelumschlaege, wahl.wahlID, wahlbezirkID]]);
     });
 
     it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {
@@ -118,9 +114,9 @@ describe("ergebnisermittlungService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
-      expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
-      ]);
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeDto.mock.calls
+      ).toStrictEqual([[stimmzettelumschlaege, wahl.wahlID, wahlbezirkID]]);
     });
 
     it("should_callNotificationServiceAfterFailure_when_sendNotificationParameterIsTrue", async () => {
@@ -145,9 +141,9 @@ describe("ergebnisermittlungService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
-      expect(mockDefinitions.toDto.mock.calls).toStrictEqual([
-        [stimmzettelumschlaege, wahl.wahlID, wahlbezirkID],
-      ]);
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeDto.mock.calls
+      ).toStrictEqual([[stimmzettelumschlaege, wahl.wahlID, wahlbezirkID]]);
     });
   });
 
@@ -161,7 +157,9 @@ describe("ergebnisermittlungService", () => {
         data: dto,
       });
       const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
-      mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
+      mockDefinitions.toStimmzettelumschlaegeModel.mockReturnValue(
+        mockedStimmzettelumschlaege
+      );
 
       const result = await getStimmzettelumschlaege(
         wahl,
@@ -173,7 +171,9 @@ describe("ergebnisermittlungService", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
-      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([[dto]]);
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeModel.mock.calls
+      ).toStrictEqual([[dto]]);
       expect(result).toStrictEqual(mockedStimmzettelumschlaege);
     });
 
@@ -186,7 +186,9 @@ describe("ergebnisermittlungService", () => {
         data: dto,
       });
       const mockedStimmzettelumschlaege = createStimmzettelumschlaege();
-      mockDefinitions.toModel.mockReturnValue(mockedStimmzettelumschlaege);
+      mockDefinitions.toStimmzettelumschlaegeModel.mockReturnValue(
+        mockedStimmzettelumschlaege
+      );
 
       const result = await getStimmzettelumschlaege(
         wahl,
@@ -198,7 +200,9 @@ describe("ergebnisermittlungService", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
-      expect(mockDefinitions.toModel.mock.calls).toStrictEqual([[dto]]);
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeModel.mock.calls
+      ).toStrictEqual([[dto]]);
       expect(result).toStrictEqual(mockedStimmzettelumschlaege);
     });
 
@@ -235,7 +239,9 @@ describe("ergebnisermittlungService", () => {
       );
 
       expect(result).toBeNull();
-      expect(mockDefinitions.toModel).not.toHaveBeenCalled();
+      expect(
+        mockDefinitions.toStimmzettelumschlaegeModel
+      ).not.toHaveBeenCalled();
       expect(mockDefinitions.addNotification).not.toHaveBeenCalled();
     });
   });

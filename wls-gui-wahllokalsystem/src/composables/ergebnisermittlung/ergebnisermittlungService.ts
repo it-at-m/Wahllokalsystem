@@ -8,16 +8,19 @@ import {
   StimmzettelumschlaegeControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
-import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { toDto, toModel } = useErgebnisermittlungMapper();
-const { toBegruendungModel, toBegruendungDto, toPostErgebnisseStapelartEnum } =
-  useErgebnisMapper();
+const {
+  toBegruendungModel,
+  toBegruendungDto,
+  toPostErgebnisseStapelartEnum,
+  toStimmzettelumschlaegeDto,
+  toStimmzettelumschlaegeModel,
+} = useErgebnisMapper();
 const { addNotification } = useUserNotificationService();
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
@@ -44,7 +47,11 @@ export function useErgebnisermittlungService() {
       await stimmzettelumschlaegeControllerAPI.postStimmzettelumschlaege(
         wahl.wahlID,
         wahlbezirkID,
-        toDto(stimmzettelumschlaege, wahl.wahlID, wahlbezirkID)
+        toStimmzettelumschlaegeDto(
+          stimmzettelumschlaege,
+          wahl.wahlID,
+          wahlbezirkID
+        )
       );
       if (sendNotification) {
         addNotification(
@@ -82,7 +89,7 @@ export function useErgebnisermittlungService() {
         );
       }
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? toModel(responseData) : null;
+      return responseData ? toStimmzettelumschlaegeModel(responseData) : null;
     } catch (e) {
       if (sendNotification) {
         addNotification(

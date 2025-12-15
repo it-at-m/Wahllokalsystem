@@ -1,11 +1,17 @@
-import type { BegruendungDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import type {
+  BegruendungDTO,
+  StimmzettelumschlaegeDTO,
+} from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
-import { describe, expect, it } from "vitest";
+import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnismeldung/common/StimmzettelumschlaegeTestDataFactory.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum,
@@ -16,13 +22,26 @@ import {
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
+const mockDefinitions = vi.hoisted(() => ({
+  toYyyyMmDdWithTimeWithoutTimezoneOffset: vi.fn(),
+}));
+
+vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
+  useDateTimeFormatter: () => ({
+    toYyyyMmDdWithTimeWithoutTimezoneOffset:
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
+  }),
+}));
+
 const {
-  toModel,
-  toDto,
+  toErgebnisseModel,
+  toErgebnisseDto,
   toPostErgebnisseStapelartEnum,
   toGetErgebnisseStapelartEnum,
   toBegruendungModel,
   toBegruendungDto,
+  toStimmzettelumschlaegeDto,
+  toStimmzettelumschlaegeModel,
 } = useErgebnisMapper();
 const {
   prepareErgebnisseDTO,
@@ -32,9 +51,19 @@ const {
 } = useErgebnisseTestDataFactory();
 const { prepareBegruendungDTO, prepareBegruendung } =
   useBegruendungTestDataFactory();
+const {
+  createStimmzettelumschlaege,
+  createBezirkUndWahlIDDto,
+  createStimmzettelumschlaegeDto,
+} = useStimmzettelumschlaegeTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
 
 describe("ergebnisMapper.ts", () => {
-  describe("toModel", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("toErgebnisseModel", () => {
     it("should_returnModel_when_givenDto", () => {
       const wahlbezirkID = "wahlbezirkID";
       const wahlID = "wahlID";
@@ -63,7 +92,7 @@ describe("ergebnisMapper.ts", () => {
         .ergebnisse([modelErgebnis])
         .build();
 
-      const result = toModel(dtoErgebnisse);
+      const result = toErgebnisseModel(dtoErgebnisse);
 
       expect(result).toStrictEqual(modelErgebnisse);
       expect(result.ergebnisse).not.toBe(dtoErgebnisse.ergebnisse);
@@ -98,7 +127,7 @@ describe("ergebnisMapper.ts", () => {
             stapelart: dtoStapelart,
           })
           .build();
-        const result = toModel(dto);
+        const result = toErgebnisseModel(dto);
         expect(result.bezirkUndWahlIDStapelart.stapelArt).toBe(modelStapelart);
       }
     );
@@ -112,11 +141,13 @@ describe("ergebnisMapper.ts", () => {
         })
         .build();
 
-      expect(() => toModel(invalidDto)).toThrow("Stapelart nicht gefunden");
+      expect(() => toErgebnisseModel(invalidDto)).toThrow(
+        "Stapelart nicht gefunden"
+      );
     });
   });
 
-  describe("toDto", () => {
+  describe("toErgebnisseDto", () => {
     it("should_returnDto_when_givenModel", () => {
       const wahlbezirkID = "wahlbezirkID";
       const wahlID = "wahlID";
@@ -150,7 +181,7 @@ describe("ergebnisMapper.ts", () => {
         .ergebnisse([dtoErgebnis])
         .build();
 
-      const result = toDto(modelErgebnisse);
+      const result = toErgebnisseDto(modelErgebnisse);
 
       expect(result).toStrictEqual(expectedDto);
       expect(result.ergebnisse).not.toBe(expectedDto.ergebnisse);
@@ -186,7 +217,7 @@ describe("ergebnisMapper.ts", () => {
           })
           .build();
 
-        const result = toDto(model);
+        const result = toErgebnisseDto(model);
         expect(result.bezirkUndWahlIDStapelart.stapelart).toBe(dtoStapelart);
       }
     );
@@ -200,7 +231,9 @@ describe("ergebnisMapper.ts", () => {
         })
         .build();
 
-      expect(() => toDto(invalidModel)).toThrow("Stapelart nicht gefunden");
+      expect(() => toErgebnisseDto(invalidModel)).toThrow(
+        "Stapelart nicht gefunden"
+      );
     });
   });
 
@@ -401,6 +434,87 @@ describe("ergebnisMapper.ts", () => {
       expect(() => toBegruendungDto(modelBegruendung, "wahlbezirkID")).toThrow(
         "Stapelart nicht gefunden"
       );
+    });
+  });
+
+  describe("toStimmzettelumschlaegeDto", () => {
+    it("should_returnDto_when_givenModelWithoutUhrzeit", () => {
+      const model: Stimmzettelumschlaege = createStimmzettelumschlaege();
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const expectedDto: StimmzettelumschlaegeDTO = {
+        bezirkUndWahlID: createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
+        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+      };
+
+      const result = toStimmzettelumschlaegeDto(model, wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(expectedDto);
+    });
+
+    it("should_returnDto_when_givenModelWithUhrzeit", () => {
+      const eroeffnungszeit = new Date("2025-08-20T15:00:00.000Z");
+      const model: Stimmzettelumschlaege = createStimmzettelumschlaege({
+        urneneroeffnungsUhrzeit: eroeffnungszeit,
+      });
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedMappedDate = "2025-08-20T15:00:00.000";
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        mockedMappedDate
+      );
+
+      const expectedDto: StimmzettelumschlaegeDTO = {
+        bezirkUndWahlID: createBezirkUndWahlIDDto(wahlID, wahlbezirkID),
+        anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+        urneneroeffnungsUhrzeit: mockedMappedDate,
+      };
+
+      const result = toStimmzettelumschlaegeDto(model, wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(expectedDto);
+    });
+  });
+
+  describe("toStimmzettelumschlaegeModel", () => {
+    beforeEach(() => {
+      const mockedNow = new Date();
+      vi.useFakeTimers({
+        now: mockedNow,
+      });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("should_returnModel_when_givenDtoWithoutUhrzeit", () => {
+      const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
+
+      const expectedModel: Stimmzettelumschlaege = {
+        anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+      };
+
+      const result = toStimmzettelumschlaegeModel(dto);
+
+      expect(result).toStrictEqual(expectedModel);
+    });
+
+    it("should_returnModel_when_givenDtoWithUhrzeit", () => {
+      const eroeffnungszeit = "2025-09-25T15:00:00.000";
+      const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
+      dto.urneneroeffnungsUhrzeit = eroeffnungszeit;
+
+      const expectedModel: Stimmzettelumschlaege = {
+        anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+        urneneroeffnungsUhrzeit: new Date(eroeffnungszeit),
+      };
+
+      const result = toStimmzettelumschlaegeModel(dto);
+
+      expect(result).toStrictEqual(expectedModel);
     });
   });
 });

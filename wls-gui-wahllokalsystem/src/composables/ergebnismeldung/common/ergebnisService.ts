@@ -14,8 +14,8 @@ import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const {
-  toModel,
-  toDto,
+  toErgebnisseModel,
+  toErgebnisseDto,
   toGetErgebnisseStapelartEnum,
   toPostErgebnisseStapelartEnum,
 } = useErgebnisMapper();
@@ -53,7 +53,7 @@ export function useErgebnisService() {
       }
 
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? toModel(responseData) : null;
+      return responseData ? toErgebnisseModel(responseData) : null;
     } catch {
       if (sendNotification) {
         addNotification(
@@ -77,7 +77,7 @@ export function useErgebnisService() {
         wahlbezirkID,
         wahlID,
         toPostErgebnisseStapelartEnum(stapelArt),
-        toDto(ergebnisse)
+        toErgebnisseDto(ergebnisse)
       );
       if (sendNotification) {
         addNotification(

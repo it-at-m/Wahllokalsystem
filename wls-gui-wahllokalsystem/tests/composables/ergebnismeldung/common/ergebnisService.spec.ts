@@ -17,8 +17,8 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   sendErgebnisse: vi.fn(),
-  toModel: vi.fn(),
-  toDto: vi.fn(),
+  toErgebnisseModel: vi.fn(),
+  toErgebnisseDto: vi.fn(),
   toGetErgebnisseStapelartEnum: vi.fn(),
   toPostErgebnisseStapelartEnum: vi.fn(),
   configurationConstructor: vi.fn().mockImplementation(() => ({})),
@@ -50,8 +50,8 @@ vi.mock(
 );
 vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
-    toModel: mockDefinitions.toModel,
-    toDto: mockDefinitions.toDto,
+    toErgebnisseModel: mockDefinitions.toErgebnisseModel,
+    toErgebnisseDto: mockDefinitions.toErgebnisseDto,
     toGetErgebnisseStapelartEnum: mockDefinitions.toGetErgebnisseStapelartEnum,
     toPostErgebnisseStapelartEnum:
       mockDefinitions.toPostErgebnisseStapelartEnum,
@@ -100,7 +100,7 @@ describe("ergebnisService.ts", () => {
         status: 200,
         data: mockedErgebnisseDto,
       });
-      mockDefinitions.toModel.mockReturnValue(mockedErgebnisseModel);
+      mockDefinitions.toErgebnisseModel.mockReturnValue(mockedErgebnisseModel);
       mockDefinitions.toGetErgebnisseStapelartEnum.mockReturnValue(
         stapelArtDto
       );
@@ -113,7 +113,9 @@ describe("ergebnisService.ts", () => {
         wahlID,
         stapelArtDto
       );
-      expect(mockDefinitions.toModel).toHaveBeenCalledWith(mockedErgebnisseDto);
+      expect(mockDefinitions.toErgebnisseModel).toHaveBeenCalledWith(
+        mockedErgebnisseDto
+      );
     });
 
     it("should_throwError_when_apiCallFailed", async () => {
@@ -146,7 +148,7 @@ describe("ergebnisService.ts", () => {
       const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArt);
 
       expect(result).toBeNull();
-      expect(mockDefinitions.toModel).not.toHaveBeenCalled();
+      expect(mockDefinitions.toErgebnisseModel).not.toHaveBeenCalled();
     });
   });
 
@@ -185,7 +187,7 @@ describe("ergebnisService.ts", () => {
       mockDefinitions.toPostErgebnisseStapelartEnum.mockReturnValue(
         stapelArtPostDto
       );
-      mockDefinitions.toDto.mockReturnValue(mockedErgebnisseDto);
+      mockDefinitions.toErgebnisseDto.mockReturnValue(mockedErgebnisseDto);
       mockDefinitions.postErgebnisse.mockResolvedValue({});
 
       await postErgebnisse(
@@ -201,7 +203,9 @@ describe("ergebnisService.ts", () => {
         stapelArtPostDto,
         mockedErgebnisseDto
       );
-      expect(mockDefinitions.toDto).toHaveBeenCalledWith(ergebnisseModelToSend);
+      expect(mockDefinitions.toErgebnisseDto).toHaveBeenCalledWith(
+        ergebnisseModelToSend
+      );
     });
 
     it("should_throwError_when_apiCallFailed", async () => {

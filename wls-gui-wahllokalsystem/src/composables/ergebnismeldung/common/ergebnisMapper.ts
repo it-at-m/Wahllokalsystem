@@ -1,23 +1,29 @@
 import type {
   BegruendungDTO,
+  BezirkUndWahlID,
   BezirkUndWahlIDStapelartDTO,
   ErgebnisDTO,
   ErgebnisseDTO,
+  StimmzettelumschlaegeDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
 import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/common/BezirkUndWahlIDStapelArt.ts";
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum,
   GetErgebnisseStapelartEnum,
   PostErgebnisseStapelartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
+
 export function useErgebnisMapper() {
-  function toModel(dto: ErgebnisseDTO): Ergebnisse {
+  function toErgebnisseModel(dto: ErgebnisseDTO): Ergebnisse {
     return {
       bezirkUndWahlIDStapelart: _dtoBezirkUndWahlIDStapelartToModel(
         dto.bezirkUndWahlIDStapelart
@@ -26,7 +32,7 @@ export function useErgebnisMapper() {
     };
   }
 
-  function toDto(model: Ergebnisse): ErgebnisseDTO {
+  function toErgebnisseDto(model: Ergebnisse): ErgebnisseDTO {
     return {
       bezirkUndWahlIDStapelart: _modelBezirkUndWahlIDStapelartToDto(
         model.bezirkUndWahlIDStapelart
@@ -144,6 +150,42 @@ export function useErgebnisMapper() {
       nachzaehlung: model.nachzaehlung,
       unstimmigkeiten: model.unstimmigkeiten,
     };
+  }
+
+  function toStimmzettelumschlaegeDto(
+    model: Stimmzettelumschlaege,
+    wahlID: string,
+    wahlbezirkID: string
+  ): StimmzettelumschlaegeDTO {
+    const dto: StimmzettelumschlaegeDTO = {
+      bezirkUndWahlID: _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
+        wahlID,
+        wahlbezirkID
+      ),
+      anzahlWaehler: model.anzahlWaehler != null ? model.anzahlWaehler : 0,
+    };
+
+    if (model.urneneroeffnungsUhrzeit) {
+      dto.urneneroeffnungsUhrzeit = toYyyyMmDdWithTimeWithoutTimezoneOffset(
+        model.urneneroeffnungsUhrzeit
+      );
+    }
+
+    return dto;
+  }
+
+  function toStimmzettelumschlaegeModel(
+    dto: StimmzettelumschlaegeDTO
+  ): Stimmzettelumschlaege {
+    const model: Stimmzettelumschlaege = {
+      anzahlWaehler: dto.anzahlWaehler != null ? dto.anzahlWaehler : 0,
+    };
+
+    if (dto.urneneroeffnungsUhrzeit) {
+      model.urneneroeffnungsUhrzeit = new Date(dto.urneneroeffnungsUhrzeit);
+    }
+
+    return model;
   }
 
   function _dtoBezirkUndWahlIDStapelartToModel(
@@ -268,12 +310,24 @@ export function useErgebnisMapper() {
     }));
   }
 
+  function _wahlIDAndWahlbezirkIDToBezirkUndWahlID(
+    wahlID: string,
+    wahlbezirkID: string
+  ): BezirkUndWahlID {
+    return {
+      wahlID: wahlID,
+      wahlbezirkID: wahlbezirkID,
+    };
+  }
+
   return {
-    toModel,
-    toDto,
+    toErgebnisseModel,
+    toErgebnisseDto,
     toGetErgebnisseStapelartEnum,
     toPostErgebnisseStapelartEnum,
     toBegruendungModel,
     toBegruendungDto,
+    toStimmzettelumschlaegeDto,
+    toStimmzettelumschlaegeModel,
   };
 }

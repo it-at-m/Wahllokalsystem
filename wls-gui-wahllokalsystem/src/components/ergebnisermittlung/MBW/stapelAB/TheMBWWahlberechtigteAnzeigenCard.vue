@@ -15,7 +15,7 @@ import { storeToRefs } from "pinia";
 import { onActivated, ref } from "vue";
 
 import TheMbwWahlberechtigteAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenTable.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const props = defineProps<{

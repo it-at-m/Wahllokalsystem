@@ -10,7 +10,7 @@ import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
@@ -31,6 +31,15 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
     postSchnellmeldung: mockDefinitions.postSchnellmeldung,
   }),
 }));
+vi.mock(
+  "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts",
+  () => ({
+    useMbwErgebnisAndWahlvorschlagMapper: () => ({
+      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse:
+        mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse,
+    }),
+  })
+);
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
   useWahlvorschlaegeService: () => ({
     getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
@@ -42,15 +51,6 @@ vi.mock("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts", () => ({
       mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
   }),
 }));
-vi.mock(
-  "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts",
-  () => ({
-    useMbwErgebnisAndWahlvorschlagMapper: () => ({
-      mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse:
-        mockDefinitions.mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse,
-    }),
-  })
-);
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenActions: {

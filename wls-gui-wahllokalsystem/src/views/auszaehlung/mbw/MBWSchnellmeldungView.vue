@@ -56,7 +56,7 @@ import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/M
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

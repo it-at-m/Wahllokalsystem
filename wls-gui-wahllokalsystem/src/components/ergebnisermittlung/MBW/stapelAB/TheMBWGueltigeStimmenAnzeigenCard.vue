@@ -14,7 +14,7 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/M
 import { onActivated, ref } from "vue";
 
 import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 
 const props = defineProps<{
   wahlbezirkId: string;

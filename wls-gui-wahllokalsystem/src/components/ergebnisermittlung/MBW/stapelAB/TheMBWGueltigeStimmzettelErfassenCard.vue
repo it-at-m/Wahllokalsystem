@@ -27,7 +27,7 @@ import { ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,

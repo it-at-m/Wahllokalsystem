@@ -13,7 +13,7 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import TheMBWGueltigeStimmzettelErfassenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenCard.vue";
-import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 
 const route = useRoute();
 

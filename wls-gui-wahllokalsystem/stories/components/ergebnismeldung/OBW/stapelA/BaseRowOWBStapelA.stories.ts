@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
+import BaseRowObwStapelA from "@/components/ergebnismeldung/OBW/stapelA/BaseRowOBWStapelA.vue";
 
 const meta = {
   component: BaseRowObwStapelA,

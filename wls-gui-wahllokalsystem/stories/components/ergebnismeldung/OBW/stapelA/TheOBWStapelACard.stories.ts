@@ -5,7 +5,7 @@ import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 
-import TheOBWStapelACard from "@/components/ergebnisermittlung/OBW/stapelA/TheOBWStapelACard.vue";
+import TheOBWStapelACard from "@/components/ergebnismeldung/OBW/stapelA/TheOBWStapelACard.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";

@@ -5,8 +5,8 @@ import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { delay, http, HttpResponse } from "msw";
 
-import TheOBWStapelCErfassungCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
-import pinia from "@/plugins/pinia";
+import TheOBWStapelCErfassungCard from "@/components/ergebnismeldung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
+import pinia from "@/plugins/pinia.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";

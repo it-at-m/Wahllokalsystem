@@ -53,7 +53,7 @@
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseRowObwStapelA from "@/components/ergebnisermittlung/OBW/stapelA/BaseRowOBWStapelA.vue";
+import BaseRowObwStapelA from "@/components/ergebnismeldung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useOBWStapelAUtils } from "@/composables/ergebnismeldung/OBW/obwStapelAUtils.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";

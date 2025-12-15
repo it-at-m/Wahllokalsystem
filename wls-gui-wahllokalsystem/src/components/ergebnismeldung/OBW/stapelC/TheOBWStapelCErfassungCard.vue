@@ -65,8 +65,8 @@ import { computed, onMounted, ref, useTemplateRef } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.vue";
-import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
-import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
+import BaseRowStapelC from "@/components/ergebnismeldung/OBW/stapelC/BaseRowStapelC.vue";
+import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnismeldung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";

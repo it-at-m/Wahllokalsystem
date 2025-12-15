@@ -20,9 +20,9 @@ import {
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
-const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
-
 export function useErgebnisMapper() {
+  const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
+
   function toErgebnisseModel(dto: ErgebnisseDTO): Ergebnisse {
     return {
       bezirkUndWahlIDStapelart: _dtoBezirkUndWahlIDStapelartToModel(

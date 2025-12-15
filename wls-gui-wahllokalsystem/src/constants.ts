@@ -1,8 +1,5 @@
 export const ROUTES_HOME = "home";
-export const EXAMPLE_ROUTES_NEWROUTE = "newroute";
 export const EXAMPLE_ROUTES_NOTFOUND = "404";
-export const EXAMPLE_ROUTES_DYNAMIC = "dynamic";
-export const EXAMPLE_VALIDATION = "validation-example";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_STIMMABGABE = "stimmabgabe";
@@ -11,7 +8,6 @@ export const ROUTE_BEGINN_STIMMABGABE = "beginnStimmabgabe";
 export const ROUTE_ERFASSUNG_WAHLBRIEFE = "erfassungWahlbriefe";
 export const ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS = "waehlerverzeichnis";
 export const ROUTE_WAHLBRIEFE_ZULASSEN = "wahlbriefzulassung";
-export const ROUTE_ERGEBNISERMITTLUNG = "ergebnisermittlung";
 export const ROUTE_STIMMABGABEVERMERKE = "stimmabgabevermerke";
 export const ROUTE_WAHLSCHEINE = "wahlscheine";
 export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
@@ -23,9 +19,6 @@ export const ROUTE_STAPEL_D = "stapelD";
 export const ROUTE_SCHNELLMELDUNG = "schnellmeldung";
 export const ROUTE_STAPEL_BC = "stapelBC";
 export const ROUTE_NIEDERSCHRIFT = "niederschrift";
-
-export const TOAST = "toast";
-export const PRINT_EXAMPLE = "print-example";
 
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;

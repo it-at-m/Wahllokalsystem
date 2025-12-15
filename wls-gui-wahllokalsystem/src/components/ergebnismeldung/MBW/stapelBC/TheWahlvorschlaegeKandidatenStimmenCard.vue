@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnisermittlung/MbwErgebnisseAndWahlvorschlag.ts";
+import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { computed, onActivated, ref } from "vue";

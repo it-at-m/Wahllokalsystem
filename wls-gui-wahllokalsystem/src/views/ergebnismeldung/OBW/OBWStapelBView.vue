@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 
-import TheOBWStapelBCard from "@/components/ergebnisermittlung/OBW/stapelB/TheOBWStapelBCard.vue";
+import TheOBWStapelBCard from "@/components/ergebnismeldung/OBW/stapelB/TheOBWStapelBCard.vue";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

@@ -23,8 +23,8 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useDisplay } from "vuetify/framework";
 
-import TheOBWStapelCErfassungCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
-import TheOBWStapelCSummaryCard from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCSummaryCard.vue";
+import TheOBWStapelCErfassungCard from "@/components/ergebnismeldung/OBW/stapelC/TheOBWStapelCErfassungCard.vue";
+import TheOBWStapelCSummaryCard from "@/components/ergebnismeldung/OBW/stapelC/TheOBWStapelCSummaryCard.vue";
 import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 

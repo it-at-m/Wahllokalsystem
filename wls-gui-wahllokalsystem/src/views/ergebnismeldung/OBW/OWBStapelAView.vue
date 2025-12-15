@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
 
-import TheOWBStapelACard from "@/components/ergebnisermittlung/OBW/stapelA/TheOBWStapelACard.vue";
+import TheOWBStapelACard from "@/components/ergebnismeldung/OBW/stapelA/TheOBWStapelACard.vue";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

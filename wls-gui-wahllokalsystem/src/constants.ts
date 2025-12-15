@@ -1,5 +1,5 @@
 export const ROUTES_HOME = "home";
-export const EXAMPLE_ROUTES_NOTFOUND = "404";
+export const ROUTE_NOTFOUND = "404";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_STIMMABGABE = "stimmabgabe";

@@ -9,7 +9,7 @@
 import { useRoute, useRouter } from "vue-router";
 
 import TheOWBStapelACard from "@/components/ergebnisermittlung/OBW/stapelA/TheOBWStapelACard.vue";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -23,7 +23,7 @@ const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
   router.push({
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
   });
 }
 </script>

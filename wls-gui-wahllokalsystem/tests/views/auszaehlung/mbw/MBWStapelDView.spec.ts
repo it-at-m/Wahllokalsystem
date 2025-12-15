@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify";
 import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
@@ -43,7 +43,7 @@ describe("MBWStapelDView", () => {
     routes: [
       {
         path: "/",
-        name: EXAMPLE_ROUTES_NOTFOUND,
+        name: ROUTE_NOTFOUND,
         component: HomeView,
         meta: {},
       },

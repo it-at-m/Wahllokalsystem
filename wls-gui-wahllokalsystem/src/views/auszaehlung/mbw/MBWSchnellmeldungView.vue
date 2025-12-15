@@ -57,7 +57,7 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnisermittlung/MBW/stape
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnisermittlung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useMbwUtils } from "@/composables/ergebnisermittlung/mbwUtils.ts";
-import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
@@ -79,7 +79,7 @@ const isDruckenValid = ref<null | boolean>(true);
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
   router.push({
-    name: EXAMPLE_ROUTES_NOTFOUND,
+    name: ROUTE_NOTFOUND,
   });
 }
 

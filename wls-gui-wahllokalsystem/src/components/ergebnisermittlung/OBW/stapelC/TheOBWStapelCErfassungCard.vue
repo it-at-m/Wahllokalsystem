@@ -68,8 +68,8 @@ import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.
 import BaseRowStapelC from "@/components/ergebnisermittlung/OBW/stapelC/BaseRowStapelC.vue";
 import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnisermittlung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";
 import { useRules } from "@/composables/common/rules.ts";
-import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
 import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
+import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";
 
 const { orderedByNumIndexWithNullAtEnd } = useErgebnisUtils();
 const { minNumber, maxNumber } = useRules();

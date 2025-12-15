@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { useOBWStapelCUtils } from "@/composables/ergebnisermittlung/obwStapelCUtils.ts";
+import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { getWahlvorschlagTitle } = useWahlvorschlagUtils();

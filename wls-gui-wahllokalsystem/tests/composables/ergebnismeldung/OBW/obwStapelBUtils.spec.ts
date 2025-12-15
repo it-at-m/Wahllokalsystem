@@ -11,7 +11,7 @@ import {
 } from "vitest";
 import { computed } from "vue";
 
-import { useOBWStapelBUtils } from "@/composables/ergebnisermittlung/obwStapelBUtils.ts";
+import { useOBWStapelBUtils } from "@/composables/ergebnismeldung/OBW/obwStapelBUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({

@@ -9,39 +9,41 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Wahlvorbereitung_READ_Waehlerverzeichnis')")
-public interface WaehlerverzeichnisRepository extends CrudRepository<Waehlerverzeichnis, BezirkIDUndWaehlerverzeichnisNummer> {
+public interface WaehlerverzeichnisRepository
+    extends CrudRepository<Waehlerverzeichnis, BezirkIDUndWaehlerverzeichnisNummer> {
 
-    String CACHE = "WaehlerverzeichnisCACHE";
+  String CACHE = "WaehlerverzeichnisCACHE";
 
-    @Override
-    Iterable<Waehlerverzeichnis> findAll();
+  @Override
+  Iterable<Waehlerverzeichnis> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Waehlerverzeichnis> findById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Waehlerverzeichnis> findById(
+      BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.waehlerverzeichnisReference")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_Waehlerverzeichnis')")
-    <S extends Waehlerverzeichnis> S save(S waehlerverzeichnis);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.waehlerverzeichnisReference")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_Waehlerverzeichnis')")
+  <S extends Waehlerverzeichnis> S save(S waehlerverzeichnis);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
-    void deleteById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
+  void deleteById(BezirkIDUndWaehlerverzeichnisNummer bezirkIDUndWaehlerverzeichnisNummer);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.waehlerverzeichnisReference")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
-    void delete(Waehlerverzeichnis entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.waehlerverzeichnisReference")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
+  void delete(Waehlerverzeichnis entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
-    void deleteAll(Iterable<? extends Waehlerverzeichnis> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
+  void deleteAll(Iterable<? extends Waehlerverzeichnis> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_Waehlerverzeichnis')")
+  void deleteAll();
 }

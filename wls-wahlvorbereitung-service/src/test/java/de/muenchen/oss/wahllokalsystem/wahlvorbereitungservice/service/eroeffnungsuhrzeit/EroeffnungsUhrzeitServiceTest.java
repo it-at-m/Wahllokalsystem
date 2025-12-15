@@ -22,109 +22,123 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class EroeffnungsUhrzeitServiceTest {
 
-    @Mock
-    EroeffnungsUhrzeitRepository eroeffnungsUhrzeitRepository;
+  @Mock EroeffnungsUhrzeitRepository eroeffnungsUhrzeitRepository;
 
-    @Mock
-    EroeffnungsUhrzeitModelMapper eroeffnungsUhrzeitModelMapper;
+  @Mock EroeffnungsUhrzeitModelMapper eroeffnungsUhrzeitModelMapper;
 
-    @Mock
-    EroeffnungsUhrzeitValidator eroeffnungsUhrzeitValidator;
+  @Mock EroeffnungsUhrzeitValidator eroeffnungsUhrzeitValidator;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    EroeffnungsUhrzeitService unitUnderTest;
+  @InjectMocks EroeffnungsUhrzeitService unitUnderTest;
 
-    @Nested
-    class GetEroeffnungsUhrzeit {
+  @Nested
+  class GetEroeffnungsUhrzeit {
 
-        @Test
-        void should_returnEroeffnungsuhrzeit_when_givenValidWahlbezirkID() {
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_returnEroeffnungsuhrzeit_when_givenValidWahlbezirkID() {
+      val wahlbezirkID = "wahlbezirkID";
 
-            val mockedRepoResponse = new EroeffnungsUhrzeit();
-            val mockedMappedRepoResponseAsModel = EroeffnungsUhrzeitModel.builder().build();
+      val mockedRepoResponse = new EroeffnungsUhrzeit();
+      val mockedMappedRepoResponseAsModel = EroeffnungsUhrzeitModel.builder().build();
 
-            Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(eroeffnungsUhrzeitRepository.findById(wahlbezirkID)).thenReturn(Optional.of(mockedRepoResponse));
-            Mockito.when(eroeffnungsUhrzeitModelMapper.toModel(mockedRepoResponse)).thenReturn(mockedMappedRepoResponseAsModel);
+      Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(eroeffnungsUhrzeitRepository.findById(wahlbezirkID))
+          .thenReturn(Optional.of(mockedRepoResponse));
+      Mockito.when(eroeffnungsUhrzeitModelMapper.toModel(mockedRepoResponse))
+          .thenReturn(mockedMappedRepoResponseAsModel);
 
-            val result = unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID);
+      val result = unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID);
 
-            Assertions.assertThat(result.get()).isEqualTo(mockedMappedRepoResponseAsModel);
-        }
-
-        @Test
-        void should_returnEmpty_when_noDataFound() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-            Mockito.when(eroeffnungsUhrzeitRepository.findById(wahlbezirkID)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID);
-
-            Assertions.assertThat(result).isEmpty();
-
-            Mockito.verify(eroeffnungsUhrzeitModelMapper, times(0)).toModel(any());
-        }
-
-        @Test
-        void should_throwException_when_validationFailed() {
-            val wahlbezirkID = "wahlbezirkID";
-
-            val mockedValidatorException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidatorException).when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID)).isSameAs(mockedValidatorException);
-        }
+      Assertions.assertThat(result.get()).isEqualTo(mockedMappedRepoResponseAsModel);
     }
 
-    @Nested
-    class SetEroeffnungsUhrzeit {
+    @Test
+    void should_returnEmpty_when_noDataFound() {
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_saveEroeffnungsuhrzeit_when_givenValidModel() {
-            val modelToSave = EroeffnungsUhrzeitModel.builder().build();
+      Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validWahlbezirkIDOrThrow(wahlbezirkID);
+      Mockito.when(eroeffnungsUhrzeitRepository.findById(wahlbezirkID))
+          .thenReturn(Optional.empty());
 
-            val mockedModelAsEntity = new EroeffnungsUhrzeit();
-            Mockito.when(eroeffnungsUhrzeitModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
+      val result = unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID);
 
-            Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validModelToSetOrThrow(modelToSave);
+      Assertions.assertThat(result).isEmpty();
 
-            unitUnderTest.setEroeffnungsUhrzeit(modelToSave);
-
-            Mockito.verify(eroeffnungsUhrzeitRepository).save(mockedModelAsEntity);
-        }
-
-        @Test
-        void should_notSaveEroeffnungsuhrzeit_when_validationFailed() {
-            val modelToSave = EroeffnungsUhrzeitModel.builder().build();
-
-            val mockedValidationException = new RuntimeException("validation failed");
-
-            Mockito.doThrow(mockedValidationException).when(eroeffnungsUhrzeitValidator).validModelToSetOrThrow(modelToSave);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setEroeffnungsUhrzeit(modelToSave)).isSameAs(mockedValidationException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_savingFailed() {
-            val modelToSave = EroeffnungsUhrzeitModel.builder().build();
-
-            val mockedModelAsEntity = new EroeffnungsUhrzeit();
-            val mockedSaveException = new RuntimeException("fail on save");
-            val mockedFactoryException = TechnischeWlsException.withCode("code").buildWithMessage("message");
-
-            Mockito.when(eroeffnungsUhrzeitModelMapper.toEntity(modelToSave)).thenReturn(mockedModelAsEntity);
-            Mockito.doThrow(mockedSaveException).when(eroeffnungsUhrzeitRepository).save(mockedModelAsEntity);
-            Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validModelToSetOrThrow(modelToSave);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setEroeffnungsUhrzeit(modelToSave)).usingRecursiveComparison()
-                    .isSameAs(mockedFactoryException);
-        }
+      Mockito.verify(eroeffnungsUhrzeitModelMapper, times(0)).toModel(any());
     }
+
+    @Test
+    void should_throwException_when_validationFailed() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      val mockedValidatorException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidatorException)
+          .when(eroeffnungsUhrzeitValidator)
+          .validWahlbezirkIDOrThrow(wahlbezirkID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getEroeffnungsUhrzeit(wahlbezirkID))
+          .isSameAs(mockedValidatorException);
+    }
+  }
+
+  @Nested
+  class SetEroeffnungsUhrzeit {
+
+    @Test
+    void should_saveEroeffnungsuhrzeit_when_givenValidModel() {
+      val modelToSave = EroeffnungsUhrzeitModel.builder().build();
+
+      val mockedModelAsEntity = new EroeffnungsUhrzeit();
+      Mockito.when(eroeffnungsUhrzeitModelMapper.toEntity(modelToSave))
+          .thenReturn(mockedModelAsEntity);
+
+      Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validModelToSetOrThrow(modelToSave);
+
+      unitUnderTest.setEroeffnungsUhrzeit(modelToSave);
+
+      Mockito.verify(eroeffnungsUhrzeitRepository).save(mockedModelAsEntity);
+    }
+
+    @Test
+    void should_notSaveEroeffnungsuhrzeit_when_validationFailed() {
+      val modelToSave = EroeffnungsUhrzeitModel.builder().build();
+
+      val mockedValidationException = new RuntimeException("validation failed");
+
+      Mockito.doThrow(mockedValidationException)
+          .when(eroeffnungsUhrzeitValidator)
+          .validModelToSetOrThrow(modelToSave);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setEroeffnungsUhrzeit(modelToSave))
+          .isSameAs(mockedValidationException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_savingFailed() {
+      val modelToSave = EroeffnungsUhrzeitModel.builder().build();
+
+      val mockedModelAsEntity = new EroeffnungsUhrzeit();
+      val mockedSaveException = new RuntimeException("fail on save");
+      val mockedFactoryException =
+          TechnischeWlsException.withCode("code").buildWithMessage("message");
+
+      Mockito.when(eroeffnungsUhrzeitModelMapper.toEntity(modelToSave))
+          .thenReturn(mockedModelAsEntity);
+      Mockito.doThrow(mockedSaveException)
+          .when(eroeffnungsUhrzeitRepository)
+          .save(mockedModelAsEntity);
+      Mockito.doNothing().when(eroeffnungsUhrzeitValidator).validModelToSetOrThrow(modelToSave);
+      Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setEroeffnungsUhrzeit(modelToSave))
+          .usingRecursiveComparison()
+          .isSameAs(mockedFactoryException);
+    }
+  }
 }

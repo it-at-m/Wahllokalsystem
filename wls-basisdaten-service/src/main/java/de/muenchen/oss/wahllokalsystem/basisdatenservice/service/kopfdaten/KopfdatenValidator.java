@@ -11,12 +11,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KopfdatenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlIdUndWahlbezirkIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
-        if (bezirkUndWahlID == null || StringUtils.isEmpty(bezirkUndWahlID.getWahlID()) || StringUtils.isEmpty(bezirkUndWahlID.getWahlbezirkID()) ||
-                StringUtils.isBlank(bezirkUndWahlID.getWahlID()) || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID())) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlIdUndWahlbezirkIDOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
+    if (bezirkUndWahlID == null
+        || StringUtils.isEmpty(bezirkUndWahlID.getWahlID())
+        || StringUtils.isEmpty(bezirkUndWahlID.getWahlbezirkID())
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlID())
+        || StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID())) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETKOPFDATEN_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
@@ -28,39 +27,26 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Kandidat {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  private UUID id;
 
-    @NotNull
-    @ToString.Include
-    private String identifikator;
+  @NotNull @ToString.Include private String identifikator;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "wahlvorschlagID")
-    @EqualsAndHashCode.Exclude
-    private Wahlvorschlag wahlvorschlag;
+  @ManyToOne
+  @NotNull @JoinColumn(name = "wahlvorschlagID")
+  @EqualsAndHashCode.Exclude
+  private Wahlvorschlag wahlvorschlag;
 
-    @NotNull
-    @ToString.Include
-    private String name;
+  @NotNull @ToString.Include private String name;
 
-    @NotNull
-    @ToString.Include
-    private long listenposition;
+  @NotNull @ToString.Include private long listenposition;
 
-    @NotNull
-    @ToString.Include
-    private boolean direktkandidat;
+  @NotNull @ToString.Include private boolean direktkandidat;
 
-    @NotNull
-    @ToString.Include
-    private long tabellenSpalteInNiederschrift;
+  @NotNull @ToString.Include private long tabellenSpalteInNiederschrift;
 
-    @NotNull
-    @ToString.Include
-    private boolean einzelbewerber;
+  @NotNull @ToString.Include private boolean einzelbewerber;
 }

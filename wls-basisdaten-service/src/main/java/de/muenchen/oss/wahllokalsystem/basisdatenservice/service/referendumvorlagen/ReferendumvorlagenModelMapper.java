@@ -10,14 +10,15 @@ import org.mapstruct.Mapping;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface ReferendumvorlagenModelMapper {
 
-    BezirkUndWahlID toBezirkUndWahlID(ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel);
+  BezirkUndWahlID toBezirkUndWahlID(
+      ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel);
 
-    ReferendumvorlagenModel toModel(Referendumvorlagen entity);
+  ReferendumvorlagenModel toModel(Referendumvorlagen entity);
 
-    @Mapping(target = "id", ignore = true)
-    Referendumvorlagen toEntity(ReferendumvorlagenModel model, BezirkUndWahlID bezirkUndWahlID);
+  @Mapping(target = "id", ignore = true)
+  Referendumvorlagen toEntity(ReferendumvorlagenModel model, BezirkUndWahlID bezirkUndWahlID);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "referendumvorlagen", ignore = true)
-    Referendumvorlage toEntity(ReferendumvorlageModel model);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "referendumvorlagen", ignore = true)
+  Referendumvorlage toEntity(ReferendumvorlageModel model);
 }

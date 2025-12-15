@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface ReferendumvorlagenClientMapper {
-    ReferendumvorlagenModel toModel(ReferendumvorlagenDTO referendumvorlagenDTO);
+  ReferendumvorlagenModel toModel(ReferendumvorlagenDTO referendumvorlagenDTO);
 
-    ReferendumvorlageModel toModel(ReferendumvorlageDTO referendumvorlageDTO);
+  ReferendumvorlageModel toModel(ReferendumvorlageDTO referendumvorlageDTO);
 }

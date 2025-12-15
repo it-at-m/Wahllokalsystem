@@ -8,6 +8,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -34,127 +35,165 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class WahllokalBenutzerControllerIntegrationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @AfterEach
-    void teardown() {
-        reset();
+  @AfterEach
+  void teardown() {
+    reset();
+  }
+
+  @Nested
+  class GenerateWahllokalbenutzer {
+
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val invalidWahltagID = " ";
+      val request =
+          post("/businessActions/generateWahllokalbenutzer/" + invalidWahltagID).with(csrf());
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.MISSING_ARGUMENT.code(),
+              "WLS-ADMIN",
+              ExceptionConstants.MISSING_ARGUMENT.message());
+
+      val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val resultBodyAsWlsExceptionDTO =
+          objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
     }
 
-    @Nested
-    class GenerateWahllokalbenutzer {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER})
+    void should_returnOK_when_allRemoteClientsAreCalledSuccesfully() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf());
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER })
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val invalidWahltagID = " ";
-            val request = post("/businessActions/generateWahllokalbenutzer/" + invalidWahltagID).with(csrf());
+      val wahlbezirkeList =
+          List.of(
+              new WahlbezirkModel(
+                  "wahlbezirkID", WahlbezirkArtModel.UWB, "4711", LocalDate.now(), "0", "wahlID"));
+      stubFor(
+          WireMock.get("/businessActions/wahlbezirke/" + wahltagID)
+              .willReturn(createWireMockResponse(wahlbezirkeList, HttpStatus.OK)));
+      stubFor(
+          WireMock.post("/generateAndExportWahllokalbenutzer/" + wahltagID)
+              .willReturn(createWireMockResponse(HttpStatus.OK)));
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
+      api.perform(request).andExpect(status().isOk()).andReturn();
+    }
+  }
 
-            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
+  @Nested
+  class ExportWahllokalBenutzer {
 
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
-        }
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val invalidWahltagID = " ";
+      val request =
+          get("/businessActions/exportWahllokalBenutzer/" + invalidWahltagID).with(csrf());
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_GENERATEEXPORTWAHLLOKALBENUTZER })
-        void should_returnOK_when_allRemoteClientsAreCalledSuccesfully() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = post("/businessActions/generateWahllokalbenutzer/" + wahltagID).with(csrf());
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.MISSING_ARGUMENT.code(),
+              "WLS-ADMIN",
+              ExceptionConstants.MISSING_ARGUMENT.message());
 
-            val wahlbezirkeList = List.of(new WahlbezirkModel("wahlbezirkID", WahlbezirkArtModel.UWB, "4711", LocalDate.now(), "0", "wahlID"));
-            stubFor(WireMock.get("/businessActions/wahlbezirke/" + wahltagID).willReturn(createWireMockResponse(wahlbezirkeList, HttpStatus.OK)));
-            stubFor(WireMock.post("/generateAndExportWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
+      val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val resultBodyAsWlsExceptionDTO =
+          objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            api.perform(request).andExpect(status().isOk()).andReturn();
-        }
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
     }
 
-    @Nested
-    class ExportWahllokalBenutzer {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER})
+    void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = get("/businessActions/exportWahllokalBenutzer/" + wahltagID).with(csrf());
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER })
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val invalidWahltagID = " ";
-            val request = get("/businessActions/exportWahllokalBenutzer/" + invalidWahltagID).with(csrf());
+      stubFor(
+          WireMock.get("/exportWahllokalbenutzer/" + wahltagID)
+              .willReturn(createWireMockResponse(HttpStatus.OK)));
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
+      api.perform(request).andExpect(status().isOk()).andReturn();
+    }
+  }
 
-            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
+  @Nested
+  class DeleteWahllokalBenutzer {
 
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
-        }
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_DELETEWAHLLOKALBENUTZER})
+    void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val invalidWahltagID = " ";
+      val request =
+          post("/businessActions/deleteWahllokalBenutzer/" + invalidWahltagID).with(csrf());
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_EXPORTWAHLLOKALBENUTZER })
-        void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = get("/businessActions/exportWahllokalBenutzer/" + wahltagID).with(csrf());
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.MISSING_ARGUMENT.code(),
+              "WLS-ADMIN",
+              ExceptionConstants.MISSING_ARGUMENT.message());
 
-            stubFor(WireMock.get("/exportWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
+      val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val resultBodyAsWlsExceptionDTO =
+          objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            api.perform(request).andExpect(status().isOk()).andReturn();
-        }
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+      Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
     }
 
-    @Nested
-    class DeleteWahllokalBenutzer {
+    @Test
+    @WithMockUser(authorities = {Authorities.ADMIN_DELETEWAHLLOKALBENUTZER})
+    void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
+      val wahltagID = "wahltagID";
+      val request = post("/businessActions/deleteWahllokalBenutzer/" + wahltagID).with(csrf());
 
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLLOKALBENUTZER })
-        void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
-            val invalidWahltagID = " ";
-            val request = post("/businessActions/deleteWahllokalBenutzer/" + invalidWahltagID).with(csrf());
+      stubFor(
+          WireMock.delete("/deleteWahllokalbenutzer/" + wahltagID)
+              .willReturn(createWireMockResponse(HttpStatus.OK)));
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.MISSING_ARGUMENT.code(),
-                    "WLS-ADMIN", ExceptionConstants.MISSING_ARGUMENT.message());
-
-            val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val resultBodyAsWlsExceptionDTO = objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(resultBodyAsWlsExceptionDTO.message()).isNotNull();
-        }
-
-        @Test
-        @WithMockUser(authorities = { Authorities.ADMIN_DELETEWAHLLOKALBENUTZER })
-        void should_returnOK_when_remoteClientIsCalledSuccesfully() throws Exception {
-            val wahltagID = "wahltagID";
-            val request = post("/businessActions/deleteWahllokalBenutzer/" + wahltagID).with(csrf());
-
-            stubFor(WireMock.delete("/deleteWahllokalbenutzer/" + wahltagID).willReturn(createWireMockResponse(HttpStatus.OK)));
-
-            api.perform(request).andExpect(status().isOk()).andReturn();
-        }
+      api.perform(request).andExpect(status().isOk()).andReturn();
     }
+  }
 
-    private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
-        return aResponse()
-                .withStatus(responseStatus.value());
-    }
+  private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
+    return aResponse().withStatus(responseStatus.value());
+  }
 
-    private ResponseDefinitionBuilder createWireMockResponse(final Object responseBody, final HttpStatus responseStatus) throws Exception {
-        return aResponse()
-                .withBody(objectMapper.writeValueAsString(responseBody))
-                .withHeader("Content-Type", "application/json")
-                .withStatus(responseStatus.value());
-    }
+  private ResponseDefinitionBuilder createWireMockResponse(
+      final Object responseBody, final HttpStatus responseStatus) throws Exception {
+    return aResponse()
+        .withBody(objectMapper.writeValueAsString(responseBody))
+        .withHeader("Content-Type", "application/json")
+        .withStatus(responseStatus.value());
+  }
 }

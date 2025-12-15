@@ -15,15 +15,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WahlUndBezirkIDUndMeldungsart implements Serializable {
 
-    @NotBlank
-    @Size(max = 1024)
-    private String wahlbezirkID;
+  @NotBlank @Size(max = 1024) private String wahlbezirkID;
 
-    @NotBlank
-    @Size(max = 1024)
-    private String wahlID;
+  @NotBlank @Size(max = 1024) private String wahlID;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Meldungsart meldungsart;
+  @NotNull @Enumerated(EnumType.STRING)
+  private Meldungsart meldungsart;
 }

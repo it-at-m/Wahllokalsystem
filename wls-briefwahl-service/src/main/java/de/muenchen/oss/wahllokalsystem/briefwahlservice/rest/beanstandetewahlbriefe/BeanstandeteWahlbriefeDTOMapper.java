@@ -7,9 +7,11 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BeanstandeteWahlbriefeDTOMapper {
 
-    BeanstandeteWahlbriefeModel toCreateModel(BeanstandeteWahlbriefeCreateDTO dto, String wahlbezirkID, Long waehlerverzeichnisNummer);
+  BeanstandeteWahlbriefeModel toCreateModel(
+      BeanstandeteWahlbriefeCreateDTO dto, String wahlbezirkID, Long waehlerverzeichnisNummer);
 
-    BeanstandeteWahlbriefeReferenceModel toReferenceModel(String wahlbezirkID, Long waehlerverzeichnisNummer);
+  BeanstandeteWahlbriefeReferenceModel toReferenceModel(
+      String wahlbezirkID, Long waehlerverzeichnisNummer);
 
-    BeanstandeteWahlbriefeDTO toDTO(BeanstandeteWahlbriefeModel model);
+  BeanstandeteWahlbriefeDTO toDTO(BeanstandeteWahlbriefeModel model);
 }

@@ -12,18 +12,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlscheineValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (bezirkUndWahlId == null || StringUtils.isBlank(bezirkUndWahlId.getWahlID()) || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
-            throw exceptionOnInvalid;
-        }
+  public void validBezirkUndWahlIdOrThrow(
+      final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (bezirkUndWahlId == null
+        || StringUtils.isBlank(bezirkUndWahlId.getWahlID())
+        || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
+      throw exceptionOnInvalid;
     }
+  }
 
-    public void validWahlscheineOrThrow(final WahlscheineModel wahlscheineModel) {
-        if (wahlscheineModel == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlscheineOrThrow(final WahlscheineModel wahlscheineModel) {
+    if (wahlscheineModel == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

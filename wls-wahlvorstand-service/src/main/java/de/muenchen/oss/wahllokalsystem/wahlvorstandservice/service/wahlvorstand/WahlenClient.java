@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface WahlenClient {
 
-    List<WahlModel> getWahlen(final KonfigurierterWahltagModel wahltag) throws WlsException;
+  List<WahlModel> getWahlen(final KonfigurierterWahltagModel wahltag) throws WlsException;
 }

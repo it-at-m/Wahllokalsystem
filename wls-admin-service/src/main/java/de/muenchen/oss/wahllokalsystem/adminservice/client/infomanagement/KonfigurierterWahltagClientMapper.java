@@ -11,17 +11,19 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface KonfigurierterWahltagClientMapper {
 
-    @Mapping(target = "wahltagStatus", source = "active")
-    KonfigurierterWahltagDTO toDto(KonfigurierterWahltagModel model);
+  @Mapping(target = "wahltagStatus", source = "active")
+  KonfigurierterWahltagDTO toDto(KonfigurierterWahltagModel model);
 
-    @Mapping(target = "active", source = "wahltagStatus")
-    KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO dto);
+  @Mapping(target = "active", source = "wahltagStatus")
+  KonfigurierterWahltagModel toModel(KonfigurierterWahltagDTO dto);
 
-    default KonfigurierterWahltagDTO.WahltagStatusEnum mapModelBooleanActiveToWahltagStatusEnumString(boolean active) {
-        return active ? AKTIV : INAKTIV;
-    }
+  default KonfigurierterWahltagDTO.WahltagStatusEnum mapModelBooleanActiveToWahltagStatusEnumString(
+      boolean active) {
+    return active ? AKTIV : INAKTIV;
+  }
 
-    default boolean mapWahltagStatusEnumStringToModelBooleanActive(KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatusEnum) {
-        return wahltagStatusEnum == AKTIV;
-    }
+  default boolean mapWahltagStatusEnumStringToModelBooleanActive(
+      KonfigurierterWahltagDTO.WahltagStatusEnum wahltagStatusEnum) {
+    return wahltagStatusEnum == AKTIV;
+  }
 }

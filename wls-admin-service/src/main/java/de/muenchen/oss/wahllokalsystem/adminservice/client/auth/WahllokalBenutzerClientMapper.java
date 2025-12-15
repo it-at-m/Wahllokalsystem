@@ -12,16 +12,18 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface WahllokalBenutzerClientMapper {
-    ObjectMapper objectMapper = new ObjectMapper();
+  ObjectMapper objectMapper = new ObjectMapper();
 
-    @Mapping(target = "wbidWahlnummer", source = "wbid_wahlnummer")
-    WahllokalUserInfoDTO toDTO(WahllokalBenutzerModel wahllokalBenutzerModel);
+  @Mapping(target = "wbidWahlnummer", source = "wbid_wahlnummer")
+  WahllokalUserInfoDTO toDTO(WahllokalBenutzerModel wahllokalBenutzerModel);
 
-    default String mapTripleToJsonAsString(final List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer) throws JsonProcessingException {
-        val root = objectMapper.createObjectNode();
-        root.set("wbid_wahlnummer", objectMapper.valueToTree(wbid_wahlnummer));
-        return objectMapper.writeValueAsString(root);
-    }
+  default String mapTripleToJsonAsString(
+      final List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer)
+      throws JsonProcessingException {
+    val root = objectMapper.createObjectNode();
+    root.set("wbid_wahlnummer", objectMapper.valueToTree(wbid_wahlnummer));
+    return objectMapper.writeValueAsString(root);
+  }
 
-    List<WahllokalUserInfoDTO> toDTO(List<WahllokalBenutzerModel> wahllokalBenutzerModelList);
+  List<WahllokalUserInfoDTO> toDTO(List<WahllokalBenutzerModel> wahllokalBenutzerModelList);
 }

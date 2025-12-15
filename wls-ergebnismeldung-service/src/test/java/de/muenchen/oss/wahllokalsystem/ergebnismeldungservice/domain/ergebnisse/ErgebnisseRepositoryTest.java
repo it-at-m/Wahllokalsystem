@@ -15,21 +15,24 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = TestConstants.SPRING_TEST_PROFILE)
 public class ErgebnisseRepositoryTest {
 
-    @Autowired
-    private ErgebnisseRepository ergebnisseRepository;
+  @Autowired private ErgebnisseRepository ergebnisseRepository;
 
-    @Test
-    void should_returnErgebnisseList_when_getAllErgebnisseIsCalled() {
-        val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
-        val ergebnis1 = new Ergebnis(null, null, null, 1, null);
-        val ergebnisList = List.of(ergebnis1);
+  @Test
+  void should_returnErgebnisseList_when_getAllErgebnisseIsCalled() {
+    val bezirkUndWahlIDStapelart =
+        new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", Stapelart.LTW_BZW_A);
+    val ergebnis1 = new Ergebnis(null, null, null, 1, null);
+    val ergebnisList = List.of(ergebnis1);
 
-        val ergebnisseToSaveInRepo = new Ergebnisse(bezirkUndWahlIDStapelart, ergebnisList);
+    val ergebnisseToSaveInRepo = new Ergebnisse(bezirkUndWahlIDStapelart, ergebnisList);
 
-        ergebnisseRepository.save(ergebnisseToSaveInRepo);
+    ergebnisseRepository.save(ergebnisseToSaveInRepo);
 
-        List<Ergebnisse> result = ergebnisseRepository.findByWahlbezirkIDAndWahlD("wahlbezirkID", "wahlID");
+    List<Ergebnisse> result =
+        ergebnisseRepository.findByWahlbezirkIDAndWahlD("wahlbezirkID", "wahlID");
 
-        Assertions.assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(ergebnisseToSaveInRepo);
-    }
+    Assertions.assertThat(result.get(0))
+        .usingRecursiveComparison()
+        .isEqualTo(ergebnisseToSaveInRepo);
+  }
 }

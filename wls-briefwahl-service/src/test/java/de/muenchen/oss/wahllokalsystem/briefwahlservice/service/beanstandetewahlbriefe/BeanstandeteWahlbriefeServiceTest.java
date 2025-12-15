@@ -18,98 +18,105 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BeanstandeteWahlbriefeServiceTest {
 
-    @Mock
-    BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
+  @Mock BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
 
-    @Mock
-    BeanstandeteWahlbriefeModelMapper beanstandeteWahlbriefeModelMapper;
+  @Mock BeanstandeteWahlbriefeModelMapper beanstandeteWahlbriefeModelMapper;
 
-    @Mock
-    BeanstandeteWahlbriefeValidator beanstandeteWahlbriefeValidator;
+  @Mock BeanstandeteWahlbriefeValidator beanstandeteWahlbriefeValidator;
 
-    @InjectMocks
-    BeanstandeteWahlbriefeService service;
+  @InjectMocks BeanstandeteWahlbriefeService service;
 
-    @Nested
-    class GetBeanstandeteWahlbriefe {
+  @Nested
+  class GetBeanstandeteWahlbriefe {
 
-        @Test
-        void should_returnNull_when_noDataFound() {
-            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
+    @Test
+    void should_returnNull_when_noDataFound() {
+      val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
 
-            val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
+      val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
 
-            Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
-            Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
+      Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
+      Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference))
+          .thenReturn(mappedEntityId);
+      Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId))
+          .thenReturn(Optional.empty());
 
-            val result = service.getBeanstandeteWahlbriefe(reference);
+      val result = service.getBeanstandeteWahlbriefe(reference);
 
-            Assertions.assertThat(result).isNull();
-        }
-
-        @Test
-        void should_returnBeanstandeteWahlbriefeModel_when_givenValidReference() {
-            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
-
-            val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
-            val entityFromRepo = new BeanstandeteWahlbriefe();
-            val mappedEntity = BeanstandeteWahlbriefeModel.builder().build();
-
-            Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
-            Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId)).thenReturn(Optional.of(entityFromRepo));
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
-
-            val result = service.getBeanstandeteWahlbriefe(reference);
-
-            Assertions.assertThat(result).isSameAs(mappedEntity);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_referenceIsInvalid() {
-            val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
-
-            val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
-
-            Mockito.doThrow(exceptionToThrow).when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
-
-            val exceptionThrown = Assertions.catchThrowable(() -> service.getBeanstandeteWahlbriefe(reference));
-
-            Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
-            Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).findById(Mockito.any());
-        }
-
+      Assertions.assertThat(result).isNull();
     }
 
-    @Nested
-    class SetBeanstandeteWahlbriefe {
-        @Test
-        void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
-            val invalidModel = BeanstandeteWahlbriefeModel.builder().build();
+    @Test
+    void should_returnBeanstandeteWahlbriefeModel_when_givenValidReference() {
+      val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
 
-            val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
+      val mappedEntityId = new BezirkIDUndWaehlerverzeichnisNummer();
+      val entityFromRepo = new BeanstandeteWahlbriefe();
+      val mappedEntity = BeanstandeteWahlbriefeModel.builder().build();
 
-            Mockito.doThrow(exceptionToThrow).when(beanstandeteWahlbriefeValidator).valideModelOrThrow(invalidModel);
+      Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideReferenceOrThrow(reference);
+      Mockito.when(beanstandeteWahlbriefeModelMapper.toEmbeddedId(reference))
+          .thenReturn(mappedEntityId);
+      Mockito.when(beanstandeteWahlbriefeRepository.findById(mappedEntityId))
+          .thenReturn(Optional.of(entityFromRepo));
+      Mockito.when(beanstandeteWahlbriefeModelMapper.toModel(entityFromRepo))
+          .thenReturn(mappedEntity);
 
-            val exceptionThrown = Assertions.catchException(() -> service.setBeanstandeteWahlbriefe(invalidModel));
+      val result = service.getBeanstandeteWahlbriefe(reference);
 
-            Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
-            Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).save(Mockito.any());
-        }
-
-        @Test
-        void should_saveBeanstandeteWahlbriefe_when_givenValidModel() {
-            val model = BeanstandeteWahlbriefeModel.builder().build();
-
-            val mappedEntityOfModel = new BeanstandeteWahlbriefe();
-
-            Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideModelOrThrow(model);
-            Mockito.when(beanstandeteWahlbriefeModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
-
-            service.setBeanstandeteWahlbriefe(model);
-
-            Mockito.verify(beanstandeteWahlbriefeRepository).save(mappedEntityOfModel);
-        }
+      Assertions.assertThat(result).isSameAs(mappedEntity);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_referenceIsInvalid() {
+      val reference = BeanstandeteWahlbriefeReferenceModel.builder().build();
+
+      val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
+
+      Mockito.doThrow(exceptionToThrow)
+          .when(beanstandeteWahlbriefeValidator)
+          .valideReferenceOrThrow(reference);
+
+      val exceptionThrown =
+          Assertions.catchThrowable(() -> service.getBeanstandeteWahlbriefe(reference));
+
+      Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
+      Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).findById(Mockito.any());
+    }
+  }
+
+  @Nested
+  class SetBeanstandeteWahlbriefe {
+    @Test
+    void should_notSaveBriefwahlvorbereitung_when_validationFailed() {
+      val invalidModel = BeanstandeteWahlbriefeModel.builder().build();
+
+      val exceptionToThrow = FachlicheWlsException.withCode("0815").buildWithMessage("upsi");
+
+      Mockito.doThrow(exceptionToThrow)
+          .when(beanstandeteWahlbriefeValidator)
+          .valideModelOrThrow(invalidModel);
+
+      val exceptionThrown =
+          Assertions.catchException(() -> service.setBeanstandeteWahlbriefe(invalidModel));
+
+      Assertions.assertThat(exceptionThrown).isSameAs(exceptionToThrow);
+      Mockito.verify(beanstandeteWahlbriefeRepository, Mockito.times(0)).save(Mockito.any());
+    }
+
+    @Test
+    void should_saveBeanstandeteWahlbriefe_when_givenValidModel() {
+      val model = BeanstandeteWahlbriefeModel.builder().build();
+
+      val mappedEntityOfModel = new BeanstandeteWahlbriefe();
+
+      Mockito.doNothing().when(beanstandeteWahlbriefeValidator).valideModelOrThrow(model);
+      Mockito.when(beanstandeteWahlbriefeModelMapper.toEntity(model))
+          .thenReturn(mappedEntityOfModel);
+
+      service.setBeanstandeteWahlbriefe(model);
+
+      Mockito.verify(beanstandeteWahlbriefeRepository).save(mappedEntityOfModel);
+    }
+  }
 }

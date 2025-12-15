@@ -36,215 +36,301 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DefaultElectionTypeValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    AWerteRepository aWerteRepo;
+  @Mock AWerteRepository aWerteRepo;
 
-    @Mock
-    ErgebnisseRepository ergebnisseRepo;
+  @Mock ErgebnisseRepository ergebnisseRepo;
 
-    @Mock
-    StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
+  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
 
-    @Mock
-    WahlscheineRepository wahlscheineRepo;
+  @Mock WahlscheineRepository wahlscheineRepo;
 
-    @Mock
-    AWerteService aWerteService;
+  @Mock AWerteService aWerteService;
 
-    @InjectMocks
-    DefaultElectionTypeValidator unitUnderTest;
+  @InjectMocks DefaultElectionTypeValidator unitUnderTest;
+
+  @Nested
+  class CheckValidation {
 
     @Nested
-    class CheckValidation {
+    class WithWahlbezirkArtBWB {
 
-        @Nested
-        class WithWahlbezirkArtBWB {
+      final WahlbezirkArtModel wahlbezirkArt = WahlbezirkArtModel.BWB;
 
-            final WahlbezirkArtModel wahlbezirkArt = WahlbezirkArtModel.BWB;
+      @Test
+      void should_returnTrue_when_stapelAndWahlscheineAreValid() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
 
-            @Test
-            void should_returnTrue_when_stapelAndWahlscheineAreValid() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedRepoWahlscheine = new Wahlscheine();
 
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedRepoWahlscheine = new Wahlscheine();
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(Optional.of(mockedRepoWahlscheine));
 
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(Optional.of(mockedRepoWahlscheine));
+        val result =
+            unitUnderTest.checkValidation(
+                wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
 
-                val result = unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
+        Assertions.assertThat(result).isTrue();
+      }
 
-                Assertions.assertThat(result).isTrue();
-            }
+      @Test
+      void should_throwFachlicheWlsException_when_requiredStapelArtIsMissing() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
 
-            @Test
-            void should_throwFachlicheWlsException_when_requiredStapelArtIsMissing() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+        val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A));
+        val mockedWlsException =
+            FachlicheWlsException.withCode("000")
+                .buildWithMessage("Required stapel art is missing");
 
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A));
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required stapel art is missing");
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(exceptionFactory.createFachlicheWlsException(any(ExceptionDataWrapper.class)))
+            .thenReturn(mockedWlsException);
 
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(exceptionFactory.createFachlicheWlsException(any(ExceptionDataWrapper.class)))
-                        .thenReturn(mockedWlsException);
+        Assertions.assertThatThrownBy(
+                () ->
+                    unitUnderTest.checkValidation(
+                        wahlbezirkArt,
+                        wahlbezirkID,
+                        wahlID,
+                        waehlerverzeichnisNummer,
+                        requiredStapel))
+            .isSameAs(mockedWlsException);
+      }
 
-                Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
-                        .isSameAs(mockedWlsException);
-            }
+      @Test
+      void should_throwFachlicheWlsException_when_noWahlscheineExists() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
 
-            @Test
-            void should_throwFachlicheWlsException_when_noWahlscheineExists() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedWlsException =
+            FachlicheWlsException.withCode("000")
+                .buildWithMessage("Required wahlscheine are missing");
 
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required wahlscheine are missing");
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(Optional.empty());
+        Mockito.when(
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.SENDERGEBNISSE_WAHLSCHEINE_UNVOLLSTAENDIG))
+            .thenReturn(mockedWlsException);
 
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(wahlscheineRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(Optional.empty());
-                Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SENDERGEBNISSE_WAHLSCHEINE_UNVOLLSTAENDIG))
-                        .thenReturn(mockedWlsException);
-
-                Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
-                        .isSameAs(mockedWlsException);
-            }
-        }
-
-        @Nested
-        class WithWahlbezirkArtUWB {
-
-            final WahlbezirkArtModel wahlbezirkArt = WahlbezirkArtModel.UWB;
-
-            @Test
-            void should_returnTrue_when_stapelStimmabgabevermerkeAndAWerteAreValid() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
-
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedStimmabgabevermerke = new Stimmabgabevermerke();
-                val mockedAWerte = new AWerte();
-
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                        .thenReturn(Optional.of(mockedStimmabgabevermerke));
-                Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(Optional.of(mockedAWerte));
-
-                val result = unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
-
-                Assertions.assertThat(result).isTrue();
-            }
-
-            @Test
-            void should_throwFachlicheWlsException_when_requiredStapelIsMissing() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
-
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A));
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required stapel art is missing");
-
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(exceptionFactory.createFachlicheWlsException(any(ExceptionDataWrapper.class)))
-                        .thenReturn(mockedWlsException);
-
-                Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
-                        .isSameAs(mockedWlsException);
-            }
-
-            @Test
-            void should_throwFachlicheWlsException_when_noStimmabgabevermerkeExists() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
-
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required stimmabgabevermerke are missing");
-
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                        .thenReturn(Optional.empty());
-                Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SENDERGEBNISSE_STIMMABGABEVERMERKE_UNVOLLSTAENDIG))
-                        .thenReturn(mockedWlsException);
-
-                Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
-                        .isSameAs(mockedWlsException);
-            }
-
-            @Test
-            void should_throwFachlicheWlsException_when_noAWerteExists() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
-
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedStimmabgabevermerke = new Stimmabgabevermerke();
-                val mockedWlsException = FachlicheWlsException.withCode("000").buildWithMessage("Required A-Werte are missing");
-
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                        .thenReturn(Optional.of(mockedStimmabgabevermerke));
-                Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID))).thenReturn(Optional.empty());
-                Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SENDERGEBNISSE_AWERTE_UNVOLLSTAENDIG))
-                        .thenReturn(mockedWlsException);
-
-                Assertions.assertThatThrownBy(
-                        () -> unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel))
-                        .isSameAs(mockedWlsException);
-            }
-
-            @Test
-            void should_returnTrue_when_aWerteExistsAfterLoadingThem() {
-                val wahlbezirkID = "wahlbezirkID";
-                val wahlID = "wahlID";
-                val waehlerverzeichnisNummer = 0L;
-                val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
-
-                val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A), createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-                val mockedStimmabgabevermerke = new Stimmabgabevermerke();
-                val mockedAWerte = new AWerte();
-                final Optional<AWerte> mockedNotFound = Optional.empty();
-
-                Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID))).thenReturn(mockedRepoErgebnisse);
-                Mockito.when(stimmabgabevermerkeRepo.findById(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer)))
-                        .thenReturn(Optional.of(mockedStimmabgabevermerke));
-                Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
-                        .thenReturn(mockedNotFound, Optional.of(mockedAWerte));
-
-                val result = unitUnderTest.checkValidation(wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
-
-                Assertions.assertThat(result).isTrue();
-
-                Mockito.verify(aWerteService).getAWerte(wahlbezirkID);
-            }
-
-        }
-
-        private Ergebnisse createErgebnisWithStapelArt(final Stapelart stapelart) {
-            val ergebnis = new Ergebnisse();
-
-            ergebnis.setBezirkUndWahlIDStapelart(new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", stapelart));
-
-            return ergebnis;
-        }
+        Assertions.assertThatThrownBy(
+                () ->
+                    unitUnderTest.checkValidation(
+                        wahlbezirkArt,
+                        wahlbezirkID,
+                        wahlID,
+                        waehlerverzeichnisNummer,
+                        requiredStapel))
+            .isSameAs(mockedWlsException);
+      }
     }
+
+    @Nested
+    class WithWahlbezirkArtUWB {
+
+      final WahlbezirkArtModel wahlbezirkArt = WahlbezirkArtModel.UWB;
+
+      @Test
+      void should_returnTrue_when_stapelStimmabgabevermerkeAndAWerteAreValid() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedAWerte = new AWerte();
+
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(
+                stimmabgabevermerkeRepo.findById(
+                    new BezirkIDUndWaehlerverzeichnisNummer(
+                        wahlbezirkID, waehlerverzeichnisNummer)))
+            .thenReturn(Optional.of(mockedStimmabgabevermerke));
+        Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(Optional.of(mockedAWerte));
+
+        val result =
+            unitUnderTest.checkValidation(
+                wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
+
+        Assertions.assertThat(result).isTrue();
+      }
+
+      @Test
+      void should_throwFachlicheWlsException_when_requiredStapelIsMissing() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+
+        val mockedRepoErgebnisse = List.of(createErgebnisWithStapelArt(Stapelart.BTW_A));
+        val mockedWlsException =
+            FachlicheWlsException.withCode("000")
+                .buildWithMessage("Required stapel art is missing");
+
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(exceptionFactory.createFachlicheWlsException(any(ExceptionDataWrapper.class)))
+            .thenReturn(mockedWlsException);
+
+        Assertions.assertThatThrownBy(
+                () ->
+                    unitUnderTest.checkValidation(
+                        wahlbezirkArt,
+                        wahlbezirkID,
+                        wahlID,
+                        waehlerverzeichnisNummer,
+                        requiredStapel))
+            .isSameAs(mockedWlsException);
+      }
+
+      @Test
+      void should_throwFachlicheWlsException_when_noStimmabgabevermerkeExists() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedWlsException =
+            FachlicheWlsException.withCode("000")
+                .buildWithMessage("Required stimmabgabevermerke are missing");
+
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(
+                stimmabgabevermerkeRepo.findById(
+                    new BezirkIDUndWaehlerverzeichnisNummer(
+                        wahlbezirkID, waehlerverzeichnisNummer)))
+            .thenReturn(Optional.empty());
+        Mockito.when(
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.SENDERGEBNISSE_STIMMABGABEVERMERKE_UNVOLLSTAENDIG))
+            .thenReturn(mockedWlsException);
+
+        Assertions.assertThatThrownBy(
+                () ->
+                    unitUnderTest.checkValidation(
+                        wahlbezirkArt,
+                        wahlbezirkID,
+                        wahlID,
+                        waehlerverzeichnisNummer,
+                        requiredStapel))
+            .isSameAs(mockedWlsException);
+      }
+
+      @Test
+      void should_throwFachlicheWlsException_when_noAWerteExists() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedWlsException =
+            FachlicheWlsException.withCode("000").buildWithMessage("Required A-Werte are missing");
+
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(
+                stimmabgabevermerkeRepo.findById(
+                    new BezirkIDUndWaehlerverzeichnisNummer(
+                        wahlbezirkID, waehlerverzeichnisNummer)))
+            .thenReturn(Optional.of(mockedStimmabgabevermerke));
+        Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(Optional.empty());
+        Mockito.when(
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.SENDERGEBNISSE_AWERTE_UNVOLLSTAENDIG))
+            .thenReturn(mockedWlsException);
+
+        Assertions.assertThatThrownBy(
+                () ->
+                    unitUnderTest.checkValidation(
+                        wahlbezirkArt,
+                        wahlbezirkID,
+                        wahlID,
+                        waehlerverzeichnisNummer,
+                        requiredStapel))
+            .isSameAs(mockedWlsException);
+      }
+
+      @Test
+      void should_returnTrue_when_aWerteExistsAfterLoadingThem() {
+        val wahlbezirkID = "wahlbezirkID";
+        val wahlID = "wahlID";
+        val waehlerverzeichnisNummer = 0L;
+        val requiredStapel = List.of(Stapelart.BTW_A, Stapelart.BTW_B_I_GUELTIG);
+
+        val mockedRepoErgebnisse =
+            List.of(
+                createErgebnisWithStapelArt(Stapelart.BTW_A),
+                createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedAWerte = new AWerte();
+        final Optional<AWerte> mockedNotFound = Optional.empty();
+
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
+            .thenReturn(mockedRepoErgebnisse);
+        Mockito.when(
+                stimmabgabevermerkeRepo.findById(
+                    new BezirkIDUndWaehlerverzeichnisNummer(
+                        wahlbezirkID, waehlerverzeichnisNummer)))
+            .thenReturn(Optional.of(mockedStimmabgabevermerke));
+        Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(mockedNotFound, Optional.of(mockedAWerte));
+
+        val result =
+            unitUnderTest.checkValidation(
+                wahlbezirkArt, wahlbezirkID, wahlID, waehlerverzeichnisNummer, requiredStapel);
+
+        Assertions.assertThat(result).isTrue();
+
+        Mockito.verify(aWerteService).getAWerte(wahlbezirkID);
+      }
+    }
+
+    private Ergebnisse createErgebnisWithStapelArt(final Stapelart stapelart) {
+      val ergebnis = new Ergebnisse();
+
+      ergebnis.setBezirkUndWahlIDStapelart(
+          new BezirkUndWahlIDStapelart("wahlbezirkID", "wahlID", stapelart));
+
+      return ergebnis;
+    }
+  }
 }

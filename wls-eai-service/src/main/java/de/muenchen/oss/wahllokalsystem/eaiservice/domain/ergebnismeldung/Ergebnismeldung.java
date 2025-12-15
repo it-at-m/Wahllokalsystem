@@ -25,38 +25,33 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 public class Ergebnismeldung extends BaseEntity {
 
-    @NotNull
-    private String wahlbezirkID;
+  @NotNull private String wahlbezirkID;
 
-    @NotNull
-    private String wahlID;
+  @NotNull private String wahlID;
 
-    @Enumerated(EnumType.STRING)
-    private Meldungsart meldungsart;
+  @Enumerated(EnumType.STRING)
+  private Meldungsart meldungsart;
 
-    @Embedded
-    private AWerte aWerte;
+  @Embedded private AWerte aWerte;
 
-    @Embedded
-    private BWerte bWerte;
+  @Embedded private BWerte bWerte;
 
-    @Embedded
-    private WahlbriefeWerte wahlbriefeWerte;
+  @Embedded private WahlbriefeWerte wahlbriefeWerte;
 
-    @ElementCollection
-    @CollectionTable(name = "ungueltigeStimmzettel", joinColumns = @JoinColumn(name = "ergebnismeldungID"))
-    private Set<UngueltigeStimmzettel> ungueltigeStimmzettels;
+  @ElementCollection
+  @CollectionTable(
+      name = "ungueltigeStimmzettel",
+      joinColumns = @JoinColumn(name = "ergebnismeldungID"))
+  private Set<UngueltigeStimmzettel> ungueltigeStimmzettels;
 
-    private Long ungueltigeStimmzettelAnzahl;
+  private Long ungueltigeStimmzettelAnzahl;
 
-    @ElementCollection
-    @CollectionTable(name = "ergebnisse", joinColumns = @JoinColumn(name = "ergebnismeldungID"))
-    private Set<Ergebnis> ergebnisse;
+  @ElementCollection
+  @CollectionTable(name = "ergebnisse", joinColumns = @JoinColumn(name = "ergebnismeldungID"))
+  private Set<Ergebnis> ergebnisse;
 
-    @Enumerated(EnumType.STRING)
-    private Wahlart wahlart;
+  @Enumerated(EnumType.STRING)
+  private Wahlart wahlart;
 
-    @CreationTimestamp
-    private LocalDateTime erstellungszeit;
-
+  @CreationTimestamp private LocalDateTime erstellungszeit;
 }

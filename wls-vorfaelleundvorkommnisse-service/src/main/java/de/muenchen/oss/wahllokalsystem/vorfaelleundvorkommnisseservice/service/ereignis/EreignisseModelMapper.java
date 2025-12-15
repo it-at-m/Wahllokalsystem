@@ -9,13 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface EreignisseModelMapper {
 
-    @Mapping(target = "ereignisse", source = "ereigniseintraege")
-    Ereignisse toEntity(EreignisseModel ereignisseModel);
+  @Mapping(target = "ereignisse", source = "ereigniseintraege")
+  Ereignisse toEntity(EreignisseModel ereignisseModel);
 
-    @Mapping(target = "ereigniseintraege", source = "ereignisse")
-    EreignisseModel toModel(final Ereignisse ereignisseEntity);
+  @Mapping(target = "ereigniseintraege", source = "ereignisse")
+  EreignisseModel toModel(final Ereignisse ereignisseEntity);
 
-    Ereignis toEntity(final EreignisModel ereignisModel);
+  Ereignis toEntity(final EreignisModel ereignisModel);
 
-    EreignisModel toModel(final Ereignis ereignisEntity);
+  EreignisModel toModel(final Ereignis ereignisEntity);
 }

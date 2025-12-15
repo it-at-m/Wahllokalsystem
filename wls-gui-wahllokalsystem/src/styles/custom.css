@@ -14,8 +14,8 @@
 .index-column {
   width: 150px;
 }
-.bottom-border-black tr:last-child td {
-  border-bottom: 1px solid black;
+.v-table > .v-table__wrapper > table > tfoot > tr > td {
+  border-top: 1px solid black;
 }
 
 /* #2085 */

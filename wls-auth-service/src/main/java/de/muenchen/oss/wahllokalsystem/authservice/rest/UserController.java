@@ -23,40 +23,36 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    private final UserDTOMapper userDTOMapper;
+  private final UserDTOMapper userDTOMapper;
 
-    @Operation(
-            description = "Liefert einen User.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Enthält den angegebenen user oder null falls keiner vorhanden ist"
-                    )
-            }
-    )
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    @Transactional(readOnly = true)
-    @Cacheable(value = CacheConfig.USER_CACHE, key = "#a0.getName()")
-    public UserDTO user(Principal user) {
-        log.debug("user info for '{}' called.", user.getName());
-        val userServiceModel = userService.getUser(user.getName());
-        return userServiceModel.map(userDTOMapper::toDTO).orElse(null);
-    }
+  @Operation(
+      description = "Liefert einen User.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Enthält den angegebenen user oder null falls keiner vorhanden ist")
+      })
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  @Transactional(readOnly = true)
+  @Cacheable(value = CacheConfig.USER_CACHE, key = "#a0.getName()")
+  public UserDTO user(Principal user) {
+    log.debug("user info for '{}' called.", user.getName());
+    val userServiceModel = userService.getUser(user.getName());
+    return userServiceModel.map(userDTOMapper::toDTO).orElse(null);
+  }
 
-    @Operation(
-            description = "Freischalten eines users.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "User erfolgreich freigeschaltet."
-                    )
-            }
-    )
-    @RequestMapping(value = "/user/{username}/unlock", method = POST)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
-    @Transactional
-    public void unlockUser(@PathVariable("username") String username) {
-        log.info("unlockUser for '{}' called.", username);
-        userService.resetFailAttempts(username);
-    }
+  @Operation(
+      description = "Freischalten eines users.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "User erfolgreich freigeschaltet.")
+      })
+  @RequestMapping(value = "/user/{username}/unlock", method = POST)
+  @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
+  @Transactional
+  public void unlockUser(@PathVariable("username") String username) {
+    log.info("unlockUser for '{}' called.", username);
+    userService.resetFailAttempts(username);
+  }
 }

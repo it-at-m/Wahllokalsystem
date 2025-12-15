@@ -36,192 +36,220 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles(
-        profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE,
-                de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK }
-)
+    profiles = {
+      SPRING_TEST_PROFILE,
+      SPRING_NO_SECURITY_PROFILE,
+      de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK
+    })
 public class StimmabgabevermerkeControllerIntegrationTest {
 
-    @Autowired
-    StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Autowired StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
-    @Autowired
-    StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
+  @Autowired StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
 
-    @Autowired
-    StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
+  @Autowired StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @AfterEach
-    void teardown() {
-        stimmabgabevermerkeRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    stimmabgabevermerkeRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStimmabgabevermerke {
+
+    @Test
+    void should_returnData_when_dataIsPresentInRepository() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val waehlerverzeichnisNummer = 1L;
+      val anzahlBlaetter = 4711L;
+      val request =
+          MockMvcRequestBuilders.get(
+              buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
+
+      val entityToFind = new Stimmabgabevermerke();
+      val wahldaten = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      entityToFind.setBezirkIDUndWaehlerverzeichnisNummer(
+          new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
+      entityToFind.setAnzahlBlaetter(anzahlBlaetter);
+      entityToFind.getWahldaten().add(wahldaten);
+
+      stimmabgabevermerkeRepository.save(entityToFind);
+
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val responseBodyAsDTO =
+          objectMapper.readValue(response.getContentAsString(), StimmabgabevermerkeDTO.class);
+
+      val expectedResult =
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
+              stimmabgabevermerkeModelMapper.toModel(entityToFind));
+
+      Assertions.assertThat(responseBodyAsDTO)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .isEqualTo(expectedResult);
     }
 
-    @Nested
-    class GetStimmabgabevermerke {
+    @Test
+    void should_returnBadRequest_when_requestIsInvalid() throws Exception {
+      val wahlbezirkID = "  ";
+      val waehlerverzeichnisNummer = 1L;
 
-        @Test
-        void should_returnData_when_dataIsPresentInRepository() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val waehlerverzeichnisNummer = 1L;
-            val anzahlBlaetter = 4711L;
-            val request = MockMvcRequestBuilders.get(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
+      val request =
+          MockMvcRequestBuilders.get(
+              buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
 
-            val entityToFind = new Stimmabgabevermerke();
-            val wahldaten = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
-            entityToFind.setBezirkIDUndWaehlerverzeichnisNummer(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
-            entityToFind.setAnzahlBlaetter(anzahlBlaetter);
-            entityToFind.getWahldaten().add(wahldaten);
+      mockMvc.perform(request).andExpect(status().isBadRequest());
+    }
+  }
 
-            stimmabgabevermerkeRepository.save(entityToFind);
+  @Nested
+  class PostStimmabgabevermerke {
 
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
-            val responseBodyAsDTO = objectMapper.readValue(response.getContentAsString(), StimmabgabevermerkeDTO.class);
+    @Test
+    void should_persistData_when_dataIsSent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 1L;
+      val anzahlBlaetter = 4711L;
 
-            val expectedResult = stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(stimmabgabevermerkeModelMapper.toModel(entityToFind));
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val expectedEntity =
+          new Stimmabgabevermerke(
+              id,
+              anzahlBlaetter,
+              Set.of(
+                  createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
+                  createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
 
-            Assertions.assertThat(responseBodyAsDTO)
-                    .usingRecursiveComparison()
-                    .ignoringCollectionOrder()
-                    .isEqualTo(expectedResult);
-        }
+      val requestBody =
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
+              stimmabgabevermerkeModelMapper.toModel(expectedEntity));
+      val request =
+          MockMvcRequestBuilders.post(
+                  buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-        @Test
-        void should_returnBadRequest_when_requestIsInvalid() throws Exception {
-            val wahlbezirkID = "  ";
-            val waehlerverzeichnisNummer = 1L;
+      mockMvc.perform(request).andExpect(status().isOk());
 
-            val request = MockMvcRequestBuilders.get(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer));
+      val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
 
-            mockMvc.perform(request).andExpect(status().isBadRequest());
-        }
+      Assertions.assertThat(persistedEntity)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          // expected object is not persistent -> has no UUIDs set
+          .ignoringFieldsOfTypes(UUID.class)
+          .isEqualTo(expectedEntity);
     }
 
-    @Nested
-    class PostStimmabgabevermerke {
+    @Test
+    void should_replaceExistingData_when_dataIsSent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 1L;
+      val anzahlBlaetter = 4711L;
+      val wahlID = "wahlID";
 
-        @Test
-        void should_persistData_when_dataIsSent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 1L;
-            val anzahlBlaetter = 4711L;
+      val entityToReplace =
+          new Stimmabgabevermerke(
+              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
+              anzahlBlaetter + 1,
+              Set.of(
+                  Testdaten.Wahldaten.createEntity(
+                      wahlbezirkID, wahlID, waehlerverzeichnisNummer)));
+      stimmabgabevermerkeRepository.save(entityToReplace);
 
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
-                    waehlerverzeichnisNummer);
-            val expectedEntity = new Stimmabgabevermerke(id, anzahlBlaetter,
-                    Set.of(createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
-                            createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val expectedEntity =
+          new Stimmabgabevermerke(
+              id,
+              anzahlBlaetter,
+              Set.of(
+                  createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
+                  createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
 
-            val requestBody = stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(stimmabgabevermerkeModelMapper.toModel(expectedEntity));
-            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(requestBody));
+      val requestBody =
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
+              stimmabgabevermerkeModelMapper.toModel(expectedEntity));
+      val request =
+          MockMvcRequestBuilders.post(
+                  buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-            mockMvc.perform(request).andExpect(status().isOk());
+      mockMvc.perform(request).andExpect(status().isOk());
 
-            val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
+      val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
 
-            Assertions.assertThat(persistedEntity)
-                    .usingRecursiveComparison()
-                    .ignoringCollectionOrder()
-                    // expected object is not persistent -> has no UUIDs set
-                    .ignoringFieldsOfTypes(UUID.class)
-                    .isEqualTo(expectedEntity);
-        }
+      Assertions.assertThat(persistedEntity)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          // expected object is not persistent -> has no UUIDs set
+          .ignoringFieldsOfTypes(UUID.class)
+          .isEqualTo(expectedEntity);
 
-        @Test
-        void should_replaceExistingData_when_dataIsSent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 1L;
-            val anzahlBlaetter = 4711L;
-            val wahlID = "wahlID";
-
-            val entityToReplace = new Stimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer), anzahlBlaetter + 1,
-                    Set.of(
-                            Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer)));
-            stimmabgabevermerkeRepository.save(entityToReplace);
-
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID,
-                    waehlerverzeichnisNummer);
-            val expectedEntity = new Stimmabgabevermerke(id, anzahlBlaetter,
-                    Set.of(createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
-                            createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
-
-            val requestBody = stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(stimmabgabevermerkeModelMapper.toModel(expectedEntity));
-            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(wahlbezirkID, waehlerverzeichnisNummer))
-                    .contentType(MediaType.APPLICATION_JSON).content(
-                            objectMapper.writeValueAsString(requestBody));
-
-            mockMvc.perform(request).andExpect(status().isOk());
-
-            val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
-
-            Assertions.assertThat(persistedEntity)
-                    .usingRecursiveComparison()
-                    .ignoringCollectionOrder()
-                    // expected object is not persistent -> has no UUIDs set
-                    .ignoringFieldsOfTypes(UUID.class)
-                    .isEqualTo(expectedEntity);
-
-            Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(1);
-        }
-
-        @Test
-        void should_returnBadRequest_when_requestIsInvalid() throws Exception {
-            val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(" ", 0L));
-
-            mockMvc.perform(request).andExpect(status().isBadRequest());
-
-            Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(0);
-        }
+      Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(1);
     }
 
-    private String buildStimmabgabevermerkeURI(final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
-        return "/businessActions/stimmabgabevermerke/" + wahlbezirkID + "/" + waehlerverzeichnisNummer;
+    @Test
+    void should_returnBadRequest_when_requestIsInvalid() throws Exception {
+      val request = MockMvcRequestBuilders.post(buildStimmabgabevermerkeURI(" ", 0L));
+
+      mockMvc.perform(request).andExpect(status().isBadRequest());
+
+      Assertions.assertThat(stimmabgabevermerkeRepository.count()).isEqualTo(0);
     }
+  }
 
-    private Wahldaten createWahldaten(final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
-        val emptyWahldaten = new Wahldaten();
-        val stimmzettel1 = new Stimmzettel();
-        stimmzettel1.setAnzahl(20);
-        stimmzettel1.setStimmzettelart(Stimmzettelart.KLEIN);
+  private String buildStimmabgabevermerkeURI(
+      final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
+    return "/businessActions/stimmabgabevermerke/" + wahlbezirkID + "/" + waehlerverzeichnisNummer;
+  }
 
-        val stimmzettel2 = new Stimmzettel();
-        stimmzettel2.setAnzahl(21);
-        stimmzettel2.setStimmzettelart(Stimmzettelart.GROSS);
+  private Wahldaten createWahldaten(
+      final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
+    val emptyWahldaten = new Wahldaten();
+    val stimmzettel1 = new Stimmzettel();
+    stimmzettel1.setAnzahl(20);
+    stimmzettel1.setStimmzettelart(Stimmzettelart.KLEIN);
 
-        val stimmzettel3 = new Stimmzettel();
-        stimmzettel3.setAnzahl(22);
-        stimmzettel3.setStimmzettelart(Stimmzettelart.BEIDE);
+    val stimmzettel2 = new Stimmzettel();
+    stimmzettel2.setAnzahl(21);
+    stimmzettel2.setStimmzettelart(Stimmzettelart.GROSS);
 
-        val vermerk1 = new Vermerk();
-        vermerk1.setBlattnummer(1L);
-        vermerk1.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
+    val stimmzettel3 = new Stimmzettel();
+    stimmzettel3.setAnzahl(22);
+    stimmzettel3.setStimmzettelart(Stimmzettelart.BEIDE);
 
-        val vermerk2 = new Vermerk();
-        vermerk2.setBlattnummer(2L);
-        vermerk2.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
+    val vermerk1 = new Vermerk();
+    vermerk1.setBlattnummer(1L);
+    vermerk1.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
-        val wahlschein1 = new EingenommenerWahlschein();
-        wahlschein1.setAnzahl(1);
-        wahlschein1.setStimmzettelart(Stimmzettelart.KLEIN);
-        val wahlschein2 = new EingenommenerWahlschein();
-        wahlschein2.setAnzahl(2);
-        wahlschein2.setStimmzettelart(Stimmzettelart.GROSS);
-        val wahlschein3 = new EingenommenerWahlschein();
-        wahlschein3.setAnzahl(3);
-        wahlschein3.setStimmzettelart(Stimmzettelart.BEIDE);
+    val vermerk2 = new Vermerk();
+    vermerk2.setBlattnummer(2L);
+    vermerk2.getStimmzettel().addAll(List.of(stimmzettel1, stimmzettel2, stimmzettel3));
 
-        emptyWahldaten
-                .setBezirkUndWahlIDUndWaehlerverzeichnisnummer(new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, waehlerverzeichnisNummer));
-        List.of(vermerk1, vermerk2).forEach(emptyWahldaten::addVermerk);
-        emptyWahldaten.getEingenommeneWahlscheine().addAll(List.of(wahlschein1, wahlschein2, wahlschein3));
+    val wahlschein1 = new EingenommenerWahlschein();
+    wahlschein1.setAnzahl(1);
+    wahlschein1.setStimmzettelart(Stimmzettelart.KLEIN);
+    val wahlschein2 = new EingenommenerWahlschein();
+    wahlschein2.setAnzahl(2);
+    wahlschein2.setStimmzettelart(Stimmzettelart.GROSS);
+    val wahlschein3 = new EingenommenerWahlschein();
+    wahlschein3.setAnzahl(3);
+    wahlschein3.setStimmzettelart(Stimmzettelart.BEIDE);
 
-        return emptyWahldaten;
-    }
+    emptyWahldaten.setBezirkUndWahlIDUndWaehlerverzeichnisnummer(
+        new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+            wahlbezirkID, wahlID, waehlerverzeichnisNummer));
+    List.of(vermerk1, vermerk2).forEach(emptyWahldaten::addVermerk);
+    emptyWahldaten
+        .getEingenommeneWahlscheine()
+        .addAll(List.of(wahlschein1, wahlschein2, wahlschein3));
+
+    return emptyWahldaten;
+  }
 }

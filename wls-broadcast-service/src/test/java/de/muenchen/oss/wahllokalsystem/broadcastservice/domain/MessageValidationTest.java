@@ -13,95 +13,95 @@ import org.junit.jupiter.api.Test;
 
 class MessageValidationTest {
 
-    @Nested
-    class ValidationTest {
+  @Nested
+  class ValidationTest {
 
-        private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        private final Validator validator = factory.getValidator();
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final Validator validator = factory.getValidator();
 
-        @Test
-        void should_succeedValidation_when_allRequiredFieldsAreSet() {
-            val message = createMessageWithAllRequiredData();
+    @Test
+    void should_succeedValidation_when_allRequiredFieldsAreSet() {
+      val message = createMessageWithAllRequiredData();
 
-            val validationResult = validator.validate(message);
+      val validationResult = validator.validate(message);
 
-            Assertions.assertThat(validationResult.isEmpty()).isTrue();
-        }
-
-        @Test
-        void should_failValidation_when_wahlbezirkIdMissing() {
-            val message = createMessageWithAllRequiredData();
-            message.setWahlbezirkID(null);
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.size()).isEqualTo(1);
-        }
-
-        @Test
-        void should_failValidation_when_wahlbezirkIdLargerThan1024Chars() {
-            val message = createMessageWithAllRequiredData();
-            String myString = " ".repeat(1025);
-            message.setWahlbezirkID(myString);
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.size()).isEqualTo(1);
-        }
-
-        @Test
-        void should_failValidation_when_messageIsNull() {
-            val message = createMessageWithAllRequiredData();
-            message.setNachricht(null);
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.size()).isEqualTo(1);
-        }
-
-        @Test
-        void should_failValidation_when_messageLargerThan1024Chars() {
-            val message = createMessageWithAllRequiredData();
-            String myString = " ".repeat(1025);
-            message.setNachricht(myString);
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.size()).isEqualTo(1);
-        }
-
-        @Test
-        void should_failValidation_when_messageEmpfangsZeitIsNull() {
-            val message = createMessageWithAllRequiredData();
-            message.setEmpfangsZeit(null);
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.size()).isEqualTo(1);
-        }
-
-        @Test
-        void should_succeedValidation_when_wahlbezirkIdHas1024Chars() {
-            val message = createMessageWithAllRequiredData();
-            message.setWahlbezirkID(StringUtils.left("", 1024));
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.isEmpty()).isTrue();
-        }
-
-        @Test
-        void should_succeedValidation_when_messageHas1024Chars() {
-            val message = createMessageWithAllRequiredData();
-            message.setNachricht(StringUtils.left("", 1024));
-
-            val validationResult = validator.validate(message);
-
-            Assertions.assertThat(validationResult.isEmpty()).isTrue();
-        }
-
-        private Message createMessageWithAllRequiredData() {
-            return new Message(UUID.randomUUID(), "", "", LocalDateTime.now());
-        }
+      Assertions.assertThat(validationResult.isEmpty()).isTrue();
     }
+
+    @Test
+    void should_failValidation_when_wahlbezirkIdMissing() {
+      val message = createMessageWithAllRequiredData();
+      message.setWahlbezirkID(null);
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.size()).isEqualTo(1);
+    }
+
+    @Test
+    void should_failValidation_when_wahlbezirkIdLargerThan1024Chars() {
+      val message = createMessageWithAllRequiredData();
+      String myString = " ".repeat(1025);
+      message.setWahlbezirkID(myString);
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.size()).isEqualTo(1);
+    }
+
+    @Test
+    void should_failValidation_when_messageIsNull() {
+      val message = createMessageWithAllRequiredData();
+      message.setNachricht(null);
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.size()).isEqualTo(1);
+    }
+
+    @Test
+    void should_failValidation_when_messageLargerThan1024Chars() {
+      val message = createMessageWithAllRequiredData();
+      String myString = " ".repeat(1025);
+      message.setNachricht(myString);
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.size()).isEqualTo(1);
+    }
+
+    @Test
+    void should_failValidation_when_messageEmpfangsZeitIsNull() {
+      val message = createMessageWithAllRequiredData();
+      message.setEmpfangsZeit(null);
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.size()).isEqualTo(1);
+    }
+
+    @Test
+    void should_succeedValidation_when_wahlbezirkIdHas1024Chars() {
+      val message = createMessageWithAllRequiredData();
+      message.setWahlbezirkID(StringUtils.left("", 1024));
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.isEmpty()).isTrue();
+    }
+
+    @Test
+    void should_succeedValidation_when_messageHas1024Chars() {
+      val message = createMessageWithAllRequiredData();
+      message.setNachricht(StringUtils.left("", 1024));
+
+      val validationResult = validator.validate(message);
+
+      Assertions.assertThat(validationResult.isEmpty()).isTrue();
+    }
+
+    private Message createMessageWithAllRequiredData() {
+      return new Message(UUID.randomUUID(), "", "", LocalDateTime.now());
+    }
+  }
 }

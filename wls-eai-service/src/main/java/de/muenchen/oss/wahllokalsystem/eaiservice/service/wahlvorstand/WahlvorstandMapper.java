@@ -10,8 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlvorstandMapper {
 
-    WahlvorstandDTO toDTO(Wahlvorstand wahlvorstand);
+  WahlvorstandDTO toDTO(Wahlvorstand wahlvorstand);
 
-    @Mapping(target = "identifikator", source = "id")
-    WahlvorstandsmitgliedDTO toDTO(Wahlvorstandsmitglied wahlvorstandsmitglied);
+  @Mapping(target = "identifikator", source = "id")
+  WahlvorstandsmitgliedDTO toDTO(Wahlvorstandsmitglied wahlvorstandsmitglied);
 }

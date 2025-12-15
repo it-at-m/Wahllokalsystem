@@ -20,58 +20,61 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class WahlenClientImpl implements WahlenClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahlenControllerApi wahlenControllerApi;
+  private final WahlenControllerApi wahlenControllerApi;
 
-    private final WahlenClientMapper wahlenClientMapper;
+  private final WahlenClientMapper wahlenClientMapper;
 
-    @Override
-    public void resetWahlen() {
-        log.debug("#resetWahlen");
-        try {
-            wahlenControllerApi.resetWahlen();
-        } catch (WlsException wlsException) {
-            log.debug("#resetWahlen found WlsException:", wlsException);
-            throw wlsException;
-        } catch (Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
+  @Override
+  public void resetWahlen() {
+    log.debug("#resetWahlen");
+    try {
+      wahlenControllerApi.resetWahlen();
+    } catch (WlsException wlsException) {
+      log.debug("#resetWahlen found WlsException:", wlsException);
+      throw wlsException;
+    } catch (Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+  }
 
-    @Override
-    public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
-        log.debug("#getWahlen");
-        List<WahlModel> wahlen;
-        try {
-            val wahlenDTO = wahlenControllerApi.getWahlen(wahltagID);
+  @Override
+  public List<WahlModel> getWahlen(String wahltagID) throws WlsException {
+    log.debug("#getWahlen");
+    List<WahlModel> wahlen;
+    try {
+      val wahlenDTO = wahlenControllerApi.getWahlen(wahltagID);
 
-            if (wahlenDTO == null) {
-                return null;
-            }
-            wahlen = wahlenClientMapper.toModelList(wahlenDTO);
-        } catch (final WlsException wlsException) {
-            log.error("#getWahlen found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            log.error("#getWahlen exception:", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
-        return wahlen;
+      if (wahlenDTO == null) {
+        return null;
+      }
+      wahlen = wahlenClientMapper.toModelList(wahlenDTO);
+    } catch (final WlsException wlsException) {
+      log.error("#getWahlen found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      log.error("#getWahlen exception:", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+    return wahlen;
+  }
 
-    @Override
-    public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
-        log.debug("#postWahlen");
+  @Override
+  public void postWahlen(String wahltagID, List<WahlModel> wahlen) {
+    log.debug("#postWahlen");
 
-        try {
-            wahlenControllerApi.postWahlen(wahltagID, wahlenClientMapper.toDtoList(wahlen));
-        } catch (final WlsException wlsException) {
-            log.error("#postWahlen found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            log.error("#postWahlen exception:", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
+    try {
+      wahlenControllerApi.postWahlen(wahltagID, wahlenClientMapper.toDtoList(wahlen));
+    } catch (final WlsException wlsException) {
+      log.error("#postWahlen found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      log.error("#postWahlen exception:", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
+  }
 }

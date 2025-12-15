@@ -25,58 +25,65 @@ import org.springframework.web.client.RestClientException;
 @ExtendWith(MockitoExtension.class)
 class WahlbezirkeClientImplTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    WahldatenControllerApi wahldatenControllerApi;
+  @Mock WahldatenControllerApi wahldatenControllerApi;
 
-    @Mock
-    WahlbezirkeClientMapper wahlbezirkeClientMapper;
+  @Mock WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
-    @InjectMocks
-    WahlbezirkeClientImpl unitUnderTest;
+  @InjectMocks WahlbezirkeClientImpl unitUnderTest;
 
-    @Nested
-    class LoadWahlbezirke {
+  @Nested
+  class LoadWahlbezirke {
 
-        @Test
-        void should_mapClientResponse_when_callingGet() {
-            val testDate = LocalDate.now().minusMonths(3);
+    @Test
+    void should_mapClientResponse_when_callingGet() {
+      val testDate = LocalDate.now().minusMonths(3);
 
-            val mockedClientResponse = MockDataFactory.createSetOfClientWahlbezirkDTO(testDate);
-            val mockedMappedClientResponse = Set.of(WahlbezirkModel.builder().build());
+      val mockedClientResponse = MockDataFactory.createSetOfClientWahlbezirkDTO(testDate);
+      val mockedMappedClientResponse = Set.of(WahlbezirkModel.builder().build());
 
-            Mockito.when(wahldatenControllerApi.loadWahlbezirke(testDate, "wahltagNummer"))
-                    .thenReturn(mockedClientResponse);
-            Mockito.when(wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(mockedClientResponse))
-                    .thenReturn(mockedMappedClientResponse);
+      Mockito.when(wahldatenControllerApi.loadWahlbezirke(testDate, "wahltagNummer"))
+          .thenReturn(mockedClientResponse);
+      Mockito.when(wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(mockedClientResponse))
+          .thenReturn(mockedMappedClientResponse);
 
-            val result = unitUnderTest.loadWahlbezirke(testDate, "wahltagNummer");
+      val result = unitUnderTest.loadWahlbezirke(testDate, "wahltagNummer");
 
-            Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(mockedMappedClientResponse);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_clientResponseIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(wahldatenControllerApi.loadWahlbezirke(any(), any())).thenReturn(null);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadWahlbezirke(LocalDate.now(), "wahltagNummer")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_apiInvocationFailed() {
-            val testDate = LocalDate.now().minusMonths(3);
-            val mockedException = TechnischeWlsException.withCode("100")
-                    .buildWithMessage("Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
-
-            Mockito.when(wahldatenControllerApi.loadWahlbezirke(any(), any()))
-                    .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI)).thenThrow(mockedException);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.loadWahlbezirke(testDate, "wahltagNummer")).isSameAs(mockedException);
-        }
+      Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(mockedMappedClientResponse);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_clientResponseIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(wahldatenControllerApi.loadWahlbezirke(any(), any())).thenReturn(null);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.loadWahlbezirke(LocalDate.now(), "wahltagNummer"))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_apiInvocationFailed() {
+      val testDate = LocalDate.now().minusMonths(3);
+      val mockedException =
+          TechnischeWlsException.withCode("100")
+              .buildWithMessage(
+                  "Bei der Kommunikation mit dem Aoueai-Service ist ein Fehler aufgetreten. Es konnten daher keine Daten geladen werden.");
+
+      Mockito.when(wahldatenControllerApi.loadWahlbezirke(any(), any()))
+          .thenThrow(new RestClientException("error occurs while attempting to invoke the API"));
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI))
+          .thenThrow(mockedException);
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.loadWahlbezirke(testDate, "wahltagNummer"))
+          .isSameAs(mockedException);
+    }
+  }
 }

@@ -22,44 +22,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahlbriefdatenController {
 
-    private final WahlbriefdatenService wahlbriefdatenService;
+  private final WahlbriefdatenService wahlbriefdatenService;
 
-    private final WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
+  private final WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
 
-    @Operation(description = "Laden der Wahlbriefdaten mit { wahlbezirkID }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlbriefdaten erfolgreich zurückgegeben."
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine Wahlbriefdaten gefunden."
-                    )
-            }
-    )
-    @GetMapping("{wahlbezirkID}")
-    public ResponseEntity<WahlbriefdatenDTO> getWahlbriefdaten(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val wahlbriefdatenFromService = wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID);
+  @Operation(description = "Laden der Wahlbriefdaten mit { wahlbezirkID }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlbriefdaten erfolgreich zurückgegeben."),
+        @ApiResponse(responseCode = "204", description = "Keine Wahlbriefdaten gefunden.")
+      })
+  @GetMapping("{wahlbezirkID}")
+  public ResponseEntity<WahlbriefdatenDTO> getWahlbriefdaten(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val wahlbriefdatenFromService = wahlbriefdatenService.getWahlbriefdaten(wahlbezirkID);
 
-        return okWithBodyOrNoContent(wahlbriefdatenFromService.map(wahlbriefdatenDTOMapper::toDTO));
-    }
+    return okWithBodyOrNoContent(wahlbriefdatenFromService.map(wahlbriefdatenDTOMapper::toDTO));
+  }
 
-    @Operation(description = "Speichern der Wahlbriefdaten mit { wahlbezirkID }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlbriefdaten erfolgreich gespeichert."
-                    )
-            }
-    )
-    @PostMapping("{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void postWahlbriefdaten(@PathVariable("wahlbezirkID") String wahlbezirkID,
-            @RequestBody WahlbriefdatenWriteDTO wahlbriefdaten) {
-        wahlbriefdatenService.setWahlbriefdaten(wahlbriefdatenDTOMapper.toModel(wahlbezirkID, wahlbriefdaten));
-    }
+  @Operation(description = "Speichern der Wahlbriefdaten mit { wahlbezirkID }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Wahlbriefdaten erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void postWahlbriefdaten(
+      @PathVariable("wahlbezirkID") String wahlbezirkID,
+      @RequestBody WahlbriefdatenWriteDTO wahlbriefdaten) {
+    wahlbriefdatenService.setWahlbriefdaten(
+        wahlbriefdatenDTOMapper.toModel(wahlbezirkID, wahlbriefdaten));
+  }
 
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
-        return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
+  private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
+    return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+  }
 }

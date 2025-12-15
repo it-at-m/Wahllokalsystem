@@ -9,25 +9,26 @@ import org.mapstruct.factory.Mappers;
 
 class WahlbezirkModelMapperTest {
 
-    private final WahlbezirkModelMapper unitUnderTest = Mappers.getMapper(WahlbezirkModelMapper.class);
+  private final WahlbezirkModelMapper unitUnderTest =
+      Mappers.getMapper(WahlbezirkModelMapper.class);
 
-    @Test
-    void should_returnWahlbezirkEntityList_when_givenWahlbezirkModelList() {
-        val modelsToMap = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
+  @Test
+  void should_returnWahlbezirkEntityList_when_givenWahlbezirkModelList() {
+    val modelsToMap = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
 
-        val result = unitUnderTest.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(modelsToMap);
+    val result = unitUnderTest.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(modelsToMap);
 
-        val expectedResult = MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now());
-        Assertions.assertThat(result).isEqualTo(expectedResult);
-    }
+    val expectedResult = MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now());
+    Assertions.assertThat(result).isEqualTo(expectedResult);
+  }
 
-    @Test
-    void should_returnWahlbezirkModelList_when_givenWahlbezirkEntityList() {
-        val entitiesToMap = MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now());
+  @Test
+  void should_returnWahlbezirkModelList_when_givenWahlbezirkEntityList() {
+    val entitiesToMap = MockDataFactory.createListOfWahlbezirkEntity("", LocalDate.now());
 
-        val result = unitUnderTest.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(entitiesToMap);
+    val result = unitUnderTest.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(entitiesToMap);
 
-        val expectedResult = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
-        Assertions.assertThat(result).isEqualTo(expectedResult);
-    }
+    val expectedResult = MockDataFactory.createListOfWahlbezirkModel("", LocalDate.now());
+    Assertions.assertThat(result).isEqualTo(expectedResult);
+  }
 }

@@ -37,176 +37,231 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
 public class BriefwahlvorbereitungControllerIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
+  @Autowired BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
 
-    @Autowired
-    BriefwahlvorbereitungDTOMapper briefwahlvorbereitungDTOMapper;
+  @Autowired BriefwahlvorbereitungDTOMapper briefwahlvorbereitungDTOMapper;
 
-    @Autowired
-    BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
+  @Autowired BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
-        briefwahlvorbereitungRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_BRIEFWAHLVORBEREITUNG);
+    briefwahlvorbereitungRepository.deleteAll();
+  }
+
+  @Nested
+  class GetBriefwahlvorbereitung {
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
+        })
+    void should_returnData_when_dataIsPresentInRepo() throws Exception {
+      val wahlbezirkIDToFind = "123";
+      val briefwahlvorbereitungToFind = new Briefwahlvorbereitung();
+      List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
+      briefwahlvorbereitungToFind.setWahlbezirkID(wahlbezirkIDToFind);
+      briefwahlvorbereitungToFind.setUrnenAnzahl(urnenanzahl1);
+      briefwahlvorbereitungRepository.save(briefwahlvorbereitungToFind);
+      val expectedResponseBody =
+          briefwahlvorbereitungDTOMapper.toDTO(
+              briefwahlvorbereitungModelMapper.toModel(briefwahlvorbereitungToFind));
+
+      val request = get("/businessActions/briefwahlvorbereitung/" + wahlbezirkIDToFind);
+
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), BriefwahlvorbereitungDTO.class);
+
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class GetBriefwahlvorbereitung {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG
+        })
+    void should_returnNoContent_when_noDataFound() throws Exception {
+      val wahlbezirkIDEmpty = "123";
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
-                        Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlbezirkIDToFind = "123";
-            val briefwahlvorbereitungToFind = new Briefwahlvorbereitung();
-            List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            briefwahlvorbereitungToFind.setWahlbezirkID(wahlbezirkIDToFind);
-            briefwahlvorbereitungToFind.setUrnenAnzahl(urnenanzahl1);
-            briefwahlvorbereitungRepository.save(briefwahlvorbereitungToFind);
-            val expectedResponseBody = briefwahlvorbereitungDTOMapper.toDTO(briefwahlvorbereitungModelMapper.toModel(briefwahlvorbereitungToFind));
+      val wahlbezirkIDNotEmpty = "456";
+      val briefwahlvorbereitungToFind = new Briefwahlvorbereitung();
+      List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
+      briefwahlvorbereitungToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
+      briefwahlvorbereitungToFind.setUrnenAnzahl(urnenanzahl1);
+      briefwahlvorbereitungRepository.save(briefwahlvorbereitungToFind);
 
-            val request = get("/businessActions/briefwahlvorbereitung/" + wahlbezirkIDToFind);
+      val request = get("/businessActions/briefwahlvorbereitung/" + wahlbezirkIDEmpty);
 
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), BriefwahlvorbereitungDTO.class);
+      val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
-        }
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+    }
+  }
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG,
-                        Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_returnNoContent_when_noDataFound() throws Exception {
-            val wahlbezirkIDEmpty = "123";
+  @Nested
+  class PostBriefwahlvorbereitung {
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG
+        })
+    void should_setNewData_when_callingPost() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      List<WahlurneDTO> urnenanzahl1 =
+          List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
+      val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
+      val request = buildPostRequest(wahlbezirkID, writeDto);
 
-            val wahlbezirkIDNotEmpty = "456";
-            val briefwahlvorbereitungToFind = new Briefwahlvorbereitung();
-            List<Wahlurne> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValid("1234").build());
-            briefwahlvorbereitungToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
-            briefwahlvorbereitungToFind.setUrnenAnzahl(urnenanzahl1);
-            briefwahlvorbereitungRepository.save(briefwahlvorbereitungToFind);
+      mockMvc.perform(request).andExpect(status().isCreated());
 
-            val request = get("/businessActions/briefwahlvorbereitung/" + wahlbezirkIDEmpty);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+      val briefwahlvorbereitungFromRepo =
+          briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
+      val expectedBriefwahlvorbereitung =
+          briefwahlvorbereitungModelMapper.toEntity(
+              briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto));
 
-            val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
-
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
+      Assertions.assertThat(briefwahlvorbereitungFromRepo)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedBriefwahlvorbereitung);
     }
 
-    @Nested
-    class PostBriefwahlvorbereitung {
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_setNewData_when_callingPost() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
-            val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
-            val request = buildPostRequest(wahlbezirkID, writeDto);
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG
+        })
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      List<WahlurneDTO> urnenanzahl1 =
+          List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
+      val writeDto1 = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
+      val request1 = buildPostRequest(wahlbezirkID, writeDto1);
 
-            mockMvc.perform(request).andExpect(status().isCreated());
+      mockMvc.perform(request1).andExpect(status().isCreated());
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+      val briefwahlvorbereitungFromRepo1 =
+          briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
+      val expectedBriefwahlvorbereitung1 =
+          briefwahlvorbereitungModelMapper.toEntity(
+              briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto1));
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
-            val briefwahlvorbereitungFromRepo = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
-            val expectedBriefwahlvorbereitung = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto));
+      Assertions.assertThat(briefwahlvorbereitungFromRepo1)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedBriefwahlvorbereitung1);
 
-            Assertions.assertThat(briefwahlvorbereitungFromRepo).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung);
-        }
+      List<WahlurneDTO> urnenanzahl2 =
+          List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
+      val writeDto2 = new BriefwahlvorbereitungWriteDTO(urnenanzahl2);
+      val request2 = buildPostRequest(wahlbezirkID, writeDto2);
 
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
-            val writeDto1 = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
-            val request1 = buildPostRequest(wahlbezirkID, writeDto1);
+      mockMvc.perform(request2).andExpect(status().isCreated());
 
-            mockMvc.perform(request1).andExpect(status().isCreated());
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
-            val briefwahlvorbereitungFromRepo1 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
-            val expectedBriefwahlvorbereitung1 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto1));
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+      val briefwahlvorbereitungFromRepo2 =
+          briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
+      val expectedBriefwahlvorbereitung2 =
+          briefwahlvorbereitungModelMapper.toEntity(
+              briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto2));
 
-            Assertions.assertThat(briefwahlvorbereitungFromRepo1).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung1);
-
-            List<WahlurneDTO> urnenanzahl2 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
-            val writeDto2 = new BriefwahlvorbereitungWriteDTO(urnenanzahl2);
-            val request2 = buildPostRequest(wahlbezirkID, writeDto2);
-
-            mockMvc.perform(request2).andExpect(status().isCreated());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
-            val briefwahlvorbereitungFromRepo2 = briefwahlvorbereitungRepository.findById(wahlbezirkID).get();
-            val expectedBriefwahlvorbereitung2 = briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungDTOMapper.toModel(wahlbezirkID, writeDto2));
-
-            Assertions.assertThat(briefwahlvorbereitungFromRepo2).usingRecursiveComparison().isEqualTo(expectedBriefwahlvorbereitung2);
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val writeDto = new BriefwahlvorbereitungWriteDTO(null);
-            val request = buildPostRequest(wahlbezirkID, writeDto);
-
-            val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
-            val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
-            Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
-
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(), "WLS-WAHLVORBEREITUNG",
-                    ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
-            Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
-        }
-
-        @Test
-        @WithMockUser(
-                authorities = { Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG, Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG }
-        )
-        void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
-            val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
-            List<WahlurneDTO> urnenanzahl1 = List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
-            val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
-
-            val request = buildPostRequest(wahlbezirkID, writeDto);
-
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val exceptionBodyFromResponse = objectMapper.readValue(response.getResponse().getContentAsString(StandardCharsets.UTF_8), WlsExceptionDTO.class);
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
-            Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
-
-            val expectedExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.UNSAVEABLE.code(), "WLS-WAHLVORBEREITUNG",
-                    ExceptionConstants.UNSAVEABLE.message());
-            Assertions.assertThat(exceptionBodyFromResponse).usingRecursiveComparison().isEqualTo(expectedExceptionDTO);
-        }
-
-        private RequestBuilder buildPostRequest(final String wahlbezirkID, final BriefwahlvorbereitungWriteDTO requestBody) throws Exception {
-            return post("/businessActions/briefwahlvorbereitung/" + wahlbezirkID).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-        }
+      Assertions.assertThat(briefwahlvorbereitungFromRepo2)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedBriefwahlvorbereitung2);
     }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG
+        })
+    void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val writeDto = new BriefwahlvorbereitungWriteDTO(null);
+      val request = buildPostRequest(wahlbezirkID, writeDto);
+
+      val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val exceptionBodyFromResponse =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(StandardCharsets.UTF_8),
+              WlsExceptionDTO.class);
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+      Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
+
+      val expectedExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.PARAMS_UNVOLLSTAENDIG.code(),
+              "WLS-WAHLVORBEREITUNG",
+              ExceptionConstants.PARAMS_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(exceptionBodyFromResponse)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedExceptionDTO);
+    }
+
+    @Test
+    @WithMockUser(
+        authorities = {
+          Authorities.SERVICE_POST_BRIEFWAHLVORBEREITUNG,
+          Authorities.REPOSITORY_WRITE_BRIEFWAHLVORBEREITUNG
+        })
+    void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
+      val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
+      List<WahlurneDTO> urnenanzahl1 =
+          List.of(WahlurneTestdatenfactory.initValidDTO("1234").build());
+      val writeDto = new BriefwahlvorbereitungWriteDTO(urnenanzahl1);
+
+      val request = buildPostRequest(wahlbezirkID, writeDto);
+
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val exceptionBodyFromResponse =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(StandardCharsets.UTF_8),
+              WlsExceptionDTO.class);
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG);
+      Assertions.assertThat(briefwahlvorbereitungRepository.findById(wahlbezirkID)).isEmpty();
+
+      val expectedExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.UNSAVEABLE.code(),
+              "WLS-WAHLVORBEREITUNG",
+              ExceptionConstants.UNSAVEABLE.message());
+      Assertions.assertThat(exceptionBodyFromResponse)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedExceptionDTO);
+    }
+
+    private RequestBuilder buildPostRequest(
+        final String wahlbezirkID, final BriefwahlvorbereitungWriteDTO requestBody)
+        throws Exception {
+      return post("/businessActions/briefwahlvorbereitung/" + wahlbezirkID)
+          .with(csrf())
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
+    }
+  }
 }

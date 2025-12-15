@@ -25,102 +25,138 @@ import org.springframework.http.client.ClientHttpResponse;
 @ExtendWith(MockitoExtension.class)
 class WlsResponseErrorHandlerTest {
 
-    @Mock
-    private ObjectMapper objectMapper;
+  @Mock private ObjectMapper objectMapper;
 
-    @Mock
-    private ClientHttpResponse response;
+  @Mock private ClientHttpResponse response;
 
-    @InjectMocks
-    private WlsResponseErrorHandler unitUnderTest;
+  @InjectMocks private WlsResponseErrorHandler unitUnderTest;
 
-    @Nested
-    class HandleError {
+  @Nested
+  class HandleError {
 
-        @Test
-        void should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryFachlichIsGiven() throws Exception {
-            val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
-            Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
+    @Test
+    void
+        should_createFachlicheWlsException_when_responseWlsExceptionDTOWithCategoryFachlichIsGiven()
+            throws Exception {
+      val mockedResponseBody =
+          new ByteArrayInputStream("mocked response body as stream".getBytes());
+      Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
 
-            val fachlicheWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.F, "code", "serviceName", "message");
-            Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class)).thenReturn(fachlicheWlsExceptionDTO);
+      val fachlicheWlsExceptionDTO =
+          new WlsExceptionDTO(WlsExceptionCategory.F, "code", "serviceName", "message");
+      Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class))
+          .thenReturn(fachlicheWlsExceptionDTO);
 
-            val exceptionThrown = Assertions.catchThrowableOfType(() -> unitUnderTest.handleError(response), FachlicheWlsException.class);
+      val exceptionThrown =
+          Assertions.catchThrowableOfType(
+              () -> unitUnderTest.handleError(response), FachlicheWlsException.class);
 
-            assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, fachlicheWlsExceptionDTO);
-        }
-
-        @Test
-        void should_createTechnischeWlsException_when_responseWlsExceptionDTOWithCategoryTechnischIsGiven() throws Exception {
-            val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
-            Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
-
-            val technischeWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, "code", "serviceName", "message");
-            Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class)).thenReturn(technischeWlsExceptionDTO);
-
-            val exceptionThrown = Assertions.catchThrowableOfType(() -> unitUnderTest.handleError(response), TechnischeWlsException.class);
-
-            assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, technischeWlsExceptionDTO);
-        }
-
-        @Test
-        void should_createSicherheitsWlsException_when_responseWlsExceptionDTOWithCategorySecurityIsGiven() throws Exception {
-            val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
-            Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
-
-            val sicherheitsWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.S, "code", "serviceName", "message");
-            Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class)).thenReturn(sicherheitsWlsExceptionDTO);
-
-            val exceptionThrown = Assertions.catchThrowableOfType(() -> unitUnderTest.handleError(response), SicherheitsWlsException.class);
-
-            assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, sicherheitsWlsExceptionDTO);
-        }
-
-        @Test
-        void should_createInfrastrukturelleWlsException_when_responseWlsExceptionDTOWithCategoryInfrastructureIsGiven() throws Exception {
-            val mockedResponseBody = new ByteArrayInputStream("mocked response body as stream".getBytes());
-            Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
-
-            val infrastrukturelleWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.I, "code", "serviceName", "message");
-            Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class)).thenReturn(infrastrukturelleWlsExceptionDTO);
-
-            val exceptionThrown = Assertions.catchThrowableOfType(() -> unitUnderTest.handleError(response), InfrastrukturelleWlsException.class);
-
-            assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, infrastrukturelleWlsExceptionDTO);
-        }
-
-        @Test
-        void should_unknownTechnischeWlsException_when_exceptionDuringCreationOfExceptionFromResponseOccurred() throws Exception {
-            val exceptionThrownByMappingResponse = new IOException("something strange happened");
-            Mockito.when(response.getBody()).thenThrow(exceptionThrownByMappingResponse);
-
-            val exceptionThrown = Assertions.catchThrowableOfType(() -> unitUnderTest.handleError(response), TechnischeWlsException.class);
-
-            val expectedExceptionMessage = ExceptionKonstanten.MESSAGE_UNBEKANNTER_FEHLER + "\nWegen: " + exceptionThrownByMappingResponse.getClass()
-                    + " mit:\n" + exceptionThrownByMappingResponse.getMessage();
-            val expectedException = TechnischeWlsException.withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
-                    .inService(ExceptionKonstanten.SERVICE_UNBEKANNT).withCause(exceptionThrownByMappingResponse)
-                    .buildWithMessage(expectedExceptionMessage);
-
-            assertWlsExceptionPropertiesAreEqual(exceptionThrown, expectedException);
-        }
-
-        private void assertAllWlsExceptionsAreSetExceptCategory(final WlsException exceptionToCheck, final WlsExceptionDTO dataToBeSet) {
-            //category muss nicht geprüft werden da diese durch die Exception-Klasse gesetzt wird (siehe deren Konstruktor)
-            Assertions.assertThat(exceptionToCheck.getCode()).isEqualTo(dataToBeSet.code());
-            Assertions.assertThat(exceptionToCheck.getMessage()).isEqualTo(dataToBeSet.message());
-            Assertions.assertThat(exceptionToCheck.getServiceName()).isEqualTo(dataToBeSet.service());
-            Assertions.assertThat(exceptionToCheck.getCause()).isNull();
-        }
-
-        private void assertWlsExceptionPropertiesAreEqual(final WlsException actual, final WlsException expected) {
-            Assertions.assertThat(actual.getCause()).isEqualTo(expected.getCause());
-            Assertions.assertThat(actual.getCode()).isEqualTo(expected.getCode());
-            Assertions.assertThat(actual.getCategory()).isEqualTo(expected.getCategory());
-            Assertions.assertThat(actual.getServiceName()).isEqualTo(expected.getServiceName());
-            Assertions.assertThat(actual.getMessage()).isEqualTo(expected.getMessage());
-
-        }
+      assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, fachlicheWlsExceptionDTO);
     }
 
+    @Test
+    void
+        should_createTechnischeWlsException_when_responseWlsExceptionDTOWithCategoryTechnischIsGiven()
+            throws Exception {
+      val mockedResponseBody =
+          new ByteArrayInputStream("mocked response body as stream".getBytes());
+      Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
+
+      val technischeWlsExceptionDTO =
+          new WlsExceptionDTO(WlsExceptionCategory.T, "code", "serviceName", "message");
+      Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class))
+          .thenReturn(technischeWlsExceptionDTO);
+
+      val exceptionThrown =
+          Assertions.catchThrowableOfType(
+              () -> unitUnderTest.handleError(response), TechnischeWlsException.class);
+
+      assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, technischeWlsExceptionDTO);
+    }
+
+    @Test
+    void
+        should_createSicherheitsWlsException_when_responseWlsExceptionDTOWithCategorySecurityIsGiven()
+            throws Exception {
+      val mockedResponseBody =
+          new ByteArrayInputStream("mocked response body as stream".getBytes());
+      Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
+
+      val sicherheitsWlsExceptionDTO =
+          new WlsExceptionDTO(WlsExceptionCategory.S, "code", "serviceName", "message");
+      Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class))
+          .thenReturn(sicherheitsWlsExceptionDTO);
+
+      val exceptionThrown =
+          Assertions.catchThrowableOfType(
+              () -> unitUnderTest.handleError(response), SicherheitsWlsException.class);
+
+      assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, sicherheitsWlsExceptionDTO);
+    }
+
+    @Test
+    void
+        should_createInfrastrukturelleWlsException_when_responseWlsExceptionDTOWithCategoryInfrastructureIsGiven()
+            throws Exception {
+      val mockedResponseBody =
+          new ByteArrayInputStream("mocked response body as stream".getBytes());
+      Mockito.when(response.getBody()).thenReturn(mockedResponseBody);
+
+      val infrastrukturelleWlsExceptionDTO =
+          new WlsExceptionDTO(WlsExceptionCategory.I, "code", "serviceName", "message");
+      Mockito.when(objectMapper.readValue(mockedResponseBody, WlsExceptionDTO.class))
+          .thenReturn(infrastrukturelleWlsExceptionDTO);
+
+      val exceptionThrown =
+          Assertions.catchThrowableOfType(
+              () -> unitUnderTest.handleError(response), InfrastrukturelleWlsException.class);
+
+      assertAllWlsExceptionsAreSetExceptCategory(exceptionThrown, infrastrukturelleWlsExceptionDTO);
+    }
+
+    @Test
+    void
+        should_unknownTechnischeWlsException_when_exceptionDuringCreationOfExceptionFromResponseOccurred()
+            throws Exception {
+      val exceptionThrownByMappingResponse = new IOException("something strange happened");
+      Mockito.when(response.getBody()).thenThrow(exceptionThrownByMappingResponse);
+
+      val exceptionThrown =
+          Assertions.catchThrowableOfType(
+              () -> unitUnderTest.handleError(response), TechnischeWlsException.class);
+
+      val expectedExceptionMessage =
+          ExceptionKonstanten.MESSAGE_UNBEKANNTER_FEHLER
+              + "\nWegen: "
+              + exceptionThrownByMappingResponse.getClass()
+              + " mit:\n"
+              + exceptionThrownByMappingResponse.getMessage();
+      val expectedException =
+          TechnischeWlsException.withCode(ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT)
+              .inService(ExceptionKonstanten.SERVICE_UNBEKANNT)
+              .withCause(exceptionThrownByMappingResponse)
+              .buildWithMessage(expectedExceptionMessage);
+
+      assertWlsExceptionPropertiesAreEqual(exceptionThrown, expectedException);
+    }
+
+    private void assertAllWlsExceptionsAreSetExceptCategory(
+        final WlsException exceptionToCheck, final WlsExceptionDTO dataToBeSet) {
+      // category muss nicht geprüft werden da diese durch die Exception-Klasse gesetzt wird (siehe
+      // deren Konstruktor)
+      Assertions.assertThat(exceptionToCheck.getCode()).isEqualTo(dataToBeSet.code());
+      Assertions.assertThat(exceptionToCheck.getMessage()).isEqualTo(dataToBeSet.message());
+      Assertions.assertThat(exceptionToCheck.getServiceName()).isEqualTo(dataToBeSet.service());
+      Assertions.assertThat(exceptionToCheck.getCause()).isNull();
+    }
+
+    private void assertWlsExceptionPropertiesAreEqual(
+        final WlsException actual, final WlsException expected) {
+      Assertions.assertThat(actual.getCause()).isEqualTo(expected.getCause());
+      Assertions.assertThat(actual.getCode()).isEqualTo(expected.getCode());
+      Assertions.assertThat(actual.getCategory()).isEqualTo(expected.getCategory());
+      Assertions.assertThat(actual.getServiceName()).isEqualTo(expected.getServiceName());
+      Assertions.assertThat(actual.getMessage()).isEqualTo(expected.getMessage());
+    }
+  }
 }

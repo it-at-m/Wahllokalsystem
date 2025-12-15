@@ -21,52 +21,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/businessActions/wahlvorstand")
 public class WahlvorstandController {
 
-    private final WahlvorstandService wahlvorstandService;
-    private final WahlvorstandDTOMapper wahlvorstandDTOMapper;
+  private final WahlvorstandService wahlvorstandService;
+  private final WahlvorstandDTOMapper wahlvorstandDTOMapper;
 
-    @Operation(
-            description = "Laden des Wahlvorstandes eines Wahlbezirks { wahlbezirkID }",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Wahlvorstand konnte nicht gefunden werden."
-                    )
-            }
-    )
-    @GetMapping("/{wahlbezirkID}")
-    public ResponseEntity<WahlvorstandDTO> getWahlvorstand(
-            @RequestHeader(value = "forceupdate", required = false) Boolean forceUpdate,
-            @PathVariable("wahlbezirkID") String wahlbezirkID) {
+  @Operation(
+      description = "Laden des Wahlvorstandes eines Wahlbezirks { wahlbezirkID }",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Wahlvorstand konnte nicht gefunden werden.")
+      })
+  @GetMapping("/{wahlbezirkID}")
+  public ResponseEntity<WahlvorstandDTO> getWahlvorstand(
+      @RequestHeader(value = "forceupdate", required = false) Boolean forceUpdate,
+      @PathVariable("wahlbezirkID") String wahlbezirkID) {
 
-        Optional<WahlvorstandModel> result;
+    Optional<WahlvorstandModel> result;
 
-        if (Boolean.TRUE.equals(forceUpdate)) {
-            result = wahlvorstandService.updateWahlvorstand(wahlbezirkID);
-        } else {
-            result = wahlvorstandService.getWahlvorstand(wahlbezirkID);
-        }
-        if (result.isEmpty()) {
-            result = wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID);
-        }
-        return okWithBodyOrNoContent(result.map(wahlvorstandDTOMapper::toDTO));
+    if (Boolean.TRUE.equals(forceUpdate)) {
+      result = wahlvorstandService.updateWahlvorstand(wahlbezirkID);
+    } else {
+      result = wahlvorstandService.getWahlvorstand(wahlbezirkID);
     }
-
-    @Operation(
-            description = "Aktualisieren des Wahlvorstandes",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorstand erfolgreich gespeichert."
-                    ) }
-    )
-    @PostMapping("/{wahlbezirkID}")
-    public ResponseEntity<?> postWahlvorstand(@PathVariable("wahlbezirkID") final String wahlbezirkID, @RequestBody WahlvorstandWriteDTO wahlvorstandBody) {
-        wahlvorstandService.postWahlvorstand(wahlvorstandDTOMapper.toModel(wahlbezirkID, wahlvorstandBody));
-        return new ResponseEntity<>(HttpStatus.OK);
+    if (result.isEmpty()) {
+      result = wahlvorstandService.getFallbackWahlvorstand(wahlbezirkID);
     }
+    return okWithBodyOrNoContent(result.map(wahlvorstandDTOMapper::toDTO));
+  }
 
-    private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
-        return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
+  @Operation(
+      description = "Aktualisieren des Wahlvorstandes",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlvorstand erfolgreich gespeichert.")
+      })
+  @PostMapping("/{wahlbezirkID}")
+  public ResponseEntity<?> postWahlvorstand(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody WahlvorstandWriteDTO wahlvorstandBody) {
+    wahlvorstandService.postWahlvorstand(
+        wahlvorstandDTOMapper.toModel(wahlbezirkID, wahlvorstandBody));
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  private <T> ResponseEntity<T> okWithBodyOrNoContent(final Optional<T> optionalBody) {
+    return optionalBody.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+  }
 }

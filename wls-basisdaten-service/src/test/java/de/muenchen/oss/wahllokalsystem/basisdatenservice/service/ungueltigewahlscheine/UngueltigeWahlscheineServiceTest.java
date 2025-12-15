@@ -21,94 +21,115 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class UngueltigeWahlscheineServiceTest {
 
-    @Mock
-    UngueltigeWahlscheineModelMapper ungueltigeWahlscheineModelMapper;
+  @Mock UngueltigeWahlscheineModelMapper ungueltigeWahlscheineModelMapper;
 
-    @Mock
-    UngueltigeWahlscheineValidator ungueltigeWahlscheineValidator;
+  @Mock UngueltigeWahlscheineValidator ungueltigeWahlscheineValidator;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
+  @Mock UngueltigeWahlscheineRepository ungueltigeWahlscheineRepository;
 
-    @InjectMocks
-    UngueltigeWahlscheineService unitUnderTest;
+  @InjectMocks UngueltigeWahlscheineService unitUnderTest;
 
-    @Nested
-    class GetUngueltigeWahlscheine {
+  @Nested
+  class GetUngueltigeWahlscheine {
 
-        @Test
-        void should_returnUngueltigeWahlscheine_when_dataIsFoundInRepo() {
-            val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+    @Test
+    void should_returnUngueltigeWahlscheine_when_dataIsFoundInRepo() {
+      val ungueltigeWahlscheineReferenceModel =
+          new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
-            val mockedEntityUngueltigeWahlscheine = "csv-data".getBytes();
-            val mockedEntity = new UngueltigeWahlscheine();
-            mockedEntity.setUngueltigeWahlscheine(mockedEntityUngueltigeWahlscheine);
-            val mockedMappedEntityID = new WahltagIdUndWahlbezirksart();
+      val mockedEntityUngueltigeWahlscheine = "csv-data".getBytes();
+      val mockedEntity = new UngueltigeWahlscheine();
+      mockedEntity.setUngueltigeWahlscheine(mockedEntityUngueltigeWahlscheine);
+      val mockedMappedEntityID = new WahltagIdUndWahlbezirksart();
 
-            Mockito.when(ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel)).thenReturn(mockedMappedEntityID);
-            Mockito.when(ungueltigeWahlscheineRepository.findById(mockedMappedEntityID)).thenReturn(Optional.of(mockedEntity));
+      Mockito.when(ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel))
+          .thenReturn(mockedMappedEntityID);
+      Mockito.when(ungueltigeWahlscheineRepository.findById(mockedMappedEntityID))
+          .thenReturn(Optional.of(mockedEntity));
 
-            val result = unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel);
+      val result = unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel);
 
-            Assertions.assertThat(result).isEqualTo(mockedEntityUngueltigeWahlscheine);
-            Assertions.assertThat(result).isNotSameAs(mockedEntityUngueltigeWahlscheine);
-            Mockito.verify(ungueltigeWahlscheineValidator).validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReferenceModel);
-        }
-
-        @Test
-        void should_throwException_when_noDataFound() {
-            val ungueltigeWahlscheineReferenceModel = new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
-
-            val mockedMappedEntityID = new WahltagIdUndWahlbezirksart();
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel)).thenReturn(mockedMappedEntityID);
-            Mockito.when(ungueltigeWahlscheineRepository.findById(mockedMappedEntityID)).thenReturn(Optional.empty());
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel)).isSameAs(mockedWlsException);
-        }
+      Assertions.assertThat(result).isEqualTo(mockedEntityUngueltigeWahlscheine);
+      Assertions.assertThat(result).isNotSameAs(mockedEntityUngueltigeWahlscheine);
+      Mockito.verify(ungueltigeWahlscheineValidator)
+          .validUngueltigeWahlscheineReferenceOrThrow(ungueltigeWahlscheineReferenceModel);
     }
 
-    @Nested
-    class SetUngueltigeWahlscheine {
+    @Test
+    void should_throwException_when_noDataFound() {
+      val ungueltigeWahlscheineReferenceModel =
+          new UngueltigeWahlscheineReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
 
-        @Test
-        void should_saveUngueltigeWahlscheine_when_callingPost() {
-            val ungueltigeWahlscheineData = "csv data to set".getBytes();
-            val ungueltigeWahlscheineWriteModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
-                    ungueltigeWahlscheineData);
+      val mockedMappedEntityID = new WahltagIdUndWahlbezirksart();
+      val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
-            val mockedMappedEntity = new UngueltigeWahlscheine();
+      Mockito.when(ungueltigeWahlscheineModelMapper.toID(ungueltigeWahlscheineReferenceModel))
+          .thenReturn(mockedMappedEntityID);
+      Mockito.when(ungueltigeWahlscheineRepository.findById(mockedMappedEntityID))
+          .thenReturn(Optional.empty());
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.GETUNGUELTIGEWAHLSCHEINE_KEINE_DATEN))
+          .thenReturn(mockedWlsException);
 
-            Mockito.when(ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineWriteModel)).thenReturn(mockedMappedEntity);
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.getUngueltigeWahlscheine(ungueltigeWahlscheineReferenceModel))
+          .isSameAs(mockedWlsException);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel));
+  @Nested
+  class SetUngueltigeWahlscheine {
 
-            Mockito.verify(ungueltigeWahlscheineValidator).validUngueltigeWahlscheineWriteModelOrThrow(ungueltigeWahlscheineWriteModel);
-            Mockito.verify(ungueltigeWahlscheineRepository).save(mockedMappedEntity);
-        }
+    @Test
+    void should_saveUngueltigeWahlscheine_when_callingPost() {
+      val ungueltigeWahlscheineData = "csv data to set".getBytes();
+      val ungueltigeWahlscheineWriteModel =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
+              ungueltigeWahlscheineData);
 
-        @Test
-        void should_throwTechnischeWlsException_when_savingFailed() {
-            val ungueltigeWahlscheineData = "csv data to set".getBytes();
-            val ungueltigeWahlscheineWriteModel = new UngueltigeWahlscheineWriteModel(new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
-                    ungueltigeWahlscheineData);
+      val mockedMappedEntity = new UngueltigeWahlscheine();
 
-            val mockedMappedEntity = new UngueltigeWahlscheine();
-            val mockedRepoSaveException = new RuntimeException("saving failed");
-            val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
+      Mockito.when(ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineWriteModel))
+          .thenReturn(mockedMappedEntity);
 
-            Mockito.when(ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineWriteModel)).thenReturn(mockedMappedEntity);
-            Mockito.doThrow(mockedRepoSaveException).when(ungueltigeWahlscheineRepository).save(mockedMappedEntity);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH))
-                    .thenReturn(mockedWlsException);
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel));
 
-            Assertions.assertThatThrownBy(() -> unitUnderTest.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel)).isSameAs(mockedWlsException);
-        }
+      Mockito.verify(ungueltigeWahlscheineValidator)
+          .validUngueltigeWahlscheineWriteModelOrThrow(ungueltigeWahlscheineWriteModel);
+      Mockito.verify(ungueltigeWahlscheineRepository).save(mockedMappedEntity);
     }
 
+    @Test
+    void should_throwTechnischeWlsException_when_savingFailed() {
+      val ungueltigeWahlscheineData = "csv data to set".getBytes();
+      val ungueltigeWahlscheineWriteModel =
+          new UngueltigeWahlscheineWriteModel(
+              new UngueltigeWahlscheineReferenceModel("wahlID", WahlbezirkArtModel.BWB),
+              ungueltigeWahlscheineData);
+
+      val mockedMappedEntity = new UngueltigeWahlscheine();
+      val mockedRepoSaveException = new RuntimeException("saving failed");
+      val mockedWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(ungueltigeWahlscheineModelMapper.toEntity(ungueltigeWahlscheineWriteModel))
+          .thenReturn(mockedMappedEntity);
+      Mockito.doThrow(mockedRepoSaveException)
+          .when(ungueltigeWahlscheineRepository)
+          .save(mockedMappedEntity);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.POSTUNGUELTIGEWS_SPEICHERN_NICHT_ERFOLGREICH))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.setUngueltigeWahlscheine(ungueltigeWahlscheineWriteModel))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

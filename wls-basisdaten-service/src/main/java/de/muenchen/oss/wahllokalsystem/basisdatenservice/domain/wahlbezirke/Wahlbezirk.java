@@ -24,27 +24,17 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Wahlbezirk {
 
-    @Id
-    @NotNull
-    @Size(max = 1024)
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 1024) private String wahlbezirkID;
 
-    @NotNull
-    private LocalDate wahltag;
+  @NotNull private LocalDate wahltag;
 
-    @NotNull
-    @Size(max = 255)
-    private String nummer;
+  @NotNull @Size(max = 255) private String nummer;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private WahlbezirkArt wahlbezirkart;
+  @Enumerated(EnumType.STRING)
+  @NotNull private WahlbezirkArt wahlbezirkart;
 
-    @NotNull
-    @Size(max = 255)
-    private String wahlnummer;
+  @NotNull @Size(max = 255) private String wahlnummer;
 
-    @NotNull
-    @Size(max = 255)
-    private String wahlID;
+  @NotNull @Size(max = 255) private String wahlID;
 }

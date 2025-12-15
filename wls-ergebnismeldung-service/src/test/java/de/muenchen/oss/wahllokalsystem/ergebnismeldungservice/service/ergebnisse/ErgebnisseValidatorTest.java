@@ -22,128 +22,152 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ErgebnisseValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    ErgebnisseValidator unitUnderTest;
+  @InjectMocks ErgebnisseValidator unitUnderTest;
 
-    @Nested
-    class ValidReferenceOrThrow {
+  @Nested
+  class ValidReferenceOrThrow {
 
-        @Test
-        void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A);
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+    @Test
+    void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
+      val id = new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A);
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id, mockedWlsException));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
-        void should_throwProvidedException_when_bezirkUndWahlIDStapelartIsNotValid(final ArgumentsAccessor arguments) {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(arguments.get(0, ErgebnisseReferenceModel.class), mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", null, StapelartModel.LTW_BZW_A), "wahlID is null"),
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A), "wahlID is empty"),
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A), "wahlID is blank"),
-                    Arguments.of(new ErgebnisseReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new ErgebnisseReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is empty"),
-                    Arguments.of(new ErgebnisseReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A), "wahlbezirkID is blank"),
-                    Arguments.of(new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id, mockedWlsException));
     }
 
-    @Nested
-    class ValidIDOrThrow {
-
-        @Test
-        void should_notThrowException_when_bezirkUndWahlIDIsValid() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException));
-        }
-
-        @Test
-        void should_throwProvidedException_when_bezirkIDIsBlank() {
-            val wahlbezirkID = " ";
-            val wahlID = "wahlID";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwProvidedException_when_wahlIDIsBlank() {
-            val wahlbezirkID = "";
-            val wahlID = " ";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwProvidedException_when_bezirkIDIsNull() {
-            val wahlID = "wahlID";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(null, wahlID, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwProvidedException_when_wahlIDIsNull() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, null, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwProvidedException_when_bezirkIDIsEmpty() {
-            val wahlbezirkID = "";
-            val wahlID = "wahlID";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwProvidedException_when_wahlIDIsEmpty() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "";
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
-                    .isSameAs(mockedWlsException);
-        }
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
+    void should_throwProvidedException_when_bezirkUndWahlIDStapelartIsNotValid(
+        final ArgumentsAccessor arguments) {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validReferenceOrThrow(
+                      arguments.get(0, ErgebnisseReferenceModel.class), mockedWlsException))
+          .isSameAs(mockedWlsException);
     }
 
-    @Nested
-    class ValidModelOrThrow {
-
-        @Test
-        void should_throwFachlicheWlsException_when_ergebnisseIsNull() {
-            val ergebnisseModelModelToValidate = new ErgebnisseModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null);
-
-            val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelOrThrow(ergebnisseModelModelToValidate))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
+    private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(
+              new ErgebnisseReferenceModel("wahlbezirkID", null, StapelartModel.LTW_BZW_A),
+              "wahlID is null"),
+          Arguments.of(
+              new ErgebnisseReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A),
+              "wahlID is empty"),
+          Arguments.of(
+              new ErgebnisseReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A),
+              "wahlID is blank"),
+          Arguments.of(
+              new ErgebnisseReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is null"),
+          Arguments.of(
+              new ErgebnisseReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is empty"),
+          Arguments.of(
+              new ErgebnisseReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is blank"),
+          Arguments.of(
+              new ErgebnisseReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
     }
+  }
+
+  @Nested
+  class ValidIDOrThrow {
+
+    @Test
+    void should_notThrowException_when_bezirkUndWahlIDIsValid() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException));
+    }
+
+    @Test
+    void should_throwProvidedException_when_bezirkIDIsBlank() {
+      val wahlbezirkID = " ";
+      val wahlID = "wahlID";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwProvidedException_when_wahlIDIsBlank() {
+      val wahlbezirkID = "";
+      val wahlID = " ";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwProvidedException_when_bezirkIDIsNull() {
+      val wahlID = "wahlID";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(null, wahlID, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwProvidedException_when_wahlIDIsNull() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, null, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwProvidedException_when_bezirkIDIsEmpty() {
+      val wahlbezirkID = "";
+      val wahlID = "wahlID";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwProvidedException_when_wahlIDIsEmpty() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "";
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validIDOrThrow(wahlbezirkID, wahlID, mockedWlsException))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class ValidModelOrThrow {
+
+    @Test
+    void should_throwFachlicheWlsException_when_ergebnisseIsNull() {
+      val ergebnisseModelModelToValidate =
+          new ErgebnisseModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null);
+
+      val mockedFachlicheWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelOrThrow(ergebnisseModelModelToValidate))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+  }
 }

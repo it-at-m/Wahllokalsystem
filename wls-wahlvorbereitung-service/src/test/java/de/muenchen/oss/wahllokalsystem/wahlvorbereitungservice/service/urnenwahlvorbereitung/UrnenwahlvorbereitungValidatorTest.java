@@ -19,99 +19,136 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class UrnenwahlvorbereitungValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    UrnenwahlvorbereitungValidator unitUnderTest;
+  @InjectMocks UrnenwahlvorbereitungValidator unitUnderTest;
 
-    @Nested
-    class ValidWahlbezirkIDOrThrow {
+  @Nested
+  class ValidWahlbezirkIDOrThrow {
 
-        @Test
-        void should_notThrowException_when_wahlbezirkIDIsValid() {
-            val idToValidate = "wahlbezirkID";
+    @Test
+    void should_notThrowException_when_wahlbezirkIDIsValid() {
+      val idToValidate = "wahlbezirkID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(idToValidate));
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsNull() {
-            val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(null)).isSameAs(exceptionToThrow);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
-            val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG)).thenReturn(exceptionToThrow);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow("")).isSameAs(exceptionToThrow);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(idToValidate));
     }
 
-    @Nested
-    class ValidModelToSetOrThrow {
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsNull() {
+      val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(exceptionToThrow);
 
-        @Test
-        void should_notThrowException_when_modelIsValid() {
-            val validModel = initValid().build();
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
-        }
-
-        @Test
-        void should_throwException_when_modelIsNull() {
-            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(null)).isSameAs(mockedFactoryException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsNull() {
-            val invalidModel = initValid().wahlbezirkID(null).build();
-
-            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedFactoryException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
-            val invalidModel = initValid().wahlbezirkID("").build();
-
-            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedFactoryException);
-        }
-
-        @Test
-        void should_throwWlsException_when_urnenanzahlIsNull() {
-            val invalidModel = initValid().urnenAnzahl(null).build();
-
-            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedFactoryException);
-        }
-
-        @Test
-        void should_throwWlsException_when_urnenanzahlIsEmpty() {
-            val invalidModel = initValid().urnenAnzahl(Collections.emptyList()).build();
-
-            val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.PARAMS_UNVOLLSTAENDIG)).thenReturn(mockedFactoryException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel)).isSameAs(mockedFactoryException);
-        }
-
-        private UrnenwahlvorbereitungModel.UrnenwahlvorbereitungModelBuilder initValid() {
-            return UrnenwahlvorbereitungModel.builder().wahlbezirkID("wahlbezirkID").urnenAnzahl(List.of(new WahlurneModel("wahlID", 1, true)));
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(null))
+          .isSameAs(exceptionToThrow);
     }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
+      val exceptionToThrow = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(exceptionToThrow);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validWahlbezirkIDOrThrow(""))
+          .isSameAs(exceptionToThrow);
+    }
+  }
+
+  @Nested
+  class ValidModelToSetOrThrow {
+
+    @Test
+    void should_notThrowException_when_modelIsValid() {
+      val validModel = initValid().build();
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(validModel));
+    }
+
+    @Test
+    void should_throwException_when_modelIsNull() {
+      val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(null))
+          .isSameAs(mockedFactoryException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsNull() {
+      val invalidModel = initValid().wahlbezirkID(null).build();
+
+      val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedFactoryException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
+      val invalidModel = initValid().wahlbezirkID("").build();
+
+      val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedFactoryException);
+    }
+
+    @Test
+    void should_throwWlsException_when_urnenanzahlIsNull() {
+      val invalidModel = initValid().urnenAnzahl(null).build();
+
+      val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedFactoryException);
+    }
+
+    @Test
+    void should_throwWlsException_when_urnenanzahlIsEmpty() {
+      val invalidModel = initValid().urnenAnzahl(Collections.emptyList()).build();
+
+      val mockedFactoryException = FachlicheWlsException.withCode("000").buildWithMessage("error");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.PARAMS_UNVOLLSTAENDIG))
+          .thenReturn(mockedFactoryException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelToSetOrThrow(invalidModel))
+          .isSameAs(mockedFactoryException);
+    }
+
+    private UrnenwahlvorbereitungModel.UrnenwahlvorbereitungModelBuilder initValid() {
+      return UrnenwahlvorbereitungModel.builder()
+          .wahlbezirkID("wahlbezirkID")
+          .urnenAnzahl(List.of(new WahlurneModel("wahlID", 1, true)));
+    }
+  }
 }

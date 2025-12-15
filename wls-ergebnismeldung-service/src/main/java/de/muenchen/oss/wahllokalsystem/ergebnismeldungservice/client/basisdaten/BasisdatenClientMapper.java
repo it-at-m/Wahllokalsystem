@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BasisdatenClientMapper {
 
-    WahlartModel toModel(WahlDTO.WahlartEnum wahlart);
+  WahlartModel toModel(WahlDTO.WahlartEnum wahlart);
 }

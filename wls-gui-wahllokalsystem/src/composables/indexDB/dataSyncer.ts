@@ -9,7 +9,7 @@ import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
 import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-const { getDirtyItems } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
@@ -17,7 +17,7 @@ export function useDataSyncer() {
   const isOfflineDataSyncing = ref(false);
 
   async function getSyncTasks() {
-    const itemsToSync = await getDirtyItems();
+    const itemsToSync = await indexDBSingleton.getDirtyItems();
     itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,

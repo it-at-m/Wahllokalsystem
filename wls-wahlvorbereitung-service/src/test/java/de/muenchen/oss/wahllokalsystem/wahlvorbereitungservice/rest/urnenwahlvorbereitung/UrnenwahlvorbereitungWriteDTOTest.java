@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Test;
 
 class UrnenwahlvorbereitungWriteDTOTest {
 
-    @Test
-    void should_notReturnNullForUrnenanzahl_when_noDataProvided() {
-        val result = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, null);
+  @Test
+  void should_notReturnNullForUrnenanzahl_when_noDataProvided() {
+    val result = new UrnenwahlvorbereitungWriteDTO(0, 0, 0, null);
 
-        Assertions.assertThat(result.urnenAnzahl()).isNotNull();
-    }
-
+    Assertions.assertThat(result.urnenAnzahl()).isNotNull();
+  }
 }

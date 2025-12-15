@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public interface WahlvorstandEaiClient {
 
-    WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag);
+  WahlvorstandModel getWahlvorstand(String wahlbezirkID, LocalDate wahltag);
 
-    void postWahlvorstand(WahlvorstandModel wahlvorstand);
+  void postWahlvorstand(WahlvorstandModel wahlvorstand);
 }

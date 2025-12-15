@@ -8,10 +8,15 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface UngueltigeWahlscheineModelMapper {
 
-    WahltagIdUndWahlbezirksart toID(UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel);
+  WahltagIdUndWahlbezirksart toID(
+      UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel);
 
-    @Mapping(target = "wahltagIdUndWahlbezirksart.wahltagID", source = "ungueltigeWahlscheineReferenceModel.wahltagID")
-    @Mapping(target = "wahltagIdUndWahlbezirksart.wahlbezirksart", source = "ungueltigeWahlscheineReferenceModel.wahlbezirksart")
-    @Mapping(target = "ungueltigeWahlscheine", source = "ungueltigeWahlscheineData")
-    UngueltigeWahlscheine toEntity(UngueltigeWahlscheineWriteModel ungueltigeWahlscheineWriteModel);
+  @Mapping(
+      target = "wahltagIdUndWahlbezirksart.wahltagID",
+      source = "ungueltigeWahlscheineReferenceModel.wahltagID")
+  @Mapping(
+      target = "wahltagIdUndWahlbezirksart.wahlbezirksart",
+      source = "ungueltigeWahlscheineReferenceModel.wahlbezirksart")
+  @Mapping(target = "ungueltigeWahlscheine", source = "ungueltigeWahlscheineData")
+  UngueltigeWahlscheine toEntity(UngueltigeWahlscheineWriteModel ungueltigeWahlscheineWriteModel);
 }

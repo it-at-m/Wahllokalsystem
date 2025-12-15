@@ -19,72 +19,82 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoginInterceptor {
 
-    private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
-    private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();
-    private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
+  private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
+  private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();
+  private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
 
-    @Value("${service.config.loginCheckMessage}")
-    private String loginCheckMessage;
+  @Value("${service.config.loginCheckMessage}")
+  private String loginCheckMessage;
 
-    private final LoginTimeClient loginTimeClient;
+  private final LoginTimeClient loginTimeClient;
 
-    private final WahltagClient wahltagClient;
+  private final WahltagClient wahltagClient;
 
-    private final UserService userService;
+  private final UserService userService;
 
-    public void validateLoginOrThrow(final LdapUserDetails ldapUserDetails) {
-        if (isLoginTimeToCheck(ldapUserDetails)) {
-            if (!isUserOfActiveElectionDay(ldapUserDetails)) {
-                throw new DisabledException(loginCheckMessage);
-            }
+  public void validateLoginOrThrow(final LdapUserDetails ldapUserDetails) {
+    if (isLoginTimeToCheck(ldapUserDetails)) {
+      if (!isUserOfActiveElectionDay(ldapUserDetails)) {
+        throw new DisabledException(loginCheckMessage);
+      }
 
-            validateNowIsInLoginIntervalOrThrow();
-        }
+      validateNowIsInLoginIntervalOrThrow();
     }
+  }
 
-    private void validateNowIsInLoginIntervalOrThrow() {
-        try {
-            val legalLoginInterval = loginTimeClient.getLegalLoginInterval();
+  private void validateNowIsInLoginIntervalOrThrow() {
+    try {
+      val legalLoginInterval = loginTimeClient.getLegalLoginInterval();
 
-            val now = LocalDateTime.now();
-            val nowIsAfterOrEqualEarliestLoginWhenEarliestExists = legalLoginInterval.earliestLogin() == null || !now.isBefore(
-                    legalLoginInterval.earliestLogin());
-            val nowIsBeforeOrEqualLatestLoginWhenLatestExists = legalLoginInterval.latestLogin() == null || !now.isAfter(legalLoginInterval.latestLogin());
-            if (!nowIsAfterOrEqualEarliestLoginWhenEarliestExists || !nowIsBeforeOrEqualLatestLoginWhenLatestExists) {
-                throw new DisabledException(
-                        "Login ausßerhalb der gültigen Login-Zeiten zwischen " + legalLoginInterval.earliestLogin() + " und " + legalLoginInterval.latestLogin()
-                                + ".");
-            }
-        } catch (final WlsException wlsException) {
-            log.warn("Login wird erlaubt, jedoch war das Abrufen der Frühesten/Spätesten Loginuhrzeit nicht möglich. Fehlermeldung: {}",
-                    wlsException.getMessage(), wlsException);
-        }
+      val now = LocalDateTime.now();
+      val nowIsAfterOrEqualEarliestLoginWhenEarliestExists =
+          legalLoginInterval.earliestLogin() == null
+              || !now.isBefore(legalLoginInterval.earliestLogin());
+      val nowIsBeforeOrEqualLatestLoginWhenLatestExists =
+          legalLoginInterval.latestLogin() == null
+              || !now.isAfter(legalLoginInterval.latestLogin());
+      if (!nowIsAfterOrEqualEarliestLoginWhenEarliestExists
+          || !nowIsBeforeOrEqualLatestLoginWhenLatestExists) {
+        throw new DisabledException(
+            "Login ausßerhalb der gültigen Login-Zeiten zwischen "
+                + legalLoginInterval.earliestLogin()
+                + " und "
+                + legalLoginInterval.latestLogin()
+                + ".");
+      }
+    } catch (final WlsException wlsException) {
+      log.warn(
+          "Login wird erlaubt, jedoch war das Abrufen der Frühesten/Spätesten Loginuhrzeit nicht möglich. Fehlermeldung: {}",
+          wlsException.getMessage(),
+          wlsException);
     }
+  }
 
-    private boolean isUserOfActiveElectionDay(LdapUserDetails principal) {
-        log.debug("Benutzer ist: {}", principal.getUsername());
-        val userWithAuthorities = userService.getUser(principal.getUsername());
-        try {
-            if (userWithAuthorities.isPresent() && hasWahllokalAuthority(userWithAuthorities.get().authorities())) {
-                return wahltagClient.isWahltagActive(userWithAuthorities.get().wahltagID());
-            }
-        } catch (Exception e) {
-            return true;
-        }
+  private boolean isUserOfActiveElectionDay(LdapUserDetails principal) {
+    log.debug("Benutzer ist: {}", principal.getUsername());
+    val userWithAuthorities = userService.getUser(principal.getUsername());
+    try {
+      if (userWithAuthorities.isPresent()
+          && hasWahllokalAuthority(userWithAuthorities.get().authorities())) {
+        return wahltagClient.isWahltagActive(userWithAuthorities.get().wahltagID());
+      }
+    } catch (Exception e) {
+      return true;
+    }
+    return true;
+  }
+
+  private boolean hasWahllokalAuthority(Collection<String> authorities) {
+    return authorities.stream().anyMatch(ROLE_LOGIN_WLS_WAHLLOKAL::equals);
+  }
+
+  private boolean isLoginTimeToCheck(LdapUserDetails principal) {
+    for (GrantedAuthority eAuthority : principal.getAuthorities()) {
+      if (eAuthority.getAuthority().toLowerCase().contains(WAHLVORSTAND_AUTHORITY)
+          || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {
         return true;
+      }
     }
-
-    private boolean hasWahllokalAuthority(Collection<String> authorities) {
-        return authorities.stream().anyMatch(ROLE_LOGIN_WLS_WAHLLOKAL::equals);
-    }
-
-    private boolean isLoginTimeToCheck(LdapUserDetails principal) {
-        for (GrantedAuthority eAuthority : principal.getAuthorities()) {
-            if (eAuthority.getAuthority().toLowerCase().contains(WAHLVORSTAND_AUTHORITY)
-                    || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    return false;
+  }
 }

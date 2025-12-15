@@ -4,8 +4,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Basisdate
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.BasisdatenModel;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = { WahlbezirkeClientMapper.class, WahlenClientMapper.class })
+@Mapper(uses = {WahlbezirkeClientMapper.class, WahlenClientMapper.class})
 public interface WahldatenClientMapper {
 
-    BasisdatenModel fromRemoteClientDTOToModel(BasisdatenDTO basisdatenDTO);
+  BasisdatenModel fromRemoteClientDTOToModel(BasisdatenDTO basisdatenDTO);
 }

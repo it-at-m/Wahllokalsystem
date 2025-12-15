@@ -21,35 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UrnenwahlvorbereitungController extends AbstractController {
 
-    private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
-    private final UrnenwahlvorbereitungService urnenwahlvorbereitungService;
+  private final UrnenwahlvorbereitungDTOMapper urnenwahlvorbereitungDTOMapper;
+  private final UrnenwahlvorbereitungService urnenwahlvorbereitungService;
 
-    @Operation(
-            description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorbereitungsdaten erfolgreich zurückgegeben."
-                    ) }
-    )
-    @GetMapping("{wahlbezirkID}")
-    public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val urnenwahlvorbereitungModel = urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
+  @Operation(
+      description = "Laden der Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlvorbereitungsdaten erfolgreich zurückgegeben.")
+      })
+  @GetMapping("{wahlbezirkID}")
+  public ResponseEntity<UrnenwahlvorbereitungDTO> getUrnenwahlVorbereitung(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val urnenwahlvorbereitungModel =
+        urnenwahlvorbereitungService.getUrnenwahlvorbereitung(wahlbezirkID);
 
-        return okWithBodyOrNoContent(urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
-    }
+    return okWithBodyOrNoContent(
+        urnenwahlvorbereitungModel.map(urnenwahlvorbereitungDTOMapper::toDTO));
+  }
 
-    @Operation(
-            description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "201", description = "Wahlvorbereitungsdaten erfolgreich gespeichert."
-                    ) }
-    )
-    @PostMapping("{wahlbezirkID}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void postUrnenwahlvorbereitung(@PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final UrnenwahlvorbereitungWriteDTO urnenwahlvorbereitungDTO) {
-        val vorbereitungToSet = urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, urnenwahlvorbereitungDTO);
-        urnenwahlvorbereitungService.setUrnenwahlvorbereitung(vorbereitungToSet);
-    }
+  @Operation(
+      description = "Aktualisiert die Wahlvorbereitungsdaten des Urnenwahllokals {wahlbezirkID}",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Wahlvorbereitungsdaten erfolgreich gespeichert.")
+      })
+  @PostMapping("{wahlbezirkID}")
+  @ResponseStatus(HttpStatus.CREATED)
+  public void postUrnenwahlvorbereitung(
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final UrnenwahlvorbereitungWriteDTO urnenwahlvorbereitungDTO) {
+    val vorbereitungToSet =
+        urnenwahlvorbereitungDTOMapper.toModel(wahlbezirkID, urnenwahlvorbereitungDTO);
+    urnenwahlvorbereitungService.setUrnenwahlvorbereitung(vorbereitungToSet);
+  }
 }

@@ -11,18 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WahlvorstandValidator {
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
-        if (StringUtils.isBlank(wahlbezirkID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLVORSTAND_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlbezirkIDOrThrow(final String wahlbezirkID) {
+    if (StringUtils.isBlank(wahlbezirkID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETWAHLVORSTAND_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 
-    public void validWahlvorstandOrThrow(final WahlvorstandModel wahlvorstand) {
-        if (wahlvorstand == null || StringUtils.isBlank(wahlvorstand.wahlbezirkID())) {
-            log.warn("#postEreignis: Parameter unvollständig");
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTWAHLVORSTAND_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validWahlvorstandOrThrow(final WahlvorstandModel wahlvorstand) {
+    if (wahlvorstand == null || StringUtils.isBlank(wahlvorstand.wahlbezirkID())) {
+      log.warn("#postEreignis: Parameter unvollständig");
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POSTWAHLVORSTAND_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

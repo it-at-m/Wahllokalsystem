@@ -19,79 +19,94 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KonfigurierteWahltageServiceTest {
 
-    @Mock
-    KonfigurierterWahltagClient konfigurierterWahltagClient;
+  @Mock KonfigurierterWahltagClient konfigurierterWahltagClient;
 
-    @Mock
-    WahlenClient wahlenClient;
+  @Mock WahlenClient wahlenClient;
 
-    @Mock
-    KonfigurierterWahltagValidator konfigurierterWahltagValidator;
+  @Mock KonfigurierterWahltagValidator konfigurierterWahltagValidator;
 
-    @InjectMocks
-    KonfigurierteWahltageService unitUnderTest;
+  @InjectMocks KonfigurierteWahltageService unitUnderTest;
 
-    @Nested
-    class GetKonfigurierteWahltage {
+  @Nested
+  class GetKonfigurierteWahltage {
 
-        @Test
-        void should_returnKonfigurierteWahltage_when_callingGetKonfigurierteWahltage() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
-            val mockedKonfigurierteWahltageList = List.of(mockedKonfigurierterWahltagModel);
+    @Test
+    void should_returnKonfigurierteWahltage_when_callingGetKonfigurierteWahltage() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
+      val mockedKonfigurierteWahltageList = List.of(mockedKonfigurierterWahltagModel);
 
-            Mockito.when(konfigurierterWahltagClient.getKonfigurierteWahltage()).thenReturn(mockedKonfigurierteWahltageList);
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getKonfigurierteWahltage());
+      Mockito.when(konfigurierterWahltagClient.getKonfigurierteWahltage())
+          .thenReturn(mockedKonfigurierteWahltageList);
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getKonfigurierteWahltage());
 
-            Mockito.verify(konfigurierterWahltagClient).getKonfigurierteWahltage();
-        }
+      Mockito.verify(konfigurierterWahltagClient).getKonfigurierteWahltage();
+    }
+  }
+
+  @Nested
+  class PostKonfigurierterWahltag {
+
+    @Test
+    void should_throwNoException_when_givenKonfigurierterWahltag() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
+
+      Mockito.verify(konfigurierterWahltagValidator)
+          .validateModel(mockedKonfigurierterWahltagModel);
+      Mockito.verify(konfigurierterWahltagClient)
+          .postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
     }
 
-    @Nested
-    class PostKonfigurierterWahltag {
+    @Test
+    void should_throwTechnischeWlsException_when_exceptionIsThrownByClient() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
 
-        @Test
-        void should_throwNoException_when_givenKonfigurierterWahltag() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
+      val expectedException = TechnischeWlsException.withCode("").buildWithMessage("");
+      Mockito.doThrow(expectedException)
+          .when(konfigurierterWahltagClient)
+          .postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel))
+          .isSameAs(expectedException);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
-
-            Mockito.verify(konfigurierterWahltagValidator).validateModel(mockedKonfigurierterWahltagModel);
-            Mockito.verify(konfigurierterWahltagClient).postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_exceptionIsThrownByClient() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
-
-            val expectedException = TechnischeWlsException.withCode("").buildWithMessage("");
-            Mockito.doThrow(expectedException).when(konfigurierterWahltagClient).postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel))
-                    .isSameAs(expectedException);
-
-            Mockito.verify(konfigurierterWahltagValidator).validateModel(mockedKonfigurierterWahltagModel);
-        }
-
-        @Test
-        void should_resetWahlen_when_statusIsAktiv() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
-
-            Mockito.verify(wahlenClient).resetWahlen();
-        }
-
-        @Test
-        void should_notResetWahlen_when_statusIsInaktiv() {
-            val wahlbezirkID = "wahlbezirkID";
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, false, "1");
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
-
-            Mockito.verifyNoInteractions(wahlenClient);
-        }
+      Mockito.verify(konfigurierterWahltagValidator)
+          .validateModel(mockedKonfigurierterWahltagModel);
     }
+
+    @Test
+    void should_resetWahlen_when_statusIsAktiv() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, true, "1");
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
+
+      Mockito.verify(wahlenClient).resetWahlen();
+    }
+
+    @Test
+    void should_notResetWahlen_when_statusIsInaktiv() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(LocalDate.now(), wahlbezirkID, false, "1");
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.postKonfigurierterWahltag(mockedKonfigurierterWahltagModel));
+
+      Mockito.verifyNoInteractions(wahlenClient);
+    }
+  }
 }

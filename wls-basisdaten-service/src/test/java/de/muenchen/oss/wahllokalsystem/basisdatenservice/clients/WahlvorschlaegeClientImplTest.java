@@ -23,46 +23,48 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlvorschlaegeClientImplTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    WahlvorschlagControllerApi wahlvorschlagControllerApi;
+  @Mock WahlvorschlagControllerApi wahlvorschlagControllerApi;
 
-    @Mock
-    WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
+  @Mock WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
 
-    @InjectMocks
-    WahlvorschlaegeClientImpl unitUnderTest;
+  @InjectMocks WahlvorschlaegeClientImpl unitUnderTest;
 
-    @Nested
-    class GetWahlvorschlaege {
+  @Nested
+  class GetWahlvorschlaege {
 
-        @Test
-        void should_mapClientResponse_when_callingGet() {
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+    @Test
+    void should_mapClientResponse_when_callingGet() {
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            val mockedClientResponse = new WahlvorschlaegeDTO();
-            val mockedMappedClientResponse = WahlvorschlaegeModel.builder().build();
+      val mockedClientResponse = new WahlvorschlaegeDTO();
+      val mockedMappedClientResponse = WahlvorschlaegeModel.builder().build();
 
-            Mockito.when(wahlvorschlagControllerApi.loadWahlvorschlaege(eq(bezirkUndWahlID.getWahlID()), eq(bezirkUndWahlID.getWahlbezirkID())))
-                    .thenReturn(mockedClientResponse);
-            Mockito.when(wahlvorschlaegeClientMapper.toModel(mockedClientResponse)).thenReturn(mockedMappedClientResponse);
+      Mockito.when(
+              wahlvorschlagControllerApi.loadWahlvorschlaege(
+                  eq(bezirkUndWahlID.getWahlID()), eq(bezirkUndWahlID.getWahlbezirkID())))
+          .thenReturn(mockedClientResponse);
+      Mockito.when(wahlvorschlaegeClientMapper.toModel(mockedClientResponse))
+          .thenReturn(mockedMappedClientResponse);
 
-            val result = unitUnderTest.getWahlvorschlaege(bezirkUndWahlID);
+      val result = unitUnderTest.getWahlvorschlaege(bezirkUndWahlID);
 
-            Assertions.assertThat(result).isSameAs(mockedMappedClientResponse);
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_givenNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(wahlvorschlagControllerApi.loadWahlvorschlaege(any(), any())).thenReturn(null);
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlvorschlaege(new BezirkUndWahlID("", ""))).isSameAs(mockedWlsException);
-        }
+      Assertions.assertThat(result).isSameAs(mockedMappedClientResponse);
     }
 
+    @Test
+    void should_throwFachlicheWlsException_when_givenNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(wahlvorschlagControllerApi.loadWahlvorschlaege(any(), any())).thenReturn(null);
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlvorschlaege(new BezirkUndWahlID("", "")))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

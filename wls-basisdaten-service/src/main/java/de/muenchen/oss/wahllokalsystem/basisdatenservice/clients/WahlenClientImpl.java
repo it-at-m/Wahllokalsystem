@@ -21,23 +21,26 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahlenClientImpl implements WahlenClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahlenClientMapper wahlenClientMapper;
+  private final WahldatenControllerApi wahldatenControllerApi;
+  private final WahlenClientMapper wahlenClientMapper;
 
-    @Override
-    public List<WahlModel> getWahlen(final WahltagWithNummerModel wahltagWithNummerModel) {
-        final Set<WahlDTO> wahlDTOs;
-        try {
-            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
-        } catch (final Exception exception) {
-            log.info("exception on loadwahl from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
-        }
-        if (wahlDTOs == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
-        }
-        return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  @Override
+  public List<WahlModel> getWahlen(final WahltagWithNummerModel wahltagWithNummerModel) {
+    final Set<WahlDTO> wahlDTOs;
+    try {
+      wahlDTOs =
+          wahldatenControllerApi.loadWahlen(
+              wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
+    } catch (final Exception exception) {
+      log.info("exception on loadwahl from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }
+    if (wahlDTOs == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+    }
+    return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  }
 }

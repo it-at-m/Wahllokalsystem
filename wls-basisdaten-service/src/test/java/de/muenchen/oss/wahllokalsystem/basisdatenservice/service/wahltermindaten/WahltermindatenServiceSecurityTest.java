@@ -52,237 +52,302 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = { MicroServiceApplication.class, WahltermindatenServiceSecurityTest.TestConfiguration.class })
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@SpringBootTest(
+    classes = {
+      MicroServiceApplication.class,
+      WahltermindatenServiceSecurityTest.TestConfiguration.class
+    })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 @AutoConfigureWireMock
 public class WahltermindatenServiceSecurityTest {
 
-    @Configuration
-    static class TestConfiguration {
+  @Configuration
+  static class TestConfiguration {
 
-        @Bean
-        @Primary
-        public SyncTaskExecutor syncTaskExecutor() {
-            return new SyncTaskExecutor();
-        }
+    @Bean
+    @Primary
+    public SyncTaskExecutor syncTaskExecutor() {
+      return new SyncTaskExecutor();
+    }
+  }
+
+  @Autowired WahltermindatenService unitUnderTest;
+
+  @Autowired ObjectMapper objectMapper;
+
+  @Autowired WahlvorschlaegeRepository wahlvorschlaegeRepository;
+
+  @Autowired ReferendumvorlagenRepository referendumvorlagenRepository;
+
+  @Autowired KopfdatenRepository kopfdatenRepository;
+
+  @Autowired WahltagRepository wahltagRepository;
+
+  @Autowired WahlRepository wahlRepository;
+
+  @Autowired WahlbezirkRepository wahlbezirkRepository;
+
+  @BeforeEach
+  void setup() {
+    SecurityContextHolder.clearContext();
+  }
+
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(
+        Authorities.REPOSITORY_DELETE_WAHLTAG,
+        Authorities.REPOSITORY_DELETE_WAHL,
+        Authorities.REPOSITORY_DELETE_KOPFDATEN,
+        Authorities.REPOSITORY_DELETE_WAHLBEZIRK,
+        Authorities.REPOSITORY_DELETE_WAHLVORSCHLAEGE,
+        Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN);
+    wahlvorschlaegeRepository.deleteAll();
+    referendumvorlagenRepository.deleteAll();
+    kopfdatenRepository.deleteAll();
+    wahltagRepository.deleteAll();
+    wahlRepository.deleteAll();
+    wahlbezirkRepository.deleteAll();
+  }
+
+  @Nested
+  class PutWahltermindaten {
+
+    @Test
+    void should_throwNoException_when_allRequiredAuthoritiesArePresent() throws Exception {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING,
+              Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING));
+
+      val wahltagID = "wahltagID";
+      val stimmzettelgebietID = "sgzID";
+
+      // WireMock für getWahltag
+      setupWireMockForWahltagClient(wahltagID);
+      val wahlbezirkID = "wahlbezirkID";
+      // WireMock für getBasisdaten
+      final String wahlID = "wahlID";
+      setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
+
+      // WireMock für getWahlvorschlaege
+      setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
+      // WireMock für getReferendumvorlagen
+      setupWireMockForReferendumvorlagen(wahlID);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID));
     }
 
-    @Autowired
-    WahltermindatenService unitUnderTest;
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsWithUncatchedException")
+    void should_throwAccessDeniedException_when_oneRequiredAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING,
+              argumentsAccessor.get(0, String[].class)));
 
-    @Autowired
-    ObjectMapper objectMapper;
+      val wahltagID = "wahltagID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "sgzID";
+      val wahlbezirkID = "wahlbezirkID";
 
-    @Autowired
-    WahlvorschlaegeRepository wahlvorschlaegeRepository;
+      setupWireMockForWahltagClient(wahltagID);
+      setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForReferendumvorlagen(wahlID);
 
-    @Autowired
-    ReferendumvorlagenRepository referendumvorlagenRepository;
-
-    @Autowired
-    KopfdatenRepository kopfdatenRepository;
-
-    @Autowired
-    WahltagRepository wahltagRepository;
-
-    @Autowired
-    WahlRepository wahlRepository;
-
-    @Autowired
-    WahlbezirkRepository wahlbezirkRepository;
-
-    @BeforeEach
-    void setup() {
-        SecurityContextHolder.clearContext();
+      Assertions.assertThatThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLTAG, Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_KOPFDATEN,
-                Authorities.REPOSITORY_DELETE_WAHLBEZIRK,
-                Authorities.REPOSITORY_DELETE_WAHLVORSCHLAEGE,
-                Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN);
-        wahlvorschlaegeRepository.deleteAll();
-        referendumvorlagenRepository.deleteAll();
-        kopfdatenRepository.deleteAll();
-        wahltagRepository.deleteAll();
-        wahlRepository.deleteAll();
-        wahlbezirkRepository.deleteAll();
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsWithCatchedException")
+    void should_notThrowAccessDeniedException_when_oneRequiredAuthorityIsMissingThatGotCatched(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING,
+              argumentsAccessor.get(0, String[].class)));
+
+      val wahltagID = "wahltagID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "sgzID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      setupWireMockForWahltagClient(wahltagID);
+      setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForReferendumvorlagen(wahlID);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID));
     }
 
-    @Nested
-    class PutWahltermindaten {
-
-        @Test
-        void should_throwNoException_when_allRequiredAuthoritiesArePresent() throws Exception {
-            SecurityUtils.runWith(ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING,
-                    Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING));
-
-            val wahltagID = "wahltagID";
-            val stimmzettelgebietID = "sgzID";
-
-            //WireMock für getWahltag
-            setupWireMockForWahltagClient(wahltagID);
-            val wahlbezirkID = "wahlbezirkID";
-            //WireMock für getBasisdaten
-            final String wahlID = "wahlID";
-            setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
-
-            //WireMock für getWahlvorschlaege
-            setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
-            //WireMock für getReferendumvorlagen
-            setupWireMockForReferendumvorlagen(wahlID);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID));
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsWithUncatchedException")
-        void should_throwAccessDeniedException_when_oneRequiredAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING, argumentsAccessor.get(0, String[].class)));
-
-            val wahltagID = "wahltagID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "sgzID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            setupWireMockForWahltagClient(wahltagID);
-            setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForReferendumvorlagen(wahlID);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsWithCatchedException")
-        void should_notThrowAccessDeniedException_when_oneRequiredAuthorityIsMissingThatGotCatched(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING,
-                            argumentsAccessor.get(0, String[].class)));
-
-            val wahltagID = "wahltagID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "sgzID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            setupWireMockForWahltagClient(wahltagID);
-            setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForReferendumvorlagen(wahlID);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID));
-        }
-
-        public static Stream<Arguments> getMissingAuthoritiesVariationsWithUncatchedException() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING);
-        }
-
-        public static Stream<Arguments> getMissingAuthoritiesVariationsWithCatchedException() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING);
-        }
-
+    public static Stream<Arguments> getMissingAuthoritiesVariationsWithUncatchedException() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_NOT_CATCHED_ON_MISSING);
     }
 
-    @Nested
-    class DeleteWahltermindaten {
+    public static Stream<Arguments> getMissingAuthoritiesVariationsWithCatchedException() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING);
+    }
+  }
 
-        @Test
-        void should_throwNoException_when_allRequiredAuthoritiesArePresent() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTERMINDTEN);
+  @Nested
+  class DeleteWahltermindaten {
 
-            val wahltagID = "wahltagID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "sgzID";
-            val wahlbezirkID = "wahlbezirkID";
+    @Test
+    void should_throwNoException_when_allRequiredAuthoritiesArePresent() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTERMINDTEN);
 
-            setupWireMockForWahltagClient(wahltagID);
-            setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
+      val wahltagID = "wahltagID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "sgzID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
-        }
+      setupWireMockForWahltagClient(wahltagID);
+      setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
 
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsWithUncatchedException")
-        void should_throwAccessDeniedException_when_oneRequiredAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(
-                    ArrayUtils.addAll(Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING, argumentsAccessor.get(0, String[].class)));
-
-            val wahltagID = "wahltagID";
-            val wahlID = "wahlID";
-            val stimmzettelgebietID = "sgzID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            setupWireMockForWahltagClient(wahltagID);
-            setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
-            setupWireMockForReferendumvorlagen(wahlID);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        public static Stream<Arguments> getMissingAuthoritiesVariationsWithUncatchedException() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_WAHLTERMINDTEN);
-        }
-
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.deleteWahltermindaten(wahltagID));
     }
 
-    private void setupWireMockForWahltagClient(final String wahltagID) throws JsonProcessingException {
-        val wahltagClientResponse = Set.of(new WahltagDTO().identifikator(wahltagID).tag(LocalDate.now())
-                .nummer("0"));
-        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/wahltage"))
-                .willReturn(WireMock.aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
-                        .withStatus(HttpStatus.OK.value())));
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsWithUncatchedException")
+    void should_throwAccessDeniedException_when_oneRequiredAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_PUT_WAHLTERMINDATEN_THAT_GOT_CATCHED_ON_MISSING,
+              argumentsAccessor.get(0, String[].class)));
+
+      val wahltagID = "wahltagID";
+      val wahlID = "wahlID";
+      val stimmzettelgebietID = "sgzID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      setupWireMockForWahltagClient(wahltagID);
+      setupWireMockForWahldatenClient(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForWahlvorschlaege(wahlID, wahlbezirkID, stimmzettelgebietID);
+      setupWireMockForReferendumvorlagen(wahlID);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.putWahltermindaten(wahltagID))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    private void setupWireMockForWahldatenClient(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID)
-            throws JsonProcessingException {
-        val wahltagDate = LocalDate.now();
-        val wahlclientResponse = new BasisdatenDTO().basisstrukturdaten(
-                Set.of(new BasisstrukturdatenDTO().wahlID(wahlID).wahlbezirkID(wahlbezirkID).stimmzettelgebietID(stimmzettelgebietID)))
-                .wahlbezirke(Set.of(new WahlbezirkDTO().identifikator(wahlbezirkID).wahltag(wahltagDate).wahlID(wahlID)
-                        .wahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB).nummer("0")
+    public static Stream<Arguments> getMissingAuthoritiesVariationsWithUncatchedException() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_DELETE_WAHLTERMINDTEN);
+    }
+  }
+
+  private void setupWireMockForWahltagClient(final String wahltagID)
+      throws JsonProcessingException {
+    val wahltagClientResponse =
+        Set.of(new WahltagDTO().identifikator(wahltagID).tag(LocalDate.now()).nummer("0"));
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("/wahldaten/wahltage"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(objectMapper.writeValueAsString(wahltagClientResponse))
+                    .withStatus(HttpStatus.OK.value())));
+  }
+
+  private void setupWireMockForWahldatenClient(
+      final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID)
+      throws JsonProcessingException {
+    val wahltagDate = LocalDate.now();
+    val wahlclientResponse =
+        new BasisdatenDTO()
+            .basisstrukturdaten(
+                Set.of(
+                    new BasisstrukturdatenDTO()
+                        .wahlID(wahlID)
+                        .wahlbezirkID(wahlbezirkID)
+                        .stimmzettelgebietID(stimmzettelgebietID)))
+            .wahlbezirke(
+                Set.of(
+                    new WahlbezirkDTO()
+                        .identifikator(wahlbezirkID)
+                        .wahltag(wahltagDate)
+                        .wahlID(wahlID)
+                        .wahlbezirkArt(WahlbezirkDTO.WahlbezirkArtEnum.UWB)
+                        .nummer("0")
                         .wahlnummer("0")))
-                .wahlen(Set.of(new WahlDTO().nummer("0").wahltag(wahltagDate).name("wahl").wahlart(WahlDTO.WahlartEnum.BTW).identifikator(wahlID)))
-                .stimmzettelgebiete(
-                        Set.of(new StimmzettelgebietDTO().stimmzettelgebietsart(StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK).wahltag(wahltagDate)
-                                .nummer("0").identifikator(stimmzettelgebietID).name("name")));
-        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
-                .willReturn(WireMock.aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(wahlclientResponse))
-                        .withStatus(HttpStatus.OK.value())));
-    }
+            .wahlen(
+                Set.of(
+                    new WahlDTO()
+                        .nummer("0")
+                        .wahltag(wahltagDate)
+                        .name("wahl")
+                        .wahlart(WahlDTO.WahlartEnum.BTW)
+                        .identifikator(wahlID)))
+            .stimmzettelgebiete(
+                Set.of(
+                    new StimmzettelgebietDTO()
+                        .stimmzettelgebietsart(StimmzettelgebietDTO.StimmzettelgebietsartEnum.WK)
+                        .wahltag(wahltagDate)
+                        .nummer("0")
+                        .identifikator(stimmzettelgebietID)
+                        .name("name")));
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("/wahldaten/basisdaten"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(objectMapper.writeValueAsString(wahlclientResponse))
+                    .withStatus(HttpStatus.OK.value())));
+  }
 
-    private void setupWireMockForWahlvorschlaege(final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID)
-            throws JsonProcessingException {
-        val wahlvorschlaege = new WahlvorschlaegeDTO().wahlID(wahlID)
-                .stimmzettelgebietID(stimmzettelgebietID)
-                .wahlbezirkID(wahlbezirkID)
-                .wahlvorschlaege(Set.of(new WahlvorschlagDTO().identifikator(UUID.randomUUID().toString())
+  private void setupWireMockForWahlvorschlaege(
+      final String wahlID, final String wahlbezirkID, final String stimmzettelgebietID)
+      throws JsonProcessingException {
+    val wahlvorschlaege =
+        new WahlvorschlaegeDTO()
+            .wahlID(wahlID)
+            .stimmzettelgebietID(stimmzettelgebietID)
+            .wahlbezirkID(wahlbezirkID)
+            .wahlvorschlaege(
+                Set.of(
+                    new WahlvorschlagDTO()
+                        .identifikator(UUID.randomUUID().toString())
                         .kurzname("kurzname")
-                        .addKandidatenItem(new KandidatDTO().identifikator(UUID.randomUUID().toString()).name("kandidat").direktkandidat(true))));
-        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/vorschlaege/wahl/.*/.*"))
-                .willReturn(WireMock.aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(wahlvorschlaege))
-                        .withStatus(HttpStatus.OK.value())));
-    }
+                        .addKandidatenItem(
+                            new KandidatDTO()
+                                .identifikator(UUID.randomUUID().toString())
+                                .name("kandidat")
+                                .direktkandidat(true))));
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("/vorschlaege/wahl/.*/.*"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(objectMapper.writeValueAsString(wahlvorschlaege))
+                    .withStatus(HttpStatus.OK.value())));
+  }
 
-    private void setupWireMockForReferendumvorlagen(final String stimmzettelgebietID) throws JsonProcessingException {
-        val referendumvorlagen = new ReferendumvorlagenDTO().stimmzettelgebietID(stimmzettelgebietID)
-                .referendumvorlagen(
-                        Set.of(new ReferendumvorlageDTO().frage("frage")
-                                .addReferendumoptionenItem(new ReferendumoptionDTO().id(UUID.randomUUID().toString()).name("option"))));
-        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("/vorschlaege/referendum/.*/.*"))
-                .willReturn(WireMock.aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(objectMapper.writeValueAsString(referendumvorlagen))
-                        .withStatus(HttpStatus.OK.value())));
-    }
+  private void setupWireMockForReferendumvorlagen(final String stimmzettelgebietID)
+      throws JsonProcessingException {
+    val referendumvorlagen =
+        new ReferendumvorlagenDTO()
+            .stimmzettelgebietID(stimmzettelgebietID)
+            .referendumvorlagen(
+                Set.of(
+                    new ReferendumvorlageDTO()
+                        .frage("frage")
+                        .addReferendumoptionenItem(
+                            new ReferendumoptionDTO()
+                                .id(UUID.randomUUID().toString())
+                                .name("option"))));
+    WireMock.stubFor(
+        WireMock.get(WireMock.urlPathMatching("/vorschlaege/referendum/.*/.*"))
+            .willReturn(
+                WireMock.aResponse()
+                    .withHeader("Content-Type", "application/json")
+                    .withBody(objectMapper.writeValueAsString(referendumvorlagen))
+                    .withStatus(HttpStatus.OK.value())));
+  }
 }

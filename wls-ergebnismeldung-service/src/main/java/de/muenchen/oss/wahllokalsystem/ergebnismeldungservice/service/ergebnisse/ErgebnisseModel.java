@@ -6,6 +6,8 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record ErgebnisseModel(@NotNull String wahlbezirkID, @NotNull String wahlID, @NotNull StapelartModel stapelart,
-                              @NotNull List<ErgebnisModel> ergebnisse) {
-}
+public record ErgebnisseModel(
+    @NotNull String wahlbezirkID,
+    @NotNull String wahlID,
+    @NotNull StapelartModel stapelart,
+    @NotNull List<ErgebnisModel> ergebnisse) {}

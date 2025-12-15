@@ -23,74 +23,81 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class Mapping {
 
-    public AWerteDTO toClientDTO(final AWerte aWerte) {
-        AWerteDTO aoueaiAWerte = new AWerteDTO();
-        if (aWerte != null) {
-            aoueaiAWerte.setA1(aWerte.getA1());
-            aoueaiAWerte.setA2(aWerte.getA2());
-        }
-        return aoueaiAWerte;
+  public AWerteDTO toClientDTO(final AWerte aWerte) {
+    AWerteDTO aoueaiAWerte = new AWerteDTO();
+    if (aWerte != null) {
+      aoueaiAWerte.setA1(aWerte.getA1());
+      aoueaiAWerte.setA2(aWerte.getA2());
     }
+    return aoueaiAWerte;
+  }
 
-    public Set<ErgebnisDTO> toDtoErgebnisseSet(final List<Ergebnisse> ergebnisse) {
-        Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
+  public Set<ErgebnisDTO> toDtoErgebnisseSet(final List<Ergebnisse> ergebnisse) {
+    Set<ErgebnisDTO> ergebnisSet = new HashSet<>();
 
-        ergebnisse.forEach(ergebnisList -> {
-            Stapelart stapelart = ergebnisList.getBezirkUndWahlIDStapelart().getStapelart();
-            ergebnisList.getErgebnisse().forEach(ergebnis -> {
+    ergebnisse.forEach(
+        ergebnisList -> {
+          Stapelart stapelart = ergebnisList.getBezirkUndWahlIDStapelart().getStapelart();
+          ergebnisList
+              .getErgebnisse()
+              .forEach(
+                  ergebnis -> {
+                    ErgebnisDTO aoueaiErgebnis = new ErgebnisDTO();
+                    aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
+                    aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
+                    aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
 
-                ErgebnisDTO aoueaiErgebnis = new ErgebnisDTO();
-                aoueaiErgebnis.setErgebnis(ergebnis.getErgebnis());
-                aoueaiErgebnis.setKandidatID(ergebnis.getKandidatID());
-                aoueaiErgebnis.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
+                    val wahlvorschlagsordnungszahl = ergebnis.getWahlvorschlagsordnungszahl();
+                    if (wahlvorschlagsordnungszahl == null) {
+                      log.warn(
+                          "toAoueaiErgebnisseSet 4.1.1  fehler - wahlvorschlagsordnungszahl is null");
+                      log.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);
+                      log.warn("toAoueaiErgebnisseSet 4.1.1.2  ergebnisList: {} ", ergebnisList);
+                      log.warn("toAoueaiErgebnisseSet 4.1.1.3  ergebnis: {} ", ergebnis);
+                    }
+                    aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
 
-                val wahlvorschlagsordnungszahl = ergebnis.getWahlvorschlagsordnungszahl();
-                if (wahlvorschlagsordnungszahl == null) {
-                    log.warn("toAoueaiErgebnisseSet 4.1.1  fehler - wahlvorschlagsordnungszahl is null");
-                    log.warn("toAoueaiErgebnisseSet 4.1.1.1  ergebnisse: {} ", ergebnisse);
-                    log.warn("toAoueaiErgebnisseSet 4.1.1.2  ergebnisList: {} ", ergebnisList);
-                    log.warn("toAoueaiErgebnisseSet 4.1.1.3  ergebnis: {} ", ergebnis);
-                }
-                aoueaiErgebnis.setWahlvorschlagsordnungszahl(wahlvorschlagsordnungszahl);
-
-                aoueaiErgebnis.setStimmenart(stapelart.name());
-                ergebnisSet.add(aoueaiErgebnis);
-            });
+                    aoueaiErgebnis.setStimmenart(stapelart.name());
+                    ergebnisSet.add(aoueaiErgebnis);
+                  });
         });
 
-        return ergebnisSet;
-    }
+    return ergebnisSet;
+  }
 
-    public ErgebnismeldungDTO.WahlartEnum toWahlartDTO(final WahlartModel wahlart) {
-        try {
-            return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
-        } catch (Exception e) {
-            log.error("#convertWahlart: parsing Exception", e);
-        }
-        return null;
+  public ErgebnismeldungDTO.WahlartEnum toWahlartDTO(final WahlartModel wahlart) {
+    try {
+      return ErgebnismeldungDTO.WahlartEnum.valueOf(wahlart.name());
+    } catch (Exception e) {
+      log.error("#convertWahlart: parsing Exception", e);
     }
+    return null;
+  }
 
-    public Set<UngueltigeStimmzettelDTO> toDtoSet(final List<Ergebnisse> ungueltigeErgebnisse) {
-        Set<UngueltigeStimmzettelDTO> ungueltigeStimmzettelSet = new HashSet<>();
-        ungueltigeErgebnisse.forEach(ungueltigesErgebnis -> {
-            Stapelart stapelart = ungueltigesErgebnis.getBezirkUndWahlIDStapelart().getStapelart();
-            ungueltigesErgebnis.getErgebnisse().forEach(ergebnis -> ungueltigeStimmzettelSet.add(toDto(ergebnis, stapelart)));
+  public Set<UngueltigeStimmzettelDTO> toDtoSet(final List<Ergebnisse> ungueltigeErgebnisse) {
+    Set<UngueltigeStimmzettelDTO> ungueltigeStimmzettelSet = new HashSet<>();
+    ungueltigeErgebnisse.forEach(
+        ungueltigesErgebnis -> {
+          Stapelart stapelart = ungueltigesErgebnis.getBezirkUndWahlIDStapelart().getStapelart();
+          ungueltigesErgebnis
+              .getErgebnisse()
+              .forEach(ergebnis -> ungueltigeStimmzettelSet.add(toDto(ergebnis, stapelart)));
         });
-        return ungueltigeStimmzettelSet;
-    }
+    return ungueltigeStimmzettelSet;
+  }
 
-    public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
-        return switch (meldungsart) {
-        case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
-        case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
-        };
-    }
+  public ErgebnismeldungDTO.MeldungsartEnum toDTO(final MeldungsartModel meldungsart) {
+    return switch (meldungsart) {
+      case V1 -> ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+      case V3 -> ErgebnismeldungDTO.MeldungsartEnum.SCHNELLMELDUNG;
+    };
+  }
 
-    private UngueltigeStimmzettelDTO toDto(final Ergebnis ergebnis, final Stapelart stapelart) {
-        UngueltigeStimmzettelDTO ungueltigeStimmzettel = new UngueltigeStimmzettelDTO();
-        ungueltigeStimmzettel.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
-        ungueltigeStimmzettel.setAnzahl(ergebnis.getErgebnis());
-        ungueltigeStimmzettel.setStimmenart(stapelart.name());
-        return ungueltigeStimmzettel;
-    }
+  private UngueltigeStimmzettelDTO toDto(final Ergebnis ergebnis, final Stapelart stapelart) {
+    UngueltigeStimmzettelDTO ungueltigeStimmzettel = new UngueltigeStimmzettelDTO();
+    ungueltigeStimmzettel.setWahlvorschlagID(ergebnis.getWahlvorschlagID());
+    ungueltigeStimmzettel.setAnzahl(ergebnis.getErgebnis());
+    ungueltigeStimmzettel.setStimmenart(stapelart.name());
+    return ungueltigeStimmzettel;
+  }
 }

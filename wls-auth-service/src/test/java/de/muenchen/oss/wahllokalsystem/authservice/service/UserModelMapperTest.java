@@ -16,136 +16,204 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 class UserModelMapperTest {
 
-    UserModelMapper unitUnderTest = Mappers.getMapper(UserModelMapper.class);
+  UserModelMapper unitUnderTest = Mappers.getMapper(UserModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-        }
-
-        @Test
-        void should_returnModel_when_entityIsGiven() {
-            val authorities = Set.of(
-                    new Authority("authority1", Set.of(new Permission("permission11"), new Permission("permission12")), Collections.emptySet()),
-                    new Authority("authority2", Set.of(new Permission("permission21"), new Permission("permission22")), Collections.emptySet()));
-            val entityToMap = new User("username", "password", "email", true, true, "wahltagID", LocalDate.now(), "wahlbezirkID", "wahlbezirkNummer",
-                    Wahlbezirksart.BWB, "pin", authorities, "wbdid_wahlnummer");
-            entityToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entityToMap)));
-
-            val result = unitUnderTest.toModel(entityToMap);
-
-            val expectedAuthorities = Set.of("permission11", "permission12", "permission21", "permission22");
-            val expectedResult = new UserModel(entityToMap.getUsername(), entityToMap.getEmail(), entityToMap.isUserEnabled(), entityToMap.getWahltagID(),
-                    entityToMap.getWahltag(),
-                    entityToMap.getWahlbezirkID(), entityToMap.getWahlbezirkNummer(), WahlbezirksartModel.BWB, entityToMap.getPin(), expectedAuthorities,
-                    entityToMap.getWbid_wahlnummer());
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_nullIsGiven() {
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
-    @Nested
-    class PermissionsOfAuthoritiesToAuthorities {
+    @Test
+    void should_returnModel_when_entityIsGiven() {
+      val authorities =
+          Set.of(
+              new Authority(
+                  "authority1",
+                  Set.of(new Permission("permission11"), new Permission("permission12")),
+                  Collections.emptySet()),
+              new Authority(
+                  "authority2",
+                  Set.of(new Permission("permission21"), new Permission("permission22")),
+                  Collections.emptySet()));
+      val entityToMap =
+          new User(
+              "username",
+              "password",
+              "email",
+              true,
+              true,
+              "wahltagID",
+              LocalDate.now(),
+              "wahlbezirkID",
+              "wahlbezirkNummer",
+              Wahlbezirksart.BWB,
+              "pin",
+              authorities,
+              "wbdid_wahlnummer");
+      entityToMap.getAuthorities().forEach(authority -> authority.setUsers(Set.of(entityToMap)));
 
-        @Test
-        void should_returnNull_when_nullIsGiven() {
-            Assertions.assertThat(unitUnderTest.permissionsOfAuthoritiesToAuthorities(null)).isNull();
-        }
+      val result = unitUnderTest.toModel(entityToMap);
 
-        @Test
-        void should_returnSetWithPermissions_when_authoritiesWithPermissionsAreGiven() {
-            val authorities = Set.of(
-                    new Authority("authority1", Set.of(new Permission("permission11"), new Permission("permission12")), Collections.emptySet()),
-                    new Authority("authority2", Set.of(new Permission("permission21"), new Permission("permission22")), Collections.emptySet()));
+      val expectedAuthorities =
+          Set.of("permission11", "permission12", "permission21", "permission22");
+      val expectedResult =
+          new UserModel(
+              entityToMap.getUsername(),
+              entityToMap.getEmail(),
+              entityToMap.isUserEnabled(),
+              entityToMap.getWahltagID(),
+              entityToMap.getWahltag(),
+              entityToMap.getWahlbezirkID(),
+              entityToMap.getWahlbezirkNummer(),
+              WahlbezirksartModel.BWB,
+              entityToMap.getPin(),
+              expectedAuthorities,
+              entityToMap.getWbid_wahlnummer());
 
-            val result = unitUnderTest.permissionsOfAuthoritiesToAuthorities(authorities);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 
-            Assertions.assertThat(result).containsExactlyInAnyOrder("permission11", "permission12", "permission21", "permission22");
-        }
+  @Nested
+  class PermissionsOfAuthoritiesToAuthorities {
+
+    @Test
+    void should_returnNull_when_nullIsGiven() {
+      Assertions.assertThat(unitUnderTest.permissionsOfAuthoritiesToAuthorities(null)).isNull();
     }
 
-    @Nested
-    class ToUser {
+    @Test
+    void should_returnSetWithPermissions_when_authoritiesWithPermissionsAreGiven() {
+      val authorities =
+          Set.of(
+              new Authority(
+                  "authority1",
+                  Set.of(new Permission("permission11"), new Permission("permission12")),
+                  Collections.emptySet()),
+              new Authority(
+                  "authority2",
+                  Set.of(new Permission("permission21"), new Permission("permission22")),
+                  Collections.emptySet()));
 
-        @Test
-        void should_mapToEntity_when_allParametersAreGiven() {
-            val wahltagID = "wahltagID";
-            final Set<Authority> authoritiesToLink = Collections.emptySet();
-            val pin = "pin";
-            val username = "username";
-            val userInfo = createWahlbezirksartModelWithAllDataSet(WahlbezirksartModel.UWB);
+      val result = unitUnderTest.permissionsOfAuthoritiesToAuthorities(authorities);
 
-            val result = unitUnderTest.toUser(wahltagID, userInfo, authoritiesToLink, pin, username);
+      Assertions.assertThat(result)
+          .containsExactlyInAnyOrder(
+              "permission11", "permission12", "permission21", "permission22");
+    }
+  }
 
-            val expectedResult = new User(username, "dummy", "dummy@dummy.local", false, true, wahltagID, userInfo.wahltag(), userInfo.wahlbezirkID(),
-                    userInfo.wahlbezirknummer(), Wahlbezirksart.UWB, pin, authoritiesToLink, userInfo.wbid_wahlnummer());
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+  @Nested
+  class ToUser {
 
-        private WahllokalUserInfoModel createWahlbezirksartModelWithAllDataSet(final WahlbezirksartModel wahlbezirkArt) {
-            val userInfoModel = new WahllokalUserInfoModel("wahlbezirkNummer", LocalDate.now(), "wahlbezirkID", wahlbezirkArt, "wbid_wahlnummer");
-            Assertions.assertThat(userInfoModel).hasNoNullFieldsOrProperties();
-            return userInfoModel;
-        }
+    @Test
+    void should_mapToEntity_when_allParametersAreGiven() {
+      val wahltagID = "wahltagID";
+      final Set<Authority> authoritiesToLink = Collections.emptySet();
+      val pin = "pin";
+      val username = "username";
+      val userInfo = createWahlbezirksartModelWithAllDataSet(WahlbezirksartModel.UWB);
+
+      val result = unitUnderTest.toUser(wahltagID, userInfo, authoritiesToLink, pin, username);
+
+      val expectedResult =
+          new User(
+              username,
+              "dummy",
+              "dummy@dummy.local",
+              false,
+              true,
+              wahltagID,
+              userInfo.wahltag(),
+              userInfo.wahlbezirkID(),
+              userInfo.wahlbezirknummer(),
+              Wahlbezirksart.UWB,
+              pin,
+              authoritiesToLink,
+              userInfo.wbid_wahlnummer());
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
-    @Nested
-    class ToSpringSecurityUser {
+    private WahllokalUserInfoModel createWahlbezirksartModelWithAllDataSet(
+        final WahlbezirksartModel wahlbezirkArt) {
+      val userInfoModel =
+          new WahllokalUserInfoModel(
+              "wahlbezirkNummer",
+              LocalDate.now(),
+              "wahlbezirkID",
+              wahlbezirkArt,
+              "wbid_wahlnummer");
+      Assertions.assertThat(userInfoModel).hasNoNullFieldsOrProperties();
+      return userInfoModel;
+    }
+  }
 
-        @Test
-        void should_mapToUser_when_allTargetRequiredPropertiesAreGiven() {
-            val username = "username";
-            val password = "password";
+  @Nested
+  class ToSpringSecurityUser {
 
-            val userTopMap = new User();
-            userTopMap.setUsername(username);
-            userTopMap.setPassword(password);
-            userTopMap.setAccountNonLocked(true);
-            userTopMap.setAuthorities(Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
-                    new Authority("authority2", Collections.emptySet(), Collections.emptySet())));
+    @Test
+    void should_mapToUser_when_allTargetRequiredPropertiesAreGiven() {
+      val username = "username";
+      val password = "password";
 
-            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
+      val userTopMap = new User();
+      userTopMap.setUsername(username);
+      userTopMap.setPassword(password);
+      userTopMap.setAccountNonLocked(true);
+      userTopMap.setAuthorities(
+          Set.of(
+              new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
+              new Authority("authority2", Collections.emptySet(), Collections.emptySet())));
 
-            val expectedAuthorities = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
-            val expectedResult = new org.springframework.security.core.userdetails.User(username, password, true, true, true, true, expectedAuthorities);
+      val result = unitUnderTest.toSpringSecurityUser(userTopMap);
 
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+      val expectedAuthorities =
+          Set.of(
+              new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
+      val expectedResult =
+          new org.springframework.security.core.userdetails.User(
+              username, password, true, true, true, true, expectedAuthorities);
 
-        @Test
-        void should_mapToUserWithEmptyStringForPassword_when_userPasswordIsNull() {
-            val userTopMap = new User();
-            userTopMap.setUsername("username");
-            userTopMap.setPassword(null);
-            userTopMap.setAuthorities(Collections.emptySet());
-
-            val result = unitUnderTest.toSpringSecurityUser(userTopMap);
-
-            Assertions.assertThat(result.getPassword()).isEmpty();
-        }
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
     }
 
-    @Nested
-    class AuthoritiesToGrantedAuthorities {
+    @Test
+    void should_mapToUserWithEmptyStringForPassword_when_userPasswordIsNull() {
+      val userTopMap = new User();
+      userTopMap.setUsername("username");
+      userTopMap.setPassword(null);
+      userTopMap.setAuthorities(Collections.emptySet());
 
-        @Test
-        void should_returnSetOfGrantedAuthorities_when_setOfAuthoritiesIsGiven() {
-            val authoritiesToMap = Set.of(new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
-                    new Authority("authority2", Collections.emptySet(), Collections.emptySet()));
+      val result = unitUnderTest.toSpringSecurityUser(userTopMap);
 
-            val result = unitUnderTest.authoritiesToGrantedAuthorities(authoritiesToMap);
+      Assertions.assertThat(result.getPassword()).isEmpty();
+    }
+  }
 
-            val expectedResult = Set.of(new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+  @Nested
+  class AuthoritiesToGrantedAuthorities {
 
-        @Test
-        void should_returnEmptySet_when_parameterIsNull() {
-            Assertions.assertThat(unitUnderTest.authoritiesToGrantedAuthorities(null)).isEmpty();
-        }
+    @Test
+    void should_returnSetOfGrantedAuthorities_when_setOfAuthoritiesIsGiven() {
+      val authoritiesToMap =
+          Set.of(
+              new Authority("authority1", Collections.emptySet(), Collections.emptySet()),
+              new Authority("authority2", Collections.emptySet(), Collections.emptySet()));
+
+      val result = unitUnderTest.authoritiesToGrantedAuthorities(authoritiesToMap);
+
+      val expectedResult =
+          Set.of(
+              new SimpleGrantedAuthority("authority1"), new SimpleGrantedAuthority("authority2"));
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
+    @Test
+    void should_returnEmptySet_when_parameterIsNull() {
+      Assertions.assertThat(unitUnderTest.authoritiesToGrantedAuthorities(null)).isEmpty();
+    }
+  }
 }

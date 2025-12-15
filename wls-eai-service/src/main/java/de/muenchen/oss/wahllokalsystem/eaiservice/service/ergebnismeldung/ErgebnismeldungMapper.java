@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ErgebnismeldungMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "AWerte", source = "aWerte")
-    @Mapping(target = "BWerte", source = "bWerte")
-    @Mapping(target = "erstellungszeit", ignore = true)
-    Ergebnismeldung toEntity(ErgebnismeldungDTO dto);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "AWerte", source = "aWerte")
+  @Mapping(target = "BWerte", source = "bWerte")
+  @Mapping(target = "erstellungszeit", ignore = true)
+  Ergebnismeldung toEntity(ErgebnismeldungDTO dto);
 }

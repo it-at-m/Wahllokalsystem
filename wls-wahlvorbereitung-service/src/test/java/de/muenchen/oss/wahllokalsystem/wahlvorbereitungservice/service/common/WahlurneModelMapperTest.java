@@ -9,23 +9,23 @@ import org.mapstruct.factory.Mappers;
 
 class WahlurneModelMapperTest {
 
-    private final WahlurneModelMapper unitUnderTest = Mappers.getMapper(WahlurneModelMapper.class);
+  private final WahlurneModelMapper unitUnderTest = Mappers.getMapper(WahlurneModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnWahlurneModel_when_givenWahlurneEntity() {
-            val wahlID = "wahlID";
-            val anzahl = 23;
-            val urneVersiegelt = true;
-            val entityToMap = new Wahlurne(wahlID, anzahl, urneVersiegelt);
+    @Test
+    void should_returnWahlurneModel_when_givenWahlurneEntity() {
+      val wahlID = "wahlID";
+      val anzahl = 23;
+      val urneVersiegelt = true;
+      val entityToMap = new Wahlurne(wahlID, anzahl, urneVersiegelt);
 
-            val result = unitUnderTest.toModel(entityToMap);
+      val result = unitUnderTest.toModel(entityToMap);
 
-            val expectedResult = new WahlurneModel(wahlID, anzahl, urneVersiegelt);
+      val expectedResult = new WahlurneModel(wahlID, anzahl, urneVersiegelt);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

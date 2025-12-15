@@ -39,14 +39,11 @@ vi.mock(
   })
 );
 
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-    }),
-  })
-);
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
+  useErgebnisService: () => ({
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+  }),
+}));
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({

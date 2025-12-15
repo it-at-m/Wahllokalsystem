@@ -9,7 +9,6 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
@@ -20,9 +19,12 @@ const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-  const { getErgebnisse, postErgebnisse } = useErgebnisService();
-  const { getBegruendungStimmzettelumschlaege, postBegruendung } =
-    useErgebnisermittlungService();
+  const {
+    getErgebnisse,
+    postErgebnisse,
+    getBegruendungStimmzettelumschlaege,
+    postBegruendung,
+  } = useErgebnisService();
   const { getStimmzettelTermForWahl } = useTextFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);

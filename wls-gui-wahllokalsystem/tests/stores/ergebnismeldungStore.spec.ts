@@ -26,18 +26,11 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     getErgebnisse: mockDefinitions.getErgebnisse,
     postErgebnisse: mockDefinitions.postErgebnisse,
+    getBegruendungStimmzettelumschlaege:
+      mockDefinitions.getBegruendungStimmzettelumschlaege,
+    postBegruendung: mockDefinitions.postBegruendung,
   }),
 }));
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      getBegruendungStimmzettelumschlaege:
-        mockDefinitions.getBegruendungStimmzettelumschlaege,
-      postBegruendung: mockDefinitions.postBegruendung,
-    }),
-  })
-);
 
 const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();

@@ -51,7 +51,7 @@
 import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 
-import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -59,7 +59,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { waehlerverzeichnisActions, wahlenActions } = useWahlenStore();
 const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
-const { getStimmzettelumschlaege } = useErgebnisermittlungService();
+const { getStimmzettelumschlaege } = useErgebnisService();
 
 const props = defineProps<{
   wahlbezirkId: string;

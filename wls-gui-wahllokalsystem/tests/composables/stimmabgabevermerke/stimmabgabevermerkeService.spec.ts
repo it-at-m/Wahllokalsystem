@@ -14,16 +14,23 @@ const mockDefinitions = vi.hoisted(() => ({
   toDto: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  StimmzettelumschlaegeControllerApi: vi.fn(),
-  BegruendungControllerApi: vi.fn(),
-  StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
-    getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
-    postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
-  })),
-  StimmzettelDTOStimmzettelartEnum: vi.fn(),
-  Configuration: vi.fn(),
-}));
+vi.mock(
+  "@/api/wls-clients/generated-ergebnismeldung-api",
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...(mod as object),
+      StimmzettelumschlaegeControllerApi: vi.fn(),
+      BegruendungControllerApi: vi.fn(),
+      StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
+        getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
+        postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
+      })),
+      StimmzettelDTOStimmzettelartEnum: vi.fn(),
+      Configuration: vi.fn(),
+    };
+  }
+);
 vi.mock(
   "@/composables/stimmabgabevermerke/stimmabgabevermerkeMapper.ts",
   () => ({

@@ -29,14 +29,11 @@ const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
 }));
 
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-    }),
-  })
-);
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
+  useErgebnisService: () => ({
+    postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
+  }),
+}));
 
 describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   let testPinia: TestingPinia;

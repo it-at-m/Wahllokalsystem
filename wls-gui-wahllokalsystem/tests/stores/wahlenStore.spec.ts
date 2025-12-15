@@ -31,14 +31,11 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
     getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
   }),
 }));
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-    }),
-  })
-);
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
+  useErgebnisService: () => ({
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+  }),
+}));
 
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();

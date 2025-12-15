@@ -1,9 +1,9 @@
-import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/BezirkUndWahlIDStapelArt.ts";
+import type { BezirkUndWahlIDStapelArt } from "@/types/ergebnismeldung/common/BezirkUndWahlIDStapelArt.ts";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/begruendungTestDataFactory.ts";
-import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/commonErgebnismeldungTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
+import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
+import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -22,22 +22,15 @@ const mockDefinitions = vi.hoisted(() => ({
   postBegruendung: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     getErgebnisse: mockDefinitions.getErgebnisse,
     postErgebnisse: mockDefinitions.postErgebnisse,
+    getBegruendungStimmzettelumschlaege:
+      mockDefinitions.getBegruendungStimmzettelumschlaege,
+    postBegruendung: mockDefinitions.postBegruendung,
   }),
 }));
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      getBegruendungStimmzettelumschlaege:
-        mockDefinitions.getBegruendungStimmzettelumschlaege,
-      postBegruendung: mockDefinitions.postBegruendung,
-    }),
-  })
-);
 
 const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();

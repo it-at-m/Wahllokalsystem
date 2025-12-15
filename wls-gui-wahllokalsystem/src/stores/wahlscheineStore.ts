@@ -1,11 +1,11 @@
-import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
+import type { Wahlscheine } from "@/types/ergebnismeldung/common/Wahlscheine.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
+import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const { getWahlscheine, postWahlscheine } = useWahlscheineService();

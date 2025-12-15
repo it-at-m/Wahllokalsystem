@@ -6,7 +6,7 @@ import type { Farbe } from "@/types/wahl/Farbe.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { WahlDTOWahlartEnum } from "@/api/wls-clients/generated-basisdaten-api";
-import { StimmzettelumschlaegeBuilder } from "@/types/ergebnisermittlung/Stimmzettelumschlaege.ts";
+import { StimmzettelumschlaegeBuilder } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useWahlMapper() {

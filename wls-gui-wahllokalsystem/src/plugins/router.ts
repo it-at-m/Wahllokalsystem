@@ -26,17 +26,17 @@ import {
 } from "@/constants";
 import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import ErfassungStimmzettelView from "@/views/auszaehlung/ErfassungStimmzettelView.vue";
-import MBWNiederschriftView from "@/views/auszaehlung/mbw/MBWNiederschriftView.vue";
-import MBWSchnellmeldungView from "@/views/auszaehlung/mbw/MBWSchnellmeldungView.vue";
-import MBWStapelAandBView from "@/views/auszaehlung/mbw/MBWStapelAandBView.vue";
-import MBWStapelBCView from "@/views/auszaehlung/mbw/MBWStapelBCView.vue";
-import MBWStapelDView from "@/views/auszaehlung/mbw/MBWStapelDView.vue";
-import StapelCView from "@/views/auszaehlung/obw/StapelCView.vue";
-import ObwStapelBView from "@/views/auszaehlung/OBWStapelBView.vue";
-import OWBStapelAView from "@/views/auszaehlung/OWBStapelAView.vue";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
+import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
+import MBWNiederschriftView from "@/views/ergebnismeldung/MBW/MBWNiederschriftView.vue";
+import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldungView.vue";
+import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
+import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
+import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
+import OBWStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
+import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
+import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
 import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
@@ -136,7 +136,7 @@ const routes = [
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
-    component: ObwStapelBView,
+    component: OBWStapelBView,
   },
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",

@@ -2,7 +2,7 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnisermittlung/StimmzettelumschlaegeTestDataFactory.ts";
+import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnismeldung/common/StimmzettelumschlaegeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -31,14 +31,11 @@ vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
     getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
   }),
 }));
-vi.mock(
-  "@/composables/ergebnisermittlung/ergebnisermittlungService.ts",
-  () => ({
-    useErgebnisermittlungService: () => ({
-      getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-    }),
-  })
-);
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
+  useErgebnisService: () => ({
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+  }),
+}));
 
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();

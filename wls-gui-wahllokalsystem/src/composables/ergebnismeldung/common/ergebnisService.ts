@@ -39,7 +39,7 @@ export function useErgebnisService() {
   const ergebnisseControllerAPI = new ErgebnisseControllerApi(
     ergebnisMeldungConfiguration
   );
-  const ergebenismeldungsControllerApi = new ErgebnismeldungControllerApi(
+  const ergebnismeldungsControllerApi = new ErgebnismeldungControllerApi(
     ergebnisMeldungConfiguration
   );
   const stimmzettelumschlaegeControllerAPI =
@@ -120,7 +120,7 @@ export function useErgebnisService() {
     sendNotification = true
   ) {
     try {
-      await ergebenismeldungsControllerApi.sendErgebnisse(
+      await ergebnismeldungsControllerApi.sendErgebnisse(
         wahlID,
         wahlbezirkID,
         waehlerverzeichnisNummer,

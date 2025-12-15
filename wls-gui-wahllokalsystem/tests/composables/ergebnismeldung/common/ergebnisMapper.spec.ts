@@ -11,7 +11,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnismeldung/common/StimmzettelumschlaegeTestDataFactory.ts";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum,
@@ -479,17 +479,6 @@ describe("ergebnisMapper.ts", () => {
   });
 
   describe("toStimmzettelumschlaegeModel", () => {
-    beforeEach(() => {
-      const mockedNow = new Date();
-      vi.useFakeTimers({
-        now: mockedNow,
-      });
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
     it("should_returnModel_when_givenDtoWithoutUhrzeit", () => {
       const dto: StimmzettelumschlaegeDTO = createStimmzettelumschlaegeDto();
 

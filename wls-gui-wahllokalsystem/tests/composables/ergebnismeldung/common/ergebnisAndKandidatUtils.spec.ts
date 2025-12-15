@@ -4,7 +4,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
+import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 const { createKandidat } = useWahlvorschlaegeTestDataFactory();

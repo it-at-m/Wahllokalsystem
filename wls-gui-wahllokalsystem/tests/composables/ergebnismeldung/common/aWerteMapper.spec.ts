@@ -4,7 +4,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnisermittlung/aWerteTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useAWerteMapper } from "@/composables/ergebnismeldung/aWerteMapper.ts";
+import { useAWerteMapper } from "@/composables/ergebnismeldung/common/aWerteMapper.ts";
 
 const { prepareAWerteDTO } = useAWerteTestDataFactory();
 const { generateRandomNumber } = useCommonTestDataFactory();

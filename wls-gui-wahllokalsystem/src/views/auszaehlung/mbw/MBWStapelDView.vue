@@ -16,7 +16,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

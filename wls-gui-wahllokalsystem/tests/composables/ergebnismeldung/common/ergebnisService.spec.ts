@@ -8,7 +8,7 @@ import {
   PostErgebnisseStapelartEnum,
   SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -48,7 +48,7 @@ vi.mock(
     };
   }
 );
-vi.mock("@/composables/ergebnismeldung/ergebnisMapper.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
     toModel: mockDefinitions.toModel,
     toDto: mockDefinitions.toDto,

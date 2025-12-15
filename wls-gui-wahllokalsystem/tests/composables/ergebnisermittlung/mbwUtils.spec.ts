@@ -24,7 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
     getErgebnisse: mockDefinitions.getErgebnisse,

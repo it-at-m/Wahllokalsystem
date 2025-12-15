@@ -46,7 +46,7 @@ vi.mock("@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts", () => ({
     toModel: mockDefinitions.toModel,
   }),
 }));
-vi.mock("@/composables/ergebnismeldung/ergebnisMapper.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
   useErgebnisMapper: () => ({
     toBegruendungModel: mockDefinitions.toBegruendungModel,
     toBegruendungDto: mockDefinitions.toBegruendungDto,

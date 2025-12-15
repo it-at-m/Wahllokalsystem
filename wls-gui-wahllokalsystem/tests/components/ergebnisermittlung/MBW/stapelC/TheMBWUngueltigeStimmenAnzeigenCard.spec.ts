@@ -20,7 +20,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     getErgebnisse: mockDefinitions.getErgebnisse,
   }),

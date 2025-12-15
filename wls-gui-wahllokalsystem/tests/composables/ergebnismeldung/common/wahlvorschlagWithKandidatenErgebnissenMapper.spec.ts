@@ -6,7 +6,7 @@ import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergeb
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
+import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnismeldung/common/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();

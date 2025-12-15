@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { onActivated, ref } from "vue";
 
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const { getErgebnisse } = useErgebnisService();

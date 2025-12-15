@@ -2,7 +2,7 @@ import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/statusTes
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useStatusService } from "@/composables/ergebnismeldung/statusService.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createStatusDTO, createStatus } = useStatusTestDataFactory();
@@ -37,7 +37,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/ergebnismeldung/statusMapper.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/statusMapper.ts", () => ({
   useStatusMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
     toDto: mockDefinitions.mapModelToDto,

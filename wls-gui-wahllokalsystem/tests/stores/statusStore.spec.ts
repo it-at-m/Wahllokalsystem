@@ -13,7 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
   postStatus: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/statusService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/statusService.ts", () => ({
   useStatusService: () => ({
     getStatus: mockDefinitions.getStatus,
     postStatus: mockDefinitions.postStatus,

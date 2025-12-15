@@ -10,7 +10,7 @@ import { ref } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 

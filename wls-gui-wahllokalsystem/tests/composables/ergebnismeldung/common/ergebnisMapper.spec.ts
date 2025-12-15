@@ -13,7 +13,7 @@ import {
   GetErgebnisseStapelartEnum,
   PostErgebnisseStapelartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
+import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";
 
 const {

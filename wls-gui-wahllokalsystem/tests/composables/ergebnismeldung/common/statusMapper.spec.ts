@@ -2,7 +2,7 @@ import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/statusTes
 import { describe, expect, it } from "vitest";
 
 import { MeldungDTOValidierungsstatusEnum } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useStatusMapper } from "@/composables/ergebnismeldung/statusMapper.ts";
+import { useStatusMapper } from "@/composables/ergebnismeldung/common/statusMapper.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
 
 const { prepareStatusDTO, prepareMeldungDTO, prepareStatus, prepareMeldung } =

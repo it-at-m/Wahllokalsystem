@@ -4,7 +4,7 @@ import type { Wahlscheine } from "@/types/ergebnismeldung/Wahlscheine.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahlscheineTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useWahlscheineMapper } from "@/composables/ergebnismeldung/wahlscheineMapper.ts";
+import { useWahlscheineMapper } from "@/composables/ergebnismeldung/common/wahlscheineMapper.ts";
 
 const { createWahlscheineDTO, createWahlscheine } =
   useWahlscheineTestDataFactory();

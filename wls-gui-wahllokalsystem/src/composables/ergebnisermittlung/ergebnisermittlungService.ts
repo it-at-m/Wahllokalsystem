@@ -9,7 +9,7 @@ import {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisermittlungMapper } from "@/composables/ergebnisermittlung/ergebnisermittlungMapper.ts";
-import { useErgebnisMapper } from "@/composables/ergebnismeldung/ergebnisMapper.ts";
+import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";

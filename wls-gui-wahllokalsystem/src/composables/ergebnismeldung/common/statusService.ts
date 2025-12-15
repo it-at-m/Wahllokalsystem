@@ -5,7 +5,7 @@ import {
   StatusControllerApi,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
-import { useStatusMapper } from "@/composables/ergebnismeldung/statusMapper.ts";
+import { useStatusMapper } from "@/composables/ergebnismeldung/common/statusMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

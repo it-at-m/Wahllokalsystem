@@ -7,8 +7,8 @@ import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnisermittlung/mbwErgebnisAndWahlvorschlagMapper.ts";
-import { useAWerteService } from "@/composables/ergebnismeldung/aWerteService.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";

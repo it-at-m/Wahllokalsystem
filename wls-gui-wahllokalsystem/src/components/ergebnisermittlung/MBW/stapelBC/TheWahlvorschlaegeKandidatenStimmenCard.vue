@@ -70,8 +70,8 @@ import { computed, onMounted, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
-import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnisermittlung/mwbStapelBCUtils.ts";
+import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 
 const COLUMN_COUNT_FULL_COL_SPAN = 4;
 

@@ -2,7 +2,7 @@ import {
   AWerteControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { useAWerteMapper } from "@/composables/ergebnismeldung/aWerteMapper.ts";
+import { useAWerteMapper } from "@/composables/ergebnismeldung/common/aWerteMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";

@@ -32,7 +32,7 @@ import type { ErgebnisAndKandidat } from "@/types/ergebnisermittlung/ErgebnisAnd
 import { computed } from "vue";
 
 import BaseRowKandidatStimmenErfassen from "@/components/ergebnisermittlung/MBW/stapelBC/BaseRowKandidatStimmenErfassen.vue";
-import { useErgebnisAndKandidatUtils } from "@/composables/ergebnisermittlung/ergebnisAndKandidatUtils.ts";
+import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 
 const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 

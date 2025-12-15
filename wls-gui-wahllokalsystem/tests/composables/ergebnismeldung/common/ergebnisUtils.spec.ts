@@ -2,7 +2,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/ergebnisseTestDataFactory.ts";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
+import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 const { generateRandomNumber } = useCommonTestDataFactory();

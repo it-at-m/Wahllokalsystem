@@ -3,7 +3,7 @@ import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/wahl
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useWahlscheineService } from "@/composables/ergebnismeldung/wahlscheineService.ts";
+import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createWahlscheine, prepareWahlscheineDTO } =
@@ -39,7 +39,7 @@ vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/ergebnismeldung/wahlscheineMapper.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/wahlscheineMapper.ts", () => ({
   useWahlscheineMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
     toDto: mockDefinitions.mapModelToDto,

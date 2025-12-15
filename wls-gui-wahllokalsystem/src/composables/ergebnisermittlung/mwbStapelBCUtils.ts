@@ -5,8 +5,8 @@ import type { Ref } from "vue";
 import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/ergebnisService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useWahlvorschlagWithKandidatenErgebnissenMapper } from "@/composables/ergebnismeldung/common/wahlvorschlagWithKandidatenErgebnissenMapper.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";

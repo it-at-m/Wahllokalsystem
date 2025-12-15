@@ -26,7 +26,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  "@/composables/ergebnisermittlung/wahlvorschlagWithKandidatenErgebnissenMapper.ts",
+  "@/composables/ergebnismeldung/common/wahlvorschlagWithKandidatenErgebnissenMapper.ts",
   () => ({
     useWahlvorschlagWithKandidatenErgebnissenMapper: () => ({
       toWahlvorschlagWithKandidatenErgebnissen:
@@ -36,7 +36,7 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/ergebnismeldung/ergebnisService.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   useErgebnisService: () => ({
     getErgebnisse: mockDefinitions.getErgebnisse,
     postErgebnisse: mockDefinitions.postErgebnisse,

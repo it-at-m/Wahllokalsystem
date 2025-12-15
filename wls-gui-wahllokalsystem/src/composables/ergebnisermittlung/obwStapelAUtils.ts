@@ -5,7 +5,7 @@ import type { ComputedRef } from "vue";
 import { computed } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useErgebnisUtils } from "@/composables/ergebnismeldung/ergebnisUtils.ts";
+import { useErgebnisUtils } from "@/composables/ergebnismeldung/common/ergebnisUtils.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/StapelArtEnum.ts";

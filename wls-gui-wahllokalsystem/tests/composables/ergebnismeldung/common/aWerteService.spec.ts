@@ -11,7 +11,7 @@ import {
   vi,
 } from "vitest";
 
-import { useAWerteService } from "@/composables/ergebnismeldung/aWerteService.ts";
+import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -27,7 +27,7 @@ vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   })),
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/ergebnismeldung/aWerteMapper.ts", () => ({
+vi.mock("@/composables/ergebnismeldung/common/aWerteMapper.ts", () => ({
   useAWerteMapper: () => ({
     toModel: mockDefinitions.mapToModel,
   }),

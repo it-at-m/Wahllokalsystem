@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useStatusService } from "@/composables/ergebnismeldung/statusService.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
 
 export const storeID = "status";

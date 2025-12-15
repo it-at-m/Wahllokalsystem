@@ -9,7 +9,7 @@ import {
 import { afterEach, describe, expect, it } from "vitest";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseCardSnippedErgebnis from "@/components/ergebnisermittlung/BaseCardSnippedErgebnis.vue";
+import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 

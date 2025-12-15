@@ -11,7 +11,7 @@
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 
-import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnisermittlung/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
+import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { EXAMPLE_ROUTES_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";

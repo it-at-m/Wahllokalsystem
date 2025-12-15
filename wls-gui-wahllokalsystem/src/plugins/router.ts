@@ -34,7 +34,7 @@ import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldung
 import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
-import ObwStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
+import OBWStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
 import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
@@ -136,7 +136,7 @@ const routes = [
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelB",
     name: ROUTE_STAPEL_B,
-    component: ObwStapelBView,
+    component: OBWStapelBView,
   },
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelC",

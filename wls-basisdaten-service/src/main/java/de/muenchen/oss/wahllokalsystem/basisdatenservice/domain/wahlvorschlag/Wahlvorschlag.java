@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -51,6 +52,7 @@ public class Wahlvorschlag {
   @NotNull @ToString.Include private boolean erhaeltStimmen;
 
   @OneToMany(mappedBy = "wahlvorschlag", orphanRemoval = true, cascade = CascadeType.PERSIST)
+  @BatchSize(size = 1000)
   @NotNull private Set<Kandidat> kandidaten = new LinkedHashSet<>();
 
   public void addKandidat(final Kandidat kandidat) {

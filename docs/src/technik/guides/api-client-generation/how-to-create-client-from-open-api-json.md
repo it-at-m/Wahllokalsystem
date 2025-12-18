@@ -95,7 +95,7 @@ Für jeden zu erzeugenden Client mus ein `execution`-Element definiert werden.
 > [!WARNING] Known error - org.openapitools.codegen.SpecValidationException: Illegal Character in path at index
 >
 > Der Pfad zur JSON-Datei `${project.basedir}` erlaubt keine Leerzeichen. Sollte die Client-Generierung diesen
-> Fehler werfen, muss die lokale Projektdirectory so angepasst werden, dass sich im Pfad keine Leerzeichen mehr
+> Fehler werfen, muss das lokale Projektverzeichnis so angepasst werden, dass sich im Pfad keine Leerzeichen mehr
 > befinden.
 >
 > <details>

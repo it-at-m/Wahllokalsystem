@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public interface WahlvorschlaegeRepository extends CrudRepository<Wahlvorschlaeg
   @Cacheable(value = CACHE, key = "#p0")
   Optional<Wahlvorschlaege> findById(UUID bezirkUndWahlID);
 
+  @EntityGraph(attributePaths = {"wahlvorschlaege", "wahlvorschlaege.kandidaten"})
   Optional<Wahlvorschlaege> findByBezirkUndWahlID(BezirkUndWahlID bezirkUndWahlID);
 
   @Override

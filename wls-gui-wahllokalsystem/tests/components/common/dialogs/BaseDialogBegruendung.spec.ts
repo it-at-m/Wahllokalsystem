@@ -6,6 +6,7 @@ import {
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -19,8 +20,6 @@ describe("BaseDialogBegruendung.vue", () => {
   }));
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
-  const BEGRUENDUNG = "Begründung";
-
   beforeEach(() => {
     wrapper = mount(BaseDialogBegruendung, {
       global: {
@@ -29,7 +28,6 @@ describe("BaseDialogBegruendung.vue", () => {
       props: {
         visible: true,
         dialogtitle: "Abweichung erfordert Begründung",
-        label: "Bitte begründen Sie hier die Abweichung",
       },
       slots: {
         default: "Es wurde eine Abweichung erkannt.",
@@ -47,52 +45,33 @@ describe("BaseDialogBegruendung.vue", () => {
         getSnapshotFilename(context)
       );
     });
-
-    it("should_showBaseDialogBegruendungWithEnabledSaveButton_when_begruendungIsSetAndValid", async (context) => {
-      const textarea = wrapper.findComponent(
-        '[data-test="basedialogbegruendung-textarea"]'
-      );
-      await textarea.setValue(BEGRUENDUNG);
-
-      await expect(document.body.innerHTML).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_showBaseDialogBegruendungWithDisabledSaveButton_when_begruendungIsSetAndNotValid", async (context) => {
-      const textarea = wrapper.findComponent(
-        '[data-test="basedialogbegruendung-textarea"]'
-      );
-      await textarea.setValue("a");
-
-      await expect(document.body.innerHTML).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_sendConfirmEventWithPayload_when_confirmButtonIsClickedAndInputIsValid", async () => {
-      const textarea = wrapper.findComponent(
-        '[data-test="basedialogbegruendung-textarea"]'
-      );
-      await textarea.setValue(BEGRUENDUNG);
-
+    it("should_sendConfirm_when_confirmButtonIsClicked", async () => {
       await wrapper
         .findComponent('[data-test="basedialogbegruendung-btn-confirm"]')
         .trigger("click");
 
       expect(wrapper.emitted()).toHaveProperty("confirm");
-      const confirmEventPayload = wrapper.emitted("confirm") as string[];
-      expect(confirmEventPayload).toHaveLength(1);
-      expect(confirmEventPayload[0]).toEqual([BEGRUENDUNG]);
     });
 
-    it("should_notSendConfirmEvent_when_inputIsInvalid", async () => {
-      await wrapper
-        .findComponent('[data-test="basedialogbegruendung-btn-confirm"]')
-        .trigger("click");
-      expect(wrapper.emitted()).not.toHaveProperty("confirm");
+    it("should_disableSaveButton_when_inputIsInvalid", async () => {
+      const dialogWithDisabledButton = mount(BaseDialogBegruendung, {
+        global: {
+          plugins: [vuetify],
+        },
+        props: {
+          visible: true,
+          dialogtitle: "Abweichung erfordert Begründung",
+          isSaveDisabled: true,
+        },
+        slots: {
+          default: "Es wurde eine Abweichung erkannt.",
+        },
+      });
+      const saveButton = dialogWithDisabledButton.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
     it("should_sendCancelEvent_when_cancelButtonIsClicked", async () => {

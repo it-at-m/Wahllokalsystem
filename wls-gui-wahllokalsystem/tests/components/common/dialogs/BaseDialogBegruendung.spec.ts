@@ -40,7 +40,7 @@ describe("BaseDialogBegruendung.vue", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_showBaseDialogBegruendungWithDisabledSaveButton_when_mounted", async (context) => {
+    it("should_showBaseDialogBegruendung_when_mounted", async (context) => {
       await expect(document.body.innerHTML).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -72,6 +72,8 @@ describe("BaseDialogBegruendung.vue", () => {
       });
       const saveButton = dialogWithDisabledButton.findComponent(BaseButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+
+      dialogWithDisabledButton.unmount();
     });
 
     it("should_sendCancelEvent_when_cancelButtonIsClicked", async () => {

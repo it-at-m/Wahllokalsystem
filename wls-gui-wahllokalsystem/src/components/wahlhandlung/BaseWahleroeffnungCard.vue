@@ -132,6 +132,7 @@ function onSaveEroeffnungsuhrzeitClicked() {
 function onCancelBegruendung() {
   isZuSpaet.value = false;
   eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit = undefined;
+  begruendung.value = "";
 }
 
 function onConfirmBegruendung(): void {

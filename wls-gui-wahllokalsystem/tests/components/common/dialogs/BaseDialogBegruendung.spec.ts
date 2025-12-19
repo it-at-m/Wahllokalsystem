@@ -56,7 +56,7 @@ describe("BaseDialogBegruendung.vue", () => {
       expect(wrapper.emitted()).toHaveProperty("confirm");
     });
 
-    it("should_disableSaveButton_when_inputIsInvalid", async () => {
+    it("should_disableSaveButton_when_propertyIsUsed", async () => {
       const dialogWithDisabledButton = mount(BaseDialogBegruendung, {
         global: {
           plugins: [vuetify],

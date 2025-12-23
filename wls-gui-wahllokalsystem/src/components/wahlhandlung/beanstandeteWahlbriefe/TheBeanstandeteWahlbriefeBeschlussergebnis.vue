@@ -54,7 +54,7 @@
             ) in beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende"
             :key="index"
           >
-            <td style="text-indent: 20px">
+            <td style="padding-left: 30px">
               {{ zurueckweisungsgrundEnumToDisplayString(beanstandung.grund) }}
             </td>
             <td

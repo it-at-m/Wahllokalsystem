@@ -57,9 +57,13 @@ import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
 const INTERVAL_OF_30_SECONDS_AS_MILLISECONDS = 1000 * 30;
 
-useInterval(() => {
-  checkConnectionStatus();
-}, INTERVAL_OF_30_SECONDS_AS_MILLISECONDS);
+useInterval(
+  "LastSeen Interval",
+  () => {
+    checkConnectionStatus();
+  },
+  INTERVAL_OF_30_SECONDS_AS_MILLISECONDS
+);
 
 const onlineOfflineStore = useOnlineOfflineStore();
 const { isCheckingStatus, isOnline } = storeToRefs(onlineOfflineStore);

@@ -2,12 +2,15 @@ import type { Ref } from "vue";
 
 import { watch } from "vue";
 
-const MAX_DELAY_IN_MILLISECONDS = 0x7fffffff; //https://mrcoles.com/maximum-delay-settimeout/
+import { useSchedulerStore } from "@/stores/schedulerStore.ts";
+import { TimeoutConfiguration } from "@/types/scheduler/TimeoutConfiguration.ts";
 
 export function useDateOfActionTimeout(
+  title: string,
   dateOfAction: Ref<Date | undefined>,
   callback: () => void
 ) {
+  const { registerTimeout, stopTimeout } = useSchedulerStore();
   let popupTimeout: number | null = null;
 
   watch(dateOfAction, () => setupTimer());
@@ -16,21 +19,15 @@ export function useDateOfActionTimeout(
     clearTimer();
 
     if (dateOfAction.value) {
-      const currentTime = new Date().getTime();
-      const popupTime = dateOfAction.value.getTime();
-      const delayInMilliseconds = popupTime - currentTime;
-      if (
-        delayInMilliseconds >= 0 &&
-        delayInMilliseconds <= MAX_DELAY_IN_MILLISECONDS
-      ) {
-        popupTimeout = window.setTimeout(callback, delayInMilliseconds);
-      }
+      popupTimeout = registerTimeout(
+        new TimeoutConfiguration(title, callback, dateOfAction.value)
+      );
     }
   }
 
   function clearTimer() {
     if (popupTimeout !== null) {
-      clearTimeout(popupTimeout);
+      stopTimeout(popupTimeout);
     }
   }
 

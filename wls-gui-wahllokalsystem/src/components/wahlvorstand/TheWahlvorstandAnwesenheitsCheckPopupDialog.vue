@@ -35,6 +35,7 @@ const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
 
 const { setupTimer, clearTimer } = useDateOfActionTimeout(
+  "Anwesenheitscheck Timeout",
   dateTimeToCheckAnwesenheit,
   showDialog
 );

@@ -1,7 +1,10 @@
 import { useBroadcastStore } from "@/stores/broadcastStore.ts";
+import { useSchedulerStore } from "@/stores/schedulerStore.ts";
+import { IntervalConfiguration } from "@/types/scheduler/IntervalConfiguration.ts";
 
 export function useBroadcastCronjobService() {
   const { loadLatestMessage } = useBroadcastStore();
+  const { registerInterval, stopInterval } = useSchedulerStore();
 
   const time5MinutesInMilliseconds = 60_000 * 5;
 
@@ -13,16 +16,19 @@ export function useBroadcastCronjobService() {
       stopBroadcastMessageInterval();
     }
 
-    broadcastMessageActiveInterval = window.setInterval(
-      () => loadLatestMessage(),
-      broadcastMessagePollingInterval
+    broadcastMessageActiveInterval = registerInterval(
+      new IntervalConfiguration(
+        "Broadcast Message Interval",
+        loadLatestMessage,
+        broadcastMessagePollingInterval,
+        true
+      )
     );
-    loadLatestMessage();
   }
 
   function stopBroadcastMessageInterval() {
     if (broadcastMessageActiveInterval !== null) {
-      clearInterval(broadcastMessageActiveInterval);
+      stopInterval(broadcastMessageActiveInterval);
       broadcastMessageActiveInterval = null;
     }
   }

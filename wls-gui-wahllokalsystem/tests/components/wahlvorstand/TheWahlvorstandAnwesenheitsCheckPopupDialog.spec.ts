@@ -31,6 +31,7 @@ vi.mock("@/plugins/router.ts", () => ({
 }));
 vi.mock("@/composables/dateOfActionTimeout.ts", () => ({
   useDateOfActionTimeout: (
+    title: string,
     dateOfAction: Ref<Date | undefined>,
     callback: () => void
   ) => {

@@ -46,10 +46,12 @@ export const useSchedulerStore = defineStore(storeId, () => {
 
   function stopInterval(id: number) {
     clearInterval(id);
+    intervals.value.delete(id);
   }
 
   function stopTimeout(id: number) {
     clearTimeout(id);
+    timeouts.value.delete(id);
   }
 
   function stopAll() {

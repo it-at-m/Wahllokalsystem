@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useUserService } from "@/composables/user/userService.ts";
@@ -15,6 +16,8 @@ const { importKey } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
+  const { logDebug } = useLogging("userStore");
+
   const defaultUser: User = {
     username: "",
     email: "",
@@ -56,6 +59,17 @@ export const useUserStore = defineStore("user", () => {
           type: "PIN",
           payload: cryptoKey,
         });
+      }
+
+      const userFromIDB = await indexDBSingleton.getPreviousUserFromIDB();
+      if (userFromIDB !== user.value.username) {
+        indexDBSingleton
+          .clearIndexDB()
+          .then(async () => {
+            logDebug("IndexedDB wurde erfolgreich geleert");
+            await indexDBSingleton.setPreviousUserInIDB(user.value.username);
+          })
+          .catch(() => logDebug("Fehler beim Leeren der IndexedDB"));
       }
     }
   }

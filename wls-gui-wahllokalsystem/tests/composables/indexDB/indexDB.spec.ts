@@ -26,6 +26,8 @@ describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
 
+  const PREVIOUS_USER_DB_KEY = "previous_user";
+
   beforeEach(() => {
     unitUnderTest = useIndexDB();
     consoleMock = vi
@@ -157,6 +159,41 @@ describe("indexDB.ts", () => {
       expect(mockDefinitions.encrypt).toHaveBeenCalled();
 
       expect(localforage.setItem).toHaveBeenCalledWith(key, data);
+    });
+  });
+
+  describe("getPreviousUserFromIDB", () => {
+    it("should_returnPreviousUserFromIndexDB_when_called", async () => {
+      const mockItem = "Test User";
+      vi.spyOn(localforage, "getItem").mockReturnValueOnce(
+        Promise.resolve(mockItem)
+      );
+
+      const result = await unitUnderTest.getItemFromIDB(PREVIOUS_USER_DB_KEY);
+
+      expect(result).toEqual(mockItem);
+      expect(localforage.getItem).toHaveBeenCalledWith(PREVIOUS_USER_DB_KEY);
+    });
+  });
+
+  describe("setPreviousUserInIDB", () => {
+    it("should_setPreviousUserInIndexDB_when_called", async () => {
+      const username = "Test User";
+
+      await unitUnderTest.setPreviousUserInIDB(username);
+
+      expect(localforage.setItem).toHaveBeenCalledWith(
+        PREVIOUS_USER_DB_KEY,
+        username
+      );
+    });
+  });
+
+  describe("clearIndexDB", () => {
+    it("should_clearIndexDB_when_called", async () => {
+      await unitUnderTest.clearIndexDB();
+
+      expect(localforage.clear).toHaveBeenCalled();
     });
   });
 });

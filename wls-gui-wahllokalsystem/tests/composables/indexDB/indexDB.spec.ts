@@ -169,7 +169,7 @@ describe("indexDB.ts", () => {
         Promise.resolve(mockItem)
       );
 
-      const result = await unitUnderTest.getItemFromIDB(PREVIOUS_USER_DB_KEY);
+      const result = await unitUnderTest.getPreviousUserFromIDB();
 
       expect(result).toEqual(mockItem);
       expect(localforage.getItem).toHaveBeenCalledWith(PREVIOUS_USER_DB_KEY);

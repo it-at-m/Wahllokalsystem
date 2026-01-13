@@ -80,6 +80,11 @@ den Auth-Service folgende weitere Claims gesetzt:
 
 Diese Informationen sind auch über den Userinfo-Endpunkt des Auth-Services abrufbar.
 
+> [!TIP]
+> 
+> Die Verwendung des Userinfo-Endpunktes wird empfohlen, da man so sich so unabhängiger vom Auth-Service macht, und so
+> leichter alternative, wie .z.B. den Keycloak verwenden kann.
+
 ## Prozesse
 
 ### Auswahl Loginmaske

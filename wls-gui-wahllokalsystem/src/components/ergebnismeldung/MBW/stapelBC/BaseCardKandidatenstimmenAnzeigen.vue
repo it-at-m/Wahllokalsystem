@@ -10,10 +10,10 @@
           cols="3"
           class="d-flex align-end flex-column"
         >
-          <base-button-folding v-model="expandedRows[index]" />
+          <base-button-folding v-model="showDetails" />
         </v-col>
       </v-row>
-      <div v-if="expandedRows[index]">
+      <div v-if="showDetails">
         <v-table
           striped="odd"
           density="compact"
@@ -24,7 +24,7 @@
               <td
                 v-for="(group, groupIndex) in groupedKandidatenByTabellenSpalte"
                 :key="groupIndex"
-                class="px-0"
+                class="px-0 align-top"
               >
                 <v-table
                   striped="odd"
@@ -56,9 +56,9 @@
       </div>
       <div
         class="bg-grey-lighten-3 font-weight-bold pa-4"
-        :class="[expandedRows[index] ? 'top-border' : '']"
+        :class="[showDetails ? 'top-border' : '']"
       >
-        <v-row>
+        <v-row class="overflow-hidden">
           <v-col> Gesamtstimmenzahl </v-col>
           <v-col class="text-right">
             {{ summeKandidatenStimmen(kandidatenergebnisse) }}
@@ -71,7 +71,6 @@
 
 <script setup lang="ts">
 import type { ErgebnisAndKandidat } from "@/types/ergebnismeldung/common/ErgebnisAndKandidat.ts";
-import type { Ref } from "vue";
 
 import { onActivated, ref } from "vue";
 
@@ -82,7 +81,7 @@ import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschl
 const { getKandidatLaufendeNummer } = useWahlvorschlagUtils();
 const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 
-const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
+const showDetails = ref<boolean>(false);
 
 const props = defineProps<{
   kandidatenergebnisse: ErgebnisAndKandidat[];
@@ -125,5 +124,9 @@ function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
 <style scoped>
 .top-border {
   border-top: 1px solid;
+}
+
+.align-top {
+  vertical-align: top;
 }
 </style>

@@ -1,7 +1,6 @@
 import { useLogging } from "@/composables/common/logging.ts";
 import { useMonitoringStore } from "@/stores/monitoringStore.ts";
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
-import { IntervalConfiguration } from "@/types/scheduler/IntervalConfiguration.ts";
 
 const { logDebug } = useLogging("monitoringCronjobService");
 
@@ -19,13 +18,12 @@ export function useMonitoringCronjobService() {
       stopWahlbeteiligungInterval();
     }
 
-    wahlbeteiligungActiveInterval = registerInterval(
-      new IntervalConfiguration(
-        "Send Wahlbeteiligung Interval",
-        _sendWaehlerForInterval,
-        wahlbeteiligungUpdateInterval
-      )
-    );
+    wahlbeteiligungActiveInterval = registerInterval({
+      title: "Send Wahlbeteiligung Interval",
+      action: _sendWaehlerForInterval,
+      delay: wahlbeteiligungUpdateInterval,
+      runActionAfterRegister: false,
+    });
   }
 
   function stopWahlbeteiligungInterval(): void {

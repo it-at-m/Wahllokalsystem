@@ -25,7 +25,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
-import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
+import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";

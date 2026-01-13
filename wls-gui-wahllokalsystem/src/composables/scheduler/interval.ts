@@ -1,7 +1,6 @@
 import { onMounted, onUnmounted, ref } from "vue";
 
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
-import { IntervalConfiguration } from "@/types/scheduler/IntervalConfiguration.ts";
 
 export function useInterval(
   title: string,
@@ -13,9 +12,12 @@ export function useInterval(
 
   const start = () => {
     if (intervalId.value === null) {
-      intervalId.value = registerInterval(
-        new IntervalConfiguration(title, callback, delay)
-      );
+      intervalId.value = registerInterval({
+        title: title,
+        action: callback,
+        delay: delay,
+        runActionAfterRegister: false,
+      });
     }
   };
 

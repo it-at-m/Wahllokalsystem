@@ -52,7 +52,7 @@ import { computed } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
-import { useInterval } from "@/composables/useInterval";
+import { useInterval } from "@/composables/scheduler/interval.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
 const INTERVAL_OF_30_SECONDS_AS_MILLISECONDS = 1000 * 30;

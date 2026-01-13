@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
+import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 
 const mockedNow = new Date();
 

@@ -22,7 +22,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fontsource/roboto": "5.2.6",
+    "@fontsource/roboto": "5.2.9",
     "@muenchen/appswitcher-vue": "2.2.0",
     "@vueuse/core": "14.1.0",
     "pinia": "3.0.4",

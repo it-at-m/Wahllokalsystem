@@ -13,37 +13,58 @@
           <base-button-folding v-model="expandedRows[index]" />
         </v-col>
       </v-row>
-      <v-table
-        striped="odd"
-        density="compact"
+      <div v-if="expandedRows[index]">
+        <v-table
+          striped="odd"
+          density="compact"
+          class="ma-0"
+        >
+          <tbody class="ma-10">
+            <tr class="justify-start">
+              <td
+                v-for="(group, groupIndex) in groupedKandidatenByTabellenSpalte"
+                :key="groupIndex"
+                class="px-0"
+              >
+                <v-table
+                  striped="odd"
+                  density="compact"
+                >
+                  <tbody>
+                    <tr
+                      v-for="kandidatWithErgebnis in group"
+                      :key="kandidatWithErgebnis.kandidat.identifikator"
+                    >
+                      <td>
+                        {{
+                          getKandidatLaufendeNummer(
+                            wahlvorschlagNr,
+                            kandidatWithErgebnis.kandidat.listenposition
+                          )
+                        }}
+                      </td>
+                      <td class="text-right border-e-md">
+                        {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </div>
+      <div
+        class="bg-grey-lighten-3 font-weight-bold pa-4"
+        :class="[expandedRows[index] ? 'top-border' : '']"
       >
-        <tbody v-if="expandedRows[index]">
-          <tr
-            v-for="kandidatWithErgebnis in kandidatenergebnisse"
-            :key="kandidatWithErgebnis.kandidat.identifikator"
-          >
-            <td>
-              {{
-                getKandidatLaufendeNummer(
-                  wahlvorschlagNr,
-                  kandidatWithErgebnis.kandidat.listenposition
-                )
-              }}
-            </td>
-            <td class="text-right">
-              {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td class="font-weight-bold">Gesamtstimmenzahl</td>
-            <td class="font-weight-bold text-right">
-              {{ summeKandidatenStimmen(kandidatenergebnisse) }}
-            </td>
-          </tr>
-        </tfoot>
-      </v-table>
+        <v-row>
+          <v-col> Gesamtstimmenzahl </v-col>
+          <v-col class="text-right">
+            {{ summeKandidatenStimmen(kandidatenergebnisse) }}
+          </v-col>
+        </v-row>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -52,7 +73,7 @@
 import type { ErgebnisAndKandidat } from "@/types/ergebnismeldung/common/ErgebnisAndKandidat.ts";
 import type { Ref } from "vue";
 
-import { ref } from "vue";
+import { onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
@@ -63,7 +84,7 @@ const { summeKandidatenStimmen } = useErgebnisAndKandidatUtils();
 
 const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
 
-defineProps<{
+const props = defineProps<{
   kandidatenergebnisse: ErgebnisAndKandidat[];
   wahlvorschlagNr: number;
   wahlvorschlagName: string;
@@ -71,15 +92,38 @@ defineProps<{
   stimmen: string;
   index: number;
 }>();
+
+const groupedKandidatenByTabellenSpalte =
+  ref<Record<number, ErgebnisAndKandidat[]>>();
+
+onActivated(() => {
+  groupedKandidatenByTabellenSpalte.value =
+    groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
+      props.kandidatenergebnisse
+    );
+});
+
+function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
+  kandidatenergebnisse: ErgebnisAndKandidat[]
+) {
+  return kandidatenergebnisse.reduce(
+    (grouped, current) => {
+      const tabellenSpalte = current.kandidat.tabellenSpalteInNiederschrift;
+
+      if (!grouped[tabellenSpalte]) {
+        grouped[tabellenSpalte] = [];
+      }
+      grouped[tabellenSpalte].push(current);
+
+      return grouped;
+    },
+    {} as Record<number, ErgebnisAndKandidat[]>
+  );
+}
 </script>
 
 <style scoped>
-.v-table > .v-table__wrapper > table > tfoot > tr > td {
-  background-color: #eeeeee;
-  border-top: 0;
-}
-
-.v-table > .v-table__wrapper > table > tbody > tr:last-child td {
-  border-bottom: 1px solid black;
+.top-border {
+  border-top: 1px solid;
 }
 </style>

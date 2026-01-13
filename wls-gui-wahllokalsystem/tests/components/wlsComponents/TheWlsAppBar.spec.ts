@@ -21,7 +21,7 @@ import { VApp } from "vuetify/components";
 
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
@@ -62,7 +62,7 @@ describe("TheWlsAppBar.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasCompletelyRun", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = true;
       // @ts-expect-error: cannot set readonly
@@ -76,7 +76,7 @@ describe("TheWlsAppBar.vue", () => {
     });
 
     it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;
       // @ts-expect-error: cannot set readonly

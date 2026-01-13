@@ -22,7 +22,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import HomeView from "@/views/HomeView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
@@ -72,7 +72,7 @@ describe("BaseOfflineLoading.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showOneTaskSuccessfulRun_when_runSuccessful", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
 
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
@@ -85,7 +85,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showTaskNamesInExpansionPanel_when_runSuccessful", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
 
       const taskName = "test task";
       taskManagerStore.successfullyTasks.push(createTask(taskName));
@@ -112,7 +112,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showOneTaskFail_when_runFailed", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
 
       taskManagerStore.failedTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
@@ -125,7 +125,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showTaskNamesInExpansionPanel_when_runFailed", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
 
       const taskName = "test task";
       taskManagerStore.failedTasks.push(createTask(taskName));
@@ -152,7 +152,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showHeadlineLoadingText_when_stillLoading", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
 
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
@@ -165,7 +165,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showEnabledRefreshButton_when_tasksFailed", async () => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksFailed = 1;
 
@@ -178,7 +178,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_showDisabledRefreshButton_when_noTasksFailed", async () => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksFailed = 0;
 
@@ -196,7 +196,7 @@ describe("BaseOfflineLoading.vue", () => {
       const pushMock = vi.fn();
       vi.spyOn(router, "push").mockImplementation(pushMock);
 
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;
 
@@ -213,7 +213,7 @@ describe("BaseOfflineLoading.vue", () => {
     });
 
     it("should_callOnRefreshClicked_when_refreshButtonIsClicked", async () => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksFailed = 1;
 

@@ -26,7 +26,7 @@ describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
 
-  const PREVIOUS_USER_DB_KEY = "previous_user";
+  const OWNER_DB_KEY = "owner";
 
   beforeEach(() => {
     unitUnderTest = useIndexDB();
@@ -162,38 +162,32 @@ describe("indexDB.ts", () => {
     });
   });
 
-  describe("getPreviousUserFromIDB", () => {
-    it("should_returnPreviousUserFromIndexDB_when_called", async () => {
-      const mockItem = "Test User";
+  describe("clearIndexDBWhenOwnerNotMatches", () => {
+    it("should_clearIndexDB_when_ownerNotMatches", async () => {
+      const ownerInIDB = "Test Owner";
       vi.spyOn(localforage, "getItem").mockReturnValueOnce(
-        Promise.resolve(mockItem)
+        Promise.resolve(ownerInIDB)
       );
 
-      const result = await unitUnderTest.getPreviousUserFromIDB();
-
-      expect(result).toEqual(mockItem);
-      expect(localforage.getItem).toHaveBeenCalledWith(PREVIOUS_USER_DB_KEY);
-    });
-  });
-
-  describe("setPreviousUserInIDB", () => {
-    it("should_setPreviousUserInIndexDB_when_called", async () => {
-      const username = "Test User";
-
-      await unitUnderTest.setPreviousUserInIDB(username);
-
-      expect(localforage.setItem).toHaveBeenCalledWith(
-        PREVIOUS_USER_DB_KEY,
-        username
-      );
-    });
-  });
-
-  describe("clearIndexDB", () => {
-    it("should_clearIndexDB_when_called", async () => {
-      await unitUnderTest.clearIndexDB();
+      const actualOwner = "Anderer Owner";
+      await unitUnderTest.clearIndexDBWhenOwnerNotMatches(actualOwner);
 
       expect(localforage.clear).toHaveBeenCalled();
+      expect(localforage.setItem).toHaveBeenCalledWith(
+        OWNER_DB_KEY,
+        actualOwner
+      );
+    });
+
+    it("should_notClearIndexDB_when_ownerMatches", async () => {
+      const ownerInIDB = "Test Owner";
+      vi.spyOn(localforage, "getItem").mockReturnValueOnce(
+        Promise.resolve(ownerInIDB)
+      );
+
+      await unitUnderTest.clearIndexDBWhenOwnerNotMatches(ownerInIDB);
+
+      expect(localforage.clear).not.toHaveBeenCalled();
     });
   });
 });

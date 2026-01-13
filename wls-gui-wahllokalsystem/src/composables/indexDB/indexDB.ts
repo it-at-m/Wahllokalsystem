@@ -17,18 +17,16 @@ export interface IndexDBComposable {
   >;
   storeItem: (key: string, data: IndexDBValue) => Promise<void>;
   setupIndexDB: () => void;
-  getPreviousUserFromIDB: () => Promise<string | null>;
-  setPreviousUserInIDB: (username: string) => Promise<void>;
-  clearIndexDB: () => Promise<void>;
+  clearIndexDBWhenOwnerNotMatches: (owner: string) => void;
 }
 
 let instance: IndexDBComposable | null = null;
 
 export const useIndexDB = () => {
-  const { logError } = useLogging("useIndexDB");
+  const { logDebug, logError } = useLogging("useIndexDB");
   const { encrypt, decrypt } = useCryptoUtils();
 
-  const PREVIOUS_USER_DB_KEY = "previous_user";
+  const OWNER_DB_KEY = "owner";
 
   if (!instance) {
     instance = {
@@ -121,16 +119,17 @@ export const useIndexDB = () => {
         });
       },
 
-      async getPreviousUserFromIDB() {
-        return await localforage.getItem<string>(PREVIOUS_USER_DB_KEY);
-      },
-
-      async setPreviousUserInIDB(username: string) {
-        await localforage.setItem(PREVIOUS_USER_DB_KEY, username);
-      },
-
-      async clearIndexDB() {
-        await localforage.clear();
+      async clearIndexDBWhenOwnerNotMatches(owner: string) {
+        const userFromIDB = await localforage.getItem<string>(OWNER_DB_KEY);
+        if (userFromIDB !== owner) {
+          try {
+            await localforage.clear();
+            logDebug("IndexedDB wurde erfolgreich geleert");
+            await localforage.setItem(OWNER_DB_KEY, owner);
+          } catch (error) {
+            logDebug("Fehler beim Leeren der IndexedDB: ", error);
+          }
+        }
       },
     };
   }

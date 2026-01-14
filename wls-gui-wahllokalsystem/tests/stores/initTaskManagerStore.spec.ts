@@ -3,7 +3,7 @@ import type { Task } from "@/types/tasks/Task.ts";
 import { createTestingPinia } from "@pinia/testing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   initTasklist: vi.fn(),
@@ -15,15 +15,15 @@ vi.mock("@/composables/tasks/taskListService.ts", () => ({
   }),
 }));
 
-describe("taskManagerStore.ts", () => {
-  let unitUnderTest: ReturnType<typeof useTaskManagerStore>;
+describe("initTaskManagerStore.ts", () => {
+  let unitUnderTest: ReturnType<typeof useInitTaskManagerStore>;
 
   beforeEach(() => {
     const testPinia = createTestingPinia({
       stubActions: false,
       createSpy: vi.fn,
     });
-    unitUnderTest = useTaskManagerStore(testPinia);
+    unitUnderTest = useInitTaskManagerStore(testPinia);
   });
 
   afterEach(() => {

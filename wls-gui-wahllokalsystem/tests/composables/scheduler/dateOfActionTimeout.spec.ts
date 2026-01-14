@@ -1,16 +1,20 @@
 import { flushPromises } from "@vue/test-utils";
+import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
-import { useDateOfActionTimeout } from "@/composables/dateOfActionTimeout.ts";
+import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 
 const mockedNow = new Date();
 
 const { logDebug } = useLogging("dateOfActionTimeout.spec.ts");
 
 describe("dateOfActionTimeout", () => {
+  const TITLE = "Test Titel";
+
   beforeEach(() => {
+    setActivePinia(createPinia());
     vi.useFakeTimers({
       now: mockedNow,
     });
@@ -27,7 +31,7 @@ describe("dateOfActionTimeout", () => {
   it("should_notSetTimeout_when_dateOfActionIsUndefined", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
-    useDateOfActionTimeout(ref(undefined), defaultCallback);
+    useDateOfActionTimeout(TITLE, ref(undefined), defaultCallback);
 
     expect(setTimeoutSpy).toHaveBeenCalledTimes(0);
 
@@ -38,6 +42,7 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime() - 1)),
       defaultCallback
     );
@@ -52,6 +57,7 @@ describe("dateOfActionTimeout", () => {
 
     const callback = defaultCallback;
     const { setupTimer } = useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime() + 1)),
       callback
     );
@@ -67,6 +73,7 @@ describe("dateOfActionTimeout", () => {
 
     const callback = defaultCallback;
     const { setupTimer } = useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime())),
       callback
     );
@@ -82,6 +89,7 @@ describe("dateOfActionTimeout", () => {
 
     const callback = vi.fn();
     const { setupTimer } = useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime() + 1)),
       callback
     );
@@ -98,6 +106,7 @@ describe("dateOfActionTimeout", () => {
     const setTimeoutSpy = vi.spyOn(window, "setTimeout");
 
     useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime() + 0x80000000)),
       defaultCallback
     );
@@ -112,6 +121,7 @@ describe("dateOfActionTimeout", () => {
 
     const callback = defaultCallback;
     const { setupTimer } = useDateOfActionTimeout(
+      TITLE,
       ref(new Date(mockedNow.getTime() + 0x7fffffff)),
       callback
     );
@@ -133,7 +143,11 @@ describe("dateOfActionTimeout", () => {
     // @ts-expect-error: error TS2322: Type 'number' is not assignable to type 'Timeout'
     setTimeoutSpy.mockImplementation(() => mockedTimeoutNumber);
 
-    const { setupTimer } = useDateOfActionTimeout(dateOfAction, callback);
+    const { setupTimer } = useDateOfActionTimeout(
+      TITLE,
+      dateOfAction,
+      callback
+    );
     setupTimer();
 
     dateOfAction.value = new Date(mockedNow.getTime() + 2);
@@ -157,6 +171,7 @@ describe("dateOfActionTimeout", () => {
 
     const callback = defaultCallback;
     const { setupTimer, clearTimer } = useDateOfActionTimeout(
+      TITLE,
       ref(dateOfAction),
       callback
     );

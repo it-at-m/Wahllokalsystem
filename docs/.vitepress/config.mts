@@ -263,6 +263,10 @@ export default withMermaid({
                   text: "Task-Factories",
                   link: `${PATH_SYSSPEC}frontend/task-factories.md`,
                 },
+                {
+                  text: "Intervalle und Timeouts",
+                  link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
               ],
             },
           ],

@@ -24,7 +24,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
@@ -191,7 +191,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const { hasTasksToRun, hasAllTasksRun } = storeToRefs(useTaskManagerStore());
+  const { hasTasksToRun, hasAllTasksRun } = storeToRefs(
+    useInitTaskManagerStore()
+  );
   if (
     to.name !== ROUTES_HOME &&
     (!hasTasksToRun.value || !hasAllTasksRun.value)

@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
@@ -18,6 +19,7 @@ describe("broadcastCronjobService.ts", () => {
   let unitUnderTest: ReturnType<typeof useBroadcastCronjobService>;
 
   beforeEach(() => {
+    setActivePinia(createPinia());
     unitUnderTest = useBroadcastCronjobService();
 
     vi.spyOn(global, "setInterval").mockImplementation(

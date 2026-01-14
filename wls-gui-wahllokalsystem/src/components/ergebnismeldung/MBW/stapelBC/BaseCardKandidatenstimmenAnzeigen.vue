@@ -17,46 +17,40 @@
           <base-button-folding v-model="showDetails" />
         </v-col>
       </v-row>
-      <div v-if="showDetails">
-        <v-table
-          striped="odd"
-          class="ma-0"
+      <v-row
+        v-if="showDetails"
+        class="flex-nowrap overflow-x-auto mt-0"
+      >
+        <v-col
+          v-for="(group, groupIndex) in groupedKandidatenByTabellenSpalte"
+          :key="groupIndex"
+          class="px-0 pt-0"
         >
-          <tbody class="ma-10">
-            <tr class="justify-start">
-              <td
-                v-for="(group, groupIndex) in groupedKandidatenByTabellenSpalte"
-                :key="groupIndex"
-                class="px-0 align-top"
+          <v-table
+            striped="odd"
+            density="compact"
+          >
+            <tbody>
+              <tr
+                v-for="kandidatWithErgebnis in group"
+                :key="kandidatWithErgebnis.kandidat.identifikator"
               >
-                <v-table
-                  striped="odd"
-                  density="compact"
-                >
-                  <tbody>
-                    <tr
-                      v-for="kandidatWithErgebnis in group"
-                      :key="kandidatWithErgebnis.kandidat.identifikator"
-                    >
-                      <td>
-                        {{
-                          getKandidatLaufendeNummer(
-                            wahlvorschlagNr,
-                            kandidatWithErgebnis.kandidat.listenposition
-                          )
-                        }}
-                      </td>
-                      <td class="text-right border-e-md">
-                        {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-      </div>
+                <td>
+                  {{
+                    getKandidatLaufendeNummer(
+                      wahlvorschlagNr,
+                      kandidatWithErgebnis.kandidat.listenposition
+                    )
+                  }}
+                </td>
+                <td class="text-right border-e-md">
+                  {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-col>
+      </v-row>
       <div
         class="bg-grey-lighten-3 font-weight-bold pa-4"
         :class="[showDetails ? 'top-border' : '']"
@@ -120,10 +114,6 @@ function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
 <style scoped>
 .top-border {
   border-top: 1px solid;
-}
-
-.align-top {
-  vertical-align: top;
 }
 
 .smallText {

@@ -10,10 +10,10 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 
 /**
- * alternative implementation of {@link org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer}
+ * Alternative Implementation of {@link org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer}
  *
- * Implementation was required to use our own AuthenticationFilter and show authentication exception on the form.
- * With the existing formLoginConfigurer it was not possible to change the AuthenticationFilter
+ * This implementation was required to use our own AuthenticationFilter and display authentication exceptions on the form.
+ * With the existing `FormLoginConfigurer`, it was not possible to change the `AuthenticationFilter`
  */
 @Component
 class WlsFormLoginConfigurer<H extends HttpSecurityBuilder<H>> extends

@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class ErrorMessageService {
 
-    public String getErrorMessage(final Exception exception) {
-        if (exception instanceof BadCredentialsException) {
-            return exception.getMessage();
-        } else if (exception instanceof LockedException) {
-            return exception.getMessage();
-        } else if (exception instanceof SessionAuthenticationException) {
-            return ErrorMessages.BENUTZER_BEREITS_ANGEMELDET + exception.getMessage();
-        } else if (exception instanceof InternalAuthenticationServiceException) {
-            return ErrorMessages.LOGIN_BLOCKED_BY_LDAP_SERVER;
-        } else if (exception instanceof AccessDeniedException) {
-            return exception.getMessage();
-        } else {
-            return ErrorMessages.INVALID_USERNAME_OR_PASSWORD;
-        }
+  public String getErrorMessage(final Exception exception) {
+    if (exception instanceof BadCredentialsException) {
+      return exception.getMessage();
+    } else if (exception instanceof LockedException) {
+      return exception.getMessage();
+    } else if (exception instanceof SessionAuthenticationException) {
+      return ErrorMessages.BENUTZER_BEREITS_ANGEMELDET + exception.getMessage();
+    } else if (exception instanceof InternalAuthenticationServiceException) {
+      return ErrorMessages.LOGIN_BLOCKED_BY_LDAP_SERVER;
+    } else if (exception instanceof AccessDeniedException) {
+      return exception.getMessage();
+    } else {
+      return ErrorMessages.INVALID_USERNAME_OR_PASSWORD;
     }
+  }
 }

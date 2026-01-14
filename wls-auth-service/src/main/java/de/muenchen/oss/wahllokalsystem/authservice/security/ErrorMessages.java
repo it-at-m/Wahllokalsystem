@@ -2,10 +2,10 @@ package de.muenchen.oss.wahllokalsystem.authservice.security;
 
 public class ErrorMessages {
 
-
-    public static final String BENUTZER_BEREITS_ANGEMELDET = "Es ist bereits ein Benutzer mit ihrem Benutzernamen angemeldet.";
-    public static final String LOGIN_BLOCKED_BY_LDAP_SERVER = "Blockiert durch LDAP.";
-    public static final String BENUTZER_WIRD_GESPERRT =
+  public static final String BENUTZER_BEREITS_ANGEMELDET =
+      "Es ist bereits ein Benutzer mit ihrem Benutzernamen angemeldet.";
+  public static final String LOGIN_BLOCKED_BY_LDAP_SERVER = "Blockiert durch LDAP.";
+  public static final String BENUTZER_WIRD_GESPERRT =
       "Falscher Benutzername oder Passwort. Ab dem nächsten Versuch wird der Zugang für zwei Minuten gesperrt.";
   public static final String BENUTZER_WURDE_GESPERRT =
       "Falscher Benutzername oder Passwort. Benutzer wurde für zwei Minuten gesperrt.";

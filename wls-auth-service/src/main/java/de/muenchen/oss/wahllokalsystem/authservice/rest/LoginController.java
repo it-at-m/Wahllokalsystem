@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
-import de.muenchen.oss.wahllokalsystem.authservice.security.ErrorMessages;
 import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import de.muenchen.oss.wahllokalsystem.authservice.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,12 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class LoginController {
 
-    private static final String TEMPLATE_OBJECT_KEY_ERROR_MESSAGE = "error";
+  private static final String TEMPLATE_OBJECT_KEY_ERROR_MESSAGE = "error";
 
   private final LoginService loginService;
 
-  private final ErrorMessageService  errorMessageService;
+  private final ErrorMessageService errorMessageService;
 
   @Operation(
       description = "Liefert die Login Ansicht zurück",
@@ -40,12 +34,15 @@ public class LoginController {
         @ApiResponse(responseCode = "200", description = "Login Ansicht erfolgreich geliefert.")
       })
   @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public ModelAndView login(HttpServletRequest request, HttpServletResponse response, final @RequestParam(value = "error", required = false) String errorParameter) {
+  public ModelAndView login(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      final @RequestParam(value = "error", required = false) String errorParameter) {
     val loginView = new ModelAndView();
 
     val errorMessage = getErrorMessageWhenAuthenticationExceptionExists(request);
     if (errorMessage != null && errorParameter != null) {
-        loginView.addObject(TEMPLATE_OBJECT_KEY_ERROR_MESSAGE, errorMessage);
+      loginView.addObject(TEMPLATE_OBJECT_KEY_ERROR_MESSAGE, errorMessage);
     }
 
     if (hasParameterValue(request, response, "admin")) {
@@ -77,12 +74,14 @@ public class LoginController {
     modelAndView.setViewName("loginwls");
   }
 
-    private String getErrorMessageWhenAuthenticationExceptionExists(final HttpServletRequest request) {
-        if (request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
-            val exception = (Exception) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-            return errorMessageService.getErrorMessage(exception);
-        } else {
-            return null;
-        }
+  private String getErrorMessageWhenAuthenticationExceptionExists(
+      final HttpServletRequest request) {
+    if (request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
+      val exception =
+          (Exception) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      return errorMessageService.getErrorMessage(exception);
+    } else {
+      return null;
     }
+  }
 }

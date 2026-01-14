@@ -22,7 +22,7 @@ VALUES ('c109888f-b29d-49bf-9b78-929bdb517772', 'René Dupont', 8, 0, 1, 0, 'b2c
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
 VALUES ('cb80bddf-b967-487d-8587-657b32561890', 'Ali Karam', 9, 0, 2, 0, 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
-VALUES ('e7f41b65-ec69-4e1a-a24d-820460ec09ca', 'Fiona O’Reilly', 10, 0, 2, 0, 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f');
+VALUES ('e7f41b65-ec69-4e1a-a24d-820460ec09ca', 'Fiona Reilly', 10, 0, 2, 0, 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
 VALUES ('f0b10eeb-a34a-40a2-be7e-3e6ee6ef2e7e', 'Hugo Morales', 11, 0, 2, 0, 'b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6f');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
@@ -71,7 +71,7 @@ VALUES ('59993798-01aa-4628-af2f-a5e6d740826b', 'René Dupont', 8, 0, 1, 0, 'f2a
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
 VALUES ('32c956d9-fd94-486e-8450-56f4d1ccc109', 'Ali Karam', 9, 0, 2, 0, 'f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6e');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
-VALUES ('8cc9d266-11a6-468e-a7ef-0ee51c32f19f', 'Fiona O’Reilly', 10, 0, 2, 0, 'f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6e');
+VALUES ('8cc9d266-11a6-468e-a7ef-0ee51c32f19f', 'Fiona Reilly', 10, 0, 2, 0, 'f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6e');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)
 VALUES ('c2bc04ce-d363-4cdc-9cc0-fd19f124def5', 'Hugo Morales', 11, 0, 2, 0, 'f2a3b4c5-d6e7-4f8a-9b0c-1d2e3f4a5b6e');
 INSERT INTO Kandidat (id, name, listenposition, direktkandidat, tabellenSpalteInNiederschrift, einzelbewerber, wahlvorschlagId)

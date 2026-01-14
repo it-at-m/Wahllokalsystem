@@ -20,7 +20,6 @@
       <div v-if="showDetails">
         <v-table
           striped="odd"
-          density="compact"
           class="ma-0"
         >
           <tbody class="ma-10">
@@ -62,7 +61,7 @@
         class="bg-grey-lighten-3 font-weight-bold pa-4"
         :class="[showDetails ? 'top-border' : '']"
       >
-        <v-row class="overflow-hidden">
+        <v-row>
           <v-col> Gesamtstimmenzahl </v-col>
           <v-col class="text-right">
             {{ summeKandidatenStimmen(kandidatenergebnisse) }}

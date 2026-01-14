@@ -14,6 +14,8 @@ Im Wahllokalsystem sind die folgenden Intervalle konfiguriert:
 | Broadcast Message    | Lädt die älteste Nachricht für das jeweilige Wahllokal                         | alle 5 Minuten   |
 | Send Wahlbeteiligung | Sendet die Wahlbeteiligung an das Backend                                      | alle 30 Minuten  |
 
+## Timeouts
+
 Timeouts werden verwendet, um Aktionen auszuführen, die zu einem bestimmten Zeitpunkt erfolgen sollen.
 Hierbei wird die Zeitspanne vom aktuellen Zeitpunkt bis zum gewünschten Zeitpunkt an das Timeout übergeben, zusammen mit der Funktion, die ausgeführt werden soll.
 Im Wahllokalsystem sind die folgenden Timeouts definiert:

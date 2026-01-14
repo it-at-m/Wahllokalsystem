@@ -3,8 +3,12 @@
     <v-card-text class="px-0 pb-0 pt-2">
       <v-row align="center">
         <v-col cols="9">
-          <h4 class="mx-4">Wahlvorschlag Nr. {{ wahlvorschlagNr }}</h4>
-          <h5 class="text-grey-darken-1 mx-4">{{ wahlvorschlagName }}</h5>
+          <div class="font-weight-bold mx-4">
+            Wahlvorschlag Nr. {{ wahlvorschlagNr }}
+          </div>
+          <div class="font-weight-bold smallText text-grey-darken-1 mx-4">
+            {{ wahlvorschlagName }}
+          </div>
         </v-col>
         <v-col
           cols="3"
@@ -121,5 +125,9 @@ function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
 
 .align-top {
   vertical-align: top;
+}
+
+.smallText {
+  font-size: 12px;
 }
 </style>

@@ -65,7 +65,7 @@ import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOffl
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
@@ -75,7 +75,7 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
 const { toGermanDate } = useDateTimeFormatter();
 const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
   storeToRefs(useUserStore());
-const { hasAllTasksRun } = storeToRefs(useTaskManagerStore());
+const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();

@@ -215,8 +215,7 @@ class LdapConfigurationTest {
       val formLoginResponseAfterLoginFailure =
           restTemplate.exchange(formLoginRequestAfterLoginFailure, String.class);
 
-      formLoginResponseAfterLoginFailure
-          .getBody()
+      Assertions.assertThat(formLoginResponseAfterLoginFailure.getBody())
           .contains(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
     }
 

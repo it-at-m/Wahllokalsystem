@@ -4,7 +4,7 @@
     <v-card-text>
       <v-row>
         <v-col
-          v-for="(vorschlag, index) in ergebnisseAndWahlvorschlaege"
+          v-for="vorschlag in ergebnisseAndWahlvorschlaege"
           :key="vorschlag.identifikator"
           class="pa-0"
           cols="12"
@@ -14,9 +14,6 @@
             :wahlvorschlag-nr="vorschlag.ordnungszahl"
             :wahlvorschlag-name="vorschlag.kurzname"
             :kandidatenergebnisse="vorschlag.kandidatenErgebnisse"
-            laufende-nummer="nummer"
-            stimmen="15"
-            :index="index"
             class="flex-grow-1"
           />
         </v-col>

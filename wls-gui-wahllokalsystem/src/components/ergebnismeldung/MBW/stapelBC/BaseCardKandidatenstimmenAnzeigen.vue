@@ -87,9 +87,6 @@ const props = defineProps<{
   kandidatenergebnisse: ErgebnisAndKandidat[];
   wahlvorschlagNr: number;
   wahlvorschlagName: string;
-  laufendeNummer: string;
-  stimmen: string;
-  index: number;
 }>();
 
 const groupedKandidatenByTabellenSpalte =

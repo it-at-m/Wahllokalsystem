@@ -14,7 +14,6 @@
             :wahlvorschlag-nr="vorschlag.ordnungszahl"
             :wahlvorschlag-name="vorschlag.kurzname"
             :kandidatenergebnisse="vorschlag.kandidatenErgebnisse"
-            class="flex-grow-1"
           />
         </v-col>
       </v-row>

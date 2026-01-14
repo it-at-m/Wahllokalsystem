@@ -74,9 +74,9 @@ den Auth-Service folgende zusätzliche Claims gesetzt:
 > }
 > ```
 >
-> wahlbezirkID ... technische ID des Wahlbezirkes für die Wahl
-> wahlnummer ... Nummer der Wahl in der Reihenfolge der abzuarbeitenden Wahlen
-> wahlID ... technische ID der Wahl in welcher der Benutzer arbeitet
+> - wahlbezirkID ... technische ID des Wahlbezirkes für die Wahl
+> - wahlnummer ... Nummer der Wahl in der Reihenfolge der abzuarbeitenden Wahlen
+> - wahlID ... technische ID der Wahl in welcher der Benutzer arbeitet
 
 Diese Informationen sind auch über den Userinfo-Endpunkt des Auth-Services abrufbar.
 

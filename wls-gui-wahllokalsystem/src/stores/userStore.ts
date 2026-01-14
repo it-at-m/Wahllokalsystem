@@ -57,6 +57,8 @@ export const useUserStore = defineStore("user", () => {
           payload: cryptoKey,
         });
       }
+
+      indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }
   }
 

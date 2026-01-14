@@ -17,13 +17,16 @@ export interface IndexDBComposable {
   >;
   storeItem: (key: string, data: IndexDBValue) => Promise<void>;
   setupIndexDB: () => void;
+  clearIndexDBWhenOwnerNotMatches: (owner: string) => void;
 }
 
 let instance: IndexDBComposable | null = null;
 
 export const useIndexDB = () => {
-  const { logError } = useLogging("useIndexDB");
+  const { logDebug, logError } = useLogging("useIndexDB");
   const { encrypt, decrypt } = useCryptoUtils();
+
+  const OWNER_DB_KEY = "owner";
 
   if (!instance) {
     instance = {
@@ -114,6 +117,19 @@ export const useIndexDB = () => {
           storeName: "wahlstore",
           description: "store for data of electoral district",
         });
+      },
+
+      async clearIndexDBWhenOwnerNotMatches(owner: string) {
+        const userFromIDB = await localforage.getItem<string>(OWNER_DB_KEY);
+        if (userFromIDB !== owner) {
+          try {
+            await localforage.clear();
+            logDebug("IndexedDB wurde erfolgreich geleert");
+            await localforage.setItem(OWNER_DB_KEY, owner);
+          } catch (error) {
+            logDebug("Fehler beim Leeren der IndexedDB: ", error);
+          }
+        }
       },
     };
   }

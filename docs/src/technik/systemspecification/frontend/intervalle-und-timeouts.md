@@ -2,6 +2,8 @@
 
 Im Wahllokalsystem werden Intervalle und Timeouts verwendet, um wiederkehrende Aufgaben und zeitlich festgelegte Aktionen zu verwalten.
 
+## Intervalle
+
 Intervalle werden eingesetzt, um wiederkehrende Aufgaben zu implementieren.
 Bei der Definition eines Intervalls wird die zu erfüllende Aufgabe sowie die zeitliche Frequenz für die Wiederholung angegeben.
 Im Wahllokalsystem sind die folgenden Intervalle konfiguriert:

@@ -66,7 +66,10 @@ sequenceDiagram
         AuthService->>+InfomanagementService : get Willkommenstext Konfiguration
         InfomanagementService->>-AuthService : Willkommenstext
     end
-    AuthService->>AuthService: ergänze Werte für View
+    
+    opt Fehler beim Letzten Login
+        AuthService->>AuthService : Ergänze Fehlermeldung
+    end
 
     AuthService->>-User : LoginView
 ```

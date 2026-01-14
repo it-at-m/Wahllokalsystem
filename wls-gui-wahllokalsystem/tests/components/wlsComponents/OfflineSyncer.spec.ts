@@ -22,32 +22,28 @@ import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  taskManager: {
-    numberOfTasksFinished: undefined as Ref<number> | undefined, //i cant use ref because its hoisted
-    numberOfTasksToRun: undefined as Ref<number> | undefined,
-    setTasks: vi.fn(),
-    runAllTasks: vi.fn(),
-  },
-  getSyncTasks: vi.fn(),
   dataSyncer: {
     isOfflineDataSyncing: undefined as Ref<boolean> | undefined,
     synchronizeOfflineData: vi.fn(),
+    taskManager: {
+      numberOfTasksFinished: undefined as Ref<number> | undefined, //i cant use ref because its hoisted
+      numberOfTasksToRun: undefined as Ref<number> | undefined,
+    },
   },
 }));
 
-vi.mock("@/composables/tasks/taskManager.ts", () => ({
-  useTaskManager: vi.fn().mockImplementation(() => mockDefinitions.taskManager),
-}));
-vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
-  useDataSyncer: vi.fn().mockImplementation(() => ({
-    getSyncTasks: mockDefinitions.getSyncTasks,
-  })),
-}));
-vi.mock("@/stores/dataSyncStore.ts", () => ({
-  useDataSyncStore: vi
-    .fn()
-    .mockImplementation(() => mockDefinitions.dataSyncer),
-}));
+vi.mock("@/stores/dataSyncStore.ts", () => {
+  return {
+    useDataSyncStore: () => ({
+      synchronizeOfflineData: mockDefinitions.dataSyncer.synchronizeOfflineData,
+      isOfflineDataSyncing: mockDefinitions.dataSyncer.isOfflineDataSyncing,
+      numberOfTasksFinished:
+        mockDefinitions.dataSyncer.taskManager.numberOfTasksFinished,
+      numberOfTasksToRun:
+        mockDefinitions.dataSyncer.taskManager.numberOfTasksToRun,
+    }),
+  };
+});
 
 describe("OfflineSyncer", () => {
   let wrapper: VueWrapper;
@@ -61,8 +57,8 @@ describe("OfflineSyncer", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {
-    mockDefinitions.taskManager.numberOfTasksFinished = ref(0);
-    mockDefinitions.taskManager.numberOfTasksToRun = ref(0);
+    mockDefinitions.dataSyncer.taskManager.numberOfTasksFinished = ref(0);
+    mockDefinitions.dataSyncer.taskManager.numberOfTasksToRun = ref(0);
     mockDefinitions.dataSyncer.isOfflineDataSyncing = ref(false);
     wrapper = mount(OfflineSyncer, {
       global: {
@@ -93,9 +89,9 @@ describe("OfflineSyncer", () => {
         '[data-test="button-sync-offline-data"]'
       );
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      mockDefinitions.taskManager.numberOfTasksToRun!.value = 10;
+      mockDefinitions.dataSyncer.taskManager.numberOfTasksToRun!.value = 10;
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      mockDefinitions.taskManager.numberOfTasksFinished!.value = 2;
+      mockDefinitions.dataSyncer.taskManager.numberOfTasksFinished!.value = 2;
 
       await syncButton.trigger("click");
 

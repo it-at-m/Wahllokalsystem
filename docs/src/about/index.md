@@ -287,6 +287,15 @@ Stapel für die **Oberbürgermeisterwahl**:
   | `C_Gueltig`          | Bedenkliche Stimmzettel, die für gültig erklärt wurden        |           |
   | `C_Ungueltig`        | Bedenkliche Stimmzettel, die für ungültig erklärt wurden      |           |
 
+Stapel für die **Migrationsbeiratswahl**:
+
+  | Stapel        | Beschreibung                                                    | Anmerkung                 |
+  |---------------|-----------------------------------------------------------------|---------------------------|
+  | `A`           | Zweifelsfrei gültige Stimmen: unverändert                       | mit Listenkreuz           |
+  | `B`           | Zweifelsfrei gültige Stimmen: verändert, nur ein Wahlvorschlag  | mit oder ohne Listenkreuz |
+  | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidatenstimmen         |
+  | `D_Ungueltig` | Leere und ungekennzeichnete Stimmzettel                         |                           |
+
 #### Nach der Auszählung
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**

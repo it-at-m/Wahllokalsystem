@@ -13,7 +13,7 @@ const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
-  const { setTasks, runAllTasks } = useTaskManager();
+  const taskManager = useTaskManager();
   const isOfflineDataSyncing = ref(false);
 
   async function getSyncTasks() {
@@ -34,8 +34,8 @@ export function useDataSyncer() {
 
   async function synchronizeOfflineData() {
     isOfflineDataSyncing.value = true;
-    setTasks(await getSyncTasks());
-    await runAllTasks();
+    taskManager.setTasks(await getSyncTasks());
+    await taskManager.runAllTasks();
     isOfflineDataSyncing.value = false;
   }
 
@@ -59,6 +59,7 @@ export function useDataSyncer() {
   }
 
   return {
+    ...taskManager,
     getSyncTasks,
     synchronizeOfflineData,
     isOfflineDataSyncing,

@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorstand-service</artifactId>
-    <version>0.5.8-SNAPSHOT</version>
+    <version>0.5.9-SNAPSHOT</version>
     <name>wls_wahlvorstand_service</name>
 
     <properties>
@@ -13,24 +13,24 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.5.7</spring.boot.version>
-        <spring.cloud.version>2025.0.0</spring.cloud.version>
+        <spring.boot.version>3.5.9</spring.boot.version>
+        <spring.cloud.version>2025.0.1</spring.cloud.version>
         <logstash.encoder>8.1</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
         <apache.commons.csv>1.14.1</apache.commons.csv>
-        <apache.commons.io>2.20.0</apache.commons.io>
-        <apache.commons.lang3>3.19.0</apache.commons.lang3>
-        <apache.commons.text>1.14.0</apache.commons.text>
-        <apache.commons.validator>1.10.0</apache.commons.validator>
+        <apache.commons.io>2.21.0</apache.commons.io>
+        <apache.commons.lang3>3.20.0</apache.commons.lang3>
+        <apache.commons.text>1.15.0</apache.commons.text>
+        <apache.commons.validator>1.10.1</apache.commons.validator>
         <!-- SonarQube -->
-        <sonar.scanner.version>5.2.0.4988</sonar.scanner.version>
+        <sonar.scanner.version>5.5.0.6356</sonar.scanner.version>
         <!-- TestCoverage -->
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Plugins -->
         <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
-        <maven.resources.plugin.version>3.3.1</maven.resources.plugin.version>
+        <maven.resources.plugin.version>3.4.0</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>

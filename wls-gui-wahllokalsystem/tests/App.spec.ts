@@ -13,7 +13,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from "@/App.vue";
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -175,7 +175,7 @@ describe("App", () => {
     });
 
     it("should_callInitTasks_when_mounted", async () => {
-      const { initTasks } = useTaskManagerStore();
+      const { initTasks } = useInitTaskManagerStore();
 
       await flushPromises();
 

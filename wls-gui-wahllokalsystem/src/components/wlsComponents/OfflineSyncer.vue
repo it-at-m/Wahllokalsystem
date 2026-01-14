@@ -44,13 +44,11 @@ import { storeToRefs } from "pinia";
 import { mergeProps, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
 const { synchronizeOfflineData } = useDataSyncStore();
-const { isOfflineDataSyncing } = storeToRefs(useDataSyncStore());
-
-const { numberOfTasksFinished, numberOfTasksToRun } = useTaskManager();
+const { isOfflineDataSyncing, numberOfTasksFinished, numberOfTasksToRun } =
+  storeToRefs(useDataSyncStore());
 
 const isDialogVisible = ref(false);
 const isSyncInProgress = ref(false);

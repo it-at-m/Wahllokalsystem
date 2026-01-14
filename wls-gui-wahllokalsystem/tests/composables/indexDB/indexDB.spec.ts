@@ -26,6 +26,8 @@ describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;
   let consoleMock: MockInstance;
 
+  const OWNER_DB_KEY = "owner";
+
   beforeEach(() => {
     unitUnderTest = useIndexDB();
     consoleMock = vi
@@ -157,6 +159,35 @@ describe("indexDB.ts", () => {
       expect(mockDefinitions.encrypt).toHaveBeenCalled();
 
       expect(localforage.setItem).toHaveBeenCalledWith(key, data);
+    });
+  });
+
+  describe("clearIndexDBWhenOwnerNotMatches", () => {
+    it("should_clearIndexDB_when_ownerNotMatches", async () => {
+      const ownerInIDB = "Test Owner";
+      vi.spyOn(localforage, "getItem").mockReturnValueOnce(
+        Promise.resolve(ownerInIDB)
+      );
+
+      const actualOwner = "Anderer Owner";
+      await unitUnderTest.clearIndexDBWhenOwnerNotMatches(actualOwner);
+
+      expect(localforage.clear).toHaveBeenCalled();
+      expect(localforage.setItem).toHaveBeenCalledWith(
+        OWNER_DB_KEY,
+        actualOwner
+      );
+    });
+
+    it("should_notClearIndexDB_when_ownerMatches", async () => {
+      const ownerInIDB = "Test Owner";
+      vi.spyOn(localforage, "getItem").mockReturnValueOnce(
+        Promise.resolve(ownerInIDB)
+      );
+
+      await unitUnderTest.clearIndexDBWhenOwnerNotMatches(ownerInIDB);
+
+      expect(localforage.clear).not.toHaveBeenCalled();
     });
   });
 });

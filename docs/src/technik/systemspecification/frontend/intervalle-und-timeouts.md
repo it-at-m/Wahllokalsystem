@@ -62,6 +62,7 @@ classDiagram
     }
 
     class Interval {
+        <<Composable>>
         +start()
         +stop()
     }

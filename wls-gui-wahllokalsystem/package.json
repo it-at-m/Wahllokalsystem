@@ -74,9 +74,9 @@
     "vite-plugin-vuetify": "2.1.2",
     "vitest": "3.2.4",
     "vue-tsc": "2.2.12",
-    "workbox-core": "7.3.0",
-    "workbox-precaching": "7.3.0",
-    "workbox-routing": "7.3.0"
+    "workbox-core": "7.4.0",
+    "workbox-precaching": "7.4.0",
+    "workbox-routing": "7.4.0"
   },
   "eslintConfig": {
     "extends": [

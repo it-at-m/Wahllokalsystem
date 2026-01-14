@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { onActivated, onMounted } from "vue";
+import { onActivated } from "vue";
 
 import BaseCardKandidatenstimmenAnzeigen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardKandidatenstimmenAnzeigen.vue";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
@@ -37,6 +37,5 @@ const {
   loadWahlvorschlaegeAndErgebnisse,
 } = useMwbStapelBCUtils(props.wahlbezirkId, props.wahlId);
 
-onMounted(loadWahlvorschlaegeAndErgebnisse);
 onActivated(loadWahlvorschlaegeAndErgebnisse);
 </script>

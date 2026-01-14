@@ -68,6 +68,7 @@ classDiagram
     }
 
     class DateOfActionTimeout {
+        <<Composable>>
         +setupTimer()
         +clearTimer()
     }

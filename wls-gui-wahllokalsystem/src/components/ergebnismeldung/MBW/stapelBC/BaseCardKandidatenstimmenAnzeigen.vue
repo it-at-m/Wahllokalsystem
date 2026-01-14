@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import type { ErgebnisAndKandidat } from "@/types/ergebnismeldung/common/ErgebnisAndKandidat.ts";
 
-import { onActivated, ref } from "vue";
+import { computed, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
@@ -89,15 +89,11 @@ const props = defineProps<{
   wahlvorschlagName: string;
 }>();
 
-const groupedKandidatenByTabellenSpalte =
-  ref<Record<number, ErgebnisAndKandidat[]>>();
-
-onActivated(() => {
-  groupedKandidatenByTabellenSpalte.value =
-    groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
-      props.kandidatenergebnisse
-    );
-});
+const groupedKandidatenByTabellenSpalte = computed(() =>
+  groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
+    props.kandidatenergebnisse
+  )
+);
 
 function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
   kandidatenergebnisse: ErgebnisAndKandidat[]

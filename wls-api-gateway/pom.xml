@@ -52,7 +52,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Release -->
-        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
+        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
 
         <!-- Utility -->
         <refarch-tools.version>1.2.0</refarch-tools.version>

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-app-bar color="primary">
+    <v-app-bar
+      v-if="isUserLoggedIn"
+      color="primary"
+    >
       <v-row align="center">
         <v-col
           cols="4"
@@ -47,6 +50,17 @@
         </v-col>
       </v-row>
     </v-app-bar>
+    <v-app-bar
+      v-else
+      color="primary"
+    >
+      <v-col
+        cols="12"
+        class="d-flex align-center justify-end"
+      >
+        <wls-clock class="navbar-text mx-2 mt-1" />
+      </v-col>
+    </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <the-root-navigation-list />
     </v-navigation-drawer>
@@ -73,8 +87,13 @@ const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDate } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
-  storeToRefs(useUserStore());
+const {
+  user,
+  currentUserWahltag,
+  currentUserWahlbezirkNummer,
+  isUWB,
+  isUserLoggedIn,
+} = storeToRefs(useUserStore());
 const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();

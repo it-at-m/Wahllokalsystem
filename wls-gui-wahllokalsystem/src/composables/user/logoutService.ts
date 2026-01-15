@@ -1,16 +1,22 @@
+import { storeToRefs } from "pinia";
+
 import {
   AuthServerControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-auth-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { AUTH_SERVICE_API_URL } from "@/constants.ts";
+import { AUTH_SERVICE_API_URL, ROUTE_LOGOUT } from "@/constants.ts";
+import router from "@/plugins/router.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { axiosConfigWrapper } = useCommonApiUtils();
 
 const { logDebug, logError } = useLogging("logoutService");
 
 export function useLogoutService() {
+  const { isUserLoggedIn } = storeToRefs(useUserStore());
+
   const authServerControllerApi = new AuthServerControllerApi(
     new Configuration({
       basePath: AUTH_SERVICE_API_URL,
@@ -45,6 +51,9 @@ export function useLogoutService() {
       });
 
       logDebug(`logout erfolgreich durchgeführt`);
+
+      isUserLoggedIn.value = false;
+      await router.push(ROUTE_LOGOUT);
     } catch (error) {
       logError(`fehler bei logout`, error);
       throw error;

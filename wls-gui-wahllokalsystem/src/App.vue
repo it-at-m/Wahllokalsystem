@@ -40,7 +40,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
-const { isUWB } = storeToRefs(useUserStore());
+const { isUWB, isUserLoggedIn } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 
@@ -52,6 +52,8 @@ const indexDBSingleton = useIndexDB();
 onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
   indexDBSingleton.setupIndexDB();
+
+  isUserLoggedIn.value = true;
 
   try {
     await loadUser();

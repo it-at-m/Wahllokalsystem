@@ -51,6 +51,10 @@ export function useLogoutService() {
     }
   }
 
+  function forwardToLoginPage() {
+    window.location.reload();
+  }
+
   function _getHeaders(): Headers {
     const headers = new Headers({
       "Content-Type": "application/json",
@@ -82,5 +86,6 @@ export function useLogoutService() {
 
   return {
     logout,
+    forwardToLoginPage,
   };
 }

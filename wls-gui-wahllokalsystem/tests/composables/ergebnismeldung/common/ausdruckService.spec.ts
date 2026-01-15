@@ -179,7 +179,7 @@ describe("ausdruckService.ts", () => {
       ]);
     });
 
-    it("should_throwErrorButSendNotification_when_apiCallFailedAndWasCalledWithSendNotificationFalse", async () => {
+    it("should_throwErrorButSendNoNotification_when_apiCallFailedAndWasCalledWithSendNotificationFalse", async () => {
       const wahlbezirkID = generateRandomString(10);
       const wahlID = generateRandomString(10);
       const meldungsart = getRandomItem(Object.values(MeldungsArtEnum));

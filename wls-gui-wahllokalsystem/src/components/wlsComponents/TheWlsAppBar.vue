@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-app-bar
-      v-if="isUserLoggedIn"
-      color="primary"
-    >
-      <v-row align="center">
+    <v-app-bar color="primary">
+      <v-row
+        v-if="isUserLoggedIn"
+        align="center"
+      >
         <v-col
           cols="4"
           class="d-flex align-center justify-start"
@@ -49,12 +49,8 @@
           />
         </v-col>
       </v-row>
-    </v-app-bar>
-    <v-app-bar
-      v-else
-      color="primary"
-    >
       <v-col
+        v-else
         cols="12"
         class="d-flex align-center justify-end"
       >

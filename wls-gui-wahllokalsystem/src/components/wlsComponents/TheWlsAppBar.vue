@@ -81,7 +81,6 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
-import { useSchedulerStore } from "@/stores/schedulerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -102,7 +101,6 @@ const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();
 const { addNotification } = useUserNotificationService();
-const { stopAll } = useSchedulerStore();
 
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""
@@ -113,7 +111,6 @@ const wahlbezirknummer = computed(() =>
 
 async function onLogoutClicked() {
   try {
-    stopAll();
     await logout();
   } catch {
     addNotification(

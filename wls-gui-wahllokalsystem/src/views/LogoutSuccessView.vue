@@ -1,6 +1,6 @@
 <template>
   <v-container class="d-flex flex-column align-center ga-5">
-    <h1>Sie haben sich erfolgreich abgemeldet</h1>
+    <div class="text-h4">Sie haben sich erfolgreich abgemeldet</div>
     <v-icon
       icon="$locked"
       size="150"

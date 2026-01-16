@@ -1,5 +1,6 @@
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useResolvedUrlTestDataFactory } from "@tests/utils/user/ResolvedUrlTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import {
   afterAll,
   afterEach,
@@ -17,12 +18,16 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-auth-api", () => ({
-  AuthServerControllerApi: vi.fn().mockImplementation(() => ({
-    getLogoutUrl: mockDefinitions.getLogoutUrl,
-  })),
-  Configuration: vi.fn(),
-}));
+vi.mock("@/api/wls-clients/generated-auth-api", async (importOriginal) => {
+  const mod = await importOriginal();
+  return {
+    ...(mod as object),
+    AuthServerControllerApi: vi.fn().mockImplementation(() => ({
+      getLogoutUrl: mockDefinitions.getLogoutUrl,
+    })),
+    Configuration: vi.fn(),
+  };
+});
 
 global.fetch = mockDefinitions.fetch;
 
@@ -33,6 +38,7 @@ describe("logoutService.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogoutService>;
 
   beforeEach(() => {
+    setActivePinia(createPinia());
     unitUnderTest = useLogoutService();
   });
 

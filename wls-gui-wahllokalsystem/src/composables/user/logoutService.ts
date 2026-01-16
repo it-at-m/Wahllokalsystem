@@ -65,6 +65,8 @@ export function useLogoutService() {
   }
 
   function forwardToLoginPage() {
+    // Full page reload required because login is handled by the auth-service,
+    // not by client-side routing
     window.location.reload();
   }
 

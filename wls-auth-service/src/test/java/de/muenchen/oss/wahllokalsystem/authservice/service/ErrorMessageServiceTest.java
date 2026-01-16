@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
-import de.muenchen.oss.wahllokalsystem.authservice.security.ErrorMessages;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +48,7 @@ class ErrorMessageServiceTest {
       val result = unitUnderTest.getErrorMessage(new SessionAuthenticationException(errorMessage));
 
       Assertions.assertThat(result)
-          .isEqualTo(ErrorMessages.BENUTZER_BEREITS_ANGEMELDET + errorMessage);
+          .isEqualTo(ErrorMessageService.BENUTZER_BEREITS_ANGEMELDET + errorMessage);
     }
 
     @Test
@@ -59,7 +58,7 @@ class ErrorMessageServiceTest {
       val result =
           unitUnderTest.getErrorMessage(new InternalAuthenticationServiceException(errorMessage));
 
-      Assertions.assertThat(result).isEqualTo(ErrorMessages.LOGIN_BLOCKED_BY_LDAP_SERVER);
+      Assertions.assertThat(result).isEqualTo(ErrorMessageService.LOGIN_BLOCKED_BY_LDAP_SERVER);
     }
 
     @Test
@@ -67,7 +66,7 @@ class ErrorMessageServiceTest {
       val errorMessage = "bad credentials";
       val result = unitUnderTest.getErrorMessage(new Exception(errorMessage));
 
-      Assertions.assertThat(result).isEqualTo(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+      Assertions.assertThat(result).isEqualTo(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
   }
 }

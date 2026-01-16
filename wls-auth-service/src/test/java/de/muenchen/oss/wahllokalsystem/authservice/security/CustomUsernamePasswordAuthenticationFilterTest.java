@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.authservice.security;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import de.muenchen.oss.wahllokalsystem.authservice.service.LoginAttemptModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -59,6 +60,13 @@ class CustomUsernamePasswordAuthenticationFilterTest {
   @Mock LoginInterceptor loginInterceptor;
 
   @Mock AuthenticationManager authenticationManager;
+
+  @Mock ErrorMessageService errorMessageService;
+
+  private static final String mockedErrorMessageUserIsLocked = "mocked message user is locked";
+  private static final String mockedErrorMessageUserIsGettingLocked =
+      "mocked message user is getting locked";
+  private static final String mockedErrorMessageUserGotLocked = "mocked message user got locked";
 
   @InjectMocks @Spy CustomUsernamePasswordAuthenticationFilter unitUnderTest;
 
@@ -152,8 +160,9 @@ class CustomUsernamePasswordAuthenticationFilterTest {
               () ->
                   unitUnderTest.attemptAuthentication(
                       httpServletRequest, new MockHttpServletResponse()))
-          .isInstanceOf(LockedException.class)
-          .withMessageContaining(username);
+          .isInstanceOf(LockedException.class);
+      Mockito.verify(errorMessageService, Mockito.times(1))
+          .getErrorMessageUserIsLocked(Mockito.eq(username), Mockito.anyString());
     }
 
     @Test
@@ -175,7 +184,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
                   unitUnderTest.attemptAuthentication(
                       httpServletRequest, new MockHttpServletResponse()))
           .isInstanceOf(BadCredentialsException.class)
-          .withMessage(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+          .withMessage(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     @ParameterizedTest
@@ -195,7 +204,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
                   unitUnderTest.attemptAuthentication(
                       httpServletRequest, new MockHttpServletResponse()))
           .isInstanceOf(BadCredentialsException.class)
-          .withMessage(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+          .withMessage(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     @ParameterizedTest
@@ -225,7 +234,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
                   unitUnderTest.attemptAuthentication(
                       httpServletRequest, new MockHttpServletResponse()))
           .isInstanceOf(BadCredentialsException.class)
-          .withMessage(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+          .withMessage(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     public static Stream<Arguments> createIllegalRedirectUrls() {
@@ -347,6 +356,21 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val username = "username";
       val httpServletRequest = createAuthenticationRequest(username, "", "");
 
+      // Non-strict stubbing is used because the test is reused several times with different
+      // arguments (see Parameterized).
+      // Each test case requires at most one of these stubbings.
+      Mockito.lenient()
+          .when(errorMessageService.getErrorMessageUserGotLocked())
+          .thenReturn(mockedErrorMessageUserGotLocked);
+      Mockito.lenient()
+          .when(
+              errorMessageService.getErrorMessageUserIsLocked(
+                  Mockito.anyString(), Mockito.anyString()))
+          .thenReturn(mockedErrorMessageUserIsLocked);
+      Mockito.lenient()
+          .when(errorMessageService.getErrorMessageUserIsGettingLocked())
+          .thenReturn(mockedErrorMessageUserIsGettingLocked);
+
       Mockito.when(userService.doesUserExist(username)).thenReturn(true);
       Mockito.when(userService.getUserAttempts(username)).thenReturn(loginAttempt);
       val mockedAuthenticationFailureHandler = Mockito.mock(AuthenticationFailureHandler.class);
@@ -408,24 +432,26 @@ class CustomUsernamePasswordAuthenticationFilterTest {
 
     public static Stream<Arguments> createExpectedLoginErrorMessageForLoginAttempt() {
       return Stream.of(
-          Arguments.of(Optional.empty(), ErrorMessages.INVALID_USERNAME_OR_PASSWORD),
+          Arguments.of(Optional.empty(), ErrorMessageService.INVALID_USERNAME_OR_PASSWORD),
           Arguments.of(
               Optional.of(createLoginAttemptWithCountOfAttempts(MAX_LOGINT_ATTEMPTS - 1)),
-              ErrorMessages.BENUTZER_WIRD_GESPERRT),
+              mockedErrorMessageUserIsGettingLocked),
           Arguments.of(
               Optional.of(createLoginAttemptWithCountOfAttempts(MAX_LOGINT_ATTEMPTS)),
-              ErrorMessages.BENUTZER_WURDE_GESPERRT),
+              mockedErrorMessageUserGotLocked),
           Arguments.of(
               Optional.of(createLoginAttemptWithCountOfAttempts(0)),
-              ErrorMessages.INVALID_USERNAME_OR_PASSWORD));
+              ErrorMessageService.INVALID_USERNAME_OR_PASSWORD));
     }
 
     public static Stream<Arguments>
         createExpectedLoginErrorMessageForDisabledExceptionWithMessage() {
       return Stream.of(
           Arguments.of(
-              new DisabledException(LOGIN_CHECK_MESSAGE), ErrorMessages.NOT_IN_ACTIVE_ELECTION),
-          Arguments.of(new DisabledException("with sth else"), ErrorMessages.INVALID_LOGIN_TIMES));
+              new DisabledException(LOGIN_CHECK_MESSAGE),
+              ErrorMessageService.NOT_IN_ACTIVE_ELECTION),
+          Arguments.of(
+              new DisabledException("with sth else"), ErrorMessageService.INVALID_LOGIN_TIMES));
     }
 
     private static LoginAttemptModel createLoginAttemptWithCountOfAttempts(int count) {

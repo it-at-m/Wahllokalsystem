@@ -10,7 +10,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Wahlbezirksart;
-import de.muenchen.oss.wahllokalsystem.authservice.security.ErrorMessages;
+import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
@@ -216,7 +216,7 @@ class LdapConfigurationTest {
           restTemplate.exchange(formLoginRequestAfterLoginFailure, String.class);
 
       Assertions.assertThat(formLoginResponseAfterLoginFailure.getBody())
-          .contains(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+          .contains(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     private String getHost() {

@@ -181,7 +181,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.7</version>
+            <version>0.2.8</version>
         </dependency>
 
         <!-- Validation -->
@@ -388,7 +388,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.17.0</version>
+                <version>7.18.0</version>
                 <executions>
                     <execution>
                         <id>generateEAI</id>

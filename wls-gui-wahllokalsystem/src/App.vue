@@ -53,15 +53,15 @@ onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
   indexDBSingleton.setupIndexDB();
 
-  isUserLoggedIn.value = true;
-
   try {
     await loadUser();
+    isUserLoggedIn.value = true;
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
     await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
+    isUserLoggedIn.value = false;
     console.debug(error);
   }
 });

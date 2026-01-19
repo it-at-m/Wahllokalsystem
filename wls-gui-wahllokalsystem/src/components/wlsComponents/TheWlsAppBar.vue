@@ -119,7 +119,7 @@ async function onLogoutClicked() {
 watch(isUserLoggedIn, async () => {
   await nextTick();
   if (!isUserLoggedIn.value && drawer.value) {
-    toggleDrawer();
+    toggleDrawer(false);
   }
 });
 </script>

@@ -55,7 +55,6 @@ onMounted(async () => {
 
   try {
     await loadUser();
-    isUserLoggedIn.value = true;
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();

@@ -36,7 +36,7 @@ export const useUserStore = defineStore("user", () => {
   };
   const user = ref<User>(defaultUser);
 
-  const isUserLoggedIn = ref<boolean>(false);
+  const isUserLoggedIn = ref<boolean>(true);
 
   async function loadUser() {
     try {

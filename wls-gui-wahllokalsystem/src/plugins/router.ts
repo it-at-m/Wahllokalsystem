@@ -60,6 +60,11 @@ const permitNavigationOnlyForWahlbezirksArtBwb = () => {
   return isBWB.value;
 };
 
+const permitNavigationOnlyIfUserIsLoggedOut = () => {
+  const { isUserLoggedIn } = storeToRefs(useUserStore());
+  return !isUserLoggedIn.value;
+};
+
 const routes = [
   {
     path: "/",
@@ -174,6 +179,7 @@ const routes = [
     path: "/logout",
     name: ROUTE_LOGOUT,
     component: LogoutSuccessView,
+    beforeEnter: permitNavigationOnlyIfUserIsLoggedOut, // verhindert zu logout zu gelangen wenn man die url eingibt
   },
   {
     path: "/notFound",
@@ -201,11 +207,16 @@ router.beforeEach((to) => {
   const { hasTasksToRun, hasAllTasksRun } = storeToRefs(
     useInitTaskManagerStore()
   );
+  const { isUserLoggedIn } = storeToRefs(useUserStore());
   if (
     to.name !== ROUTES_HOME &&
     (!hasTasksToRun.value || !hasAllTasksRun.value)
   ) {
     return { name: ROUTES_HOME };
+  }
+
+  if (to.name !== ROUTE_LOGOUT && !isUserLoggedIn.value) {
+    return { name: ROUTE_LOGOUT };
   }
 });
 

@@ -24,6 +24,11 @@
       :wahlbezirk-id="currentUserWahlbezirkID"
       :wahl-id="wahlID"
     />
+    <the-m-b-w-gueltige-kandidatenstimmen-anzeigen-card
+      class="ma-5"
+      :wahlbezirk-id="currentUserWahlbezirkID"
+      :wahl-id="wahlID"
+    />
     <v-card-actions>
       <base-button-save
         save-text="Niederschrift senden"
@@ -55,6 +60,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

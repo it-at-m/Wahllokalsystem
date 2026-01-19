@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar color="primary">
-      <v-row align="center">
+      <v-row
+        v-if="isUserLoggedIn"
+        align="center"
+      >
         <v-col
           cols="4"
           class="d-flex align-center justify-start"
@@ -46,6 +49,13 @@
           />
         </v-col>
       </v-row>
+      <v-col
+        v-else
+        cols="12"
+        class="d-flex align-center justify-end"
+      >
+        <wls-clock class="navbar-text mx-2 mt-1" />
+      </v-col>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <the-root-navigation-list />
@@ -55,7 +65,7 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, nextTick, watch } from "vue";
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
@@ -65,20 +75,28 @@ import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOffl
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
 
 const { toGermanDate } = useDateTimeFormatter();
-const { user, currentUserWahltag, currentUserWahlbezirkNummer, isUWB } =
-  storeToRefs(useUserStore());
+const {
+  user,
+  currentUserWahltag,
+  currentUserWahlbezirkNummer,
+  isUWB,
+  isUserLoggedIn,
+} = storeToRefs(useUserStore());
 const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();
+const { addNotification } = useUserNotificationService();
 
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""
@@ -87,9 +105,23 @@ const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
 
-function onLogoutClicked() {
-  logout();
+async function onLogoutClicked() {
+  try {
+    await logout();
+  } catch {
+    addNotification(
+      "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+      UserNotificationCategoryEnum.ERROR
+    );
+  }
 }
+
+watch(isUserLoggedIn, async () => {
+  await nextTick();
+  if (!isUserLoggedIn.value && drawer.value) {
+    toggleDrawer(false);
+  }
+});
 </script>
 
 <style>

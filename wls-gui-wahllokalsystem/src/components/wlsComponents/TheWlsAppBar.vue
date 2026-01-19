@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, nextTick, watch } from "vue";
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
@@ -115,6 +115,13 @@ async function onLogoutClicked() {
     );
   }
 }
+
+watch(isUserLoggedIn, async () => {
+  await nextTick();
+  if (!isUserLoggedIn.value && drawer.value) {
+    toggleDrawer();
+  }
+});
 </script>
 
 <style>

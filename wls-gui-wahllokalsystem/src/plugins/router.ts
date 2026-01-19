@@ -179,7 +179,7 @@ const routes = [
     path: "/logout",
     name: ROUTE_LOGOUT,
     component: LogoutSuccessView,
-    beforeEnter: permitNavigationOnlyIfUserIsLoggedOut, // verhindert zu logout zu gelangen wenn man die url eingibt
+    beforeEnter: permitNavigationOnlyIfUserIsLoggedOut,
   },
   {
     path: "/notFound",

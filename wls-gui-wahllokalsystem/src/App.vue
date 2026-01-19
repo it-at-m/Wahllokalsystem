@@ -40,7 +40,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
-const { isUWB, isUserLoggedIn } = storeToRefs(useUserStore());
+const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 
@@ -60,7 +60,6 @@ onMounted(async () => {
     await initTasks();
     await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
-    isUserLoggedIn.value = false;
     console.debug(error);
   }
 });

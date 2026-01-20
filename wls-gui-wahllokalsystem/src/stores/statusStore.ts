@@ -36,7 +36,7 @@ export const useStatusStore = defineStore(storeID, () => {
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
 
-  //non election specific status
+  //TODO: non election specific status - to complete
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
 

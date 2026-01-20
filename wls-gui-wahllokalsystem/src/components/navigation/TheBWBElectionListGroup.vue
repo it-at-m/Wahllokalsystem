@@ -4,6 +4,7 @@
       <v-list-item
         v-bind="props"
         title="Wahlbriefzulassung"
+        :disabled="disabled"
       />
     </template>
     <v-list-item
@@ -17,6 +18,7 @@
     <v-list-item
       title="Wahlbriefe erfassen"
       :to="routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)"
+      :disabled="!isWahlumgebungErfasst"
     />
     <v-list-item
       title="Wahlbriefe zulassen"
@@ -26,6 +28,8 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
@@ -33,6 +37,15 @@ import {
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
 } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
+
+defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const { routeWithName } = useNavigationUtils();
+const { isWahlumgebungErfasst } = storeToRefs(useStatusStore());
 </script>

@@ -5,6 +5,7 @@ import { Configuration } from "@/api/wls-clients/generated-vorfaelleundvorkommni
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlMapper } from "@/composables/wahl/wahlMapper.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel } = useWahlMapper();
@@ -21,10 +22,13 @@ export function useWahlService() {
     wahltagID: string,
     sendNotification = true
   ): Promise<Wahl[] | null> {
+    const statusStore = useStatusStore();
     try {
       const response = await wahlenControllerApi.getWahlen(wahltagID);
       if (response.status === 200) {
-        return response.data.map(toModel);
+        const wahlen = response.data.map(toModel);
+        wahlen.forEach((wahl) => statusStore.addWahl(wahl.wahlID));
+        return wahlen;
       } else {
         return null;
       }

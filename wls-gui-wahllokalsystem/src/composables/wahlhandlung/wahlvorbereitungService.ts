@@ -14,6 +14,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlhandlung/wahlvorbereitungMapper.ts";
 import { WAHLVORBEREITUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const userNotificationService = useUserNotificationService();
@@ -48,6 +49,7 @@ export function useWahlvorbereitungService() {
     new BriefwahlvorbereitungControllerApi(
       wahlvorbereitungsServiceConfiguration
     );
+  const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
   async function getUrnenwahlSchliessungsUhrzeit(
     wahlbezirkID: string,
@@ -154,11 +156,19 @@ export function useWahlvorbereitungService() {
   async function getUrnenwahlvorbereitung(
     wahlbezirkID: string,
     sendNotification = true
-  ): Promise<Urnenwahlvorbereitung> {
+  ): Promise<Urnenwahlvorbereitung | null> {
     try {
-      return await urnenwahlvorbereitungControllerAPI
-        .getUrnenwahlVorbereitung(wahlbezirkID)
-        .then((response) => toUrnenwahlvorbereitungModel(response.data));
+      const response =
+        await urnenwahlvorbereitungControllerAPI.getUrnenwahlVorbereitung(
+          wahlbezirkID
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+      if (responseData) {
+        useStatusStore().isWahlumgebungErfasst = true;
+        return toUrnenwahlvorbereitungModel(responseData);
+      } else {
+        return null;
+      }
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -187,6 +197,7 @@ export function useWahlvorbereitungService() {
         "Urnenwahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
+      useStatusStore().isWahlumgebungErfasst = true;
     } catch (error) {
       userNotificationService.addNotification(
         "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",

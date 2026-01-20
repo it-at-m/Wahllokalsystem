@@ -20,7 +20,16 @@ export function useTextFormatter() {
     }
   }
 
+  function getStimmzettelTermForWahlID(wahlId: string): string {
+    const { isBWB, currentUserHauptWahlID } = storeToRefs(useUserStore());
+
+    return isBWB.value && wahlId === currentUserHauptWahlID.value
+      ? "Stimmzettelumschläge"
+      : "Stimmzettel";
+  }
+
   return {
     getStimmzettelTermForWahl,
+    getStimmzettelTermForWahlID,
   };
 }

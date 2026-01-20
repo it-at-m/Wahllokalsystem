@@ -18,8 +18,14 @@
         title="Wahlvorstand"
         :to="routeWithName(ROUTE_WAHLVORSTAND)"
       />
-      <the-b-w-b-election-list-group v-if="isBWB" />
-      <the-u-w-b-election-list-group v-if="isUWB" />
+      <the-b-w-b-election-list-group
+        v-if="isBWB"
+        :disabled="!isWahlvorstandErfasst"
+      />
+      <the-u-w-b-election-list-group
+        v-if="isUWB"
+        :disabled="!isWahlvorstandErfasst"
+      />
       <v-list-item
         title="Ereignisse"
         :to="routeWithName(ROUTE_EREIGNISSE)"
@@ -31,6 +37,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
 import TheScoresListGroup from "@/components/navigation/TheScoresListGroup.vue";
@@ -41,8 +48,10 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
+const { isWahlvorstandErfasst } = storeToRefs(useStatusStore());
 </script>

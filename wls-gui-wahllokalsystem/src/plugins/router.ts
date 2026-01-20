@@ -25,16 +25,12 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
+import { routeDefinitions } from "@/plugins/router/mwbRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
-import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
-import MBWNiederschriftView from "@/views/ergebnismeldung/MBW/MBWNiederschriftView.vue";
-import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldungView.vue";
-import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
-import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
-import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 import OBWStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
 import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
@@ -59,6 +55,9 @@ const permitNavigationOnlyForWahlbezirksArtBwb = () => {
   const { isBWB } = storeToRefs(useUserStore());
   return isBWB.value;
 };
+
+const permitNavigationWhenWahlumgebungIsErfasst = () =>
+  useStatusStore().isWahlumgebungErfasst;
 
 const permitNavigationOnlyIfUserIsLoggedOut = () => {
   const { isUserLoggedIn } = storeToRefs(useUserStore());
@@ -98,13 +97,19 @@ const routes = [
     path: "/erfassungWahlbriefe",
     name: ROUTE_ERFASSUNG_WAHLBRIEFE,
     component: BWBWahlbriefErfassungView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtBwb,
+      permitNavigationWhenWahlumgebungIsErfasst,
+    ],
   },
   {
     path: "/waehlerverzeichnis",
     name: ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
     component: UWBWaehlerverzeichnisView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtUwb,
+      permitNavigationWhenWahlumgebungIsErfasst,
+    ],
   },
   {
     path: "/wahlbriefzulassung",
@@ -131,11 +136,6 @@ const routes = [
     beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
   },
   {
-    path: "/:wahlart/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
-    name: ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-    component: ErfassungStimmzettelView,
-  },
-  {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",
     name: ROUTE_STAPEL_A,
     component: OWBStapelAView,
@@ -150,31 +150,7 @@ const routes = [
     name: ROUTE_STAPEL_C,
     component: StapelCView,
   },
-  {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelAandB",
-    name: ROUTE_STAPEL_A_AND_B,
-    component: MBWStapelAandBView,
-  },
-  {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",
-    name: ROUTE_STAPEL_D,
-    component: MBWStapelDView,
-  },
-  {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/schnellmeldung",
-    name: ROUTE_SCHNELLMELDUNG,
-    component: MBWSchnellmeldungView,
-  },
-  {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelBC",
-    name: ROUTE_STAPEL_BC,
-    component: MBWStapelBCView,
-  },
-  {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",
-    name: ROUTE_NIEDERSCHRIFT,
-    component: MBWNiederschriftView,
-  },
+  ...routeDefinitions,
   {
     path: "/logout",
     name: ROUTE_LOGOUT,

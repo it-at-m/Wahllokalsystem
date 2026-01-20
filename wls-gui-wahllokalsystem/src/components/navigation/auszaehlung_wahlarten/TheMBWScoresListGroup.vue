@@ -7,54 +7,31 @@
       />
     </template>
     <v-list-item
-      :title="titleStimmenZaehlen"
-      :to="
-        routeWithNameAndParams(ROUTE_AUSZAEHLUNG_STIMMZETTEL, {
-          wahlId: wahlId,
-          wahlbezirkId: wahlbezirkId,
-          wahlart: WahlWahlartEnum.Mbw,
-        })
-      "
-    />
-    <v-list-item
-      v-for="(route, index) in listItems"
+      v-for="(route, index) in navigation"
       :key="index"
       :title="route.title"
       :to="
-        routeWithNameAndParams(route.routeName, {
+        routeWithNameAndParams(route.targetRouteName, {
           wahlId: wahlId,
           wahlbezirkId: wahlbezirkId,
         })
       "
+      :disabled="route.disabled"
     />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import {
-  ROUTE_AUSZAEHLUNG_STIMMZETTEL,
-  ROUTE_NIEDERSCHRIFT,
-  ROUTE_SCHNELLMELDUNG,
-  ROUTE_STAPEL_A_AND_B,
-  ROUTE_STAPEL_BC,
-  ROUTE_STAPEL_D,
-} from "@/constants.ts";
-import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import { useMbwRoutes } from "@/plugins/router/mwbRoutes.ts";
 
 const { routeWithNameAndParams } = useNavigationUtils();
 
-defineProps<{
+const props = defineProps<{
   titleStimmenZaehlen: string;
   wahlId: string;
   wahlbezirkId: string;
 }>();
 
-const listItems = [
-  { title: "Ungültige Stimmzettel", routeName: ROUTE_STAPEL_D },
-  { title: "Gültige Stimmzettel", routeName: ROUTE_STAPEL_A_AND_B },
-  { title: "Schnellmeldung", routeName: ROUTE_SCHNELLMELDUNG },
-  { title: "Kandidatinnen- und Kandidatenstimmen", routeName: ROUTE_STAPEL_BC },
-  { title: "Niederschrift", routeName: ROUTE_NIEDERSCHRIFT },
-];
+const { navigation } = useMbwRoutes(props.wahlId, props.wahlbezirkId);
 </script>

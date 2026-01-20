@@ -1,4 +1,5 @@
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
+import type { Ref } from "vue";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -9,11 +10,37 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/Me
 
 export const storeID = "status";
 
+interface WahlokalState {
+  wahlvorstandErfasst: boolean;
+}
+
+export interface WahlState extends Record<string, boolean> {
+  schnellmeldungGesendet: boolean;
+  schnellmeldungGedruckt: boolean;
+  niederschriftGesendet: boolean;
+  niederschriftGedruckt: boolean;
+}
+
+export interface MBWState extends WahlState {
+  stimmzettelgezaehlt: boolean;
+  gueltigeErfasst: boolean;
+  ungueltigeErfasst: boolean;
+  kandidatenErfasst: boolean;
+}
+
+interface BTWState extends WahlState {}
+
 export const useStatusStore = defineStore(storeID, () => {
   const { getStatus, postStatus } = useStatusService();
 
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
+
+  //non election specific status
+  const isWahlvorstandErfasst = ref(false);
+  const isWahlumgebungErfasst = ref(false);
+
+  const wahlStatus: Ref<Map<string, Ref<WahlState>>> = ref(new Map());
 
   const DEFAULT_MELDUNG = {
     validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
@@ -60,9 +87,50 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  function addWahl(wahlID: string) {
+    if (!wahlStatus.value.get(wahlID)) {
+      wahlStatus.value.set(
+        wahlID,
+        ref({
+          niederschriftGedruckt: false,
+          niederschriftGesendet: false,
+          schnellmeldungGedruckt: false,
+          schnellmeldungGesendet: false,
+          gueltigeErfasst: false,
+          ungueltigeErfasst: false,
+          kandidatenErfasst: false,
+          stimmzettelgezaehlt: false,
+        } as MBWState)
+      );
+    }
+  }
+
+  function getWahl(wahlID: string): Ref<WahlState> {
+    let wahl = wahlStatus.value.get(wahlID);
+    if (!wahl) {
+      wahl = ref({
+        niederschriftGedruckt: false,
+        niederschriftGesendet: false,
+        schnellmeldungGedruckt: false,
+        schnellmeldungGesendet: false,
+        gueltigeErfasst: false,
+        ungueltigeErfasst: false,
+        kandidatenErfasst: false,
+        stimmzettelgezaehlt: false,
+      } as MBWState);
+      wahlStatus.value.set(wahlID, wahl);
+    }
+    return wahl;
+  }
+
   return {
     status,
     isStatusSaving,
+    isWahlvorstandErfasst,
+    isWahlumgebungErfasst,
+    wahlStatus,
+    addWahl,
+    getWahl,
     loadStatus,
     saveStatus,
   };

@@ -1,3 +1,4 @@
+import type { MBWState } from "@/stores/statusStore.ts";
 import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
@@ -15,6 +16,7 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -101,6 +103,7 @@ export function useErgebnisService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
+      useStatusStore().getWahl(wahlID).value[stapelArt] = true;
     } catch {
       if (sendNotification) {
         addNotification(

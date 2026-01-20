@@ -17,13 +17,17 @@
         })
       "
       :disabled="route.disabled"
+      :prepend-icon="getPrependIcon(route)"
     />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { useMbwRoutes } from "@/plugins/router/mwbRoutes.ts";
+import {
+  useMbwRoutes,
+  WorflowStepStateEnum,
+} from "@/plugins/router/mwbRoutes.ts";
 
 const { routeWithNameAndParams } = useNavigationUtils();
 
@@ -34,4 +38,12 @@ const props = defineProps<{
 }>();
 
 const { navigation } = useMbwRoutes(props.wahlId, props.wahlbezirkId);
+
+function getPrependIcon(route: any) {
+  return route.disabled
+    ? "$error"
+    : route.nonDisabledState === WorflowStepStateEnum.IN_PROGRESS
+      ? "$valid"
+      : "$information";
+}
 </script>

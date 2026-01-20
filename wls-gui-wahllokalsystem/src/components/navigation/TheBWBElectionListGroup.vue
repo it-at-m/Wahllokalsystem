@@ -4,8 +4,16 @@
       <v-list-item
         v-bind="props"
         title="Wahlbriefzulassung"
-        :disabled="disabled"
-      />
+        :disabled="isGroupDisabled"
+        :lines="groupActivatorListItemLines"
+      >
+        <template
+          v-if="disablingReason"
+          #subtitle
+        >
+          {{ disablingReason }}
+        </template>
+      </v-list-item>
     </template>
     <v-list-item
       title="Beginn Stimmabgabe"
@@ -29,6 +37,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
@@ -39,13 +48,24 @@ import {
 } from "@/constants.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 
-defineProps({
+const props = defineProps({
   disabled: {
-    type: Boolean,
+    type: [Boolean, String],
     default: false,
   },
 });
 
 const { routeWithName } = useNavigationUtils();
 const { isWahlumgebungErfasst } = storeToRefs(useStatusStore());
+
+const isGroupDisabled = computed(() => !!props.disabled);
+
+const disablingReason = computed(() => {
+  console.log(`props.disabled typeof : ${typeof props.disabled}`);
+  return typeof props.disabled === "string" ? props.disabled : null;
+});
+
+const groupActivatorListItemLines = computed(() =>
+  disablingReason.value ? false : "one"
+);
 </script>

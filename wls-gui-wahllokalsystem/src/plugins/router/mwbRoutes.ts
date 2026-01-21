@@ -1,6 +1,6 @@
-import type { ComputedRef, Ref } from "vue";
+import type { ComputedRef } from "vue";
 
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { type RouteRecordRaw } from "vue-router";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
@@ -54,7 +54,7 @@ export const routeDefinitions = Object.entries(routeDefinitionsRecord).map(
   })
 );
 
-interface NavigationDefinition {
+export interface NavigationDefinition {
   title: string;
   targetRouteName: MbwRoutesEnum;
   disabled: boolean;
@@ -70,7 +70,7 @@ export type WorkflowStepStateEnum =
 
 const { getStimmzettelTermForWahlID } = useTextFormatter();
 
-export function useMbwRoutes(wahlID: string, wahlbezirkID: string) {
+export function useMbwRoutes(wahlID: string) {
   const theWahlState = useStatusStore().getWahl(wahlID);
 
   const navigation: ComputedRef<(NavigationDefinition & { title: string })[]> =

@@ -48,7 +48,7 @@ import {
 } from "@/constants.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 
-const props = defineProps({
+const properties = defineProps({
   disabled: {
     type: [Boolean, String],
     default: false,
@@ -58,11 +58,10 @@ const props = defineProps({
 const { routeWithName } = useNavigationUtils();
 const { isWahlumgebungErfasst } = storeToRefs(useStatusStore());
 
-const isGroupDisabled = computed(() => !!props.disabled);
+const isGroupDisabled = computed(() => !!properties.disabled);
 
 const disablingReason = computed(() => {
-  console.log(`props.disabled typeof : ${typeof props.disabled}`);
-  return typeof props.disabled === "string" ? props.disabled : null;
+  return typeof properties.disabled === "string" ? properties.disabled : null;
 });
 
 const groupActivatorListItemLines = computed(() =>

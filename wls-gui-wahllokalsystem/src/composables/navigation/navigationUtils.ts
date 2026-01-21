@@ -3,10 +3,7 @@ import type { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
-import {
-  MbwRoutesEnum,
-  routeDefinitionsRecord,
-} from "@/plugins/router/mwbRoutes.ts";
+import { MbwRoutesEnum } from "@/plugins/router/mwbRoutes.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -15,7 +12,7 @@ interface ElectionSpecificNextStep {
 }
 
 const NullImpl: ElectionSpecificNextStep = {
-  getNextRoute(wahlstatus: WahlState): RouteLocationAsRelativeGeneric | null {
+  getNextRoute(): RouteLocationAsRelativeGeneric | null {
     return null;
   },
 };

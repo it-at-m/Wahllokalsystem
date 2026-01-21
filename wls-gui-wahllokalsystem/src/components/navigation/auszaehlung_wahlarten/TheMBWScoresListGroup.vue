@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import type { NavigationDefinition } from "@/plugins/router/mwbRoutes.ts";
+
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   useMbwRoutes,
@@ -31,15 +33,15 @@ import {
 
 const { routeWithNameAndParams } = useNavigationUtils();
 
-const props = defineProps<{
+const properties = defineProps<{
   titleStimmenZaehlen: string;
   wahlId: string;
   wahlbezirkId: string;
 }>();
 
-const { navigation } = useMbwRoutes(props.wahlId, props.wahlbezirkId);
+const { navigation } = useMbwRoutes(properties.wahlId, properties.wahlbezirkId);
 
-function getPrependIcon(route: any) {
+function getPrependIcon(route: NavigationDefinition) {
   return route.disabled
     ? "$error"
     : route.nonDisabledState === WorflowStepStateEnum.IN_PROGRESS

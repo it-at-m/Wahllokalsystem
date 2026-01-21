@@ -1,4 +1,3 @@
-import type { MBWState } from "@/stores/statusStore.ts";
 import type { Begruendung } from "@/types/ergebnismeldung/common/Begruendung.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";

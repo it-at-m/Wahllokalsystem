@@ -10,10 +10,6 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/Me
 
 export const storeID = "status";
 
-interface WahlokalState {
-  wahlvorstandErfasst: boolean;
-}
-
 export interface WahlState extends Record<string, boolean> {
   schnellmeldungGesendet: boolean;
   schnellmeldungGedruckt: boolean;
@@ -27,8 +23,6 @@ export interface MBWState extends WahlState {
   ungueltigeErfasst: boolean;
   kandidatenErfasst: boolean;
 }
-
-interface BTWState extends WahlState {}
 
 export const useStatusStore = defineStore(storeID, () => {
   const { getStatus, postStatus } = useStatusService();

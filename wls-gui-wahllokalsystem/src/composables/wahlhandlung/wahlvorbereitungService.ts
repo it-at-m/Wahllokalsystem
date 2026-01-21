@@ -49,7 +49,6 @@ export function useWahlvorbereitungService() {
     new BriefwahlvorbereitungControllerApi(
       wahlvorbereitungsServiceConfiguration
     );
-  const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 
   async function getUrnenwahlSchliessungsUhrzeit(
     wahlbezirkID: string,

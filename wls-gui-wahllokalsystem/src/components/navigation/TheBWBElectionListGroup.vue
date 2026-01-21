@@ -26,7 +26,7 @@
     <v-list-item
       title="Wahlbriefe erfassen"
       :to="routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)"
-      :disabled="!isWahlumgebungErfasst"
+      :disabled="isGroupDisabled || !isWahlumgebungErfasst"
     />
     <v-list-item
       title="Wahlbriefe zulassen"

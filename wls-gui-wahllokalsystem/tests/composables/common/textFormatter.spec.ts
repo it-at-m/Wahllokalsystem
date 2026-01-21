@@ -1,3 +1,4 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -9,7 +10,9 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("textFormatter.ts", () => {
-  const { getStimmzettelTermForWahl } = useTextFormatter();
+  const { getStimmzettelTermForWahl, getStimmzettelTermForWahlID } =
+    useTextFormatter();
+  const { generateRandomString } = useCommonTestDataFactory();
   const { prepareUser } = useUserTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();
 
@@ -101,6 +104,84 @@ describe("textFormatter.ts", () => {
           ).toStrictEqual("Stimmzettel");
         }
       }
+    });
+  });
+
+  describe("getStimmzettelTermForWahlID", () => {
+    it("should_returnStimmzettelumschläge_when_userIsBwbAndCurrentUserHauptwahlIdMatches", () => {
+      const wahlId = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID1",
+              wahlID: wahlId,
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
+
+      const result = getStimmzettelTermForWahlID(wahlId);
+      expect(result).toStrictEqual("Stimmzettelumschläge");
+    });
+
+    it("should_returnStimmzettel_when_userIsBwbButCurrentUserHauptwahlIdDoestNotMatch", () => {
+      const wahlId = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID1",
+              wahlID: wahlId + "sth",
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
+
+      const result = getStimmzettelTermForWahlID(wahlId);
+      expect(result).toStrictEqual("Stimmzettel");
+    });
+
+    it("should_returnStimmzettel_when_userIsUwbAndAndCurrentUserHauptwahlIdMatches", () => {
+      const wahlId = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID1",
+              wahlID: wahlId,
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
+
+      const result = getStimmzettelTermForWahlID(wahlId);
+      expect(result).toStrictEqual("Stimmzettel");
+    });
+
+    it("should_returnStimmzettel_when_userIsUwbAndAndCurrentUserHauptwahlIdDoestNotMatch", () => {
+      const wahlId = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser()
+          .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+          .wahlMetaData([
+            {
+              wahlbezirkID: "wahlbezirkID1",
+              wahlID: wahlId + "sth",
+              wahlnummer: "0",
+            },
+          ])
+          .build()
+      );
+
+      const result = getStimmzettelTermForWahlID(wahlId);
+      expect(result).toStrictEqual("Stimmzettel");
     });
   });
 });

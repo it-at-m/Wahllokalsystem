@@ -40,6 +40,7 @@ import WahleroeffnungView from "@/views/wahlhandlung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
+//TODO in composable auslagern und auch tests ergänzen
 const permitNavigationOnlyForWahlbezirksArtUwb = () => {
   const { isUWB } = storeToRefs(useUserStore());
   return isUWB.value;
@@ -173,6 +174,7 @@ const router = createRouter({
   },
 });
 
+//
 router.beforeEach((to) => {
   const { hasTasksToRun, hasAllTasksRun } = storeToRefs(
     useInitTaskManagerStore()

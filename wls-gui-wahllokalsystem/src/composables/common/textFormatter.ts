@@ -7,7 +7,6 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 export function useTextFormatter() {
   function getStimmzettelTermForWahl(wahl: Wahl | undefined): string {
-    const { isBWB } = storeToRefs(useUserStore());
     const { logDebug } = useLogging("textFormatter");
 
     if (wahl) {

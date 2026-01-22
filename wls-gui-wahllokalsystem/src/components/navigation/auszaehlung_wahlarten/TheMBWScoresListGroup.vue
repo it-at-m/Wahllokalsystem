@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { useMbwRoutes } from "@/plugins/router/mwbRoutes.ts";
 
 const { routeWithNameAndParams } = useNavigationUtils();
 
@@ -33,5 +33,8 @@ const properties = defineProps<{
   wahlbezirkId: string;
 }>();
 
-const { navigation } = useMbwRoutes(properties.wahlId, properties.wahlbezirkId);
+const { navigation } = useMbwNavigationService(
+  properties.wahlId,
+  properties.wahlbezirkId
+);
 </script>

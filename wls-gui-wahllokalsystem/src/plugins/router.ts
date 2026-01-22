@@ -19,7 +19,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
-import { routeDefinitions } from "@/plugins/router/mwbRoutes.ts";
+import { mbwRouteDefinitions } from "@/plugins/router/mbwRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -144,7 +144,7 @@ const routes = [
     name: ROUTE_STAPEL_C,
     component: StapelCView,
   },
-  ...routeDefinitions,
+  ...mbwRouteDefinitions,
   {
     path: "/logout",
     name: ROUTE_LOGOUT,

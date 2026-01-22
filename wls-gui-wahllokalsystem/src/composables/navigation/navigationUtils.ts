@@ -1,14 +1,15 @@
-import type { WahlState } from "@/stores/statusStore.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
-import { MbwRoutesEnum } from "@/plugins/router/mwbRoutes.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 interface ElectionSpecificNextStep {
-  getNextRoute(wahlstatus: WahlState): RouteLocationAsRelativeGeneric | null;
+  getNextRoute(wahlstatus: Status): RouteLocationAsRelativeGeneric | null;
 }
 
 const NullImpl: ElectionSpecificNextStep = {
@@ -18,13 +19,13 @@ const NullImpl: ElectionSpecificNextStep = {
 };
 
 const MBWNestStepImpl: ElectionSpecificNextStep = {
-  getNextRoute(wahlstatus: WahlState): RouteLocationAsRelativeGeneric | null {
-    if (!wahlstatus.schnellmeldungGedruckt) {
+  getNextRoute(wahlstatus: Status): RouteLocationAsRelativeGeneric | null {
+    if (!wahlstatus.schnellmeldung.gedruckt) {
       return {
         name: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
         params: {
-          wahlId: "",
-          wahlbezirkId: "",
+          wahlId: wahlstatus.bezirkUndWahlID.wahlID,
+          wahlbezirkId: wahlstatus.bezirkUndWahlID.wahlbezirkID,
         },
       };
     }
@@ -72,20 +73,32 @@ export function useNavigationUtils() {
     }
 
     //check all elections in their order
-    const firstWahlWithoutNiederschrift =
-      useWahlenStore().wahlenState.wahlen?.find((wahl) => {
-        const wahlStatus = useStatusStore().getWahl(wahl.wahlID);
-        return wahlStatus.value.niederschriftGedruckt;
-      });
+    const firstWahlWithoutNiederschrift = useUserStore().user.wahlMetaData.find(
+      (wahlMetaData) => {
+        const status = useStatusStore().getOrInitStatus(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        );
+        return !status.niederschrift.gedruckt;
+      }
+    );
 
     if (firstWahlWithoutNiederschrift) {
-      const nextHandlerForWahl =
-        electionSpecificNextStepHandlers[firstWahlWithoutNiederschrift.wahlart];
-      const nextStep = nextHandlerForWahl.getNextRoute(
-        useStatusStore().getWahl(firstWahlWithoutNiederschrift.wahlID).value
+      const wahl = useWahlenStore().wahlenActions.getWahlOrUndefinedById(
+        firstWahlWithoutNiederschrift.wahlID
       );
-      if (nextStep) {
-        return nextStep;
+      if (wahl) {
+        const nextHandlerForWahl =
+          electionSpecificNextStepHandlers[wahl.wahlart];
+        const nextStep = nextHandlerForWahl.getNextRoute(
+          useStatusStore().getOrInitStatus(
+            firstWahlWithoutNiederschrift.wahlID,
+            firstWahlWithoutNiederschrift.wahlbezirkID
+          )
+        );
+        if (nextStep) {
+          return nextStep;
+        }
       }
     }
 

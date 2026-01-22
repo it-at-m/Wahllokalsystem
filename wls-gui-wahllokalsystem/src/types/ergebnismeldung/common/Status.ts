@@ -8,4 +8,5 @@ TODO: neuer Name? ElectionStatus weil es noch einen Status ohne eine bestimmte W
   bezirkUndWahlID: BezirkUndWahlID;
   schnellmeldung: Meldung;
   niederschrift: Meldung;
+  stepsDone: Record<string, boolean>;
 }

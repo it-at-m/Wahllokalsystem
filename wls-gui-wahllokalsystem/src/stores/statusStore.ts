@@ -1,5 +1,4 @@
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
-import type { Ref } from "vue";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -10,22 +9,8 @@ import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/Me
 
 export const storeID = "status";
 
-export interface WahlState extends Record<string, boolean> {
-  schnellmeldungGesendet: boolean;
-  schnellmeldungGedruckt: boolean;
-  niederschriftGesendet: boolean;
-  niederschriftGedruckt: boolean;
-}
-
-export interface MBWState extends WahlState {
-  stimmzettelgezaehlt: boolean;
-  gueltigeErfasst: boolean;
-  ungueltigeErfasst: boolean;
-  kandidatenErfasst: boolean;
-}
-
 export const useStatusStore = defineStore(storeID, () => {
-  const { getStatus, postStatus } = useStatusService();
+  const { getStatus: _getStatus, postStatus } = useStatusService();
 
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
@@ -34,8 +19,6 @@ export const useStatusStore = defineStore(storeID, () => {
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
 
-  const wahlStatus: Ref<Map<string, Ref<WahlState>>> = ref(new Map());
-
   const DEFAULT_MELDUNG = {
     validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
     gedruckt: false,
@@ -43,13 +26,29 @@ export const useStatusStore = defineStore(storeID, () => {
     sendeuhrzeit: undefined,
   };
 
+  function getStatus(wahlID: string, wahlbezirkID: string): Status | undefined {
+    return status.value.find(
+      (statusEntry) =>
+        statusEntry.bezirkUndWahlID.wahlID === wahlID &&
+        statusEntry.bezirkUndWahlID.wahlbezirkID === wahlbezirkID
+    );
+  }
+
+  function getOrInitStatus(wahlID: string, wahlbezirkID: string): Status {
+    let statusEntry = getStatus(wahlID, wahlbezirkID);
+    if (!statusEntry) {
+      statusEntry = initStatus(wahlID, wahlbezirkID);
+    }
+    return statusEntry;
+  }
+
   async function loadStatus(
     wahlID: string,
     wahlbezirkID: string,
     sendNotification = true
   ) {
     try {
-      const statusForWahl = await getStatus(
+      const statusForWahl = await _getStatus(
         wahlID,
         wahlbezirkID,
         sendNotification
@@ -61,6 +60,7 @@ export const useStatusStore = defineStore(storeID, () => {
           bezirkUndWahlID: { wahlID, wahlbezirkID },
           schnellmeldung: DEFAULT_MELDUNG,
           niederschrift: DEFAULT_MELDUNG,
+          stepsDone: {},
         });
       }
     } catch {
@@ -81,40 +81,15 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
-  function addWahl(wahlID: string) {
-    if (!wahlStatus.value.get(wahlID)) {
-      wahlStatus.value.set(
-        wahlID,
-        ref({
-          niederschriftGedruckt: false,
-          niederschriftGesendet: false,
-          schnellmeldungGedruckt: false,
-          schnellmeldungGesendet: false,
-          gueltigeErfasst: false,
-          ungueltigeErfasst: false,
-          kandidatenErfasst: false,
-          stimmzettelgezaehlt: false,
-        } as MBWState)
-      );
-    }
-  }
-
-  function getWahl(wahlID: string): Ref<WahlState> {
-    let wahl = wahlStatus.value.get(wahlID);
-    if (!wahl) {
-      wahl = ref({
-        niederschriftGedruckt: false,
-        niederschriftGesendet: false,
-        schnellmeldungGedruckt: false,
-        schnellmeldungGesendet: false,
-        gueltigeErfasst: false,
-        ungueltigeErfasst: false,
-        kandidatenErfasst: false,
-        stimmzettelgezaehlt: false,
-      } as MBWState);
-      wahlStatus.value.set(wahlID, wahl);
-    }
-    return wahl;
+  function initStatus(wahlID: string, wahlbezirkID: string) {
+    const newStatus = {
+      bezirkUndWahlID: { wahlID, wahlbezirkID },
+      schnellmeldung: DEFAULT_MELDUNG,
+      niederschrift: DEFAULT_MELDUNG,
+      stepsDone: {},
+    };
+    status.value.push(newStatus);
+    return newStatus;
   }
 
   return {
@@ -122,9 +97,9 @@ export const useStatusStore = defineStore(storeID, () => {
     isStatusSaving,
     isWahlvorstandErfasst,
     isWahlumgebungErfasst,
-    wahlStatus,
-    addWahl,
-    getWahl,
+    getStatus,
+    getOrInitStatus,
+    initStatus,
     loadStatus,
     saveStatus,
   };

@@ -11,12 +11,8 @@ import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
-  const status = useStatusStore().getStatus(wahlID, wahlbezirkID);
-  if (!status) {
-    return {
-      navigation: computed(() => []) as ComputedRef<NavigationDefinition[]>,
-    };
-  }
+  const { getStatus } = useStatusStore();
+  const status = getStatus(wahlID, wahlbezirkID);
 
   //TODO das MbwRoutesEnum wird aktuell nur einmal verwendet; ist es dann so sinnvoll?
   const navigation: ComputedRef<NavigationDefinition[]> = computed(() => [
@@ -33,7 +29,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     {
       title: `Gültige Stimmzettel`,
       targetRouteName: MbwRoutesEnum.MBW_STAPEL_A_AND_B,
-      disabled: !status.stepsDone[StapelArtEnum.MbwDUngueltig],
+      disabled: status ? !status.stepsDone[StapelArtEnum.MbwDUngueltig] : false,
     },
     {
       title: `Schnellmeldung`,

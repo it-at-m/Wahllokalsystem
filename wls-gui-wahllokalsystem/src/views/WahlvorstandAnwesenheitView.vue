@@ -23,8 +23,7 @@
       <base-button-save
         :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
-        save-text="Speichern und Weiter"
-        @click="onSavedClicked"
+        @click="sendWahlvorstand()"
       />
       <base-button-refresh
         :loading="isLoading"
@@ -37,7 +36,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
@@ -46,12 +44,9 @@ import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const router = useRouter();
 const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
-const { getNextRoute } = useNavigationUtils();
 
 const {
   isWahlvorstandAusreichendAnwesend,
@@ -60,9 +55,4 @@ const {
   isLoading,
   isSaving,
 } = storeToRefs(useWahlvorstandStore());
-
-async function onSavedClicked() {
-  await sendWahlvorstand();
-  await router.push(getNextRoute());
-}
 </script>

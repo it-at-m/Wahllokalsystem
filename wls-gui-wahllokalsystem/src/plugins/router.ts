@@ -6,6 +6,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_LOGOUT,
   ROUTE_NIEDERSCHRIFT,
   ROUTE_NOTFOUND,
   ROUTE_SCHNELLMELDUNG,
@@ -39,6 +40,7 @@ import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
 import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
 import HomeView from "@/views/HomeView.vue";
+import LogoutSuccessView from "@/views/LogoutSuccessView.vue";
 import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
 import BWBWahlbriefErfassungView from "@/views/wahlhandlung/BWBWahlbriefErfassungView.vue";
 import BwbWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
@@ -56,6 +58,11 @@ const permitNavigationOnlyForWahlbezirksArtUwb = () => {
 const permitNavigationOnlyForWahlbezirksArtBwb = () => {
   const { isBWB } = storeToRefs(useUserStore());
   return isBWB.value;
+};
+
+const permitNavigationOnlyIfUserIsLoggedOut = () => {
+  const { isUserLoggedIn } = storeToRefs(useUserStore());
+  return !isUserLoggedIn.value;
 };
 
 const routes = [
@@ -169,6 +176,12 @@ const routes = [
     component: MBWNiederschriftView,
   },
   {
+    path: "/logout",
+    name: ROUTE_LOGOUT,
+    component: LogoutSuccessView,
+    beforeEnter: permitNavigationOnlyIfUserIsLoggedOut,
+  },
+  {
     path: "/notFound",
     name: ROUTE_NOTFOUND,
     component: ExampleError404View,
@@ -194,11 +207,16 @@ router.beforeEach((to) => {
   const { hasTasksToRun, hasAllTasksRun } = storeToRefs(
     useInitTaskManagerStore()
   );
+  const { isUserLoggedIn } = storeToRefs(useUserStore());
   if (
     to.name !== ROUTES_HOME &&
     (!hasTasksToRun.value || !hasAllTasksRun.value)
   ) {
     return { name: ROUTES_HOME };
+  }
+
+  if (to.name !== ROUTE_LOGOUT && !isUserLoggedIn.value) {
+    return { name: ROUTE_LOGOUT };
   }
 });
 

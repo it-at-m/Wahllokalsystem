@@ -1,6 +1,6 @@
 import { type RouteRecordRaw } from "vue-router";
 
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
@@ -9,6 +9,8 @@ import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldung
 import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
+
+const { isStepDoneInElectionState } = useNavigationGuards();
 
 const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRaw> = {
   [MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: {
@@ -22,27 +24,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRaw> = {
   [MbwRoutesEnum.MBW_STAPEL_A_AND_B]: {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelAandB",
     component: MBWStapelAandBView,
-    beforeEnter: [
-      (to) => {
-        const wahlID = to.params.wahlId;
-        if (wahlID === undefined || Array.isArray(wahlID)) {
-          return false;
-        }
-        const wahlbezirkID = to.params.wahlbezirkId;
-        if (wahlbezirkID === undefined || Array.isArray(wahlbezirkID)) {
-          return false;
-        }
-
-        const wahlState = useStatusStore().getOrInitStatus(
-          wahlID,
-          wahlbezirkID
-        );
-        if (!wahlState) {
-          return false;
-        }
-        return wahlState.stepsDone[StapelArtEnum.MbwDUngueltig] === true; //not to simplify, or it would return undefined whicht is equal to true in router
-      },
-    ],
+    beforeEnter: [isStepDoneInElectionState(StapelArtEnum.MbwDUngueltig)],
   },
   [MbwRoutesEnum.MBW_SCHNELLMELDUNG]: {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/schnellmeldung",

@@ -34,6 +34,14 @@ export const useStatusStore = defineStore(storeID, () => {
     );
   }
 
+  function isStepDone(
+    wahlID: string,
+    wahlbezirkID: string,
+    step: string
+  ): boolean {
+    return getStatus(wahlID, wahlbezirkID)?.stepsDone[step] ?? false;
+  }
+
   function getOrInitStatus(wahlID: string, wahlbezirkID: string): Status {
     let statusEntry = getStatus(wahlID, wahlbezirkID);
     if (!statusEntry) {
@@ -99,6 +107,7 @@ export const useStatusStore = defineStore(storeID, () => {
     isWahlumgebungErfasst,
     getStatus,
     getOrInitStatus,
+    isStepDone,
     initStatus,
     loadStatus,
     saveStatus,

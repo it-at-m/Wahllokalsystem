@@ -27,14 +27,10 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 
 const { routeWithNameAndParams } = useNavigationUtils();
 
-const properties = defineProps<{
-  titleStimmenZaehlen: string;
+const { wahlbezirkId, wahlId } = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
 }>();
 
-const { navigation } = useMbwNavigationService(
-  properties.wahlId,
-  properties.wahlbezirkId
-);
+const { navigation } = useMbwNavigationService(wahlId, wahlbezirkId);
 </script>

@@ -1,9 +1,11 @@
 import type { NavigationDefinition } from "@/types/navigation/NavigationDefinition.ts";
 import type { ComputedRef } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { mbwRoutesRecord } from "@/plugins/router/mbwRoutes.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
@@ -11,11 +13,20 @@ import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
-  const { getStatus } = useStatusStore();
-  const status = getStatus(wahlID, wahlbezirkID);
+  const { status } = storeToRefs(useStatusStore());
 
-  const navigation: ComputedRef<NavigationDefinition<MbwRoutesEnum>[]> =
-    computed(() => [
+  const mbwStatus = computed(() =>
+    status.value.find(
+      (status) =>
+        status.bezirkUndWahlID.wahlID === wahlID &&
+        status.bezirkUndWahlID.wahlbezirkID === wahlbezirkID
+    )
+  );
+
+  const navigation: ComputedRef<NavigationDefinition[]> = computed(() => {
+    if (!mbwStatus.value) return [];
+
+    return [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
         targetRoute: mbwRoutesRecord.createRoute(
@@ -42,7 +53,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlbezirkID
         ),
         disabled: status
-          ? !status.stepsDone[StapelArtEnum.MbwDUngueltig]
+          ? !mbwStatus.value.stepsDone[StapelArtEnum.MbwDUngueltig]
           : false,
       },
       {
@@ -72,7 +83,8 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
         ),
         disabled: false,
       },
-    ]);
+    ];
+  });
 
   return {
     navigation,

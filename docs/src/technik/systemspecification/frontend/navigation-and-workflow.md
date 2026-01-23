@@ -12,7 +12,7 @@ Der aktuelle Bearbeitungszustand wird im `StatusStore` gepflegt.
 
 ## Navigationguards
 
-[Navigationguards](https://router.vuejs.org/guide/advanced/navigation-guards.html) ermöglichen es, dann der Aufruf
+[Navigationguards](https://router.vuejs.org/guide/advanced/navigation-guards.html) ermöglichen es, dass der Aufruf
 einer View unterbunden wird.
 
 Im Wahllokalsystem wird geprüft, ob die direkt notwendigen Schritte abgeschlossen wurden.
@@ -87,7 +87,7 @@ classDiagram
 
 Das Composable `mbwNavigationService` liefert die einzelnen Bearbeitungsschritte für die MBW, die in der Navigation
 angezeigt werden. Bei der Initialisierung muss die `wahlID` und `wahlbezirkID` definiert werden. Anhand der IDs
-wird der Status für diese konkrete Wahl ermittelt. Anhand des Status wird dann bestimmte, ob die Links aktiv oder inaktiv
+wird der Status für diese konkrete Wahl ermittelt. Anhand des Status wird dann bestimmt, ob die Links aktiv oder inaktiv
 sind. Die Reaktivität wird durch `ComputedRef` erreicht. Ändert sich am Status etwas, erfolgt eine Evaluierung
 entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Links.
 

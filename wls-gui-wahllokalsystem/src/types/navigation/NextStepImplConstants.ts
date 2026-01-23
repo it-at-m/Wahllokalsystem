@@ -10,7 +10,7 @@ export const NullNextStepImpl: ElectionSpecificNextStep = {
   },
 };
 
-export const MBWNestStepImpl: ElectionSpecificNextStep = {
+export const MBWNextStepImpl: ElectionSpecificNextStep = {
   getNextRouteOrNull(
     wahlstatus: Status
   ): RouteLocationAsRelativeGeneric | null {

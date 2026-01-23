@@ -8,7 +8,7 @@ import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import {
-  MBWNestStepImpl,
+  MBWNextStepImpl,
   NullNextStepImpl,
 } from "@/types/navigation/NextStepImplConstants.ts";
 
@@ -22,7 +22,7 @@ const electionSpecificNextStepHandlers: Record<
   BZW: NullNextStepImpl,
   EUW: NullNextStepImpl,
   LTW: NullNextStepImpl,
-  MBW: MBWNestStepImpl,
+  MBW: MBWNextStepImpl,
   OBW: NullNextStepImpl,
   SRW: NullNextStepImpl,
   SVW: NullNextStepImpl,

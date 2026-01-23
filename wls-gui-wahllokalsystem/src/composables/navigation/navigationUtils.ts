@@ -79,7 +79,6 @@ export function useNavigationUtils() {
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {
-      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
       const statusOfElection = useStatusStore().getStatus(
         metaDataOfFirstUnfinishedElection.wahlID,
         metaDataOfFirstUnfinishedElection.wahlbezirkID
@@ -87,6 +86,8 @@ export function useNavigationUtils() {
       if (!statusOfElection) {
         return null;
       }
+
+      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
       return nextHandlerForWahl.getNextRouteOrNull(statusOfElection);
     } else {
       return null;

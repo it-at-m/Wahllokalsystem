@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import {withMermaid} from "vitepress-plugin-mermaid";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
@@ -266,6 +266,10 @@ export default withMermaid({
                 {
                   text: "Intervalle und Timeouts",
                   link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
+                {
+                  text: "Navigation und Bearbeitungsreihenfolge",
+                  link: `${PATH_SYSSPEC}frontend/navigation-and-workflow.md`,
                 },
               ],
             },

@@ -9,7 +9,6 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { useWahlvorstandMapper } from "@/composables/wahlvorstand/wahlvorstandMapper";
 import { useWahlvorstandComparators } from "@/composables/wahlvorstand/wahlvorstandUtils.ts";
 import { WAHLVORSTAND_SERVICE_API_URL } from "@/constants";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { toModel, toDto } = useWahlvorstandMapper();
@@ -52,8 +51,6 @@ export function useWahlvorstandService() {
       wahlvorstand?.wahlvorstandsmitglieder.sort(
         compareWahlvorstandsMitglieder
       );
-      useStatusStore().isWahlvorstandErfasst = false;
-
       return wahlvorstand;
     } catch (error) {
       if (sendNotification) {
@@ -81,7 +78,6 @@ export function useWahlvorstandService() {
         wahlvorstandDto,
         axiosConfigWrapper().requestAsOnlineFirst()
       );
-      useStatusStore().isWahlvorstandErfasst = true;
       userNotificationService.addNotification(
         "Die Anwesenheit wurde erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS

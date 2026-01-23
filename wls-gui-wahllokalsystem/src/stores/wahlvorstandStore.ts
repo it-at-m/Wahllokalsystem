@@ -9,6 +9,7 @@ import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
   MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
 } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { createEmptyWahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
@@ -25,6 +26,7 @@ const { registerStoreHMR } = useHmrUpdate();
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
+  const { isWahlvorstandErfasst } = storeToRefs(useStatusStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -64,6 +66,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       forceUpdate: true,
       sendNotification: sendNotification,
     });
+    isWahlvorstandErfasst.value = false;
   }
 
   async function forceLoadWahlvorstand() {
@@ -78,6 +81,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     wahlvorstand.value.wahlvorstandsmitglieder.forEach(
       (wahlvorstandsMitglied) => (wahlvorstandsMitglied.anwesend = false)
     );
+    isWahlvorstandErfasst.value = false;
   }
 
   async function sendWahlvorstand() {
@@ -87,6 +91,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
         currentUserWahlbezirkID.value,
         wahlvorstand.value
       );
+      isWahlvorstandErfasst.value = true;
       lastSending.value = updateDatetime;
     } finally {
       isSaving.value = false;
@@ -117,6 +122,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
           sendNotification: sendNotification,
         }
       );
+      isWahlvorstandErfasst.value = false;
       lastLoading.value = new Date();
     } finally {
       isLoading.value = false;

@@ -1,7 +1,7 @@
 # Navigation und Bearbeitungsreihenfolge
 
 Die Bearbeitungsreihenfolge folgt einem gewissen Schema. Welche Schritte am Wahltag erfolgen kann
-[dieser Übersicht](/about#was-kann-die-software) entnommen werden.
+[dieser Übersicht](/about/#was-kann-die-software) entnommen werden.
 
 Das Wahllokalsystem unterstützt dabei, in dem bestimmte Funktionen erst genutzt werden können, wenn die notwendigen
 Schritte zuvor abgeschlossen wurden.

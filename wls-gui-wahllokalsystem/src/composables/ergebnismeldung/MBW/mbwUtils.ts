@@ -1,4 +1,5 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
+import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -9,17 +10,23 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
+import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
-const { postErgebnisse, getErgebnisse, postSchnellmeldung } =
-  useErgebnisService();
+const {
+  postErgebnisse,
+  getErgebnisse,
+  postSchnellmeldung,
+  getStimmzettelumschlaege,
+} = useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
 const { getAWerte } = useAWerteService();
+const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
 const { logError } = useLogging("mbwUtils");
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
@@ -27,7 +34,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     useMbwErgebnisAndWahlvorschlagMapper(wahlID, wahlbezirkID);
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-  const { wahlenActions } = useWahlenStore();
+  const { wahlenActions, waehlerverzeichnisActions } = useWahlenStore();
+  const { isUWB, isBWB } = storeToRefs(useUserStore());
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -118,6 +126,62 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     return filteredAWert;
   }
 
+  async function getBWerteForWahlbezirkAndWahl(): Promise<BWerte> {
+    const bWerte: BWerte = {
+      bezirkUndWahlID: {
+        wahlbezirkID: wahlbezirkID,
+        wahlID: wahlID,
+      },
+      b: 0,
+      b1: 0,
+      b2: 0,
+    };
+
+    try {
+      if (isUWB.value) {
+        const waehlerverzeichnisNummer =
+          waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+            wahlID
+          );
+        if (waehlerverzeichnisNummer) {
+          const loadedStimmabgabevermerke = await getStimmabgabevermerke(
+            wahlbezirkID,
+            waehlerverzeichnisNummer
+          );
+          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+          bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
+            .flatMap((vermerk) => vermerk.stimmzettel)
+            .reduce(
+              (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
+              0
+            );
+          bWerte.b2 = Array.from(
+            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+            loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
+          ).reduce((sum, value) => sum + value, 0);
+
+          bWerte.b = bWerte.b1 + bWerte.b2;
+        }
+      }
+      if (isBWB.value) {
+        const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+        if (wahl) {
+          const loadedStimmzettelumschlaege = await getStimmzettelumschlaege(
+            wahl,
+            wahlbezirkID,
+            "",
+            false
+          );
+          bWerte.b = loadedStimmzettelumschlaege?.anzahlWaehler || 0;
+        }
+      }
+    } catch {
+      throw new Error(`Fehler beim Laden der BWerte`);
+    }
+
+    return bWerte;
+  }
+
   async function sendSchnellmeldung() {
     isSendingSchnellmeldung.value = true;
 
@@ -174,6 +238,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     saveGueltigeErgebnisse,
     loadAndCombineErgebnisseAndWahlvorschlaege,
     getAWerteForWahlbezirkAndWahl,
+    getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
   };
 }

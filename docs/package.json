@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@mdi/js": "7.4.47",
-    "vuetify": "3.10.12"
+    "vuetify": "3.11.6"
   },
   "devDependencies": {
     "@mdi/font": "7.4.47",

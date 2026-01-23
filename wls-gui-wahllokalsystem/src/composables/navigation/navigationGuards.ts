@@ -16,16 +16,16 @@ export function useNavigationGuards() {
     to: RouteLocationNormalizedGeneric,
     requiredStep: string
   ) {
-    const { wahlID, wahlbezirkID } = to.params;
+    const { wahlId, wahlbezirkId } = to.params;
 
-    if (wahlID === undefined || Array.isArray(wahlID)) {
+    if (wahlId === undefined || Array.isArray(wahlId)) {
       return false;
     }
-    if (wahlbezirkID === undefined || Array.isArray(wahlbezirkID)) {
+    if (wahlbezirkId === undefined || Array.isArray(wahlbezirkId)) {
       return false;
     }
 
-    return useStatusStore().isStepDone(wahlID, wahlbezirkID, requiredStep);
+    return useStatusStore().isStepDone(wahlId, wahlbezirkId, requiredStep);
   }
 
   return {

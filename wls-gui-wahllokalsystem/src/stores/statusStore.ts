@@ -89,6 +89,18 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  function setStepDone(
+    wahlID: string,
+    wahlbezirkID: string,
+    step: string,
+    isDone = true
+  ) {
+    const status = getStatus(wahlID, wahlbezirkID);
+    if (status) {
+      status.stepsDone[step] = isDone;
+    }
+  }
+
   function initStatus(wahlID: string, wahlbezirkID: string) {
     const newStatus = {
       bezirkUndWahlID: { wahlID, wahlbezirkID },
@@ -111,6 +123,7 @@ export const useStatusStore = defineStore(storeID, () => {
     initStatus,
     loadStatus,
     saveStatus,
+    setStepDone,
   };
 });
 

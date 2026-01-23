@@ -102,9 +102,7 @@ export function useErgebnisService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      useStatusStore().getOrInitStatus(wahlID, wahlbezirkID).stepsDone[
-        stapelArt
-      ] = true;
+      useStatusStore().setStepDone(wahlID, wahlbezirkID, stapelArt);
     } catch {
       if (sendNotification) {
         addNotification(

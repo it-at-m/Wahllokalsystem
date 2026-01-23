@@ -14,39 +14,41 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStatus } = useStatusStore();
   const status = getStatus(wahlID, wahlbezirkID);
 
-  //TODO das MbwRoutesEnum wird aktuell nur einmal verwendet; ist es dann so sinnvoll?
-  const navigation: ComputedRef<NavigationDefinition[]> = computed(() => [
-    {
-      title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
-      targetRouteName: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
-      disabled: false,
-    },
-    {
-      title: `Ungültige Stimmzettel`,
-      targetRouteName: MbwRoutesEnum.MBW_STAPEL_D,
-      disabled: false,
-    },
-    {
-      title: `Gültige Stimmzettel`,
-      targetRouteName: MbwRoutesEnum.MBW_STAPEL_A_AND_B,
-      disabled: status ? !status.stepsDone[StapelArtEnum.MbwDUngueltig] : false,
-    },
-    {
-      title: `Schnellmeldung`,
-      targetRouteName: MbwRoutesEnum.MBW_SCHNELLMELDUNG,
-      disabled: false,
-    },
-    {
-      title: `Kandidatinnen- und Kandidatenstimmen`,
-      targetRouteName: MbwRoutesEnum.MBW_STAPEL_BC,
-      disabled: false,
-    },
-    {
-      title: `Niederschrift`,
-      targetRouteName: MbwRoutesEnum.MBW_NIEDERSCHRIFT,
-      disabled: false,
-    },
-  ]);
+  const navigation: ComputedRef<NavigationDefinition<MbwRoutesEnum>[]> =
+    computed(() => [
+      {
+        title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
+        targetRouteName: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+        disabled: false,
+      },
+      {
+        title: `Ungültige Stimmzettel`,
+        targetRouteName: MbwRoutesEnum.MBW_STAPEL_D,
+        disabled: false,
+      },
+      {
+        title: `Gültige Stimmzettel`,
+        targetRouteName: MbwRoutesEnum.MBW_STAPEL_A_AND_B,
+        disabled: status
+          ? !status.stepsDone[StapelArtEnum.MbwDUngueltig]
+          : false,
+      },
+      {
+        title: `Schnellmeldung`,
+        targetRouteName: MbwRoutesEnum.MBW_SCHNELLMELDUNG,
+        disabled: false,
+      },
+      {
+        title: `Kandidatinnen- und Kandidatenstimmen`,
+        targetRouteName: MbwRoutesEnum.MBW_STAPEL_BC,
+        disabled: false,
+      },
+      {
+        title: `Niederschrift`,
+        targetRouteName: MbwRoutesEnum.MBW_NIEDERSCHRIFT,
+        disabled: false,
+      },
+    ]);
 
   return {
     navigation,

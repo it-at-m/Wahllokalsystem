@@ -1,7 +1,5 @@
-import type { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
-
-export interface NavigationDefinition {
+export interface NavigationDefinition<T> {
   title: string;
-  targetRouteName: MbwRoutesEnum;
+  targetRouteName: T;
   disabled: boolean; //TODO Optional für false ergänzen
 }

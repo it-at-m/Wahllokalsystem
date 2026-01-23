@@ -5,9 +5,16 @@ import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
 const storeID = "dataSync";
 
 export const useDataSyncStore = defineStore(storeID, () => {
-  const { synchronizeOfflineData, isOfflineDataSyncing } = useDataSyncer();
+  const {
+    synchronizeOfflineData,
+    isOfflineDataSyncing,
+    numberOfTasksFinished,
+    numberOfTasksToRun,
+  } = useDataSyncer();
 
   return {
+    numberOfTasksFinished,
+    numberOfTasksToRun,
     isOfflineDataSyncing,
     synchronizeOfflineData,
   };

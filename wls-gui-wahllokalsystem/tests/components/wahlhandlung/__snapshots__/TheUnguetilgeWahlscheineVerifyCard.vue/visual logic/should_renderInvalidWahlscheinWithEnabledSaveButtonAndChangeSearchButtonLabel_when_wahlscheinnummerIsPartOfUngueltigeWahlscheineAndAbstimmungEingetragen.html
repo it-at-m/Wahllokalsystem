@@ -24,10 +24,10 @@
             <!---->
             <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-1" aria-hidden="false">
                 <!---->Wahlscheinnummer
-              </label><label class="v-label v-field-label" for="input-v-1">
+              </label><label class="v-label v-field-label" id="input-v-1-label" for="input-v-1" aria-hidden="true">
                 <!---->Wahlscheinnummer
               </label>
-              <!----><input size="1" type="text" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input" value="123">
+              <!----><input size="1" type="text" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input" value="123">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -36,7 +36,6 @@
                   </svg></i></div>
             </transition-stub>
             <div class="v-field__append-inner">
-              <!---->
               <!---->
             </div>
             <div class="v-field__outline">
@@ -111,10 +110,10 @@
                         <!---->
                         <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-6" aria-hidden="false">
                             <!---->Abstimmungsergebnis
-                          </label><label class="v-label v-field-label" for="input-v-6">
+                          </label><label class="v-label v-field-label" id="input-v-6-label" for="input-v-6" aria-hidden="true">
                             <!---->Abstimmungsergebnis
                           </label>
-                          <!----><textarea class="v-field__input" rows="1" id="input-v-6" aria-describedby="input-v-6-messages" value="einstimmig zurückgewiesen"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-6-sizer" readonly="" aria-hidden="true"></textarea>
+                          <!----><textarea class="v-field__input" rows="1" aria-labelledby="input-v-6-label" id="input-v-6" aria-describedby="input-v-6-messages" value="einstimmig zurückgewiesen"></textarea><textarea class="v-field__input v-textarea__sizer" id="input-v-6-sizer" readonly="" aria-hidden="true"></textarea>
                           <!---->
                         </div>
                         <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -123,7 +122,6 @@
                               </svg></i></div>
                         </transition-stub>
                         <div class="v-field__append-inner">
-                          <!---->
                           <!---->
                         </div>
                         <div class="v-field__outline">

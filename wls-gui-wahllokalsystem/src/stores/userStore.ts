@@ -36,6 +36,8 @@ export const useUserStore = defineStore("user", () => {
   };
   const user = ref<User>(defaultUser);
 
+  const isUserLoggedIn = ref<boolean>(true);
+
   async function loadUser() {
     try {
       user.value = await getUser();
@@ -57,6 +59,8 @@ export const useUserStore = defineStore("user", () => {
           payload: cryptoKey,
         });
       }
+
+      indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }
   }
 
@@ -129,6 +133,7 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlMetadata,
     isUWB,
     isBWB,
+    isUserLoggedIn,
   };
 });
 

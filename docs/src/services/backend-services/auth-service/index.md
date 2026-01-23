@@ -49,6 +49,42 @@ erDiagram
 > [!IMPORTANT]
 > Der Benutzername liegt in der Datenbank nur verschlüsselt vor.
 
+## Zusätzliche Claims
+
+Neben den [Standardclaims](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims) werden durch
+den Auth-Service folgende zusätzliche Claims gesetzt:
+
+| Claimname | Beschreibung | Datentyp |
+| --------- | ------------------------------------------------------------------- | -------- |
+| wahlbezirkID | technische ID des Hauptwahlbezirkes des Benutzers | UUIDv4 |
+| wahlbezirksArt | Art des Wahlbezirks (Urnenwahl oder Briefwahl) | Enum: [BWB, UWB] |
+| wahlbezirkid_wahlnummer | Wahlbezirke und Wahlen, die dem Benutzer zur Pflege zugewiesen sind | JSON-String |
+
+> [!NOTE] Aufbau `wahlbezirkid_wahlnummer`
+>
+> Der JSON-String bildet folgendes Objekt ab:
+>
+> ```JSON
+> {"wbid_wahlnummer":
+>   [{
+>       "wahlbezirkID": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+>       "wahlnummer": "0",
+>       "wahlID": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"
+>   }]
+> }
+> ```
+>
+> - wahlbezirkID ... technische ID des Wahlbezirkes für die Wahl
+> - wahlnummer ... Nummer der Wahl in der Reihenfolge der abzuarbeitenden Wahlen
+> - wahlID ... technische ID der Wahl in welcher der Benutzer arbeitet
+
+Diese Informationen sind auch über den Userinfo-Endpunkt des Auth-Services abrufbar.
+
+> [!TIP]
+>
+> Die Verwendung des Userinfo-Endpunkts wird empfohlen, da man sich so unabhängiger vom Auth-Service macht, und so
+> leichter Alternativen, wie z. B. den Keycloak, verwenden kann.
+
 ## Prozesse
 
 ### Auswahl Loginmaske
@@ -66,7 +102,10 @@ sequenceDiagram
         AuthService->>+InfomanagementService : get Willkommenstext Konfiguration
         InfomanagementService->>-AuthService : Willkommenstext
     end
-    AuthService->>AuthService: ergänze Werte für View
+    
+    opt Fehler beim Letzten Login
+        AuthService->>AuthService : Ergänze Fehlermeldung
+    end
 
     AuthService->>-User : LoginView
 ```

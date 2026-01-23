@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.security;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import de.muenchen.oss.wahllokalsystem.authservice.service.LoginAttemptModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -63,13 +64,17 @@ public class CustomUsernamePasswordAuthenticationFilter
 
   private final LoginInterceptor loginInterceptor;
 
+  private final ErrorMessageService errorMessageService;
+
   public CustomUsernamePasswordAuthenticationFilter(
       final UserService userService,
       final LoginInterceptor loginInterceptor,
-      final AuthenticationManager authenticationManager) {
+      final AuthenticationManager authenticationManager,
+      final ErrorMessageService errorMessageService) {
     super(authenticationManager);
     this.userService = userService;
     this.loginInterceptor = loginInterceptor;
+    this.errorMessageService = errorMessageService;
   }
 
   @Override
@@ -88,7 +93,7 @@ public class CustomUsernamePasswordAuthenticationFilter
           && !isPenaltyOver(loginAttempts.get().lastModified())) {
         String sperreDauer = getSperredauer(loginAttempts.get().lastModified());
         throw new LockedException(
-            username + ErrorMessages.BENUTZER_WURDE_GESPERRT_DAUERT + sperreDauer);
+            errorMessageService.getErrorMessageUserIsLocked(username, sperreDauer));
       }
 
       logUserCustom(
@@ -104,7 +109,7 @@ public class CustomUsernamePasswordAuthenticationFilter
           "benutzername=" + username + "|message=Dem Benutzer ist eine Anmeldung nicht erlaubt|",
           username);
 
-      throw new BadCredentialsException(ErrorMessages.INVALID_USERNAME_OR_PASSWORD);
+      throw new BadCredentialsException(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     return super.attemptAuthentication(request, response);
@@ -150,9 +155,9 @@ public class CustomUsernamePasswordAuthenticationFilter
     } else if (failed instanceof DisabledException) {
       final String message;
       if (failed.getMessage().equals(loginCheckMessage)) {
-        message = ErrorMessages.NOT_IN_ACTIVE_ELECTION;
+        message = ErrorMessageService.NOT_IN_ACTIVE_ELECTION;
       } else {
-        message = ErrorMessages.INVALID_LOGIN_TIMES;
+        message = ErrorMessageService.INVALID_LOGIN_TIMES;
       }
       super.unsuccessfulAuthentication(request, response, new BadCredentialsException(message));
     } else {
@@ -170,17 +175,17 @@ public class CustomUsernamePasswordAuthenticationFilter
 
   private String createErrorMessage(final Optional<LoginAttemptModel> loginAttempt) {
     if (loginAttempt.isEmpty()) {
-      return ErrorMessages.INVALID_USERNAME_OR_PASSWORD;
+      return ErrorMessageService.INVALID_USERNAME_OR_PASSWORD;
     }
 
     val countLoginAttempts = loginAttempt.get().attempts();
 
     if (countLoginAttempts == (maxLoginAttempts - 1)) {
-      return ErrorMessages.BENUTZER_WIRD_GESPERRT;
+      return errorMessageService.getErrorMessageUserIsGettingLocked();
     } else if (countLoginAttempts >= maxLoginAttempts) {
-      return ErrorMessages.BENUTZER_WURDE_GESPERRT;
+      return errorMessageService.getErrorMessageUserGotLocked();
     } else {
-      return ErrorMessages.INVALID_USERNAME_OR_PASSWORD;
+      return ErrorMessageService.INVALID_USERNAME_OR_PASSWORD;
     }
   }
 

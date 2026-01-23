@@ -7,7 +7,7 @@ import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 const storeID = "taskManager";
 const { registerStoreHMR } = useHmrUpdate();
 
-export const useTaskManagerStore = defineStore(storeID, () => {
+export const useInitTaskManagerStore = defineStore(storeID, () => {
   const { initTasklist } = useTaskListService();
   const taskManager = useTaskManager([]);
 
@@ -23,4 +23,4 @@ export const useTaskManagerStore = defineStore(storeID, () => {
   };
 });
 
-registerStoreHMR(useTaskManagerStore);
+registerStoreHMR(useInitTaskManagerStore);

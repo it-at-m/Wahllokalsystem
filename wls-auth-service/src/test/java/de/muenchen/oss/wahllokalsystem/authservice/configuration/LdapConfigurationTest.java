@@ -10,16 +10,13 @@ import de.muenchen.oss.wahllokalsystem.authservice.domain.PermissionRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
 import de.muenchen.oss.wahllokalsystem.authservice.domain.Wahlbezirksart;
-import de.muenchen.oss.wahllokalsystem.authservice.rest.UserDTO;
+import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import java.net.URI;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import lombok.Data;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -101,7 +98,7 @@ class LdapConfigurationTest {
     final Pattern codePattern = Pattern.compile("code=(.*)");
 
     @Test
-    void should_accessSecureResource_when_loggingInWithToken() throws Exception {
+    void should_showErrorMessage_when_credentialsAreInvalid() throws Exception {
       val userWahlbezirkArt = Wahlbezirksart.BWB;
 
       transactionTemplate.executeWithoutResult(
@@ -143,7 +140,7 @@ class LdapConfigurationTest {
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                    .redirectUri("http://127.0.0.1:8080/oauth2/authorized")
+                    .redirectUri("http://127.0.0.1:8080/oauth2/code/sso")
                     .postLogoutRedirectUri("http://localhost:8080/")
                     .scope(OidcScopes.OPENID)
                     .clientSettings(
@@ -153,7 +150,7 @@ class LdapConfigurationTest {
             registeredClientRepository.save(oidcClient);
           });
 
-      val redirectURI = "http%3A%2F%2F127.0.0.1%3A" + port + "%2Foauth2%2Fauthorized";
+      val redirectURI = "http%3A%2F%2F127.0.0.1%3A" + port + "%2Foauth2%2Fcode%2Fsso";
 
       // init request authorization
       val restrictedResourceRequestHeaders = new HttpHeaders();
@@ -167,8 +164,7 @@ class LdapConfigurationTest {
               URI.create(
                   getHost()
                       + "/oauth2/authorize?"
-                      + wahllokalGui
-                      + "&response_type=code&client_id="
+                      + "response_type=code&client_id="
                       + clientID
                       + "&scope=openid&redirect_uri="
                       + redirectURI));
@@ -198,6 +194,7 @@ class LdapConfigurationTest {
               + EMBEDDED_LDAP_USER
               + "&password="
               + EMBEDDED_LDAP_PASSWORD
+              + "as"
               + "&_csrf="
               + csrfToken;
       val loginRequest =
@@ -206,63 +203,24 @@ class LdapConfigurationTest {
               loginRequestHeaders,
               HttpMethod.POST,
               URI.create(getHost() + "/login"));
-      val loginResponse = restTemplate.exchange(loginRequest, String.class);
+      restTemplate.exchange(loginRequest, String.class);
 
-      val authorizeRelocation = loginResponse.getHeaders().getFirst("Location");
-
-      // Authorize-Request
-      val authorizeRequestHeaders = new HttpHeaders();
-      authorizeRequestHeaders.add("Cookie", restrictedResourceRequestSessionID);
-      val authorizeRequest =
+      val formLoginRequestHeadersAfterLoginFailure = new HttpHeaders();
+      formLoginRequestHeadersAfterLoginFailure.add("Cookie", restrictedResourceRequestSessionID);
+      val formLoginRequestAfterLoginFailure =
           new RequestEntity<>(
-              authorizeRequestHeaders, HttpMethod.GET, URI.create(authorizeRelocation));
-      val authorizeResponse = restTemplate.exchange(authorizeRequest, String.class);
-      Assertions.assertThat(authorizeResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+              formLoginRequestHeadersAfterLoginFailure,
+              HttpMethod.GET,
+              URI.create(getHost() + "/login?error"));
+      val formLoginResponseAfterLoginFailure =
+          restTemplate.exchange(formLoginRequestAfterLoginFailure, String.class);
 
-      val code = getCode(authorizeResponse.getHeaders().getFirst("Location"));
-
-      // request token
-      val tokenRequestHeaders = new HttpHeaders();
-      tokenRequestHeaders.add("Content-Type", "application/x-www-form-urlencoded");
-      tokenRequestHeaders.add(
-          "Authorization",
-          "Basic "
-              + Base64.getEncoder().encodeToString((clientID + ":" + clientSecret).getBytes()));
-      tokenRequestHeaders.add("Cookie", restrictedResourceRequestSessionID);
-      val tokenRequestBody =
-          "grant_type=authorization_code&code=" + code + "&redirect_uri=" + redirectURI;
-      val tokenRequest =
-          new RequestEntity<>(
-              tokenRequestBody,
-              tokenRequestHeaders,
-              HttpMethod.POST,
-              URI.create(getHost() + "/oauth2/token"));
-      val tokenResponse = restTemplate.exchange(tokenRequest, String.class);
-
-      val token = objectMapper.readValue(tokenResponse.getBody(), Token.class).getAccess_token();
-
-      val tokenPayload = Base64.getDecoder().decode(token.split("\\.")[1].getBytes());
-      val tokenPayloadAsMap = objectMapper.readValue(tokenPayload, Map.class);
-      Assertions.assertThat(tokenPayloadAsMap.get("wahlbezirksArt"))
-          .isEqualTo(userWahlbezirkArt.name());
-
-      // user endpoint
-      val userRequestHeaders = new HttpHeaders();
-      userRequestHeaders.add("Authorization", "Bearer " + token);
-      val userRequest =
-          new RequestEntity<>(userRequestHeaders, HttpMethod.GET, URI.create(getHost() + "/user"));
-      val userResponse = restTemplate.exchange(userRequest, UserDTO.class);
-      Assertions.assertThat(userResponse.getBody().authorities()).isNotEmpty();
+      Assertions.assertThat(formLoginResponseAfterLoginFailure.getBody())
+          .contains(ErrorMessageService.INVALID_USERNAME_OR_PASSWORD);
     }
 
     private String getHost() {
       return "http://localhost:" + port;
-    }
-
-    private String getCode(String locationWithCode) {
-      val codeMatcher = codePattern.matcher(locationWithCode);
-      Assertions.assertThat(codeMatcher.find()).isTrue();
-      return codeMatcher.group(1);
     }
 
     private String getSessionID(final ResponseEntity<?> response) {
@@ -282,10 +240,5 @@ class LdapConfigurationTest {
       Assertions.assertThat(csrfTokenMatcher.find()).isTrue();
       return csrfTokenMatcher.group(1);
     }
-  }
-
-  @Data
-  static class Token {
-    private String access_token;
   }
 }

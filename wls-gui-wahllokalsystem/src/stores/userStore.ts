@@ -7,7 +7,6 @@ import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useUserService } from "@/composables/user/userService.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -41,11 +40,7 @@ export const useUserStore = defineStore("user", () => {
 
   async function loadUser() {
     try {
-      const statusStore = useStatusStore();
       user.value = await getUser();
-      user.value.wahlMetaData.forEach((metadata) => {
-        statusStore.initStatus(metadata.wahlID, metadata.wahlbezirkID);
-      });
     } catch (e) {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();

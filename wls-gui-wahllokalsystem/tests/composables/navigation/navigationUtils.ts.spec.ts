@@ -201,7 +201,7 @@ describe("navigationUtils.ts", () => {
         .fn()
         .mockImplementation(
           (wahlID: string, wahlbezirkID: string) =>
-            wahlID === mbwWahlID && wahlbezirkID === mbwWahlbezirkID
+            wahlID !== mbwWahlID || wahlbezirkID !== mbwWahlbezirkID
         );
 
       const mockedWahl = prepareWahl().wahlart(WahlWahlartEnum.Mbw).build();

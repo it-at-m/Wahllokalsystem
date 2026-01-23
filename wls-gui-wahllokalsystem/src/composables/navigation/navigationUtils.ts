@@ -57,7 +57,7 @@ export function useNavigationUtils() {
     const { isElectionFinished } = useStatusStore();
     const metaDataOfFirstUnfinishedElection = user.wahlMetaData.find(
       (wahlMetaData) =>
-        isElectionFinished(wahlMetaData.wahlID, wahlMetaData.wahlbezirkID)
+        !isElectionFinished(wahlMetaData.wahlID, wahlMetaData.wahlbezirkID)
     );
 
     if (metaDataOfFirstUnfinishedElection) {

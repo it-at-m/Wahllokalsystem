@@ -51,6 +51,7 @@ export function useWahlvorstandService() {
       wahlvorstand?.wahlvorstandsmitglieder.sort(
         compareWahlvorstandsMitglieder
       );
+
       return wahlvorstand;
     } catch (error) {
       if (sendNotification) {

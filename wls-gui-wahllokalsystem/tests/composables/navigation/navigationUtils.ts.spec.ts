@@ -44,11 +44,11 @@ describe("navigationUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useNavigationUtils>;
 
   beforeEach(() => {
-    unitUnderTest = useNavigationUtils();
     createTestingPinia({
       createSpy: vi.fn,
       stubActions: false,
     });
+    unitUnderTest = useNavigationUtils();
   });
 
   afterEach(() => {

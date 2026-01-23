@@ -4,6 +4,7 @@ import type { ComputedRef } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
+
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { mbwRoutesRecord } from "@/plugins/router/mbwRoutes.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
@@ -52,7 +53,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: status
+        disabled: mbwStatus.value
           ? !mbwStatus.value.stepsDone[StapelArtEnum.MbwDUngueltig]
           : false,
       },

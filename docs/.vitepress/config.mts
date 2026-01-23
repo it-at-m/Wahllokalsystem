@@ -1,4 +1,4 @@
-import { withMermaid } from "vitepress-plugin-mermaid";
+import {withMermaid} from "vitepress-plugin-mermaid";
 
 const PATH_SERVICES = "/services/";
 const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
@@ -118,6 +118,10 @@ export default withMermaid({
             {
               text: "Kleine Menge von Renovate-PRs",
               link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
+            },
+            {
+              text: "Anpassung des Renovate-Schedulers",
+              link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
             },
             {
               text: "UI/UX",

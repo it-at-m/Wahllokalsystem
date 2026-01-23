@@ -18,10 +18,12 @@
     <v-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
+      :disabled="isGroupDisabled"
     />
     <v-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
+      :disabled="isGroupDisabled"
     />
     <v-list-item
       title="Wahlbriefe erfassen"
@@ -31,6 +33,7 @@
     <v-list-item
       title="Wahlbriefe zulassen"
       :to="routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)"
+      :disabled="isGroupDisabled"
     />
   </v-list-group>
 </template>

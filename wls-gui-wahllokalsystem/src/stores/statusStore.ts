@@ -47,14 +47,6 @@ export const useStatusStore = defineStore(storeID, () => {
     return getStatus(wahlID, wahlbezirkID)?.stepsDone[step] ?? false;
   }
 
-  function getOrInitStatus(wahlID: string, wahlbezirkID: string): Status {
-    let statusEntry = getStatus(wahlID, wahlbezirkID);
-    if (!statusEntry) {
-      statusEntry = initStatus(wahlID, wahlbezirkID);
-    }
-    return statusEntry;
-  }
-
   async function loadStatus(
     wahlID: string,
     wahlbezirkID: string,
@@ -69,12 +61,13 @@ export const useStatusStore = defineStore(storeID, () => {
       if (statusForWahl) {
         status.value.push(statusForWahl);
       } else {
-        status.value.push({
+        const newStatus = {
           bezirkUndWahlID: { wahlID, wahlbezirkID },
           schnellmeldung: DEFAULT_MELDUNG,
           niederschrift: DEFAULT_MELDUNG,
           stepsDone: {},
-        });
+        };
+        status.value.push(newStatus);
       }
     } catch {
       throw Error(`Fehler beim Laden des Status für WahlID: ${wahlID}`);
@@ -106,27 +99,14 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
-  function initStatus(wahlID: string, wahlbezirkID: string) {
-    const newStatus = {
-      bezirkUndWahlID: { wahlID, wahlbezirkID },
-      schnellmeldung: DEFAULT_MELDUNG,
-      niederschrift: DEFAULT_MELDUNG,
-      stepsDone: {},
-    };
-    status.value.push(newStatus);
-    return newStatus;
-  }
-
   return {
     status,
     isStatusSaving,
     isWahlvorstandErfasst,
     isWahlumgebungErfasst,
     getStatus,
-    getOrInitStatus,
     isElectionFinished,
     isStepDone,
-    initStatus,
     loadStatus,
     saveStatus,
     setStepDone,

@@ -20,11 +20,11 @@
       />
       <the-b-w-b-election-list-group
         v-if="isBWB"
-        :disabled="commonActionsDisableReasonOrFalse"
+        :disabled="commonActionsDisabledMessageOrFalse"
       />
       <the-u-w-b-election-list-group
         v-if="isUWB"
-        :disabled="commonActionsDisableReasonOrFalse"
+        :disabled="commonActionsDisabledMessageOrFalse"
       />
       <v-list-item
         title="Ereignisse"
@@ -55,7 +55,7 @@ const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useStatusStore());
 
-const commonActionsDisableReasonOrFalse = computed(() =>
+const commonActionsDisabledMessageOrFalse = computed(() =>
   !isWahlvorstandErfasst.value ? "Erst Anwesenheit erfassen" : false
 );
 </script>

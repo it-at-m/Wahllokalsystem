@@ -8,10 +8,10 @@
         :lines="groupActivatorListItemLines"
       >
         <template
-          v-if="disablingReason"
+          v-if="disabledMessage"
           #subtitle
         >
-          {{ disablingReason }}
+          {{ disabledMessage }}
         </template>
       </v-list-item>
     </template>
@@ -48,7 +48,7 @@ import {
 } from "@/constants.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 
-const properties = defineProps({
+const { disabled } = defineProps({
   disabled: {
     type: [Boolean, String],
     default: false,
@@ -58,13 +58,13 @@ const properties = defineProps({
 const { routeWithName } = useNavigationUtils();
 const { isWahlumgebungErfasst } = storeToRefs(useStatusStore());
 
-const isGroupDisabled = computed(() => !!properties.disabled);
+const isGroupDisabled = computed(() => !!disabled);
 
-const disablingReason = computed(() => {
-  return typeof properties.disabled === "string" ? properties.disabled : null;
+const disabledMessage = computed(() => {
+  return typeof disabled === "string" ? disabled : null;
 });
 
 const groupActivatorListItemLines = computed(() =>
-  disablingReason.value ? false : "one"
+  disabledMessage.value ? false : "one"
 );
 </script>

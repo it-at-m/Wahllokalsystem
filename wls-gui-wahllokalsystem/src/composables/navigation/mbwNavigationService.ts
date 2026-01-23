@@ -18,34 +18,58 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     computed(() => [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
-        targetRouteName: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: false,
       },
       {
         title: `Ungültige Stimmzettel`,
-        targetRouteName: MbwRoutesEnum.MBW_STAPEL_D,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_STAPEL_D,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: false,
       },
       {
         title: `Gültige Stimmzettel`,
-        targetRouteName: MbwRoutesEnum.MBW_STAPEL_A_AND_B,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_STAPEL_A_AND_B,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: status
           ? !status.stepsDone[StapelArtEnum.MbwDUngueltig]
           : false,
       },
       {
         title: `Schnellmeldung`,
-        targetRouteName: MbwRoutesEnum.MBW_SCHNELLMELDUNG,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_SCHNELLMELDUNG,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: false,
       },
       {
         title: `Kandidatinnen- und Kandidatenstimmen`,
-        targetRouteName: MbwRoutesEnum.MBW_STAPEL_BC,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_STAPEL_BC,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: false,
       },
       {
         title: `Niederschrift`,
-        targetRouteName: MbwRoutesEnum.MBW_NIEDERSCHRIFT,
+        targetRoute: mbwRoutesRecord.createRoute(
+          MbwRoutesEnum.MBW_NIEDERSCHRIFT,
+          wahlID,
+          wahlbezirkID
+        ),
         disabled: false,
       },
     ]);

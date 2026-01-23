@@ -10,12 +10,7 @@
       v-for="(route, index) in navigation"
       :key="index"
       :title="route.title"
-      :to="
-        routeWithNameAndParams(route.targetRouteName, {
-          wahlId: wahlId,
-          wahlbezirkId: wahlbezirkId,
-        })
-      "
+      :to="route.targetRoute"
       :disabled="route.disabled"
     />
   </v-list-group>
@@ -23,9 +18,6 @@
 
 <script setup lang="ts">
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-
-const { routeWithNameAndParams } = useNavigationUtils();
 
 const { wahlbezirkId, wahlId } = defineProps<{
   wahlId: string;

@@ -1,5 +1,7 @@
-export interface NavigationDefinition<T> {
+import type { RouteLocationAsRelativeGeneric } from "vue-router";
+
+export interface NavigationDefinition {
   title: string;
-  targetRouteName: T;
+  targetRoute: RouteLocationAsRelativeGeneric;
   disabled: boolean; //TODO Optional für false ergänzen
 }

@@ -1,4 +1,10 @@
-import { type RouteRecordRaw } from "vue-router";
+import type { Component } from "vue";
+
+import {
+  type NavigationGuard,
+  type RouteLocationAsRelativeGeneric,
+  type RouteRecordRaw,
+} from "vue-router";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
@@ -12,7 +18,22 @@ import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 
 const { isStepDoneInElectionState } = useNavigationGuards();
 
-const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRaw> = {
+interface SimpleRouteDefinition {
+  path: string;
+  component: Component;
+  beforeEnter?: NavigationGuard | NavigationGuard[] | undefined;
+}
+
+interface ElectionRouteBuilder {
+  createRoute: (
+    routeName: MbwRoutesEnum,
+    wahlId: string,
+    wahlbezirkId: string
+  ) => RouteLocationAsRelativeGeneric;
+}
+
+export const mbwRoutesRecord: Record<MbwRoutesEnum, SimpleRouteDefinition> &
+  ElectionRouteBuilder = {
   [MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
@@ -38,11 +59,20 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRaw> = {
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",
     component: MBWNiederschriftView,
   },
+  createRoute: (routeName, wahlId, wahlbezirkId) => ({
+    name: routeName,
+    params: {
+      wahlId,
+      wahlbezirkId,
+    },
+  }),
 };
 
 export const mbwRouteDefinitions: RouteRecordRaw[] = Object.entries(
   mbwRoutesRecord
-).map(([routeName, routeDefinition]) => ({
+).map(([routeName, { beforeEnter, component, path }]) => ({
   name: routeName,
-  ...routeDefinition,
+  path,
+  component,
+  beforeEnter,
 }));

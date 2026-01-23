@@ -96,6 +96,7 @@ entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Li
 Fast alle Seiten leiten den Nutzer weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert wurden.
 Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRoute` der `navigationUtils`. Folgende Schritte
 erfolgen dabei:
+
 - welcher allgemeine, nicht wahlspezifischen, Schritt ist als Nächstes zu bearbeiten
 - welche Wahl ist noch nicht abgeschlossen
 - welcher Schritt der Wahl ist als Nächstes zu bearbeiten
@@ -105,4 +106,3 @@ erfolgen dabei:
 
 > [!NOTE]
 > Konnte kein nächster Schritt ermittelt werden, wird der Benutzer auf die `Home`-Seite weitergeleitet.
-

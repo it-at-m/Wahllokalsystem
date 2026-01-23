@@ -87,7 +87,7 @@ export function useNavigationUtils() {
       if (!statusOfElection) {
         return null;
       }
-      return nextHandlerForWahl.getNextRoute(statusOfElection);
+      return nextHandlerForWahl.getNextRouteOrNull(statusOfElection);
     } else {
       return null;
     }

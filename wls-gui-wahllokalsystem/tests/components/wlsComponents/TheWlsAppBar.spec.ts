@@ -22,6 +22,7 @@ import { VApp } from "vuetify/components";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
@@ -70,6 +71,8 @@ describe("TheWlsAppBar.vue", () => {
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
       userStore.isUserLoggedIn = true;
+      useStatusStore().isWahlvorstandErfasst = true;
+      useStatusStore().isWahlumgebungErfasst = true;
 
       await nextTick();
 
@@ -86,6 +89,8 @@ describe("TheWlsAppBar.vue", () => {
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
       userStore.isUserLoggedIn = true;
+      useStatusStore().isWahlvorstandErfasst = true;
+      useStatusStore().isWahlumgebungErfasst = true;
 
       await nextTick();
 

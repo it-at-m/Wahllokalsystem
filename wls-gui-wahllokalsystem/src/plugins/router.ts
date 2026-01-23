@@ -173,7 +173,6 @@ const router = createRouter({
   },
 });
 
-//
 router.beforeEach((to) => {
   const { hasTasksToRun, hasAllTasksRun } = storeToRefs(
     useInitTaskManagerStore()

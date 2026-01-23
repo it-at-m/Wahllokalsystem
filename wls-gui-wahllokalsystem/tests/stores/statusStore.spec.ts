@@ -92,6 +92,7 @@ describe("statusStore.ts", () => {
           uebermittelt: undefined,
           sendeuhrzeit: undefined,
         },
+        stepsDone: {},
       };
 
       unitUnderTest.loadStatus(wahlID, wahlbezirkID);

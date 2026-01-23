@@ -5,13 +5,15 @@ import type { RouteLocationAsRelativeGeneric } from "vue-router";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 export const NullNextStepImpl: ElectionSpecificNextStep = {
-  getNextRoute(): RouteLocationAsRelativeGeneric | null {
+  getNextRouteOrNull(): RouteLocationAsRelativeGeneric | null {
     return null;
   },
 };
 
 export const MBWNestStepImpl: ElectionSpecificNextStep = {
-  getNextRoute(wahlstatus: Status): RouteLocationAsRelativeGeneric | null {
+  getNextRouteOrNull(
+    wahlstatus: Status
+  ): RouteLocationAsRelativeGeneric | null {
     if (!wahlstatus.schnellmeldung.gedruckt) {
       return {
         name: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,

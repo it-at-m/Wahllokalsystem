@@ -28,6 +28,9 @@ const mockDefinitions = vi.hoisted(() => ({
   postBriefwahlvorbereitung: vi.fn(),
   toBriefwahlvorbereitungModel: vi.fn(),
   toBriefwahlvorbereitungWriteDto: vi.fn(),
+  statusStoreMock: {
+    isWahlumgebungErfasst: false,
+  },
 }));
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
@@ -72,6 +75,10 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
     toBriefwahlvorbereitungWriteDto:
       mockDefinitions.toBriefwahlvorbereitungWriteDto,
   }),
+}));
+
+vi.mock("@/stores/statusStore.ts", () => ({
+  useStatusStore: () => mockDefinitions.statusStoreMock,
 }));
 
 const {
@@ -314,12 +321,37 @@ describe("wahlvorbereitungService", () => {
         expectedUrnenwahlvorbereitung
       );
       mockDefinitions.getUrnenwahlVorbereitung.mockResolvedValue(
-        createUrnenwahlvorbereitungDTO()
+        createAxiosResponse({
+          status: 200,
+          data: createUrnenwahlvorbereitungDTO(),
+        })
       );
+      mockDefinitions.statusStoreMock.isWahlumgebungErfasst = false;
 
       const result = await getUrnenwahlvorbereitung(wahlbezirkID);
 
       expect(result).toEqual(expectedUrnenwahlvorbereitung);
+      expect(
+        mockDefinitions.statusStoreMock.isWahlumgebungErfasst
+      ).toStrictEqual(true);
+    });
+
+    it("should_returnNull_when_apiReturns204", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+
+      mockDefinitions.getUrnenwahlVorbereitung.mockResolvedValue(
+        createAxiosResponse({
+          status: 204,
+        })
+      );
+      mockDefinitions.statusStoreMock.isWahlumgebungErfasst = false;
+
+      const result = await getUrnenwahlvorbereitung(wahlbezirkID);
+
+      expect(result).toBeNull();
+      expect(
+        mockDefinitions.statusStoreMock.isWahlumgebungErfasst
+      ).toStrictEqual(false);
     });
 
     it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {
@@ -329,6 +361,7 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.getUrnenwahlVorbereitung.mockRejectedValue(
         mockedApiError
       );
+      mockDefinitions.statusStoreMock.isWahlumgebungErfasst = false;
 
       await expect(getUrnenwahlvorbereitung(wahlbezirkID)).rejects.toThrow(
         "API Error"
@@ -340,6 +373,9 @@ describe("wahlvorbereitungService", () => {
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+      expect(
+        mockDefinitions.statusStoreMock.isWahlumgebungErfasst
+      ).toStrictEqual(false);
     });
 
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
@@ -370,6 +406,7 @@ describe("wahlvorbereitungService", () => {
         mappedUrnenwahlvorbereitungDto
       );
 
+      mockDefinitions.statusStoreMock.isWahlumgebungErfasst = false;
       await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
 
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
@@ -381,6 +418,9 @@ describe("wahlvorbereitungService", () => {
       expect(
         mockDefinitions.postUrnenwahlvorbereitung.mock.calls
       ).toStrictEqual([[wahlbezirkID, mappedUrnenwahlvorbereitungDto]]);
+      expect(
+        mockDefinitions.statusStoreMock.isWahlumgebungErfasst
+      ).toStrictEqual(true);
     });
 
     it("should_throwApiErrorAndCallNotificationServiceWithError_when_apiCallFailed", async () => {
@@ -398,6 +438,8 @@ describe("wahlvorbereitungService", () => {
         mockedApiError
       );
 
+      mockDefinitions.statusStoreMock.isWahlumgebungErfasst = false;
+
       await expect(
         postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung)
       ).rejects.toThrow(mockedApiError);
@@ -408,6 +450,9 @@ describe("wahlvorbereitungService", () => {
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+      expect(
+        mockDefinitions.statusStoreMock.isWahlumgebungErfasst
+      ).toStrictEqual(false);
     });
   });
 

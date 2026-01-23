@@ -34,6 +34,11 @@ export const useStatusStore = defineStore(storeID, () => {
     );
   }
 
+  function isElectionFinished(wahlID: string, wahlbezirkID: string): boolean {
+    const electionStatus = getStatus(wahlID, wahlbezirkID);
+    return electionStatus ? electionStatus.niederschrift.gedruckt : false;
+  }
+
   function isStepDone(
     wahlID: string,
     wahlbezirkID: string,
@@ -119,6 +124,7 @@ export const useStatusStore = defineStore(storeID, () => {
     isWahlumgebungErfasst,
     getStatus,
     getOrInitStatus,
+    isElectionFinished,
     isStepDone,
     initStatus,
     loadStatus,

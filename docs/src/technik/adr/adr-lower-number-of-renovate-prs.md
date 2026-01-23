@@ -17,7 +17,7 @@ Das ganze führt dazu, dass man relativ lange warten muss um die Renovate-PRs ab
 
 ## Entscheidung
 
-Die Menge an gleichzeiten Renovate-PRs werden auf 2 limitiert.
+Die Menge an gleichzeiten Renovate-PRs werden auf 5 limitiert.
 
 ## Konsequenzen
 

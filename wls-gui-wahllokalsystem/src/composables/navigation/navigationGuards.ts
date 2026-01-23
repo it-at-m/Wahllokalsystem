@@ -12,6 +12,9 @@ export function useNavigationGuards() {
     (requiredStep) => (to) =>
       _isStepDone(to, requiredStep);
 
+  const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
+    useStatusStore().isWahlumgebungErfasst;
+
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
     requiredStep: string
@@ -30,5 +33,6 @@ export function useNavigationGuards() {
 
   return {
     isStepDoneInElectionState,
+    permitNavigationWhenWahlumgebungIsErfasst,
   };
 }

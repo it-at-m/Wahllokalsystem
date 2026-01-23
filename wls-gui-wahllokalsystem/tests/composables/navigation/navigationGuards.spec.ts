@@ -18,6 +18,7 @@ const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareStatus } = useStatusTestDataFactory();
 
 describe("navigationGuards.ts", () => {
+  const DUMMY_TO = {} as unknown as RouteLocationNormalized;
   const DUMMY_FROM = {} as unknown as RouteLocationNormalizedLoaded;
   const DUMMY_NEXT_GUARD = {} as unknown as NavigationGuardNext;
 
@@ -28,7 +29,10 @@ describe("navigationGuards.ts", () => {
     });
   });
 
-  const { isStepDoneInElectionState } = useNavigationGuards();
+  const {
+    isStepDoneInElectionState,
+    permitNavigationWhenWahlumgebungIsErfasst,
+  } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
     it.each([undefined, ["stringArray"]])(
@@ -136,6 +140,28 @@ describe("navigationGuards.ts", () => {
       } as unknown as RouteLocationNormalized;
       const result = guard(to, DUMMY_FROM, DUMMY_NEXT_GUARD);
 
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahlumgebungIsErfasst", () => {
+    it("should_returnFalse_whenStatus_isWahlumgebungIstErfasstIsFalse", () => {
+      useStatusStore().isWahlumgebungErfasst = false;
+      const result = permitNavigationWhenWahlumgebungIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_whenStatus_isWahlumgebungIstErfasstIsTrue", () => {
+      useStatusStore().isWahlumgebungErfasst = true;
+      const result = permitNavigationWhenWahlumgebungIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(true);
     });
   });

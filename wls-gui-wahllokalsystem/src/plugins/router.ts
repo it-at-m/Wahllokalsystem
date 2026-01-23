@@ -1,6 +1,7 @@
 import { storeToRefs } from "pinia";
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
@@ -21,7 +22,6 @@ import {
 } from "@/constants";
 import { mbwRouteDefinitions } from "@/plugins/router/mbwRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import BWBWahlscheineView from "@/views/BWBWahlscheineView.vue";
 import EreignisseView from "@/views/EreignisseView.vue";
@@ -40,6 +40,8 @@ import WahleroeffnungView from "@/views/wahlhandlung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
+const { permitNavigationWhenWahlumgebungIsErfasst } = useNavigationGuards();
+
 const permitNavigationOnlyForWahlbezirksArtUwb = () => {
   const { isUWB } = storeToRefs(useUserStore());
   return isUWB.value;
@@ -49,9 +51,6 @@ const permitNavigationOnlyForWahlbezirksArtBwb = () => {
   const { isBWB } = storeToRefs(useUserStore());
   return isBWB.value;
 };
-
-const permitNavigationWhenWahlumgebungIsErfasst = () =>
-  useStatusStore().isWahlumgebungErfasst;
 
 const permitNavigationOnlyIfUserIsLoggedOut = () => {
   const { isUserLoggedIn } = storeToRefs(useUserStore());

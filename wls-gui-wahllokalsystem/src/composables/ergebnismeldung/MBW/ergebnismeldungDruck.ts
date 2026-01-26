@@ -51,8 +51,8 @@ export function useErgebnismeldungDruck() {
                 </div>
             </div>
         </div>
-        </body>
         <div class="footer">${data.footer}</div>
+        </body>
         </html>`;
   }
 

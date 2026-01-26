@@ -100,11 +100,8 @@ function onSendenClicked() {
 function onKorrigierenClicked() {
   // to be implemented
 }
-function onDruckenClicked() {
-  _openPrintDialog();
-}
 
-async function _openPrintDialog() {
+async function onDruckenClicked() {
   isDruckenLoading.value = true;
   try {
     if (wahl) {

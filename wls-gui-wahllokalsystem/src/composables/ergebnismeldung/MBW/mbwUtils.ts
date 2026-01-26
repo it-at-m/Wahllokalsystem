@@ -259,17 +259,12 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     );
     const footer = _createFooter(statusForWahlAndWahlbezirk);
 
-    const moreThan25WahlvorschlaegeListe = _getMoreThan25WahlvorschlaegeListe(
-      ergebnisseAndWahlvorschlaege
-    );
-
     return {
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       aktuelleWahl: wahl,
       footer: footer,
       alleStimmen: convertToSixDigitArray(stimmenGesamt),
-      gueltigeStimmenListe:
-        /*ergebnisseAndWahlvorschlaege*/ moreThan25WahlvorschlaegeListe,
+      gueltigeStimmenListe: ergebnisseAndWahlvorschlaege,
       gueltigeStimmenGesamt: convertToSixDigitArray(gueltigeStimmenGesamt),
       ungueltigeStimmen: convertToSixDigitArray(ungueltigeStimmen),
       bWerte: bWerte,
@@ -278,52 +273,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       barcode: "",
       sendOk: false,
     };
-  }
-
-  function _getMoreThan25WahlvorschlaegeListe(
-    ergebnisse: MbwErgebnisseAndWahlvorschlag[]
-  ): MbwErgebnisseAndWahlvorschlag[] {
-    const neueListe: MbwErgebnisseAndWahlvorschlag[] = [];
-    let ordnungszahl = 1;
-
-    for (let i = 0; i < 5; i++) {
-      // 5x duplizieren
-      for (const originalErgebnis of ergebnisse) {
-        // zufällige zahlen auslassen um zu prüfen ob trotzdem nach jeweils 25 eine neue seite begonnen wird
-        if (
-          ordnungszahl == 3 ||
-          ordnungszahl == 4 ||
-          ordnungszahl == 5 ||
-          ordnungszahl == 9 ||
-          ordnungszahl == 10 ||
-          ordnungszahl == 12 ||
-          ordnungszahl == 15 ||
-          ordnungszahl == 19 ||
-          ordnungszahl == 22 ||
-          ordnungszahl == 23 ||
-          ordnungszahl == 26 ||
-          ordnungszahl == 27 ||
-          ordnungszahl == 33 ||
-          ordnungszahl == 34 ||
-          ordnungszahl == 37 ||
-          ordnungszahl == 38 ||
-          ordnungszahl == 39
-        ) {
-          ordnungszahl += 2;
-        }
-        const neuesErgebnis: MbwErgebnisseAndWahlvorschlag = {
-          ...originalErgebnis,
-          wahlvorschlag: {
-            ...originalErgebnis.wahlvorschlag,
-            ordnungszahl: ordnungszahl,
-          },
-        };
-        neueListe.push(neuesErgebnis);
-        ordnungszahl++;
-      }
-    }
-
-    return neueListe;
   }
 
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {

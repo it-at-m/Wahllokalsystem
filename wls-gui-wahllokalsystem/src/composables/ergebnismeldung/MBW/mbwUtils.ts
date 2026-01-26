@@ -1,11 +1,13 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
+import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
+import JsBarcode from "jsbarcode";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
@@ -21,6 +23,7 @@ import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschl
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -218,7 +221,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   async function prepareDataForErgebnismeldungDruck(
-    wahl: Wahl
+    wahl: Wahl,
+    meldungsart: MeldungsartEnum
   ): Promise<ErgebnismeldungDruckInput> {
     let aWerte = undefined;
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
@@ -254,6 +258,11 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     );
     const footer = _createFooter(statusForWahlAndWahlbezirk);
 
+    const canvas = document.createElement("canvas");
+    const barcodeContent = _createBarcodeString(wahl, meldungsart);
+    JsBarcode(canvas, barcodeContent, { displayValue: false });
+    const jpegUrl = canvas.toDataURL("image/jpeg");
+
     return {
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       aktuelleWahl: wahl,
@@ -265,7 +274,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       bWerte: bWerte,
       aWerte: aWerte,
       wahlbezirkNummer: currentUserWahlbezirkNummer.value || "",
-      barcode: "",
+      barcode: jpegUrl,
       sendOk: false,
     };
   }
@@ -326,6 +335,18 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         return v.toString(16);
       }
     );
+  }
+
+  function _createBarcodeString(wahl: Wahl, meldungsart: MeldungsartEnum) {
+    const wahlartKurzbezeichnung = Array.from(wahl.wahlart)[0];
+    const wahlbezirkKurzbezeichnung =
+      currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB
+        ? "SBZ"
+        : "BWBZ";
+    const meldungsartKurzbezeichnung =
+      meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
+    const wahlDatum = toGermanDate(wahl.wahltag);
+    return `${wahlartKurzbezeichnung}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${parseInt(currentUserWahlbezirkNummer.value, 10)}`;
   }
 
   return {

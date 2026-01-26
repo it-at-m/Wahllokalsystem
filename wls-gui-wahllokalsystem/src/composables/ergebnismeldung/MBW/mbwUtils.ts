@@ -256,7 +256,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         status.bezirkUndWahlID.wahlID == wahlID &&
         status.bezirkUndWahlID.wahlbezirkID == wahlbezirkID
     );
-    const footer = _createFooter(statusForWahlAndWahlbezirk);
+    const footer = _createFooter(statusForWahlAndWahlbezirk, meldungsart);
 
     const canvas = document.createElement("canvas");
     const barcodeContent = _createBarcodeString(wahl, meldungsart);
@@ -264,6 +264,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     const jpegUrl = canvas.toDataURL("image/jpeg");
 
     return {
+      meldungsArt: meldungsart,
       wahlbezirksArt: currentUserWahlbezirksArt.value,
       aktuelleWahl: wahl,
       footer: footer,
@@ -309,20 +310,27 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     };
   }
 
-  function _createFooter(status: Status | undefined) {
-    if (
-      status &&
-      status.schnellmeldung &&
-      status.schnellmeldung.validierungsstatus
-    ) {
-      const date = new Date();
-      const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
+  function _createFooter(
+    status: Status | undefined,
+    meldungsArt: MeldungsartEnum
+  ) {
+    if (meldungsArt == MeldungsArtEnum.Schnellmeldung) {
+      if (
+        status &&
+        status.schnellmeldung &&
+        status.schnellmeldung.validierungsstatus
+      ) {
+        const date = new Date();
+        const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
-      if (status.schnellmeldung.validierungsstatus === "VALIDE") {
-        return "" + _uuidv4() + ", " + formattedDateWithTime + " O";
-      } else {
-        return "" + _uuidv4() + ", " + formattedDateWithTime + " M";
+        if (status.schnellmeldung.validierungsstatus === "VALIDE") {
+          return "" + _uuidv4() + ", " + formattedDateWithTime + " O";
+        } else {
+          return "" + _uuidv4() + ", " + formattedDateWithTime + " M";
+        }
       }
+    } else {
+      return "to be implemented - #1978";
     }
   }
 

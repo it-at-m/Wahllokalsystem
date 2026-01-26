@@ -64,6 +64,7 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const route = useRoute();
@@ -108,7 +109,10 @@ async function _openPrintDialog() {
   try {
     if (wahl) {
       const data: ErgebnismeldungDruckInput =
-        await prepareDataForErgebnismeldungDruck(wahl);
+        await prepareDataForErgebnismeldungDruck(
+          wahl,
+          MeldungsArtEnum.Schnellmeldung
+        );
 
       const printWindow = window.open(
         "",

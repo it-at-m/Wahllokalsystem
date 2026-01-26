@@ -1,5 +1,6 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
+import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -18,4 +19,5 @@ export interface ErgebnismeldungDruckInput {
   footer?: string;
   aktuelleWahl: Wahl;
   wahlbezirksArt: WahlbezirksArtEnum;
+  meldungsArt: MeldungsartEnum;
 }

@@ -1,10 +1,12 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
+import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { convertToSixDigitArray } = useNumberFormatter();
@@ -18,7 +20,7 @@ export function useErgebnismeldungDruck() {
         <head>
             <meta charset="utf-8"/>
             ${_getStyling()}
-            <title>${data.aktuelleWahl.wahlart} ${data.wahlbezirksArt == WahlbezirksArtEnum.UWB ? "Urnenwahl" : "Briefwahl"} Schnellmeldung</title>
+            <title>${data.aktuelleWahl.wahlart} ${data.wahlbezirksArt == WahlbezirksArtEnum.UWB ? "Urnenwahl" : "Briefwahl"} ${data.meldungsArt == MeldungsArtEnum.Schnellmeldung ? "Schnellmeldung" : "Niederschrift"}</title>
         </head>
         <body>
         <div class="vertical bodycontainer">
@@ -31,7 +33,7 @@ export function useErgebnismeldungDruck() {
                     ${_buildKennbuchstabenTable(data.wahlbezirksArt, data.bWerte, data.aWerte)}
                 </div>
                 <div class="vertical spaceBetween widthRightTop marginTopBottom_1">
-                    ${_buildDocumentMetaData(data.wahlbezirksArt, data.wahlbezirkNummer, data.aktuelleWahl.wahltag, data.barcode)}
+                    ${_buildDocumentMetaData(data.meldungsArt, data.wahlbezirksArt, data.wahlbezirkNummer, data.aktuelleWahl.wahltag, data.barcode)}
                 </div>
             </div>
             <div class="horizontal spaceBetween">
@@ -153,6 +155,7 @@ export function useErgebnismeldungDruck() {
   }
 
   function _buildDocumentMetaData(
+    meldungsArt: MeldungsartEnum,
     wahlbezirksArt: WahlbezirksArtEnum,
     wahlbezirkNummer: string,
     wahltag: string,
@@ -168,16 +171,17 @@ export function useErgebnismeldungDruck() {
             }</div>
             <div class="borderBottom backendData">${wahlbezirkNummer}</div>
         </div>
-        ${_buildBarcodeWithTitle(wahlbezirksArt, wahltag, barcode)}`;
+        ${_buildBarcodeWithTitle(meldungsArt, wahlbezirksArt, wahltag, barcode)}`;
   }
 
   function _buildBarcodeWithTitle(
+    meldungsArt: MeldungsartEnum,
     wahlbezirksArt: WahlbezirksArtEnum,
     wahltag: string,
     barcode: string
   ) {
     return `
-        <div class="bold fontSize_14 marginTop_5">Schnellmeldung <br/> 
+        <div class="bold fontSize_14 marginTop_5">${meldungsArt == MeldungsArtEnum.Schnellmeldung ? "Schnellmeldung" : "Niederschrift"} <br/> 
             ${wahlbezirksArt == WahlbezirksArtEnum.UWB ? "Wahlvorstand" : "Briefwahlvorstand"} <br/> 
             für die Wahl des <br/> Migrationsbeirates <br/> am ${toGermanDate(wahltag)}
         </div>

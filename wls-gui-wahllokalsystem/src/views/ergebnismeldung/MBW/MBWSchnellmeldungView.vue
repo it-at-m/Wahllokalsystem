@@ -61,8 +61,10 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useErgebnismeldungDruck } from "@/composables/ergebnismeldung/MBW/ergebnismeldungDruck.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -70,6 +72,7 @@ const router = useRouter();
 const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 
+const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
 const {
   isSendingSchnellmeldung,
@@ -119,9 +122,11 @@ async function _openPrintDialog() {
         printWindow.close();
       }
     }
-  } catch (e) {
-    // todo: toasty
-    console.log("fehler: ", e);
+  } catch {
+    addNotification(
+      "Fehler beim Drucken der Schnellmeldung.",
+      UserNotificationCategoryEnum.WARNING
+    );
   } finally {
     isDruckenLoading.value = false;
   }

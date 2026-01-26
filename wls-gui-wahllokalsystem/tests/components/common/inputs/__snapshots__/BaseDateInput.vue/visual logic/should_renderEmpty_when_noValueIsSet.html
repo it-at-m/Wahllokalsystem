@@ -20,10 +20,10 @@
       <!---->
       <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-1" aria-hidden="false">
           <!---->Datum
-        </label><label class="v-label v-field-label" for="input-v-1">
+        </label><label class="v-label v-field-label" id="input-v-1-label" for="input-v-1" aria-hidden="true">
           <!---->Datum
         </label>
-        <!----><input size="1" type="date" id="input-v-1" aria-describedby="input-v-1-messages" class="v-field__input">
+        <!----><input size="1" type="date" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" class="v-field__input">
         <!---->
       </div>
       <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -32,7 +32,6 @@
             </svg></i></div>
       </transition-stub>
       <div class="v-field__append-inner">
-        <!---->
         <!---->
       </div>
       <div class="v-field__outline">

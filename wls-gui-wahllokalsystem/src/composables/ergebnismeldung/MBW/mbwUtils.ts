@@ -51,7 +51,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
   const { status } = storeToRefs(useStatusStore());
-  const { loadStatus } = useStatusStore();
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -248,7 +247,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
-    await loadStatus(wahlID, wahlbezirkID, false);
     const statusForWahlAndWahlbezirk = status.value.find(
       (status) =>
         status.bezirkUndWahlID.wahlID == wahlID &&

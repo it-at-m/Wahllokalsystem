@@ -197,7 +197,7 @@ export function useErgebnismeldungDruck() {
     alleStimmen: string[]
   ) {
     return `
-        <div class="marginTopBottom_1">Von den <span class="bold">gültigen</span> Stimmzetteln (Stapel a) und Stapel b) hellgrün) entfallen auf</div> <!-- todo ist hellgrün) ein typo? -->
+        <div class="marginTopBottom_1">Von den <span class="bold">gültigen</span> Stimmzetteln (Stapel a) und Stapel b) hellgrün) entfallen auf</div>
             <table class="table marginTopBottom_1 width_100 fontSize_8">
                 ${_getDefaultColgroup()}
                 <tr>

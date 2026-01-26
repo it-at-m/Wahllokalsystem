@@ -15,7 +15,7 @@ export interface ErgebnismeldungDruckInput {
   gueltigeStimmenListe: MbwErgebnisseAndWahlvorschlag[];
   alleStimmen: string[];
   alleStimmenErgebnisGesamt?: string;
-  footer: string;
+  footer?: string;
   aktuelleWahl: Wahl;
   wahlbezirksArt: WahlbezirksArtEnum;
 }

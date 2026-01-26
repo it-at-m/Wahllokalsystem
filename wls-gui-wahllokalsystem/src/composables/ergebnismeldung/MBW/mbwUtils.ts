@@ -250,7 +250,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
-    // todo: status wird erst mit #2002 gepflegt
     await loadStatus(wahlID, wahlbezirkID, false);
 
     const statusForWahlAndWahlbezirk = status.value.find(
@@ -357,7 +356,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     };
   }
 
-  function _createFooter(status: Status | undefined): string {
+  function _createFooter(status: Status | undefined) {
     if (
       status &&
       status.schnellmeldung &&
@@ -371,8 +370,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       } else {
         return "" + _uuidv4() + ", " + formattedDateWithTime + " M";
       }
-    } else {
-      return "test"; // todo was wird hier returned?
     }
   }
 

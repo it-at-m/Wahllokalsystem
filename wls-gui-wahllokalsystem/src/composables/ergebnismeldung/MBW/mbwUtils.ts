@@ -230,10 +230,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const ergebnisseAndWahlvorschlaege =
       await loadAndCombineErgebnisseAndWahlvorschlaege();
+
     let gueltigeStimmenGesamt = 0;
     for (const vorschlag of ergebnisseAndWahlvorschlaege) {
-      gueltigeStimmenGesamt =
-        gueltigeStimmenGesamt +
+      gueltigeStimmenGesamt +=
         (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
         (vorschlag.ergebnisStapelB.ergebnis ?? 0);
     }
@@ -249,7 +249,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
     await loadStatus(wahlID, wahlbezirkID, false);
-
     const statusForWahlAndWahlbezirk = status.value.find(
       (status) =>
         status.bezirkUndWahlID.wahlID == wahlID &&

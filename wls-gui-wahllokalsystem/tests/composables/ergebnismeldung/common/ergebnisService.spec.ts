@@ -36,7 +36,6 @@ const mockDefinitions = vi.hoisted(() => ({
   postBegruendung: vi.fn(),
   toBegruendungModel: vi.fn(),
   toBegruendungDto: vi.fn(),
-  setStepDone: vi.fn(),
 }));
 
 vi.mock(
@@ -84,12 +83,6 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
     addNotification: mockDefinitions.addNotification,
-  }),
-}));
-
-vi.mock("@/stores/statusStore.ts", () => ({
-  useStatusStore: () => ({
-    setStepDone: mockDefinitions.setStepDone,
   }),
 }));
 
@@ -248,9 +241,6 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.toErgebnisseDto).toHaveBeenCalledWith(
         ergebnisseModelToSend
       );
-      expect(mockDefinitions.setStepDone.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID, stapelArtModel],
-      ]);
     });
 
     it("should_throwError_when_apiCallFailed", async () => {

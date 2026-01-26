@@ -15,7 +15,6 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -102,7 +101,6 @@ export function useErgebnisService() {
           UserNotificationCategoryEnum.SUCCESS
         );
       }
-      useWorkflowStore().setStepDone(wahlID, wahlbezirkID, stapelArt);
     } catch {
       if (sendNotification) {
         addNotification(

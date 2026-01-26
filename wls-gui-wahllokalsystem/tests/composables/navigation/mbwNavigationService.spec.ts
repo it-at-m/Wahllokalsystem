@@ -4,16 +4,16 @@ import type { ComputedRef } from "vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
-import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { prepareStatus } = useStatusTestDataFactory();
+const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
 describe("mbwNavigationService.ts", () => {
@@ -38,8 +38,8 @@ describe("mbwNavigationService.ts", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
-      useStatusStore().status = [
-        prepareStatus()
+      useWorkflowStore().electionWorkflowsStates = [
+        prepareElectionWorkflow()
           .bezirkUndWahlID(
             prepareBezirkUndWahlID()
               .wahlID(wahlID)
@@ -65,8 +65,8 @@ describe("mbwNavigationService.ts", () => {
 
       expect(navigation.value.length).toStrictEqual(0);
 
-      useStatusStore().status = [
-        prepareStatus()
+      useWorkflowStore().electionWorkflowsStates = [
+        prepareElectionWorkflow()
           .bezirkUndWahlID(
             prepareBezirkUndWahlID()
               .wahlID(wahlID)

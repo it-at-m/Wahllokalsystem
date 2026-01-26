@@ -13,10 +13,10 @@ import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
-  const { electionWorkflows } = storeToRefs(useWorkflowStore());
+  const { electionWorkflowsStates } = storeToRefs(useWorkflowStore());
 
   const mbwWorkflow = computed(() =>
-    electionWorkflows.value.find(
+    electionWorkflowsStates.value.find(
       (status) =>
         status.bezirkUndWahlID.wahlID === wahlID &&
         status.bezirkUndWahlID.wahlbezirkID === wahlbezirkID

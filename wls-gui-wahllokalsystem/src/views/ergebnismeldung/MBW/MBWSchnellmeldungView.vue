@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
 
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -63,6 +64,7 @@ import { useErgebnismeldungDruck } from "@/composables/ergebnismeldung/MBW/ergeb
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -75,6 +77,7 @@ const wahlID = route.params.wahlId as string;
 
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
+const { status } = storeToRefs(useStatusStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
@@ -104,10 +107,17 @@ function onKorrigierenClicked() {
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
   try {
-    if (wahl) {
+    const statusForWahlAndWahlbezirk = status.value.find(
+      (status) =>
+        status.bezirkUndWahlID.wahlID == wahlID &&
+        status.bezirkUndWahlID.wahlbezirkID == wahlbezirkID
+    );
+
+    if (wahl && statusForWahlAndWahlbezirk) {
       const data: ErgebnismeldungDruckInput =
         await prepareDataForErgebnismeldungDruck(
           wahl,
+          statusForWahlAndWahlbezirk,
           MeldungsArtEnum.Schnellmeldung
         );
 
@@ -122,6 +132,8 @@ async function onDruckenClicked() {
         printWindow.print();
         printWindow.close();
       }
+
+      // todo update status #2002
     }
   } catch {
     addNotification(

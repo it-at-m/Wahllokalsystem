@@ -20,7 +20,6 @@ import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeld
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
@@ -53,7 +52,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     currentUserWahlbezirkID,
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
-  const { status } = storeToRefs(useStatusStore());
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -222,6 +220,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
   async function prepareDataForErgebnismeldungDruck(
     wahl: Wahl,
+    status: Status,
     meldungsart: MeldungsartEnum
   ): Promise<ErgebnismeldungDruckInput> {
     let aWerte = undefined;
@@ -251,12 +250,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
-    const statusForWahlAndWahlbezirk = status.value.find(
-      (status) =>
-        status.bezirkUndWahlID.wahlID == wahlID &&
-        status.bezirkUndWahlID.wahlbezirkID == wahlbezirkID
-    );
-    const footer = _createFooter(statusForWahlAndWahlbezirk, meldungsart);
+    const footer = _createFooter(status, meldungsart);
 
     const canvas = document.createElement("canvas");
     const barcodeContent = _createBarcodeString(wahl, meldungsart);
@@ -276,7 +270,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       aWerte: aWerte,
       wahlbezirkNummer: currentUserWahlbezirkNummer.value || "",
       barcode: jpegUrl,
-      sendOk: statusForWahlAndWahlbezirk?.schnellmeldung.uebermittelt || false,
+      sendOk: status.schnellmeldung.uebermittelt || false,
     };
   }
 

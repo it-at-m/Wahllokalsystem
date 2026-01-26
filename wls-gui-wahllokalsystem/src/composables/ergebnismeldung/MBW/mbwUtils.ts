@@ -343,8 +343,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     const wahlartKurzbezeichnung = Array.from(wahl.wahlart)[0];
     const wahlbezirkKurzbezeichnung =
       currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB
-        ? "SBZ"
-        : "BWBZ";
+        ? "SBZ" // Stimmbezirk (Urnenwahl)
+        : "BWBZ"; // Briefwahlbezirk (Briefwahl)
     const meldungsartKurzbezeichnung =
       meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
     const wahlDatum = toGermanDate(wahl.wahltag);

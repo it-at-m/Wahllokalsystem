@@ -4,9 +4,9 @@ import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import {
   MBWNextStepImpl,
   NullNextStepImpl,
@@ -48,13 +48,13 @@ export function useNavigationUtils() {
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
     //check if a non election specific step is next
-    if (!useStatusStore().isWahlvorstandErfasst) {
+    if (!useWorkflowStore().isWahlvorstandErfasst) {
       return routeWithName(ROUTE_WAHLVORSTAND);
     }
 
     //check all elections in their order
     const { user } = useUserStore();
-    const { isElectionFinished } = useStatusStore();
+    const { isElectionFinished } = useWorkflowStore();
     const metaDataOfFirstUnfinishedElection = user.wahlMetaData.find(
       (wahlMetaData) =>
         !isElectionFinished(wahlMetaData.wahlID, wahlMetaData.wahlbezirkID)
@@ -79,7 +79,7 @@ export function useNavigationUtils() {
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {
-      const statusOfElection = useStatusStore().getStatus(
+      const statusOfElection = useWorkflowStore().getStatus(
         metaDataOfFirstUnfinishedElection.wahlID,
         metaDataOfFirstUnfinishedElection.wahlbezirkID
       );

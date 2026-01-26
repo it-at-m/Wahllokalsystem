@@ -48,12 +48,12 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
-const { isWahlvorstandErfasst } = storeToRefs(useStatusStore());
+const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
 
 const commonActionsDisabledMessageOrFalse = computed(() =>
   !isWahlvorstandErfasst.value ? "Erst Anwesenheit erfassen" : false

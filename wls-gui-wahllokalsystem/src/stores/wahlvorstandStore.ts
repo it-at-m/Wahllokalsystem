@@ -9,9 +9,9 @@ import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
   MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
 } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { createEmptyWahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import {
   isSchriftfuehrer,
@@ -26,7 +26,7 @@ const { registerStoreHMR } = useHmrUpdate();
 export const useWahlvorstandStore = defineStore(storeID, () => {
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
-  const { isWahlvorstandErfasst } = storeToRefs(useStatusStore());
+  const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);

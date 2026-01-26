@@ -49,7 +49,7 @@ import {
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
 } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { disabled } = defineProps({
   disabled: {
@@ -59,7 +59,7 @@ const { disabled } = defineProps({
 });
 
 const { routeWithName } = useNavigationUtils();
-const { isWahlumgebungErfasst } = storeToRefs(useStatusStore());
+const { isWahlumgebungErfasst } = storeToRefs(useWorkflowStore());
 
 const isGroupDisabled = computed(() => !!disabled);
 

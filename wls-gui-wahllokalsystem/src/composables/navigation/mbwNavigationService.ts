@@ -4,20 +4,19 @@ import type { ComputedRef } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { mbwRoutesRecord } from "@/plugins/router/mbwRoutes.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
-  const { status } = storeToRefs(useStatusStore());
+  const { electionWorkflows } = storeToRefs(useWorkflowStore());
 
-  const mbwStatus = computed(() =>
-    status.value.find(
+  const mbwWorkflow = computed(() =>
+    electionWorkflows.value.find(
       (status) =>
         status.bezirkUndWahlID.wahlID === wahlID &&
         status.bezirkUndWahlID.wahlbezirkID === wahlbezirkID
@@ -25,7 +24,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   );
 
   const navigation: ComputedRef<NavigationDefinition[]> = computed(() => {
-    if (!mbwStatus.value) return [];
+    if (!mbwWorkflow.value) return [];
 
     return [
       {
@@ -53,8 +52,8 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: mbwStatus.value
-          ? !mbwStatus.value.stepsDone[StapelArtEnum.MbwDUngueltig]
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[StapelArtEnum.MbwDUngueltig]
           : false,
       },
       {

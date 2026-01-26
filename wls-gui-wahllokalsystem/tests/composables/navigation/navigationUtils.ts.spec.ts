@@ -1,7 +1,7 @@
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
-import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import {
@@ -16,16 +16,16 @@ import {
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
-const { prepareStatus, prepareMeldung } = useStatusTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareWahl } = useWahlTestDataFactory();
+const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   mbwGetNextRouteOrNull: vi.fn(),
@@ -110,7 +110,7 @@ describe("navigationUtils.ts", () => {
 
   describe("getNextRoute", () => {
     it("should_returnRouteToWahlvorstand_when_wahlvorstandIsNotSet", () => {
-      useStatusStore().isWahlvorstandErfasst = false;
+      useWorkflowStore().isWahlvorstandErfasst = false;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
@@ -118,7 +118,7 @@ describe("navigationUtils.ts", () => {
 
     it("should_returnRouteToHome_when_noElectionAreGiven", () => {
       useUserStore().user = prepareUser().wahlMetaData([]).build();
-      useStatusStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
@@ -145,9 +145,9 @@ describe("navigationUtils.ts", () => {
           },
         ])
         .build();
-      useStatusStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
-      useStatusStore().status = [
+      useWorkflowStore().electionWorkflows = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
         createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
       ];
@@ -185,19 +185,19 @@ describe("navigationUtils.ts", () => {
           },
         ])
         .build();
-      useStatusStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       const mbwStatus = createStatusWithNiederschriftGedruckt(
         mbwWahlID,
         mbwWahlbezirkID,
         false
       );
-      useStatusStore().status = [
+      useWorkflowStore().electionWorkflows = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
         mbwStatus,
         createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
       ];
-      useStatusStore().isElectionFinished = vi
+      useWorkflowStore().isElectionFinished = vi
         .fn()
         .mockImplementation(
           (wahlID: string, wahlbezirkID: string) =>
@@ -227,16 +227,16 @@ describe("navigationUtils.ts", () => {
   function createStatusWithNiederschriftGedruckt(
     wahlID: string,
     wahlbezirkID: string,
-    gedruckt = true
+    finished = true
   ) {
-    return prepareStatus()
+    return prepareElectionWorkflow()
       .bezirkUndWahlID(
         prepareBezirkUndWahlID()
           .wahlID(wahlID)
           .wahlbezirkID(wahlbezirkID)
           .build()
       )
-      .niederschrift(prepareMeldung().gedruckt(gedruckt).build())
+      .isNiederschriftDone(finished)
       .build();
   }
 });

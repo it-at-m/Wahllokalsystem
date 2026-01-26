@@ -43,7 +43,6 @@ export function useStatusTestDataFactory() {
       bezirkUndWahlID: createBezirkUndWahlID(),
       schnellmeldung: createMeldung(),
       niederschrift: createMeldung(),
-      stepsDone: {},
     };
   }
 

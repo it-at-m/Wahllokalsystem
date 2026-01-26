@@ -7,15 +7,15 @@ import type {
 import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
-import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
-const { prepareStatus } = useStatusTestDataFactory();
+const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 
 describe("navigationGuards.ts", () => {
   const DUMMY_TO = {} as unknown as RouteLocationNormalized;
@@ -86,7 +86,7 @@ describe("navigationGuards.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
 
-        const status = prepareStatus()
+        const workflow = prepareElectionWorkflow()
           .bezirkUndWahlID(
             prepareBezirkUndWahlID()
               .wahlID(wahlID)
@@ -96,9 +96,9 @@ describe("navigationGuards.ts", () => {
           .stepsDone({})
           .build();
         if (requiredStepStatusTestArgument !== undefined) {
-          status.stepsDone[requiredStep] = requiredStepStatusTestArgument;
+          workflow.stepsDone[requiredStep] = requiredStepStatusTestArgument;
         }
-        useStatusStore().status = [status];
+        useWorkflowStore().electionWorkflows = [workflow];
 
         const guard = isStepDoneInElectionState(requiredStep);
 
@@ -119,7 +119,7 @@ describe("navigationGuards.ts", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
-      const status = prepareStatus()
+      const workflow = prepareElectionWorkflow()
         .bezirkUndWahlID(
           prepareBezirkUndWahlID()
             .wahlID(wahlID)
@@ -128,7 +128,7 @@ describe("navigationGuards.ts", () => {
         )
         .stepsDone({ [requiredStep]: true })
         .build();
-      useStatusStore().status = [status];
+      useWorkflowStore().electionWorkflows = [workflow];
 
       const guard = isStepDoneInElectionState(requiredStep);
 
@@ -146,7 +146,7 @@ describe("navigationGuards.ts", () => {
 
   describe("permitNavigationWhenWahlumgebungIsErfasst", () => {
     it("should_returnFalse_whenStatus_isWahlumgebungIstErfasstIsFalse", () => {
-      useStatusStore().isWahlumgebungErfasst = false;
+      useWorkflowStore().isWahlumgebungErfasst = false;
       const result = permitNavigationWhenWahlumgebungIsErfasst(
         DUMMY_TO,
         DUMMY_FROM,
@@ -156,7 +156,7 @@ describe("navigationGuards.ts", () => {
     });
 
     it("should_returnTrue_whenStatus_isWahlumgebungIstErfasstIsTrue", () => {
-      useStatusStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
       const result = permitNavigationWhenWahlumgebungIsErfasst(
         DUMMY_TO,
         DUMMY_FROM,

@@ -16,7 +16,6 @@ export function useStatusMapper() {
       bezirkUndWahlID: _toBezirkUndWahlIDModel(dto.bezirkUndWahlID),
       schnellmeldung: _toMeldungModel(dto.schnellmeldung),
       niederschrift: _toMeldungModel(dto.niederschrift),
-      stepsDone: {},
     };
   }
 

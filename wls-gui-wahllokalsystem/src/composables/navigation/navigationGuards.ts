@@ -3,7 +3,7 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 type NavigationGuardFactory<T> = (options: T) => NavigationGuard;
 
@@ -13,7 +13,7 @@ export function useNavigationGuards() {
       _isStepDone(to, requiredStep);
 
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
-    useStatusStore().isWahlumgebungErfasst;
+    useWorkflowStore().isWahlumgebungErfasst;
 
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
@@ -28,7 +28,7 @@ export function useNavigationGuards() {
       return false;
     }
 
-    return useStatusStore().isStepDone(wahlId, wahlbezirkId, requiredStep);
+    return useWorkflowStore().isStepDone(wahlId, wahlbezirkId, requiredStep);
   }
 
   return {

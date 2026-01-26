@@ -14,7 +14,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorbereitungMapper } from "@/composables/wahlhandlung/wahlvorbereitungMapper.ts";
 import { WAHLVORBEREITUNG_SERVICE_API_URL } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const userNotificationService = useUserNotificationService();
@@ -163,7 +163,7 @@ export function useWahlvorbereitungService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData) {
-        useStatusStore().isWahlumgebungErfasst = true;
+        useWorkflowStore().isWahlumgebungErfasst = true;
         return toUrnenwahlvorbereitungModel(responseData);
       } else {
         return null;
@@ -196,7 +196,7 @@ export function useWahlvorbereitungService() {
         "Urnenwahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
-      useStatusStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
     } catch (error) {
       userNotificationService.addNotification(
         "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",

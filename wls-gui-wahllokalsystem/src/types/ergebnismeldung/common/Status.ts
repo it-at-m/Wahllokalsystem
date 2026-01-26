@@ -5,5 +5,4 @@ export interface Status {
   bezirkUndWahlID: BezirkUndWahlID;
   schnellmeldung: Meldung;
   niederschrift: Meldung;
-  stepsDone: Record<string, boolean>;
 }

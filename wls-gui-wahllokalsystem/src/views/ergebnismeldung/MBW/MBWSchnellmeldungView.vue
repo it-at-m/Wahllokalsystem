@@ -41,6 +41,7 @@
         save-text="Schnellmeldung drucken"
         prepend-icon="$printer"
         :disabled="!isDruckenValid"
+        :loading="isDruckenLoading"
         @click="onDruckenClicked"
       />
     </v-card-actions>
@@ -48,6 +49,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
+
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -56,6 +59,7 @@ import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useErgebnismeldungDruck } from "@/composables/ergebnismeldung/MBW/ergebnismeldungDruck.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -67,14 +71,17 @@ const wahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 
 const { wahlenActions } = useWahlenStore();
-const { isSendingSchnellmeldung, sendSchnellmeldung } = useMbwUtils(
-  wahlID,
-  wahlbezirkID
-);
+const {
+  isSendingSchnellmeldung,
+  sendSchnellmeldung,
+  prepareDataForErgebnismeldungDruck,
+} = useMbwUtils(wahlID, wahlbezirkID);
+const { buildTemplateFromData } = useErgebnismeldungDruck();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
+const isDruckenLoading = ref<boolean>(false);
 
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
@@ -90,6 +97,33 @@ function onKorrigierenClicked() {
   // to be implemented
 }
 function onDruckenClicked() {
-  // to be implemented
+  _openPrintDialog();
+}
+
+async function _openPrintDialog() {
+  isDruckenLoading.value = true;
+  try {
+    if (wahl) {
+      const data: ErgebnismeldungDruckInput =
+        await prepareDataForErgebnismeldungDruck(wahl);
+
+      const printWindow = window.open(
+        "",
+        "",
+        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+      );
+
+      if (printWindow) {
+        printWindow.document.body.innerHTML = buildTemplateFromData(data);
+        printWindow.print();
+        printWindow.close();
+      }
+    }
+  } catch (e) {
+    // todo: toasty
+    console.log("fehler: ", e);
+  } finally {
+    isDruckenLoading.value = false;
+  }
 }
 </script>

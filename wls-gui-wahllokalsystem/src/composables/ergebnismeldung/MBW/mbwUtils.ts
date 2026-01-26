@@ -275,7 +275,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       aWerte: aWerte,
       wahlbezirkNummer: currentUserWahlbezirkNummer.value || "",
       barcode: jpegUrl,
-      sendOk: false,
+      sendOk: statusForWahlAndWahlbezirk?.schnellmeldung.uebermittelt || false,
     };
   }
 

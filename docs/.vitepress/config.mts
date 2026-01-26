@@ -120,6 +120,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
             },
             {
+              text: "Anpassung des Renovate-Schedulers",
+              link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,

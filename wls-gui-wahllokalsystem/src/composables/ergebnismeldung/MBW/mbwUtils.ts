@@ -221,11 +221,9 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   async function prepareDataForErgebnismeldungDruck(
     wahl: Wahl
   ): Promise<ErgebnismeldungDruckInput> {
-    let aWerte: AWerte | undefined;
+    let aWerte = undefined;
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
       aWerte = await getAWerteForWahlbezirkAndWahl();
-    } else {
-      aWerte = undefined;
     }
 
     const bWerte = await getBWerteForWahlbezirkAndWahl();

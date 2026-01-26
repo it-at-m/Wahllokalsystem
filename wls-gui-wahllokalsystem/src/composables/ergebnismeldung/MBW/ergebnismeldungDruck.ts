@@ -162,7 +162,7 @@ export function useErgebnismeldungDruck() {
     barcode: string
   ) {
     return `
-        <div class="vertical"> <!-- todo: dieses div lassen? macht glaube ich keinen unterschied -->
+        <div class="vertical">
             <div class="borderBottom marginBottom_2">Landeshauptstadt München</div>
             <div class="marginTop_1 marginBottom_1 fontSize_8">${
               wahlbezirksArt == WahlbezirksArtEnum.UWB
@@ -223,7 +223,7 @@ export function useErgebnismeldungDruck() {
                         0
                           ? `</table> 
                             </div>
-                            <!-- füge die rechten Tabellen nur auf die erste Seite ein -->
+                            <!-- insert the right side tables only on the first page -->
                             ${
                               ergebnisseAndWahlvorschlag.wahlvorschlag
                                 .ordnungszahl === 25
@@ -373,7 +373,6 @@ export function useErgebnismeldungDruck() {
   }
 
   function _getDefaultColgroup() {
-    // todo: optimieren
     return `
         <colgroup>
             <col/>

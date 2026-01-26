@@ -1,5 +1,5 @@
 import type { ElectionSpecificNextStep } from "@/types/navigation/ElectionSpecificNextStep.ts";
-import type { ElectionWorkflow } from "@/types/navigation/ElectionWorkflow.ts";
+import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
@@ -12,7 +12,7 @@ export const NullNextStepImpl: ElectionSpecificNextStep = {
 
 export const MBWNextStepImpl: ElectionSpecificNextStep = {
   getNextRouteOrNull(
-    wahlstatus: ElectionWorkflow
+    wahlstatus: ElectionWorkflowState
   ): RouteLocationAsRelativeGeneric | null {
     if (!wahlstatus.isSchnellmeldungDone) {
       return {

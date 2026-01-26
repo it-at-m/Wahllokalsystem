@@ -1,4 +1,4 @@
-import type { ElectionWorkflow } from "@/types/navigation/ElectionWorkflow.ts";
+import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -9,13 +9,13 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
 
-  const electionWorkflows = ref<ElectionWorkflow[]>([]);
+  const electionWorkflowsStates = ref<ElectionWorkflowState[]>([]);
 
   function getStatus(
     wahlID: string,
     wahlbezirkID: string
-  ): ElectionWorkflow | undefined {
-    return electionWorkflows.value.find(
+  ): ElectionWorkflowState | undefined {
+    return electionWorkflowsStates.value.find(
       (statusEntry) =>
         statusEntry.bezirkUndWahlID.wahlID === wahlID &&
         statusEntry.bezirkUndWahlID.wahlbezirkID === wahlbezirkID
@@ -23,7 +23,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   }
 
   function initStatus(wahlID: string, wahlbezirkID: string) {
-    electionWorkflows.value.push({
+    electionWorkflowsStates.value.push({
       bezirkUndWahlID: {
         wahlID,
         wahlbezirkID,
@@ -60,7 +60,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   }
 
   return {
-    electionWorkflows,
+    electionWorkflowsStates,
     isWahlvorstandErfasst,
     isWahlumgebungErfasst,
     getStatus,

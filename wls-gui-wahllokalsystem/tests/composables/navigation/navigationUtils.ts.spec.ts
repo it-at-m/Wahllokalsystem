@@ -147,7 +147,7 @@ describe("navigationUtils.ts", () => {
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
 
-      useWorkflowStore().electionWorkflows = [
+      useWorkflowStore().electionWorkflowsStates = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
         createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
       ];
@@ -192,7 +192,7 @@ describe("navigationUtils.ts", () => {
         mbwWahlbezirkID,
         false
       );
-      useWorkflowStore().electionWorkflows = [
+      useWorkflowStore().electionWorkflowsStates = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
         mbwStatus,
         createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),

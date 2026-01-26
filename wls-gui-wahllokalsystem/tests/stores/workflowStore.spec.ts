@@ -18,9 +18,9 @@ describe("workflowStore.ts", () => {
     });
   });
 
-  describe("electionWorkflows", () => {
+  describe("electionWorkflowsStates", () => {
     it("should_returnEmptyArray_when_getAfterSetup", () => {
-      expect(useWorkflowStore().electionWorkflows).toStrictEqual([]);
+      expect(useWorkflowStore().electionWorkflowsStates).toStrictEqual([]);
     });
   });
 
@@ -37,7 +37,7 @@ describe("workflowStore.ts", () => {
   });
 
   describe("getStatus", () => {
-    it("should_returnUndefined_when_workflowWithIDsDoesNotExist", () => {
+    it("should_returnUndefined_when_workflowStateWithIDsDoesNotExist", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -46,7 +46,7 @@ describe("workflowStore.ts", () => {
       ).toBeUndefined();
     });
 
-    it("should_returnFirstWorkflow_when_workflowWithIDsExist", () => {
+    it("should_returnFirstWorkflow_when_workflowSateWithIDsExist", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -55,7 +55,7 @@ describe("workflowStore.ts", () => {
         wahlbezirkID + "sth"
       );
       const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
-      useWorkflowStore().electionWorkflows = [
+      useWorkflowStore().electionWorkflowsStates = [
         workflowNotToFind,
         workflowToFind,
       ];
@@ -67,7 +67,7 @@ describe("workflowStore.ts", () => {
   });
 
   describe("initStatus", () => {
-    it("should_createNewWorkflowInUnfinishedState_when_called", () => {
+    it("should_createNewWorkflowStateInUnfinishedState_when_called", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -87,9 +87,9 @@ describe("workflowStore.ts", () => {
   });
 
   describe("isElectionFinished", () => {
-    describe("should_returnFalse_when_workflowWithIDsDoesNotExist", () => {
+    describe("should_returnFalse_when_workflowStateWithIDsDoesNotExist", () => {
       it("arrayIsEmpty", () => {
-        useWorkflowStore().electionWorkflows = [];
+        useWorkflowStore().electionWorkflowsStates = [];
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
 
@@ -101,7 +101,7 @@ describe("workflowStore.ts", () => {
       it("wahlIDDoesNotMatch", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID),
         ];
 
@@ -113,7 +113,7 @@ describe("workflowStore.ts", () => {
       it("wahlbezirkIDDoesNotMatch", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID, wahlbezirkID + "sth"),
         ];
 
@@ -125,7 +125,7 @@ describe("workflowStore.ts", () => {
       it("wahlIDAndWahlbezirkIDDoesNotMatch", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID + "sth"),
         ];
 
@@ -140,7 +140,7 @@ describe("workflowStore.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const workflow = createWorkflow(wahlID, wahlbezirkID);
       workflow.isNiederschriftDone = false;
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       expect(
         useWorkflowStore().isElectionFinished(wahlID, wahlbezirkID)
@@ -152,7 +152,7 @@ describe("workflowStore.ts", () => {
       const wahlbezirkID = generateRandomString(10);
       const workflow = createWorkflow(wahlID, wahlbezirkID);
       workflow.isNiederschriftDone = true;
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       expect(
         useWorkflowStore().isElectionFinished(wahlID, wahlbezirkID)
@@ -161,9 +161,9 @@ describe("workflowStore.ts", () => {
   });
 
   describe("isStepDone", () => {
-    describe("should_returnFalse_when_workflowForIdsDoesNotExist", () => {
+    describe("should_returnFalse_when_workflowStateForIdsDoesNotExist", () => {
       it("arrayIsEmpty", () => {
-        useWorkflowStore().electionWorkflows = [];
+        useWorkflowStore().electionWorkflowsStates = [];
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const stepToCheck = generateRandomString(10);
@@ -177,7 +177,7 @@ describe("workflowStore.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const stepToCheck = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID),
         ];
 
@@ -190,7 +190,7 @@ describe("workflowStore.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const stepToCheck = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID, wahlbezirkID + "sth"),
         ];
 
@@ -203,7 +203,7 @@ describe("workflowStore.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const stepToCheck = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID + "sth"),
         ];
 
@@ -213,11 +213,11 @@ describe("workflowStore.ts", () => {
       });
     });
 
-    it("should_returnFalse_when_workflowForIdsExistsButHasNotThatStep", () => {
+    it("should_returnFalse_when_workflowStateForIdsExistsButHasNotThatStep", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stepToCheck = generateRandomString(10);
-      useWorkflowStore().electionWorkflows = [
+      useWorkflowStore().electionWorkflowsStates = [
         createWorkflow(wahlID, wahlbezirkID),
       ];
 
@@ -226,26 +226,26 @@ describe("workflowStore.ts", () => {
       ).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_workflowForIdsExistsHasThatStepWithFalse", () => {
+    it("should_returnFalse_when_workflowStateForIdsExistsHasThatStepWithFalse", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stepToCheck = generateRandomString(10);
       const workflow = createWorkflow(wahlID, wahlbezirkID);
       workflow.stepsDone[stepToCheck] = false;
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       expect(
         useWorkflowStore().isStepDone(wahlID, wahlbezirkID, stepToCheck)
       ).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_workflowForIdsExistsHasThatStepWithTrue", () => {
+    it("should_returnTrue_when_workflowStateForIdsExistsHasThatStepWithTrue", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const stepToCheck = generateRandomString(10);
       const workflow = createWorkflow(wahlID, wahlbezirkID);
       workflow.stepsDone[stepToCheck] = true;
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       expect(
         useWorkflowStore().isStepDone(wahlID, wahlbezirkID, stepToCheck)
@@ -254,29 +254,31 @@ describe("workflowStore.ts", () => {
   });
 
   describe("setStepDone", () => {
-    describe("should_doNothing_when_workflowForIdsDoesNotExist", () => {
+    describe("should_doNothing_when_workflowStateForIdsDoesNotExist", () => {
       it("arrayIsEmpty", () => {
-        useWorkflowStore().electionWorkflows = [];
+        useWorkflowStore().electionWorkflowsStates = [];
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const step = generateRandomString(10);
 
         useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
-        expect(useWorkflowStore().electionWorkflows).toStrictEqual([]);
+        expect(useWorkflowStore().electionWorkflowsStates).toStrictEqual([]);
       });
 
       it("wahlIDDoesNotMatch", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const step = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID),
         ];
 
         useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
-        expect(useWorkflowStore().electionWorkflows.length).toStrictEqual(1);
+        expect(useWorkflowStore().electionWorkflowsStates.length).toStrictEqual(
+          1
+        );
         expect(
-          useWorkflowStore().electionWorkflows[0]?.stepsDone[step]
+          useWorkflowStore().electionWorkflowsStates[0]?.stepsDone[step]
         ).toBeUndefined();
       });
 
@@ -284,14 +286,16 @@ describe("workflowStore.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const step = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID, wahlbezirkID + "sth"),
         ];
 
         useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
-        expect(useWorkflowStore().electionWorkflows.length).toStrictEqual(1);
+        expect(useWorkflowStore().electionWorkflowsStates.length).toStrictEqual(
+          1
+        );
         expect(
-          useWorkflowStore().electionWorkflows[0]?.stepsDone[step]
+          useWorkflowStore().electionWorkflowsStates[0]?.stepsDone[step]
         ).toBeUndefined();
       });
 
@@ -299,26 +303,28 @@ describe("workflowStore.ts", () => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const step = generateRandomString(10);
-        useWorkflowStore().electionWorkflows = [
+        useWorkflowStore().electionWorkflowsStates = [
           createWorkflow(wahlID + "sth", wahlbezirkID + "sth"),
         ];
 
         useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
-        expect(useWorkflowStore().electionWorkflows.length).toStrictEqual(1);
+        expect(useWorkflowStore().electionWorkflowsStates.length).toStrictEqual(
+          1
+        );
         expect(
-          useWorkflowStore().electionWorkflows[0]?.stepsDone[step]
+          useWorkflowStore().electionWorkflowsStates[0]?.stepsDone[step]
         ).toBeUndefined();
       });
     });
 
     it.each([true, false])(
-      "should_set'%s'_when_workflowWithIDsExist",
+      "should_set'%s'_when_workflowStateWithIDsExist",
       (stepDoneArgument) => {
         const wahlID = generateRandomString(10);
         const wahlbezirkID = generateRandomString(10);
         const step = generateRandomString(10);
         const workflow = createWorkflow(wahlID, wahlbezirkID);
-        useWorkflowStore().electionWorkflows = [workflow];
+        useWorkflowStore().electionWorkflowsStates = [workflow];
 
         expect(workflow.stepsDone).toStrictEqual({});
         useWorkflowStore().setStepDone(
@@ -337,7 +343,7 @@ describe("workflowStore.ts", () => {
       const step = generateRandomString(10);
       const workflow = createWorkflow(wahlID, wahlbezirkID);
       workflow.stepsDone[step] = false;
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
       expect(workflow.stepsDone[step]).toStrictEqual(true);

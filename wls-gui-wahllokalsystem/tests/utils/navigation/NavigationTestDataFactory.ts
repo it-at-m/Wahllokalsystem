@@ -1,4 +1,4 @@
-import type { ElectionWorkflow } from "@/types/navigation/ElectionWorkflow.ts";
+import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -9,7 +9,7 @@ const { generateRandomBoolean } = useCommonTestDataFactory();
 const { createBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
 export function useWorkflowTestDataFactory() {
-  function createElectionWorkflow(): ElectionWorkflow {
+  function createElectionWorkflow(): ElectionWorkflowState {
     return {
       bezirkUndWahlID: createBezirkUndWahlID(),
       isSchnellmeldungDone: generateRandomBoolean(),
@@ -18,8 +18,8 @@ export function useWorkflowTestDataFactory() {
     };
   }
 
-  function prepareElectionWorkflow(): Builder<ElectionWorkflow> {
-    return proxyBuilder<ElectionWorkflow>(createElectionWorkflow());
+  function prepareElectionWorkflow(): Builder<ElectionWorkflowState> {
+    return proxyBuilder<ElectionWorkflowState>(createElectionWorkflow());
   }
 
   return {

@@ -1,6 +1,6 @@
 import type { BezirkUndWahlID } from "@/types/ergebnismeldung/common/BezirkUndWahlID.ts";
 
-export interface ElectionWorkflow {
+export interface ElectionWorkflowState {
   bezirkUndWahlID: BezirkUndWahlID;
   isSchnellmeldungDone: boolean;
   isNiederschriftDone: boolean;

@@ -98,7 +98,7 @@ describe("navigationGuards.ts", () => {
         if (requiredStepStatusTestArgument !== undefined) {
           workflow.stepsDone[requiredStep] = requiredStepStatusTestArgument;
         }
-        useWorkflowStore().electionWorkflows = [workflow];
+        useWorkflowStore().electionWorkflowsStates = [workflow];
 
         const guard = isStepDoneInElectionState(requiredStep);
 
@@ -128,7 +128,7 @@ describe("navigationGuards.ts", () => {
         )
         .stepsDone({ [requiredStep]: true })
         .build();
-      useWorkflowStore().electionWorkflows = [workflow];
+      useWorkflowStore().electionWorkflowsStates = [workflow];
 
       const guard = isStepDoneInElectionState(requiredStep);
 

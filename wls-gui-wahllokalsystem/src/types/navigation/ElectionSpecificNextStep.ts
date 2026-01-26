@@ -1,8 +1,8 @@
-import type { ElectionWorkflow } from "@/types/navigation/ElectionWorkflow.ts";
+import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 export interface ElectionSpecificNextStep {
   getNextRouteOrNull(
-    wahlstatus: ElectionWorkflow
+    wahlstatus: ElectionWorkflowState
   ): RouteLocationAsRelativeGeneric | null;
 }

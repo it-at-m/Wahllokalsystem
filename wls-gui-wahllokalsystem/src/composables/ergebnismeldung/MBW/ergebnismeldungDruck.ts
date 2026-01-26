@@ -255,13 +255,13 @@ export function useErgebnismeldungDruck() {
     return `
         ${_buildMeldungUebermitteltBox(sendOk)}
         <div class="vertical spaceBetween border border_bold ${sendOk ? "" : ""}"><!-- 'hidden' : ''}"> -->
-            <div class="paddingLeftRight bold fontSize_10">Die Meldung ist auf schnellstem Wege zu erstatten: </div>
-                <div class="paddingLeftRight horizontal spaceBetween fontSize_14 marginTop_2 marginBottom_4">
-                    <div>Tel.-Nr.:</div>
+            <div class="paddingLeftRight bold fontSize_11">Die Meldung ist auf schnellstem Wege zu erstatten: </div>
+                <div class="paddingLeftRight horizontal spaceBetween fontSize_14 marginTop_4 marginBottom_4">
+                    <div class="bold">Tel.-Nr.:</div>
                     <div class="bold">089 233-96233</div>
                 </div>
     
-                <div class="paddingLeftRight bold fontSize_10 marginTop_4">Bei telefonischer Weitermeldung<br/>Hörer erst auflegen, wenn die Zahlen wiederholt sind.</div>
+                <div class="paddingLeftRight bold fontSize_10 marginTop_2">Bei telefonischer Weitermeldung<br/>Hörer erst auflegen, wenn die Zahlen wiederholt sind.</div>
     
                 <div class="paddingLeftRight marginTop_4" >Durchgegeben von:</div>
                 <div class="paddingLeftRight marginTop_4">____________________________________</div>

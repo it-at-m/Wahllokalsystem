@@ -330,7 +330,16 @@ export function useErgebnismeldungDruck() {
     </table>
     <div class="marginTop_2">
         <table class="table width_100">
-            ${_getDefaultColgroup()}
+            <colgroup>
+                <col width="53%"/>
+                <col width="20%"/>
+                <col width="4.5%"/>
+                <col width="4.5%"/>
+                <col width="4.5%"/>
+                <col width="4.5%"/>
+                <col width="4.5%"/>
+                <col width="4.5%"/>
+            </colgroup>
             <tr>
                 <td class="noBorder borderBottom"></td>
                 <td class="noBorder">zusammen</td>

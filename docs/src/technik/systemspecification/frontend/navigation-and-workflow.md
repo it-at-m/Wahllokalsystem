@@ -8,7 +8,7 @@ Schritte zuvor abgeschlossen wurden.
 
 Umgesetzt wird dies durch Navigationguards, bedingt verfügbare Links und einer dynamischen Ermittlung der nächsten Seite.
 
-Der aktuelle Bearbeitungszustand wird im `StatusStore` gepflegt.
+Der aktuelle Bearbeitungszustand wird im `WorkflowStore` gepflegt.
 
 ## Navigationguards
 
@@ -59,8 +59,8 @@ Sind alle notwendigen Schritte abgeschlossen, wird der Link aktiv.
 classDiagram
         direction RL
 
-        class StatusStore {
-            status: Status[]
+        class WorkflowStore {
+            electionWorkflowStates: ElectionWorkflowState[]
             setStepDone: (stepName, wahlbezirkID, wahlID, isDone) void
         }
 
@@ -70,7 +70,7 @@ classDiagram
             MbwNavigationService(wahlID, wahlbezirkD)
         }
 
-        StatusStore <-- MbwNavigationService : uses
+    WorkflowStore <-- MbwNavigationService : uses
 
         class NavigationDefinition {
             title: String
@@ -78,7 +78,7 @@ classDiagram
             disabled: Boolean
         }
 
-        class Status {
+        class ElectionWorkflowState {
             wahlID: String
             wahlbezirkID: String
             stepsDone: Record&lt;String, boolean&gt;

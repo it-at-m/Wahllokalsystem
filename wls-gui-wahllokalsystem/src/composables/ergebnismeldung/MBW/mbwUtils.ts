@@ -318,9 +318,9 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
         if (status.schnellmeldung.validierungsstatus === "VALIDE") {
-          return "" + crypto.randomUUID() + ", " + formattedDateWithTime + " O";
+          return crypto.randomUUID() + ", " + formattedDateWithTime + " O";
         } else {
-          return "" + crypto.randomUUID() + ", " + formattedDateWithTime + " M";
+          return crypto.randomUUID() + ", " + formattedDateWithTime + " M";
         }
       }
     } else {

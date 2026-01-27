@@ -1,6 +1,7 @@
 package de.muenchen.refarch.gateway.configuration;
 
 import de.muenchen.refarch.gateway.security.AuthUtils;
+import de.muenchen.refarch.gateway.security.SessionLimitingSuccessHandler;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +15,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.ReactiveSessionRegistry;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.WebFilterExchange;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.authentication.ServerMaximumSessionsExceededHandler;
+import org.springframework.security.web.server.authentication.SessionLimit;
 import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
 import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
 import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Configuration
@@ -51,7 +51,8 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(1)
-    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http) {
+    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http, final ReactiveSessionRegistry sessionRegistry,
+            ServerMaximumSessionsExceededHandler maximumSessionsExceededHandler, SessionLimitingSuccessHandler sessionLimitingSuccessHandler) {
         val logoutHandler = new DelegatingServerLogoutHandler(
                 new SecurityContextServerLogoutHandler(), new WebSessionServerLogoutHandler());
 
@@ -79,6 +80,13 @@ public class SecurityConfiguration {
 
                     return exchange.getExchange().getResponse().setComplete();
                 }))
+                .sessionManagement(sessionManagementSpec -> {
+                    sessionManagementSpec.concurrentSessions(concurrentSessionsSpec -> {
+                        concurrentSessionsSpec.maximumSessions(SessionLimit.of(1));
+                        concurrentSessionsSpec.sessionRegistry(sessionRegistry);
+                        concurrentSessionsSpec.maximumSessionsExceededHandler(maximumSessionsExceededHandler);
+                    });
+                })
                 .cors(corsSpec -> {
                 })
                 .csrf(csrfSpec -> {
@@ -95,21 +103,27 @@ public class SecurityConfiguration {
                     csrfSpec.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse());
                     csrfSpec.requireCsrfProtectionMatcher(csrfProtectionMatcher);
                 })
-                .oauth2Login(oAuth2LoginSpec -> oAuth2LoginSpec.authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler() {
-                    @Override
-                    public Mono<Void> onAuthenticationSuccess(final WebFilterExchange webFilterExchange, final Authentication authentication) {
-                        webFilterExchange.getExchange().getSession().subscribe(
-                                webSession -> webSession.setMaxIdleTime(getSessionTimeout()));
-                        return super.onAuthenticationSuccess(webFilterExchange, authentication);
-                    }
-                }));
+                .oauth2Login(oAuth2LoginSpec -> {
+                    oAuth2LoginSpec.authenticationSuccessHandler((handlers) -> {
+                        handlers.clear();
+                        //                        handlers.add(new RedirectServerAuthenticationSuccessHandler() {
+                        //                            @Override
+                        //                            public Mono<Void> onAuthenticationSuccess(final WebFilterExchange webFilterExchange, final Authentication authentication) {
+                        //                                log.info("using redirect handler");
+                        //                                webFilterExchange.getExchange().getSession().subscribe(
+                        //                                        webSession -> webSession.setMaxIdleTime(getSessionTimeout()));
+                        //                                return super.onAuthenticationSuccess(webFilterExchange, authentication);
+                        //                            }
+                        //                        });
+                        handlers.add(sessionLimitingSuccessHandler);
+                    });
+                });
 
         return http.build();
     }
 
     /**
-     * Get Spring Session timeout. Uses {@link SessionProperties} and
-     * {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
+     * Get Spring Session timeout. Uses {@link SessionProperties} and {@link ServerProperties#getServlet()} as fallback, like Spring Session itself. See
      * according
      * <a href="https://docs.spring.io/spring-boot/reference/web/spring-session.html">Spring
      * documentation</a>.

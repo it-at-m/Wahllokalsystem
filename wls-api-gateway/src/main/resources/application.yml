@@ -70,6 +70,14 @@ management:
 logging:
   level:
     root: info
+    de:
+      muenchen:
+        refarch:
+          gateway:
+            configuration: debug
+            filter:
+              SessionValidityFilter: debug
+            security: debug
   structured:
     format:
       console: logstash

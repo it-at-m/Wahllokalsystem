@@ -34,9 +34,14 @@ export function useAWerteTestDataFactory() {
     return proxyBuilder<AWerteDTO>(createAWerteDTO());
   }
 
+  function prepareAWerte() {
+    return proxyBuilder<AWerte>(createAWerte());
+  }
+
   return {
     createAWerte,
     createAWerteDTO,
+    prepareAWerte,
     prepareAWerteDTO,
   };
 }

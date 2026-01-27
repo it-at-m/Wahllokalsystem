@@ -135,7 +135,7 @@ public class SecurityConfiguration {
                                         .authenticated())
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> {
                     httpSecuritySessionManagementConfigurer.sessionFixation().migrateSession().maximumSessions(1).expiredUrl("/login")
-                            .sessionRegistry(sessionRegistry).maxSessionsPreventsLogin(true);
+                            .sessionRegistry(sessionRegistry).maxSessionsPreventsLogin(false);
                 })
                 .oauth2ResourceServer(
                         httpSecurityOAuth2ResourceServerConfigurer ->

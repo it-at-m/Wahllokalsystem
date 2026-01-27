@@ -20,7 +20,7 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function onSaveClicked() {
     if (!isWahlscheineUnequalToStimmzettel.value) {
-      _saveStimmzettelumschlaege();
+      await _saveStimmzettelumschlaege();
     } else {
       const begruendungStimmzettel = await getBegruendung();
       dialog.value = {
@@ -41,11 +41,11 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
       dialog.value.isVisible = false;
       await saveBegruendung(dialog.value);
     }
-    _saveStimmzettelumschlaege();
+    await _saveStimmzettelumschlaege();
   }
 
-  function _saveStimmzettelumschlaege() {
-    stimmzettelumschlaegeActions.saveStimmzettelumschlaege(wahlId);
+  async function _saveStimmzettelumschlaege() {
+    await stimmzettelumschlaegeActions.saveStimmzettelumschlaege(wahlId);
   }
 
   return {

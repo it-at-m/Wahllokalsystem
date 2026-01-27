@@ -26,10 +26,40 @@
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
-          @click="onSaveAnzahlStimmzettelClicked"
+          @click="onSaveClicked"
         />
       </v-card-actions>
     </v-card>
+    <base-dialog-begruendung
+      v-if="dialog"
+      :visible="dialog.isVisible"
+      :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
+      :is-save-disabled="!dialog.isBegruendungValid"
+      @cancel="dialog.isVisible = false"
+      @confirm="onConfirmClicked"
+    >
+      <div class="font-weight-bold mb-3">
+        {{ wahlenActions.getWahlNameOrBlankStringById(props.wahlId) }}
+      </div>
+      <div class="mb-3">
+        {{ getDialogContent(dialog) }}
+      </div>
+      <v-textarea
+        v-model="dialog.begruendung"
+        :rules="[
+          minLength(MIN_LENGTH_FOR_BEGRUENDUNG),
+          maxLength(MAX_LENGTH_FOR_TEXT_INPUT),
+        ]"
+        rows="1"
+        label="Bitte begründen Sie hier die Abweichung"
+        auto-grow
+        autofocus
+        persistent-counter
+        :counter="MAX_LENGTH_FOR_TEXT_INPUT"
+        data-test="basedialogbegruendung-textarea"
+        @update:model-value="updateValidationStateForBegruendung(dialog)"
+      />
+    </base-dialog-begruendung>
   </v-container>
 </template>
 
@@ -38,15 +68,29 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
+import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
+import {
+  MAX_LENGTH_FOR_TEXT_INPUT,
+  MIN_LENGTH_FOR_BEGRUENDUNG,
+} from "@/constants.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { maxNumber, minNumber, required, timeGreaterOrEqual, timeNotInFuture } =
-  useRules();
+const {
+  maxNumber,
+  minNumber,
+  required,
+  timeGreaterOrEqual,
+  timeNotInFuture,
+  minLength,
+  maxLength,
+} = useRules();
 
 const props = defineProps<{
   wahlId: string;
@@ -54,10 +98,15 @@ const props = defineProps<{
   useTime?: boolean;
 }>();
 
-const { wahlenActions, stimmzettelumschlaegeActions } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { getStimmzettelTermForWahl } = useTextFormatter();
+const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
+  useTextFormatter();
+const { updateValidationStateForBegruendung, getDialogContent } =
+  useDifferenceDialogUtils();
+const { dialog, onSaveClicked, onConfirmClicked } =
+  useSingleDifferenceDialogUtils(props.wahlId);
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -66,8 +115,4 @@ const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
 });
-
-function onSaveAnzahlStimmzettelClicked() {
-  stimmzettelumschlaegeActions.saveStimmzettelumschlaege(props.wahlId);
-}
 </script>

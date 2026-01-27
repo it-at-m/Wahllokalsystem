@@ -39,7 +39,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmabgabevermerke: vi.fn(),
   getStimmzettelumschlaege: vi.fn(),
   getAWerte: vi.fn(),
-  createUuidv4: vi.fn(),
+  generateUuidv4: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -94,12 +94,9 @@ vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
     getAWerte: mockDefinitions.getAWerte,
   }),
 }));
-vi.mock("@/composables/common/textFormatter.ts", () => ({
-  useTextFormatter: () => ({
-    createUuidv4: mockDefinitions.createUuidv4,
-  }),
-}));
 vi.mock("jsbarcode");
+
+crypto.randomUUID = mockDefinitions.generateUuidv4;
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
@@ -909,7 +906,7 @@ describe("mbwUtils", () => {
 
       // footer
       const dummyUUID = "uuidv4";
-      mockDefinitions.createUuidv4.mockReturnValue(dummyUUID);
+      mockDefinitions.generateUuidv4.mockReturnValue(dummyUUID);
       const expectedFooter =
         dummyUUID +
         ", " +

@@ -9,7 +9,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 describe("textFormatter.ts", () => {
-  const { getStimmzettelTermForWahl, createUuidv4 } = useTextFormatter();
+  const { getStimmzettelTermForWahl } = useTextFormatter();
   const { prepareUser } = useUserTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();
 
@@ -101,17 +101,6 @@ describe("textFormatter.ts", () => {
           ).toStrictEqual("Stimmzettel");
         }
       }
-    });
-  });
-
-  describe("createUuidv4", () => {
-    it("should_matchUuidv4Format_when_returningString", () => {
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-
-      const result = createUuidv4();
-
-      expect(result).toMatch(uuidRegex);
     });
   });
 });

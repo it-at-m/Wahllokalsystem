@@ -14,7 +14,6 @@ import { ref } from "vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
-import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
@@ -42,7 +41,6 @@ const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
 const { logError } = useLogging("mbwUtils");
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
-const { createUuidv4 } = useTextFormatter();
 const { addNotification } = useUserNotificationService();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
@@ -320,9 +318,9 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
         if (status.schnellmeldung.validierungsstatus === "VALIDE") {
-          return "" + createUuidv4() + ", " + formattedDateWithTime + " O";
+          return "" + crypto.randomUUID() + ", " + formattedDateWithTime + " O";
         } else {
-          return "" + createUuidv4() + ", " + formattedDateWithTime + " M";
+          return "" + crypto.randomUUID() + ", " + formattedDateWithTime + " M";
         }
       }
     } else {

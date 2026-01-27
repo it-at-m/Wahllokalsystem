@@ -20,5 +20,12 @@ describe("numberFormatter.ts", () => {
         expect(convertToSixDigitArray(input)).toStrictEqual(output);
       }
     );
+
+    it.each([-23, 1234567])(
+      "should_throwError_when_inputOutOfRange",
+      (input) => {
+        expect(() => convertToSixDigitArray(input)).toThrowError();
+      }
+    );
   });
 });

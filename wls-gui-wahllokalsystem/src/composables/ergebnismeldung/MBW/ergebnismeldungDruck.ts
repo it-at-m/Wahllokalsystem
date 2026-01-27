@@ -1,12 +1,12 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
-import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { convertToSixDigitArray } = useNumberFormatter();
@@ -61,9 +61,9 @@ export function useErgebnismeldungDruck() {
     bWerte: BWerte,
     aWerte?: AWerte
   ) {
-    let a1AsArray = [""];
-    let a2AsArray = [""];
-    let aAsArray = [""];
+    let a1AsArray = ["", "", "", "", "", ""];
+    let a2AsArray = ["", "", "", "", "", ""];
+    let aAsArray = ["", "", "", "", "", ""];
 
     if (aWerte) {
       a1AsArray = convertToSixDigitArray(aWerte.a1);

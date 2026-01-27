@@ -107,7 +107,7 @@ describe("textFormatter.ts", () => {
   describe("createUuidv4", () => {
     it("should_matchUuidv4Format_when_returningString", () => {
       const uuidRegex =
-        /^[0-9(a-f|A-F)]{8}-[0-9(a-f|A-F)]{4}-4[0-9(a-f|A-F)]{3}-[89ab][0-9(a-f|A-F)]{3}-[0-9(a-f|A-F)]{12}$/;
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
       const result = createUuidv4();
 

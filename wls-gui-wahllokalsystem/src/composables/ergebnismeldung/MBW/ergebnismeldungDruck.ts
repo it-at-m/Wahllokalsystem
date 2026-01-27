@@ -359,16 +359,17 @@ export function useErgebnismeldungDruck() {
     ergebnisWithWahlvorschlag: MbwErgebnisseAndWahlvorschlag,
     bottomBoldedClass: string
   ) {
+    const sumAsArray = _sumAndFormatErgebnisse(ergebnisWithWahlvorschlag);
     return `
         <tr class="rowHeight">
             <td class="bold">D ${ergebnisWithWahlvorschlag.wahlvorschlag.ordnungszahl}</td>
             <td class="backendData noPadding paddingLeft">${ergebnisWithWahlvorschlag.wahlvorschlag.kurzname}</td>
-            <td class="${bottomBoldedClass} borderLeft_bold backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[0]}</td>
-            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[1]}</td>
-            <td class="${bottomBoldedClass} borderRight_bold backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[2]}</td>
-            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[3]}</td>
-            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[4]}</td>
-            <td class="${bottomBoldedClass} borderRight_bold backendData noPadding textAlignCenter">${_sumAndFormatErgebnisse(ergebnisWithWahlvorschlag)[5]}</td>
+            <td class="${bottomBoldedClass} borderLeft_bold backendData noPadding textAlignCenter">${sumAsArray[0]}</td>
+            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${sumAsArray[1]}</td>
+            <td class="${bottomBoldedClass} borderRight_bold backendData noPadding textAlignCenter">${sumAsArray[2]}</td>
+            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${sumAsArray[3]}</td>
+            <td class="${bottomBoldedClass} backendData noPadding textAlignCenter">${sumAsArray[4]}</td>
+            <td class="${bottomBoldedClass} borderRight_bold backendData noPadding textAlignCenter">${sumAsArray[5]}</td>
         </tr>`;
   }
 

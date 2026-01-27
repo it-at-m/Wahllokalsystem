@@ -254,10 +254,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
     const footer = _createFooter(status, meldungsart);
 
-    const canvas = document.createElement("canvas");
-    const barcodeContent = _createBarcodeString(wahl, meldungsart);
-    JsBarcode(canvas, barcodeContent, { displayValue: false });
-    const jpegUrl = canvas.toDataURL("image/jpeg");
+    const jpegUrl = _createBarcode(wahl, meldungsart);
 
     return {
       meldungsArt: meldungsart,
@@ -326,8 +323,16 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         }
       }
     } else {
-      return "to be implemented - #1978";
+      // to be implemented - #1978
+      return "";
     }
+  }
+
+  function _createBarcode(wahl: Wahl, meldungsart: MeldungsartEnum) {
+    const canvas = document.createElement("canvas");
+    const barcodeContent = _createBarcodeString(wahl, meldungsart);
+    JsBarcode(canvas, barcodeContent, { displayValue: false });
+    return canvas.toDataURL("image/jpeg");
   }
 
   function _createBarcodeString(wahl: Wahl, meldungsart: MeldungsartEnum) {

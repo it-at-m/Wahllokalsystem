@@ -1,14 +1,9 @@
-import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
 
 describe("numberFormatter.ts", () => {
   const { convertToSixDigitArray } = useNumberFormatter();
-
-  beforeEach(() => {
-    setActivePinia(createPinia());
-  });
 
   describe("convertToSixDigitArray", () => {
     it.each([

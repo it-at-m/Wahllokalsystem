@@ -353,6 +353,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         "Fehler beim Erstellen des Barcodes",
         UserNotificationCategoryEnum.WARNING
       );
+      return "";
     }
   }
 

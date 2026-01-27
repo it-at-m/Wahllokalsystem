@@ -249,7 +249,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       StapelArtEnum.MbwDUngueltig,
       false
     );
-    const ungueltigeStimmen = ungueltige?.ergebnisse[0]?.ergebnis || 0;
+    const ungueltigeStimmen = ungueltige?.ergebnisse[0]?.ergebnis ?? 0;
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 

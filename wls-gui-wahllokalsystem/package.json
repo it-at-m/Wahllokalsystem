@@ -29,12 +29,12 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@fontsource/roboto": "5.2.9",
     "@vueuse/core": "14.1.0",
     "jsbarcode": "3.12.3",
     "localforage": "1.10.0",
     "pinia": "3.0.4",
-    "vue": "3.5.26",
+    "@fontsource/roboto": "5.2.9",
+    "vue": "3.5.27",
     "vue-router": "4.6.4",
     "vue3-toastify": "0.2.8",
     "vuetify": "3.11.6"

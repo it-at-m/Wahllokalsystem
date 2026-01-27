@@ -689,6 +689,11 @@ describe("mbwUtils", () => {
 
   describe("prepareDataForErgebnismeldungDruck", () => {
     it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsart", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
       // --- prepare mock Values ---
       const wahl = prepareWahl().wahlID(wahlID).build();
       const status = createStatus();
@@ -923,6 +928,7 @@ describe("mbwUtils", () => {
 
       const expectedResult = prepareErgebnismeldungDruckInput()
         .meldungsArt(meldungsArt)
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .aktuelleWahl(wahl)
         .footer(expectedFooter)
         .alleStimmen(convertToSixDigitArray(expectedAlleStimmen))

@@ -19,12 +19,14 @@ import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteSer
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvorschlaegeService.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const {
@@ -41,6 +43,7 @@ const { logError } = useLogging("mbwUtils");
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { createUuidv4 } = useTextFormatter();
+const { addNotification } = useUserNotificationService();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -343,8 +346,16 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         : "BWBZ"; // Briefwahlbezirk (Briefwahl)
     const meldungsartKurzbezeichnung =
       meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
+    const wahlbezirkNummer = parseInt(currentUserWahlbezirkNummer.value, 10);
     const wahlDatum = toGermanDate(wahl.wahltag);
-    return `${wahlartKurzbezeichnung}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${parseInt(currentUserWahlbezirkNummer.value, 10)}`;
+    if (wahlartKurzbezeichnung && wahlbezirkNummer && wahlDatum) {
+      return `${wahlartKurzbezeichnung}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${wahlbezirkNummer}`;
+    } else {
+      addNotification(
+        "Fehler beim Erstellen des Barcodes",
+        UserNotificationCategoryEnum.WARNING
+      );
+    }
   }
 
   return {

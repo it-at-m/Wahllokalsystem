@@ -14,6 +14,7 @@ import { ref } from "vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
@@ -39,6 +40,7 @@ const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
 const { logError } = useLogging("mbwUtils");
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
+const { createUuidv4 } = useTextFormatter();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -318,25 +320,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         const formattedDateWithTime = toGermanDate(date) + " " + toHhMm(date);
 
         if (status.schnellmeldung.validierungsstatus === "VALIDE") {
-          return "" + _uuidv4() + ", " + formattedDateWithTime + " O";
+          return "" + createUuidv4() + ", " + formattedDateWithTime + " O";
         } else {
-          return "" + _uuidv4() + ", " + formattedDateWithTime + " M";
+          return "" + createUuidv4() + ", " + formattedDateWithTime + " M";
         }
       }
     } else {
       return "to be implemented - #1978";
     }
-  }
-
-  function _uuidv4() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
   }
 
   function _createBarcodeString(wahl: Wahl, meldungsart: MeldungsartEnum) {

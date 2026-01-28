@@ -624,6 +624,29 @@ describe("mbwUtils", () => {
       expect(result.b).toBe(5);
     });
 
+    it("should_calculateBWerteAs0_when_wahlbezirksartIsUWBAndStimmabgabevermerkeIsNull", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        1
+      );
+
+      mockDefinitions.getStimmabgabevermerke.mockReturnValue(null);
+
+      const result = await unitUnderTest.getBWerteForWahlbezirkAndWahl();
+
+      expect(mockDefinitions.getStimmabgabevermerke).toHaveBeenCalledWith(
+        wahlbezirkID,
+        1
+      );
+      expect(result.b1).toBe(0);
+      expect(result.b2).toBe(0);
+      expect(result.b).toBe(0);
+    });
+
     it("should_calculateOnlyValueB_when_wahlbezirksartIsBWB", async () => {
       const userStore = useUserStore(pinia);
       userStore.setUser(

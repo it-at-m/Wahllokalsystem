@@ -148,19 +148,21 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
             wahlbezirkID,
             waehlerverzeichnisNummer
           );
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
-            .flatMap((vermerk) => vermerk.stimmzettel)
-            .reduce(
-              (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
-              0
-            );
-          bWerte.b2 = Array.from(
+          if (loadedStimmabgabevermerke) {
             // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
-          ).reduce((sum, value) => sum + value, 0);
+            bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
+              .flatMap((vermerk) => vermerk.stimmzettel)
+              .reduce(
+                (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
+                0
+              );
+            bWerte.b2 = Array.from(
+              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+              loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
+            ).reduce((sum, value) => sum + value, 0);
 
-          bWerte.b = bWerte.b1 + bWerte.b2;
+            bWerte.b = bWerte.b1 + bWerte.b2;
+          }
         }
       }
       if (isBWB.value) {

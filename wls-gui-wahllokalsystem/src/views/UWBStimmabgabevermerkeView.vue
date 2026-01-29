@@ -10,7 +10,9 @@
         <base-button-save
           :disabled="!stimmabgabevermerkeModel"
           :loading="isStimmabgabevermerkeSaving"
-          @click="onSaveClicked"
+          @click="
+            checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine
+          "
         /> </v-card-actions
     ></v-card>
     <base-dialog-begruendung
@@ -20,7 +22,7 @@
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.isBegruendungValid"
       @cancel="dialog.isVisible = false"
-      @confirm="onConfirmClicked(dialog)"
+      @confirm="saveBegruendungAndStimmabgabevermerkeWahlscheine(dialog)"
     >
       <div class="font-weight-bold mb-3">
         {{ wahlenActions.getWahlNameOrBlankStringById(dialog.wahlId) }}
@@ -57,7 +59,6 @@ import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/s
 import TheUWBStimmabgabevermerkeErfassenCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeErfassenCard.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useMultipleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/multipleDifferenceDialogUtils.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
@@ -73,10 +74,13 @@ const { isStimmabgabevermerkeSaving } = storeToRefs(
 );
 const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
   useTextFormatter();
-const { updateValidationStateForBegruendung, getDialogContent } =
-  useDifferenceDialogUtils();
-const { dialogs, onSaveClicked, onConfirmClicked } =
-  useMultipleDifferenceDialogUtils();
+const {
+  dialogs,
+  checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine,
+  saveBegruendungAndStimmabgabevermerkeWahlscheine,
+  updateValidationStateForBegruendung,
+  getDialogContent,
+} = useMultipleDifferenceDialogUtils();
 
 const stimmabgabevermerkeModel = ref(false);
 </script>

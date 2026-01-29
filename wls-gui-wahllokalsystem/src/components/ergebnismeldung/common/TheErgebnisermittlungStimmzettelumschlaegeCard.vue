@@ -26,7 +26,7 @@
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
-          @click="onSaveClicked"
+          @click="checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege"
         />
       </v-card-actions>
     </v-card>
@@ -36,13 +36,13 @@
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.isBegruendungValid"
       @cancel="dialog.isVisible = false"
-      @confirm="onConfirmClicked"
+      @confirm="saveBegruendungAndStimmzettelumschlaege"
     >
       <div class="font-weight-bold mb-3">
         {{ wahlenActions.getWahlNameOrBlankStringById(props.wahlId) }}
       </div>
       <div class="mb-3">
-        {{ getDialogContent(dialog) }}
+        {{ getDialogContent() }}
       </div>
       <v-textarea
         v-model="dialog.begruendung"
@@ -57,7 +57,7 @@
         persistent-counter
         :counter="MAX_LENGTH_FOR_TEXT_INPUT"
         data-test="basedialogbegruendung-textarea"
-        @update:model-value="updateValidationStateForBegruendung(dialog)"
+        @update:model-value="updateValidationStateForBegruendung()"
       />
     </base-dialog-begruendung>
   </v-container>
@@ -73,7 +73,6 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
@@ -103,10 +102,13 @@ const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
   useTextFormatter();
-const { updateValidationStateForBegruendung, getDialogContent } =
-  useDifferenceDialogUtils();
-const { dialog, onSaveClicked, onConfirmClicked } =
-  useSingleDifferenceDialogUtils(props.wahlId);
+const {
+  dialog,
+  checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege,
+  saveBegruendungAndStimmzettelumschlaege,
+  updateValidationStateForBegruendung,
+  getDialogContent,
+} = useSingleDifferenceDialogUtils(props.wahlId);
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 

@@ -3,21 +3,33 @@ import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/Differ
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import {
+  MAX_LENGTH_FOR_TEXT_INPUT,
+  MIN_LENGTH_FOR_BEGRUENDUNG,
+} from "@/constants.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 export function useMultipleDifferenceDialogUtils() {
   const { isUWB } = storeToRefs(useUserStore());
   const { saveStimmabgabevermerke } = useStimmabgabevermerkeStore();
   const { saveWahlscheine } = useWahlscheineStore();
-  const { updateValidationStateForBegruendung, saveBegruendung } =
-    useDifferenceDialogUtils();
+  const { wahlenActions } = useWahlenStore();
+  const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
+  const { getBegruendungStimmzettelumschlaege, postBegruendung } =
+    useErgebnisService();
+  const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
+    useTextFormatter();
 
   const dialogs = ref<DifferenceDialogItem[]>([]);
 
-  async function onSaveClicked() {
+  async function checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine() {
     dialogs.value = [];
     if (isUWB.value) {
       await _checkForDifferenceInStimmabgabevermerke();
@@ -26,10 +38,12 @@ export function useMultipleDifferenceDialogUtils() {
     }
   }
 
-  async function onConfirmClicked(dialog: DifferenceDialogItem) {
+  async function saveBegruendungAndStimmabgabevermerkeWahlscheine(
+    dialog: DifferenceDialogItem
+  ) {
     dialog.isVisible = false;
 
-    await saveBegruendung(dialog);
+    await _saveBegruendung(dialog);
 
     if (dialogs.value.filter((dialog) => dialog.isVisible).length === 0) {
       if (isUWB.value) {
@@ -38,6 +52,26 @@ export function useMultipleDifferenceDialogUtils() {
         await saveWahlscheine();
       }
     }
+  }
+
+  function updateValidationStateForBegruendung(
+    dialog: DifferenceDialogItem
+  ): void {
+    const value = dialog.begruendung;
+    dialog.isBegruendungValid =
+      value.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
+      value.length <= MAX_LENGTH_FOR_TEXT_INPUT;
+  }
+
+  function getDialogContent(dialog: DifferenceDialogItem) {
+    return `Die Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()} (${
+      dialog.anzahlWahlscheineOrStimmabgabevermerke
+    }) unterscheidet sich um
+        ${Math.abs(
+          (dialog.anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
+            (dialog.anzahlStimmzettel ?? 0)
+        )}
+        von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.wahlId))} (${dialog.anzahlStimmzettel})`;
   }
 
   async function _checkForDifferenceInStimmabgabevermerke() {
@@ -64,11 +98,9 @@ export function useMultipleDifferenceDialogUtils() {
       anzahlWahlscheineOrStimmabgabevermerke,
       anzahlStimmzettel,
       isWahlscheineUnequalToStimmzettel,
-      getBegruendung,
     } = useDifferenceDialogUtils(wahlId);
-
     if (isWahlscheineUnequalToStimmzettel.value) {
-      const begruendungStimmzettel = await getBegruendung();
+      const begruendungStimmzettel = await _getBegruendung(wahlId);
 
       const dialogItem = {
         isVisible: false,
@@ -110,9 +142,41 @@ export function useMultipleDifferenceDialogUtils() {
     }
   }
 
+  async function _getBegruendung(wahlId: string) {
+    const wahl = wahlenActions.getWahlOrUndefinedById(wahlId);
+    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlId);
+    let begruendungStimmzettel;
+    if (wahl && wahlbezirkId) {
+      begruendungStimmzettel = await getBegruendungStimmzettelumschlaege(
+        wahl,
+        wahlbezirkId,
+        "",
+        false
+      );
+    }
+    return begruendungStimmzettel;
+  }
+
+  async function _saveBegruendung(dialog: DifferenceDialogItem) {
+    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(dialog.wahlId);
+    if (wahlbezirkId) {
+      await postBegruendung(
+        {
+          wahlID: dialog.wahlId,
+          stapelart: StapelArtEnum.StimmzettelUmschlaege,
+          grund: dialog.begruendung,
+          unstimmigkeiten: true,
+        },
+        wahlbezirkId
+      );
+    }
+  }
+
   return {
     dialogs,
-    onSaveClicked,
-    onConfirmClicked,
+    checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine,
+    saveBegruendungAndStimmabgabevermerkeWahlscheine,
+    updateValidationStateForBegruendung,
+    getDialogContent,
   };
 }

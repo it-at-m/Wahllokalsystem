@@ -96,9 +96,9 @@ Fast alle Seiten leiten den Nutzer weiter zum nächsten Schritt, sobald die Date
 Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRoute` der `navigationUtils`. Folgende Prüfungen
 erfolgen dabei:
 
-1.  welcher allgemeine, nicht wahlspezifische, Schritt ist als Nächstes zu bearbeiten
-2.  welche Wahl ist noch nicht abgeschlossen
-3.  welcher Schritt der nicht-abgeschlossenen Wahl ist als Nächstes zu bearbeiten
+1. welcher allgemeine, nicht wahlspezifische, Schritt ist als Nächstes zu bearbeiten
+2. welche Wahl ist noch nicht abgeschlossen
+3. welcher Schritt der nicht-abgeschlossenen Wahl ist als Nächstes zu bearbeiten
 
 > [!NOTE]
 > Eine Wahl gilt als abgeschlossen, wenn die Niederschrift der Wahl gedruckt wurde.

@@ -60,7 +60,7 @@ classDiagram
 
         class WorkflowStore {
             electionWorkflowStates: Ref&lt;ElectionWorkflowState[]&gt;
-            setStepDone: (stepName, wahlbezirkID, wahlID, isDone) void
+            setStepDone(stepName, wahlbezirkID, wahlID, isDone) void
         }
 
         class MbwNavigationService {

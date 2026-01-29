@@ -63,7 +63,7 @@ classDiagram
         }
 
         class MbwNavigationService {
-            mbwStatus: ComputedRef&lt;Status&gt;
+            mbwStatus: ComputedRef&lt;ElectionWorkflowState&gt;
             navigation: ComputedRef&lt;NavigationDefinition[]&gt;
             MbwNavigationService(wahlID, wahlbezirkD)
         }

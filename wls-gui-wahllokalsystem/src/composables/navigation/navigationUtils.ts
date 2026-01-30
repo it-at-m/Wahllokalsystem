@@ -30,6 +30,9 @@ const electionSpecificNextStepHandlers: Record<
 };
 
 export function useNavigationUtils() {
+  const workflowStore = useWorkflowStore();
+  const wahlenStore = useWahlenStore();
+
   function routeWithName(routeName: string): RouteLocationAsRelativeGeneric {
     return {
       name: routeName,
@@ -48,16 +51,18 @@ export function useNavigationUtils() {
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
     //check if a non election specific step is next
-    if (!useWorkflowStore().isWahlvorstandErfasst) {
+    if (!workflowStore.isWahlvorstandErfasst) {
       return routeWithName(ROUTE_WAHLVORSTAND);
     }
 
     //check all elections in their order
     const { user } = useUserStore();
-    const { isElectionFinished } = useWorkflowStore();
     const metaDataOfFirstUnfinishedElection = user.wahlMetaData.find(
       (wahlMetaData) =>
-        !isElectionFinished(wahlMetaData.wahlID, wahlMetaData.wahlbezirkID)
+        !workflowStore.isElectionFinished(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        )
     );
 
     if (metaDataOfFirstUnfinishedElection) {
@@ -75,7 +80,7 @@ export function useNavigationUtils() {
   function _getNextStepOfElection(
     metaDataOfFirstUnfinishedElection: WahlMetaData
   ): RouteLocationAsRelativeGeneric | null {
-    const wahl = useWahlenStore().wahlenActions.getWahlOrUndefinedById(
+    const wahl = wahlenStore.wahlenActions.getWahlOrUndefinedById(
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {

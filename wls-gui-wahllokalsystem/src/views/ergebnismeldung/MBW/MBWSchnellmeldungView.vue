@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/MBW/ErgebnismeldungDruckInput.ts";
+import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
 
 import { storeToRefs } from "pinia";
 import { ref } from "vue";

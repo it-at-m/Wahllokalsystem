@@ -82,7 +82,7 @@ async function onSave() {
       ergebnisse: [ergebnis.value],
     } as Ergebnisse;
 
-    if (wahlbezirkID && ergebnisseToSend) {
+    if (wahlbezirkID) {
       await postErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -90,8 +90,6 @@ async function onSave() {
         ergebnisseToSend,
         true
       );
-    }
-    if (wahlbezirkID) {
       setStepDone(wahlID, wahlbezirkID, stapelArt);
     }
   } catch (error) {

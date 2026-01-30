@@ -43,7 +43,7 @@
       <v-textarea
         v-model="begruendung"
         :rules="[
-          minLength(minLengthForBegruendung),
+          minLength(MIN_LENGTH_FOR_BEGRUENDUNG),
           maxLength(maxLengthForBegruendung),
         ]"
         rows="1"
@@ -69,7 +69,10 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
-import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
+import {
+  MAX_LENGTH_FOR_TEXT_INPUT,
+  MIN_LENGTH_FOR_BEGRUENDUNG,
+} from "@/constants.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -102,7 +105,6 @@ const begruendung = ref("");
 const isBegruendungValid = ref(false);
 
 const BEGRUENDUNG_PREFIX = "Verspätete Eröffnung: ";
-const minLengthForBegruendung = 3;
 const maxLengthForBegruendung =
   MAX_LENGTH_FOR_TEXT_INPUT - BEGRUENDUNG_PREFIX.length;
 
@@ -113,7 +115,7 @@ const isSaveButtonDisabled = computed(
 function updateValidationStateForBegruendung(): void {
   const value = begruendung.value;
   isBegruendungValid.value =
-    value.length >= minLengthForBegruendung &&
+    value.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
     value.length <= maxLengthForBegruendung;
 }
 

@@ -20,7 +20,13 @@ export function useTextFormatter() {
     }
   }
 
+  function getWahlscheineOrStimmabgabevermerkeTerm(): string {
+    const { isUWB } = useUserStore();
+    return isUWB ? "Stimmabgabevermerke" : "Wahlscheine";
+  }
+
   return {
     getStimmzettelTermForWahl,
+    getWahlscheineOrStimmabgabevermerkeTerm,
   };
 }

@@ -145,7 +145,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationWhenWahlumgebungIsErfasst", () => {
-    it("should_returnFalse_whenStatus_isWahlumgebungIstErfasstIsFalse", () => {
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsFalse", () => {
       useWorkflowStore().isWahlumgebungErfasst = false;
       const result = permitNavigationWhenWahlumgebungIsErfasst(
         DUMMY_TO,
@@ -155,7 +155,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_whenStatus_isWahlumgebungIstErfasstIsTrue", () => {
+    it("should_returnTrue_when_statusIsWahlumgebungIstErfasstIsTrue", () => {
       useWorkflowStore().isWahlumgebungErfasst = true;
       const result = permitNavigationWhenWahlumgebungIsErfasst(
         DUMMY_TO,

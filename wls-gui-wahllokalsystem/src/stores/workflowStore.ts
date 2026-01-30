@@ -11,7 +11,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
 
   const electionWorkflowsStates = ref<ElectionWorkflowState[]>([]);
 
-  function getStatus(
+  function getElectionWorkflowState(
     wahlID: string,
     wahlbezirkID: string
   ): ElectionWorkflowState | undefined {
@@ -22,7 +22,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     );
   }
 
-  function initStatus(wahlID: string, wahlbezirkID: string) {
+  function initElectionWorkflowState(wahlID: string, wahlbezirkID: string) {
     electionWorkflowsStates.value.push({
       bezirkUndWahlID: {
         wahlID,
@@ -35,7 +35,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   }
 
   function isElectionFinished(wahlID: string, wahlbezirkID: string): boolean {
-    const electionStatus = getStatus(wahlID, wahlbezirkID);
+    const electionStatus = getElectionWorkflowState(wahlID, wahlbezirkID);
     return electionStatus ? electionStatus.isNiederschriftDone : false;
   }
 
@@ -44,7 +44,9 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     wahlbezirkID: string,
     step: string
   ): boolean {
-    return getStatus(wahlID, wahlbezirkID)?.stepsDone[step] ?? false;
+    return (
+      getElectionWorkflowState(wahlID, wahlbezirkID)?.stepsDone[step] ?? false
+    );
   }
 
   function setStepDone(
@@ -53,7 +55,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     step: string,
     isDone = true
   ) {
-    const status = getStatus(wahlID, wahlbezirkID);
+    const status = getElectionWorkflowState(wahlID, wahlbezirkID);
     if (status) {
       status.stepsDone[step] = isDone;
     }
@@ -63,8 +65,8 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     electionWorkflowsStates,
     isWahlvorstandErfasst,
     isWahlumgebungErfasst,
-    getStatus,
-    initStatus,
+    getElectionWorkflowState,
+    initElectionWorkflowState,
     isElectionFinished,
     isStepDone,
     setStepDone,

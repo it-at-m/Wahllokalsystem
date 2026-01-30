@@ -36,13 +36,13 @@ describe("workflowStore.ts", () => {
     });
   });
 
-  describe("getStatus", () => {
+  describe("getElectionWorkflowState", () => {
     it("should_returnUndefined_when_workflowStateWithIDsDoesNotExist", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
       expect(
-        useWorkflowStore().getStatus(wahlID, wahlbezirkID)
+        useWorkflowStore().getElectionWorkflowState(wahlID, wahlbezirkID)
       ).toBeUndefined();
     });
 
@@ -60,20 +60,26 @@ describe("workflowStore.ts", () => {
         workflowToFind,
       ];
 
-      const result = useWorkflowStore().getStatus(wahlID, wahlbezirkID);
+      const result = useWorkflowStore().getElectionWorkflowState(
+        wahlID,
+        wahlbezirkID
+      );
 
       expect(result).toStrictEqual(workflowToFind);
     });
   });
 
-  describe("initStatus", () => {
+  describe("initElectionWorkflowState", () => {
     it("should_createNewWorkflowStateInUnfinishedState_when_called", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
-      useWorkflowStore().initStatus(wahlID, wahlbezirkID);
+      useWorkflowStore().initElectionWorkflowState(wahlID, wahlbezirkID);
 
-      const result = useWorkflowStore().getStatus(wahlID, wahlbezirkID);
+      const result = useWorkflowStore().getElectionWorkflowState(
+        wahlID,
+        wahlbezirkID
+      );
       expect(result).toStrictEqual({
         bezirkUndWahlID: {
           wahlID,

@@ -16,7 +16,7 @@ const { importKey } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
-  const { initStatus } = useWorkflowStore();
+  const { initElectionWorkflowState } = useWorkflowStore();
 
   const defaultUser: User = {
     username: "",
@@ -45,7 +45,10 @@ export const useUserStore = defineStore("user", () => {
     try {
       user.value = await getUser();
       user.value.wahlMetaData.forEach((wahlMetaData) =>
-        initStatus(wahlMetaData.wahlID, wahlMetaData.wahlbezirkID)
+        initElectionWorkflowState(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        )
       );
     } catch (e) {
       if (import.meta.env.DEV) {

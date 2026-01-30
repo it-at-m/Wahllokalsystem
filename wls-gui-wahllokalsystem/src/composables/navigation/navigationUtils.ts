@@ -84,7 +84,7 @@ export function useNavigationUtils() {
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {
-      const statusOfElection = useWorkflowStore().getStatus(
+      const statusOfElection = useWorkflowStore().getElectionWorkflowState(
         metaDataOfFirstUnfinishedElection.wahlID,
         metaDataOfFirstUnfinishedElection.wahlbezirkID
       );

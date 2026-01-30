@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@vueuse/core": "14.1.0",
+    "jsbarcode": "3.12.3",
     "localforage": "1.10.0",
     "pinia": "3.0.4",
     "@fontsource/roboto": "5.2.9",

@@ -27,4 +27,7 @@
     "ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway"
   ],
   prConcurrentLimit: 5,
+  schedule: [
+    "* * * * 1"
+  ],
 }

@@ -76,8 +76,8 @@ export function useMultipleDifferenceDialogUtils() {
   }
 
   async function _checkForDifferenceInStimmabgabevermerke() {
-    const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
-    for (const vermerk of stimmabgabevermerke.value) {
+    const { stimmabgabevermerke } = useStimmabgabevermerkeStore();
+    for (const vermerk of stimmabgabevermerke) {
       // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
       const wahlId = vermerk.wahldaten[0].wahlID;
       await _checkForDifferenceDialogForWahl(wahlId);
@@ -86,8 +86,8 @@ export function useMultipleDifferenceDialogUtils() {
   }
 
   async function _checkForDifferenceInWahlscheine() {
-    const { wahlscheine } = storeToRefs(useWahlscheineStore());
-    for (const wahlschein of wahlscheine.value) {
+    const { wahlscheine } = useWahlscheineStore();
+    for (const wahlschein of wahlscheine) {
       const wahlId = wahlschein.bezirkUndWahlID.wahlID;
       await _checkForDifferenceDialogForWahl(wahlId);
     }

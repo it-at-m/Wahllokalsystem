@@ -183,7 +183,7 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
   });
 
   describe("saveBegruendungAndStimmabgabevermerkeWahlscheine", () => {
-    it("should_saveStimmabgabevermerkeAndBegruendungAndCloseDialog_when_onConfirmClickedIsCalledInUWB", async () => {
+    it("should_saveStimmabgabevermerkeAndBegruendungAndCloseDialog_when_saveIsCalledInUWB", async () => {
       _setupUWB();
       unitUnderTest.dialogs.value = [DIALOG];
 
@@ -197,7 +197,7 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalled();
     });
 
-    it("should_saveWahlscheineAndBegruendungAndCloseDialog_when_onConfirmClickedIsCalledInBWB", async () => {
+    it("should_saveWahlscheineAndBegruendungAndCloseDialog_when_saveIsCalledInBWB", async () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .wahlMetaData([
@@ -224,6 +224,74 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postBegruendung).toHaveBeenCalled();
       expect(DIALOG.isVisible).toStrictEqual(false);
       expect(mockDefinitions.postWahlscheine).toHaveBeenCalled();
+    });
+  });
+
+  describe("getDialogContent", () => {
+    it("should_createDialogContent_when_isUWB", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().build()
+      );
+
+      const expected =
+        "Die Anzahl der Stimmabgabevermerke (2) unterscheidet sich um 1 von der Anzahl der Stimmzettel (3)";
+      expect(unitUnderTest.getDialogContent(DIALOG.differenceBegruendung)).toBe(
+        expected
+      );
+    });
+
+    it("should_createDialogContent_when_isBWB", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().wahlID("xxx").build()
+      );
+
+      const expected =
+        "Die Anzahl der Wahlscheine (2) unterscheidet sich um 1 von der Anzahl der Stimmzettel (3)";
+      expect(unitUnderTest.getDialogContent(DIALOG.differenceBegruendung)).toBe(
+        expected
+      );
+    });
+
+    it("should_createDialogContent_when_isBWBAndHauptwahl", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().wahlID(WAHL_ID).build()
+      );
+
+      const expected =
+        "Die Anzahl der Wahlscheine (2) unterscheidet sich um 1 von der Anzahl der Stimmzettelumschläge (3)";
+      expect(unitUnderTest.getDialogContent(DIALOG.differenceBegruendung)).toBe(
+        expected
+      );
     });
   });
 

@@ -60,6 +60,73 @@ describe("differenceDialogUtils.ts", () => {
     vi.resetAllMocks();
   });
 
+  describe("anzahlWahlscheineOrStimmabgabevermerke", () => {
+    it("should_returnStimmabgabevermerke_when_isUWBAndStimmabgabevermerkeForWahlIdExists", () => {
+      userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      stimmabgabevermerkeStore.stimmabgabevermerke = [
+        prepareStimmabgabevermerke()
+          .wahldaten([
+            prepareWahldaten()
+              .wahlID(WAHL_ID)
+              .eingenommeneWahlscheine(
+                new Map([[StimmzettelStimmzettelartEnum.Klein, 5]])
+              )
+              .build(),
+          ])
+          .build(),
+      ];
+      expect(
+        unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value
+      ).toStrictEqual(5);
+    });
+
+    it("should_returnUndefined_when_isUWBAndStimmabgabevermerkeForWahlIdNotExists", () => {
+      userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      stimmabgabevermerkeStore.stimmabgabevermerke = [];
+      expect(
+        unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value
+      ).toBeUndefined();
+    });
+
+    it("should_returnWahlscheine_when_isBWBAndWahlscheinForWahlIdExists", () => {
+      userStore.user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+      wahlscheineStore.wahlscheine = [
+        prepareWahlscheine()
+          .bezirkUndWahlID(prepareBezirkUndWahlID().wahlID(WAHL_ID).build())
+          .stimmabgabevermerke(5)
+          .build(),
+      ];
+      expect(
+        unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value
+      ).toStrictEqual(5);
+    });
+
+    it("should_returnUndefined_when_isBWBAndWahlscheinForWahlIdNotExists", () => {
+      userStore.user.wahlbezirksArt = WahlbezirksArtEnum.BWB;
+      wahlscheineStore.wahlscheine = [];
+      expect(
+        unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value
+      ).toBeUndefined();
+    });
+  });
+
+  describe("anzahlStimmzettel", () => {
+    it("should_returnStimmzettelumschlaegeAnzahlWaehler_when_exists", () => {
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl()
+          .wahlID(WAHL_ID)
+          .stimmzettelumschlaege({ anzahlWaehler: 2 })
+          .build()
+      );
+      expect(unitUnderTest.anzahlStimmzettel.value).toStrictEqual(2);
+    });
+
+    it("should_returnUndefined_when_notExists", () => {
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(null);
+      expect(unitUnderTest.anzahlStimmzettel.value).toBeUndefined();
+    });
+  });
+
   describe("isWahlscheineUnequalToStimmzettel", () => {
     it.each([
       [false, 1, null],

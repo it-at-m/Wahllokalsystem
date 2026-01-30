@@ -55,12 +55,10 @@ export function useMultipleDifferenceDialogUtils() {
   function getDialogContent(differenceBegruendung: DifferenceBegruendung) {
     return `Die Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()} (${
       differenceBegruendung.anzahlWahlscheineOrStimmabgabevermerke
-    }) unterscheidet sich um
-        ${Math.abs(
-          (differenceBegruendung.anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
-            (differenceBegruendung.anzahlStimmzettel ?? 0)
-        )}
-        von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(differenceBegruendung.wahlId))} (${differenceBegruendung.anzahlStimmzettel})`;
+    }) unterscheidet sich um ${Math.abs(
+      (differenceBegruendung.anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
+        (differenceBegruendung.anzahlStimmzettel ?? 0)
+    )} von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(differenceBegruendung.wahlId))} (${differenceBegruendung.anzahlStimmzettel})`;
   }
 
   async function _checkForDifferenceInStimmabgabevermerke() {

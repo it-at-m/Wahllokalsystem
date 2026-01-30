@@ -59,13 +59,11 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
       ? `Die Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()} (${
           dialog.value.differenceBegruendung
             .anzahlWahlscheineOrStimmabgabevermerke
-        }) unterscheidet sich um
-        ${Math.abs(
+        }) unterscheidet sich um ${Math.abs(
           (dialog.value.differenceBegruendung
             .anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
             (dialog.value.differenceBegruendung.anzahlStimmzettel ?? 0)
-        )}
-        von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.value.differenceBegruendung.wahlId))} (${dialog.value.differenceBegruendung.anzahlStimmzettel})`
+        )} von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.value.differenceBegruendung.wahlId))} (${dialog.value.differenceBegruendung.anzahlStimmzettel})`
       : "";
   }
 

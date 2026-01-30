@@ -1,5 +1,6 @@
 import type { DifferenceBegruendung } from "@/types/ergebnismeldung/common/DifferenceBegruendung.ts";
 
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -7,12 +8,14 @@ import { ref } from "vue";
 
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { prepareWahl } = useWahlTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   useDifferenceDialogUtils: vi.fn(),
-  getWahlbezirkIdFromWahlMetaDataByWahlId: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   saveStimmzettelumschlaege: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
@@ -25,13 +28,6 @@ vi.mock(
     useDifferenceDialogUtils: mockDefinitions.useDifferenceDialogUtils,
   })
 );
-
-vi.mock("@/stores/userStore.ts", () => ({
-  useUserStore: () => ({
-    getWahlbezirkIdFromWahlMetaDataByWahlId:
-      mockDefinitions.getWahlbezirkIdFromWahlMetaDataByWahlId,
-  }),
-}));
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
@@ -54,8 +50,10 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
 
 describe("useSingleDifferenceDialogUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useSingleDifferenceDialogUtils>;
+  let userStore: ReturnType<typeof useUserStore>;
 
   const WAHL_ID = "wahlId";
+  const WAHLBEZIRK_ID = "wahlbezirkId";
   const DIALOG = {
     isVisible: true,
     differenceBegruendung: {
@@ -80,6 +78,7 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
         }),
     });
     unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID);
+    userStore = useUserStore();
   });
 
   afterEach(() => {
@@ -87,12 +86,19 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
   });
 
   describe("checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege", () => {
-    it("should_setDialog_when_onSaveClickedIsCalledAndWahlscheineUnequalStimmzettel", async () => {
+    it("should_setDialog_when_checkIsCalledAndWahlscheineUnequalStimmzettel", async () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
         prepareWahl().build()
-      );
-      mockDefinitions.getWahlbezirkIdFromWahlMetaDataByWahlId.mockReturnValue(
-        "wahlbezirkId"
       );
       mockDefinitions.getBegruendungStimmzettelumschlaege.mockReturnValue(
         Promise.resolve({ grund: "Testgrund" })
@@ -106,7 +112,7 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       expect(unitUnderTest.dialog.value).toEqual(DIALOG);
     });
 
-    it("should_callSaveStimmzettelumschlaege_when_onSaveClickedIsCalledAndWahlscheineEqualStimmzettel", async () => {
+    it("should_callSaveStimmzettelumschlaege_when_checkIsCalledAndWahlscheineEqualStimmzettel", async () => {
       mockDefinitions.useDifferenceDialogUtils.mockReturnValueOnce({
         ...useDifferenceDialogUtils(WAHL_ID),
         isWahlscheineUnequalToStimmzettel: ref(false),
@@ -122,7 +128,17 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
   });
 
   describe("saveBegruendungAndStimmzettelumschlaege", () => {
-    it("should_saveBegruendungAndStimmzettel_when_onConfirmClickedIsCalled", async () => {
+    it("should_saveBegruendungAndStimmzettel_when_saveIsCalled", async () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
       unitUnderTest.dialog.value = DIALOG;
 
       await unitUnderTest.saveBegruendungAndStimmzettelumschlaege();
@@ -132,6 +148,91 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalledWith(
         WAHL_ID
       );
+    });
+
+    it("should_saveStimmzettel_when_saveIsCalledAndNoDialogExists", async () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+
+      await unitUnderTest.saveBegruendungAndStimmzettelumschlaege();
+
+      expect(mockDefinitions.postBegruendung).not.toHaveBeenCalled();
+      expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalledWith(
+        WAHL_ID
+      );
+    });
+  });
+
+  describe("getDialogContent", () => {
+    it("should_createDialogContent_when_isUWB", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().build()
+      );
+
+      unitUnderTest.dialog.value = DIALOG;
+      const expected =
+        "Die Anzahl der Stimmabgabevermerke (10) unterscheidet sich um 5 von der Anzahl der Stimmzettel (5)";
+      expect(unitUnderTest.getDialogContent()).toBe(expected);
+    });
+
+    it("should_createDialogContent_when_isBWB", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().wahlID("xxx").build()
+      );
+
+      unitUnderTest.dialog.value = DIALOG;
+      const expected =
+        "Die Anzahl der Wahlscheine (10) unterscheidet sich um 5 von der Anzahl der Stimmzettel (5)";
+      expect(unitUnderTest.getDialogContent()).toBe(expected);
+    });
+
+    it("should_createDialogContent_when_isBWBAndHauptwahl", () => {
+      userStore.user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([
+          {
+            wahlbezirkID: WAHLBEZIRK_ID,
+            wahlID: WAHL_ID,
+            wahlnummer: "0",
+          },
+        ])
+        .build();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
+        prepareWahl().wahlID(WAHL_ID).build()
+      );
+
+      unitUnderTest.dialog.value = DIALOG;
+      const expected =
+        "Die Anzahl der Wahlscheine (10) unterscheidet sich um 5 von der Anzahl der Stimmzettelumschläge (5)";
+      expect(unitUnderTest.getDialogContent()).toBe(expected);
     });
   });
 });

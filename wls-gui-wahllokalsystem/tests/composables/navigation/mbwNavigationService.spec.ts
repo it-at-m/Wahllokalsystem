@@ -17,6 +17,9 @@ const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
 describe("mbwNavigationService.ts", () => {
+  const wahlID = generateRandomString(10);
+  const wahlbezirkID = generateRandomString(10);
+
   beforeEach(() => {
     createTestingPinia({
       createSpy: vi.fn,
@@ -25,9 +28,6 @@ describe("mbwNavigationService.ts", () => {
 
   describe("navigation", () => {
     it("should_returnEmptyArray_when_noStatusExists", () => {
-      const wahlID = generateRandomString(10);
-      const wahlbezirkID = generateRandomString(10);
-
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
 
       const navigation = unitUnderTest.navigation;
@@ -35,9 +35,6 @@ describe("mbwNavigationService.ts", () => {
     });
 
     it("should_returnNavigation_when_statusExists", () => {
-      const wahlID = generateRandomString(10);
-      const wahlbezirkID = generateRandomString(10);
-
       useWorkflowStore().electionWorkflowsStates = [
         prepareElectionWorkflow()
           .bezirkUndWahlID(
@@ -57,9 +54,6 @@ describe("mbwNavigationService.ts", () => {
     });
 
     it("should_returnNavigation_when_statusIsSetAfterInit", async () => {
-      const wahlID = generateRandomString(10);
-      const wahlbezirkID = generateRandomString(10);
-
       const unitUnderTest = useMbwNavigationService(wahlID, wahlbezirkID);
       const navigation = unitUnderTest.navigation;
 

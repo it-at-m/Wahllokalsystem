@@ -57,7 +57,9 @@
         persistent-counter
         :counter="MAX_LENGTH_FOR_TEXT_INPUT"
         data-test="basedialogbegruendung-textarea"
-        @update:model-value="updateValidationStateForBegruendung()"
+        @update:model-value="
+          updateValidationStateForBegruendung(dialog.differenceBegruendung)
+        "
       />
     </base-dialog-begruendung>
   </v-container>

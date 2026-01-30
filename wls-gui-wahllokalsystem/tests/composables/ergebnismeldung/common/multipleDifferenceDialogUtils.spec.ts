@@ -1,3 +1,5 @@
+import type { DifferenceBegruendung } from "@/types/ergebnismeldung/common/DifferenceBegruendung.ts";
+
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
@@ -93,6 +95,11 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       anzahlWahlscheineOrStimmabgabevermerke: ref(10),
       anzahlStimmzettel: ref(5),
       isWahlscheineUnequalToStimmzettel: ref(true),
+      updateValidationStateForBegruendung: vi
+        .fn()
+        .mockImplementation((differenceBegruendung: DifferenceBegruendung) => {
+          differenceBegruendung.isBegruendungValid = true;
+        }),
     });
     unitUnderTest = useMultipleDifferenceDialogUtils();
     userStore = useUserStore();
@@ -217,21 +224,6 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postBegruendung).toHaveBeenCalled();
       expect(DIALOG.isVisible).toStrictEqual(false);
       expect(mockDefinitions.postWahlscheine).toHaveBeenCalled();
-    });
-  });
-
-  describe("updateValidationStateForBegruendung", () => {
-    it("should_updateValidation_when_calledWithDifferentBegruendung", () => {
-      DIALOG.differenceBegruendung.begruendung = "Testgrund";
-      unitUnderTest.updateValidationStateForBegruendung(
-        DIALOG.differenceBegruendung
-      );
-      expect(DIALOG.differenceBegruendung.isBegruendungValid).toBe(true);
-      DIALOG.differenceBegruendung.begruendung = "";
-      unitUnderTest.updateValidationStateForBegruendung(
-        DIALOG.differenceBegruendung
-      );
-      expect(DIALOG.differenceBegruendung.isBegruendungValid).toBe(false);
     });
   });
 

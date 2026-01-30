@@ -5,10 +5,6 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import {
-  MAX_LENGTH_FOR_TEXT_INPUT,
-  MIN_LENGTH_FOR_BEGRUENDUNG,
-} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
@@ -18,6 +14,7 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
     anzahlWahlscheineOrStimmabgabevermerke,
     anzahlStimmzettel,
     isWahlscheineUnequalToStimmzettel,
+    updateValidationStateForBegruendung,
   } = useDifferenceDialogUtils(wahlId);
   const { stimmzettelumschlaegeActions } = useWahlenStore();
   const { wahlenActions } = useWahlenStore();
@@ -45,7 +42,7 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
           anzahlStimmzettel: anzahlStimmzettel.value,
         },
       };
-      updateValidationStateForBegruendung();
+      updateValidationStateForBegruendung(dialog.value.differenceBegruendung);
     }
   }
 
@@ -55,15 +52,6 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
       await _saveBegruendung();
     }
     await _saveStimmzettelumschlaege();
-  }
-
-  function updateValidationStateForBegruendung(): void {
-    if (dialog.value) {
-      const begruendung = dialog.value.differenceBegruendung.begruendung;
-      dialog.value.differenceBegruendung.isBegruendungValid =
-        begruendung.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
-        begruendung.length <= MAX_LENGTH_FOR_TEXT_INPUT;
-    }
   }
 
   function getDialogContent() {

@@ -7,10 +7,6 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import {
-  MAX_LENGTH_FOR_TEXT_INPUT,
-  MIN_LENGTH_FOR_BEGRUENDUNG,
-} from "@/constants.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -27,6 +23,7 @@ export function useMultipleDifferenceDialogUtils() {
     useErgebnisService();
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
     useTextFormatter();
+  const { updateValidationStateForBegruendung } = useDifferenceDialogUtils();
 
   const dialogs = ref<DifferenceDialogItem[]>([]);
 
@@ -53,15 +50,6 @@ export function useMultipleDifferenceDialogUtils() {
         await saveWahlscheine();
       }
     }
-  }
-
-  function updateValidationStateForBegruendung(
-    differenceBegruendung: DifferenceBegruendung
-  ): void {
-    const begruendung = differenceBegruendung.begruendung;
-    differenceBegruendung.isBegruendungValid =
-      begruendung.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
-      begruendung.length <= MAX_LENGTH_FOR_TEXT_INPUT;
   }
 
   function getDialogContent(differenceBegruendung: DifferenceBegruendung) {

@@ -37,6 +37,16 @@ describe("differenceDialogUtils.ts", () => {
   let userStore: ReturnType<typeof useUserStore>;
 
   const WAHL_ID = "wahlId";
+  const DIALOG = {
+    isVisible: true,
+    differenceBegruendung: {
+      wahlId: WAHL_ID,
+      begruendung: "Testgrund",
+      isBegruendungValid: true,
+      anzahlWahlscheineOrStimmabgabevermerke: 2,
+      anzahlStimmzettel: 3,
+    },
+  };
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -117,5 +127,20 @@ describe("differenceDialogUtils.ts", () => {
         ).toStrictEqual(result);
       }
     );
+  });
+
+  describe("updateValidationStateForBegruendung", () => {
+    it("should_updateValidation_when_calledWithDifferentBegruendung", () => {
+      DIALOG.differenceBegruendung.begruendung = "Testgrund";
+      unitUnderTest.updateValidationStateForBegruendung(
+        DIALOG.differenceBegruendung
+      );
+      expect(DIALOG.differenceBegruendung.isBegruendungValid).toBe(true);
+      DIALOG.differenceBegruendung.begruendung = "";
+      unitUnderTest.updateValidationStateForBegruendung(
+        DIALOG.differenceBegruendung
+      );
+      expect(DIALOG.differenceBegruendung.isBegruendungValid).toBe(false);
+    });
   });
 });

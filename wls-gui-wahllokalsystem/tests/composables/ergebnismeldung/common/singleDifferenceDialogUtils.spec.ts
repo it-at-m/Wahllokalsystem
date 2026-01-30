@@ -1,3 +1,5 @@
+import type { DifferenceBegruendung } from "@/types/ergebnismeldung/common/DifferenceBegruendung.ts";
+
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -71,6 +73,11 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       anzahlWahlscheineOrStimmabgabevermerke: ref(10),
       anzahlStimmzettel: ref(5),
       isWahlscheineUnequalToStimmzettel: ref(true),
+      updateValidationStateForBegruendung: vi
+        .fn()
+        .mockImplementation((differenceBegruendung: DifferenceBegruendung) => {
+          differenceBegruendung.isBegruendungValid = true;
+        }),
     });
     unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID);
   });
@@ -125,30 +132,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalledWith(
         WAHL_ID
       );
-    });
-  });
-
-  describe("updateValidationStateForBegruendung", () => {
-    it("should_updateValidation_when_calledWithDifferentBegruendung", () => {
-      unitUnderTest.dialog.value = {
-        ...DIALOG,
-        differenceBegruendung: {
-          ...DIALOG.differenceBegruendung,
-          isBegruendungValid: false,
-        },
-      };
-      expect(
-        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
-      ).toBe(false);
-      unitUnderTest.updateValidationStateForBegruendung();
-      expect(
-        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
-      ).toBe(true);
-      unitUnderTest.dialog.value.differenceBegruendung.begruendung = "";
-      unitUnderTest.updateValidationStateForBegruendung();
-      expect(
-        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
-      ).toBe(false);
     });
   });
 });

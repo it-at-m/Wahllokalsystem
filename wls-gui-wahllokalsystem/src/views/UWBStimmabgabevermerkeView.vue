@@ -17,21 +17,25 @@
     ></v-card>
     <base-dialog-begruendung
       v-for="dialog in dialogs"
-      :key="dialog.wahlId"
+      :key="dialog.differenceBegruendung.wahlId"
       :visible="dialog.isVisible"
-      :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
-      :is-save-disabled="!dialog.isBegruendungValid"
+      :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.differenceBegruendung.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
+      :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
       @cancel="dialog.isVisible = false"
       @confirm="saveBegruendungAndStimmabgabevermerkeWahlscheine(dialog)"
     >
       <div class="font-weight-bold mb-3">
-        {{ wahlenActions.getWahlNameOrBlankStringById(dialog.wahlId) }}
+        {{
+          wahlenActions.getWahlNameOrBlankStringById(
+            dialog.differenceBegruendung.wahlId
+          )
+        }}
       </div>
       <div class="mb-3">
-        {{ getDialogContent(dialog) }}
+        {{ getDialogContent(dialog.differenceBegruendung) }}
       </div>
       <v-textarea
-        v-model="dialog.begruendung"
+        v-model="dialog.differenceBegruendung.begruendung"
         :rules="[
           minLength(MIN_LENGTH_FOR_BEGRUENDUNG),
           maxLength(MAX_LENGTH_FOR_TEXT_INPUT),
@@ -43,7 +47,9 @@
         persistent-counter
         :counter="MAX_LENGTH_FOR_TEXT_INPUT"
         data-test="basedialogbegruendung-textarea"
-        @update:model-value="updateValidationStateForBegruendung(dialog)"
+        @update:model-value="
+          updateValidationStateForBegruendung(dialog.differenceBegruendung)
+        "
       />
     </base-dialog-begruendung>
   </v-container>

@@ -1,3 +1,4 @@
+import type { DifferenceBegruendung } from "@/types/ergebnismeldung/common/DifferenceBegruendung.ts";
 import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/DifferenceDialogItem.ts";
 
 import { storeToRefs } from "pinia";
@@ -43,7 +44,7 @@ export function useMultipleDifferenceDialogUtils() {
   ) {
     dialog.isVisible = false;
 
-    await _saveBegruendung(dialog);
+    await _saveBegruendung(dialog.differenceBegruendung);
 
     if (dialogs.value.filter((dialog) => dialog.isVisible).length === 0) {
       if (isUWB.value) {
@@ -55,23 +56,23 @@ export function useMultipleDifferenceDialogUtils() {
   }
 
   function updateValidationStateForBegruendung(
-    dialog: DifferenceDialogItem
+    differenceBegruendung: DifferenceBegruendung
   ): void {
-    const value = dialog.begruendung;
-    dialog.isBegruendungValid =
-      value.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
-      value.length <= MAX_LENGTH_FOR_TEXT_INPUT;
+    const begruendung = differenceBegruendung.begruendung;
+    differenceBegruendung.isBegruendungValid =
+      begruendung.length >= MIN_LENGTH_FOR_BEGRUENDUNG &&
+      begruendung.length <= MAX_LENGTH_FOR_TEXT_INPUT;
   }
 
-  function getDialogContent(dialog: DifferenceDialogItem) {
+  function getDialogContent(differenceBegruendung: DifferenceBegruendung) {
     return `Die Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()} (${
-      dialog.anzahlWahlscheineOrStimmabgabevermerke
+      differenceBegruendung.anzahlWahlscheineOrStimmabgabevermerke
     }) unterscheidet sich um
         ${Math.abs(
-          (dialog.anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
-            (dialog.anzahlStimmzettel ?? 0)
+          (differenceBegruendung.anzahlWahlscheineOrStimmabgabevermerke ?? 0) -
+            (differenceBegruendung.anzahlStimmzettel ?? 0)
         )}
-        von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.wahlId))} (${dialog.anzahlStimmzettel})`;
+        von der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(differenceBegruendung.wahlId))} (${differenceBegruendung.anzahlStimmzettel})`;
   }
 
   async function _checkForDifferenceInStimmabgabevermerke() {
@@ -104,15 +105,17 @@ export function useMultipleDifferenceDialogUtils() {
 
       const dialogItem = {
         isVisible: false,
-        wahlId: wahlId,
-        begruendung: begruendungStimmzettel?.grund || "",
-        isBegruendungValid: false,
-        anzahlWahlscheineOrStimmabgabevermerke:
-          anzahlWahlscheineOrStimmabgabevermerke.value,
-        anzahlStimmzettel: anzahlStimmzettel.value,
+        differenceBegruendung: {
+          wahlId: wahlId,
+          begruendung: begruendungStimmzettel?.grund || "",
+          isBegruendungValid: false,
+          anzahlWahlscheineOrStimmabgabevermerke:
+            anzahlWahlscheineOrStimmabgabevermerke.value,
+          anzahlStimmzettel: anzahlStimmzettel.value,
+        },
       };
 
-      updateValidationStateForBegruendung(dialogItem);
+      updateValidationStateForBegruendung(dialogItem.differenceBegruendung);
 
       _addNewItemToDialogsOrUpdateExistingItem(dialogItem, wahlId);
     }
@@ -133,7 +136,7 @@ export function useMultipleDifferenceDialogUtils() {
     wahlId: string
   ) {
     const existingDialogIndex = dialogs.value.findIndex(
-      (dialog) => dialog.wahlId === wahlId
+      (dialog) => dialog.differenceBegruendung.wahlId === wahlId
     );
     if (existingDialogIndex >= 0) {
       dialogs.value[existingDialogIndex] = dialogItem;
@@ -157,14 +160,18 @@ export function useMultipleDifferenceDialogUtils() {
     return begruendungStimmzettel;
   }
 
-  async function _saveBegruendung(dialog: DifferenceDialogItem) {
-    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(dialog.wahlId);
+  async function _saveBegruendung(
+    differenceBegruendung: DifferenceBegruendung
+  ) {
+    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(
+      differenceBegruendung.wahlId
+    );
     if (wahlbezirkId) {
       await postBegruendung(
         {
-          wahlID: dialog.wahlId,
+          wahlID: differenceBegruendung.wahlId,
           stapelart: StapelArtEnum.StimmzettelUmschlaege,
-          grund: dialog.begruendung,
+          grund: differenceBegruendung.begruendung,
           unstimmigkeiten: true,
         },
         wahlbezirkId

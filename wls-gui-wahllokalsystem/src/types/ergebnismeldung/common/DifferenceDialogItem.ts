@@ -1,8 +1,6 @@
+import type { DifferenceBegruendung } from "@/types/ergebnismeldung/common/DifferenceBegruendung.ts";
+
 export interface DifferenceDialogItem {
   isVisible: boolean;
-  wahlId: string;
-  begruendung: string;
-  isBegruendungValid: boolean;
-  anzahlWahlscheineOrStimmabgabevermerke: number | undefined;
-  anzahlStimmzettel: number | undefined | null;
+  differenceBegruendung: DifferenceBegruendung;
 }

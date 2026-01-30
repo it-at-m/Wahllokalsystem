@@ -34,7 +34,7 @@
       v-if="dialog"
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
-      :is-save-disabled="!dialog.isBegruendungValid"
+      :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
       @cancel="dialog.isVisible = false"
       @confirm="saveBegruendungAndStimmzettelumschlaege"
     >
@@ -45,7 +45,7 @@
         {{ getDialogContent() }}
       </div>
       <v-textarea
-        v-model="dialog.begruendung"
+        v-model="dialog.differenceBegruendung.begruendung"
         :rules="[
           minLength(MIN_LENGTH_FOR_BEGRUENDUNG),
           maxLength(MAX_LENGTH_FOR_TEXT_INPUT),

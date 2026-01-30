@@ -56,11 +56,13 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
   const WAHL_ID = "wahlId";
   const DIALOG = {
     isVisible: true,
-    wahlId: WAHL_ID,
-    begruendung: "Testgrund",
-    isBegruendungValid: true,
-    anzahlWahlscheineOrStimmabgabevermerke: 10,
-    anzahlStimmzettel: 5,
+    differenceBegruendung: {
+      wahlId: WAHL_ID,
+      begruendung: "Testgrund",
+      isBegruendungValid: true,
+      anzahlWahlscheineOrStimmabgabevermerke: 10,
+      anzahlStimmzettel: 5,
+    },
   };
 
   beforeEach(() => {
@@ -128,13 +130,25 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
 
   describe("updateValidationStateForBegruendung", () => {
     it("should_updateValidation_when_calledWithDifferentBegruendung", () => {
-      unitUnderTest.dialog.value = { ...DIALOG, isBegruendungValid: false };
-      expect(unitUnderTest.dialog.value.isBegruendungValid).toBe(false);
+      unitUnderTest.dialog.value = {
+        ...DIALOG,
+        differenceBegruendung: {
+          ...DIALOG.differenceBegruendung,
+          isBegruendungValid: false,
+        },
+      };
+      expect(
+        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
+      ).toBe(false);
       unitUnderTest.updateValidationStateForBegruendung();
-      expect(unitUnderTest.dialog.value.isBegruendungValid).toBe(true);
-      unitUnderTest.dialog.value.begruendung = "";
+      expect(
+        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
+      ).toBe(true);
+      unitUnderTest.dialog.value.differenceBegruendung.begruendung = "";
       unitUnderTest.updateValidationStateForBegruendung();
-      expect(unitUnderTest.dialog.value.isBegruendungValid).toBe(false);
+      expect(
+        unitUnderTest.dialog.value.differenceBegruendung.isBegruendungValid
+      ).toBe(false);
     });
   });
 });

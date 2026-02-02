@@ -92,7 +92,7 @@ wird der WorkflowStatus für diese konkrete Wahl ermittelt. Anhand des WorkflowS
 sind. Die Reaktivität wird durch `ComputedRef` erreicht. Ändert sich am WorkflowStatus etwas, erfolgt eine Evaluierung
 entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Links.
 
-### dynamische Bestimmung des nächsten Schrittes
+### dynamische Bestimmung des nächsten Schrittes {#dynamische-bestimmung-des-nachsten-schrittes}
 
 Fast alle Seiten leiten den Nutzer weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert wurden.
 Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`. Folgende Prüfungen

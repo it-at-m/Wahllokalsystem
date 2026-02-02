@@ -9,7 +9,9 @@ Umgesetzt wird dies durch Navigationguards, bedingt verfügbare Links und einer 
 
 Der aktuelle Bearbeitungszustand wird im `WorkflowStore` gepflegt.
 
-## Navigationguards
+## Navigation- und Workflowelemente
+
+### Navigationguards
 
 [Navigationguards](https://router.vuejs.org/guide/advanced/navigation-guards.html) ermöglichen es, dass der Aufruf
 einer View unterbunden wird.
@@ -42,7 +44,7 @@ classDiagram
 Für jede Wahlart (MBW, BTW, ...) werden die Routen der jeweiligen möglichen Schritte definiert. Über die Property
 `beforeEnter` werden die Navigationguards definiert.
 
-## Aktive/Inaktive Links
+### Aktive/Inaktive Links
 
 Über die Links in der Navigation können Benutzer des Wahllokalsystems gezielt die Seiten für bestimmte
 Bearbeitungsschritte aufrufen. Diese Links sind inaktiv, solange nicht alle notwendigen Schritte abgeschlossen wurden.
@@ -51,7 +53,7 @@ Bearbeitungsschritte aufrufen. Diese Links sind inaktiv, solange nicht alle notw
 > Die Navigation wird mit dem Start der Anwendung erstellt. Damit der Abschluss eines Bearbeitungsschrittes den
 > nächsten Schritt verfügbar macht, muss die Navigation reaktiv sein.
 
-### Beschreibung anhand der Implementierung für die MBW
+#### Beschreibung anhand der Implementierung für die MBW
 
 ```mermaid
 classDiagram
@@ -90,10 +92,10 @@ wird der WorkflowStatus für diese konkrete Wahl ermittelt. Anhand des WorkflowS
 sind. Die Reaktivität wird durch `ComputedRef` erreicht. Ändert sich am WorkflowStatus etwas, erfolgt eine Evaluierung
 entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Links.
 
-## dynamische Bestimmung des nächsten Schrittes
+### dynamische Bestimmung des nächsten Schrittes
 
 Fast alle Seiten leiten den Nutzer weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert wurden.
-Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRoute` der `navigationUtils`. Folgende Prüfungen
+Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`. Folgende Prüfungen
 erfolgen dabei:
 
 1. welcher allgemeine, nicht wahlspezifische, Schritt ist als Nächstes zu bearbeiten
@@ -105,3 +107,92 @@ erfolgen dabei:
 
 > [!NOTE]
 > Konnte kein nächster Schritt ermittelt werden, wird der Benutzer auf die `Home`-Seite weitergeleitet.
+
+## Implementierung
+
+Die folgende Grafik zeigt die wesentlichen Strukturelemente, die für die Implementierung von Bedeutung sind.
+
+```mermaid
+classDiagram
+  direction RL
+
+    class WahlartRouteEnum {
+        <<enum>>
+    }
+
+    class CommonRoutes {
+        routes: RouteRecordRaw[]
+        createRoute(...args) RouteLocationAsRelativeGeneric
+    }
+
+    class WahlartRoutes {
+        routes: RouteRecordRaw[]
+        createRoute(...args) RouteLocationAsRelativeGeneric
+    }
+
+    class Routes["router.ts"] {
+
+    }
+
+    class WahlartNavigationService {
+        navigation: ComputedRef&lt;NavigationDefinition[]&gt;
+    }
+
+    class WahlartNextStepImpl {
+        getNextRouteOrNull() RouteLocationAsRelativeGeneric
+    }
+    
+    class WahlartNavigationComponent {
+        
+    }
+    
+    class NavigationDefinition {
+        title: string;
+        targetRoute: RouteLocationAsRelativeGeneric;
+        disabled: boolean;
+    }
+
+    Routes --> CommonRoutes
+    Routes "1" --> "1..n" WahlartRoutes
+
+    WahlartRoutes --> WahlartRouteEnum
+    WahlartNavigationService --> WahlartRouteEnum
+    WahlartNavigationService --> WahlartRoutes
+    WahlartNextStepImpl --> WahlartRouteEnum
+    WahlartNavigationComponent --> WahlartNavigationService
+```
+
+### WahlartRouteEnum
+
+Grundlage bildet ein `enum` welche Namen für alle aufrufbaren Views, und damit notwendigen Routen, beinhaltet. Die erste
+Implementierung erfolgte mit `MbwRoutesEnum.ts`.
+
+Anstelle einer zentralen `enum` für alle Views, wird mit den wahlspezifischen Enums eine Modularisierung erreicht.
+
+### WahlartRoutes
+
+Der `vue-router` umfasst alle Routen, die in der Anwendung aufrufbar sind. Damit die Datei aufgrund der Vielzahl
+an Wahlen nicht zu umfangreich ist, wird sie modularisiert. Je Wahlart gibt es eine Datei, welche in einem Array alle
+Routen der Wahl zur Verfügung stellt (`routes`). Bei der `MBW` heißt die Datei `mbwRoutes.ts`. Über die Funktion
+`createRoute` wird sichergestellt das eine validate Routinglocation erzeugt wird.
+
+### CommonRoutes
+
+Ist fast das gleiche wie `WahlartRoutes`. Der Unterschied besteht darin das hier alle wahlunspezifischen Routen
+enthalten sind.
+
+### router.ts
+
+Die Datei `router.ts` ist das die Konfiguration des `vue-router`. Aus diesem Grund werden hier alle Routes aus
+den `WahlartRoutes` und `CommonRoutes` verwendet.
+
+### WahlartNavigationService
+
+Der `WahlartNavigationService` ist ein Composable, welches Navigationskomponenten unterstützt. `navigation` liefert
+alle Navigationseinträge die darzustellen sind. Weitere für die Komponente notwendige Funktionen werden
+ebenfalls hier hinterlegt.
+
+### WahlartNextStepImpl
+
+Je Wahlart wird hier bestimmt welcher Schritt entsprechend [Punkt 3](#dynamische-bestimmung-des-nachsten-schrittes)
+als Nächstes zu bearbeiten ist.

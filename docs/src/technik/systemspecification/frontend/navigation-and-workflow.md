@@ -164,35 +164,35 @@ classDiagram
 
 ### WahlartRouteEnum
 
-Grundlage bildet ein `enum` welche Namen für alle aufrufbaren Views, und damit notwendigen Routen, beinhaltet. Die erste
+Grundlage bildet ein `enum`, welches Namen für alle aufrufbaren Views und damit notwendigen Routen beinhaltet. Die erste
 Implementierung erfolgte mit `MbwRoutesEnum.ts`.
 
-Anstelle einer zentralen `enum` für alle Views, wird mit den wahlspezifischen Enums eine Modularisierung erreicht.
+Anstelle einer zentralen `enum` für alle Views wird mit den wahlspezifischen Enums eine Modularisierung erreicht.
 
 ### WahlartRoutes
 
 Der `vue-router` umfasst alle Routen, die in der Anwendung aufrufbar sind. Damit die Datei aufgrund der Vielzahl
 an Wahlen nicht zu umfangreich ist, wird sie modularisiert. Je Wahlart gibt es eine Datei, welche in einem Array alle
 Routen der Wahl zur Verfügung stellt (`routes`). Bei der `MBW` heißt die Datei `mbwRoutes.ts`. Über die Funktion
-`createRoute` wird sichergestellt das eine validate Routinglocation erzeugt wird.
+`createRoute` wird sichergestellt, dass eine valide Routinglocation erzeugt wird.
 
 ### CommonRoutes
 
-Ist fast das gleiche wie `WahlartRoutes`. Der Unterschied besteht darin das hier alle wahlunspezifischen Routen
+Ist fast das gleiche wie `WahlartRoutes`. Der Unterschied besteht darin, dass hier alle wahlunspezifischen Routen
 enthalten sind.
 
 ### router.ts
 
-Die Datei `router.ts` ist das die Konfiguration des `vue-router`. Aus diesem Grund werden hier alle Routes aus
+Die Datei `router.ts` ist die Konfiguration des `vue-router`. Aus diesem Grund werden hier alle Routen aus
 den `WahlartRoutes` und `CommonRoutes` verwendet.
 
 ### WahlartNavigationService
 
 Der `WahlartNavigationService` ist ein Composable, welches Navigationskomponenten unterstützt. `navigation` liefert
-alle Navigationseinträge die darzustellen sind. Weitere für die Komponente notwendige Funktionen werden
+alle Navigationseinträge, die darzustellen sind. Weitere, für die Komponente notwendige Funktionen werden
 ebenfalls hier hinterlegt.
 
 ### WahlartNextStepImpl
 
-Je Wahlart wird hier bestimmt welcher Schritt entsprechend [Punkt 3](#dynamische-bestimmung-des-nachsten-schrittes)
+Je Wahlart wird hier bestimmt, welcher Schritt entsprechend [Punkt 3](#dynamische-bestimmung-des-nachsten-schrittes)
 als Nächstes zu bearbeiten ist.

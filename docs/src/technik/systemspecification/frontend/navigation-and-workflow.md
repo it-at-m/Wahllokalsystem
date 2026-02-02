@@ -44,7 +44,7 @@ Für jede Wahlart (MBW, BTW, ...) werden die Routen der jeweiligen möglichen Sc
 
 ## Aktive/Inaktive Links
 
-Über die Links in der Navigation können Benutzer des Wahllokalsystems gezielt die Seite für bestimmte
+Über die Links in der Navigation können Benutzer des Wahllokalsystems gezielt die Seiten für bestimmte
 Bearbeitungsschritte aufrufen. Diese Links sind inaktiv, solange nicht alle notwendigen Schritte abgeschlossen wurden.
 
 > [!important] Auf Reaktivität achten

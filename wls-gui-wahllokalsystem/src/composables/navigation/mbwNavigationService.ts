@@ -39,7 +39,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       {
         title: `Ungültige Stimmzettel`,
         targetRoute: mbwRoutesRecord.createRoute(
-          MbwRoutesEnum.MBW_STAPEL_D,
+          MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG,
           wahlID,
           wahlbezirkID
         ),

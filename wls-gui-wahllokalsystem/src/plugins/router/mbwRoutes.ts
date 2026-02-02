@@ -38,8 +38,8 @@ export const mbwRoutesRecord: Record<MbwRoutesEnum, SimpleRouteDefinition> &
     path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
   },
-  [MbwRoutesEnum.MBW_STAPEL_D]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",
+  [MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]: {
+    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelDUngueltig",
     component: MBWStapelDView,
   },
   [MbwRoutesEnum.MBW_STAPEL_A_AND_B]: {

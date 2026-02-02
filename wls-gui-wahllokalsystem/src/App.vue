@@ -51,8 +51,10 @@ const indexDBSingleton = useIndexDB();
 
 const isTodayAfterWahltag = computed(() => {
   if (currentUserWahltag.value) {
-    const currentDate = new Date().setHours(0, 0, 0, 0);
-    return new Date(currentUserWahltag.value) < currentDate;
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const wahltag = new Date(currentUserWahltag.value);
+    return wahltag < currentDate;
   }
   return false;
 });

@@ -20,7 +20,7 @@
     </v-main>
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB"
+      v-if="isUWB && !isTodayAfterWahltag"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
   </v-app>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
@@ -40,7 +40,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
-const { isUWB } = storeToRefs(useUserStore());
+const { isUWB, currentUserWahltag } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
 
@@ -48,6 +48,14 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
 const indexDBSingleton = useIndexDB();
+
+const isTodayAfterWahltag = computed(() => {
+  if (currentUserWahltag.value) {
+    const currentDate = new Date().setHours(0, 0, 0, 0);
+    return new Date(currentUserWahltag.value) < currentDate;
+  }
+  return false;
+});
 
 onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)

@@ -4,7 +4,6 @@
       <v-list-item
         v-bind="props"
         title="Wahlbriefzulassung"
-        :disabled="isGroupDisabled"
         :lines="groupActivatorListItemLines"
       >
         <template

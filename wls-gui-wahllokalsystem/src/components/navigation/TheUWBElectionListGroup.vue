@@ -4,7 +4,6 @@
       <v-list-item
         v-bind="props"
         title="Wahlhandlung"
-        :disabled="isGroupDisabled"
         :lines="groupActivatorListItemLines"
       >
         <template

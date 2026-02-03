@@ -32,7 +32,7 @@ describe("beanstandeteWahlbriefeTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskListWithTask_when_wahlbezirkIsBWB", () => {
+    it("should_returnTaskListWithTask_when_wahlbezirkIsBWB", async () => {
       const taskFactoryContext = prepareTaskFactoryContext()
         .wahlbezirkArt(WahlbezirksArtEnum.BWB)
         .build();
@@ -42,6 +42,12 @@ describe("beanstandeteWahlbriefeTaskFactory.ts", () => {
       expect(result.length).toStrictEqual(1);
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       expect(result[0]!.name).toStrictEqual("Zugelassene Wahlbriefe");
+
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      await result[0]!.callback();
+      expect(mockDefinitions.initBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+        false
+      );
     });
 
     it("should_returnEmptyList_when_wahlbezirkIsUWB", () => {

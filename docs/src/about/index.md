@@ -192,6 +192,15 @@ kann der Nutzer das Feld über seine Tastatur steuern. Wenn er sich nicht in ein
 `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten `Eingabe` oder `Leertaste`.
 :::
 
+📃 **UseCase: `Aktualisieren der Anwesenheit des Wahlvorstandes`**
+
+::: info nur im Urnenwahlbezirk {data-uwb="true"}
+Mit dem Schichtwechsel im Urnenwahlbezirk müssen die Anwesenheiten der neuen Schicht erfasst werden. Der Wahlvorstand
+wird beim Erreichen der Uhrzeit des Schichtwechsels über einen Dialog darüber informiert. Über den Dialog kann direkt
+zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird über den Konfigurationsparamter
+`MELDUNGSZEIT_ANWESENHEIT_CHECK`gesteuert.
+:::
+
 📃 **UseCase: `Wahl schliessen`**
 
 ::: info `Erfassung der Schließung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}

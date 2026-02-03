@@ -197,8 +197,8 @@ kann der Nutzer das Feld über seine Tastatur steuern. Wenn er sich nicht in ein
 ::: info nur im Urnenwahlbezirk {data-uwb="true"}
 Mit dem Schichtwechsel im Urnenwahlbezirk müssen die Anwesenheiten der neuen Schicht erfasst werden. Der Wahlvorstand
 wird beim Erreichen der Uhrzeit des Schichtwechsels über einen Dialog darüber informiert. Über den Dialog kann direkt
-zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird über den Konfigurationsparamter
-`MELDUNGSZEIT_ANWESENHEIT_CHECK`gesteuert.
+zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird über den Konfigurationsparameter
+`MELDUNGSZEIT_ANWESENHEIT_CHECK` gesteuert.
 :::
 
 📃 **UseCase: `Wahl schliessen`**

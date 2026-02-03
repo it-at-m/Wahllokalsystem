@@ -11,9 +11,9 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: vi.fn().mockImplementation(() => ({
-    beanstandeteWahlbriefeActions: vi.fn().mockImplementation(() => ({
+    beanstandeteWahlbriefeActions: {
       initBeanstandeteWahlbriefe: mockDefinitions.initBeanstandeteWahlbriefe,
-    })),
+    },
   })),
 }));
 

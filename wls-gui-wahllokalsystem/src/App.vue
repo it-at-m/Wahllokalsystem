@@ -20,7 +20,7 @@
     </v-main>
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB && !isTodayAfterWahltag"
+      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
   </v-app>
@@ -34,30 +34,30 @@ import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadc
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
-const { isUWB, currentUserWahltag } = storeToRefs(useUserStore());
+const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
+const { isTodayOrFuture } = useDateTimeUtils();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
-const indexDBSingleton = useIndexDB();
+const isTimeToCheckAnwesenheitInFuture = computed(() =>
+  dateTimeToCheckAnwesenheit.value
+    ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
+    : false
+);
 
-const isTodayAfterWahltag = computed(() => {
-  if (currentUserWahltag.value) {
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-    const wahltag = new Date(currentUserWahltag.value);
-    return wahltag < currentDate;
-  }
-  return false;
-});
+const indexDBSingleton = useIndexDB();
 
 onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)

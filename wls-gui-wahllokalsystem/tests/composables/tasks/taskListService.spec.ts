@@ -270,7 +270,7 @@ describe("taskListService.ts", () => {
       const taskNames = result.map((task) => task.name);
 
       expect(taskNames).toStrictEqual(expectedTaskNames);
-      _expectAllTasksHaveBeenCalled(mockDefinitions);
+      _expectAllTaskFactoriesHaveBeenCalled();
     });
 
     it("should_containListWithBWBTasks_when_initTaskListIsCalled", () => {
@@ -309,7 +309,7 @@ describe("taskListService.ts", () => {
       const taskNames = result.map((task) => task.name);
 
       expect(taskNames).toStrictEqual(expectedTaskNames);
-      _expectAllTasksHaveBeenCalled(mockDefinitions);
+      _expectAllTaskFactoriesHaveBeenCalled();
     });
 
     function _mockReturnValuesForBWBTasks(wbzArt: WahlbezirksArtEnum) {
@@ -472,10 +472,9 @@ describe("taskListService.ts", () => {
       ]);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function _expectAllTasksHaveBeenCalled(mockDefinitions: any) {
-      Object.keys(mockDefinitions).forEach((mockName) => {
-        expect(mockDefinitions[mockName]).toHaveBeenCalled();
+    function _expectAllTaskFactoriesHaveBeenCalled() {
+      Object.values(mockDefinitions).forEach((mock) => {
+        expect(mock).toHaveBeenCalled();
       });
     }
   });

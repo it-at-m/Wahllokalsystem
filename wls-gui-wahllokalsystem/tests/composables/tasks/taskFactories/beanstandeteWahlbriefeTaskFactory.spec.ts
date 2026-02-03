@@ -58,6 +58,7 @@ describe("beanstandeteWahlbriefeTaskFactory.ts", () => {
       const result = unitUnderTest.createTasks(taskFactoryContext);
 
       expect(result.length).toStrictEqual(0);
+      expect(mockDefinitions.initBeanstandeteWahlbriefe).not.toHaveBeenCalled();
     });
   });
 });

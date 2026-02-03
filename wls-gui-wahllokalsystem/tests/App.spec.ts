@@ -1,4 +1,5 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomanagement/KonfigurationsparameterTestDataFactory.ts";
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
@@ -13,6 +14,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import App from "@/App.vue";
 import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -46,6 +48,9 @@ vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
     stopBroadcastMessageInterval: stopBroadcastMessageIntervalMock,
   }),
 }));
+
+const { prepareKonfigurationsparameter } =
+  useKonfigurationsparameterTestDataFactory();
 
 describe("App", () => {
   let wrapper: VueWrapper;
@@ -119,11 +124,20 @@ describe("App", () => {
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {
-    it("should_renderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtUWB", async (context) => {
+    it("should_renderWahlvorstandAnwesenheitsCheckPopupDialog_when_wahlbezirkArtUWBAndCheckTimeIsInFuture", async (context) => {
       router.push = vi.fn();
 
       const store = useUserStore();
       store.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+      const now = new Date();
+      // @ts-expect-error: cannot set readonly
+      store.currentUserWahltag = `${now.getFullYear() + 1}-12-31`;
+      useInfomanagementStore().konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("MELDUNGSZEIT_ANWESENHEIT_CHECK")
+          .wert("23:59:59")
+          .build(),
+      ];
 
       await flushPromises();
 

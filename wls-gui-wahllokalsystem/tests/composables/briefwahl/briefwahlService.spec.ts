@@ -74,9 +74,12 @@ describe("briefwahlService.ts", () => {
       const result = await getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID);
 
       expect(result).toEqual(mockedBeanstandeteWahlbriefe);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
     });
 
-    it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCallAndSendNotificationIsTrue", async () => {
       const wvzNr = generateRandomNumber(1);
       const wahlbezirkID = generateRandomString(10);
 
@@ -85,13 +88,30 @@ describe("briefwahlService.ts", () => {
       );
 
       await expect(async () =>
-        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID)
+        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, true)
       ).rejects.toThrowError();
 
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
       ]);
+    });
+
+    it("should_notTriggerNotification_when_sendNotificationIsFalse", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getBeanstandeteWahlbriefe.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, false)
+      ).rejects.toThrowError();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
     });
   });
 

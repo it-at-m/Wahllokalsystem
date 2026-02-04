@@ -91,13 +91,16 @@ export const useWahlenStore = defineStore(storeID, () => {
   }));
 
   const beanstandeteWahlbriefeActions = {
-    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe() {
+    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe(
+      sendNotification = true
+    ) {
       for (const wvzNr of waehlerverzeichnisGetter.value
         .waehlerverzeichnisNummern) {
         const beanstandeteWahlbriefe =
           await briefwahlService.getBeanstandeteWahlbriefe(
             wvzNr,
-            currentUserWahlbezirkID.value
+            currentUserWahlbezirkID.value,
+            sendNotification
           );
         if (wahlenState.value.wahlen && beanstandeteWahlbriefe) {
           wahlenState.value.wahlen.forEach((wahl) => {

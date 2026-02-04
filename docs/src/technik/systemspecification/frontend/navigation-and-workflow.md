@@ -5,7 +5,7 @@ Die Bearbeitungsreihenfolge an einem Wahltag folgt einem klar definierten Schema
 Das Wahllokalsystem unterstützt die Wahlhelfer bei der korrekten Bearbeitung, in dem bestimmte Funktionen erst genutzt werden können, wenn die notwendigen
 Schritte zuvor abgeschlossen wurden.
 
-Umgesetzt wird dies durch Navigationguards, bedingt verfügbare Links und einer dynamischen Ermittlung der nächsten Seite.
+Umgesetzt wird dies durch Navigationguards, aktive oder inaktive Links und einer dynamischen Ermittlung der nächsten Seite.
 
 Der aktuelle Bearbeitungszustand wird im `WorkflowStore` gepflegt.
 

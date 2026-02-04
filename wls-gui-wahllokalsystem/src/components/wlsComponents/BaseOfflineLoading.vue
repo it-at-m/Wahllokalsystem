@@ -48,7 +48,7 @@
         prepend-icon="$continue"
         :disabled="isLoading"
         active
-        :to="routeWithName(ROUTE_WAHLVORSTAND)"
+        @click="onContinueClicked"
         >Weiter</base-text-button
       >
       <base-button-refresh
@@ -73,8 +73,9 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 
-const { routeWithName } = useNavigationUtils();
 const router = useRouter();
+
+const { getNextRoute } = useNavigationUtils();
 
 const {
   numberOfTasksToRun,
@@ -101,6 +102,10 @@ watch(hasAllTasksRunSuccessfully, () => {
     router.push(ROUTE_WAHLVORSTAND);
   }
 });
+
+async function onContinueClicked() {
+  await router.push(getNextRoute());
+}
 
 async function onRefreshClicked() {
   await rerunFailedTasks();

@@ -7,7 +7,7 @@
         :lines="groupActivatorListItemLines"
       >
         <template
-          v-if="disabledMessage"
+          v-if="disabled"
           #subtitle
         >
           {{ disabledMessage }}
@@ -17,22 +17,22 @@
     <v-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
-      :disabled="isGroupDisabled"
+      :disabled="disabled"
     />
     <v-list-item
       title="Wählerverzeichnis"
       :to="routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS)"
-      :disabled="isGroupDisabled || !isWahlumgebungErfasst"
+      :disabled="disabled || !isWahlumgebungErfasst"
     />
     <v-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
-      :disabled="isGroupDisabled"
+      :disabled="disabled"
     />
     <v-list-item
       title="Stimmabgabe"
       :to="routeWithName(ROUTE_STIMMABGABE)"
-      :disabled="isGroupDisabled"
+      :disabled="disabled"
     />
   </v-list-group>
 </template>
@@ -50,23 +50,21 @@ import {
 } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { disabled } = defineProps({
+const properties = defineProps({
   disabled: {
-    type: [Boolean, String],
+    type: Boolean,
     default: false,
+  },
+  disabledMessage: {
+    type: String,
+    default: "",
   },
 });
 
 const { routeWithName } = useNavigationUtils();
 const { isWahlumgebungErfasst } = storeToRefs(useWorkflowStore());
 
-const isGroupDisabled = computed(() => !!disabled);
-
-const disabledMessage = computed(() => {
-  return typeof disabled === "string" ? disabled : null;
-});
-
 const groupActivatorListItemLines = computed(() =>
-  disabledMessage.value ? false : "one"
+  properties.disabledMessage && properties.disabled ? false : "one"
 );
 </script>

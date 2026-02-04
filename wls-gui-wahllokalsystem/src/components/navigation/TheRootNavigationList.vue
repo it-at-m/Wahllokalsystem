@@ -20,11 +20,13 @@
       />
       <the-b-w-b-election-list-group
         v-if="isBWB"
-        :disabled="commonActionsDisabledMessageOrFalse"
+        :disabled="!isWahlvorstandErfasst"
+        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
       />
       <the-u-w-b-election-list-group
         v-if="isUWB"
-        :disabled="commonActionsDisabledMessageOrFalse"
+        :disabled="!isWahlvorstandErfasst"
+        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
       />
       <v-list-item
         title="Ereignisse"
@@ -37,7 +39,6 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
 import TheScoresListGroup from "@/components/navigation/TheScoresListGroup.vue";
@@ -55,7 +56,5 @@ const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
 
-const commonActionsDisabledMessageOrFalse = computed(() =>
-  !isWahlvorstandErfasst.value ? "Erst Anwesenheit erfassen" : false
-);
+const disabledMessageUpdateAnwesenheitRequired = "Erst Anwesenheit erfassen";
 </script>

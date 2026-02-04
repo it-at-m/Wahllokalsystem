@@ -14,33 +14,46 @@ import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 
 const { isStepDoneInElectionState } = useNavigationGuards();
+const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
+  "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
 type RouteRecordRawWithoutName = Omit<RouteRecordRaw, "name">;
 
 const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
   [MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/auszaehlungStimmzettel",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
   },
   [MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelDUngueltig",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/stapelDUngueltig",
     component: MBWStapelDView,
   },
   [MbwRoutesEnum.MBW_STAPEL_A_AND_B]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelAandB",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/stapelAandB",
     component: MBWStapelAandBView,
     beforeEnter: [isStepDoneInElectionState(StapelArtEnum.MbwDUngueltig)],
   },
   [MbwRoutesEnum.MBW_SCHNELLMELDUNG]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/schnellmeldung",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/schnellmeldung",
     component: MBWSchnellmeldungView,
   },
   [MbwRoutesEnum.MBW_STAPEL_BC]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelBC",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelBC",
     component: MBWStapelBCView,
   },
   [MbwRoutesEnum.MBW_NIEDERSCHRIFT]: {
-    path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/niederschrift",
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/niederschrift",
     component: MBWNiederschriftView,
   },
 };

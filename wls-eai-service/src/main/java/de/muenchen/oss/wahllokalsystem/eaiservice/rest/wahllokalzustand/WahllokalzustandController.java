@@ -18,17 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahllokalzustandController {
 
-    private final WahllokalZustandService wahllokalZustandService;
+  private final WahllokalZustandService wahllokalZustandService;
 
-    @Operation(
-            description = "Speichert den Wahllokalzustand. ",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Wahllokalzustand erfolgreich gespeichert.")
-            }
-    )
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustandDTO wahllokalZustand) {
-        wahllokalZustandService.setWahllokalZustand(wahllokalZustand);
-    }
+  @Operation(
+      description = "Speichert den Wahllokalzustand. ",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahllokalzustand erfolgreich gespeichert.")
+      })
+  @PostMapping
+  @ResponseStatus(HttpStatus.OK)
+  public void saveWahllokalZustand(@Valid @RequestBody WahllokalZustandDTO wahllokalZustand) {
+    wahllokalZustandService.setWahllokalZustand(wahllokalZustand);
+  }
 }

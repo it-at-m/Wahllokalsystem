@@ -35,115 +35,129 @@ import org.springframework.test.context.ActiveProfiles;
 @AutoConfigureWireMock
 public class ReferendumvorlagenServiceSecurityTest {
 
-    @Autowired
-    ReferendumvorlagenService referendumvorlagenService;
+  @Autowired ReferendumvorlagenService referendumvorlagenService;
 
-    @Autowired
-    ReferendumvorlagenRepository referendumvorlagenRepository;
+  @Autowired ReferendumvorlagenRepository referendumvorlagenRepository;
 
-    @Autowired
-    ReferendumvorlageRepository referendumvorlageRepository;
+  @Autowired ReferendumvorlageRepository referendumvorlageRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN, Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGE);
-        referendumvorlagenRepository.deleteAll();
-        referendumvorlageRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(
+        Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGEN,
+        Authorities.REPOSITORY_DELETE_REFERENDUMVORLAGE);
+    referendumvorlagenRepository.deleteAll();
+    referendumvorlageRepository.deleteAll();
+  }
+
+  @Nested
+  class LoadReferendumvorlagen {
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN);
+
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  referendumvorlagenService.getReferendumvorlagen(
+                      new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)));
+      // we have to check is data is stores because access denied exceptions are caught too
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
+      Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(1);
     }
 
-    @Nested
-    class LoadReferendumvorlagen {
+    @Test
+    void should_denyAccess_when_authoritiesAreMissing() throws Exception {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN,
+          Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGEN,
+          Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGE);
 
-        @Test
-        void should_grantAccess_when_authoritiesArePresent() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN);
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
-
-            Assertions.assertThatNoException()
-                    .isThrownBy(
-                            () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)));
-            //we have to check is data is stores because access denied exceptions are caught too
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
-            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(1);
-        }
-
-        @Test
-        void should_denyAccess_when_authoritiesAreMissing() throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN, Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGEN,
-                    Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGE);
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            Assertions.assertThatThrownBy(
-                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-            //we have to check is data is stores because access denied exceptions are caught too
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
-            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingRepositoryAuthoritiesVariations")
-        void should_denyAccess_when_oneRepositoryAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) throws Exception {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
-            WireMock.stubFor(WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(
-                            HttpStatus.OK.value()).withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
-
-            Assertions.assertThatThrownBy(
-                    () -> referendumvorlagenService.getReferendumvorlagen(new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
-                    .isInstanceOf(
-                            AccessDeniedException.class);
-            //we have to check is data is stores because access denied exceptions are caught too
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
-            Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
-        }
-
-        private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {
-            val serviceAuthoritiesWithoutServiceAuthority = ArrayUtils.removeElements(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN,
-                    Authorities.SERVICE_GET_REFERENDUMVORLAGEN);
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(serviceAuthoritiesWithoutServiceAuthority);
-        }
-
-        private ReferendumvorlagenDTO createClientReferendumvorlagenDTO() {
-            val dto = new ReferendumvorlagenDTO();
-
-            dto.setStimmzettelgebietID("szgID");
-
-            val referendumOption = new ReferendumoptionDTO();
-            referendumOption.setId("optionID");
-            referendumOption.setName("optionName");
-            referendumOption.setPosition(1L);
-
-            val vorlage = new ReferendumvorlageDTO();
-            vorlage.setFrage("frage");
-            vorlage.setKurzname("kurzname");
-            vorlage.setOrdnungszahl(1L);
-            vorlage.setWahlvorschlagID("wahlvorschlagID");
-            vorlage.setReferendumoptionen(Set.of(referendumOption));
-
-            dto.setReferendumvorlagen(Set.of(vorlage));
-
-            return dto;
-        }
-
+      Assertions.assertThatThrownBy(
+              () ->
+                  referendumvorlagenService.getReferendumvorlagen(
+                      new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+      // we have to check is data is stores because access denied exceptions are caught too
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
+      Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
     }
 
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingRepositoryAuthoritiesVariations")
+    void should_denyAccess_when_oneRepositoryAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) throws Exception {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiReferendumvorschlage = createClientReferendumvorlagenDTO();
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/referendum/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiReferendumvorschlage))));
+
+      Assertions.assertThatThrownBy(
+              () ->
+                  referendumvorlagenService.getReferendumvorlagen(
+                      new ReferendumvorlagenReferenceModel(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+      // we have to check is data is stores because access denied exceptions are caught too
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
+      Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
+    }
+
+    private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {
+      val serviceAuthoritiesWithoutServiceAuthority =
+          ArrayUtils.removeElements(
+              Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN,
+              Authorities.SERVICE_GET_REFERENDUMVORLAGEN);
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          serviceAuthoritiesWithoutServiceAuthority);
+    }
+
+    private ReferendumvorlagenDTO createClientReferendumvorlagenDTO() {
+      val dto = new ReferendumvorlagenDTO();
+
+      dto.setStimmzettelgebietID("szgID");
+
+      val referendumOption = new ReferendumoptionDTO();
+      referendumOption.setId("optionID");
+      referendumOption.setName("optionName");
+      referendumOption.setPosition(1L);
+
+      val vorlage = new ReferendumvorlageDTO();
+      vorlage.setFrage("frage");
+      vorlage.setKurzname("kurzname");
+      vorlage.setOrdnungszahl(1L);
+      vorlage.setWahlvorschlagID("wahlvorschlagID");
+      vorlage.setReferendumoptionen(Set.of(referendumOption));
+
+      dto.setReferendumvorlagen(Set.of(vorlage));
+
+      return dto;
+    }
+  }
 }

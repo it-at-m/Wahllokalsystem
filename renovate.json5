@@ -23,7 +23,11 @@
     "ghcr.io/it-at-m/wahllokalsystem-wls-eai-service",
     "ghcr.io/it-at-m/wahllokalsystem-wls-auth-service",
     "ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem",
-    "ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool"
+    "ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway"
   ],
   prConcurrentLimit: 5,
+  schedule: [
+    "* * * * 1"
+  ],
 }

@@ -11,22 +11,27 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AWerteService extends AbstractAWerteService {
 
-    private final AsyncAWerteService asyncAWerteService;
+  private final AsyncAWerteService asyncAWerteService;
 
-    public AWerteService(AWerteRepository aWerteRepository, AWerteValidator aWerteValidator, AWerteModelMapper aWerteModelMapper, AWerteClient aWerteClient,
-            ExceptionFactory exceptionFactory, AsyncAWerteService asyncAWerteService) {
-        super(aWerteRepository, aWerteValidator, aWerteModelMapper, aWerteClient, exceptionFactory);
-        this.asyncAWerteService = asyncAWerteService;
-    }
+  public AWerteService(
+      AWerteRepository aWerteRepository,
+      AWerteValidator aWerteValidator,
+      AWerteModelMapper aWerteModelMapper,
+      AWerteClient aWerteClient,
+      ExceptionFactory exceptionFactory,
+      AsyncAWerteService asyncAWerteService) {
+    super(aWerteRepository, aWerteValidator, aWerteModelMapper, aWerteClient, exceptionFactory);
+    this.asyncAWerteService = asyncAWerteService;
+  }
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
-    public List<AWerteModel> getAWerte(String wahlbezirkID) {
-        return super.getAWerte(wahlbezirkID);
-    }
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
+  public List<AWerteModel> getAWerte(String wahlbezirkID) {
+    return super.getAWerte(wahlbezirkID);
+  }
 
-    @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
-    public void initialiseAWerte(List<String> wahlbezirkIDs) {
-        asyncAWerteService.initialiseAWerte(wahlbezirkIDs);
-    }
-
+  @PreAuthorize("hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
+  public void initialiseAWerte(List<String> wahlbezirkIDs) {
+    asyncAWerteService.initialiseAWerte(wahlbezirkIDs);
+  }
 }

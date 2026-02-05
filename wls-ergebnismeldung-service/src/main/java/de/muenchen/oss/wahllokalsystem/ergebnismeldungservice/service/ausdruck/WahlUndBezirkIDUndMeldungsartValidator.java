@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahlUndBezirkIDUndMeldungsartValidator {
 
-    public void validWahlUndBezirkIDUndMeldungsartOrThrow(final WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart,
-            final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (wahlUndBezirkIDUndMeldungsart == null ||
-                StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlID()) ||
-                StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlbezirkID()) ||
-                wahlUndBezirkIDUndMeldungsart.getMeldungsart() == null) {
-            throw exceptionOnInvalid;
-        }
+  public void validWahlUndBezirkIDUndMeldungsartOrThrow(
+      final WahlUndBezirkIDUndMeldungsart wahlUndBezirkIDUndMeldungsart,
+      final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (wahlUndBezirkIDUndMeldungsart == null
+        || StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlID())
+        || StringUtils.isBlank(wahlUndBezirkIDUndMeldungsart.getWahlbezirkID())
+        || wahlUndBezirkIDUndMeldungsart.getMeldungsart() == null) {
+      throw exceptionOnInvalid;
     }
+  }
 }

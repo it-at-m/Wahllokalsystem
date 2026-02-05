@@ -8,39 +8,40 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Wahlvorbereitung_READ_UnterbrechungsUhrzeit')")
-public interface UnterbrechungsUhrzeitRepository extends CrudRepository<UnterbrechungsUhrzeit, String> {
+public interface UnterbrechungsUhrzeitRepository
+    extends CrudRepository<UnterbrechungsUhrzeit, String> {
 
-    String CACHE = "UnterbrechungsUhrzeitCACHE";
+  String CACHE = "UnterbrechungsUhrzeitCACHE";
 
-    @Override
-    Iterable<UnterbrechungsUhrzeit> findAll();
+  @Override
+  Iterable<UnterbrechungsUhrzeit> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<UnterbrechungsUhrzeit> findById(String wahlbezirkID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<UnterbrechungsUhrzeit> findById(String wahlbezirkID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_UnterbrechungsUhrzeit')")
-    <S extends UnterbrechungsUhrzeit> S save(S unterbrechungsUhrzeit);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_UnterbrechungsUhrzeit')")
+  <S extends UnterbrechungsUhrzeit> S save(S unterbrechungsUhrzeit);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
-    void deleteById(String wahlbezirkID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
+  void deleteById(String wahlbezirkID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
-    void delete(UnterbrechungsUhrzeit entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
+  void delete(UnterbrechungsUhrzeit entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
-    void deleteAll(Iterable<? extends UnterbrechungsUhrzeit> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
+  void deleteAll(Iterable<? extends UnterbrechungsUhrzeit> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UnterbrechungsUhrzeit')")
+  void deleteAll();
 }

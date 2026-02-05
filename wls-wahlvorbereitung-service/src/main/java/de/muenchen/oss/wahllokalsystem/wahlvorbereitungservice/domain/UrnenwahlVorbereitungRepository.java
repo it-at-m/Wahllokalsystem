@@ -8,39 +8,40 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Wahlvorbereitung_READ_UrnenwahlVorbereitung')")
-public interface UrnenwahlVorbereitungRepository extends CrudRepository<UrnenwahlVorbereitung, String> {
+public interface UrnenwahlVorbereitungRepository
+    extends CrudRepository<UrnenwahlVorbereitung, String> {
 
-    String CACHE = "UrnenwahlVorbereitungCACHE";
+  String CACHE = "UrnenwahlVorbereitungCACHE";
 
-    @Override
-    Iterable<UrnenwahlVorbereitung> findAll();
+  @Override
+  Iterable<UrnenwahlVorbereitung> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<UrnenwahlVorbereitung> findById(String wahlbezirkID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<UrnenwahlVorbereitung> findById(String wahlbezirkID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_UrnenwahlVorbereitung')")
-    <S extends UrnenwahlVorbereitung> S save(S urnenwahlVorbereitung);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.wahlbezirkID")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_WRITE_UrnenwahlVorbereitung')")
+  <S extends UrnenwahlVorbereitung> S save(S urnenwahlVorbereitung);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
-    void deleteById(String wahlbezirkID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
+  void deleteById(String wahlbezirkID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
-    void delete(UrnenwahlVorbereitung entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.wahlbezirkID")
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
+  void delete(UrnenwahlVorbereitung entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
-    void deleteAll(Iterable<? extends UrnenwahlVorbereitung> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
+  void deleteAll(Iterable<? extends UrnenwahlVorbereitung> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Wahlvorbereitung_DELETE_UrnenwahlVorbereitung')")
+  void deleteAll();
 }

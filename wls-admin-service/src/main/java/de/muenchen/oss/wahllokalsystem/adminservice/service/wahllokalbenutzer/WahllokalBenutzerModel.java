@@ -7,10 +7,8 @@ import lombok.Builder;
 
 @Builder
 public record WahllokalBenutzerModel(
-        String wahlbezirkID,
-        String wahlbezirknummer,
-        LocalDate wahltag,
-        WahlbezirkArtModel wahlbezirksart,
-        List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer
-) {
-}
+    String wahlbezirkID,
+    String wahlbezirknummer,
+    LocalDate wahltag,
+    WahlbezirkArtModel wahlbezirksart,
+    List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer) {}

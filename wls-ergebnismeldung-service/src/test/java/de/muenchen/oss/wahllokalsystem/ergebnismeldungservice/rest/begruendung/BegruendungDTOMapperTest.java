@@ -13,67 +13,82 @@ import org.mapstruct.factory.Mappers;
 
 class BegruendungDTOMapperTest {
 
-    private final BegruendungDTOMapper unitUnderTest = Mappers.getMapper(BegruendungDTOMapper.class);
+  private final BegruendungDTOMapper unitUnderTest = Mappers.getMapper(BegruendungDTOMapper.class);
+
+  @Nested
+  class ToModel {
 
     @Nested
-    class ToModel {
+    class ToBegruendungModel {
 
-        @Nested
-        class ToBegruendungModel {
+      @Test
+      void should_returnNull_when_givenNull() {
+        Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
+      }
 
-            @Test
-            void should_returnNull_when_givenNull() {
-                Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-            }
+      @Test
+      void should_returnBegruendungModel_when_givenBegruendungDTO() {
+        val begruendungDTO =
+            new BegruendungDTO(
+                new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A),
+                "grund1",
+                "grund2",
+                true,
+                true);
+        val result = unitUnderTest.toModel(begruendungDTO);
 
-            @Test
-            void should_returnBegruendungModel_when_givenBegruendungDTO() {
-                val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A), "grund1", "grund2", true,
-                        true);
-                val result = unitUnderTest.toModel(begruendungDTO);
+        val expectedResult =
+            new BegruendungModel(
+                "bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
 
-                val expectedResult = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
-
-                Assertions.assertThat(result).isEqualTo(expectedResult);
-            }
-        }
-
-        @Nested
-        class ToReferenceModel {
-
-            @Test
-            void should_returnNull_when_givenNull() {
-                Assertions.assertThat(unitUnderTest.toReferenceModel(null, null, null)).isNull();
-            }
-
-            @Test
-            void should_returnBegruendungReferenceModel_when_givenIDs() {
-                val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
-
-                val expectedResult = new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
-
-                Assertions.assertThat(result).isEqualTo(expectedResult);
-            }
-        }
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
     }
 
     @Nested
-    class ToDTO {
+    class ToReferenceModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
+      @Test
+      void should_returnNull_when_givenNull() {
+        Assertions.assertThat(unitUnderTest.toReferenceModel(null, null, null)).isNull();
+      }
 
-        @Test
-        void should_returnBegruendungDTO_when_givenBegruendungModel() {
-            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
-            val result = unitUnderTest.toDTO(begruendungModel);
+      @Test
+      void should_returnBegruendungReferenceModel_when_givenIDs() {
+        val result = unitUnderTest.toReferenceModel("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A);
 
-            val expectedResult = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A), "grund1", "grund2", true,
-                    true);
+        val expectedResult =
+            new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+        Assertions.assertThat(result).isEqualTo(expectedResult);
+      }
     }
+  }
+
+  @Nested
+  class ToDTO {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
+    }
+
+    @Test
+    void should_returnBegruendungDTO_when_givenBegruendungModel() {
+      val begruendungModel =
+          new BegruendungModel(
+              "bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
+      val result = unitUnderTest.toDTO(begruendungModel);
+
+      val expectedResult =
+          new BegruendungDTO(
+              new BezirkUndWahlIDStapelartDTO("bezirkID", "wahlID", StapelartDTO.LTW_BZW_A),
+              "grund1",
+              "grund2",
+              true,
+              true);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

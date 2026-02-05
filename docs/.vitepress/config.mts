@@ -120,6 +120,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
             },
             {
+              text: "Anpassung des Renovate-Schedulers",
+              link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,
@@ -151,6 +155,10 @@ export default withMermaid({
                 {
                   text: "Anordnung des active Button",
                   link: `${PATH_ADR_UI}adr007-active-button-positioning.md`,
+                },
+                {
+                  text: "Styling von Tabellen",
+                  link: `${PATH_ADR_UI}adr008-tabellen-styling.md`,
                 },
               ],
             },
@@ -220,6 +228,10 @@ export default withMermaid({
               text: "Update embedded LDAP User",
               link: `${PATH_GUIDES}update-ldif-file-data.md`,
             },
+            {
+              text: "Zertifikate für SSL erstellen",
+              link: `${PATH_GUIDES}generate certs for ssl.md`,
+            },
           ],
         },
         {
@@ -254,6 +266,14 @@ export default withMermaid({
                 {
                   text: "Task-Factories",
                   link: `${PATH_SYSSPEC}frontend/task-factories.md`,
+                },
+                {
+                  text: "Intervalle und Timeouts",
+                  link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
+                {
+                  text: "Navigation und Bearbeitungsreihenfolge",
+                  link: `${PATH_SYSSPEC}frontend/navigation-and-workflow.md`,
                 },
               ],
             },

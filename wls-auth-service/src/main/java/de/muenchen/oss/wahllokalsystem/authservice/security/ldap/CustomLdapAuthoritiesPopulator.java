@@ -19,25 +19,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CustomLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public Collection<? extends GrantedAuthority> getGrantedAuthorities(
-            DirContextOperations userData, String username) {
-        val userByUsername = userRepository.findByUsername(username);
-        if (userByUsername.isPresent()) {
-            log.info("Found authorities for user {}.", username);
-        } else {
-            log.info("Authorities for User {} not found.", username);
-        }
-
-        val userAuthorities = userByUsername.map(User::getAuthorities).orElse(Collections.emptySet());
-
-        val result = userAuthorities.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                .toList();
-        log.info("User {} got Authorities: {}", username, result);
-        return result;
+  @Override
+  @Transactional(readOnly = true)
+  public Collection<? extends GrantedAuthority> getGrantedAuthorities(
+      DirContextOperations userData, String username) {
+    val userByUsername = userRepository.findByUsername(username);
+    if (userByUsername.isPresent()) {
+      log.info("Found authorities for user {}.", username);
+    } else {
+      log.info("Authorities for User {} not found.", username);
     }
+
+    val userAuthorities = userByUsername.map(User::getAuthorities).orElse(Collections.emptySet());
+
+    val result =
+        userAuthorities.stream()
+            .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+            .toList();
+    log.info("User {} got Authorities: {}", username, result);
+    return result;
+  }
 }

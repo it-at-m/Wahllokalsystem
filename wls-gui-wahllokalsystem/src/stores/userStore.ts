@@ -4,14 +4,20 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useUserService } from "@/composables/user/userService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { getUser } = useUserService();
+const { importKey } = useCryptoUtils();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
+  const { initElectionWorkflowState } = useWorkflowStore();
+
   const defaultUser: User = {
     username: "",
     email: "",
@@ -33,9 +39,17 @@ export const useUserStore = defineStore("user", () => {
   };
   const user = ref<User>(defaultUser);
 
+  const isUserLoggedIn = ref<boolean>(true);
+
   async function loadUser() {
     try {
       user.value = await getUser();
+      user.value.wahlMetaData.forEach((wahlMetaData) =>
+        initElectionWorkflowState(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        )
+      );
     } catch (e) {
       if (import.meta.env.DEV) {
         user.value = createUserLocalDevelopment();
@@ -44,6 +58,18 @@ export const useUserStore = defineStore("user", () => {
         user.value = defaultUser;
         throw e;
       }
+    } finally {
+      const cryptoKey = await importKey(user.value.pin);
+      const indexDBSingleton = useIndexDB();
+      indexDBSingleton.setKey(cryptoKey);
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: "PIN",
+          payload: cryptoKey,
+        });
+      }
+
+      indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }
   }
 
@@ -116,6 +142,7 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlMetadata,
     isUWB,
     isBWB,
+    isUserLoggedIn,
   };
 });
 

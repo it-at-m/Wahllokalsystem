@@ -14,46 +14,50 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 class KonfigurationRepositoryTest {
 
-    @Autowired
-    KonfigurationRepository konfigurationRepository;
+  @Autowired KonfigurationRepository konfigurationRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
-        konfigurationRepository.deleteAll();
-    }
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KONFIGURATION);
+    konfigurationRepository.deleteAll();
+  }
 
-    @Test
-    void should_returnKonfigurationWithFruehesteLoginUhrzeit_when_getFruehesteLoginUhrzeitIsCalled() {
-        val konfigurationFruehesteLoginUhrzeit = new Konfiguration("FRUEHESTE_LOGIN_UHRZEIT", "06:00:00", "", "");
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
-        konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
-        SecurityContextHolder.clearContext();
+  @Test
+  void should_returnKonfigurationWithFruehesteLoginUhrzeit_when_getFruehesteLoginUhrzeitIsCalled() {
+    val konfigurationFruehesteLoginUhrzeit =
+        new Konfiguration("FRUEHESTE_LOGIN_UHRZEIT", "06:00:00", "", "");
+    SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
+    konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
+    SecurityContextHolder.clearContext();
 
-        Assertions.assertThat(konfigurationRepository.getFruehesteLoginUhrzeit().get()).isEqualTo(konfigurationFruehesteLoginUhrzeit);
-    }
+    Assertions.assertThat(konfigurationRepository.getFruehesteLoginUhrzeit().get())
+        .isEqualTo(konfigurationFruehesteLoginUhrzeit);
+  }
 
-    @Test
-    void should_returnKonfigurationWithSpaetesteLoginUhrzeit_when_getSpaetesteLoginUhrzeitIsCalled() {
-        val konfigurationFruehesteLoginUhrzeit = new Konfiguration("SPAETESTE_LOGIN_UHRZEIT", "23:56:00", "", "");
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
-        konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
-        SecurityContextHolder.clearContext();
+  @Test
+  void should_returnKonfigurationWithSpaetesteLoginUhrzeit_when_getSpaetesteLoginUhrzeitIsCalled() {
+    val konfigurationFruehesteLoginUhrzeit =
+        new Konfiguration("SPAETESTE_LOGIN_UHRZEIT", "23:56:00", "", "");
+    SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
+    konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
+    SecurityContextHolder.clearContext();
 
-        Assertions.assertThat(konfigurationRepository.getSpaetesteLoginUhrzeit().get()).isEqualTo(konfigurationFruehesteLoginUhrzeit);
-    }
+    Assertions.assertThat(konfigurationRepository.getSpaetesteLoginUhrzeit().get())
+        .isEqualTo(konfigurationFruehesteLoginUhrzeit);
+  }
 
-    @Test
-    void should_returnKonfigurationWithWillkommenstext_when_getWillkommenstextIsCalled() {
-        val konfigurationFruehesteLoginUhrzeit = new Konfiguration("WILLKOMMENSTEXT", "hello world", "", "");
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
-        konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
-        SecurityContextHolder.clearContext();
+  @Test
+  void should_returnKonfigurationWithWillkommenstext_when_getWillkommenstextIsCalled() {
+    val konfigurationFruehesteLoginUhrzeit =
+        new Konfiguration("WILLKOMMENSTEXT", "hello world", "", "");
+    SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KONFIGURATION);
+    konfigurationRepository.save(konfigurationFruehesteLoginUhrzeit);
+    SecurityContextHolder.clearContext();
 
-        Assertions.assertThat(konfigurationRepository.getWillkommenstext().get()).isEqualTo(konfigurationFruehesteLoginUhrzeit);
-    }
-
+    Assertions.assertThat(konfigurationRepository.getWillkommenstext().get())
+        .isEqualTo(konfigurationFruehesteLoginUhrzeit);
+  }
 }

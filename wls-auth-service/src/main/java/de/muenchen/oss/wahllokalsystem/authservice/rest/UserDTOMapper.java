@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserDTOMapper {
 
-    UserDTO toDTO(UserModel userModel);
+  UserDTO toDTO(UserModel userModel);
 
-    UsersOfWahltagModel toModel(String wahltagID, Collection<WahllokalUserInfoDTO> users);
+  UsersOfWahltagModel toModel(String wahltagID, Collection<WahllokalUserInfoDTO> users);
 }

@@ -14,21 +14,20 @@ import org.springframework.security.core.Authentication;
 @ExtendWith(MockitoExtension.class)
 class DummyBezirkIdPermissionEvaluatorImplTest {
 
-    @Mock
-    Authentication auth;
+  @Mock Authentication auth;
 
-    private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest = new DummyBezirkIdPermissionEvaluatorImpl();
+  private final DummyBezirkIdPermissionEvaluatorImpl unitUnderTest =
+      new DummyBezirkIdPermissionEvaluatorImpl();
 
-    @Nested
-    class TokenUserBezirkIdMatches {
+  @Nested
+  class TokenUserBezirkIdMatches {
 
-        @RegisterExtension
-        public LoggerExtension loggerExtension = new LoggerExtension();
+    @RegisterExtension public LoggerExtension loggerExtension = new LoggerExtension();
 
-        @Test
-        void should_returnTrue_when_called() {
-            Mockito.when(auth.getPrincipal()).thenReturn("1234");
-            Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
-        }
+    @Test
+    void should_returnTrue_when_called() {
+      Mockito.when(auth.getPrincipal()).thenReturn("1234");
+      Assertions.assertThat(unitUnderTest.tokenUserBezirkIdMatches("1234", auth)).isTrue();
     }
+  }
 }

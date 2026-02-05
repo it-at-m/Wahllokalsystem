@@ -15,18 +15,18 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @RequiredArgsConstructor
-public class JwtUserInfoAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class JwtUserInfoAuthenticationConverter
+    implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Override
-    public AbstractAuthenticationToken convert(Jwt source) {
-        return new JwtAuthenticationToken(source, loadAuthorities(source));
-    }
+  @Override
+  public AbstractAuthenticationToken convert(Jwt source) {
+    return new JwtAuthenticationToken(source, loadAuthorities(source));
+  }
 
-    private Collection<? extends GrantedAuthority> loadAuthorities(Jwt jwt) {
-        val userDetails = userService.getUserDetails(jwt.getSubject());
-        return userDetails.getAuthorities();
-    }
-
+  private Collection<? extends GrantedAuthority> loadAuthorities(Jwt jwt) {
+    val userDetails = userService.getUserDetails(jwt.getSubject());
+    return userDetails.getAuthorities();
+  }
 }

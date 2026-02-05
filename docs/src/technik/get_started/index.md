@@ -8,36 +8,31 @@ Dazu haben wir Regeln definiert. Diese Regeln und deren Hinterlegung in der jewe
 
 ## Zusammenspiel IDE mit Podman
 
-```mermaid
-flowchart LR
+> [!NOTE] Konfiguration von hosts
+>
+> Im hosts-File müssen folgende Enträge enthalten sein, damit das Wahllokalsystem lokal korrekt funktioniert
+>
+> - 127.0.0.1 host.docker.internal
+> - 127.0.0.1 auth.wls.host.docker.internal
+> - 127.0.0.1 gui.wls.host.docker.internal
 
-    subgraph Dev-PC
-        subgraph IDE
-            wlsService
-            frontend_gui[gui_wahllokalsystem]
-        end
+![Aufteilung Komponenten auf dem Entwicklungs-PC](/developmentPCEnvironment.png)
 
-        subgraph Podman
-            authService
-            oracleDB[Oracle DB]
-            apiGateway[API Gateway]
-            backendServiceN[Backend Service N]
-        end
+Auf dem Entwicklungs-PC müssen Container ausführbar sein. Einige Komponenten, die zur Ausführung des Systems
+notwendig sind, liegen nur als Image vor. Die Komponenten sind mit `podman only` markiert. Alle
+anderen Komponenten liegen sowohl als Image als auch anderweitig startbar vor. Die Microservices können über Skripte
+oder `Run Configurations` (IntelliJ) ausgeführt werden.
 
-        apiGateway --->|forwards request| backendServiceN
-        apiGateway --->|forwards request| authService
+> [!NOTE]
+>
+> Damit Services, die in Podman laufen, mit Services außerhalb von Podman kommunizieren können, müssen die Container
+> das entsprechende Host-Gateway konfiguriert haben.
 
-        backendServiceN --->|accesses| oracleDB
-        backendServiceN --->|OAuth2| authService
-
-        frontend_gui --->|request| apiGateway
-
-        authService-->|accesses| oracleDB
-
-        wlsService ---|OAuth2| authService
-        wlsService --->|accesses|oracleDB
-    end
-```
+> [!CAUTION] Zugriff bei Frontendentwicklung
+>
+> Bei der Entwicklung am Frontend sollte der Zugriff über `host.docker.internal:8083` erfolgen, da nur dadurch das
+> Hot Module Replacement (HMR) des Vite-Servers funktioniert. Bei Zugriff über `gui.wls.host.docker.internal:58083`
+> kann die WebSocket-Verbindung nicht aufgebaut werden, und HMR funktioniert nicht.
 
 ## Services und Ports
 

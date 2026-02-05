@@ -15,13 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Stimmzettelumschlaege {
 
-    @EmbeddedId
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId private BezirkUndWahlID bezirkUndWahlID;
 
-    private LocalDateTime urneneroeffnungsUhrzeit;
+  private LocalDateTime urneneroeffnungsUhrzeit;
 
-    @NotNull
-    private long anzahlWaehler;
+  @NotNull private long anzahlWaehler;
 
-    private Long anzahlWaehler2;
+  private Long anzahlWaehler2;
 }

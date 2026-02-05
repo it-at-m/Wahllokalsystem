@@ -35,33 +35,32 @@ import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorsta
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
 const { isUWB } = storeToRefs(useUserStore());
-const { initTasks } = useTaskManagerStore();
-const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
+const { initTasks } = useInitTaskManagerStore();
+const { wahlenActions } = useWahlenStore();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
 
-const { setupIndexDB } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 
 onMounted(async () => {
+  // config for service worker indexed db (same config as in wahl-worker.js !)
+  indexDBSingleton.setupIndexDB();
+
   try {
     await loadUser();
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }
-
-  // config for service worker indexed db (same config as in wahl-worker.js !)
-  setupIndexDB();
 });
 
 onUnmounted(() => {

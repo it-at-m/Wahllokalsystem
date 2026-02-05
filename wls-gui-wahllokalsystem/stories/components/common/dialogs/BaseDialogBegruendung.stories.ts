@@ -30,7 +30,6 @@ export const Default: Story = {
   args: {
     default: "Hi, i am the default slot content",
     dialogtitle: "My dialog title",
-    label: "Label Text",
     visible: false,
   },
 };

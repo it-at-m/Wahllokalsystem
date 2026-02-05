@@ -22,45 +22,44 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class KonfigurierteWahltageController {
 
-    private final KonfigurierteWahltageService konfigurierteWahltageService;
+  private final KonfigurierteWahltageService konfigurierteWahltageService;
 
-    private final KonfigurierterWahltagDTOMapper konfigurierterWahltagDTOMapper;
+  private final KonfigurierterWahltagDTOMapper konfigurierterWahltagDTOMapper;
 
-    @Operation(
-            description = "Liefert alle konfigurierten Wahltage.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine konfigurierten Wahltage vorhanden"
-                    )
-            }
-    )
-    @GetMapping("konfigurierteWahltage")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<KonfigurierterWahltagDTO>> getKonfigurierteWahltage() {
-        val konfigurierteWahltageDTOList = konfigurierteWahltageService.getKonfigurierteWahltage().stream().map(konfigurierterWahltagDTOMapper::toDTO).toList();
-        if (konfigurierteWahltageDTOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(konfigurierteWahltageDTOList, HttpStatus.OK);
+  @Operation(
+      description = "Liefert alle konfigurierten Wahltage.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."),
+        @ApiResponse(responseCode = "204", description = "Keine konfigurierten Wahltage vorhanden")
+      })
+  @GetMapping("konfigurierteWahltage")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<List<KonfigurierterWahltagDTO>> getKonfigurierteWahltage() {
+    val konfigurierteWahltageDTOList =
+        konfigurierteWahltageService.getKonfigurierteWahltage().stream()
+            .map(konfigurierterWahltagDTOMapper::toDTO)
+            .toList();
+    if (konfigurierteWahltageDTOList.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    return new ResponseEntity<>(konfigurierteWahltageDTOList, HttpStatus.OK);
+  }
 
-    @Operation(
-            description = "Liefert alle konfigurierten Wahltage.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."
-                    ),
+  @Operation(
+      description = "Liefert alle konfigurierten Wahltage.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Die konfigurierten Wahltage wurden erfolgreich geliefert."),
+      })
+  @PostMapping("konfigurierterWahltag")
+  @ResponseStatus(HttpStatus.OK)
+  public void postKonfigurierterWahltag(
+      @RequestBody KonfigurierterWahltagDTO konfigurierterWahltagDTO) {
+    val modelToSave = konfigurierterWahltagDTOMapper.toModel(konfigurierterWahltagDTO);
 
-            }
-    )
-    @PostMapping("konfigurierterWahltag")
-    @ResponseStatus(HttpStatus.OK)
-    public void postKonfigurierterWahltag(@RequestBody KonfigurierterWahltagDTO konfigurierterWahltagDTO) {
-        val modelToSave = konfigurierterWahltagDTOMapper.toModel(konfigurierterWahltagDTO);
-
-        konfigurierteWahltageService.postKonfigurierterWahltag(modelToSave);
-    }
+    konfigurierteWahltageService.postKonfigurierterWahltag(modelToSave);
+  }
 }

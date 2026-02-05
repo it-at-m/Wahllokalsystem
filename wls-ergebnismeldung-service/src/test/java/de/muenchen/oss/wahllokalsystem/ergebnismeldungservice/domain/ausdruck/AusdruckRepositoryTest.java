@@ -18,78 +18,101 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-        classes = { MicroServiceApplication.class }
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@SpringBootTest(classes = {MicroServiceApplication.class})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 @Slf4j
 class AusdruckRepositoryTest {
 
-    @Autowired
-    AusdruckRepository repository;
+  @Autowired AusdruckRepository repository;
 
-    @AfterEach
-    void teardown() {
-        repository.deleteAll();
+  @AfterEach
+  void teardown() {
+    repository.deleteAll();
+  }
+
+  @Nested
+  class FindById {
+
+    @Test
+    void should_returnData_when_idIsGiven() {
+      val idToFind =
+          new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
+      val timeNow = Instant.now();
+      val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", timeNow);
+      val ausdruckeToSave =
+          List.of(
+              ausdruckToFind,
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow),
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow),
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow));
+
+      repository.saveAll(ausdruckeToSave);
+
+      val result = repository.findById(idToFind);
+      Assertions.assertThat(result).isNotNull();
+      Assertions.assertThat(result)
+          .usingRecursiveComparison()
+          .withComparatorForType(INSTANT_PRECISION_MILLISECONDS, Instant.class)
+          .isEqualTo(Optional.of(ausdruckToFind));
     }
+  }
 
-    @Nested
-    class FindById {
+  @Nested
+  class FindByWahlIdAndWahlbezirkId {
 
-        @Test
-        void should_returnData_when_idIsGiven() {
-            val idToFind = new WahlUndBezirkIDUndMeldungsart("wahlbezirkID01", "wahlID01", Meldungsart.V1);
-            val timeNow = Instant.now();
-            val ausdruckToFind = new Ausdruck(idToFind, "Testcontent", timeNow);
-            val ausdruckeToSave = List.of(
-                    ausdruckToFind,
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow),
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow),
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow));
+    @Test
+    void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
+      val wahlIdToFind = "wahlId01";
+      val wahlbezirkIdToFind = "wahlbezirkID01";
+      val timeNow = Instant.now();
+      val ausdruckToFind1 =
+          new Ausdruck(
+              new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V1),
+              "Testcontent",
+              timeNow);
+      val ausdruckToFind2 =
+          new Ausdruck(
+              new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V3),
+              "Testcontent",
+              timeNow);
+      val ausdruckeToSave =
+          List.of(
+              ausdruckToFind1,
+              ausdruckToFind2,
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow),
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow),
+              new Ausdruck(
+                  new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
+                  "Testcontent",
+                  timeNow));
 
-            repository.saveAll(ausdruckeToSave);
+      repository.saveAll(ausdruckeToSave);
 
-            val result = repository.findById(idToFind);
-            Assertions.assertThat(result).isNotNull();
-            Assertions.assertThat(result).usingRecursiveComparison().withComparatorForType(INSTANT_PRECISION_MILLISECONDS, Instant.class)
-                    .isEqualTo(Optional.of(ausdruckToFind));
-        }
+      val result = repository.findByWahlIdAndWahlbezirkId(wahlIdToFind, wahlbezirkIdToFind);
+      Assertions.assertThat(result).hasSize(2);
+      Assertions.assertThat(result)
+          .allSatisfy(
+              ausdruck -> {
+                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlID())
+                    .isEqualTo(wahlIdToFind);
+                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlbezirkID())
+                    .isEqualTo(wahlbezirkIdToFind);
+              });
     }
-
-    @Nested
-    class FindByWahlIdAndWahlbezirkId {
-
-        @Test
-        void should_returnAusdruck_when_wahlUndBezirkIDUndMeldungsartIsGiven() {
-            val wahlIdToFind = "wahlId01";
-            val wahlbezirkIdToFind = "wahlbezirkID01";
-            val timeNow = Instant.now();
-            val ausdruckToFind1 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V1), "Testcontent",
-                    timeNow);
-            val ausdruckToFind2 = new Ausdruck(new WahlUndBezirkIDUndMeldungsart(wahlbezirkIdToFind, wahlIdToFind, Meldungsart.V3), "Testcontent",
-                    timeNow);
-            val ausdruckeToSave = List.of(
-                    ausdruckToFind1,
-                    ausdruckToFind2,
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID02", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow),
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID03", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow),
-                    new Ausdruck(new WahlUndBezirkIDUndMeldungsart("wahlbezirkID04", "wahlID01", Meldungsart.V1),
-                            "Testcontent", timeNow));
-
-            repository.saveAll(ausdruckeToSave);
-
-            val result = repository.findByWahlIdAndWahlbezirkId(wahlIdToFind,
-                    wahlbezirkIdToFind);
-            Assertions.assertThat(result).hasSize(2);
-            Assertions.assertThat(result).allSatisfy(ausdruck -> {
-                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlID()).isEqualTo(wahlIdToFind);
-                Assertions.assertThat(ausdruck.getWahlUndBezirkIDUndMeldungsart().getWahlbezirkID()).isEqualTo(wahlbezirkIdToFind);
-            });
-        }
-    }
+  }
 }

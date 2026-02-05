@@ -22,57 +22,62 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
 
-    private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
+  private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    @Override
-    public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltag) {
-        log.debug("#postKonfigurierterWahltag");
+  @Override
+  public void postKonfigurierterWahltag(final KonfigurierterWahltagModel konfigurierterWahltag) {
+    log.debug("#postKonfigurierterWahltag");
 
-        try {
-            val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
-            konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
-        } catch (final WlsException wlsException) {
-            log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
+    try {
+      val konfigurierterWahltagDTO = konfigurierterWahltagClientMapper.toDto(konfigurierterWahltag);
+      konfigurierterWahltagControllerApi.setKonfigurierterWahltag(konfigurierterWahltagDTO);
+    } catch (final WlsException wlsException) {
+      log.debug("#postKonfigurierterWahltag found WlsException:", wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
     }
+  }
 
-    @Override
-    public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException {
-        final List<KonfigurierterWahltagDTO> konfigurierterWahltagDTOList;
-        try {
-            konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
+  @Override
+  public List<KonfigurierterWahltagModel> getKonfigurierteWahltage() throws WlsException {
+    final List<KonfigurierterWahltagDTO> konfigurierterWahltagDTOList;
+    try {
+      konfigurierterWahltagDTOList = konfigurierterWahltagControllerApi.getKonfigurierteWahltage();
 
-            if (konfigurierterWahltagDTOList == null) {
-                return Collections.emptyList();
-            }
+      if (konfigurierterWahltagDTOList == null) {
+        return Collections.emptyList();
+      }
 
-        } catch (WlsException wlsException) {
-            log.debug("#getKonfigurierteWahltage found WlsException:", wlsException);
-            throw wlsException;
-        } catch (Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
-        return konfigurierterWahltagDTOList.stream().map(konfigurierterWahltagClientMapper::toModel).toList();
+    } catch (WlsException wlsException) {
+      log.debug("#getKonfigurierteWahltage found WlsException:", wlsException);
+      throw wlsException;
+    } catch (Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
     }
+    return konfigurierterWahltagDTOList.stream()
+        .map(konfigurierterWahltagClientMapper::toModel)
+        .toList();
+  }
 
-    @Override
-    public void deleteKonfigurierterWahltag(final String wahltagID) {
-        log.debug("#deleteKonfigurierterWahltag");
+  @Override
+  public void deleteKonfigurierterWahltag(final String wahltagID) {
+    log.debug("#deleteKonfigurierterWahltag");
 
-        try {
-            konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
-        } catch (final WlsException wlsException) {
-            log.debug("#deleteKonfigurierterWahltag found WlsException:", wlsException);
-            throw wlsException;
-        } catch (Exception exception) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
+    try {
+      konfigurierterWahltagControllerApi.deleteKonfigurierterWahltag(wahltagID);
+    } catch (final WlsException wlsException) {
+      log.debug("#deleteKonfigurierterWahltag found WlsException:", wlsException);
+      throw wlsException;
+    } catch (Exception exception) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
     }
+  }
 }

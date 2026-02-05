@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface HandbuchDTOMapper {
 
-    HandbuchWriteModel toModel(HandbuchReferenceModel handbuchReferenceModel, byte[] handbuchData);
+  HandbuchWriteModel toModel(HandbuchReferenceModel handbuchReferenceModel, byte[] handbuchData);
 
-    HandbuchReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
+  HandbuchReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
 }

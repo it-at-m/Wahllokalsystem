@@ -23,20 +23,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Stimmzettelgebiet extends BaseEntity {
 
-    @ToString.Include
-    private String nummer;
+  @ToString.Include private String nummer;
 
-    @ToString.Include
-    private String name;
+  @ToString.Include private String name;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private Stimmzettelgebietsart stimmzettelgebietsart;
+  @NotNull @Enumerated(EnumType.STRING)
+  @ToString.Include
+  private Stimmzettelgebietsart stimmzettelgebietsart;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "wahlID")
-    private Wahl wahl;
-
+  @NotNull @ManyToOne
+  @JoinColumn(name = "wahlID")
+  private Wahl wahl;
 }

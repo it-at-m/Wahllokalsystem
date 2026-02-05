@@ -48,7 +48,7 @@
         prepend-icon="$continue"
         :disabled="isLoading"
         active
-        :to="routeWithName(ROUTE_WAHLVORSTAND)"
+        @click="onContinueClicked"
         >Weiter</base-text-button
       >
       <base-button-refresh
@@ -71,10 +71,11 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 
-const { routeWithName } = useNavigationUtils();
 const router = useRouter();
+
+const { getNextRoute } = useNavigationUtils();
 
 const {
   numberOfTasksToRun,
@@ -85,9 +86,9 @@ const {
   successfullyTasks,
   failedTasks,
   hasAllTasksRunSuccessfully,
-} = storeToRefs(useTaskManagerStore());
+} = storeToRefs(useInitTaskManagerStore());
 
-const { rerunFailedTasks } = useTaskManagerStore();
+const { rerunFailedTasks } = useInitTaskManagerStore();
 
 const isLoading = computed(() => {
   return (
@@ -101,6 +102,10 @@ watch(hasAllTasksRunSuccessfully, () => {
     router.push(ROUTE_WAHLVORSTAND);
   }
 });
+
+async function onContinueClicked() {
+  await router.push(getNextRoute());
+}
 
 async function onRefreshClicked() {
   await rerunFailedTasks();

@@ -17,33 +17,34 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WahltageService {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahltagRepository wahltagRepository;
+  private final WahltagRepository wahltagRepository;
 
-    private final WahltagModelMapper wahltagModelMapper;
+  private final WahltagModelMapper wahltagModelMapper;
 
-    private final WahltageClient wahltageClient;
+  private final WahltageClient wahltageClient;
 
-    @PreAuthorize(
-        "hasAuthority('Basisdaten_BUSINESSACTION_GetWahltage')"
-    )
-    public List<WahltagModel> getWahltage() {
-        log.info("#getWahltage");
-        val wahltage = wahltageClient.getWahltage(LocalDate.now().minusMonths(3));
-        wahltagRepository.saveAll(wahltagModelMapper.fromWahltagModelToWahltagEntityList(wahltage));
-        return wahltagModelMapper.fromWahltagEntityToWahltagModelList(wahltagRepository.findAllByOrderByWahltagAsc());
-    }
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahltage')")
+  public List<WahltagModel> getWahltage() {
+    log.info("#getWahltage");
+    val wahltage = wahltageClient.getWahltage(LocalDate.now().minusMonths(3));
+    wahltagRepository.saveAll(wahltagModelMapper.fromWahltagModelToWahltagEntityList(wahltage));
+    return wahltagModelMapper.fromWahltagEntityToWahltagModelList(
+        wahltagRepository.findAllByOrderByWahltagAsc());
+  }
 
-    @PreAuthorize(
-        "hasAuthority('Basisdaten_BUSINESSACTION_GetWahltag')"
-    )
-    public WahltagModel getWahltagByID(final String wahltagID) {
-        return wahltagModelMapper.toModel(getWahltagByIDOrThrow(wahltagID));
-    }
+  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahltag')")
+  public WahltagModel getWahltagByID(final String wahltagID) {
+    return wahltagModelMapper.toModel(getWahltagByIDOrThrow(wahltagID));
+  }
 
-    private Wahltag getWahltagByIDOrThrow(final String wahltagID) {
-        return wahltagRepository.findById(wahltagID)
-                .orElseThrow(() -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG));
-    }
+  private Wahltag getWahltagByIDOrThrow(final String wahltagID) {
+    return wahltagRepository
+        .findById(wahltagID)
+        .orElseThrow(
+            () ->
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.GETWAHLBEZIRKE_NO_WAHLTAG));
+  }
 }

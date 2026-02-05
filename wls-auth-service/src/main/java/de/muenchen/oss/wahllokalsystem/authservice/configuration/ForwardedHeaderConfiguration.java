@@ -16,12 +16,12 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 @Configuration
 public class ForwardedHeaderConfiguration {
 
-    @Bean
-    public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
-        final FilterRegistrationBean<ForwardedHeaderFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new ForwardedHeaderFilter());
-        registration.addUrlPatterns("/*");
-        return registration;
-    }
-
+  @Bean
+  public FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
+    final FilterRegistrationBean<ForwardedHeaderFilter> registration =
+        new FilterRegistrationBean<>();
+    registration.setFilter(new ForwardedHeaderFilter());
+    registration.addUrlPatterns("/*");
+    return registration;
+  }
 }

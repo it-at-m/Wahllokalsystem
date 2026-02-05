@@ -19,42 +19,45 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StatusService {
 
-    private final StatusRepository statusRepository;
-    private final StatusModelMapper statusModelMapper;
-    private final StatusValidator statusValidator;
-    private final ExceptionFactory exceptionFactory;
-    private final List<AbstractStatusMonitoringSender> monitoringSender;
+  private final StatusRepository statusRepository;
+  private final StatusModelMapper statusModelMapper;
+  private final StatusValidator statusValidator;
+  private final ExceptionFactory exceptionFactory;
+  private final List<AbstractStatusMonitoringSender> monitoringSender;
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStatus')")
-    public Optional<StatusModel> getStatus(final BezirkUndWahlID id) {
-        log.info("#getStatus");
+  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStatus')")
+  public Optional<StatusModel> getStatus(final BezirkUndWahlID id) {
+    log.info("#getStatus");
 
-        statusValidator.validBezirkUndWahlIdOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG));
+    statusValidator.validBezirkUndWahlIdOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG));
 
-        val statusFromRepo = statusRepository.findById(id);
-        return statusFromRepo.map(statusModelMapper::toModel);
+    val statusFromRepo = statusRepository.findById(id);
+    return statusFromRepo.map(statusModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStatus')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public void setStatus(@P("param") final BezirkUndWahlID id, final StatusModel status) {
+    log.info("#postStatus");
+
+    statusValidator.validBezirkUndWahlIdOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG));
+    statusValidator.validStatusOrThrow(status);
+
+    val lastStatus = statusRepository.findById(id).map(statusModelMapper::toModel);
+    monitoringSender.forEach(sender -> sender.submitStatus(id, status, lastStatus.orElse(null)));
+
+    try {
+      statusRepository.save(statusModelMapper.toEntity(status));
+    } catch (Exception e) {
+      log.error("#postStatus unsaveable:", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STATUS_UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStatus')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
-    )
-    public void setStatus(@P("param") final BezirkUndWahlID id, final StatusModel status) {
-        log.info("#postStatus");
-
-        statusValidator.validBezirkUndWahlIdOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG));
-        statusValidator.validStatusOrThrow(status);
-
-        val lastStatus = statusRepository.findById(id).map(statusModelMapper::toModel);
-        monitoringSender.forEach(sender -> sender.submitStatus(id, status, lastStatus.orElse(null)));
-
-        try {
-            statusRepository.save(statusModelMapper.toEntity(status));
-        } catch (Exception e) {
-            log.error("#postStatus unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STATUS_UNSAVEABLE);
-        }
-    }
+  }
 }

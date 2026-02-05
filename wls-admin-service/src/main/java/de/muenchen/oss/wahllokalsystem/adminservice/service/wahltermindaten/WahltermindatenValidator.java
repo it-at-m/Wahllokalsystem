@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class WahltermindatenValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validWahltagIDParamOrThrow(final String wahltagID) {
-        if (StringUtils.isBlank(wahltagID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
-        }
+  public void validWahltagIDParamOrThrow(final String wahltagID) {
+    if (StringUtils.isBlank(wahltagID)) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.MISSING_ARGUMENT);
     }
+  }
 }

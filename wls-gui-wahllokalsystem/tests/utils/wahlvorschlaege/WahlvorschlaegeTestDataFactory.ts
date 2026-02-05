@@ -39,12 +39,12 @@ export function useWahlvorschlaegeTestDataFactory() {
       ordnungszahl: generateRandomNumber(1),
       kurzname: generateRandomString(3),
       erhaeltStimmen: generateRandomBoolean(),
-      kandidaten: [_createKandidat()],
+      kandidaten: [createKandidat()],
     };
   }
 
   function prepareKandidat() {
-    return proxyBuilder<Kandidat>(_createKandidat());
+    return proxyBuilder<Kandidat>(createKandidat());
   }
 
   function prepareWahlvorschlaege(): Builder<Wahlvorschlaege> {
@@ -80,7 +80,7 @@ export function useWahlvorschlaegeTestDataFactory() {
     };
   }
 
-  function _createKandidat(): Kandidat {
+  function createKandidat(): Kandidat {
     return {
       identifikator: generateRandomString(5),
       name: generateRandomString(7),
@@ -92,6 +92,7 @@ export function useWahlvorschlaegeTestDataFactory() {
   }
 
   return {
+    createKandidat,
     createWahlvorschlag,
     createWahlvorschlaege,
     createWahlvorschlaegeDto,

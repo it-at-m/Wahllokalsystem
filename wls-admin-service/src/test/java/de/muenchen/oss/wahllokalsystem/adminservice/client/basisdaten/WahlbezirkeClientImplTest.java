@@ -20,58 +20,73 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlbezirkeClientImplTest {
 
-    @Mock
-    WahlbezirkeControllerApi wahlbezirkeControllerApi;
+  @Mock WahlbezirkeControllerApi wahlbezirkeControllerApi;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Mock
-    WahlbezirkeClientMapper wahlbezirkeClientMapper;
+  @Mock WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
-    @InjectMocks
-    WahlbezirkeClientImpl unitUnderTest;
+  @InjectMocks WahlbezirkeClientImpl unitUnderTest;
 
-    @Nested
-    class GetWahlbezirke {
+  @Nested
+  class GetWahlbezirke {
 
-        @Test
-        void should_returnWahlbezirke_when_wahltagIDExists() {
-            val wahltagID = "wahltagID";
-            val wahltag = LocalDate.now();
+    @Test
+    void should_returnWahlbezirke_when_wahltagIDExists() {
+      val wahltagID = "wahltagID";
+      val wahltag = LocalDate.now();
 
-            val mockedWahlbezirkDTOList = List
-                    .of(new WahlbezirkDTO().wahlbezirkID("wahlbezirkID").wahltag(wahltag).nummer("123").wahlbezirkart(WahlbezirkDTO.WahlbezirkartEnum.UWB));
-            val mockedWahlbezirkModelList = wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList);
+      val mockedWahlbezirkDTOList =
+          List.of(
+              new WahlbezirkDTO()
+                  .wahlbezirkID("wahlbezirkID")
+                  .wahltag(wahltag)
+                  .nummer("123")
+                  .wahlbezirkart(WahlbezirkDTO.WahlbezirkartEnum.UWB));
+      val mockedWahlbezirkModelList = wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList);
 
-            Mockito.when(wahlbezirkeControllerApi.getWahlbezirke(wahltagID)).thenReturn(mockedWahlbezirkDTOList);
-            Mockito.when(wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList)).thenReturn(mockedWahlbezirkModelList);
+      Mockito.when(wahlbezirkeControllerApi.getWahlbezirke(wahltagID))
+          .thenReturn(mockedWahlbezirkDTOList);
+      Mockito.when(wahlbezirkeClientMapper.toModelList(mockedWahlbezirkDTOList))
+          .thenReturn(mockedWahlbezirkModelList);
 
-            val result = unitUnderTest.getWahlbezirke(wahltagID);
+      val result = unitUnderTest.getWahlbezirke(wahltagID);
 
-            Assertions.assertThat(result).isEqualTo(mockedWahlbezirkModelList);
-        }
-
-        @Test
-        void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahlbezirkeApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlbezirke api failed");
-
-            Mockito.doThrow(mockedWlsException).when(wahlbezirkeControllerApi).getWahlbezirke(wahltagID);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltagID)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahlbezirkeApi() {
-            val wahltagID = "wahltagID";
-            val mockedWlsException = TechnischeWlsException.withCode("000").buildWithMessage("communication with wahlbezirke api failed");
-
-            Mockito.doThrow(new RuntimeException("api call failed")).when(wahlbezirkeControllerApi).getWahlbezirke(wahltagID);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltagID)).isSameAs(mockedWlsException);
-        }
+      Assertions.assertThat(result).isEqualTo(mockedWahlbezirkModelList);
     }
+
+    @Test
+    void should_rethrowWlsException_when_wlsExceptionIsThrownFromWahlbezirkeApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahlbezirke api failed");
+
+      Mockito.doThrow(mockedWlsException).when(wahlbezirkeControllerApi).getWahlbezirke(wahltagID);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltagID))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwTechnischeWlsException_when_nonWlsExceptionIsThrownFromWahlbezirkeApi() {
+      val wahltagID = "wahltagID";
+      val mockedWlsException =
+          TechnischeWlsException.withCode("000")
+              .buildWithMessage("communication with wahlbezirke api failed");
+
+      Mockito.doThrow(new RuntimeException("api call failed"))
+          .when(wahlbezirkeControllerApi)
+          .getWahlbezirke(wahltagID);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlbezirke(wahltagID))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

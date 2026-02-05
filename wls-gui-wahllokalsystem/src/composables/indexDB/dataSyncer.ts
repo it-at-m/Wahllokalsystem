@@ -1,18 +1,23 @@
 import type { IndexDBValue } from "@/types/indexDB/IndexDBValue.ts";
 
 import axios from "axios";
+import { ref } from "vue";
 
 import { basicPostConfig } from "@/api/axios-utils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useIndexDBUtils } from "@/composables/indexDB/indexDBUtils.ts";
+import { useTaskManager } from "@/composables/tasks/taskManager.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-const { getDirtyItems } = useIndexDB();
+const indexDBSingleton = useIndexDB();
 const { compareByTimestamp } = useIndexDBUtils();
 
 export function useDataSyncer() {
+  const taskManager = useTaskManager();
+  const isOfflineDataSyncing = ref(false);
+
   async function getSyncTasks() {
-    const itemsToSync = await getDirtyItems();
+    const itemsToSync = await indexDBSingleton.getDirtyItems();
     itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,
@@ -25,6 +30,13 @@ export function useDataSyncer() {
           )
         ),
     }));
+  }
+
+  async function synchronizeOfflineData() {
+    isOfflineDataSyncing.value = true;
+    taskManager.setTasks(await getSyncTasks());
+    await taskManager.runAllTasks();
+    isOfflineDataSyncing.value = false;
   }
 
   function _compareSyncItemByTimeStamp(
@@ -47,6 +59,9 @@ export function useDataSyncer() {
   }
 
   return {
+    ...taskManager,
     getSyncTasks,
+    synchronizeOfflineData,
+    isOfflineDataSyncing,
   };
 }

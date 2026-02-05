@@ -14,6 +14,11 @@ on:
         required: true
         type: string
         description: 'Newline-delimited globs of paths to assets to upload for release'
+      javaVersion:
+        required: false
+        default: '17'
+        type: string
+        description: 'java version to use for build'
 
 env:
   REGISTRY: ghcr.io
@@ -26,16 +31,16 @@ jobs:
     steps:
 
       - name: Check out Git repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           ref: ${{ inputs.tag }}
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           cache: 'maven'
           cache-dependency-path: '${{ inputs.service }}/pom.xml'
-          java-version: '17'
+          java-version: ${{ inputs.javaVersion }}
           distribution: 'temurin'
 
       - name: build jar without tests
@@ -43,7 +48,7 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
+        uses: softprops/action-gh-release@5be0e66d93ac7ed76da52eca8bb058f665c3a5fe # v2.4.2
         with:
           files: ${{ inputs.files }}
           tag_name: ${{ inputs.tag }}

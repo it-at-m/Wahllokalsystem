@@ -11,11 +11,10 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(TestConstants.SPRING_NO_SECURITY_PROFILE)
 class MicroServiceApplicationNoSecurityProfileTest {
 
-    @Autowired
-    AnonymousDetailRetriever anonymousDetailRetriever;
+  @Autowired AnonymousDetailRetriever anonymousDetailRetriever;
 
-    @Test
-    void should_returnNotNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
-        Assertions.assertThat(anonymousDetailRetriever).isNotNull();
-    }
+  @Test
+  void should_returnNotNull_when_anonymouseHandlerIsUsedFromAutowiredContext() {
+    Assertions.assertThat(anonymousDetailRetriever).isNotNull();
+  }
 }

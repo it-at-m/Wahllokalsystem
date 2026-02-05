@@ -16,31 +16,34 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class IDConverterTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    IDConverter unitUnderTest;
+  @InjectMocks IDConverter unitUnderTest;
 
-    @Nested
-    class ConvertIDToUUIDOrThrow {
+  @Nested
+  class ConvertIDToUUIDOrThrow {
 
-        @Test
-        void should_convertToUUID_when_givenString() {
-            val idToConvert = "7db3ebc6-d2f9-4b7d-a703-6d1677f3f305";
+    @Test
+    void should_convertToUUID_when_givenString() {
+      val idToConvert = "7db3ebc6-d2f9-4b7d-a703-6d1677f3f305";
 
-            val result = unitUnderTest.convertIDToUUIDOrThrow(idToConvert);
+      val result = unitUnderTest.convertIDToUUIDOrThrow(idToConvert);
 
-            Assertions.assertThat(result.toString()).isEqualTo(idToConvert);
-        }
-
-        @Test
-        void should_throwWlsException_when_convertingFailed() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.ID_NICHT_KONVERTIERBAR)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.convertIDToUUIDOrThrow("")).isSameAs(mockedWlsException);
-        }
+      Assertions.assertThat(result.toString()).isEqualTo(idToConvert);
     }
+
+    @Test
+    void should_throwWlsException_when_convertingFailed() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.ID_NICHT_KONVERTIERBAR))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.convertIDToUUIDOrThrow(""))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

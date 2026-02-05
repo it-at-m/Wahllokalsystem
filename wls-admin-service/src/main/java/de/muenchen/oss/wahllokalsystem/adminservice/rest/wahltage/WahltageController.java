@@ -18,30 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahltageController {
 
-    private final WahltageService wahltageService;
+  private final WahltageService wahltageService;
 
-    private final WahltagDTOMapper wahltagDTOMapper;
+  private final WahltagDTOMapper wahltagDTOMapper;
 
-    @Operation(
-            description = "Liest alle vorhandenen Wahltage vom BasisdatenService.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahltage wurden erfolgreich gelesen."
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existieren keine Wahltage.",
-                            content = { @Content() }
-                    )
-            }
-    )
-    @GetMapping("/wahltage")
-    public ResponseEntity<List<WahltagDTO>> getWahltage() {
-        final List<WahltagDTO> result = wahltagDTOMapper.toDtoList(wahltageService.getWahltage());
-        if (result == null || result.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(result);
-        }
+  @Operation(
+      description = "Liest alle vorhandenen Wahltage vom BasisdatenService.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Die Wahltage wurden erfolgreich gelesen."),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es existieren keine Wahltage.",
+            content = {@Content()})
+      })
+  @GetMapping("/wahltage")
+  public ResponseEntity<List<WahltagDTO>> getWahltage() {
+    final List<WahltagDTO> result = wahltagDTOMapper.toDtoList(wahltageService.getWahltage());
+    if (result == null || result.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    } else {
+      return ResponseEntity.ok(result);
     }
-
+  }
 }

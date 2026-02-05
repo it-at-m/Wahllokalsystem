@@ -20,12 +20,9 @@ import lombok.ToString;
 @Embeddable
 public class Stimmzettel {
 
-    @NotNull
-    @ToString.Include
-    private long anzahl;
+  @NotNull @ToString.Include private long anzahl;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private Stimmzettelart stimmzettelart;
+  @NotNull @Enumerated(EnumType.STRING)
+  @ToString.Include
+  private Stimmzettelart stimmzettelart;
 }

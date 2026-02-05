@@ -17,38 +17,46 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmabgabevermerkeService {
 
-    private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
-    private final StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
-    private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
+  private final StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
-    public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(final BezirkIDUndWaehlerverzeichnisNummer id) {
-        log.info("#getStimmabgabevermerke");
+  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
+  public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(
+      final BezirkIDUndWaehlerverzeichnisNummer id) {
+    log.info("#getStimmabgabevermerke");
 
-        stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
-        val stimmabgabevermerke = stimmabgabevermerkeRepository.findById(id);
+    stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
+    val stimmabgabevermerke = stimmabgabevermerkeRepository.findById(id);
 
-        return stimmabgabevermerke.map(stimmabgabevermerkeModelMapper::toModel);
+    return stimmabgabevermerke.map(stimmabgabevermerkeModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public void postStimmabgabevermerke(
+      @P("param") final BezirkIDUndWaehlerverzeichnisNummer id,
+      final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
+    log.info("#postStimmabgabevermerke");
+
+    stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
+        id,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
+    stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(stimmabgabevermerkeModel);
+
+    try {
+      stimmabgabevermerkeRepository.save(
+          stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
+    } catch (final Exception e) {
+      log.error("#postStimmabgabevermerke unsaveable:", e);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)"
-    )
-    public void postStimmabgabevermerke(@P("param") final BezirkIDUndWaehlerverzeichnisNummer id, final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
-        log.info("#postStimmabgabevermerke");
-
-        stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
-        stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(stimmabgabevermerkeModel);
-
-        try {
-            stimmabgabevermerkeRepository.save(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
-        } catch (final Exception e) {
-            log.error("#postStimmabgabevermerke unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE);
-        }
-    }
+  }
 }

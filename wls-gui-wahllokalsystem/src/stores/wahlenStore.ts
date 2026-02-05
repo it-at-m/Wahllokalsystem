@@ -9,7 +9,7 @@ import { useBeanstandeteWahlbriefeGetter } from "@/composables/briefwahl/beansta
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { useErgebnisermittlungService } from "@/composables/ergebnisermittlung/ergebnisermittlungService.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useWaehlerverzeichnisGetter } from "@/composables/wahl/waehlerverzeichnisGetter.ts";
 import { useWahlService } from "@/composables/wahl/wahlService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -18,7 +18,7 @@ export const storeID = "wahlen";
 const wahlenService = useWahlService();
 const briefwahlService = useBriefwahlService();
 const { getStimmzettelumschlaege, postStimmzettelumschlaege } =
-  useErgebnisermittlungService();
+  useErgebnisService();
 const { registerStoreHMR } = useHmrUpdate();
 const { getStimmzettelTermForWahl } = useTextFormatter();
 
@@ -91,13 +91,16 @@ export const useWahlenStore = defineStore(storeID, () => {
   }));
 
   const beanstandeteWahlbriefeActions = {
-    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe() {
+    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe(
+      sendNotification = true
+    ) {
       for (const wvzNr of waehlerverzeichnisGetter.value
         .waehlerverzeichnisNummern) {
         const beanstandeteWahlbriefe =
           await briefwahlService.getBeanstandeteWahlbriefe(
             wvzNr,
-            currentUserWahlbezirkID.value
+            currentUserWahlbezirkID.value,
+            sendNotification
           );
         if (wahlenState.value.wahlen && beanstandeteWahlbriefe) {
           wahlenState.value.wahlen.forEach((wahl) => {

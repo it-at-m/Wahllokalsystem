@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ReferendumvorlagenDTOMapper {
 
-    @Mapping(target = "referendumvorlage", source = "referendumvorlagen")
-    ReferendumvorlagenDTO toDTO(ReferendumvorlagenModel referendumvorlagenModel);
+  @Mapping(target = "referendumvorlage", source = "referendumvorlagen")
+  ReferendumvorlagenDTO toDTO(ReferendumvorlagenModel referendumvorlagenModel);
 
-    ReferendumvorlagenReferenceModel toModel(String wahlbezirkID, String wahlID);
+  ReferendumvorlagenReferenceModel toModel(String wahlbezirkID, String wahlID);
 }

@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface CsvFileDTOMapper {
-    CsvFileDTO toDTO(CsvFileModel csvFileModel);
+  CsvFileDTO toDTO(CsvFileModel csvFileModel);
 }

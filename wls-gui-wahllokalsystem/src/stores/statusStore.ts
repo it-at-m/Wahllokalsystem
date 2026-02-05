@@ -1,18 +1,19 @@
-import type { Status } from "@/types/ergebnismeldung/Status.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
-import { useStatusService } from "@/composables/ergebnismeldung/statusService.ts";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/MeldungValidierungsstatusEnum.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 export const storeID = "status";
 
 export const useStatusStore = defineStore(storeID, () => {
-  const { getStatus } = useStatusService();
+  const { getStatus, postStatus } = useStatusService();
 
   const status = ref<Status[]>([]);
+  const isStatusSaving = ref(false);
 
   const DEFAULT_MELDUNG = {
     validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
@@ -46,9 +47,24 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  async function saveStatus(wahlID: string, wahlbezirkID: string) {
+    isStatusSaving.value = true;
+    try {
+      for (const statusEntry of status.value) {
+        await postStatus(wahlID, wahlbezirkID, statusEntry);
+      }
+    } catch {
+      throw Error(`Fehler beim Speichern des Status für WahlID: ${wahlID}`);
+    } finally {
+      isStatusSaving.value = false;
+    }
+  }
+
   return {
     status,
+    isStatusSaving,
     loadStatus,
+    saveStatus,
   };
 });
 

@@ -17,149 +17,198 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahldatenValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    WahldatenValidator unitUnderTest;
+  @InjectMocks WahldatenValidator unitUnderTest;
 
-    @Nested
-    class ValidGetWahltageParameterOrThrow {
+  @Nested
+  class ValidGetWahltageParameterOrThrow {
 
-        @Test
-        void should_notThrowException_when_wahltagIsValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(LocalDate.now()));
-        }
-
-        @Test
-        void should_throwWlsException_when_wahltagIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(null)).isSameAs(mockedWlsException);
-        }
+    @Test
+    void should_notThrowException_when_wahltagIsValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(LocalDate.now()));
     }
 
-    @Nested
-    class ValidGetWahlenParameterOrThrow {
+    @Test
+    void should_throwWlsException_when_wahltagIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_notThrowException_when_paramsAreValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(LocalDate.now(), ""));
-        }
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLTAGE_TAG_FEHLT))
+          .thenReturn(mockedWlsException);
 
-        @Test
-        void should_throwWlsException_when_wahltagIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validGetWahltageParameterOrThrow(null))
+          .isSameAs(mockedWlsException);
+    }
+  }
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
+  @Nested
+  class ValidGetWahlenParameterOrThrow {
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(null, "")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwWlsException_when_nummerIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(LocalDate.now(), null)).isSameAs(mockedWlsException);
-        }
+    @Test
+    void should_notThrowException_when_paramsAreValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(LocalDate.now(), ""));
     }
 
-    @Nested
-    class ValidGetWahlbezirkeParameterOrThrow {
+    @Test
+    void should_throwWlsException_when_wahltagIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_notThrowException_when_paramsAreValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), ""));
-        }
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLEN_WAHLTAG_FEHLT))
+          .thenReturn(mockedWlsException);
 
-        @Test
-        void should_throwWlsException_when_wahltagIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(null, "")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwWlsException_when_nummerIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), null))
-                    .isSameAs(mockedWlsException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(null, ""))
+          .isSameAs(mockedWlsException);
     }
 
-    @Nested
-    class ValidGetWahlberechtigteParameterOrThrow {
+    @Test
+    void should_throwWlsException_when_nummerIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_notThrowException_when_paramsAreValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("wahlbezirkID"));
-        }
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLEN_NUMMER_FEHLT))
+          .thenReturn(mockedWlsException);
 
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlenParameterOrThrow(LocalDate.now(), null))
+          .isSameAs(mockedWlsException);
+    }
+  }
 
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+  @Nested
+  class ValidGetWahlbezirkeParameterOrThrow {
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow(null)).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwWlsException_when_wahlbezirkIDIsBlank() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("  ")).isSameAs(mockedWlsException);
-        }
+    @Test
+    void should_notThrowException_when_paramsAreValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), ""));
     }
 
-    @Nested
-    class ValidGetBasisdatenParameterOrThrow {
+    @Test
+    void should_throwWlsException_when_wahltagIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-        @Test
-        void should_notThrowException_when_paramsAreValid() {
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(LocalDate.now(), "nummer"));
-        }
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLBEZIRKE_WAHLTAG_FEHLT))
+          .thenReturn(mockedWlsException);
 
-        @Test
-        void should_throwWlsException_when_wahltagIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_TAG_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(null, "nummer")).isSameAs(mockedWlsException);
-        }
-
-        @Test
-        void should_throwWlsException_when_nummerIsNull() {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.LOADBASISDATEN_NUMMER_FEHLT)).thenReturn(mockedWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(LocalDate.now(), null))
-                    .isSameAs(mockedWlsException);
-        }
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(null, ""))
+          .isSameAs(mockedWlsException);
     }
+
+    @Test
+    void should_throwWlsException_when_nummerIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLBEZIRKE_NUMMER_FEHLT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.validGetWahlbezirkeParameterOrThrow(LocalDate.now(), null))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class ValidGetWahlberechtigteParameterOrThrow {
+
+    @Test
+    void should_notThrowException_when_paramsAreValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("wahlbezirkID"));
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow(null))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsEmpty() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow(""))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwWlsException_when_wahlbezirkIDIsBlank() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADWAHLBERECHTIGTE_SUCHKRITERIEN_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetWahlberechtigteParameterOrThrow("  "))
+          .isSameAs(mockedWlsException);
+    }
+  }
+
+  @Nested
+  class ValidGetBasisdatenParameterOrThrow {
+
+    @Test
+    void should_notThrowException_when_paramsAreValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> unitUnderTest.validGetBasisdatenParameterOrThrow(LocalDate.now(), "nummer"));
+    }
+
+    @Test
+    void should_throwWlsException_when_wahltagIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADBASISDATEN_TAG_FEHLT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(null, "nummer"))
+          .isSameAs(mockedWlsException);
+    }
+
+    @Test
+    void should_throwWlsException_when_nummerIsNull() {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.LOADBASISDATEN_NUMMER_FEHLT))
+          .thenReturn(mockedWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validGetBasisdatenParameterOrThrow(LocalDate.now(), null))
+          .isSameAs(mockedWlsException);
+    }
+  }
 }

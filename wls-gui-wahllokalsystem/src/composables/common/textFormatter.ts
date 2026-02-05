@@ -7,20 +7,32 @@ import { useUserStore } from "@/stores/userStore.ts";
 
 export function useTextFormatter() {
   function getStimmzettelTermForWahl(wahl: Wahl | undefined): string {
-    const { isBWB, currentUserHauptWahlID } = storeToRefs(useUserStore());
     const { logDebug } = useLogging("textFormatter");
 
     if (wahl) {
-      return isBWB.value && wahl.wahlID === currentUserHauptWahlID.value
-        ? "Stimmzettelumschläge"
-        : "Stimmzettel";
+      return getStimmzettelTermForWahlID(wahl.wahlID);
     } else {
       logDebug("Wahl not found");
       return "";
     }
   }
 
+  function getStimmzettelTermForWahlID(wahlId: string): string {
+    const { isBWB, currentUserHauptWahlID } = storeToRefs(useUserStore());
+
+    return isBWB.value && wahlId === currentUserHauptWahlID.value
+      ? "Stimmzettelumschläge"
+      : "Stimmzettel";
+  }
+
+  function getWahlscheineOrStimmabgabevermerkeTerm(): string {
+    const { isUWB } = useUserStore();
+    return isUWB ? "Stimmabgabevermerke" : "Wahlscheine";
+  }
+
   return {
     getStimmzettelTermForWahl,
+    getStimmzettelTermForWahlID,
+    getWahlscheineOrStimmabgabevermerkeTerm,
   };
 }

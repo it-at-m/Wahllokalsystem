@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WaehlerverzeichnisModelMapper {
 
-    Waehlerverzeichnis toEntity(WaehlerverzeichnisModel waehlerverzeichnisModel);
+  Waehlerverzeichnis toEntity(WaehlerverzeichnisModel waehlerverzeichnisModel);
 
-    WaehlerverzeichnisModel toModel(Waehlerverzeichnis entity);
+  WaehlerverzeichnisModel toModel(Waehlerverzeichnis entity);
 }

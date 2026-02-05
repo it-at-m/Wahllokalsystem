@@ -16,11 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EroeffnungsUhrzeit {
 
-    @Id
-    @NotNull
-    @Size(max = 255)
-    private String wahlbezirkID;
+  @Id
+  @NotNull @Size(max = 255) private String wahlbezirkID;
 
-    @NotNull
-    private java.time.LocalDateTime eroeffnungsuhrzeit;
+  @NotNull private java.time.LocalDateTime eroeffnungsuhrzeit;
 }

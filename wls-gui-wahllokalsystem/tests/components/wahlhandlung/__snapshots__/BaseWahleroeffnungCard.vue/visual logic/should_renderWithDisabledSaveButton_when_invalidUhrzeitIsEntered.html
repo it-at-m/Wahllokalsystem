@@ -41,10 +41,10 @@
               <!---->
               <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-1" aria-hidden="false">
                   <!---->Uhrzeit
-                </label><label class="v-label v-field-label" for="input-v-1">
+                </label><label class="v-label v-field-label" id="input-v-1-label" for="input-v-1" aria-hidden="true">
                   <!---->Uhrzeit
                 </label>
-                <!----><input size="1" type="time" id="input-v-1" aria-describedby="input-v-1-messages" class="v-field__input" value="06:30">
+                <!----><input size="1" type="time" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" class="v-field__input" value="06:30">
                 <!---->
               </div>
               <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -53,7 +53,6 @@
                     </svg></i></div>
               </transition-stub>
               <div class="v-field__append-inner">
-                <!---->
                 <!---->
               </div>
               <div class="v-field__outline">
@@ -65,7 +64,7 @@
           <!---->
           <div id="input-v-1-messages" class="v-input__details" role="alert" aria-live="polite">
             <transition-group-stub name="slide-y-transition" tag="div" appear="false" persisted="false" css="true" class="v-messages">
-              <div class="v-messages__message">Eingabe muss größer oder gleich 07:00:00 sein.</div>
+              <div class="v-messages__message">Eingabe muss größer oder gleich 07:00 sein.</div>
             </transition-group-stub>
             <!---->
           </div>

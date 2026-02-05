@@ -1,6 +1,14 @@
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -8,6 +16,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUser: vi.fn(),
+  initElectionWorkflowState: vi.fn(),
 }));
 
 vi.mock("@/composables/user/userService", () => ({
@@ -15,11 +24,27 @@ vi.mock("@/composables/user/userService", () => ({
     getUser: mockDefinitions.getUser,
   }),
 }));
+vi.mock("@/stores/workflowStore.ts", () => ({
+  useWorkflowStore: () => ({
+    initElectionWorkflowState: mockDefinitions.initElectionWorkflowState,
+  }),
+}));
 
 const { prepareUser } = useUserTestDataFactory();
 
 describe("userStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserStore>;
+
+  beforeAll(() => {
+    const mockPostMessage = vi.fn();
+    const mockController = { postMessage: mockPostMessage };
+    Object.defineProperty(navigator, "serviceWorker", {
+      value: {
+        controller: mockController,
+      },
+      writable: true,
+    });
+  });
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -48,6 +73,11 @@ describe("userStore.ts", () => {
       await unitUnderTest.loadUser();
 
       expect(unitUnderTest.user).toStrictEqual(user);
+      expect(
+        mockDefinitions.initElectionWorkflowState.mock.calls
+      ).toStrictEqual([
+        [user.wahlMetaData[0]?.wahlID, user.wahlMetaData[0]?.wahlbezirkID],
+      ]);
     });
   });
 

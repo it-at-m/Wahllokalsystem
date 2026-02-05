@@ -2,6 +2,5 @@ package de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.utils.correc
 
 public class ExampleService {
 
-    public void notHavingTestEnding() {
-    }
+  public void notHavingTestEnding() {}
 }

@@ -18,64 +18,77 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KonfigurationModelValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    KonfigurationModelValidator unitUnderTest;
+  @InjectMocks KonfigurationModelValidator unitUnderTest;
 
-    @Nested
-    class ValidOrThrowGetKonfigurationByKey {
+  @Nested
+  class ValidOrThrowGetKonfigurationByKey {
 
-        @Test
-        void should_notThrowException_when_konfigurationKonfigKeyIsValid() {
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(KonfigurationKonfigKey.WILLKOMMENSTEXT));
-        }
-
-        @Test
-        void should_throwException_when_konfigurationKonfigKeyIsNull() {
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null)).isSameAs(expectedException);
-        }
+    @Test
+    void should_notThrowException_when_konfigurationKonfigKeyIsValid() {
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validOrThrowGetKonfigurationByKey(
+                      KonfigurationKonfigKey.WILLKOMMENSTEXT));
     }
 
-    @Nested
-    class ValidOrThrowSetKonfiguration {
+    @Test
+    void should_throwException_when_konfigurationKonfigKeyIsNull() {
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GETKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
 
-        @Test
-        void should_notThrowException_when_konfigurationSetModelIsValid() {
-            val validModel = initValidModel().build();
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validOrThrowGetKonfigurationByKey(null))
+          .isSameAs(expectedException);
+    }
+  }
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(validModel));
-        }
+  @Nested
+  class ValidOrThrowSetKonfiguration {
 
-        @Test
-        void should_throwException_when_konfigurationSetModelIsNull() {
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
+    @Test
+    void should_notThrowException_when_konfigurationSetModelIsValid() {
+      val validModel = initValidModel().build();
 
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(null)).isSameAs(expectedException);
-        }
-
-        @Test
-        void should_throwException_when_konfigurationSetModelSchluesselIsNull() {
-            val invalidModel = initValidModel().schluessel(null).build();
-
-            val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(expectedException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(invalidModel)).isSameAs(expectedException);
-        }
-
-        private KonfigurationSetModel.KonfigurationSetModelBuilder initValidModel() {
-            return KonfigurationSetModel.builder().schluessel("schluessel");
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(validModel));
     }
 
+    @Test
+    void should_throwException_when_konfigurationSetModelIsNull() {
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(null))
+          .isSameAs(expectedException);
+    }
+
+    @Test
+    void should_throwException_when_konfigurationSetModelSchluesselIsNull() {
+      val invalidModel = initValidModel().schluessel(null).build();
+
+      val expectedException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POSTKONFIGURATION_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(expectedException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validOrThrowSetKonfiguration(invalidModel))
+          .isSameAs(expectedException);
+    }
+
+    private KonfigurationSetModel.KonfigurationSetModelBuilder initValidModel() {
+      return KonfigurationSetModel.builder().schluessel("schluessel");
+    }
+  }
 }

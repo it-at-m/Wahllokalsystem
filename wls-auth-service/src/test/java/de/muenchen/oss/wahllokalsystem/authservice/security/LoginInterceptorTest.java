@@ -30,150 +30,176 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 @ExtendWith(MockitoExtension.class)
 class LoginInterceptorTest {
 
-    @Mock
-    LoginTimeClient loginTimeClient;
+  @Mock LoginTimeClient loginTimeClient;
 
-    @Mock
-    WahltagClient wahltagClient;
+  @Mock WahltagClient wahltagClient;
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @InjectMocks
-    LoginInterceptor unitUnderTest;
+  @InjectMocks LoginInterceptor unitUnderTest;
 
-    @Nested
-    class ValidateLoginOrThrow {
+  @Nested
+  class ValidateLoginOrThrow {
 
-        @Test
-        void should_notThrowException_when_loginTimeIsNotToCheck() {
-            val ldapUserDetails = new TestLdapUserDetails("");
+    @Test
+    void should_notThrowException_when_loginTimeIsNotToCheck() {
+      val ldapUserDetails = new TestLdapUserDetails("");
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
-        }
-
-        @Test
-        void should_throwDisabledException_when_userIsNotAssignedToActiveWahltag() {
-            val wahltagID = "wahltagID";
-            val username = "username";
-            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
-
-            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-
-            Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
-            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
-                    .isInstanceOf(DisabledException.class);
-        }
-
-        @Test
-        void should_throwDisabledException_when_userLoginIsAfterLatestAllowedLoginTime() {
-            val wahltagID = "wahltagID";
-            val username = "username";
-            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
-
-            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().minusMinutes(1));
-
-            Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
-            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
-            Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
-                    .isInstanceOf(DisabledException.class);
-        }
-
-        @Test
-        void should_throwDisabledException_when_userLoginIsBeforeEarliestAllowedLoginTime() {
-            val wahltagID = "wahltagID";
-            val username = "username";
-            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
-
-            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusYears(1));
-
-            Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
-            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
-            Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
-                    .isInstanceOf(DisabledException.class);
-        }
-
-        @Test
-        void should_catchWlsException_when_retrievingLegalLoginTimeFails() {
-            val wahltagID = "wahltagID";
-            val username = "username";
-            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
-
-            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedLegalLoginClientException = InfrastrukturelleWlsException.withCode("").buildWithMessage("getting legal login interval failed");
-
-            Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
-            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
-            Mockito.doThrow(mockedLegalLoginClientException).when(loginTimeClient).getLegalLoginInterval();
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
-        }
-
-        @Test
-        void should_notThrowException_when_infomanagementClientThrowsExceptionOnWahltagIsActiveCheck() {
-            val wahltagID = "wahltagID";
-            val username = "username";
-            val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
-
-            val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
-            val mockedWahltagClientIsWahltagActiveException = InfrastrukturelleWlsException.withCode("").buildWithMessage("checking wahltag is active failed");
-            val mockedLegalLoginInterval = new LegalLoginIntervalModel(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
-
-            Mockito.doThrow(mockedWahltagClientIsWahltagActiveException).when(wahltagClient).isWahltagActive(wahltagID);
-            Mockito.when(userService.getUser(username)).thenReturn(Optional.of(mockedUserModelFromUserService));
-            Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
-        }
-
-        private UserModel createUserModel(final String wahltagID, final String... authorities) {
-            return new UserModel("", "", true, wahltagID, LocalDate.now(), "", "", WahlbezirksartModel.UWB, "", Set.of(authorities), "");
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
     }
 
-    @RequiredArgsConstructor
-    static class TestLdapUserDetails implements LdapUserDetails {
+    @Test
+    void should_throwDisabledException_when_userIsNotAssignedToActiveWahltag() {
+      val wahltagID = "wahltagID";
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
 
-        private final String username;
-        private final Collection<SimpleGrantedAuthority> authorities;
+      val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
 
-        public TestLdapUserDetails(final String username, final String... authorities) {
-            this.username = username;
-            this.authorities = Arrays.stream(authorities).map(SimpleGrantedAuthority::new).toList();
-        }
+      Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
 
-        @Override
-        public String getDn() {
-            return "";
-        }
-
-        @Override
-        public void eraseCredentials() {
-
-        }
-
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            return authorities;
-        }
-
-        @Override
-        public String getPassword() {
-            return "";
-        }
-
-        @Override
-        public String getUsername() {
-            return username;
-        }
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
+          .isInstanceOf(DisabledException.class);
     }
 
+    @Test
+    void should_throwDisabledException_when_userLoginIsAfterLatestAllowedLoginTime() {
+      val wahltagID = "wahltagID";
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
+
+      val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
+      val mockedLegalLoginInterval =
+          new LegalLoginIntervalModel(
+              LocalDateTime.now().minusYears(1), LocalDateTime.now().minusMinutes(1));
+
+      Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+      Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
+          .isInstanceOf(DisabledException.class);
+    }
+
+    @Test
+    void should_throwDisabledException_when_userLoginIsBeforeEarliestAllowedLoginTime() {
+      val wahltagID = "wahltagID";
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
+
+      val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
+      val mockedLegalLoginInterval =
+          new LegalLoginIntervalModel(
+              LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusYears(1));
+
+      Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+      Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
+          .isInstanceOf(DisabledException.class);
+    }
+
+    @Test
+    void should_catchWlsException_when_retrievingLegalLoginTimeFails() {
+      val wahltagID = "wahltagID";
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
+
+      val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
+      val mockedLegalLoginClientException =
+          InfrastrukturelleWlsException.withCode("")
+              .buildWithMessage("getting legal login interval failed");
+
+      Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(true);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+      Mockito.doThrow(mockedLegalLoginClientException)
+          .when(loginTimeClient)
+          .getLegalLoginInterval();
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+    }
+
+    @Test
+    void should_notThrowException_when_infomanagementClientThrowsExceptionOnWahltagIsActiveCheck() {
+      val wahltagID = "wahltagID";
+      val username = "username";
+      val ldapUserDetails = new TestLdapUserDetails(username, "WAHLVORSTAND");
+
+      val mockedUserModelFromUserService = createUserModel(wahltagID, "WLS_WAHLVORSTAND");
+      val mockedWahltagClientIsWahltagActiveException =
+          InfrastrukturelleWlsException.withCode("")
+              .buildWithMessage("checking wahltag is active failed");
+      val mockedLegalLoginInterval =
+          new LegalLoginIntervalModel(
+              LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
+
+      Mockito.doThrow(mockedWahltagClientIsWahltagActiveException)
+          .when(wahltagClient)
+          .isWahltagActive(wahltagID);
+      Mockito.when(userService.getUser(username))
+          .thenReturn(Optional.of(mockedUserModelFromUserService));
+      Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
+    }
+
+    private UserModel createUserModel(final String wahltagID, final String... authorities) {
+      return new UserModel(
+          "",
+          "",
+          true,
+          wahltagID,
+          LocalDate.now(),
+          "",
+          "",
+          WahlbezirksartModel.UWB,
+          "",
+          Set.of(authorities),
+          "");
+    }
+  }
+
+  @RequiredArgsConstructor
+  static class TestLdapUserDetails implements LdapUserDetails {
+
+    private final String username;
+    private final Collection<SimpleGrantedAuthority> authorities;
+
+    public TestLdapUserDetails(final String username, final String... authorities) {
+      this.username = username;
+      this.authorities = Arrays.stream(authorities).map(SimpleGrantedAuthority::new).toList();
+    }
+
+    @Override
+    public String getDn() {
+      return "";
+    }
+
+    @Override
+    public void eraseCredentials() {}
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+      return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+      return "";
+    }
+
+    @Override
+    public String getUsername() {
+      return username;
+    }
+  }
 }

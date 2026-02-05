@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BriefwahlvorbereitungModelMapper {
 
-    BriefwahlvorbereitungModel toModel(Briefwahlvorbereitung entity);
+  BriefwahlvorbereitungModel toModel(Briefwahlvorbereitung entity);
 
-    Briefwahlvorbereitung toEntity(BriefwahlvorbereitungModel model);
+  Briefwahlvorbereitung toEntity(BriefwahlvorbereitungModel model);
 }

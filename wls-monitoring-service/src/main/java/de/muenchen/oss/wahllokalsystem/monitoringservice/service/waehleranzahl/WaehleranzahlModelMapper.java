@@ -6,8 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WaehleranzahlModelMapper {
 
-    Waehleranzahl toEntity(WaehleranzahlModel waehleranzahlModel);
+  Waehleranzahl toEntity(WaehleranzahlModel waehleranzahlModel);
 
-    WaehleranzahlModel toModel(Waehleranzahl entity);
-
+  WaehleranzahlModel toModel(Waehleranzahl entity);
 }

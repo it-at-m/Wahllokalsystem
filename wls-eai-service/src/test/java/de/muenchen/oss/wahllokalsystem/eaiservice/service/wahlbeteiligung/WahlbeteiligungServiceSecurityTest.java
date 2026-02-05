@@ -18,47 +18,49 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class WahlbeteiligungServiceSecurityTest {
 
-    @Autowired
-    WahlbeteiligungService unitUnderTest;
+  @Autowired WahlbeteiligungService unitUnderTest;
 
-    @BeforeEach
-    void setup() {
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setup() {
+    SecurityContextHolder.clearContext();
+  }
+
+  @Nested
+  class SaveWahlvorbereitung {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.SERVICE_SAVE_WAHLBETEILIGUNG);
+
+      val wahlID = "wahlID1";
+      val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
+      val anzahlWaehler = 150;
+      val meldeZeitpunkt = LocalDateTime.now();
+
+      val modelToSet =
+          new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSet));
     }
 
-    @Nested
-    class SaveWahlvorbereitung {
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.SERVICE_SAVE_WAHLBETEILIGUNG);
+      val wahlID = "wahlID1";
+      val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
+      val anzahlWaehler = 150;
+      val meldeZeitpunkt = LocalDateTime.now();
 
-            val wahlID = "wahlID1";
-            val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
-            val anzahlWaehler = 150;
-            val meldeZeitpunkt = LocalDateTime.now();
+      val modelToSet =
+          new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
 
-            val modelToSet = new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSet));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_anyAuthorityMissing() {
-            SecurityUtils.runWith();
-
-            val wahlID = "wahlID1";
-            val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
-            val anzahlWaehler = 150;
-            val meldeZeitpunkt = LocalDateTime.now();
-
-            val modelToSet = new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSet))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatThrownBy(() -> unitUnderTest.saveWahlbeteiligung(modelToSet))
+          .isInstanceOf(AccessDeniedException.class);
     }
+  }
 }

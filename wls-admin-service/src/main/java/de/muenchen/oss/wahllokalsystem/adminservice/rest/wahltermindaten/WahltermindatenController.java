@@ -18,33 +18,32 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahltermindatenController {
 
-    private final WahltermindatenService wahltermindatenService;
+  private final WahltermindatenService wahltermindatenService;
 
-    @Operation(
-            description = "Importiert die Wahltermindaten.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich importiert."
-                    )
-            }
-    )
-    @PostMapping("importWahltermindaten/{wahltagID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void loadWahltermindaten(@PathVariable("wahltagID") final String wahltagID) {
-        wahltermindatenService.loadWahltermindaten(wahltagID);
-    }
+  @Operation(
+      description = "Importiert die Wahltermindaten.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Die Wahltermindaten wurden erfolgreich importiert.")
+      })
+  @PostMapping("importWahltermindaten/{wahltagID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void loadWahltermindaten(@PathVariable("wahltagID") final String wahltagID) {
+    wahltermindatenService.loadWahltermindaten(wahltagID);
+  }
 
-    @Operation(
-            description = "Loescht Wahlen, Wahlbezirke, Stimmzettelgebiete und Basisstrukturdaten zu einem gegebenen Wahltag aus dem externem Wahlsystem.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahltermindaten wurden erfolgreich gelöscht."
-                    )
-            }
-    )
-    @PostMapping("deleteWahltermindaten/{wahltagID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
-        wahltermindatenService.deleteWahltermindaten(wahltagID);
-    }
+  @Operation(
+      description =
+          "Loescht Wahlen, Wahlbezirke, Stimmzettelgebiete und Basisstrukturdaten zu einem gegebenen Wahltag aus dem externem Wahlsystem.",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Die Wahltermindaten wurden erfolgreich gelöscht.")
+      })
+  @PostMapping("deleteWahltermindaten/{wahltagID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+    wahltermindatenService.deleteWahltermindaten(wahltagID);
+  }
 }

@@ -21,21 +21,15 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Message {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    private UUID oid;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  private UUID oid;
 
-    @NotNull
-    @Size(max = 1024)
-    private String wahlbezirkID;
+  @NotNull @Size(max = 1024) private String wahlbezirkID;
 
-    @NotNull
-    @Size(max = 1024)
-    private String nachricht;
+  @NotNull @Size(max = 1024) private String nachricht;
 
-    @NotNull
-    private LocalDateTime empfangsZeit;
-
+  @NotNull private LocalDateTime empfangsZeit;
 }

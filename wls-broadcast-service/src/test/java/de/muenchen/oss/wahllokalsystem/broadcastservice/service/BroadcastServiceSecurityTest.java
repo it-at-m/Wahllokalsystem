@@ -25,120 +25,125 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+    classes = {MicroServiceApplication.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 @Slf4j
 public class BroadcastServiceSecurityTest {
 
-    @Autowired
-    BroadcastService broadcastService;
+  @Autowired BroadcastService broadcastService;
 
-    @BeforeEach
-    void setup() {
-        Assertions.assertThat(broadcastService).isNotNull();
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setup() {
+    Assertions.assertThat(broadcastService).isNotNull();
+    SecurityContextHolder.clearContext();
+  }
+
+  @Nested
+  class Broadcast {
+
+    @Test
+    void should_throwAccessDeniedException_when_runWithDummyRole() {
+      SecurityUtils.runWith("ROLE_DUMMY");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.broadcast(null))
+          .withMessageStartingWith("Access Denied");
     }
 
-    @Nested
-    class Broadcast {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
-        @Test
-        void should_throwAccessDeniedException_when_runWithDummyRole() {
-            SecurityUtils.runWith("ROLE_DUMMY");
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.broadcast(null)).withMessageStartingWith("Access Denied");
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.broadcast(m1))
-                    .withMessageStartingWith("Access Denied");
-        }
-
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
-            List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
-            BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should have access");
-
-            Assertions.assertThatCode(() -> broadcastService.broadcast(m1))
-                    .doesNotThrowAnyException();
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
-        }
+      List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+      BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should fail");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.broadcast(m1))
+          .withMessageStartingWith("Access Denied");
     }
 
-    @Nested
-    class GetOldestMessage {
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_BROADCAST);
+      List<String> wahlbezirke = Arrays.asList("1", "2", "3", "4");
+      BroadcastMessageDTO m1 = new BroadcastMessageDTO(wahlbezirke, "I should have access");
 
-        @Test
-        void should_throwAccessDeniedException_when_runWithDummyRole() {
-            SecurityUtils.runWith("ROLE_DUMMY");
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.getOldestMessage(null))
-                    .withMessageStartingWith("Access Denied");
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
-                    .withMessageStartingWith("Access Denied");
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
-        }
-
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
-            Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId")).isNotInstanceOf(AccessDeniedException.class);
-        }
+      Assertions.assertThatCode(() -> broadcastService.broadcast(m1)).doesNotThrowAnyException();
     }
 
-    @Nested
-    class DeleteMessage {
-
-        @Test
-        void should_throwAccessDeniedException_when_runWithDummyRole() {
-            SecurityUtils.runWith("ROLE_DUMMY");
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.deleteMessage(null))
-                    .withMessageStartingWith("Access Denied");
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-            Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-                    .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
-                    .withMessageStartingWith("Access Denied");
-        }
-
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
-            Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
-                    .doesNotThrowAnyException();
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
-        }
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_POST_BROADCAST);
     }
+  }
+
+  @Nested
+  class GetOldestMessage {
+
+    @Test
+    void should_throwAccessDeniedException_when_runWithDummyRole() {
+      SecurityUtils.runWith("ROLE_DUMMY");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.getOldestMessage(null))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_BROADCAST);
+    }
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
+      Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
+          .isNotInstanceOf(AccessDeniedException.class);
+    }
+  }
+
+  @Nested
+  class DeleteMessage {
+
+    @Test
+    void should_throwAccessDeniedException_when_runWithDummyRole() {
+      SecurityUtils.runWith("ROLE_DUMMY");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.deleteMessage(null))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+          .withMessageStartingWith("Access Denied");
+    }
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
+      Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+          .doesNotThrowAnyException();
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
+    }
+  }
 }

@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 
 class ServiceIDFormatterTest {
 
-    @Nested
-    class GetId {
+  @Nested
+  class GetId {
 
-        @Test
-        void should_returnDefinedId_when_called() {
-            val appName = "app name";
-            val unitUnderTest = new ServiceIDFormatter(appName);
+    @Test
+    void should_returnDefinedId_when_called() {
+      val appName = "app name";
+      val unitUnderTest = new ServiceIDFormatter(appName);
 
-            Assertions.assertThat(unitUnderTest.getId()).isEqualTo(appName);
-        }
+      Assertions.assertThat(unitUnderTest.getId()).isEqualTo(appName);
     }
+  }
 }

@@ -16,32 +16,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KopfdatenControllerTest {
 
-    @Mock
-    KopfdatenService kopfdatenService;
+  @Mock KopfdatenService kopfdatenService;
 
-    @Mock
-    KopfdatenDTOMapper kopfdatenDTOMapper;
+  @Mock KopfdatenDTOMapper kopfdatenDTOMapper;
 
-    @InjectMocks
-    KopfdatenController kopfdatenController;
+  @InjectMocks KopfdatenController kopfdatenController;
 
-    @Nested
-    class GetKopfdaten {
+  @Nested
+  class GetKopfdaten {
 
-        @Test
-        void should_callServiceAndMapObjects_when_callingGet() {
+    @Test
+    void should_callServiceAndMapObjects_when_callingGet() {
 
-            val kopfdatenModel = KopfdatenModel.builder().build();
-            val kopfdatenDTO = KopfdatenDTO.builder().build();
+      val kopfdatenModel = KopfdatenModel.builder().build();
+      val kopfdatenDTO = KopfdatenDTO.builder().build();
 
-            val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-            Mockito.when(kopfdatenService.getKopfdaten(bezirkUndWahlID)).thenReturn(kopfdatenModel);
-            Mockito.when(kopfdatenDTOMapper.toDTO(kopfdatenModel)).thenReturn(kopfdatenDTO);
+      Mockito.when(kopfdatenService.getKopfdaten(bezirkUndWahlID)).thenReturn(kopfdatenModel);
+      Mockito.when(kopfdatenDTOMapper.toDTO(kopfdatenModel)).thenReturn(kopfdatenDTO);
 
-            val result = kopfdatenController.getKopfdaten(bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
+      val result =
+          kopfdatenController.getKopfdaten(
+              bezirkUndWahlID.getWahlID(), bezirkUndWahlID.getWahlbezirkID());
 
-            Assertions.assertThat(result).isEqualTo(kopfdatenDTO);
-        }
+      Assertions.assertThat(result).isEqualTo(kopfdatenDTO);
     }
+  }
 }

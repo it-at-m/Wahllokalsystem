@@ -15,7 +15,7 @@
             color="primary"
             :loading="isSyncInProgress"
             data-test="button-sync-offline-data"
-            @click="synchronizeOfflineData"
+            @click="initiateOfflineDataSync"
           />
         </template>
       </v-tooltip>
@@ -40,27 +40,26 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { mergeProps, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
-import { useTaskManager } from "@/composables/tasks/taskManager.ts";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
-const { getSyncTasks } = useDataSyncer();
-
-const { setTasks, numberOfTasksFinished, numberOfTasksToRun, runAllTasks } =
-  useTaskManager();
+const { synchronizeOfflineData } = useDataSyncStore();
+const { isOfflineDataSyncing, numberOfTasksFinished, numberOfTasksToRun } =
+  storeToRefs(useDataSyncStore());
 
 const isDialogVisible = ref(false);
 const isSyncInProgress = ref(false);
 
-async function synchronizeOfflineData() {
+async function initiateOfflineDataSync() {
   isDialogVisible.value = true;
   isSyncInProgress.value = true;
 
-  setTasks(await getSyncTasks());
-  await runAllTasks();
-
+  if (!isOfflineDataSyncing.value) {
+    await synchronizeOfflineData();
+  }
   isSyncInProgress.value = false;
 }
 

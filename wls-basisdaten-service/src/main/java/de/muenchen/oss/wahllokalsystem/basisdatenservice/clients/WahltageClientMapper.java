@@ -10,9 +10,10 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahltageClientMapper {
 
-    @Mapping(target = "wahltagID", source = "identifikator")
-    @Mapping(target = "wahltag", source = "tag")
-    WahltagModel toWahltagModel(WahltagDTO wahltagDTO);
+  @Mapping(target = "wahltagID", source = "identifikator")
+  @Mapping(target = "wahltag", source = "tag")
+  WahltagModel toWahltagModel(WahltagDTO wahltagDTO);
 
-    List<WahltagModel> fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(Set<WahltagDTO> wahltageDTO);
+  List<WahltagModel> fromRemoteClientSetOfWahltagDTOtoListOfWahltagModel(
+      Set<WahltagDTO> wahltageDTO);
 }

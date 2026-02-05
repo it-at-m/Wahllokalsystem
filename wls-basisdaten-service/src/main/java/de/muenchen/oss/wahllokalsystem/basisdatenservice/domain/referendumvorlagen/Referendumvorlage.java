@@ -30,36 +30,29 @@ import org.hibernate.annotations.UuidGenerator;
 @ToString(onlyExplicitlyIncluded = true)
 public class Referendumvorlage {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    @ToString.Include
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  @ToString.Include
+  private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "referendumvorlagenID")
-    @EqualsAndHashCode.Exclude
-    private Referendumvorlagen referendumvorlagen;
+  @ManyToOne
+  @JoinColumn(name = "referendumvorlagenID")
+  @EqualsAndHashCode.Exclude
+  private Referendumvorlagen referendumvorlagen;
 
-    @NotNull
-    @ToString.Include
-    private String wahlvorschlagID;
+  @NotNull @ToString.Include private String wahlvorschlagID;
 
-    @NotNull
-    @ToString.Include
-    private Long ordnungszahl;
+  @NotNull @ToString.Include private Long ordnungszahl;
 
-    @NotNull
-    @ToString.Include
-    private String kurzname;
+  @NotNull @ToString.Include private String kurzname;
 
-    @NotNull
-    @ToString.Include
-    private String frage;
+  @NotNull @ToString.Include private String frage;
 
-    @ElementCollection
-    @CollectionTable(name = "referendumoption", joinColumns = @JoinColumn(name = "referendumvorlageID"))
-    @NotNull
-    private Set<Referendumoption> referendumoptionen;
+  @ElementCollection
+  @CollectionTable(
+      name = "referendumoption",
+      joinColumns = @JoinColumn(name = "referendumvorlageID"))
+  @NotNull private Set<Referendumoption> referendumoptionen;
 }

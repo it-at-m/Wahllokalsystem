@@ -26,107 +26,120 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class AusdruckControllerTest {
 
-    @Mock
-    AusdruckService ausdruckService;
+  @Mock AusdruckService ausdruckService;
 
-    @Mock
-    AusdruckDTOMapper ausdruckDTOMapper;
+  @Mock AusdruckDTOMapper ausdruckDTOMapper;
 
-    @InjectMocks
-    AusdruckController unitUnderTest;
+  @InjectMocks AusdruckController unitUnderTest;
 
-    @Nested
-    class GetAusdruck {
+  @Nested
+  class GetAusdruck {
 
-        @Test
-        void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val meldungsArtModel = MeldungsartModel.V1;
-            val meldungsArtDto = MeldungsartDTO.V1;
-            val content = "Testcontent";
-            val erstelltAm = Instant.now();
+    @Test
+    void should_returnTextWithHttpStatusOk_when_serviceReturnsData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val meldungsArtModel = MeldungsartModel.V1;
+      val meldungsArtDto = MeldungsartDTO.V1;
+      val content = "Testcontent";
+      val erstelltAm = Instant.now();
 
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
-            val mockedServiceResponse = new AusdruckReadModel(idModel, content, erstelltAm);
-            val mockedServiceResponseAsDTO = new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArtDto, content, erstelltAm);
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
+      val mockedServiceResponse = new AusdruckReadModel(idModel, content, erstelltAm);
+      val mockedServiceResponseAsDTO =
+          new AusdruckReadDTO(wahlbezirkID, wahlID, meldungsArtDto, content, erstelltAm);
 
-            Mockito.when(ausdruckService.getAusdruck(idModel)).thenReturn(Optional.of(mockedServiceResponse));
-            Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(ausdruckService.getAusdruck(idModel))
+          .thenReturn(Optional.of(mockedServiceResponse));
+      Mockito.when(ausdruckDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0)).isEqualTo("text/html; charset=utf-8");
-        }
-
-        @Test
-        void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmptyOptional() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val meldungsArtModel = MeldungsartModel.V1;
-
-            Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO.content());
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getHeaders().get(HttpHeaders.CONTENT_TYPE).get(0))
+          .isEqualTo("text/html; charset=utf-8");
     }
 
-    @Nested
-    class GetAllAusdrucke {
+    @Test
+    void should_returnNullBodyWithHttpStatusNotFound_when_serviceReturnsEmptyOptional() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val meldungsArtModel = MeldungsartModel.V1;
 
-        @Test
-        void should_returnHttpStatusOkAndData_when_dataIsFound() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val content = "Testcontent";
-            val erstelltAm = Instant.now();
+      Mockito.when(ausdruckService.getAusdruck(any())).thenReturn(Optional.empty());
 
-            val mockedAusdruckeModel1 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1), content,
-                    erstelltAm);
-            val mockedAusdruckeModel2 = new AusdruckReadModel(new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3), content,
-                    erstelltAm);
-            val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
+      val result = unitUnderTest.getAusdruck(wahlID, wahlbezirkID, meldungsArtModel);
 
-            val mockedAusdruckReadDTO1 = new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V1, content, erstelltAm);
-            val mockedAusdruckReadDTO2 = new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V3, content, erstelltAm);
-            val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
-
-            Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID)).thenReturn(mockedServiceModel);
-            Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel1)).thenReturn(mockedAusdruckReadDTO1);
-            Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel2)).thenReturn(mockedAusdruckReadDTO2);
-
-            val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceDTO);
-            Assertions.assertThat(result.getBody()).hasSize(mockedServiceModel.size());
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+  }
 
-    @Nested
-    class PostAusdruck {
+  @Nested
+  class GetAllAusdrucke {
 
-        @Test
-        void should_callServiceWithAusdruckWriteModel_when_calledWithData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val meldungsArtModel = MeldungsartModel.V1;
+    @Test
+    void should_returnHttpStatusOkAndData_when_dataIsFound() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val content = "Testcontent";
+      val erstelltAm = Instant.now();
 
-            val content = "Testcontent";
-            val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
-            val ausdruckWriteDTO = new AusdruckWriteDTO(content);
+      val mockedAusdruckeModel1 =
+          new AusdruckReadModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V1),
+              content,
+              erstelltAm);
+      val mockedAusdruckeModel2 =
+          new AusdruckReadModel(
+              new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, MeldungsartModel.V3),
+              content,
+              erstelltAm);
+      val mockedServiceModel = List.of(mockedAusdruckeModel1, mockedAusdruckeModel2);
 
-            val mockedAusdruckModel = new AusdruckWriteModel(idModel, content);
-            Mockito.when(ausdruckDTOMapper.toModel(ausdruckWriteDTO, idModel)).thenReturn(mockedAusdruckModel);
+      val mockedAusdruckReadDTO1 =
+          new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V1, content, erstelltAm);
+      val mockedAusdruckReadDTO2 =
+          new AusdruckReadDTO(wahlbezirkID, wahlID, MeldungsartDTO.V3, content, erstelltAm);
+      val mockedMappedServiceDTO = List.of(mockedAusdruckReadDTO1, mockedAusdruckReadDTO2);
 
-            unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArtModel, ausdruckWriteDTO);
+      Mockito.when(ausdruckService.getAllAusdrucke(wahlID, wahlbezirkID))
+          .thenReturn(mockedServiceModel);
+      Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel1))
+          .thenReturn(mockedAusdruckReadDTO1);
+      Mockito.when(ausdruckDTOMapper.toDTO(mockedAusdruckeModel2))
+          .thenReturn(mockedAusdruckReadDTO2);
 
-            Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
-        }
+      val result = unitUnderTest.getAllAusdrucke(wahlID, wahlbezirkID);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedMappedServiceDTO);
+      Assertions.assertThat(result.getBody()).hasSize(mockedServiceModel.size());
     }
+  }
+
+  @Nested
+  class PostAusdruck {
+
+    @Test
+    void should_callServiceWithAusdruckWriteModel_when_calledWithData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val meldungsArtModel = MeldungsartModel.V1;
+
+      val content = "Testcontent";
+      val idModel = new WahlUndBezirkIDUndMeldungsartModel(wahlbezirkID, wahlID, meldungsArtModel);
+      val ausdruckWriteDTO = new AusdruckWriteDTO(content);
+
+      val mockedAusdruckModel = new AusdruckWriteModel(idModel, content);
+      Mockito.when(ausdruckDTOMapper.toModel(ausdruckWriteDTO, idModel))
+          .thenReturn(mockedAusdruckModel);
+
+      unitUnderTest.postAusdruck(wahlID, wahlbezirkID, meldungsArtModel, ausdruckWriteDTO);
+
+      Mockito.verify(ausdruckService).saveAusdruck(mockedAusdruckModel);
+    }
+  }
 }

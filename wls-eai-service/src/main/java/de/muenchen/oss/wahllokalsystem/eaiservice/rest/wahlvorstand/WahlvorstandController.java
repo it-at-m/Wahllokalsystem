@@ -18,29 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahlvorstandController {
 
-    private final WahlvorstandService wahlvorstandService;
+  private final WahlvorstandService wahlvorstandService;
 
-    @GetMapping
-    @Operation(
-            description = "Abrufen des Wahlvorstandes für einen bestimmten Wahlbezirk",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben."
-                    ) }
-    )
-    public WahlvorstandDTO loadWahlvorstand(final @RequestParam("wahlbezirkID")
-    String wahlbezirkID) {
-        return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID);
-    }
+  @GetMapping
+  @Operation(
+      description = "Abrufen des Wahlvorstandes für einen bestimmten Wahlbezirk",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlvorstand erfolgreich zurückgegeben.")
+      })
+  public WahlvorstandDTO loadWahlvorstand(final @RequestParam("wahlbezirkID") String wahlbezirkID) {
+    return wahlvorstandService.getWahlvorstandForWahlbezirk(wahlbezirkID);
+  }
 
-    @PutMapping("anwesenheit")
-    @Operation(
-            description = "Aktualisieren der Anwesenheit der Wahlvorstandsmitglieder eines bestimmten Wahlbezirkes", responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Anwesenheit erfolgreich gespeichert."
-                    ) }
-    )
-    public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
-        wahlvorstandService.setAnwesenheit(wahlvorstand);
-    }
+  @PutMapping("anwesenheit")
+  @Operation(
+      description =
+          "Aktualisieren der Anwesenheit der Wahlvorstandsmitglieder eines bestimmten Wahlbezirkes",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Anwesenheit erfolgreich gespeichert.")
+      })
+  public void saveAnwesenheit(@RequestBody WahlvorstandsaktualisierungDTO wahlvorstand) {
+    wahlvorstandService.setAnwesenheit(wahlvorstand);
+  }
 }

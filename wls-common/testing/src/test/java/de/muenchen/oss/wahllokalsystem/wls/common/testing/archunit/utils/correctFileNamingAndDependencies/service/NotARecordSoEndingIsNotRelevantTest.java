@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Nested;
 
 public class NotARecordSoEndingIsNotRelevantTest {
 
-    @Nested
-    class PublicMethodName {
-    }
+  @Nested
+  class PublicMethodName {}
 
-    @Nested
-    class AnotherPublicMethod {
-    }
+  @Nested
+  class AnotherPublicMethod {}
 }

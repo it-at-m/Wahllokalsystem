@@ -21,7 +21,9 @@ import { VApp } from "vuetify/components";
 
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useTaskManagerStore } from "@/stores/taskManagerStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
@@ -62,11 +64,15 @@ describe("TheWlsAppBar.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasCompletelyRun", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
+      const userStore = useUserStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = true;
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
+      userStore.isUserLoggedIn = true;
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
 
       await nextTick();
 
@@ -76,11 +82,15 @@ describe("TheWlsAppBar.vue", () => {
     });
 
     it("should_renderNavigationDrawerIcon_when_initializationOfTaskHasNotCompletelyRun", async (context) => {
-      const taskManagerStore = useTaskManagerStore();
+      const taskManagerStore = useInitTaskManagerStore();
+      const userStore = useUserStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = false;
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
+      userStore.isUserLoggedIn = true;
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
 
       await nextTick();
 

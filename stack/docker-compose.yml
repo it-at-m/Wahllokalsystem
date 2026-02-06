@@ -273,6 +273,9 @@ services:
   refarch-gateway-wls:
     container_name: wls-refarch-gateway-wls
     image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    depends_on:
+      wls-auth-service:
+        condition: service_healthy
     env_file:
       - .env
     ports:
@@ -308,6 +311,9 @@ services:
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
     image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    depends_on:
+      wls-auth-service:
+        condition: service_healthy
     env_file:
       - .env
     ports:
@@ -403,6 +409,12 @@ services:
       - 8100:8080
     networks:
       - services
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 60s
+      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
 
   wls-gui-wahllokalsystem:
     container_name: wls-gui-wahllokalsystem

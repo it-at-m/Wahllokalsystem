@@ -88,7 +88,7 @@ describe("differenceDialogUtils.ts", () => {
         },
         0
       );
-      const expectedTotal = eingenommene + vermerkeSum;
+      const expectedTotal = eingenommeneWahlscheineAnzahl + vermerkeSum;
 
       expect(
         unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value

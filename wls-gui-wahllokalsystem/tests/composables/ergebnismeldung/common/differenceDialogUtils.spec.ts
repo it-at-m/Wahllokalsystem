@@ -64,12 +64,13 @@ describe("differenceDialogUtils.ts", () => {
     it("should_returnStimmabgabevermerke_when_isUWBAndStimmabgabevermerkeForWahlIdExists", () => {
       userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
 
+      const eingenommeneWahlscheineAnzahl = 5;
       const testStimmabgabevermerke = prepareStimmabgabevermerke()
         .wahldaten([
           prepareWahldaten()
             .wahlID(WAHL_ID)
             .eingenommeneWahlscheine(
-              new Map([[StimmzettelStimmzettelartEnum.Klein, 5]])
+              new Map([[StimmzettelStimmzettelartEnum.Klein, eingenommeneWahlscheineAnzahl]])
             )
             .build(),
         ])
@@ -77,7 +78,6 @@ describe("differenceDialogUtils.ts", () => {
 
       stimmabgabevermerkeStore.stimmabgabevermerke = [testStimmabgabevermerke];
 
-      const eingenommene = 5;
       // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
       const vermerkeSum = testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
         (sum, vermerk) => {

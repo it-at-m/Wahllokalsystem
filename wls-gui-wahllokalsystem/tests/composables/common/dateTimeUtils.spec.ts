@@ -64,7 +64,7 @@ describe("dateTimeUtils", () => {
   });
 
   describe("isTodayOrFuture", () => {
-    it("should_returnFalse_when_dateIsValid", () => {
+    it("should_returnFalse_when_dateIsInvalid", () => {
       expect(isTodayOrFuture(new Date("hello world"))).toStrictEqual(false);
     });
 

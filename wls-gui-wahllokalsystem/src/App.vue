@@ -45,7 +45,7 @@ const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
-const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 const { isTodayOrFuture } = useDateTimeUtils();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -68,7 +68,6 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

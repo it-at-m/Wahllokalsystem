@@ -7,7 +7,6 @@ import {
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
-import { setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -17,7 +16,6 @@ import vuetify from "@/plugins/vuetify";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import HomeView from "@/views/HomeView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
@@ -194,32 +192,6 @@ describe("App", () => {
       await flushPromises();
 
       expect(initTasks).toHaveBeenCalled();
-    });
-
-    it("should_callInitBeanstandeteWahlbriefe_when_mountedAndWaehlerverzeichnisNummernAreGiven", async () => {
-      const testingPinia = createTestingPinia({
-        createSpy: vi.fn,
-      });
-      setActivePinia(testingPinia);
-      const { waehlerverzeichnisGetter } = storeToRefs(useWahlenStore());
-      const initBeanstandeteWahlbriefeSpy = vi.spyOn(
-        useWahlenStore().beanstandeteWahlbriefeActions,
-        "initBeanstandeteWahlbriefe"
-      );
-
-      const localWrapper = mount(App, {
-        global: {
-          plugins: [testingPinia, vuetify, router],
-        },
-      });
-
-      // @ts-expect-error: cannot set readonly
-      waehlerverzeichnisGetter.waehlerverzeichnisNummern = [1];
-
-      await flushPromises();
-
-      expect(initBeanstandeteWahlbriefeSpy).toHaveBeenCalled();
-      localWrapper.unmount();
     });
 
     it("should_callStopBroadcastMessageInterval_when_unmounted", async () => {

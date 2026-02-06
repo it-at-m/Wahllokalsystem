@@ -319,11 +319,62 @@ describe("wahlenStore.ts", () => {
         unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual([]);
 
-      await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
+      await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe(
+        true
+      );
 
       expect(
         unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
       ).toStrictEqual(["ZUGELASSEN"]);
+      expect(mockDefinitions.getBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+        wvzNr,
+        wahlbezirkID,
+        true
+      );
+    });
+
+    it("should_notCallToasty_when_sendNotificationIsFalse", async () => {
+      const wahlbezirkID = "wahlbezirkId";
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const wahlID = "wahlID";
+      const wvzNr = 1;
+
+      const mockedBeanstandeteWahlbriefe = prepareBeanstandeteWahlbriefe()
+        .wahlbezirkID(wahlbezirkID)
+        .waehlerverzeichnisNummer(wvzNr)
+        .beanstandeteWahlbriefe(new Map([[wahlID, ["ZUGELASSEN"]]]))
+        .build();
+
+      mockDefinitions.getBeanstandeteWahlbriefe.mockReturnValue(
+        mockedBeanstandeteWahlbriefe
+      );
+
+      unitUnderTest.wahlenState.wahlen = [
+        prepareWahl()
+          .wahlID(wahlID)
+          .waehlerverzeichnisNummer(wvzNr)
+          .beanstandeteWahlbriefe([])
+          .build(),
+      ];
+
+      expect(
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
+      ).toStrictEqual([]);
+
+      await unitUnderTest.beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe(
+        false
+      );
+
+      expect(
+        unitUnderTest.wahlenState.wahlen[0]?.beanstandeteWahlbriefe
+      ).toStrictEqual(["ZUGELASSEN"]);
+      expect(mockDefinitions.getBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+        wvzNr,
+        wahlbezirkID,
+        false
+      );
     });
 
     it("should_notCallService_when_noWahlenGiven", async () => {

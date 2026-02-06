@@ -230,8 +230,15 @@ export const useWahlbezirkStore = defineStore(storeID, () => {
       sendNotification = true
     ) {
       const wahlbezirkID = currentUserWahlbezirkID.value;
-      urnenwahlVorbereitungState.value.urnenwahlVorbereitung =
-        await getUrnenwahlvorbereitung(wahlbezirkID, sendNotification);
+      const urnenwahlVorbereitung = await getUrnenwahlvorbereitung(
+        wahlbezirkID,
+        sendNotification
+      );
+      if (urnenwahlVorbereitung) {
+        urnenwahlVorbereitungState.value.urnenwahlVorbereitung =
+          urnenwahlVorbereitung;
+      }
+
       if (
         urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl
           .length === 0

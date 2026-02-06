@@ -6,6 +6,7 @@ import {
   mdiCheckCircle,
   mdiCloudUpload,
   mdiContentSave,
+  mdiContentSaveCheck,
   mdiDelete,
   mdiDiameterVariant,
   mdiEmail,
@@ -74,6 +75,7 @@ export default createVuetify({
       cloudUpload: mdiCloudUpload,
       logout: mdiLogout,
       locked: mdiLockOutline,
+      saveSuccess: mdiContentSaveCheck,
     },
     sets: {
       mdi,

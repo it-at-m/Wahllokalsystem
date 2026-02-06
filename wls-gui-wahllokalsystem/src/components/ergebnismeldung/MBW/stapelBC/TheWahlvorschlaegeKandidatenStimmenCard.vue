@@ -20,6 +20,7 @@
               Gültige Stimmzettel
             </th>
             <th class="font-weight-bold text-right">Gültige Stimmen</th>
+            <th><!-- Bearbeitungsstatus --></th>
           </tr>
           <tr>
             <th><!-- fold/expand action --></th>
@@ -37,49 +38,62 @@
             <th class="font-weight-bold smallText">
               Gültig kumulierte und panaschierte insgesamt
             </th>
+            <th><!-- Bearbeitungsstatus --></th>
           </tr>
         </thead>
         <tbody>
-          <template
-            v-for="(
-              wahlvorschlag, index
-            ) in wahlvorschlaegeWithKandidatenErgebnissen"
-            :key="index"
-          >
-            <tr>
-              <td class="foldingButtonColumn">
-                <base-button-folding v-model="expandedRows[index]" />
-              </td>
-              <td class="ordnungszahlColumn">
-                D{{ wahlvorschlag.ordnungszahl }}
-              </td>
-              <td>{{ wahlvorschlag.kurzname }}</td>
-              <td class="text-right">
-                {{ getStapelAErgebnisForWahlvorschlagIndex(index) }}
-              </td>
-              <td class="text-right">
-                {{ getStapelBErgebnisForWahlvorschlagIndex(index) }}
-              </td>
-              <td class="text-right">
-                {{
-                  getStapelAErgebnisForWahlvorschlagIndex(index) +
-                  getStapelBErgebnisForWahlvorschlagIndex(index)
-                }}
-              </td>
-              <td class="text-right">
-                {{ summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse) }}
-              </td>
-            </tr>
-            <tr v-if="expandedRows[index]">
-              <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
-                <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
-                  :model-value="wahlvorschlag"
-                  :is-saving="isSaving"
-                  @do-save="onSaveWahlvorschlag"
-                />
-              </td>
-            </tr>
-          </template>
+          <v-confirm-edit v-model="wahlvorschlaegeWithKandidatenErgebnissen">
+            <!-- actions muss drin stehen damit vuetify nicht die default actions rendert -->
+            <template #default="{ model: proxyModel, actions, save }">
+              <template
+                v-for="(wahlvorschlag, index) in proxyModel.value"
+                :key="wahlvorschlag.identifikator"
+              >
+                <tr>
+                  <td class="foldingButtonColumn">
+                    <base-button-folding v-model="expandedRows[index]" />
+                  </td>
+                  <td class="ordnungszahlColumn">
+                    D{{ wahlvorschlag.ordnungszahl }}
+                  </td>
+                  <td>{{ wahlvorschlag.kurzname }}</td>
+                  <td class="text-right">
+                    {{ getStapelAErgebnisForWahlvorschlagIndex(index) }}
+                  </td>
+                  <td class="text-right">
+                    {{ getStapelBErgebnisForWahlvorschlagIndex(index) }}
+                  </td>
+                  <td class="text-right">
+                    {{
+                      getStapelAErgebnisForWahlvorschlagIndex(index) +
+                      getStapelBErgebnisForWahlvorschlagIndex(index)
+                    }}
+                  </td>
+                  <td class="text-right">
+                    {{
+                      summeKandidatenStimmen(wahlvorschlag.kandidatenErgebnisse)
+                    }}
+                  </td>
+                  <td>
+                    <v-icon
+                      :icon="dirtyRows[index] ? `$edit` : `$saveSuccess`"
+                      :color="dirtyRows[index] ? `error` : `success`"
+                    />
+                  </td>
+                </tr>
+                <tr v-if="expandedRows[index]">
+                  <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
+                    <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
+                      :model-value="proxyModel.value[index]!"
+                      :is-saving="isSaving"
+                      @do-save="onSaveWahlvorschlag(index, save)"
+                      @dirty="onInputChanged(index)"
+                    />
+                  </td>
+                </tr>
+              </template>
+            </template>
+          </v-confirm-edit>
         </tbody>
         <tfoot>
           <tr>
@@ -101,6 +115,7 @@
             <td class="font-weight-bold text-right">
               {{ totalSumErgebnisse }}
             </td>
+            <td><!-- Bearbeitungsstatus --></td>
           </tr>
         </tfoot>
       </v-table>
@@ -120,7 +135,7 @@ import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/commo
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
 
-const COLUMN_COUNT_FULL_COL_SPAN = 7;
+const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
 const props = defineProps({
   wahlbezirkID: {
@@ -148,6 +163,7 @@ const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
 
 const ergebnisseAndWahlvorschlaege = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
 const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
+const dirtyRows = ref<Record<number, boolean>>({});
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;
 
@@ -155,6 +171,14 @@ onActivated(async () => {
   await loadWahlvorschlaegeAndErgebnisse();
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
+
+  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
+    (wahlvorschlagWithErgebnis, i) => {
+      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis == null
+      );
+    }
+  );
 });
 
 const totalSumErgebnisse = computed(() => {
@@ -191,8 +215,16 @@ function getStapelBErgebnisForWahlvorschlagIndex(index: number) {
   );
 }
 
-function onSaveWahlvorschlag() {
+function onInputChanged(rowIndex: number) {
+  dirtyRows.value[rowIndex] = true;
+}
+
+function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
+  // commit von proxy-model -> v-model
+  save();
+
   saveErgebnisse();
+  dirtyRows.value[rowIndex] = false;
 }
 </script>
 

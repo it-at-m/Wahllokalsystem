@@ -14,6 +14,7 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -374,6 +375,22 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastSending).toStrictEqual(mockedNow);
     });
+
+    it("should_setWahlvorstandErfasst_when_wahlvorstandIsSent", async () => {
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
+      await unitUnderTest.sendWahlvorstand();
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
+    });
   });
 
   describe("initWahlvorstand", () => {
@@ -405,6 +422,20 @@ describe("wahlvorstandStore.ts", () => {
         unitUnderTest.initWahlvorstand()
       ).rejects.toThrowError();
     });
+
+    it("should_setWahlvorstandErfasstFalse_when_called", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
+      mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
+
+      await unitUnderTest.initWahlvorstand();
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
+    });
   });
 
   describe("forceLoadWahlvorstand", () => {
@@ -428,6 +459,8 @@ describe("wahlvorstandStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(_createUser("wahlbezirkID"));
 
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
       const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
@@ -436,11 +469,14 @@ describe("wahlvorstandStore.ts", () => {
       await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
 
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
       userStore.setUser(_createUser("wahlbezirkID"));
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");
@@ -453,6 +489,7 @@ describe("wahlvorstandStore.ts", () => {
       );
 
       expect(unitUnderTest.lastLoading).toBeNull();
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
     });
   });
 
@@ -645,6 +682,7 @@ describe("wahlvorstandStore.ts", () => {
           prepareWahlvorstandsmitglied().anwesend(false).build(),
         ])
         .build();
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       unitUnderTest.resetAllAnwesenheiten();
 
@@ -652,6 +690,7 @@ describe("wahlvorstandStore.ts", () => {
         (mitglieder: Wahlvorstandsmitglied[]) =>
           mitglieder.every((mitglied) => !mitglied.anwesend)
       );
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
   });
 

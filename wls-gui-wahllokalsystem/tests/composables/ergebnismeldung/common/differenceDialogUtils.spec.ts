@@ -70,7 +70,12 @@ describe("differenceDialogUtils.ts", () => {
           prepareWahldaten()
             .wahlID(WAHL_ID)
             .eingenommeneWahlscheine(
-              new Map([[StimmzettelStimmzettelartEnum.Klein, eingenommeneWahlscheineAnzahl]])
+              new Map([
+                [
+                  StimmzettelStimmzettelartEnum.Klein,
+                  eingenommeneWahlscheineAnzahl,
+                ],
+              ])
             )
             .build(),
         ])

@@ -53,12 +53,6 @@ export const useUserStore = defineStore("user", () => {
       const cryptoKey = await importKey(user.value.pin);
       const indexDBSingleton = useIndexDB();
       indexDBSingleton.setKey(cryptoKey);
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-          type: "PIN",
-          payload: cryptoKey,
-        });
-      }
 
       indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }

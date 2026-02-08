@@ -61,7 +61,7 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
         wahlvorschlaegeWithKandidatenErgebnissen.value
           .filter((wahlvorschlag) =>
             wahlvorschlag.kandidatenErgebnisse.every(
-              (kandidatErgebnis) => kandidatErgebnis.ergebnis !== null
+              (kandidatErgebnis) => kandidatErgebnis.ergebnis.ergebnis !== null
             )
           )
           .flatMap((wahlvorschlag) => wahlvorschlag.kandidatenErgebnisse)

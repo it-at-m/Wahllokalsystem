@@ -59,9 +59,13 @@ export function useMwbStapelBCUtils(wahlbezirkID: string, wahlID: string) {
     try {
       const ergebnisValuesToSave =
         wahlvorschlaegeWithKandidatenErgebnissen.value
+          .filter((wahlvorschlag) =>
+            wahlvorschlag.kandidatenErgebnisse.every(
+              (kandidatErgebnis) => kandidatErgebnis.ergebnis !== null
+            )
+          )
           .flatMap((wahlvorschlag) => wahlvorschlag.kandidatenErgebnisse)
-          .map((kandidatErgebnis) => kandidatErgebnis.ergebnis)
-          .filter((ergebnis) => ergebnis.ergebnis != null);
+          .map((kandidatErgebnis) => kandidatErgebnis.ergebnis);
 
       const ergebnisse = toErgebnisse(
         ergebnisValuesToSave,

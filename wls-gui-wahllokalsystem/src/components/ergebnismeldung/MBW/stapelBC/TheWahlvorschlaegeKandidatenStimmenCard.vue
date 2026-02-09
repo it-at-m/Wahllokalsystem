@@ -43,8 +43,7 @@
         </thead>
         <tbody>
           <v-confirm-edit v-model="wahlvorschlaegeWithKandidatenErgebnissen">
-            <!-- actions muss angegeben werden, damit vuetify nicht die default action buttons rendert -->
-            <!-- eslint-disable-next-line vue/no-unused-vars -->
+            <!-- eslint-disable-next-line vue/no-unused-vars -- actions muss angegeben werden, damit vuetify nicht die default action buttons rendert -->
             <template #default="{ model: proxyModel, actions, save }">
               <template
                 v-for="(wahlvorschlag, index) in proxyModel.value"

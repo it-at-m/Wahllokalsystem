@@ -219,11 +219,11 @@ function onInputChanged(rowIndex: number) {
   dirtyRows.value[rowIndex] = true;
 }
 
-function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
+async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   // commit von proxy-model -> v-model
   save();
 
-  saveErgebnisse();
+  await saveErgebnisse();
   dirtyRows.value[rowIndex] = false;
 }
 </script>

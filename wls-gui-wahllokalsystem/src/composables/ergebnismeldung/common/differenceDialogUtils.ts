@@ -11,22 +11,19 @@ import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.t
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
-import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
 export function useDifferenceDialogUtils(wahlId = "") {
   const { wahlscheine } = storeToRefs(useWahlscheineStore());
-  const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
+  const { sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl } =
+    storeToRefs(useStimmabgabevermerkeStore());
   const { wahlenActions } = useWahlenStore();
   const { isUWB } = storeToRefs(useUserStore());
 
   const anzahlWahlscheineOrStimmabgabevermerke = computed(() =>
     isUWB.value
-      ? // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-        stimmabgabevermerke.value
-          .find((vermerk) => vermerk.wahldaten[0]?.wahlID === wahlId)
-          ?.wahldaten[0].eingenommeneWahlscheine.get(
-            EingenommenerWahlscheinStimmzettelartEnum.Klein
-          )
+      ? sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl.value.get(
+          wahlId
+        )
       : wahlscheine.value.find(
           (wahlschein) => wahlschein.bezirkUndWahlID.wahlID === wahlId
         )?.stimmabgabevermerke

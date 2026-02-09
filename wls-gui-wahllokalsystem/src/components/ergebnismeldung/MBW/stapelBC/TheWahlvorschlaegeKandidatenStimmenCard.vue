@@ -175,7 +175,7 @@ onActivated(async () => {
   wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
     (wahlvorschlagWithErgebnis, i) => {
       dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
-        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis == null
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
       );
     }
   );

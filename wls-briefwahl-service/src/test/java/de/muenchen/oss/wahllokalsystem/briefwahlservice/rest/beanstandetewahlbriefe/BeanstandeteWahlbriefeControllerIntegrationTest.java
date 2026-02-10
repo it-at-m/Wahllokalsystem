@@ -28,7 +28,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -69,19 +68,13 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE
-        })
     void should_returnData_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
 
       val waehlerverzeichnissNummer1 = 1L;
       val waehlerverzeichnissNummer2 = 2L;
-
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE);
       val beanstandeteWahlbriefe1 = new BeanstandeteWahlbriefe();
       beanstandeteWahlbriefe1.setBezirkIDUndWaehlerverzeichnisNummer(
           new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID1, waehlerverzeichnissNummer1));
@@ -137,19 +130,13 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE
-        })
     void should_returnDataWithEmptyZurueckweisegruende_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
 
       val waehlerverzeichnissNummer1 = 1L;
       val waehlerverzeichnissNummer2 = 2L;
-
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE);
       val beanstandeteWahlbriefe1 = new BeanstandeteWahlbriefe();
       beanstandeteWahlbriefe1.setBezirkIDUndWaehlerverzeichnisNummer(
           new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID1, waehlerverzeichnissNummer1));
@@ -193,11 +180,6 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE
-        })
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
       val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
               .with(jwt()
@@ -222,11 +204,6 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
       @Test
-      @WithMockUser(
-              authorities = {
-                      Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-                      Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE
-              })
       void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
           val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
                   .with(jwt()
@@ -249,11 +226,6 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE
-        })
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
       val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
       val request =
@@ -282,12 +254,6 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE
-        })
     void should_setNewData_when_callingPost() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 89L;
@@ -308,8 +274,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                   + waehlerverzeichnisNummer)
                   .with(jwt()
                           .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
                           .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID))
                   )
               .with(csrf())

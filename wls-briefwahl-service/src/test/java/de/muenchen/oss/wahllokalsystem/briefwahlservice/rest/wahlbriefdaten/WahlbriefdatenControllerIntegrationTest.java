@@ -104,7 +104,7 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        void should_returnForbidden_when_UserHasWrongBezirkID() throws Exception {
+        void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
             val wahlbezirkID = "12345";
             val andereBezirkID = "99999";
 
@@ -196,7 +196,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                 authorities = {
                         Authorities.SERVICE_POST_WAHLBRIEFDATEN
                 })
-        void should_returnForbidden_when_callingPost_with_wrong_BezirkID() throws Exception {
+        void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
             val userWahlbezirkID = "wahlbezirkID_user";
             val requestBody =
                     new WahlbriefdatenWriteDTO(

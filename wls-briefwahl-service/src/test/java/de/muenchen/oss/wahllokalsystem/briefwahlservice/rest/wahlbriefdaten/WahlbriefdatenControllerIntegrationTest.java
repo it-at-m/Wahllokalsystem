@@ -179,10 +179,6 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-/*        @WithMockUser(
-                authorities = {
-                        Authorities.SERVICE_POST_WAHLBRIEFDATEN
-                })*/
         void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
             val userWahlbezirkID = "wahlbezirkID_user";
             val requestBody =

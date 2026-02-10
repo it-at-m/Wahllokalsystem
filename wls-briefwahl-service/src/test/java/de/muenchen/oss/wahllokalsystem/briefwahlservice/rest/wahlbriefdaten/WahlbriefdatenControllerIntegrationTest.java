@@ -26,7 +26,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -71,10 +70,6 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(
-                authorities = {
-                        Authorities.REPOSITORY_READ_WAHLBRIEFDATEN,
-                })
         void should_returnData_when_dataIsPresentInRepo() throws Exception {
             val wahlbezirkIDToFind = "wahlbezirkID";
             val wahlbriefdaten1 = new Wahlbriefdaten("id1", null, null, null, null, null);
@@ -82,7 +77,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                     new Wahlbriefdaten(
                             wahlbezirkIDToFind, 1L, 2L, 3L, 4L, LocalDateTime.parse("2024-09-13T12:11:21.343"));
             val wahlbriefdaten2 = new Wahlbriefdaten("id1", null, null, null, null, null);
-
+            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
             wahlbriefdatenRepository.saveAll(
                     List.of(wahlbriefdaten1, wahlbriefdatenToFind, wahlbriefdaten2));
 
@@ -123,16 +118,12 @@ public class WahlbriefdatenControllerIntegrationTest {
     class PostWahlbriefdaten {
 
         @Test
-        @WithMockUser(
-                authorities = {
-                        Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN
-                })
         void should_setNewData_when_callingPost() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody =
                     new WahlbriefdatenWriteDTO(
                             1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
-
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
             val request =
                     post("/businessActions/wahlbriefdaten/" + wahlbezirkID)
                             .with(jwt()
@@ -155,16 +146,12 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(
-                authorities = {
-                        Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN
-                })
         void should_replaceData_when_dataIsPresent() throws Exception {
             val wahlbezirkID = "wahlbezirkID";
             val requestBody =
                     new WahlbriefdatenWriteDTO(
                             1L, 2L, 3L, 4L, LocalDateTime.parse("2035-02-27T00:01:02.003"));
-
+            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
             val wahlbriefdatenToReplace =
                     new Wahlbriefdaten(wahlbezirkID, 11L, 22L, 33L, 44L, LocalDateTime.now());
             wahlbriefdatenRepository.save(wahlbriefdatenToReplace);
@@ -192,16 +179,16 @@ public class WahlbriefdatenControllerIntegrationTest {
         }
 
         @Test
-        @WithMockUser(
+/*        @WithMockUser(
                 authorities = {
                         Authorities.SERVICE_POST_WAHLBRIEFDATEN
-                })
+                })*/
         void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
             val userWahlbezirkID = "wahlbezirkID_user";
             val requestBody =
                     new WahlbriefdatenWriteDTO(
                             1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
-
+            SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLBRIEFDATEN);
             val request =
                     post("/businessActions/wahlbriefdaten/" + userWahlbezirkID)
                             .with(jwt()

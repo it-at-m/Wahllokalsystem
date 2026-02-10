@@ -350,6 +350,53 @@ describe("mwbStapelBCUtils.ts", () => {
       expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledTimes(1);
     });
 
+    it("should_sendCompleteWahlvorschlagOnly_when_oneIsCompleteAndOneIsIncomplete", async () => {
+      const completeErgebnis1 = createErgebnis();
+      const completeErgebnis2 = createErgebnis();
+      const completeErgebnis3 = createErgebnis();
+
+      const incompleteErgebnis1 = createErgebnis();
+      const incompleteErgebnisNull = prepareErgebnis().ergebnis(null).build();
+      const incompleteErgebnis2 = createErgebnis();
+
+      unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value = [
+        {
+          kandidatenErgebnisse: [
+            { kandidat: createKandidat(), ergebnis: completeErgebnis1 },
+            { kandidat: createKandidat(), ergebnis: completeErgebnis2 },
+            { kandidat: createKandidat(), ergebnis: completeErgebnis3 },
+          ],
+          ordnungszahl: 1,
+          identifikator: "complete-wahlvorschlag",
+          kurzname: "D1 Complete",
+        },
+        {
+          kandidatenErgebnisse: [
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnis1 },
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnisNull },
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnis2 },
+          ],
+          ordnungszahl: 2,
+          identifikator: "incomplete-wahlvorschlag",
+          kurzname: "D2 Incomplete",
+        },
+      ];
+
+      const mockedMappedErgebnisse = createErgebnisse();
+      mockDefinitions.mapToErgebnisse.mockReturnValue(mockedMappedErgebnisse);
+
+      await unitUnderTest.saveErgebnisse();
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledWith(
+        [completeErgebnis1, completeErgebnis2, completeErgebnis3],
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwBC
+      );
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledTimes(1);
+    });
+
     it("should_updateIsSaving_when_callIsSuccessful", async () => {
       const spyOnIsSavingValueSetter = spyOn(
         unitUnderTest.isSaving,

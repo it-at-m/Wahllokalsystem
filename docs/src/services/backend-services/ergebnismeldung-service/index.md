@@ -1,7 +1,7 @@
 # Ergebnismeldung-Service
 
 Service der Informationen und Operationen für die Ergebnisse einer Wahl bereitstellt. Dabei geht es um die Ergebnisse
-die durch den Nutzer anhand von Masken erfasst werden.
+die durch die Nutzer\*innen anhand von Masken erfasst werden.
 
 ## Abhängigkeiten
 
@@ -57,10 +57,10 @@ Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzog
 
 #### Erfassung der Stimmabgaben mit Wahlschein
 
-Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer über den sogenannten "Stimmabgabevermerk" vermerkt,
-wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne im Wahllokal gelegt hat.
-Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt
-bzw. ausgelesen werden.
+Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer oder die Schriftführerin über den sogenannten 
+"Stimmabgabevermerk" vermerkt, wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne im Wahllokal 
+gelegt hat. Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS 
+übermittelt bzw. ausgelesen werden.
 
 ### Erfassung der Anzahl an Stimmzettelumschlaegen
 

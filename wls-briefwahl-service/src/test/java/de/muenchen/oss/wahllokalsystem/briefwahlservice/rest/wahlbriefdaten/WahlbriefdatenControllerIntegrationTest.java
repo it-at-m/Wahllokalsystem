@@ -168,8 +168,7 @@ public class WahlbriefdatenControllerIntegrationTest {
                   jwt()
                       .authorities(
                           new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN),
-                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN),
-                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
@@ -191,14 +190,13 @@ public class WahlbriefdatenControllerIntegrationTest {
       val requestBody =
           new WahlbriefdatenWriteDTO(
               1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
-      SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLBRIEFDATEN);
       val request =
           post("/businessActions/wahlbriefdaten/" + userWahlbezirkID)
               .with(
                   jwt()
                       .authorities(
                           new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID_target", userWahlbezirkID)))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", userWahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));

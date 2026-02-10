@@ -232,7 +232,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                       Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
                       Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE
               })
-      void should_returnForbidden_when_bezirkID_isWrong() throws Exception {
+      void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
           val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
                   .with(jwt()
                           .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
@@ -340,7 +340,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
           .isEqualTo(expectedRepoResponse);
     }
       @Test
-      void should_returnForbidden_when_wahlbezirkID_isWrong() throws Exception {
+      void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
           val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
           val request =
                   post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")

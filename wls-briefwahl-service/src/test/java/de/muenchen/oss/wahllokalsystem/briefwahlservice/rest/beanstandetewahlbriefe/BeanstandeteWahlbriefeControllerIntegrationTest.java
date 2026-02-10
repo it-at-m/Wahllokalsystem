@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})/*, "dummy.nobezirkid.check"})*/
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE}) /* , "dummy.nobezirkid.check"}) */
 public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
   @Autowired MockMvc api;
@@ -55,12 +55,16 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
     @Test
     void should_returnNoContent_when_noDataFound() throws Exception {
-      val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/21")
-              .with(jwt()
-                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID"))
-              );
+      val request =
+          get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/21")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
 
       val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
@@ -111,16 +115,18 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
               wahlbezirkID1, waehlerverzeichnissNummer1, expectedZurueckweisungen);
 
       val request =
-          get(
-              "/businessActions/beanstandeteWahlbriefe/"
+          get("/businessActions/beanstandeteWahlbriefe/"
                   + wahlbezirkID1
                   + "/"
                   + waehlerverzeichnissNummer1)
-                  .with(jwt()
-                          .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1))
-                  );
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)));
       val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
       val responseBody =
@@ -161,16 +167,18 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
               wahlbezirkID1, waehlerverzeichnissNummer1, expectedZurueckweisungen);
 
       val request =
-          get(
-              "/businessActions/beanstandeteWahlbriefe/"
+          get("/businessActions/beanstandeteWahlbriefe/"
                   + wahlbezirkID1
                   + "/"
                   + waehlerverzeichnissNummer1)
-                  .with(jwt()
-                          .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1))
-                  );
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)));
       val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
       val responseBody =
@@ -181,12 +189,16 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
     @Test
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
-      val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
-              .with(jwt()
-                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID"))
-              );
+      val request =
+          get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
 
       val expectedWlsExceptionDTO =
           new WlsExceptionDTO(WlsExceptionCategory.F, "100", "WLS-BRIEFWAHL", null);
@@ -203,17 +215,21 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
       Assertions.assertThat(wlsExceptionFromResponse.message()).isNotNull();
     }
 
-      @Test
-      void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
-          val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
-                  .with(jwt()
-                          .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID1"))
-                  );
+    @Test
+    void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
+      val request =
+          get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID1")));
 
-           api.perform(request).andExpect(status().isForbidden()).andReturn();
-      }
+      api.perform(request).andExpect(status().isForbidden()).andReturn();
+    }
   }
 
   @Nested
@@ -230,11 +246,14 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
       val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
       val request =
           post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
-                  .with(jwt()
-                          .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID"))
-                  )
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
@@ -272,11 +291,14 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                   + wahlbezirkID
                   + "/"
                   + waehlerverzeichnisNummer)
-                  .with(jwt()
-                          .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID))
-                  )
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
@@ -299,24 +321,25 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
           .usingRecursiveComparison()
           .isEqualTo(expectedRepoResponse);
     }
-      @Test
-      void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
-          val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
-          val request =
-                  post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
-                          .with(jwt()
-                                  .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID1"))
-                          )
-                          .with(csrf())
-                          .contentType(MediaType.APPLICATION_JSON)
-                          .content(objectMapper.writeValueAsString(requestBody));
 
+    @Test
+    void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
+      val requestBody = BeanstandeteWahlbriefeCreateDTO.builder().build();
+      val request =
+          post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/0")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_ADD_BEANSTANDETE_WAHLBRIEFE),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_BEANSTANDETE_WAHLBRIEFE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID1")))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-          api.perform(request).andExpect(status().isForbidden());
-
-      }
-
+      api.perform(request).andExpect(status().isForbidden());
+    }
   }
 }

@@ -30,170 +30,179 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(
-        classes = MicroServiceApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})//, Profiles.NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE}) // , Profiles.NO_BEZIRKS_ID_CHECK})
 public class WahlbriefdatenControllerIntegrationTest {
 
-    @Autowired MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired WahlbriefdatenRepository wahlbriefdatenRepository;
+  @Autowired WahlbriefdatenRepository wahlbriefdatenRepository;
 
-    @Autowired WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
+  @Autowired WahlbriefdatenModelMapper wahlbriefdatenModelMapper;
 
-    @Autowired WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
+  @Autowired WahlbriefdatenDTOMapper wahlbriefdatenDTOMapper;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBRIEFDATEN);
-        wahlbriefdatenRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBRIEFDATEN);
+    wahlbriefdatenRepository.deleteAll();
+  }
+
+  @Nested
+  class GetWahlbriefdaten {
+
+    @Test
+    void should_returnNoContent_when_noDataFound() throws Exception {
+      val request =
+          get("/businessActions/wahlbriefdaten/wahlbezirkID")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
+
+      val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
 
-    @Nested
-    class GetWahlbriefdaten {
+    @Test
+    void should_returnData_when_dataIsPresentInRepo() throws Exception {
+      val wahlbezirkIDToFind = "wahlbezirkID";
+      val wahlbriefdaten1 = new Wahlbriefdaten("id1", null, null, null, null, null);
+      val wahlbriefdatenToFind =
+          new Wahlbriefdaten(
+              wahlbezirkIDToFind, 1L, 2L, 3L, 4L, LocalDateTime.parse("2024-09-13T12:11:21.343"));
+      val wahlbriefdaten2 = new Wahlbriefdaten("id1", null, null, null, null, null);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
+      wahlbriefdatenRepository.saveAll(
+          List.of(wahlbriefdaten1, wahlbriefdatenToFind, wahlbriefdaten2));
 
-        @Test
-        void should_returnNoContent_when_noDataFound() throws Exception {
-            val request = get("/businessActions/wahlbriefdaten/wahlbezirkID")
-                    .with(jwt()
-                            .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN),
-                                    new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
-                            .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID"))
-                    );
+      val request =
+          get("/businessActions/wahlbriefdaten/" + wahlbezirkIDToFind)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
-            val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBody =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WahlbriefdatenDTO.class);
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
-        }
-
-        @Test
-        void should_returnData_when_dataIsPresentInRepo() throws Exception {
-            val wahlbezirkIDToFind = "wahlbezirkID";
-            val wahlbriefdaten1 = new Wahlbriefdaten("id1", null, null, null, null, null);
-            val wahlbriefdatenToFind =
-                    new Wahlbriefdaten(
-                            wahlbezirkIDToFind, 1L, 2L, 3L, 4L, LocalDateTime.parse("2024-09-13T12:11:21.343"));
-            val wahlbriefdaten2 = new Wahlbriefdaten("id1", null, null, null, null, null);
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
-            wahlbriefdatenRepository.saveAll(
-                    List.of(wahlbriefdaten1, wahlbriefdatenToFind, wahlbriefdaten2));
-
-            val request = get("/businessActions/wahlbriefdaten/" + wahlbezirkIDToFind)
-                    .with(jwt()
-                            .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN),
-                                    new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
-                            .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind))
-                    );
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBody =
-                    objectMapper.readValue(
-                            response.getResponse().getContentAsString(), WahlbriefdatenDTO.class);
-
-            val expectedResponseBody =
-                    wahlbriefdatenDTOMapper.toDTO(wahlbriefdatenModelMapper.toModel(wahlbriefdatenToFind));
-            Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
-        }
-
-        @Test
-        void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-            val wahlbezirkID = "12345";
-            val andereBezirkID = "99999";
-
-            val request = get("/businessActions/wahlbriefdaten/" + wahlbezirkID)
-                    .with(jwt()
-                            .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
-                            .jwt(jwt -> jwt.claim("wahlbezirkID", andereBezirkID))
-                    );
-
-            api.perform(request)
-                    .andExpect(status().isForbidden());
-        }
+      val expectedResponseBody =
+          wahlbriefdatenDTOMapper.toDTO(wahlbriefdatenModelMapper.toModel(wahlbriefdatenToFind));
+      Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);
     }
 
-    @Nested
-    class PostWahlbriefdaten {
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "12345";
+      val andereBezirkID = "99999";
 
-        @Test
-        void should_setNewData_when_callingPost() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody =
-                    new WahlbriefdatenWriteDTO(
-                            1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
-            val request =
-                    post("/businessActions/wahlbriefdaten/" + wahlbezirkID)
-                            .with(jwt()
-                                    .authorities(
-                                            new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN),
-                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN))
-                                    .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
-                            .with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(requestBody));
-            api.perform(request).andExpect(status().isOk());
+      val request =
+          get("/businessActions/wahlbriefdaten/" + wahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", andereBezirkID)));
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
-            val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
-
-            val expectedSavedEntity =
-                    wahlbriefdatenModelMapper.toEntity(
-                            wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
-            Assertions.assertThat(entityFromRepo).isEqualTo(expectedSavedEntity);
-        }
-
-        @Test
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val requestBody =
-                    new WahlbriefdatenWriteDTO(
-                            1L, 2L, 3L, 4L, LocalDateTime.parse("2035-02-27T00:01:02.003"));
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
-            val wahlbriefdatenToReplace =
-                    new Wahlbriefdaten(wahlbezirkID, 11L, 22L, 33L, 44L, LocalDateTime.now());
-            wahlbriefdatenRepository.save(wahlbriefdatenToReplace);
-
-            val request =
-                    post("/businessActions/wahlbriefdaten/" + wahlbezirkID)
-                            .with(jwt()
-                                    .authorities(
-                                            new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN),
-                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN),
-                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
-                                    .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
-                            .with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(requestBody));
-            api.perform(request).andExpect(status().isOk());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
-            val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
-
-            val expectedSavedEntity =
-                    wahlbriefdatenModelMapper.toEntity(
-                            wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
-            Assertions.assertThat(entityFromRepo).isEqualTo(expectedSavedEntity);
-        }
-
-        @Test
-        void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
-            val userWahlbezirkID = "wahlbezirkID_user";
-            val requestBody =
-                    new WahlbriefdatenWriteDTO(
-                            1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
-            SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLBRIEFDATEN);
-            val request =
-                    post("/businessActions/wahlbriefdaten/" + userWahlbezirkID)
-                            .with(jwt()
-                                    .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
-                                    .jwt(jwt -> jwt.claim("wahlbezirkID_target", userWahlbezirkID)))
-                            .with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(requestBody));
-            api.perform(request).andExpect(status().isForbidden());
-        }
+      api.perform(request).andExpect(status().isForbidden());
     }
+  }
+
+  @Nested
+  class PostWahlbriefdaten {
+
+    @Test
+    void should_setNewData_when_callingPost() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new WahlbriefdatenWriteDTO(
+              1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
+      val request =
+          post("/businessActions/wahlbriefdaten/" + wahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+      api.perform(request).andExpect(status().isOk());
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
+      val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
+
+      val expectedSavedEntity =
+          wahlbriefdatenModelMapper.toEntity(
+              wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
+      Assertions.assertThat(entityFromRepo).isEqualTo(expectedSavedEntity);
+    }
+
+    @Test
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val requestBody =
+          new WahlbriefdatenWriteDTO(
+              1L, 2L, 3L, 4L, LocalDateTime.parse("2035-02-27T00:01:02.003"));
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN);
+      val wahlbriefdatenToReplace =
+          new Wahlbriefdaten(wahlbezirkID, 11L, 22L, 33L, 44L, LocalDateTime.now());
+      wahlbriefdatenRepository.save(wahlbriefdatenToReplace);
+
+      val request =
+          post("/businessActions/wahlbriefdaten/" + wahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLBRIEFDATEN),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+      api.perform(request).andExpect(status().isOk());
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN);
+      val entityFromRepo = wahlbriefdatenRepository.findById(wahlbezirkID).get();
+
+      val expectedSavedEntity =
+          wahlbriefdatenModelMapper.toEntity(
+              wahlbriefdatenDTOMapper.toModel(wahlbezirkID, requestBody));
+      Assertions.assertThat(entityFromRepo).isEqualTo(expectedSavedEntity);
+    }
+
+    @Test
+    void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
+      val userWahlbezirkID = "wahlbezirkID_user";
+      val requestBody =
+          new WahlbriefdatenWriteDTO(
+              1L, 2L, 3L, 4L, LocalDateTime.parse("2023-02-23T02:23:32.021"));
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAHLBRIEFDATEN);
+      val request =
+          post("/businessActions/wahlbriefdaten/" + userWahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID_target", userWahlbezirkID)))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+      api.perform(request).andExpect(status().isForbidden());
+    }
+  }
 }

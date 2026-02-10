@@ -46,7 +46,7 @@ Für jede Wahlart (MBW, BTW, ...) werden die Routen der jeweiligen möglichen Sc
 
 ### Aktive/Inaktive Links
 
-Über die Links in der Navigation können Benutzer des Wahllokalsystems gezielt die Seiten für bestimmte
+Über die Links in der Navigation können die Nutzer\*innen des Wahllokalsystems gezielt die Seiten für bestimmte
 Bearbeitungsschritte aufrufen. Diese Links sind inaktiv, solange nicht alle notwendigen Schritte abgeschlossen wurden.
 
 > [!important] Auf Reaktivität achten
@@ -94,9 +94,9 @@ entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Li
 
 ### dynamische Bestimmung des nächsten Schrittes {#dynamische-bestimmung-des-nachsten-schrittes}
 
-Fast alle Seiten leiten den Nutzer weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert wurden.
-Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`. Folgende Prüfungen
-erfolgen dabei:
+Fast alle Seiten leiten die Nutzer\*innen weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert 
+wurden. Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`. 
+Folgende Prüfungen erfolgen dabei:
 
 1. welcher allgemeine, nicht wahlspezifische, Schritt ist als Nächstes zu bearbeiten
 2. welche Wahl ist noch nicht abgeschlossen
@@ -106,7 +106,7 @@ erfolgen dabei:
 > Eine Wahl gilt als abgeschlossen, wenn die Niederschrift der Wahl gedruckt wurde.
 
 > [!NOTE]
-> Konnte kein nächster Schritt ermittelt werden, wird der Benutzer auf die `Home`-Seite weitergeleitet.
+> Konnte kein nächster Schritt ermittelt werden, werden die Nutzer\*innen auf die `Home`-Seite weitergeleitet.
 
 ## Implementierung
 

@@ -115,7 +115,8 @@ on:
 <!-- prettier-ignore-end -->
 ## Datenbank einrichten
 
-Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
+Jeder Service hat ein eigenes Benutzerkonto für die Datenbank. Diese sind im File 
+`stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
 `jdbc:oracle:thin:@//localhost:1521/XEPDB1`
 
 Dabei sollte auf folgendes Schema geachtet werden:

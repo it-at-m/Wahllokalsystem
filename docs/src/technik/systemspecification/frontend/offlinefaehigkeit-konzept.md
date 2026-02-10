@@ -2,9 +2,10 @@
 
 In den Wahllokalen kann die Internetverbindung instabil sein, was jedoch die Bedienbarkeit des Clients nicht beeinträchtigen darf.
 Eine Voraussetzung für die Nutzung ist, dass zu Beginn des Wahltages beim Anmelden eine Internetverbindung verfügbar ist.
-Anschließend sollte der Benutzer bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. Sollte am Ende des Tages
-weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und telefonisch übermittelt.
-Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des Notebooks erfolgen.
+Anschließend sollten die Nutzer\*innen bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. 
+Sollte am Ende des Tages weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und 
+telefonisch übermittelt. Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des 
+Notebooks erfolgen.
 
 ## Beschreibung Offlinefähigkeit
 
@@ -17,7 +18,7 @@ Diese Anforderung lässt sich mit dem Service Worker (im folgenden SW) umsetzen.
 
 ## Anforderungen an die REST-Schnittstellen der Microservices
 
-Um einen möglichst konfigurations- und wartungsarmen Code zu ermöglichen ist es notwendig,
+Um einen möglichst konfigurations- und wartungsarmen Code zu ermöglichen, ist es notwendig,
 dass alle WLS-Schnittstellen einer Objektart, die Lese- und Schreiboperationen bieten, die
 gleiche URL anbieten und die Unterscheidung der Operation einzig und allein anhand der
 HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `Eroeffnungsuhrzeit` eine GET und eine POST Operation an die URL: "_/businessActions/eroeffnungsuhrzeit/wahlbezirkID_".
@@ -184,8 +185,13 @@ await wahlvorstandControllerApi.getWahlvorstand(
 
 ### Initialisierung
 
-Bei Login am Wahllokalsystem prüft der Client zunächst, welcher Benutzer als letztes an diesem Browser angemeldet war. Ist der aktuelle Benutzer ungleich dem letzten Benutzer, wird die lokale Datenbank gelöscht. Handelt es sich aber um den gleichen Benutzer, bleiben seine Offline erfassten Daten bestehen und er kann weiter arbeiten.
-Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass alle Daten ab sofort Offline zur Verfügung stehen.
+Bei Login am Wahllokalsystem prüft der Client zunächst, welches Benutzerkonto als letztes an diesem Browser angemeldet 
+war. Ist das aktuelle Benutzerkonto ungleich dem letzten, wird die lokale Datenbank gelöscht. Handelt es sich aber 
+um das gleiche Konto, bleiben die Offline erfassten Daten bestehen und die Nutzer\*innen können weiter arbeiten.
+Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche 
+für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind 
+einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass 
+alle Daten ab sofort Offline zur Verfügung stehen.
 
 ### Behandlung der aus- oder eingehenden Requests oder Responses
 
@@ -243,49 +249,53 @@ sequenceDiagram
 
 ### Datensynchronisation
 
-Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter Verbindung zu übermittelt, erfolgt eine Synchronisierung:
+Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter 
+Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 
-- beim Wechseln vom `offline` in den `online` Status, die sog. Hintergrund-Synchronisation);
-- beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift) die sog. Vordergrund-Synchronisation);
-- beim Ausloggen des Benutzers.
+- beim Wechseln vom `offline` in den `online` Status (die sog. Hintergrund-Synchronisation)
+- beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift; die sog. Vordergrund-Synchronisation)
+- beim Ausloggen des Benutzerkontos
 
 ![Skizze OfflineSyncher](/offlinesyncer/offlinesyncher.png)
 
 #### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
-Dies geschieht im Hintegrund und ist für den Benutzer nur durch eine Einblendung erkennbar.
+Dies geschieht im Hintegrund und ist für die Nutzer*innen nur durch eine Einblendung erkennbar.
 
-Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)).
-Dann versucht er jede dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich durchgeführten Anfragen wird das `dirty` auf `false` gesetzt.
-Nicht erfolgreiche Anfragen haben keine Konsequenzen. Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
+Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert 
+diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann 
+versucht er jeden dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich 
+durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. Nicht erfolgreiche Anfragen haben keine Konsequenzen. 
+Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
 #### Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
 Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen sein. War die Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
 
-Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt dem User angezeigt.
+Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt den Nutzer\*innen angezeigt.
 
 #### Vordergrundsynchronisation beim Ausloggen des Benutzers
 
-Wie oben [beim Senden der Ergebnismeldung](#vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzers versucht,
+Wie oben [beim Senden der Ergebnismeldung](#vordergrundsynchronisation-beim-senden-der-ergebnismeldung) wird auch vor dem Ausloggen eines Benutzerkontos versucht,
 falls `dirty=true`-markierte Daten in der `IndexedDB` vorhanden, diese ans Backend zu senden.
 
-### Logout eines Benutzers
+### Logout eines Benutzerkontos
 
-Daten werden NICHT gelöscht, wenn ein Nutzer sich abmeldet. Dadurch wird verhindert, dass durch
+Daten werden NICHT gelöscht, wenn die Nutzer\*innen sich abmelden. Dadurch wird verhindert, dass durch
 
 1. Koffertausch
 2. Abmeldung durch Inaktivität
 3. Schließen des Tabs
 4. Etc.
 
-offline-erfasste Daten verloren gehen. Die Daten bleiben solange im Offline-Speicher enthalten, bis sich ein
-anderer Benutzer am gleichen Rechner anmeldet (siehe [Initialisierung](#initialisierung)).
+offline-erfasste Daten verloren gehen. Die Daten bleiben so lange im Offline-Speicher enthalten, bis sich mit einem
+anderen Benutzerkonto am gleichen Rechner angemeldet wird (siehe [Initialisierung](#initialisierung)).
 
 ### Beispieleintrag in der IndexedDB
 
-Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Payload noch die folgenden Informationen enthält:
+Das `Value` das dem `Key` entspricht, soll ein JSON-String sein, das neben dem Payload noch die folgenden 
+Informationen enthält:
 
 - das Payload (`data` = Inhalt des Requests);
 - die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);

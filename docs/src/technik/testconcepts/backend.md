@@ -19,7 +19,7 @@ Was: Neue oder geänderte Funktionalität einer Klasse.
 Wie: Erstellen, Anpassen oder Erweitern vorhandener Testsuits. Es sollte bei eigenen Klassen eine Codecoverage
 von 100% (Methoden und Lines) erreicht werden. Komponenten, auf die die Testunit zugreifen, werden gemockt.
 
-Verantwortung: Entwickler, der die Änderung implementiert hat.
+Verantwortung: Entwickler oder Entwicklerin, der/die die Änderung implementiert hat.
 
 ### Integrationstests zur Authentifizierung
 
@@ -32,7 +32,7 @@ Wie: Durch Anpassung der `configuration.SecurityConfigurationTest`-Testsuit.
 Das Verhalten mit und ohne korrekter Authentifizierung ist zu prüfen.
 Die korrekte Fachlichkeit des Zugriffes soll dabei nicht geprüft werden.
 
-Verantwortung: Entwickler, der die Änderung implementiert hat.
+Verantwortung: Entwickler oder Entwicklerin, der/die die Änderung implementiert hat.
 
 ### Integrationstests zur Autorisierung
 
@@ -50,7 +50,7 @@ Gibt es mehrere erforderliche Berechtigungen, müssen alle Kombinationen geprüf
 Die korrekte logische Verknüpfung der Berechtigungen muss dabei beachtet werden.
 Die korrekte Fachlichkeit des Zugriffes soll dabei nicht geprüft werden.
 
-Verantwortung: Entwickler, der die Änderung implementiert hat.
+Verantwortung: Entwickler oder Entwicklerin, der/die die Änderung implementiert hat.
 
 ### Integrationstest des Microservices unter Beachtung der Fachlichkeit
 
@@ -65,7 +65,7 @@ jeweiligen Authentifizierung durchführen.
 Eine vollständige Abdeckung aller fachlichen Szenarien ist nicht erforderlich, weil dies durch die
 [Unittests](#unittests) der Services sichergestellt wird.
 
-Verantwortung: Entwickler, der die elementare Änderung an der Fachlichkeit implementiert hat.
+Verantwortung: Entwickler oder Entwicklerin, der/die die elementare Änderung an der Fachlichkeit implementiert hat.
 
 ### Architekturtests
 
@@ -77,7 +77,7 @@ Wie: Durch Anpassungen in `ArchUnitTest`, unter Verwendung von Regeln aus `wls-c
 erstellte Regeln. Bei der Implementierung von Anforderungen sind in der Regel keine Anpassungen an den Architekturtests
 vorzunehmen. Mit den Architekturtests wird aber sichergestellt, dass die Implementierung sich an die definierten Regeln hält.
 
-Verantwortung: Entwickler, der das entsprechende Issue zur Pflege der Architekturtests umsetzt,
+Verantwortung: Entwickler oder Entwicklerin, der/die das entsprechende Issue zur Pflege der Architekturtests umsetzt,
 oder bei Änderungen an der Architektur.
 
 > [!NOTE]

@@ -16,13 +16,13 @@ Was: Jeder Pull-Request, der auf den Default-Branch geht, muss gereviewt werden.
 können optional einem Review unterzogen werden.
 
 Wie: Die Workflows stellen eine syntaktische Funktionsfähigkeit der Anwendung fest, sowie die Einhaltung eines definierten
-Stils. Reviewer prüfen die Einhaltung der Definition of Done, sowie eine korrekte, vollständige und effiziente Umsetzung.
-In der Regel muss für das Review der Code lokal ausgecheckt werden. Feedback ist im Pull-Request zu geben.
+Stils. Reviewer\*innen prüfen die Einhaltung der Definition of Done, sowie eine korrekte, vollständige und effiziente 
+Umsetzung. In der Regel muss für das Review der Code lokal ausgecheckt werden. Feedback ist im Pull-Request zu geben.
 
 Verantwortung: Entwicklungsteam
 
-Ausführung: Der Ersteller eines Pull-Requests trägt die Verantwortung, dass ein Review durchgeführt wird. Entwickler
-aus dem Entwicklungsteam weisen sich selbständig PRs für ein Review zu.
+Ausführung: Der Ersteller oder die Erstellerin eines Pull-Requests trägt die Verantwortung, dass ein Review 
+durchgeführt wird. Entwickler\*innen aus dem Entwicklungsteam weisen sich selbständig PRs für ein Review zu.
 
 ### Sprint-Review
 

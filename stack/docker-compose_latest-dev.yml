@@ -267,7 +267,7 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
+      start_period: 120s
       test: [ "CMD-SHELL", "/opt/oracle/healthcheck.sh" ]
 
   refarch-gateway-wls:
@@ -303,8 +303,8 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
     security_opt:
       - no-new-privileges:true
 
@@ -341,8 +341,8 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
     security_opt:
       - no-new-privileges:true
 
@@ -413,8 +413,8 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
 
   wls-gui-wahllokalsystem:
     container_name: wls-gui-wahllokalsystem

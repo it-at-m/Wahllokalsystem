@@ -58,10 +58,7 @@ management:
       path-mapping:
         prometheus: metrics
   endpoint:
-    health:
-      access: read_only
-      probes:
-        enabled: true
+    health.enabled: true
     info.enabled: true
     prometheus.enabled: true
   info:

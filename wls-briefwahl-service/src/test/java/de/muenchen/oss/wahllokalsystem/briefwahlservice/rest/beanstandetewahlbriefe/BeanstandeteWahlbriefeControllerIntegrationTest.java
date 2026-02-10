@@ -55,16 +55,11 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
     }
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE,
-          Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE
-        })*/
     void should_returnNoContent_when_noDataFound() throws Exception {
       val request = get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/21")
               .with(jwt()
-                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLBRIEFDATEN))
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEANSTANDETE_WAHLBRIEFE),
+                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID"))
               );
 

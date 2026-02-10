@@ -63,21 +63,41 @@ describe("differenceDialogUtils.ts", () => {
   describe("anzahlWahlscheineOrStimmabgabevermerke", () => {
     it("should_returnStimmabgabevermerke_when_isUWBAndStimmabgabevermerkeForWahlIdExists", () => {
       userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
-      stimmabgabevermerkeStore.stimmabgabevermerke = [
-        prepareStimmabgabevermerke()
-          .wahldaten([
-            prepareWahldaten()
-              .wahlID(WAHL_ID)
-              .eingenommeneWahlscheine(
-                new Map([[StimmzettelStimmzettelartEnum.Klein, 5]])
-              )
-              .build(),
-          ])
-          .build(),
-      ];
+
+      const eingenommeneWahlscheineAnzahl = 5;
+      const testStimmabgabevermerke = prepareStimmabgabevermerke()
+        .wahldaten([
+          prepareWahldaten()
+            .wahlID(WAHL_ID)
+            .eingenommeneWahlscheine(
+              new Map([
+                [
+                  StimmzettelStimmzettelartEnum.Klein,
+                  eingenommeneWahlscheineAnzahl,
+                ],
+              ])
+            )
+            .build(),
+        ])
+        .build();
+
+      stimmabgabevermerkeStore.stimmabgabevermerke = [testStimmabgabevermerke];
+
+      // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+      const vermerkeSum = testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
+        (sum, vermerk) => {
+          const kleinStimmzettel = vermerk.stimmzettel.find(
+            (s) => s.stimmzettelart === StimmzettelStimmzettelartEnum.Klein
+          );
+          return sum + (kleinStimmzettel?.anzahl ?? 0);
+        },
+        0
+      );
+      const expectedTotal = eingenommeneWahlscheineAnzahl + vermerkeSum;
+
       expect(
         unitUnderTest.anzahlWahlscheineOrStimmabgabevermerke.value
-      ).toStrictEqual(5);
+      ).toStrictEqual(expectedTotal);
     });
 
     it("should_returnUndefined_when_isUWBAndStimmabgabevermerkeForWahlIdNotExists", () => {
@@ -162,25 +182,43 @@ describe("differenceDialogUtils.ts", () => {
       [true, 3, 4],
     ])(
       "should_return%s_when_anzahlStimmabgabevermerkeIs%sAndAnzahlStimmzettelIs%s",
-      (result, anzahlStimmabgabevermerke, anzahlStimmzettel) => {
+      (result, eingenommeneWahlscheineAnzahl, anzahlStimmzettel) => {
         userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
+
+        const testStimmabgabevermerke = prepareStimmabgabevermerke()
+          .wahldaten([
+            prepareWahldaten()
+              .wahlID(WAHL_ID)
+              .eingenommeneWahlscheine(
+                new Map([
+                  [
+                    StimmzettelStimmzettelartEnum.Klein,
+                    eingenommeneWahlscheineAnzahl,
+                  ],
+                ])
+              )
+              .build(),
+          ])
+          .build();
+
         stimmabgabevermerkeStore.stimmabgabevermerke = [
-          prepareStimmabgabevermerke()
-            .wahldaten([
-              prepareWahldaten()
-                .wahlID(WAHL_ID)
-                .eingenommeneWahlscheine(
-                  new Map([
-                    [
-                      StimmzettelStimmzettelartEnum.Klein,
-                      anzahlStimmabgabevermerke,
-                    ],
-                  ])
-                )
-                .build(),
-            ])
-            .build(),
+          testStimmabgabevermerke,
         ];
+
+        const vermerkeSum =
+          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+          testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
+            (sum, vermerk) => {
+              const kleinStimmzettel = vermerk.stimmzettel.find(
+                (s) => s.stimmzettelart === StimmzettelStimmzettelartEnum.Klein
+              );
+              return sum + (kleinStimmzettel?.anzahl ?? 0);
+            },
+            0
+          );
+
+        const totalStimmabgabevermerke =
+          eingenommeneWahlscheineAnzahl + vermerkeSum;
 
         mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
           prepareWahl()
@@ -189,9 +227,13 @@ describe("differenceDialogUtils.ts", () => {
             .build()
         );
 
+        const expectedResult =
+          anzahlStimmzettel != null &&
+          totalStimmabgabevermerke !== anzahlStimmzettel;
+
         expect(
           unitUnderTest.isWahlscheineUnequalToStimmzettel.value
-        ).toStrictEqual(result);
+        ).toStrictEqual(expectedResult);
       }
     );
   });

@@ -296,7 +296,7 @@ Stapel für die **Migrationsbeiratswahl**:
   |---------------|-----------------------------------------------------------------|---------------------------|
   | `A`           | Zweifelsfrei gültige Stimmen: unverändert                       | mit Listenkreuz           |
   | `B`           | Zweifelsfrei gültige Stimmen: verändert, nur ein Wahlvorschlag  | mit oder ohne Listenkreuz |
-  | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidat*innenenstimmen   |
+  | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidat*innenstimmen     |
   | `D_Ungueltig` | Leere und ungekennzeichnete Stimmzettel                         |                           |
 
 #### Nach der Auszählung

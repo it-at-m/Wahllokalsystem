@@ -13,9 +13,15 @@ export function useServiceWorkerPinSyncer() {
   const { importKey } = useCryptoUtils();
   const { sendMessage } = useServiceWorkerUtils();
 
-  watch(user, async () => {
-    await syncPin();
-  });
+  watch(
+    () => user.value.pin,
+    async (currentPin, oldPin) => {
+      if (currentPin !== oldPin) {
+        await syncPin();
+      }
+    },
+    { deep: true }
+  );
 
   navigator.serviceWorker.addEventListener("message", (event) =>
     _handleServiceWorkerInstalledMessage(event.data)

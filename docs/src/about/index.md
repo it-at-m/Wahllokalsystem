@@ -102,8 +102,8 @@ geöffnet wurde.
 
 📃 **UseCase: `Erfassung der Anwesenheit des Wahlvorstands`**
 
-Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder\*innen geladen, die für diesen Tag im Wahlbezirk
-eingeteilt sind. Die Liste der Wahlvorstandsmitglieder\*innen ist nach Funktion in folgender Reihenfolge sortiert:
+Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder geladen, die für diesen Tag im Wahlbezirk eingeteilt
+sind. Die Liste der Wahlvorstandsmitglieder ist nach Funktion in folgender Reihenfolge sortiert:
 
 1. Wahlvorsteher\*in
 2. Stellvertretung Wahlvorsteher\*in
@@ -113,17 +113,17 @@ eingeteilt sind. Die Liste der Wahlvorstandsmitglieder\*innen ist nach Funktion 
 
 Bei gleicher Funktion wird zusätzlich nach Familienname und Vorname sortiert.
 
-Für alle Mitglieder\*innen, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
+Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
 - es muss mindestens ein/e Wahlvorsteher\*in oder dessen Stellvertreter\*in anwesend sein
 - es muss mindestens ein/e Schriftführer\*in oder dessen Stellvertreter\*in anwesend sein
-- vor der Wahlschließung müssen mindestens 3 Mitglieder\*innen anwesend sein
-- nach der Wahlschließung müssen mindestens 5 Mitglieder\*innen anwesend sein
+- vor der Wahlschließung müssen mindestens 3 Mitglieder anwesend sein
+- nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein
 
 Die Nutzer\*innen der Anwendung werden durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht
 erfüllt sind. Über einen "Aktualisieren"-Button, welcher den Wahlvorstand mit einem `forceUpdate`-Flag neu lädt,
-können die Nutzer\*innen erzwingen, die Mitglieder\*innen durch eine mögliche neue Zusammensetzung zu überschreiben.
+können die Nutzer\*innen erzwingen, die Mitglieder durch eine mögliche neue Zusammensetzung zu überschreiben.
 
 ::: info 📃 UseCase: `Druck einer Wahlvorstand-Nachbesetzung` im Briefwahlbezirk {data-bwb="true"}
 In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu können die

@@ -9,7 +9,7 @@
         {{ MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG }} und nach der Schliessung
         mindestens
         {{ MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG }}
-        Wahlvorstandsmitglieder*innen anwesend sein.
+        Wahlvorstandsmitglieder anwesend sein.
       </li>
       <li v-if="!isSchriftfuehrerAnwesend">
         Die Rolle Schriftführer*in muss besetzt sein.
@@ -19,8 +19,8 @@
       </li>
     </ul>
     <template #additionalFeedback>
-      Bitte wenden Sie sich bei fehlenden Mitglieder*innen oder getauschten
-      Rollen an die Bezirksinspektion. Dort werden die Rollen im System richtig
+      Bitte wenden Sie sich bei fehlenden Mitglieder oder getauschten Rollen an
+      die Bezirksinspektion. Dort werden die Rollen im System richtig
       hinterlegt. Bis dahin bleiben Sie bitte auf dieser Seite.
     </template>
   </base-input-feedback-card>

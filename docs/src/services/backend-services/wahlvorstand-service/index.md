@@ -2,8 +2,8 @@
 
 Service für Themen im Zusammenhang mit Wahlvorständen und Anwesenheiten.
 
-Alle Wahlvorstandsmitglieder haben eine Funktion, die von der entsprechenden WahlbezirksArt und Wahlart abhängig
-ist. Der konkrete Funktionsname wird aktuell vom Service gemappt und bereitgestellt.
+Jedes WahlvorstandsMitglied hat eine Funktion, die von der entsprechenden WahlbezirksArt und Wahlart abhängig ist. 
+Der konkrete Funktionsname wird aktuell vom Service gemappt und bereitgestellt.
 
 **Beispiel:**
 

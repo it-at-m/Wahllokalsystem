@@ -4,7 +4,10 @@ services:
   ### WLS-Backend Services
   wls-broadcast-service:
     container_name: wls-broadcast-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest
+    image: wahllokalsystem-wls-broadcast-service:local
+    build:
+      context: ../wls-broadcast-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -25,7 +28,10 @@ services:
 
   wls-infomanagement-service:
     container_name: wls-infomanagement-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest
+    image: wahllokalsystem-wls-infomanagement-service:local
+    build:
+      context: ../wls-infomanagement-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -46,7 +52,10 @@ services:
 
   wls-briefwahl-service:
     container_name: wls-briefwahl-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest
+    image: wahllokalsystem-wls-briefwahl-service:local
+    build:
+      context: ../wls-briefwahl-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -67,7 +76,10 @@ services:
 
   wls-wahlvorbereitung-service:
     container_name: wls-wahlvorbereitung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest
+    image: wahllokalsystem-wls-wahlvorbereitung-service:local
+    build:
+      context: ../wls-wahlvorbereitung-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -88,7 +100,10 @@ services:
 
   wls-vorfaelleundvorkommnisse-service:
     container_name: wls-vorfaelleundvorkommnisse-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest
+    image: wahllokalsystem-wls-vorfaelleundvorkommnisse-service:local
+    build:
+      context: ../wls-vorfaelleundvorkommnisse-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -109,7 +124,10 @@ services:
 
   wls-basisdaten-service:
     container_name: wls-basisdaten-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest
+    image: wahllokalsystem-wls-basisdaten-service:local
+    build:
+      context: ../wls-basisdaten-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -132,7 +150,10 @@ services:
 
   wls-monitoring-service:
     container_name: wls-monitoring-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest
+    image: wahllokalsystem-wls-monitoring-service:local
+    build:
+      context: ../wls-monitoring-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -154,7 +175,10 @@ services:
 
   wls-wahlvorstand-service:
     container_name: wls-wahlvorstand-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest
+    image: wahllokalsystem-wls-wahlvorstand-service:local
+    build:
+      context: ../wls-wahlvorstand-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -178,7 +202,10 @@ services:
 
   wls-ergebnismeldung-service:
     container_name: wls-ergebnismeldung-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest
+    image: wahllokalsystem-wls-ergebnismeldung-service:local
+    build:
+      context: ../wls-ergebnismeldung-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -205,7 +232,10 @@ services:
 
   wls-admin-service:
     container_name: wls-admin-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest
+    image: wahllokalsystem-wls-admin-service:local
+    build:
+      context: ../wls-admin-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -230,7 +260,10 @@ services:
 
   wls-eai-service:
     container_name: wls-eai-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
+    image: wahllokalsystem-wls-eai-service:local
+    build:
+      context: ../wls-eai-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -272,7 +305,10 @@ services:
 
   refarch-gateway-wls:
     container_name: wls-refarch-gateway-wls
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    image: wahllokalsystem-wls-api-gateway:local
+    build:
+      context: ../wls-api-gateway
+      dockerfile: Dockerfile
     depends_on:
       wls-auth-service:
         condition: service_healthy
@@ -310,7 +346,10 @@ services:
 
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    image: wahllokalsystem-wls-api-gateway:local
+    build:
+      context: ../wls-api-gateway
+      dockerfile: Dockerfile
     depends_on:
       wls-auth-service:
         condition: service_healthy
@@ -348,7 +387,10 @@ services:
 
   wls-auth-service:
     container_name: wls-auth-service
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest
+    image: wahllokalsystem-wls-auth-service:local
+    build:
+      context: ../wls-auth-service
+      dockerfile: Dockerfile
     depends_on:
       wls-db-oracle:
         condition: service_healthy
@@ -418,7 +460,10 @@ services:
 
   wls-gui-wahllokalsystem:
     container_name: wls-gui-wahllokalsystem
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem:latest
+    image: wahllokalsystem-wls-gui-wahllokalsystem:local
+    build:
+      context: ../wls-gui-wahllokalsystem
+      dockerfile: Dockerfile
     ports:
       - 8400:8080
     extra_hosts:
@@ -428,7 +473,10 @@ services:
 
   wls-gui-admintool:
     container_name: wls-gui-admintool
-    image: ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool:latest
+    image: wahllokalsystem-wls-gui-admintool:local
+    build:
+      context: ../wls-gui-admintool
+      dockerfile: Dockerfile
     ports:
       - 8401:8080
     extra_hosts:

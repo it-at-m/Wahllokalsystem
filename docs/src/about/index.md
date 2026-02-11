@@ -190,9 +190,9 @@ dazu angegeben werden.
 ::: info Urnenwahlbezirk {data-uwb="true"}
 In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler\*innen, die das Wahllokal besuchen,
 erfasst werden. Jedes Mal, wenn die Nutzer\*innen auf den entsprechenden Button klicken, wird die Wähler\*innenanzahl
-um 1 erhöht. Alternativ können die Nutzer\*innen das Feld über seine Tastatur steuern. Wenn er sich nicht in einem
-Input-Feld befindet, kann er die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten `Eingabe` oder
-`Leertaste`.
+um 1 erhöht. Alternativ können die Nutzer\*innen das Feld über seine Tastatur steuern. Wenn sie sich nicht in einem
+Input-Feld befinden, können sie die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten 
+`Eingabe` oder `Leertaste`.
 :::
 
 📃 **UseCase: `Wahl schliessen`**

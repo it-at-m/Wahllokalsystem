@@ -26,15 +26,16 @@ HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `E
 ## Umgesetztes Verhalten
 
 Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service Worker
-(der als eine Art Middleware aggiert) abgefangen und wahlweise lokal gespeichert oder aus
+(der als eine Art Middleware agiert) abgefangen und wahlweise lokal gespeichert oder aus
 dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
-Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` fungiert.
-Das `Value` das dem `Key` enspricht soll ein JSON-String sein, das neben dem Payload noch ein paar Informationen enthalten muss.
-Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags](#beispieleintrag-in-der-indexeddb).
+Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` 
+fungiert. Das `Value` das dem `Key` entspricht soll ein JSON-String sein, das neben dem Payload noch ein paar 
+Informationen enthalten muss. Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags]
+(#beispieleintrag-in-der-indexeddb).
 
 ![Skizze OfflineKonzept](/offlinesyncer/offlinekonzept.png)
 
-Ergebnisse weiterer Requests zu der selben Ressource-URL führen zur Aktualisierung des `Values` unter dem gleichen `Key`.
+Ergebnisse weiterer Requests zu derselben Ressource-URL führen zur Aktualisierung des `Values` unter dem gleichen `Key`.
 
 ### Verschlüsselung der Offline-Daten
 
@@ -185,9 +186,9 @@ await wahlvorstandControllerApi.getWahlvorstand(
 
 ### Initialisierung
 
-Bei Login am Wahllokalsystem prüft der Client zunächst, welches Benutzerkonto als letztes an diesem Browser angemeldet
+Bei Login am Wahllokalsystem prüft der Client zunächst, welches Benutzerkonto als Letztes an diesem Browser angemeldet
 war. Ist das aktuelle Benutzerkonto ungleich dem letzten, wird die lokale Datenbank gelöscht. Handelt es sich aber
-um das gleiche Konto, bleiben die Offline erfassten Daten bestehen und die Nutzer\*innen können weiter arbeiten.
+um das gleiche Konto, bleiben die Offline erfassten Daten bestehen und die Nutzer\*innen können weiterarbeiten.
 Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche
 für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind
 einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass
@@ -200,8 +201,9 @@ alle Daten ab sofort Offline zur Verfügung stehen.
 In diesem Fall wird davon ausgegangen, dass keine Probleme auftreten.
 
 Der Client sendet seine Anfrage und die enthaltenen Daten werden erfolgreich im Backend gespeichert.
-Alles was der SW in diesem Fall tut ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten, diese leitet der SW ans Backend.
-Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten](#umgesetztes-verhalten) beschrieben.
+Alles, was der SW in diesem Fall tut, ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten, 
+diese leitet der SW ans Backend. Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten]
+(#umgesetztes-verhalten) beschrieben.
 
 #### Ist `offline` oder `ein Fehler` ist aufgetreten
 
@@ -256,24 +258,25 @@ Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 - beim Senden der Ergebnismeldung (Schnellmeldung oder Niederschrift; die sog. Vordergrund-Synchronisation)
 - beim Ausloggen des Benutzerkontos
 
-![Skizze OfflineSyncher](/offlinesyncer/offlinesyncher.png)
+![Skizze OfflineSyncer](/offlinesyncer/offlinesyncher.png)
 
 #### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
-Dies geschieht im Hintegrund und ist für die Nutzer\*innen nur durch eine Einblendung erkennbar.
+Dies geschieht im Hintergrund und ist für die Nutzer\*innen nur durch eine Einblendung erkennbar.
 
 Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert
-diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann
+diese anhand der ursprünglichen Speicherungsreihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann
 versucht er jeden dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich
 durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. Nicht erfolgreiche Anfragen haben keine Konsequenzen.
 Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
 #### Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
-Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen sein. War die Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
+Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen. War die 
+Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
 
-Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsforschritt den Nutzer\*innen angezeigt.
+Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsfortschritt den Nutzer\*innen angezeigt.
 
 #### Vordergrundsynchronisation beim Ausloggen des Benutzers
 
@@ -363,7 +366,7 @@ Die Registrierung erfolgt mittels `registerRoute(<RegEx für URL>, <Requesthandl
 ```mermaid
 flowchart LR
 
-    wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistance| indexDB
+    wahlWorker -->|select strategy| requestStrategyManager[Request Strategy Manager] -->|handling of request| requestStrategy[Request Strategy] -->|used for data persistence| indexDB
 ```
 
 _Übersicht über die wesentlichen Komponenten, die bei der Verarbeitung eines Requests zum Einsatz kommen._

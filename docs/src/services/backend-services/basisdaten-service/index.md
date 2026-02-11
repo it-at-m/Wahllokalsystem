@@ -88,7 +88,7 @@ sequenceDiagram
 
     WahltermindatenService -->> AsyncWahltermindatenService : Starte Initialisierung der<br>Wahlvorschläge und Referendumvorlagen
 
-    AsyncWahltermindatenService ->>+ Wahlvorschlaege : Lade request Wahlvorschläge für Bezirke der Wahlen
+    AsyncWahltermindatenService ->>+ Wahlvorschlaege : Lade Request Wahlvorschläge für Bezirke der Wahlen
     Wahlvorschlaege -->>- AsyncWahltermindatenService : Wahlvorschläge
     AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Wahlvorschläge
 

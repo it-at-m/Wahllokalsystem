@@ -77,8 +77,8 @@ ujt9a-wahlbezirk0002
 
 ### Erzeugung des neuen LDIF-Files
 
-Die Konten sollten in einer Datei vorliegen. Im Beispiel gehen wir davon aus, dass die Datei den Namen `exportusers.csv`
-hat und im selben Ordner wie das Skript liegt.
+Die Benutzerkonten sollten in einer Datei vorliegen. Im Beispiel gehen wir davon aus, dass die Datei den Namen 
+`exportusers.csv` hat und im selben Ordner wie das Skript liegt.
 
 ```bash
 ./generateLdif.sh exportusers.csv

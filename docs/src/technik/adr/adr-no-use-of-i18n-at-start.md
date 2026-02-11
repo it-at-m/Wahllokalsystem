@@ -17,7 +17,7 @@ wiederverwendet werden.
 ## Entscheidung
 
 Wir haben uns dagegen entschieden, i18n in der aktuellen Phase einzusetzen. WLS ist für den Münchner Prozess zur
-Auszählung der Stimmen. Wir gehen aktuell nicht davon aus, dass für den Nutzendenkreis der Software eine 
+Auszählung der Stimmen. Wir gehen aktuell nicht davon aus, dass für den Nutzendenkreis der Software eine
 Mehrsprachigkeit erforderlich ist.
 
 Eine spätere Verwendung von i18n hat keinen relevanten erhöhten Aufwand als wenn wir es von Beginn an verwenden würden.

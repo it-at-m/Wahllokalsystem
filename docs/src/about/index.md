@@ -191,7 +191,7 @@ dazu angegeben werden.
 In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler\*innen, die das Wahllokal besuchen,
 erfasst werden. Jedes Mal, wenn die Nutzer\*innen auf den entsprechenden Button klicken, wird die Wähler\*innenanzahl
 um 1 erhöht. Alternativ können die Nutzer\*innen das Feld über seine Tastatur steuern. Wenn sie sich nicht in einem
-Input-Feld befinden, können sie die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten 
+Input-Feld befinden, können sie die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten
 `Eingabe` oder `Leertaste`.
 :::
 
@@ -303,14 +303,14 @@ Stapel für die **Migrationsbeiratswahl**:
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Schnellmeldung zu den vorläufigen 
+Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Schnellmeldung zu den vorläufigen
 Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die 
+Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.

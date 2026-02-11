@@ -19,6 +19,10 @@ Formulierungen. Folgende Ausnahmen wurden hierbei vom Fachbereich definiert:
 - Im Navigationsmenü der Anwendung soll `Kandidatinnen- und Kandidatenstimmen` ausgeschrieben werden
 - `Wähler*innen` kann, wo sinnvoll und fachlich korrekt, durch `Wahlberechtigte` ersetzt werden
 
+Weiterhin wurden die folgenden Bezeichnungen festgelegt:
+
+- `Bewerber\*innen` ❌ → `Kandidat\*innen` ✅
+
 ## Konsequenzen
 
 ### positiv

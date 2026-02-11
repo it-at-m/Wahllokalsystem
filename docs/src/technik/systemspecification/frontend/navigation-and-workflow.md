@@ -2,8 +2,8 @@
 
 Die Bearbeitungsreihenfolge an einem Wahltag folgt einem klar definierten Schema. Die ["Was kann die Software"-Übersicht](/about/#was-kann-die-software) zeigt alle Schritte, die dabei zu berücksichtigen sind.
 
-Das Wahllokalsystem unterstützt die Wahlhelfer bei der korrekten Bearbeitung, in dem bestimmte Funktionen erst genutzt werden können, wenn die notwendigen
-Schritte zuvor abgeschlossen wurden.
+Das Wahllokalsystem unterstützt die Wahlhelfer\*innen bei der korrekten Bearbeitung, in dem bestimmte Funktionen erst 
+genutzt werden können, wenn die notwendigen Schritte zuvor abgeschlossen wurden.
 
 Umgesetzt wird dies durch Navigationguards, aktive oder inaktive Links und einer dynamischen Ermittlung der nächsten Seite.
 

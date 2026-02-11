@@ -7,6 +7,7 @@
         v-model="ergebnis.ergebnis"
         :rules="[required, minNumber(0), maxNumber(9999)]"
         class="styleErgebnisCell"
+        @update:model-value="$emit('dirty')"
       />
     </td>
   </tr>
@@ -45,6 +46,10 @@ const laufendeNummer = computed(() =>
     props.kandidat.listenposition
   )
 );
+
+defineEmits<{
+  dirty: [];
+}>();
 </script>
 
 <style scoped>

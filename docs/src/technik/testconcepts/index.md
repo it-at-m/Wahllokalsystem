@@ -21,7 +21,7 @@ Umsetzung. In der Regel muss für das Review der Code lokal ausgecheckt werden. 
 
 Verantwortung: Entwicklungsteam
 
-Ausführung: Der Ersteller oder die Erstellerin eines Pull-Requests trägt die Verantwortung, dass ein Review
+Ausführung: Der/Die Ersteller\*in eines Pull-Requests trägt die Verantwortung, dass ein Review
 durchgeführt wird. Entwickler\*innen aus dem Entwicklungsteam weisen sich selbständig PRs für ein Review zu.
 
 ### Sprint-Review

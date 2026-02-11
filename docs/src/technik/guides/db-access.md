@@ -1,7 +1,7 @@
 # Zugriff auf Datenbanktabellen aller Services in einer Verbindung
 
 Für jeden Service gibt es ein separates Benutzerkonto für die Oracle Datenbank, die in Podman läuft.
-Diese Benutzerkonten können nur die Tabellen sehen, die im jeweiligen Schema sind. Mit dem Benutzerkonto 
+Diese Benutzerkonten können nur die Tabellen sehen, die im jeweiligen Schema sind. Mit dem Benutzerkonto
 `wls_basisdaten_service` kann z.B. nur auf die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` zugegriffen werden.
 
 <details>

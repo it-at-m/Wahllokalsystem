@@ -121,9 +121,9 @@ flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, g
 
 ### 1. Starten über das Gateway + Authentifizierung {#start-via-gateway}
 
-Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [Benutzerkonten](#benutzerkonten) 
-anzumelden. Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port 
-`8083` aufgerufen werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird 
+Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [Benutzerkonten](#benutzerkonten)
+anzumelden. Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port
+`8083` aufgerufen werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird
 aber vom Gateway zum Frontend weitergeleitet und die Ladeschleife ist weg.
 
 > [!NOTE]

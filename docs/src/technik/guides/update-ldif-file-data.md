@@ -5,7 +5,7 @@
 Der [Auth-Service](/services/backend-services/auth-service/index.md) verwendet einen embedded LDAP-Server, wenn  
 keine LDAP-Verbindung konfiguriert ist. Die Daten dieses Servers werden über ein
 [LDIF](https://de.wikipedia.org/wiki/LDAP_Data_Interchange_Format)-File
-definiert. Wenn bei der Eingabe von Wahltermindaten neue Benutzerkonten erstellt werden, müssen diese im LDIF-File 
+definiert. Wenn bei der Eingabe von Wahltermindaten neue Benutzerkonten erstellt werden, müssen diese im LDIF-File
 ergänzt werden.
 
 ## Kurzbeschreibung des Vorgehens
@@ -60,7 +60,7 @@ member: uid=wls_all_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_all_bwb,ou=people,dc=springframework,dc=org
 ```
 
-Über dieses File werden zwei Benutzerkonten (`wls_all_uwb` und `wls_all_bwb`) definiert. Nur mit diesen beiden Konten 
+Über dieses File werden zwei Benutzerkonten (`wls_all_uwb` und `wls_all_bwb`) definiert. Nur mit diesen beiden Konten
 ist ein Login möglich.
 
 ### Generierung eines neuen Wahltermins
@@ -140,7 +140,7 @@ member: uid=ujt9a-wahlbezirk0002,ou=people,dc=springframework,dc=org
 member: uid=78nmr-wahlbezirk0003,ou=people,dc=springframework,dc=org
 ```
 
-Aus dem erzeugten File müssen die erzeugten Benutzerkonten und die Zuordnung zur Gruppe (siehe den hervorgehobenen 
+Aus dem erzeugten File müssen die erzeugten Benutzerkonten und die Zuordnung zur Gruppe (siehe den hervorgehobenen
 Bereich) in das bestehende LDIF-File übertragen werden.
 
 Nach einem Neustart des Auth-Service kann zusätzlich ein Login mit den neuen Konten erfolgen.

@@ -35,12 +35,12 @@ Das Wahllokalsystem ist die Anwendung, die am Wahltag vom Wahlvorstand bedient w
 
 📃 **UseCase: `Initiales Laden der Daten`**
 
-In einem ersten Schritt nach dem Login werden die hinterlegten Daten des angemeldeten Benutzerkontos geladen. Kommt es 
+In einem ersten Schritt nach dem Login werden die hinterlegten Daten des angemeldeten Benutzerkontos geladen. Kommt es
 hier zu einem Fehler, wird der Wahlvorstand dazu aufgefordert, sich beim Wahlamt zu melden. Ist der Schritt erfolgreich,
 müssen anschließend alle für die Wahlen wichtigen Daten ebenfalls erfolgreich geladen werden. Schlägt das Laden fehl,
-kann die Initialisierungs-Anfrage für die betroffenen Daten wiederholt werden. Bei bestimmten fehlenden Daten wird 
-den Nutzer\*innenn der Zugriff auf die Anwendung verwehrt, bei anderen, mit niedrigerer Priorität, ist der Zugriff auf 
-die Anwendung trotzdem möglich. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung im 
+kann die Initialisierungs-Anfrage für die betroffenen Daten wiederholt werden. Bei bestimmten fehlenden Daten wird
+den Nutzer\*innenn der Zugriff auf die Anwendung verwehrt, bei anderen, mit niedrigerer Priorität, ist der Zugriff auf
+die Anwendung trotzdem möglich. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung im
 Offline-Modus.
 
 Folgende Daten werden bei einer **Kommunalwahl** von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk"
@@ -62,7 +62,7 @@ Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 
 📃 **UseCase: `Erfassung von Ereignissen`**
 
-Zu jeder Zeit der Wahlhandlung können die Nutzer\*innen Ereignisse in der Anwendung erfassen. Jedes Ereignis hat 
+Zu jeder Zeit der Wahlhandlung können die Nutzer\*innen Ereignisse in der Anwendung erfassen. Jedes Ereignis hat
 folgende Pflichtfelder:
 
 - eine (berechnete) Ereignisart (siehe Infobox ["Ereignisse im Urnenwahlbezirk"](./#infobox-ereignisse-uwb))
@@ -102,7 +102,7 @@ geöffnet wurde.
 
 📃 **UseCase: `Erfassung der Anwesenheit des Wahlvorstands`**
 
-Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder\*innen geladen, die für diesen Tag im Wahlbezirk 
+Beim Start der Anwendung wurden alle Wahlvorstandsmitglieder\*innen geladen, die für diesen Tag im Wahlbezirk
 eingeteilt sind. Die Liste der Wahlvorstandsmitglieder\*innen ist nach Funktion in folgender Reihenfolge sortiert:
 
 1. Wahlvorsteher\*in
@@ -121,20 +121,20 @@ Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 - vor der Wahlschließung müssen mindestens 3 Mitglieder\*innen anwesend sein
 - nach der Wahlschließung müssen mindestens 5 Mitglieder\*innen anwesend sein
 
-Die Nutzer\*innen der Anwendung werden durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht 
-erfüllt sind. Über einen "Aktualisieren"-Button, welcher den Wahlvorstand mit einem `forceUpdate`-Flag neu lädt, 
+Die Nutzer\*innen der Anwendung werden durch eine Fehlermeldung darauf hingewiesen, wenn diese Bedingungen nicht
+erfüllt sind. Über einen "Aktualisieren"-Button, welcher den Wahlvorstand mit einem `forceUpdate`-Flag neu lädt,
 können die Nutzer\*innen erzwingen, die Mitglieder\*innen durch eine mögliche neue Zusammensetzung zu überschreiben.
 
 ::: info 📃 UseCase: `Druck einer Wahlvorstand-Nachbesetzung` im Briefwahlbezirk {data-bwb="true"}
-In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu können die 
-Nutzer\*innen über den Button `Nachbesetzung drucken` ein entsprechendes PDF-Dokument generieren lassen, welches im 
+In manchen Fällen ist es in einem Briefwahlbezirk notwendig, eine Nachbesetzung zu organisieren. Hierzu können die
+Nutzer\*innen über den Button `Nachbesetzung drucken` ein entsprechendes PDF-Dokument generieren lassen, welches im
 Anschluss gedruckt und ausgefüllt werden kann.
 :::
 
 📃 **UseCase: `Vorbereitung der Wahlhandlung - Prüfung der Ausstattung des Wahllokals`**
 
 Für jede an dem entsprechenden Tag stattfindende Wahl muss die Anzahl der zur Verfügung gestellten Wahlurnen erfasst
-werden. Die Nutzer\*innen müssen bestätigen, dass die Wahlurnen vor der Nutzung leer waren und versiegelt wurden, um 
+werden. Die Nutzer\*innen müssen bestätigen, dass die Wahlurnen vor der Nutzung leer waren und versiegelt wurden, um
 speichern zu können.
 
 ::: info Abstimmungsschutzvorrichtungen im Urnenwahlbezirk {data-uwb="true"}
@@ -156,9 +156,9 @@ zugehörigen Ansicht in der Anwendung vorzunehmen sind.
 
 📃 **UseCase: `Wahl eröffnen`**
 
-Die Nutzer\*innen werden dazu aufgefordert, die Uhrzeit einzutragen, zu welcher die Stimmabgabe begonnen wurde, 
-beziehungsweise zu welcher der Wahlvorstand zusammengetreten ist. Um speichern zu können, dürfen die Nutzer\*innen 
-keine Zeit eingeben, die in der Zukunft liegt. Außerdem müssen die folgenden Grenzwerte je nach Wahlbezirksart 
+Die Nutzer\*innen werden dazu aufgefordert, die Uhrzeit einzutragen, zu welcher die Stimmabgabe begonnen wurde,
+beziehungsweise zu welcher der Wahlvorstand zusammengetreten ist. Um speichern zu können, dürfen die Nutzer\*innen
+keine Zeit eingeben, die in der Zukunft liegt. Außerdem müssen die folgenden Grenzwerte je nach Wahlbezirksart
 berücksichtigt werden:
 
 ::: info `Erfassung der Öffnung des Wahllokals` im Urnenwahlbezirk {data-uwb="true"}
@@ -188,10 +188,10 @@ dazu angegeben werden.
 📃 **UseCase: `Erfassung der absoluten Wahlbeteiligung`**
 
 ::: info Urnenwahlbezirk {data-uwb="true"}
-In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler\*innen, die das Wahllokal besuchen, 
-erfasst werden. Jedes Mal, wenn die Nutzer\*innen auf den entsprechenden Button klicken, wird die Wähler\*innenanzahl 
-um 1 erhöht. Alternativ können die Nutzer\*innen das Feld über seine Tastatur steuern. Wenn er sich nicht in einem 
-Input-Feld befindet, kann er die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten `Eingabe` oder 
+In einem Urnenwahlbezirk kann nach der Öffnung der Wahl die Anzahl der Wähler\*innen, die das Wahllokal besuchen,
+erfasst werden. Jedes Mal, wenn die Nutzer\*innen auf den entsprechenden Button klicken, wird die Wähler\*innenanzahl
+um 1 erhöht. Alternativ können die Nutzer\*innen das Feld über seine Tastatur steuern. Wenn er sich nicht in einem
+Input-Feld befindet, kann er die Taste `+` drücken, oder, wenn der Zählbutton fokussiert ist, die Tasten `Eingabe` oder
 `Leertaste`.
 :::
 
@@ -214,10 +214,10 @@ Standardwert von 18 Uhr.
 
 ::: info Urnenwahlbezirk {data-uwb="true"}
 In einem Urnenwahlbezirk muss, wenn jemand mit Wahlschein kommt, geprüft werden, ob dieser Wahlschein gültig ist. Dazu
-gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Die Nutzer\*innen geben die Nummer des Wahlscheins ein und 
-suchen. Nach der Suche erhalten die Nutzer\*innen Feedback darüber, ob der Wahlschein gültig oder ungültig ist. 
-Entsprechend werden auch Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, werden in der Fehlermeldung 
-neben der Wahlscheinnummer auch Vor- und Familienname angezeigt. Außerdem werden die Nutzer\*innen in diesem Fall dazu 
+gibt es in der Anwendung eine Liste ungültiger Wahlscheine. Die Nutzer\*innen geben die Nummer des Wahlscheins ein und
+suchen. Nach der Suche erhalten die Nutzer\*innen Feedback darüber, ob der Wahlschein gültig oder ungültig ist.
+Entsprechend werden auch Handlungsanweisungen angezeigt. Ist der Wahlschein ungültig, werden in der Fehlermeldung
+neben der Wahlscheinnummer auch Vor- und Familienname angezeigt. Außerdem werden die Nutzer\*innen in diesem Fall dazu
 aufgefordert, den Beschluss über die Zurückweisung als Ereignis zu erfassen.
 
 Um suchen zu können, muss eine Wahlscheinnummer vorhanden sein. Die Wahlscheinnummer muss außerdem im Bereich von `1` bis
@@ -303,14 +303,14 @@ Stapel für die **Migrationsbeiratswahl**:
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Schnellmeldung zu den 
+Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Schnellmeldung zu den
 vorläufigen Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Wahlniederschrift über die 
+Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Wahlniederschrift über die
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.

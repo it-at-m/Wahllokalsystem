@@ -109,7 +109,7 @@ Das Frontend wird aus diversen [Single-File-Components](https://vuejs.org/guide/
 
 Das Wahllokalsystem UI besteht im Wesentlichen aus drei Komponenten.
 
-Die `app-bar` stellt den Nutzer\*innen grundlegende Informationen zu ihrem Wahlbezirk bereit. Die `navigation` 
+Die `app-bar` stellt den Nutzer\*innen grundlegende Informationen zu ihrem Wahlbezirk bereit. Die `navigation`
 umfasst die Navigationselemente der Seite, und die `router-view` zeigt den jeweils angeforderten Inhalt an.
 
 ### router-view

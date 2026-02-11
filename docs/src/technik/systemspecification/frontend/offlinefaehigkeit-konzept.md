@@ -2,9 +2,9 @@
 
 In den Wahllokalen kann die Internetverbindung instabil sein, was jedoch die Bedienbarkeit des Clients nicht beeinträchtigen darf.
 Eine Voraussetzung für die Nutzung ist, dass zu Beginn des Wahltages beim Anmelden eine Internetverbindung verfügbar ist.
-Anschließend sollten die Nutzer\*innen bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können. 
-Sollte am Ende des Tages weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und 
-telefonisch übermittelt. Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des 
+Anschließend sollten die Nutzer\*innen bis einschließlich des Drucks der Niederschrift durchgehend arbeiten können.
+Sollte am Ende des Tages weiterhin keine Verbindung bestehen, wird die Niederschrift im Wahllokal gedruckt und
+telefonisch übermittelt. Die Datenübertragung an das Backend kann auch am nächsten Tag durch das Hochfahren des
 Notebooks erfolgen.
 
 ## Beschreibung Offlinefähigkeit
@@ -185,12 +185,12 @@ await wahlvorstandControllerApi.getWahlvorstand(
 
 ### Initialisierung
 
-Bei Login am Wahllokalsystem prüft der Client zunächst, welches Benutzerkonto als letztes an diesem Browser angemeldet 
-war. Ist das aktuelle Benutzerkonto ungleich dem letzten, wird die lokale Datenbank gelöscht. Handelt es sich aber 
+Bei Login am Wahllokalsystem prüft der Client zunächst, welches Benutzerkonto als letztes an diesem Browser angemeldet
+war. Ist das aktuelle Benutzerkonto ungleich dem letzten, wird die lokale Datenbank gelöscht. Handelt es sich aber
 um das gleiche Konto, bleiben die Offline erfassten Daten bestehen und die Nutzer\*innen können weiter arbeiten.
-Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche 
-für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind 
-einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass 
+Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werden alle lesenden Endpunkte, welche
+für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind
+einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass
 alle Daten ab sofort Offline zur Verfügung stehen.
 
 ### Behandlung der aus- oder eingehenden Requests oder Responses
@@ -249,7 +249,7 @@ sequenceDiagram
 
 ### Datensynchronisation
 
-Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter 
+Um die Daten, die bisher nicht erfolgreich an das Backend übermittelt werden konnten, bei wiederhergestellter
 Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 
 - beim Wechseln vom `offline` in den `online` Status (die sog. Hintergrund-Synchronisation)
@@ -263,10 +263,10 @@ Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
 Dies geschieht im Hintegrund und ist für die Nutzer*innen nur durch eine Einblendung erkennbar.
 
-Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert 
-diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann 
-versucht er jeden dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich 
-durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. Nicht erfolgreiche Anfragen haben keine Konsequenzen. 
+Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert
+diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann
+versucht er jeden dieser Datensätze (aus der `indexedDB`) erneut ans Backend zu senden. Bei erfolgreich
+durchgeführten Anfragen wird das `dirty` auf `false` gesetzt. Nicht erfolgreiche Anfragen haben keine Konsequenzen.
 Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzeige unten rechts wieder.
 
 #### Vordergrundsynchronisation beim Senden der Ergebnismeldung
@@ -294,7 +294,7 @@ anderen Benutzerkonto am gleichen Rechner angemeldet wird (siehe [Initialisierun
 
 ### Beispieleintrag in der IndexedDB
 
-Das `Value` das dem `Key` entspricht, soll ein JSON-String sein, das neben dem Payload noch die folgenden 
+Das `Value` das dem `Key` entspricht, soll ein JSON-String sein, das neben dem Payload noch die folgenden
 Informationen enthält:
 
 - das Payload (`data` = Inhalt des Requests);

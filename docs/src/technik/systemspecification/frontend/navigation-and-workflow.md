@@ -94,8 +94,8 @@ entlang der Reaktivitätskette und ggf. eine Änderung der Verfügbarkeit der Li
 
 ### dynamische Bestimmung des nächsten Schrittes {#dynamische-bestimmung-des-nachsten-schrittes}
 
-Fast alle Seiten leiten die Nutzer\*innen weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert 
-wurden. Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`. 
+Fast alle Seiten leiten die Nutzer\*innen weiter zum nächsten Schritt, sobald die Daten der aktuellen Seite gespeichert
+wurden. Die Bestimmung der nächsten Seite erfolgt über die Funktion `getNextRouteOrNull` der `navigationUtils`.
 Folgende Prüfungen erfolgen dabei:
 
 1. welcher allgemeine, nicht wahlspezifische, Schritt ist als Nächstes zu bearbeiten

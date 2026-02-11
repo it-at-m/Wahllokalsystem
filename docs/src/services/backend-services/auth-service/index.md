@@ -126,7 +126,7 @@ Des Weiteren müssen folgende Regeln beachtet werden:
 ### Erstellung der Benutzerkonten
 
 > [!IMPORTANT]
-> Damit Benutzerkonten angelegt werden können muss die definierte Authority vorhanden sein die den entsprechenden 
+> Damit Benutzerkonten angelegt werden können muss die definierte Authority vorhanden sein die den entsprechenden
 > Konten zugewiesen werden soll.
 
 > [!NOTE]

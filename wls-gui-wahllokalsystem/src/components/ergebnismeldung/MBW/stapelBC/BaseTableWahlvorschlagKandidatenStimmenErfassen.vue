@@ -14,6 +14,7 @@
         v-model="ergebnisAndKandidat.ergebnis"
         :kandidat="ergebnisAndKandidat.kandidat"
         :wahlvorschlag-nummer="wahlvorschlagNummer"
+        @dirty="$emit('dirty')"
       />
     </tbody>
     <tfoot>
@@ -53,6 +54,10 @@ defineProps({
 const totalScore = computed(() =>
   summeKandidatenStimmen(ergebnisseAndKandidaten.value)
 );
+
+defineEmits<{
+  dirty: [];
+}>();
 </script>
 
 <style scoped>

@@ -261,7 +261,7 @@ Verbindung zu übermitteln, erfolgt eine Synchronisierung:
 #### Hintergrundsynchronisation beim offline-online Wechsel
 
 Wenn der Wahllokalclient den Zustand von _Offline_ zu _Online_ wechselt, wird der `Offline-Syncer` aktiv.
-Dies geschieht im Hintegrund und ist für die Nutzer*innen nur durch eine Einblendung erkennbar.
+Dies geschieht im Hintegrund und ist für die Nutzer\*innen nur durch eine Einblendung erkennbar.
 
 Der `Offline-Syncer` prüft, ob in den lokalen Daten mit `dirty=true` markierte Daten vorhanden sind und sortiert
 diese anhand der ursprünglichen Speicherung-Reihenfolge ([timestamp](#beispieleintrag-in-der-indexeddb)). Dann

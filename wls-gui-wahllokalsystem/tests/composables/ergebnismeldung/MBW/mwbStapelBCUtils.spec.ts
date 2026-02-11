@@ -273,18 +273,11 @@ describe("mwbStapelBCUtils.ts", () => {
     it("should_sendErgebnisseWithValue_when_ergebnisseAreGiven", async () => {
       const ergebnisToSave1 = createErgebnis();
       const ergebnisToSave2 = createErgebnis();
-      const ergebnisToSave3 = createErgebnis();
-      const ergebnisToSave4 = createErgebnis();
+
       unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value = [
         {
           kandidatenErgebnisse: [
             { kandidat: createKandidat(), ergebnis: ergebnisToSave1 },
-            { kandidat: createKandidat(), ergebnis: ergebnisToSave2 },
-            {
-              kandidat: createKandidat(),
-              ergebnis: prepareErgebnis().ergebnis(null).build(),
-            },
-            { kandidat: createKandidat(), ergebnis: ergebnisToSave3 },
           ],
           ordnungszahl: generateRandomNumber(2),
           identifikator: generateRandomString(10),
@@ -294,9 +287,8 @@ describe("mwbStapelBCUtils.ts", () => {
           kandidatenErgebnisse: [
             {
               kandidat: createKandidat(),
-              ergebnis: prepareErgebnis().ergebnis(null).build(),
+              ergebnis: ergebnisToSave2,
             },
-            { kandidat: createKandidat(), ergebnis: ergebnisToSave4 },
           ],
           ordnungszahl: generateRandomNumber(2),
           identifikator: generateRandomString(10),
@@ -310,11 +302,99 @@ describe("mwbStapelBCUtils.ts", () => {
       await unitUnderTest.saveErgebnisse();
 
       expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledWith(
-        [ergebnisToSave1, ergebnisToSave2, ergebnisToSave3, ergebnisToSave4],
+        [ergebnisToSave1, ergebnisToSave2],
         wahlbezirkID,
         wahlID,
         StapelArtEnum.MbwBC
       );
+    });
+
+    it("should_onlySendCompleteWahlvorschlaege_when_someWahlvorschlaegeAreIncomplete", async () => {
+      const ergebnisToSave1 = createErgebnis();
+      const ergebnisWithNull = prepareErgebnis().ergebnis(null).build();
+
+      unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value = [
+        {
+          kandidatenErgebnisse: [
+            { kandidat: createKandidat(), ergebnis: ergebnisToSave1 },
+          ],
+          ordnungszahl: generateRandomNumber(2),
+          identifikator: generateRandomString(10),
+          kurzname: generateRandomString(10),
+        },
+        {
+          kandidatenErgebnisse: [
+            {
+              kandidat: createKandidat(),
+              ergebnis: ergebnisWithNull,
+            },
+          ],
+          ordnungszahl: generateRandomNumber(2),
+          identifikator: generateRandomString(10),
+          kurzname: generateRandomString(10),
+        },
+      ];
+
+      const mockedMappedErgebnisse = createErgebnisse();
+      mockDefinitions.mapToErgebnisse.mockReturnValue(mockedMappedErgebnisse);
+
+      await unitUnderTest.saveErgebnisse();
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledWith(
+        [ergebnisToSave1],
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwBC
+      );
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledTimes(1);
+    });
+
+    it("should_sendCompleteWahlvorschlagOnly_when_oneIsCompleteAndOneIsIncomplete", async () => {
+      const completeErgebnis1 = createErgebnis();
+      const completeErgebnis2 = createErgebnis();
+      const completeErgebnis3 = createErgebnis();
+
+      const incompleteErgebnis1 = createErgebnis();
+      const incompleteErgebnisNull = prepareErgebnis().ergebnis(null).build();
+      const incompleteErgebnis2 = createErgebnis();
+
+      unitUnderTest.wahlvorschlaegeWithKandidatenErgebnissen.value = [
+        {
+          kandidatenErgebnisse: [
+            { kandidat: createKandidat(), ergebnis: completeErgebnis1 },
+            { kandidat: createKandidat(), ergebnis: completeErgebnis2 },
+            { kandidat: createKandidat(), ergebnis: completeErgebnis3 },
+          ],
+          ordnungszahl: 1,
+          identifikator: "complete-wahlvorschlag",
+          kurzname: "D1 Complete",
+        },
+        {
+          kandidatenErgebnisse: [
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnis1 },
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnisNull },
+            { kandidat: createKandidat(), ergebnis: incompleteErgebnis2 },
+          ],
+          ordnungszahl: 2,
+          identifikator: "incomplete-wahlvorschlag",
+          kurzname: "D2 Incomplete",
+        },
+      ];
+
+      const mockedMappedErgebnisse = createErgebnisse();
+      mockDefinitions.mapToErgebnisse.mockReturnValue(mockedMappedErgebnisse);
+
+      await unitUnderTest.saveErgebnisse();
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledWith(
+        [completeErgebnis1, completeErgebnis2, completeErgebnis3],
+        wahlbezirkID,
+        wahlID,
+        StapelArtEnum.MbwBC
+      );
+
+      expect(mockDefinitions.mapToErgebnisse).toHaveBeenCalledTimes(1);
     });
 
     it("should_updateIsSaving_when_callIsSuccessful", async () => {

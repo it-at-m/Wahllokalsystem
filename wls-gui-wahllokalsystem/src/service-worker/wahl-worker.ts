@@ -80,4 +80,4 @@ async function getRequestHandler(options: RouteHandlerCallbackOptions) {
   return await handleRequestWithStrategy(options);
 }
 
-log("installed and took control");
+log("service worker configured and initialized");

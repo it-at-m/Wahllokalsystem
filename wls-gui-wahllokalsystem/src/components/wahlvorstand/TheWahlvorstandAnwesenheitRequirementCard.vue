@@ -19,7 +19,7 @@
       </li>
     </ul>
     <template #additionalFeedback>
-      Bitte wenden Sie sich bei fehlenden Mitglieder oder getauschten Rollen an
+      Bitte wenden Sie sich bei fehlenden Mitgliedern oder getauschten Rollen an
       die Bezirksinspektion. Dort werden die Rollen im System richtig
       hinterlegt. Bis dahin bleiben Sie bitte auf dieser Seite.
     </template>

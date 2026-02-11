@@ -303,14 +303,14 @@ Stapel für die **Migrationsbeiratswahl**:
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Schnellmeldung zu den
-vorläufigen Ergebnissen nach der Auszählung der Stimmen erstellt.
+Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Schnellmeldung zu den vorläufigen 
+Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
-Im Urnenwahl - sowie im Briefwahlbezirk wird vom Schriftführer oder der Schriftführerin eine Wahlniederschrift über die
+Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die 
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.

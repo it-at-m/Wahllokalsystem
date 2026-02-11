@@ -57,10 +57,9 @@ Welche Aktionen für die jeweiligen Dokumente bereits in einem Wahllokal vollzog
 
 #### Erfassung der Stimmabgaben mit Wahlschein
 
-Im Wählerverzeichnis wird bei einer Wahl durch den Schriftführer oder die Schriftführerin über den sogenannten
-"Stimmabgabevermerk" vermerkt, wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne im Wahllokal
-gelegt hat. Über das Schreiben und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS
-übermittelt bzw. ausgelesen werden.
+Im Wählerverzeichnis wird bei einer Wahl durch die Schriftführung über den sogenannten "Stimmabgabevermerk" vermerkt,
+wenn ein Wahlberechtigter mit Wahlschein seinen Stimmzettel in die Urne im Wahllokal gelegt hat. Über das Schreiben 
+und Lesen der Wahlscheine kann die aktuelle Anzahl an Stimmabgabevermerken an WLS übermittelt bzw. ausgelesen werden.
 
 ### Erfassung der Anzahl an Stimmzettelumschlaegen
 

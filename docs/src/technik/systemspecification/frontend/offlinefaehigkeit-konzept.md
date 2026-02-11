@@ -28,8 +28,8 @@ HTTP-Methode durchgeführt wird. So haben wir zum Beispiel für die Objektart `E
 Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service Worker
 (der als eine Art Middleware agiert) abgefangen und wahlweise lokal gespeichert oder aus
 dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
-Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key` 
-fungiert. Das `Value` das dem `Key` entspricht soll ein JSON-String sein, das neben dem Payload noch ein paar 
+Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key`
+fungiert. Das `Value` das dem `Key` entspricht soll ein JSON-String sein, das neben dem Payload noch ein paar
 Informationen enthalten muss. Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags]
 (#beispieleintrag-in-der-indexeddb).
 
@@ -201,7 +201,7 @@ alle Daten ab sofort Offline zur Verfügung stehen.
 In diesem Fall wird davon ausgegangen, dass keine Probleme auftreten.
 
 Der Client sendet seine Anfrage und die enthaltenen Daten werden erfolgreich im Backend gespeichert.
-Alles, was der SW in diesem Fall tut, ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten, 
+Alles, was der SW in diesem Fall tut, ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten,
 diese leitet der SW ans Backend. Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten]
 (#umgesetztes-verhalten) beschrieben.
 
@@ -273,7 +273,7 @@ Nachdem alle Anfragen zu synchronisieren versucht wurden, verschwindet die Anzei
 
 #### Vordergrundsynchronisation beim Senden der Ergebnismeldung
 
-Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen. War die 
+Vor dem Senden einer Schnellmeldung oder Niederschrift muss der `Offline-Syncer` erfolgreich durchlaufen. War die
 Synchronisierung nicht erfolgreich kann kein Senden erfolgen.
 
 Zur Besseren Nachvollziehbarkeit wird der Synchronisierungsfortschritt den Nutzer\*innen angezeigt.

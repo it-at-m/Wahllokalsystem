@@ -21,7 +21,7 @@ Formulierungen. Folgende Ausnahmen wurden hierbei vom Fachbereich definiert:
 
 Weiterhin wurden die folgenden Bezeichnungen festgelegt:
 
-- `Bewerber\*innen` ❌ → `Kandidat\*innen` ✅
+- `Bewerber*innen` ❌ → `Kandidat*innen` ✅
 
 ## Konsequenzen
 

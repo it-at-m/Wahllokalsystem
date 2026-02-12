@@ -172,13 +172,7 @@ onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
 
-  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
-    (wahlvorschlagWithErgebnis, i) => {
-      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
-        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
-      );
-    }
-  );
+  _updateDirtyRowIcons();
 });
 
 const totalSumErgebnisse = computed(() => {
@@ -224,7 +218,17 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   save();
 
   await saveErgebnisse();
-  dirtyRows.value[rowIndex] = false;
+  _updateDirtyRowIcons();
+}
+
+function _updateDirtyRowIcons() {
+  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
+    (wahlvorschlagWithErgebnis, i) => {
+      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
+      );
+    }
+  );
 }
 </script>
 

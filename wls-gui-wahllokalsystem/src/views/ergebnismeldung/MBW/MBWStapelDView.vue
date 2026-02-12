@@ -20,12 +20,14 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebni
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
+const { setStepDone } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { logError } = useLogging("requestStrategies");
 
@@ -80,7 +82,7 @@ async function onSave() {
       ergebnisse: [ergebnis.value],
     } as Ergebnisse;
 
-    if (wahlbezirkID && ergebnisseToSend) {
+    if (wahlbezirkID) {
       await postErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -88,6 +90,7 @@ async function onSave() {
         ergebnisseToSend,
         true
       );
+      setStepDone(wahlID, wahlbezirkID, stapelArt);
     }
   } catch (error) {
     logError("Fehler beim Speichern der Ergebnisse: ", error);

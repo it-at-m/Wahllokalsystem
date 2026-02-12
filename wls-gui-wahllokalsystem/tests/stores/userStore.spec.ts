@@ -16,11 +16,17 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUser: vi.fn(),
+  initElectionWorkflowState: vi.fn(),
 }));
 
 vi.mock("@/composables/user/userService", () => ({
   useUserService: () => ({
     getUser: mockDefinitions.getUser,
+  }),
+}));
+vi.mock("@/stores/workflowStore.ts", () => ({
+  useWorkflowStore: () => ({
+    initElectionWorkflowState: mockDefinitions.initElectionWorkflowState,
   }),
 }));
 
@@ -67,6 +73,11 @@ describe("userStore.ts", () => {
       await unitUnderTest.loadUser();
 
       expect(unitUnderTest.user).toStrictEqual(user);
+      expect(
+        mockDefinitions.initElectionWorkflowState.mock.calls
+      ).toStrictEqual([
+        [user.wahlMetaData[0]?.wahlID, user.wahlMetaData[0]?.wahlbezirkID],
+      ]);
     });
   });
 

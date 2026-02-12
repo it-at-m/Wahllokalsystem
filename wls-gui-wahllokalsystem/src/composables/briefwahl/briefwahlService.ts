@@ -35,7 +35,8 @@ export function useBriefwahlService() {
 
   async function getBeanstandeteWahlbriefe(
     waehlerverzeichnisNummer: number,
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ) {
     try {
       const response =
@@ -43,14 +44,22 @@ export function useBriefwahlService() {
           wahlbezirkID,
           waehlerverzeichnisNummer
         );
+      if (sendNotification) {
+        addNotification(
+          "Die beanstandeten Wahlbriefe wurden erfolgreich geladen.",
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
       const responseData = getNullOn204OrElseResponseData(response);
 
       return responseData ? toModel(responseData) : null;
     } catch (e) {
       const errorMessage =
         "Die beanstandeten Wahlbriefe konnten nicht geladen werden.";
+      if (sendNotification) {
+        addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
+      }
       logDebug(errorMessage, e);
-      addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       throw new Error("Get beanstandete Wahlbriefe Failed");
     }
   }

@@ -46,7 +46,8 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { isUWB } = storeToRefs(useUserStore());
-const { initTasks, hasAllTasksRun } = useInitTaskManagerStore();
+const { initTasks } = useInitTaskManagerStore();
+const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 const { wahlenActions } = useWahlenStore();
 const { isTodayOrFuture } = useDateTimeUtils();
 
@@ -71,7 +72,7 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    if (hasAllTasksRun) {
+    if (hasAllTasksRun.value) {
       showTestdruckDialog.value = true;
     }
   } catch (error) {

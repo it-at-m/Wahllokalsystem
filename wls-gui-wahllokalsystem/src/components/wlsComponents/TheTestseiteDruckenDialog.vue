@@ -24,19 +24,13 @@
       <div>
         So können Sie sicherstellen, dass Ihr Drucker einwandfrei funktioniert.
       </div>
-      <v-divider
-        :thickness="3"
-        color="black"
-      />
+      <v-divider :thickness="2" />
       <div>
         Sie können den Test auch später wiederholen. Öffnen Sie hierfür das
         Hilfe-Menü (Fragezeichen-Symbol oben rechts). Dort finden Sie das Feld
         "Testdruck starten".
       </div>
-      <v-divider
-        :thickness="3"
-        color="black"
-      />
+      <v-divider :thickness="2" />
       <div>
         Sollten Sie Probleme beim Drucken haben, informieren Sie bitte das
         Wahlamt.

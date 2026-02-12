@@ -5,7 +5,7 @@
     max-width="648px"
   >
     <v-card>
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         <v-icon
           :icon="icon"
           size="x-small"

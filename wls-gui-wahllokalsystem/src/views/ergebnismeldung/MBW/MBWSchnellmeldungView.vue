@@ -4,26 +4,24 @@
     <v-card-subtitle class="font-weight-bold mb-10"
       >Kontrolle, Übermittlung und Druck der Schnellmeldung</v-card-subtitle
     >
-    <the-m-b-w-wahlberechtigte-anzeigen-card
-      class="ma-5"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-waehler-anzeigen-card
-      class="ma-5"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-ungueltige-stimmen-anzeigen-card
-      class="ma-5"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-gueltige-stimmen-anzeigen-card
-      class="ma-5"
-      :wahlbezirk-id="wahlbezirkID"
-      :wahl-id="wahlID"
-    />
+    <base-ergebnismeldung-view-container>
+      <the-m-b-w-wahlberechtigte-anzeigen-card
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-waehler-anzeigen-card
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-ungueltige-stimmen-anzeigen-card
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-gueltige-stimmen-anzeigen-card
+        :wahlbezirk-id="wahlbezirkID"
+        :wahl-id="wahlID"
+      />
+    </base-ergebnismeldung-view-container>
     <v-card-actions>
       <base-button-save
         save-text="Schnellmeldung senden"
@@ -56,6 +54,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseErgebnismeldungViewContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungViewContainer.vue";
 import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";

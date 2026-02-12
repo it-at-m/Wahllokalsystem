@@ -84,7 +84,7 @@
                 <tr v-if="expandedRows[index]">
                   <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
-                      id="kandidatenStimmenErfassen"
+                      :id="'kandidatenStimmenErfassen' + index"
                       :model-value="proxyModel.value[index]!"
                       :is-saving="isSaving"
                       @do-save="onSaveWahlvorschlag(index, save)"
@@ -96,7 +96,7 @@
             </template>
           </v-confirm-edit>
         </tbody>
-        <tfoot id="footer">
+        <tfoot id="wahlvorschlaege-table-footer">
           <tr>
             <td
               :colspan="COUNT_COLUMNS_BEFORE_SUM"
@@ -235,15 +235,17 @@ function _openNextCard(index: number) {
   if (nextIndex > -1) {
     expandedRows.value[nextIndex] = true;
     nextTick(() => {
-      const nextElement = document.querySelector("#kandidatenStimmenErfassen");
+      const nextElement = document.querySelector(
+        "#kandidatenStimmenErfassen" + nextIndex
+      );
       if (nextElement) {
-        nextElement.scrollIntoView();
+        nextElement.scrollIntoView({ behavior: "smooth" });
       }
     });
   } else {
-    const footer = document.querySelector("#footer");
+    const footer = document.querySelector("#wahlvorschlaege-table-footer");
     if (footer) {
-      footer.scrollIntoView();
+      footer.scrollIntoView({ behavior: "smooth" });
     }
   }
 }

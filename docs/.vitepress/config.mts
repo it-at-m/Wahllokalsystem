@@ -124,6 +124,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
             },
             {
+              text: "Gendergerechte Sprache",
+              link: `${PATH_ADR}adr-gender-sensitive-language.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,

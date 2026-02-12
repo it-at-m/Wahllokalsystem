@@ -19,6 +19,7 @@
 ### Dokumentation
 - [ ] Links geprüft
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
+- [ ] Texte auf gendergerechte Sprache geprüft
 
 <!-- Frontend -->
 ### Frontend
@@ -28,6 +29,7 @@
   - [UI/UX-Adrs][ui-ux-adrs-link]
 - [ ] Unit-Tests gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
+- [ ] Texte auf gendergerechte Sprache geprüft
 
 # Referenzen[^1]:
 

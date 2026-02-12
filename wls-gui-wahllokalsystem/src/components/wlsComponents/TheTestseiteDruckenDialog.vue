@@ -46,12 +46,15 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { printTestdruck } = useHelpIconCallbacks();
+const { isTestdruckGedruckt } = storeToRefs(useWorkflowStore());
 
 const visible = ref(true);
 const cancelDisabled = ref(true);
@@ -61,6 +64,7 @@ function closeDialog() {
 }
 
 function onCancelClicked() {
+  isTestdruckGedruckt.value = true;
   closeDialog();
 }
 

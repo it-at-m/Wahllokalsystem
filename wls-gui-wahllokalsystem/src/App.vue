@@ -18,6 +18,7 @@
         </router-view>
       </v-container>
     </v-main>
+    <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
       v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
@@ -28,10 +29,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
+import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
@@ -44,7 +46,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { isUWB } = storeToRefs(useUserStore());
-const { initTasks } = useInitTaskManagerStore();
+const { initTasks, hasAllTasksRun } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isTodayOrFuture } = useDateTimeUtils();
 
@@ -56,6 +58,7 @@ const isTimeToCheckAnwesenheitInFuture = computed(() =>
     ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
     : false
 );
+const showTestdruckDialog = ref(false);
 
 const indexDBSingleton = useIndexDB();
 
@@ -68,6 +71,9 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
+    if (hasAllTasksRun) {
+      showTestdruckDialog.value = true;
+    }
   } catch (error) {
     console.debug(error);
   }

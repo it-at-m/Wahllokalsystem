@@ -84,6 +84,7 @@
                 <tr v-if="expandedRows[index]">
                   <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
+                      id="kandidatenStimmenErfassen"
                       :model-value="proxyModel.value[index]!"
                       :is-saving="isSaving"
                       @do-save="onSaveWahlvorschlag(index, save)"
@@ -127,7 +128,7 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { computed, onActivated, ref } from "vue";
+import { computed, nextTick, onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
@@ -225,6 +226,32 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
 
   await saveErgebnisse();
   dirtyRows.value[rowIndex] = false;
+  _openNextCard(rowIndex);
+}
+
+function _openNextCard(index: number) {
+  expandedRows.value[index] = false;
+  const nextIndex = _findNextIndex(index);
+  if (nextIndex > -1) {
+    expandedRows.value[nextIndex] = true;
+    nextTick(() => {
+      const nextElement = document.querySelector("#kandidatenStimmenErfassen");
+      if (nextElement) {
+        nextElement.scrollIntoView();
+      }
+    });
+  }
+}
+
+function _findNextIndex(index: number) {
+  const length = wahlvorschlaegeWithKandidatenErgebnissen.value.length;
+  for (let i = 0; i < length; i++) {
+    const currentIndex = (index + i) % length;
+    if (dirtyRows.value[currentIndex]) {
+      return currentIndex;
+    }
+  }
+  return -1;
 }
 </script>
 

@@ -48,7 +48,7 @@ import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { printTestdruck } = useHelpIconCallbacks();
-const { isTestdruckGedruckt } = storeToRefs(useWorkflowStore());
+const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 
 const visible = ref(true);
 const cancelDisabled = ref(true);
@@ -58,7 +58,7 @@ function closeDialog() {
 }
 
 function onCancelClicked() {
-  isTestdruckGedruckt.value = true;
+  isTestseiteGedruckt.value = true;
   closeDialog();
 }
 

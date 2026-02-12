@@ -89,7 +89,7 @@ const {
   hasAllTasksRunSuccessfully,
 } = storeToRefs(useInitTaskManagerStore());
 const { rerunFailedTasks } = useInitTaskManagerStore();
-const { isTestdruckGedruckt } = storeToRefs(useWorkflowStore());
+const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 
 const isLoading = computed(() => {
   return (
@@ -98,8 +98,8 @@ const isLoading = computed(() => {
   );
 });
 
-watch(hasAllTasksRunSuccessfully && isTestdruckGedruckt, () => {
-  if (hasAllTasksRunSuccessfully.value && isTestdruckGedruckt.value) {
+watch(hasAllTasksRunSuccessfully && isTestseiteGedruckt, () => {
+  if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
     router.push(ROUTE_WAHLVORSTAND);
   }
 });

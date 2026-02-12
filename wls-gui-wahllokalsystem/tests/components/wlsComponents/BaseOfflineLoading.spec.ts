@@ -208,7 +208,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasAllTasksRunSuccessfully = true;
-      workflowStore.isTestdruckGedruckt = true;
+      workflowStore.isTestseiteGedruckt = true;
 
       await nextTick();
 

@@ -96,7 +96,7 @@
             </template>
           </v-confirm-edit>
         </tbody>
-        <tfoot>
+        <tfoot id="footer">
           <tr>
             <td
               :colspan="COUNT_COLUMNS_BEFORE_SUM"
@@ -240,6 +240,11 @@ function _openNextCard(index: number) {
         nextElement.scrollIntoView();
       }
     });
+  } else {
+    const footer = document.querySelector("#footer");
+    if (footer) {
+      footer.scrollIntoView();
+    }
   }
 }
 

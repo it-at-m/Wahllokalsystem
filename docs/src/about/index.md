@@ -116,8 +116,8 @@ Bei gleicher Funktion wird zusätzlich nach Familienname und Vorname sortiert.
 Für alle Mitglieder, die tatsächlich anwesend sind, muss die Anwesenheit manuell per Checkbox erfasst werden. Die
 Anwesenheit kann nur bei Erfüllung folgender Bedingungen gespeichert werden:
 
-- es muss mindestens ein/e Wahlvorsteher\*in oder dessen Stellvertretung anwesend sein
-- es muss mindestens ein/e Schriftführer\*in oder dessen Stellvertretung anwesend sein
+- es muss mindestens ein/e Wahlvorsteher\*in oder dessen/deren Stellvertretung anwesend sein
+- es muss mindestens ein/e Schriftführer\*in oder dessen/deren Stellvertretung anwesend sein
 - vor der Wahlschließung müssen mindestens 3 Mitglieder anwesend sein
 - nach der Wahlschließung müssen mindestens 5 Mitglieder anwesend sein
 

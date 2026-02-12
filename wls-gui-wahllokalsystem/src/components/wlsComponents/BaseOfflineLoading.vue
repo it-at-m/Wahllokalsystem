@@ -98,7 +98,7 @@ const isLoading = computed(() => {
   );
 });
 
-watch(hasAllTasksRunSuccessfully && isTestseiteGedruckt, () => {
+watch([hasAllTasksRunSuccessfully, isTestseiteGedruckt], () => {
   if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
     router.push(ROUTE_WAHLVORSTAND);
   }

@@ -21,7 +21,6 @@ classDiagram
             wahlbezirkID: String
             keineVorfaelle: Boolean
             keineVorkommnisse: Boolean
-
         }
 
         class Ereignis {
@@ -30,7 +29,7 @@ classDiagram
         }
 
         class EreignisartEnum {
-        <<enum>>
+            <<enum>>
             Vorfall
             Vorkommnis
         }

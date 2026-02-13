@@ -15,12 +15,9 @@ export function useServiceWorkerPinSyncer() {
 
   watch(
     () => user.value.pin,
-    async (currentPin, oldPin) => {
-      if (currentPin !== oldPin) {
-        await syncPin();
-      }
-    },
-    { deep: true }
+    async () => {
+      await syncPin();
+    }
   );
 
   navigator.serviceWorker.addEventListener("message", (event) =>

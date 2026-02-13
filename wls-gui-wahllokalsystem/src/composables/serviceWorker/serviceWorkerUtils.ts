@@ -2,7 +2,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { type ServiceWorkerMessage } from "@/types/serviceWorker/ServiceWorkerMessage.ts";
 
 export function useServiceWorkerUtils() {
-  const { logDebug, logWarn } = useLogging("useServiceWorkerUtils");
+  const { logDebug } = useLogging("useServiceWorkerUtils");
 
   function isServiceWorkerActive() {
     return !!navigator.serviceWorker.controller;

@@ -1,5 +1,3 @@
-import type { ServiceWorkerMessage } from "@/types/serviceWorker/ServiceWorkerMessage.ts";
-
 import { useServiceWorkerTestDataFactory } from "@tests/utils/serviceWorker/serviceWorkerTestDataFactory.ts";
 import {
   afterAll,

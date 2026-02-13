@@ -425,3 +425,30 @@ await ereignisControllerApi.postEreignisse(
     ereignisseWriteDto
 );
 ```
+
+### Verschlüsselung der Daten
+
+Die Daten, die in der Indexed-DB abgelegt werden sollen verschlüsselt sein, damit im Falle eines Geräteverlustes
+kein Zugriff auf die Daten möglich ist. Als Schlüssel dient die PIN des Users. Die Ver- bzw. Entschlüsslung
+erfolgt transparent im Composable für die IndexedDB.
+
+```mermaid
+classDiagram
+    class indexDB {
+        <<composable>>
+        setKey(cryptoKey: CryptoKey)
+        getItemFromDB(key: String) Promise&lt;IndexDBValue&gt;
+        storeItem(key: String, value: IndexDBValue) Promise&lt;void&gt;
+    }
+
+```
+
+Da der Service-Worker und in die Anwendung in unterschiedlichen Kontexten ausgeführt werden ist eine Synchronisierung
+der Daten erforderlich.
+
+In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker
+- nachdem der Benutzer geladen wurde
+- wenn die PIN des Benutzers sich ändert
+- es einen neuen Service-Worker gibt
+  - nach der erstmaligen Installation
+  - nach dem Update auf eine neue Version

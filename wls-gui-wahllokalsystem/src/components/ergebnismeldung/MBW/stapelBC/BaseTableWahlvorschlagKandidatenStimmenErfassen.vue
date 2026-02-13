@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th class="colLfdNr font-weight-bold">Lfd. Nr.</th>
-        <th class="font-weight-bold">Kandidatin/Kandidat</th>
+        <th class="font-weight-bold">Kandidat*in</th>
         <th class="colScore font-weight-bold">Schlusszahl</th>
       </tr>
     </thead>

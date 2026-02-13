@@ -178,7 +178,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkIdIsBwb", () => {
+    it("should_returnTrue_when_usersWahlbezirkIdIsUwb", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().isUWB = true;
       const result = permitNavigationOnlyForWahlbezirksArtUwb();

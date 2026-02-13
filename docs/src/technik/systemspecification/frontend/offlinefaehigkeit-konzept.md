@@ -428,8 +428,8 @@ await ereignisControllerApi.postEreignisse(
 
 ### Verschlüsselung der Daten
 
-Die Daten, die in der Indexed-DB abgelegt werden sollen verschlüsselt sein, damit im Falle eines Geräteverlustes
-kein Zugriff auf die Daten möglich ist. Als Schlüssel dient die PIN des Users. Die Ver- bzw. Entschlüsslung
+Die Daten, die in der Indexed-DB abgelegt werden sollen, müssen verschlüsselt sein, damit im Falle eines Geräteverlusts
+kein Zugriff auf die Daten möglich ist. Als Schlüssel dient die PIN des Users. Die Ver- bzw. Entschlüsselung
 erfolgt transparent im Composable für die IndexedDB.
 
 ```mermaid
@@ -443,12 +443,12 @@ classDiagram
 
 ```
 
-Da der Service-Worker und in die Anwendung in unterschiedlichen Kontexten ausgeführt werden ist eine Synchronisierung
+Da der Service-Worker und die Anwendung in unterschiedlichen Kontexten ausgeführt werden, ist eine Synchronisierung
 der Daten erforderlich.
 
-In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker
+In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker:
 - nachdem der Benutzer geladen wurde
-- wenn die PIN des Benutzers sich ändert
-- es einen neuen Service-Worker gibt
-  - nach der erstmaligen Installation
-  - nach dem Update auf eine neue Version
+- wenn sich die PIN des Benutzers ändert
+- wenn es einen neuen Service-Worker gibt
+    - nach der erstmaligen Installation
+    - nach dem Update auf eine neue Version

@@ -11,6 +11,7 @@ import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTe
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
@@ -32,6 +33,9 @@ describe("navigationGuards.ts", () => {
   const {
     isStepDoneInElectionState,
     permitNavigationWhenWahlumgebungIsErfasst,
+    permitNavigationOnlyForWahlbezirksArtUwb,
+    permitNavigationOnlyForWahlbezirksArtBwb,
+    permitNavigationOnlyIfUserIsLoggedOut,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -162,6 +166,52 @@ describe("navigationGuards.ts", () => {
         DUMMY_FROM,
         DUMMY_NEXT_GUARD
       );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationOnlyForWahlbezirksArtUwb", () => {
+    it("should_returnFalse_when_usersWahlbezirkIdIsBwb", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().isUWB = false;
+      const result = permitNavigationOnlyForWahlbezirksArtUwb();
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkIdIsBwb", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().isUWB = true;
+      const result = permitNavigationOnlyForWahlbezirksArtUwb();
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationOnlyForWahlbezirksArtBwb", () => {
+    it("should_returnFalse_when_usersWahlbezirkIdIsUwb", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().isBWB = false;
+      const result = permitNavigationOnlyForWahlbezirksArtBwb();
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkIdIsBwb", () => {
+      // @ts-expect-error: cannot set readonly
+      useUserStore().isBWB = true;
+      const result = permitNavigationOnlyForWahlbezirksArtBwb();
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationOnlyIfUserIsLoggedOut", () => {
+    it("should_returnFalse_when_userIsLoggedIn", () => {
+      useUserStore().isUserLoggedIn = true;
+      const result = permitNavigationOnlyIfUserIsLoggedOut();
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_userIsLoggedOut", () => {
+      useUserStore().isUserLoggedIn = false;
+      const result = permitNavigationOnlyIfUserIsLoggedOut();
       expect(result).toStrictEqual(true);
     });
   });

@@ -12,16 +12,17 @@ describe("viewportUtils.ts", () => {
   describe("scrollIntoView", () => {
     it("should_scrollToElement_when_elementExists", () => {
       const mockElement = document.createElement("div");
-      mockElement.getBoundingClientRect = () => ({
-        top: 200,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: 0,
-        width: 0,
-        x: 0,
-        y: 0,
-      });
+      mockElement.getBoundingClientRect = () =>
+        ({
+          top: 200,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 0,
+          width: 0,
+          x: 0,
+          y: 0,
+        }) as DOMRect;
 
       document.body.appendChild(mockElement);
       mockElement.id = "elementId";

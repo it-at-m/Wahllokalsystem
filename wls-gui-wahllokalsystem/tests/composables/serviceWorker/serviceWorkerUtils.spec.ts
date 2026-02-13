@@ -100,6 +100,10 @@ describe("serviceWorkerUtils.ts", () => {
         configurable: true,
       });
 
+      //advance to end of all tries
+      vi.advanceTimersByTime(
+        (numberOfTries - 1) * delayForEachTryInMilliseconds
+      );
       const result = await waitForServiceWorkerPromise;
       expect(result).toStrictEqual(true);
       vi.useRealTimers();

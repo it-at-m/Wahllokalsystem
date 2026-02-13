@@ -20,7 +20,7 @@ export function useServiceWorkerUtils() {
     retryDelayInMilliseconds = 100
   ) {
     let numberOfChecker = 1;
-    while (!isServiceWorkerActive() && numberOfChecker <= countTries) {
+    while (!isServiceWorkerActive() && numberOfChecker < countTries) {
       await _sleep(retryDelayInMilliseconds);
       numberOfChecker++;
     }

@@ -20,7 +20,6 @@
     />
     <the-m-b-w-scores-list-group
       v-if="wahl.wahlart === WahlWahlartEnum.Mbw"
-      :title-stimmen-zaehlen="titleStimmenZaehlen"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
     />

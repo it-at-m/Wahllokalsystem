@@ -124,6 +124,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
             },
             {
+              text: "Gendergerechte Sprache",
+              link: `${PATH_ADR}adr-gender-sensitive-language.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,
@@ -270,6 +274,10 @@ export default withMermaid({
                 {
                   text: "Intervalle und Timeouts",
                   link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
+                {
+                  text: "Navigation und Bearbeitungsreihenfolge",
+                  link: `${PATH_SYSSPEC}frontend/navigation-and-workflow.md`,
                 },
               ],
             },

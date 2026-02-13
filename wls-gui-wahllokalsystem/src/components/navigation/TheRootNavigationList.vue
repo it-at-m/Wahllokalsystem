@@ -18,8 +18,16 @@
         title="Wahlvorstand"
         :to="routeWithName(ROUTE_WAHLVORSTAND)"
       />
-      <the-b-w-b-election-list-group v-if="isBWB" />
-      <the-u-w-b-election-list-group v-if="isUWB" />
+      <the-b-w-b-election-list-group
+        v-if="isBWB"
+        :disabled="!isWahlvorstandErfasst"
+        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
+      />
+      <the-u-w-b-election-list-group
+        v-if="isUWB"
+        :disabled="!isWahlvorstandErfasst"
+        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
+      />
       <v-list-item
         title="Ereignisse"
         :to="routeWithName(ROUTE_EREIGNISSE)"
@@ -42,7 +50,11 @@ import {
   ROUTES_HOME,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
+const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
+
+const disabledMessageUpdateAnwesenheitRequired = "Erst Anwesenheit erfassen";
 </script>

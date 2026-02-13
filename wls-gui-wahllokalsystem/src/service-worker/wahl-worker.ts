@@ -96,4 +96,4 @@ self.clients.matchAll().then((match) => {
   });
 });
 
-log("installed and took control");
+log("service worker configured and initialized");

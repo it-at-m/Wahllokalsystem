@@ -20,7 +20,7 @@
     </v-main>
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
-      v-if="isUWB"
+      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
   </v-app>
@@ -28,13 +28,15 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
@@ -45,12 +47,20 @@ const { awaitServiceWorkerActive } = useServiceWorkerUtils();
 const { syncPin } = useServiceWorkerPinSyncer();
 
 const { loadUser } = useUserStore();
+const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
-const { wahlenActions, beanstandeteWahlbriefeActions } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
+const { isTodayOrFuture } = useDateTimeUtils();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
+
+const isTimeToCheckAnwesenheitInFuture = computed(() =>
+  dateTimeToCheckAnwesenheit.value
+    ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
+    : false
+);
 
 const indexDBSingleton = useIndexDB();
 
@@ -65,7 +75,6 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    await beanstandeteWahlbriefeActions.initBeanstandeteWahlbriefe();
   } catch (error) {
     console.debug(error);
   }

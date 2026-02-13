@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th class="colLfdNr font-weight-bold">Lfd. Nr.</th>
-        <th class="font-weight-bold">Kandidatin/Kandidat</th>
+        <th class="font-weight-bold">Kandidat*in</th>
         <th class="colScore font-weight-bold">Schlusszahl</th>
       </tr>
     </thead>
@@ -14,6 +14,7 @@
         v-model="ergebnisAndKandidat.ergebnis"
         :kandidat="ergebnisAndKandidat.kandidat"
         :wahlvorschlag-nummer="wahlvorschlagNummer"
+        @dirty="$emit('dirty')"
       />
     </tbody>
     <tfoot>
@@ -53,6 +54,10 @@ defineProps({
 const totalScore = computed(() =>
   summeKandidatenStimmen(ergebnisseAndKandidaten.value)
 );
+
+defineEmits<{
+  dirty: [];
+}>();
 </script>
 
 <style scoped>

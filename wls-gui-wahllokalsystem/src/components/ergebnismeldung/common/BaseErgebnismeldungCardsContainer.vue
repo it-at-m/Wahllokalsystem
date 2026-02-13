@@ -17,13 +17,13 @@
       <base-button-save
         :save-text="`${title} korrigieren`"
         prepend-icon="$edit"
-        :disabled="!isKorrigierenValid"
+        :disabled="!isKorrigierenActive"
         @click="$emit('edit')"
       />
       <base-button-save
         :save-text="`${title} drucken`"
         prepend-icon="$printer"
-        :disabled="!isDruckenValid"
+        :disabled="!isDruckenActive"
         :loading="isDruckenLoading"
         @click="$emit('print')"
       />
@@ -38,8 +38,8 @@ defineProps<{
   title: string;
   subtitle: string;
   isSending: boolean;
-  isKorrigierenValid: boolean | null | undefined;
-  isDruckenValid: boolean | null | undefined;
+  isKorrigierenActive: boolean | null | undefined;
+  isDruckenActive: boolean | null | undefined;
   isDruckenLoading: boolean;
 }>();
 

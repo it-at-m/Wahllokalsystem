@@ -18,7 +18,7 @@ dargestellt. Dies ist in den meisten Fällen der Button zum Speichern bzw. Forts
 
 ## Konsequenzen
 
-Für die Benutzer ist innerhalb einer Card der Button mit der höchsten Priorität als erstes dargestellt.
+Für die Nutzer\*innen ist innerhalb einer Card der Button mit der höchsten Priorität als erstes dargestellt.
 Anders verhält sich dies für die Buttons in einem Dialog. Hier sind die Buttons so angeordnet, dass die ablehnende
 Aktion links vom Button für die Bestätigung platziert ist.
 ([siehe. Material Design](https://m3.material.io/components/dialogs/guidelines#befd7f4d-1029-4957-b1b5-da13fc0bbf3c))

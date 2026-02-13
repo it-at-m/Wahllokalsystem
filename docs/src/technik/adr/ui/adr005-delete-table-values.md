@@ -6,8 +6,8 @@
 
 ## Kontext
 
-Es soll vermieden werden, dass der Nutzer bei der Erfassung von Daten innerhalb einer Tabelle bereits (teil-)befüllte
-Zeilen entfernt, ohne es zu bemerken.
+Es soll vermieden werden, dass die Nutzer\*innen bei der Erfassung von Daten innerhalb einer Tabelle bereits (teil-)
+befüllte Zeilen entfernen, ohne es zu bemerken.
 
 ## Entscheidung
 
@@ -18,7 +18,7 @@ Use-Cases unterschieden.
 
 - **Aktion**: Mittels Icon-Button (z.B. bei Ereignissen)
 - **Prozess**:
-  - Der Nutzer erhält einen Hinweisdialog mit konkretem Kontext zur zu löschenden Zeile.
+  - Die Nutzer\*innen erhalten einen Hinweisdialog mit konkretem Kontext zur zu löschenden Zeile.
   - Das Löschen muss bestätigt oder kann abgebrochen werden.
 - **Entscheidungsgrundlage**:
   - Das WLS ist das führende System.
@@ -28,7 +28,7 @@ Use-Cases unterschieden.
 
 - **Aktion**: Mittels Input, der die gesamte Zeilenanzahl widerspiegelt (z.B. bei Stimmabgabevermerken)
 - **Prozess**:
-  - Der Nutzer erhält einen Hinweisdialog mit dem Kontext, dass Zeilen x-y aufgrund bereits erfasster Daten nicht
+  - Die Nutzer\*innen erhalten einen Hinweisdialog mit dem Kontext, dass Zeilen x-y aufgrund bereits erfasster Daten nicht
   gelöscht werden können.
   - Das Hinweisfenster kann geschlossen werden, aber das Löschen wird verhindert.
 - **Entscheidungsgrundlage**:

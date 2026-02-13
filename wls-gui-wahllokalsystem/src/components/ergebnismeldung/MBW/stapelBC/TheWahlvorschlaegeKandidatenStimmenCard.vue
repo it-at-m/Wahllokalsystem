@@ -178,14 +178,7 @@ onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
 
-  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
-    (wahlvorschlagWithErgebnis, i) => {
-      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
-        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
-      );
-    }
-  );
-
+  _updateDirtyRowIcons();
   _openNextCard(0);
 });
 
@@ -232,7 +225,7 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   save();
 
   await saveErgebnisse();
-  dirtyRows.value[rowIndex] = false;
+  _updateDirtyRowIcons();
   _openNextCard(rowIndex);
 }
 
@@ -260,6 +253,16 @@ function _getNextDirtyRowIndexOrNull(index: number): number | null {
     }
   }
   return null;
+}
+
+function _updateDirtyRowIcons() {
+  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
+    (wahlvorschlagWithErgebnis, i) => {
+      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
+      );
+    }
+  );
 }
 </script>
 

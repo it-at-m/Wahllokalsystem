@@ -86,9 +86,9 @@ const installedMessage: ServiceWorkerMessage = {
   type: ServiceWorkerMessageTypeEnum.SERVICE_WORKER_INSTALLED,
   payload: undefined,
 };
-self.clients.matchAll().then((match) => {
-  log(`count clients: ${match.length}`);
-  match.forEach((client) => {
+self.clients.matchAll().then((matchingClients) => {
+  log(`count clients: ${matchingClients.length}`);
+  matchingClients.forEach((client) => {
     log(
       `sending message that service worker is installed to client: ${client.id} URL: ${client.url} Type: ${client.type}`
     );

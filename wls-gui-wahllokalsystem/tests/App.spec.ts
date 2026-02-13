@@ -24,9 +24,11 @@ const startBroadcastMessageIntervalMock = vi.fn();
 const stopBroadcastMessageIntervalMock = vi.fn();
 
 const mockDefinitions = vi.hoisted(() => ({
+  awaitServiceWorkerActive: vi.fn(),
   getWahlen: vi.fn(),
   postBeanstandeteWahlbriefe: vi.fn(),
   getBeanstandeteWahlbriefe: vi.fn(),
+  syncPin: vi.fn(),
 }));
 
 vi.mock("@/composables/wahl/wahlService.ts", () => ({
@@ -44,6 +46,16 @@ vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
   useBroadcastCronjobService: () => ({
     startBroadcastMessageInterval: startBroadcastMessageIntervalMock,
     stopBroadcastMessageInterval: stopBroadcastMessageIntervalMock,
+  }),
+}));
+vi.mock("@/composables/serviceWorker/serviceWorkerPinSyncer.ts", () => ({
+  useServiceWorkerPinSyncer: () => ({
+    syncPin: mockDefinitions.syncPin,
+  }),
+}));
+vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
+  useServiceWorkerUtils: () => ({
+    awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
   }),
 }));
 
@@ -200,6 +212,22 @@ describe("App", () => {
       await flushPromises();
 
       expect(stopBroadcastMessageIntervalMock).toHaveBeenCalled();
+    });
+
+    it("should_callAwaitServiceWorkerActive_when_unmounted", async () => {
+      wrapper.unmount();
+
+      await flushPromises();
+
+      expect(mockDefinitions.awaitServiceWorkerActive).toHaveBeenCalled();
+    });
+
+    it("should_callSyncPin_when_unmounted", async () => {
+      wrapper.unmount();
+
+      await flushPromises();
+
+      expect(mockDefinitions.syncPin).toHaveBeenCalled();
     });
   });
 });

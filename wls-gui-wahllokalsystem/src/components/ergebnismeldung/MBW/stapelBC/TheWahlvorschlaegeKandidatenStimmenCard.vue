@@ -50,7 +50,10 @@
                 :key="wahlvorschlag.identifikator"
               >
                 <tr>
-                  <td class="foldingButtonColumn">
+                  <td
+                    :id="`kandidatenStimmenErfassen` + index"
+                    class="foldingButtonColumn"
+                  >
                     <base-button-folding v-model="expandedRows[index]" />
                   </td>
                   <td class="ordnungszahlColumn">
@@ -84,7 +87,6 @@
                 <tr v-if="expandedRows[index]">
                   <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
-                      :id="'kandidatenStimmenErfassen' + index"
                       :model-value="proxyModel.value[index]!"
                       :is-saving="isSaving"
                       @do-save="onSaveWahlvorschlag(index, save)"
@@ -132,9 +134,12 @@ import { computed, nextTick, onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
+import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+
+const { scrollIntoView } = useViewportUtils();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
@@ -180,6 +185,8 @@ onActivated(async () => {
       );
     }
   );
+
+  _openNextCard(0);
 });
 
 const totalSumErgebnisse = computed(() => {
@@ -231,26 +238,20 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
 
 function _openNextCard(index: number) {
   expandedRows.value[index] = false;
-  const nextIndex = _findNextIndex(index);
-  if (nextIndex > -1) {
+  const nextIndex = _getNextDirtyRowIndexOrNull(index);
+  if (nextIndex !== null) {
     expandedRows.value[nextIndex] = true;
-    nextTick(() => {
-      const nextElement = document.querySelector(
-        "#kandidatenStimmenErfassen" + nextIndex
-      );
-      if (nextElement) {
-        nextElement.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-  } else {
-    const footer = document.querySelector("#wahlvorschlaege-table-footer");
-    if (footer) {
-      footer.scrollIntoView({ behavior: "smooth" });
+    if (nextIndex > 0) {
+      nextTick(() => {
+        scrollIntoView("#kandidatenStimmenErfassen" + nextIndex);
+      });
     }
+  } else {
+    scrollIntoView("#wahlvorschlaege-table-footer");
   }
 }
 
-function _findNextIndex(index: number) {
+function _getNextDirtyRowIndexOrNull(index: number): number | null {
   const length = wahlvorschlaegeWithKandidatenErgebnissen.value.length;
   for (let i = 0; i < length; i++) {
     const currentIndex = (index + i) % length;
@@ -258,7 +259,7 @@ function _findNextIndex(index: number) {
       return currentIndex;
     }
   }
-  return -1;
+  return null;
 }
 </script>
 

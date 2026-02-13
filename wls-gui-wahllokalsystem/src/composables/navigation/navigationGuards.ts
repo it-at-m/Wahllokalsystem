@@ -16,11 +16,13 @@ export function useNavigationGuards() {
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlumgebungErfasst;
 
-  const permitNavigationOnlyForWahlbezirksArtUwb = () => useUserStore().isUWB;
+  const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
+    useUserStore().isUWB;
 
-  const permitNavigationOnlyForWahlbezirksArtBwb = () => useUserStore().isBWB;
+  const permitNavigationOnlyForWahlbezirksArtBwb: NavigationGuard = () =>
+    useUserStore().isBWB;
 
-  const permitNavigationOnlyIfUserIsLoggedOut = () =>
+  const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
     !useUserStore().isUserLoggedIn;
 
   function _isStepDone(

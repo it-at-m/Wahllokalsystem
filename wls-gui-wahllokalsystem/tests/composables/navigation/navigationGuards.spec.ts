@@ -174,14 +174,22 @@ describe("navigationGuards.ts", () => {
     it("should_returnFalse_when_usersWahlbezirkIdIsBwb", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().isUWB = false;
-      const result = permitNavigationOnlyForWahlbezirksArtUwb();
+      const result = permitNavigationOnlyForWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(false);
     });
 
     it("should_returnTrue_when_usersWahlbezirkIdIsUwb", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().isUWB = true;
-      const result = permitNavigationOnlyForWahlbezirksArtUwb();
+      const result = permitNavigationOnlyForWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(true);
     });
   });
@@ -190,14 +198,22 @@ describe("navigationGuards.ts", () => {
     it("should_returnFalse_when_usersWahlbezirkIdIsUwb", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().isBWB = false;
-      const result = permitNavigationOnlyForWahlbezirksArtBwb();
+      const result = permitNavigationOnlyForWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(false);
     });
 
     it("should_returnTrue_when_usersWahlbezirkIdIsBwb", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().isBWB = true;
-      const result = permitNavigationOnlyForWahlbezirksArtBwb();
+      const result = permitNavigationOnlyForWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(true);
     });
   });
@@ -205,13 +221,21 @@ describe("navigationGuards.ts", () => {
   describe("permitNavigationOnlyIfUserIsLoggedOut", () => {
     it("should_returnFalse_when_userIsLoggedIn", () => {
       useUserStore().isUserLoggedIn = true;
-      const result = permitNavigationOnlyIfUserIsLoggedOut();
+      const result = permitNavigationOnlyIfUserIsLoggedOut(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(false);
     });
 
     it("should_returnTrue_when_userIsLoggedOut", () => {
       useUserStore().isUserLoggedIn = false;
-      const result = permitNavigationOnlyIfUserIsLoggedOut();
+      const result = permitNavigationOnlyIfUserIsLoggedOut(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
       expect(result).toStrictEqual(true);
     });
   });

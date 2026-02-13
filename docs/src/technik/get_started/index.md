@@ -59,32 +59,32 @@ oder `Run Configurations` (IntelliJ) ausgeführt werden.
 
 ## Profile
 
-| Profilname             | Beschreibung                                                                                                                             |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                |
-| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Podman) verwendet.                  |
-| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                   |
-| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                               |
-| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem User des Wahlbezirkes erfolgen dürfen |
-| dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                  |
-| standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                           |
-| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen.           |
-| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt.                                       |
+| Profilname             | Beschreibung                                                                                                                                      |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| db-h2                  | Als Datenbank wird eine embedded H2 im Service verwendet.                                                                                         |
+| db-oracle              | Als Datenbank wird eine Oracle Datenbank verwendet. Im Standard wird die DB-Datenbank aus dem Stack (Podman) verwendet.                           |
+| db-dummydata           | Es werden Flyway-Files mit Dummydaten für die Datenbank mit verwendet.                                                                            |
+| no-security            | Die Prüfungen der Authentifizierung und Authorisierung werden deaktiviert.                                                                        |
+| dummy.nobezirkid.check | Deaktiviert die Prüfung, dass Anfragen für einen bestimmten Wahlbezirk (wahlbezirkID), nur von dem Benutzerkonto des Wahlbezirkes erfolgen dürfen |
+| dummy.clients          | Es erfolgt keine Kommunikation mit fachlichen Services weil Dummy-Implementierung anstatt von Clients verwendet werden.                           |
+| standalone             | Der Service arbeitet eigenständig. Inkludiert dummy.clients, dummy.nobezirkid.check und db-h2.                                                    |
+| local                  | Der Service läuft lokal. Entsprechend wird der Port des Services definiert um nicht in Konflikt mit anderen Service zu kommen.                    |
+| plainTextLogging       | Logmeldungen werden als Text ausgegeben. Ohne dieses Profil sind die Logmeldungen ein JSON-Objekt.                                                |
 
-## Benutzer
+## Benutzerkonten
 
-| Name         | Passwort | Beschreibung                                                                                                           |
-|--------------|----------|------------------------------------------------------------------------------------------------------------------------|
-| wls_all_bwb  | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
-| wls_all_uwb  | test     | Ein Benutzer mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
-| wls_komw_bwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
-| wls_komw_uwb | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
-| wls_mbw_bwb  | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
-| wls_mbw_uwb  | test     | Ein Benutzer mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
+| Name         | Passwort | Beschreibung                                                                                                                |
+|--------------|----------|-----------------------------------------------------------------------------------------------------------------------------|
+| wls_all_bwb  | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_all_uwb  | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_komw_bwb | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
+| wls_komw_uwb | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
+| wls_mbw_bwb  | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
+| wls_mbw_uwb  | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
 
 > [!CAUTION]
-> Für die Anmeldung am WLS muss der User die Rolle `WLS_WAHLVORSTAND` haben.
-> Für die Anmeldung am Admintool muss der User die Rolle `MONITORING_HELPDESK` haben.
+> Für die Anmeldung am WLS muss das Benutzerkonto die Rolle `WLS_WAHLVORSTAND` haben.
+> Für die Anmeldung am Admintool muss das Benutzerkonto die Rolle `MONITORING_HELPDESK` haben.
 
 ## Datenbank
 
@@ -121,10 +121,10 @@ flackernden Bildschirm. Um diese Schleife während der Entwicklung zu umgehen, g
 
 ### 1. Starten über das Gateway + Authentifizierung {#start-via-gateway}
 
-Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [User](#benutzer) anzumelden.
-Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port `8083` aufgerufen
-werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird aber vom Gateway
-zum Frontend weitergeleitet und die Ladeschleife ist weg.
+Eine Möglichkeit, die Ladeschleife zu umgehen, ist es, sich lokal mit einem der [Benutzerkonten](#benutzerkonten)
+anzumelden. Nachdem das Frontend über die IDE gestartet wurde, muss die URL `http://localhost:8083/` mit dem Port
+`8083` aufgerufen werden, um auf die Login-Seite zu kommen. Nach der Anmeldung bleibt man auf dem Port `8083`, wird
+aber vom Gateway zum Frontend weitergeleitet und die Ladeschleife ist weg.
 
 > [!NOTE]
 > Der Anmeldevorgang muss jedes Mal wiederholt werden, sobald das ApiGateway neu gestartet wird.

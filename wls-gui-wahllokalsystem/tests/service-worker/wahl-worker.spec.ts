@@ -25,9 +25,6 @@ vi.mock("workbox-routing", () => ({
 }));
 
 vi.mock("localforage");
-vi.stubGlobal("clients", {
-  matchAll: () => Promise.resolve([]),
-});
 
 describe("wahl-worker.ts", () => {
   const API_BASE_PATH_REGEX = new RegExp("/api/.+");

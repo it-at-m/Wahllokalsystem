@@ -71,7 +71,7 @@ describe("serviceWorkerUtils.ts", () => {
     it("should_returnTrue_when_serviceWorkerWentActiveDuringWaits", async () => {
       vi.useFakeTimers();
 
-      //start with mussing service worker controller
+      //start with missing service worker controller
       Object.defineProperty(global.navigator, "serviceWorker", {
         value: {
           controller: null,

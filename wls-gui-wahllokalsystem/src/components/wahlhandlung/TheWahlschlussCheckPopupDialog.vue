@@ -9,8 +9,7 @@
     @cancel="onCancelClicked"
   >
     <div>
-      Es ist {{ hourOfTimeToCheck }} Uhr und der Wahlschluss sollte erfasst
-      werden.
+      Es ist {{ timeToCheck }} Uhr und der Wahlschluss sollte erfasst werden.
     </div>
     <div>
       Stimmen Sie der sofortigen Weiterleitung zu, oder führen Sie diese Aufgabe
@@ -24,12 +23,14 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 import { ROUTE_STIMMABGABE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 
 const { dateTimeToCheckWahlschluss } = storeToRefs(useInfomanagementStore());
+const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 
 const WAHLSCHLUSS_ERFASSEN = "Wahlschluss erfassen";
 
@@ -41,9 +42,9 @@ const { setupTimer, clearTimer } = useDateOfActionTimeout(
 
 const visible = ref(false);
 
-const hourOfTimeToCheck = computed(() => {
+const timeToCheck = computed(() => {
   return dateTimeToCheckWahlschluss.value
-    ? new Date(dateTimeToCheckWahlschluss.value).getHours()
+    ? toTimeWithHoursAndOptionalMinutes(dateTimeToCheckWahlschluss.value)
     : 0;
 });
 

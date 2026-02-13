@@ -24,7 +24,7 @@
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
     <the-wahlschluss-check-popup-dialog
-      v-if="isUWB && isTimeToCheckWahlschlussInFuture"
+      v-if="isTimeToCheckWahlschlussInFuture"
     />
   </v-app>
 </template>

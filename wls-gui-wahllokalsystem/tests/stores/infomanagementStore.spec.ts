@@ -125,6 +125,59 @@ describe("infomanagementStore.ts", () => {
     );
   });
 
+  describe("dateTimeToCheckWahlschluss", () => {
+    it("should_beUndefined_when_userHasCurrentWahltagButConfigParamIsNotGiven", async () => {
+      userStore.setUser(prepareUser().wahltag("2025-06-26").build());
+      unitUnderTest.konfigurationsparameter = [];
+
+      await flushPromises();
+
+      expect(unitUnderTest.dateTimeToCheckWahlschluss).toBeUndefined();
+    });
+
+    it("should_beAtTimeOfWahltag_when_wahltagAndConfigParamIsGiven", async () => {
+      const wahltagDateString = "2025-06-26";
+      userStore.setUser(prepareUser().wahltag(wahltagDateString).build());
+
+      const wahlschlussCheckTimeString = "12:11:23";
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("MELDUNGSZEIT_WAHL_SCHLIESSEN")
+          .wert(wahlschlussCheckTimeString)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(unitUnderTest.dateTimeToCheckWahlschluss?.getTime()).toStrictEqual(
+        new Date(`${wahltagDateString}T${wahlschlussCheckTimeString}`).getTime()
+      );
+    });
+
+    it.each([
+      { invalidTime: "" },
+      { invalidTime: "   " },
+      { invalidTime: "13" },
+      { invalidTime: "12:1" },
+      { invalidTime: "12:61" },
+    ])(
+      "should_beUndefined_when_value'$invalidTime'IsNotATimeFormat",
+      async (args) => {
+        userStore.setUser(prepareUser().wahltag("2025-06-26").build());
+        unitUnderTest.konfigurationsparameter = [
+          prepareKonfigurationsparameter()
+            .schluessel("MELDUNGSZEIT_WAHL_SCHLIESSEN")
+            .wert(args.invalidTime)
+            .build(),
+        ];
+
+        await flushPromises();
+
+        expect(unitUnderTest.dateTimeToCheckWahlschluss).toBeUndefined();
+      }
+    );
+  });
+
   describe("fruehesteEroeffnungsuhrzeit", () => {
     let userStore: ReturnType<typeof useUserStore>;
     let infomanagementStore: ReturnType<typeof useInfomanagementStore>;

@@ -20,9 +20,10 @@ Timeouts werden verwendet, um Aktionen auszuführen, die zu einem bestimmten Zei
 Hierbei wird die Zeitspanne vom aktuellen Zeitpunkt bis zum gewünschten Zeitpunkt an das Timeout übergeben, zusammen mit der Funktion, die ausgeführt werden soll.
 Im Wahllokalsystem sind die folgenden Timeouts definiert:
 
-| Titel                                          | Beschreibung                                                                                                               |
-|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| Überprüfung der Anwesenheit des Wahlvorstandes | Fragt die Anwesenheit des Wahlvorstandes ab. Der spezifische Zeitpunkt wird anhand der Konfigurationsparameter festgelegt. |
+| Titel                                          | Beschreibung                                                                                                                                                                      |
+|------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Überprüfung der Anwesenheit des Wahlvorstandes | Fragt die Anwesenheit des Wahlvorstandes ab. Der spezifische Zeitpunkt wird anhand der Konfigurationsparameter festgelegt (`MELDUNGSZEIT_ANWESENHEIT_CHECK`).                     |
+| Erfassung des Wahlschlusses                    | Erinnert den Wahlvorstand an die Erfassung der Schließungsuhrzeit. Der spezifische Zeitpunkt wird anhand der Konfigurationsparameter festgelegt (`MELDUNGSZEIT_WAHL_SCHLIESSEN`). |
 
 ## Technische Umsetzung
 

@@ -25,12 +25,14 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
-import { ROUTE_STIMMABGABE } from "@/constants.ts";
+import { ROUTE_STIMMABGABE, ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { dateTimeToCheckWahlschluss } = storeToRefs(useInfomanagementStore());
 const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
+const { isUWB } = storeToRefs(useUserStore());
 
 const WAHLSCHLUSS_ERFASSEN = "Wahlschluss erfassen";
 
@@ -65,7 +67,11 @@ function onCancelClicked() {
 }
 
 function onConfirmClicked() {
-  router.push({ name: ROUTE_STIMMABGABE });
+  if (isUWB.value) {
+    router.push({ name: ROUTE_STIMMABGABE });
+  } else {
+    router.push({ name: ROUTE_WAHLVORSTAND });
+  }
   closeDialog();
 }
 

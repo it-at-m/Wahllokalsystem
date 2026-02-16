@@ -60,11 +60,30 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  function getStatusEntry(wahlID: string, wahlbezirkID: string): Status {
+    const foundStatus = status.value.find(
+      (status) =>
+        status.bezirkUndWahlID?.wahlID === wahlID &&
+        status.bezirkUndWahlID?.wahlbezirkID === wahlbezirkID
+    );
+
+    if (foundStatus) return foundStatus;
+
+    const defaultStatus: Status = {
+      bezirkUndWahlID: { wahlID, wahlbezirkID },
+      schnellmeldung: DEFAULT_MELDUNG,
+      niederschrift: DEFAULT_MELDUNG,
+    };
+    status.value.push(defaultStatus);
+    return defaultStatus;
+  }
+
   return {
     status,
     isStatusSaving,
     loadStatus,
     saveStatus,
+    getStatusEntry,
   };
 });
 

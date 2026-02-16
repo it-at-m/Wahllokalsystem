@@ -33,7 +33,6 @@
       <base-button-save
         save-text="Niederschrift senden"
         prepend-icon="$cloudUpload"
-        :disabled="!isSendenValid"
         @click="onSendenClicked"
       />
       <base-button-save
@@ -57,20 +56,25 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
+import TheMBWGueltigeStimmenAnzeigenCard
+  from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
-import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
-import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
-import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import TheMBWWahlberechtigteAnzeigenCard
+  from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
+import TheMBWGueltigeKandidatenstimmenAnzeigenCard
+  from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
+import TheMBWUngueltigeStimmenAnzeigenCard
+  from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
+const { sendNiederschrift } = useErgebnismeldungStore();
 
 // button logic to be implemented
-const isSendenValid = ref<null | boolean>();
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 
@@ -85,7 +89,9 @@ if (!wahl) {
 }
 
 function onSendenClicked() {
-  // to be implemented
+  if (wahl) {
+    sendNiederschrift(wahl);
+  }
 }
 function onKorrigierenClicked() {
   // to be implemented

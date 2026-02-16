@@ -4,12 +4,14 @@ import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
@@ -19,13 +21,17 @@ const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
+  const { currentUserHauptWahlID } = storeToRefs(useUserStore());
   const {
     getErgebnisse,
     postErgebnisse,
     getBegruendungStimmzettelumschlaege,
     postBegruendung,
+    postNiederschrift,
   } = useErgebnisService();
   const { getStimmzettelTermForWahl } = useTextFormatter();
+  const { saveStatus, getStatusEntry } = useStatusStore();
+  const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
   const isErgebnisseSaving = ref<boolean>(false);
@@ -244,6 +250,31 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     }
   }
 
+  async function sendNiederschrift(wahl: Wahl) {
+    const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
+    let niederschriftError: Error | null = null;
+    if (wahlbezirkID) {
+      try {
+        await postNiederschrift(
+          wahl.wahlID,
+          wahlbezirkID,
+          wahl.waehlerverzeichnisNummer,
+          currentUserHauptWahlID.value
+        );
+      } catch {
+        niederschriftError = new Error(`Fehler beim senden der Niederschrift.`);
+      }
+      const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
+      statusToUpdate.niederschrift.uebermittelt = niederschriftError === null;
+      statusToUpdate.niederschrift.sendeuhrzeit =
+        toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+      await saveStatus(wahl.wahlID, wahlbezirkID);
+      if (niederschriftError) {
+        throw niederschriftError;
+      }
+    }
+  }
+
   return {
     ergebnisse,
     begruendungen,
@@ -258,6 +289,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     switchStapelOfErgebnis,
     loadBegruendungForWahl,
     saveBegruendung,
+    sendNiederschrift,
   };
 });
 

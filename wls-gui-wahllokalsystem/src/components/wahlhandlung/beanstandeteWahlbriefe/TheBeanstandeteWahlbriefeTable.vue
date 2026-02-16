@@ -22,7 +22,7 @@
         >
           <td class="fill-height columnStyling">
             <div class="d-flex align-center fill-height">
-              <p>{{ index }}</p>
+              <p class="index-width">{{ index }}</p>
               <v-autocomplete
                 :model-value="
                   zurueckweisungsgrundEnumToDisplayString(
@@ -333,5 +333,9 @@ td {
   text-align: left;
   width: 300px;
   font-weight: bold;
+}
+
+.index-width {
+  width: 25px;
 }
 </style>

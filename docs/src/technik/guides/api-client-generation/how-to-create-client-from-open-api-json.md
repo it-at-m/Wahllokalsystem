@@ -191,8 +191,8 @@ wird, das sonst eine zirkulare Abhängigkeit vorliegt und die Anwendung nicht st
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-  /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:39146 */
-  @Value("${app.clients.eai.basePath}")
+  /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:8300 */
+  @Value("${service.config.clients.eai.basePath}")
   String eaiBasePath;
 
   private final ApiClient eaiApiClient;
@@ -204,13 +204,14 @@ public class BasePathConfiguration {
 }
 ```
 
-In der `application.yml` wird der Defaultwert für die Ziel-URL hinterlegt:
+In der `application.yml` wird der Defaultwert für die Ziel-URL hinterlegt (Beispiel Port für den EAI Service):
 
 ```yml
-app:
-  clients:
-    eai:
-      basePath: http://localhost:39146
+service:
+  config:
+    clients:
+      eai:
+        basePath: http://localhost:8300
 ```
 
 ## EAI-Client definieren und verwenden

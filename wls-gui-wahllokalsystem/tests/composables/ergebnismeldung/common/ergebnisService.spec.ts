@@ -738,6 +738,7 @@ describe("ergebnisService.ts", () => {
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
     });
+
     it("should_callClientWithoutSendingNotification_when_sendNotificationIsFalseAndCallSuccessful", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
@@ -763,6 +764,7 @@ describe("ergebnisService.ts", () => {
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
     });
+
     it("should_callNotificationServiceAfterFailure_when_sendNotificationIsTrueAndCallFails", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
@@ -787,6 +789,7 @@ describe("ergebnisService.ts", () => {
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
     });
+
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationIsFalseAndCallFails", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);

@@ -58,6 +58,16 @@ Folgende Daten werden bei allen Wahlen von beiden Wahlbezirksarten "Urnenwahlbez
 Stimmzettelumschläge*, *Stapel b - leere Stimmzettelumschläge*
 :::
 
+📃 **UseCase: `Testdruck durchführen`**
+
+::: info Testdruck im Urnenwahlbezirk {data-uwb="true"}
+Damit in den Urnenwahllokalen frühzeitig die technischen Geräte auf ihre Funktionalität überprüft werden, werden die
+Nutzer\*innen nach dem initialen Laden der Daten durch einen Dialog dazu aufgefordert, eine Testseite zu drucken.
+Dieser Dialog kann erst nach erfolgreichem Erscheinen der Druckseite geschlossen werden. Anschließend werden die
+Nutzer\*innen entsprechend der [Navigation](/technik/systemspecification/frontend/navigation-and-workflow) zum nächsten
+Bearbeitungsschritt weitergeleitet.
+:::
+
 📃 **UseCase: `Erfassung von Ereignissen`**
 
 Zu jeder Zeit der Wahlhandlung können die Nutzer\*innen Ereignisse in der Anwendung erfassen. Jedes Ereignis hat

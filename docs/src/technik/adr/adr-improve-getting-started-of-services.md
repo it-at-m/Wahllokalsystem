@@ -27,12 +27,7 @@ Durch technische Profile kann die Art der Datenbank geändert werden.
 
 Zum Start muss kein explizites Profil angegeben werden. Ein simple `java -jar Microservice.jar` soll ausreichend sein.
 
-Jeder Microservice bekommt einen eigenen Port per Default, beginnend bei `39146` für den Broadcast-Service und dann weiter
-mit `39147` für den Briefwahlservice, `39148` für den Infomanagement-Service und `39149` für den EAI-Service. Weitere Services
-reihen sich entsprechend nachfolgend ein.
-
-> [!IMPORTANT]
-> Die aktuelle Übersicht der Ports gibt es [hier](/technik/get_started/#services-und-ports)
+Jeder Microservice bekommt [einen eigenen Port per Default](/technik/get_started/#services-und-ports).
 
 ## Konsequenzen
 

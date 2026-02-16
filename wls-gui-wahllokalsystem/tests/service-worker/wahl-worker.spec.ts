@@ -1,10 +1,24 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 import "@/service-worker/wahl-worker.ts";
 
-const mockDefinitions = vi.hoisted(() => ({
-  registerRoute: vi.fn(),
-}));
+import { flushPromises } from "@vue/test-utils";
+
+import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => {
+  const matchAll = vi.fn().mockImplementation(() => {
+    return Promise.resolve([]);
+  });
+  vi.stubGlobal("clients", {
+    matchAll,
+  });
+
+  return {
+    registerRoute: vi.fn(),
+    matchAll,
+  };
+});
 
 vi.mock("workbox-routing", () => ({
   registerRoute: mockDefinitions.registerRoute,
@@ -17,6 +31,10 @@ describe("wahl-worker.ts", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.unstubAllGlobals();
   });
 
   it("should_registerRequestHandler_when_serviceWorkerIsInitialised", () => {
@@ -53,4 +71,46 @@ describe("wahl-worker.ts", () => {
       expect(matches).toBe(expected);
     });
   });
+
+  it("should_sendMessageToAllClients_when_startedAndClientsAreGiven", async () => {
+    const clients = [
+      createMockedClient(),
+      createMockedClient(),
+      createMockedClient(),
+    ];
+    mockDefinitions.matchAll.mockReturnValue(Promise.resolve(clients));
+    vi.resetModules();
+
+    vi.stubGlobal("clients", {
+      matchAll: mockDefinitions.matchAll,
+    });
+    await import("@/service-worker/wahl-worker.ts");
+    await flushPromises();
+
+    const expectedMessage = {
+      type: ServiceWorkerMessageTypeEnum.SERVICE_WORKER_INSTALLED,
+      payload: undefined,
+    };
+    clients.forEach((client) => {
+      expect(client.postMessage).toHaveBeenCalledWith(expectedMessage);
+    });
+  });
+
+  it("should_sendNoMessageToClients_when_startedAndNoClientsAreGiven", async () => {
+    const clients: unknown[] = [];
+    mockDefinitions.matchAll.mockReturnValue(Promise.resolve(clients));
+    vi.resetModules();
+
+    vi.stubGlobal("clients", {
+      matchAll: mockDefinitions.matchAll,
+    });
+    await import("@/service-worker/wahl-worker.ts");
+    await flushPromises();
+  });
+
+  function createMockedClient() {
+    return {
+      postMessage: vi.fn(),
+    };
+  }
 });

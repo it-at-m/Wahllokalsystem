@@ -54,7 +54,10 @@
                     :id="`kandidatenStimmenErfassen` + index"
                     class="foldingButtonColumn"
                   >
-                    <base-button-folding v-model="expandedRows[index]" />
+                    <base-button-folding
+                      :model-value="expandedRowIndex === index"
+                      @click="toggleRow(index)"
+                    />
                   </td>
                   <td class="ordnungszahlColumn">
                     D{{ wahlvorschlag.ordnungszahl }}
@@ -84,7 +87,7 @@
                     />
                   </td>
                 </tr>
-                <tr v-if="expandedRows[index]">
+                <tr v-if="expandedRowIndex === index">
                   <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
                       :model-value="proxyModel.value[index]!"
@@ -128,7 +131,6 @@
 
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ref } from "vue";
 
 import { computed, nextTick, onActivated, ref } from "vue";
 
@@ -168,7 +170,7 @@ const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
 );
 
 const ergebnisseAndWahlvorschlaege = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
-const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
+const expandedRowIndex = ref<number | null>(null);
 const dirtyRows = ref<Record<number, boolean>>({});
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;
@@ -216,6 +218,14 @@ function getStapelBErgebnisForWahlvorschlagIndex(index: number) {
   );
 }
 
+function toggleRow(index: number) {
+  if (expandedRowIndex.value === index) {
+    expandedRowIndex.value = null;
+  } else {
+    expandedRowIndex.value = index;
+  }
+}
+
 function onInputChanged(rowIndex: number) {
   dirtyRows.value[rowIndex] = true;
 }
@@ -230,10 +240,10 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
 }
 
 function _openNextCard(index: number) {
-  expandedRows.value[index] = false;
+  expandedRowIndex.value = null;
   const nextIndex = _getNextDirtyRowIndexOrNull(index);
   if (nextIndex !== null) {
-    expandedRows.value[nextIndex] = true;
+    expandedRowIndex.value = nextIndex;
     if (nextIndex > 0) {
       nextTick(() => {
         scrollIntoView("#kandidatenStimmenErfassen" + nextIndex);

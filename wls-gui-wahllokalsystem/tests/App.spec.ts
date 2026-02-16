@@ -214,7 +214,7 @@ describe("App", () => {
       expect(stopBroadcastMessageIntervalMock).toHaveBeenCalled();
     });
 
-    it("should_callAwaitServiceWorkerActive_when_unmounted", async () => {
+    it("should_callAwaitServiceWorkerActive_when_mounted", async () => {
       wrapper.unmount();
 
       await flushPromises();
@@ -222,7 +222,7 @@ describe("App", () => {
       expect(mockDefinitions.awaitServiceWorkerActive).toHaveBeenCalled();
     });
 
-    it("should_callSyncPin_when_unmounted", async () => {
+    it("should_callSyncPin_when_mounted", async () => {
       wrapper.unmount();
 
       await flushPromises();

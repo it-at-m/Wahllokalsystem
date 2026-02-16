@@ -42,7 +42,7 @@ describe("serviceWorkerUtils.ts", () => {
   });
 
   describe("awaitServiceWorkerActive", () => {
-    it("should_returnFalse_when_afterAllTriesAndTimeoutServiceWorkerControllerDoesNotExist", async () => {
+    it("should_returnFalse_when_serviceWorkerControllerDoesNotExist", async () => {
       Object.defineProperty(global.navigator, "serviceWorker", {
         value: {
           controller: null,

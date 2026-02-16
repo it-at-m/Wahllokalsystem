@@ -82,7 +82,7 @@ export function useWahlvorbereitungMapper() {
     briefwahlvorbereitungDTO: BriefwahlvorbereitungDTO
   ): Wahlvorbereitung {
     const urnenAnzahlModel =
-      briefwahlvorbereitungDTO.urnenAnzahl?.map((wahlurneDTO) =>
+      briefwahlvorbereitungDTO?.urnenAnzahl?.map((wahlurneDTO) =>
         _toWahlurneModel(wahlurneDTO)
       ) ?? [];
     return {

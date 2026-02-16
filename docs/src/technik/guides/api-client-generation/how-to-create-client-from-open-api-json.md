@@ -191,8 +191,8 @@ wird, das sonst eine zirkulare Abhängigkeit vorliegt und die Anwendung nicht st
 @RequiredArgsConstructor
 public class BasePathConfiguration {
 
-  /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:39146 */
-  @Value("${app.clients.eai.basePath}")
+  /* Umgebungsvariable welche die Ziel-URL enthält, z.b. http//localhost:8300 */
+  @Value("${service.config.clients.eai.basePath}")
   String eaiBasePath;
 
   private final ApiClient eaiApiClient;

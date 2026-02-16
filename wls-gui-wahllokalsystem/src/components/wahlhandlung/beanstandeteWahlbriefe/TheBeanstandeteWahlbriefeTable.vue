@@ -336,6 +336,6 @@ td {
 }
 
 .index-width {
-  width: 25px;
+  width: 2em;
 }
 </style>

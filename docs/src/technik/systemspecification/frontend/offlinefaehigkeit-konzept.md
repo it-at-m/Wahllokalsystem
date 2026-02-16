@@ -440,7 +440,6 @@ classDiagram
         getItemFromDB(key: String) Promise&lt;IndexDBValue&gt;
         storeItem(key: String, value: IndexDBValue) Promise&lt;void&gt;
     }
-
 ```
 
 Da der Service-Worker und die Anwendung in unterschiedlichen Kontexten ausgeführt werden, ist eine Synchronisierung

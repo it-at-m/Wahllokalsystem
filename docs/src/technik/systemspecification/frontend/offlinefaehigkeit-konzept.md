@@ -56,8 +56,16 @@ Im Vue-Kontext erfolgt die Initialisierung des CryptoKeys im User-Store,
 sobald das User-Objekt geladen wird. Hierbei wird der CryptoKey über eine Nachricht an den
 Service Worker gesendet, indem die Methode `navigator.serviceWorker.controller.postMessage` verwendet wird.
 
-Im Kontext des Service Workers erfolgt die erste Verwendung des IndexDB-Composables innerhalb der Request-Strategien.
-Hier wird auf das Event aus dem User Store gehört, um den CryptoKey zu empfangen, der dann für die Verarbeitung von Anfragen genutzt wird.
+Beide Kontexte müssen den gleichen CryptoKey verwenden. Dazu erfolgt eine Synchronisierung, wobei die Anwendung das
+führende System ist.
+
+In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker:
+
+- nachdem der Benutzer geladen wurde
+- wenn sich die PIN des Benutzers ändert
+- wenn es einen neuen Service-Worker gibt
+    - nach der erstmaligen Installation
+    - nach dem Update auf eine neue Version
 
 ### Strategien
 
@@ -396,6 +404,16 @@ Die Strategie nutzt für den Zugriff das entsprechende [Composable](#indexdb).
 IndexDB ist ein Composable, das als Fassade für den Zugriff auf die IndexedDB des Browsers dient.
 Es stellt alle notwendigen Funktionen zur Einrichtung sowie zum Lesen und Schreiben bereit.
 
+```mermaid
+classDiagram
+    class indexDB {
+        <<composable>>
+        setKey(cryptoKey: CryptoKey)
+        getItemFromDB(key: String) Promise&lt;IndexDBValue&gt;
+        storeItem(key: String, value: IndexDBValue) Promise&lt;void&gt;
+    }
+```
+
 #### Common API Utils
 
 Das Composable `commonApiUtils` stellt mit dem `axiosConfigWrapper` eine Fluent-API bereit, damit bei den Requests
@@ -425,30 +443,3 @@ await ereignisControllerApi.postEreignisse(
     ereignisseWriteDto
 );
 ```
-
-### Verschlüsselung der Daten
-
-Die Daten, die in der Indexed-DB abgelegt werden sollen, müssen verschlüsselt sein, damit im Falle eines Geräteverlusts
-kein Zugriff auf die Daten möglich ist. Als Schlüssel dient die PIN des Users. Die Ver- bzw. Entschlüsselung
-erfolgt transparent im Composable für die IndexedDB.
-
-```mermaid
-classDiagram
-    class indexDB {
-        <<composable>>
-        setKey(cryptoKey: CryptoKey)
-        getItemFromDB(key: String) Promise&lt;IndexDBValue&gt;
-        storeItem(key: String, value: IndexDBValue) Promise&lt;void&gt;
-    }
-```
-
-Da der Service-Worker und die Anwendung in unterschiedlichen Kontexten ausgeführt werden, ist eine Synchronisierung
-der Daten erforderlich.
-
-In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker:
-
-- nachdem der Benutzer geladen wurde
-- wenn sich die PIN des Benutzers ändert
-- wenn es einen neuen Service-Worker gibt
-  - nach der erstmaligen Installation
-  - nach dem Update auf eine neue Version

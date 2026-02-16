@@ -17,7 +17,7 @@ Der Service verwaltet den konfigurierten Wahltag für eine oder mehrere konkrete
 
 ### Konfigurationen
 
-Eine vielzahl an Konfigurationen wird am Wahltag über das Admin-Tool für die Wahlen festgelegt:
+Eine Vielzahl an Konfigurationen wird am Wahltag über das Admin-Tool für die Wahlen festgelegt:
 
 | Schlüssel                      | Beschreibung                                                                      | Standardwert                                                                                                                                                                                      |
 |--------------------------------|-----------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

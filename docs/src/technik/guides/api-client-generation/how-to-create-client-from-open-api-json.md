@@ -204,13 +204,14 @@ public class BasePathConfiguration {
 }
 ```
 
-In der `application.yml` wird der Defaultwert für die Ziel-URL hinterlegt:
+In der `application.yml` wird der Defaultwert für die Ziel-URL hinterlegt (Beispiel Port für den EAI Service):
 
 ```yml
-app:
-  clients:
-    eai:
-      basePath: http://localhost:39146
+service:
+  config:
+    clients:
+      eai:
+        basePath: http://localhost:8300
 ```
 
 ## EAI-Client definieren und verwenden

@@ -24,6 +24,9 @@
       v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
     />
+    <the-wahlschluss-check-popup-dialog
+      v-if="isTimeToCheckWahlschlussInFuture"
+    />
   </v-app>
 </template>
 
@@ -32,6 +35,7 @@ import { storeToRefs } from "pinia";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlschlussCheckPopupDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
@@ -44,7 +48,9 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { loadUser } = useUserStore();
-const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
+  useInfomanagementStore()
+);
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
@@ -59,6 +65,12 @@ const isTimeToCheckAnwesenheitInFuture = computed(() =>
     : false
 );
 const showTestdruckDialog = ref(false);
+
+const isTimeToCheckWahlschlussInFuture = computed(() =>
+  dateTimeToCheckWahlschluss.value
+    ? isTodayOrFuture(dateTimeToCheckWahlschluss.value)
+    : false
+);
 
 const indexDBSingleton = useIndexDB();
 

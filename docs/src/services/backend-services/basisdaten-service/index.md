@@ -76,25 +76,25 @@ sequenceDiagram
         participant Referendumvorlagen
     end
 
-    WahltermindatenService ->>+ WahltagService: request für Wahltag mit ID
+    WahltermindatenService ->>+ WahltagService: Request für Wahltag mit ID
     WahltagService -->>- WahltermindatenService: Wahltag
 
-    WahltermindatenService ->>+ Basisdaten : request Basisdaten für Wahltag
+    WahltermindatenService ->>+ Basisdaten : Request Basisdaten für Wahltag
     Basisdaten -->>- WahltermindatenService : Basisdaten
 
     WahltermindatenService ->> WahltermindatenService : Speichere Wahlen aus Basisdaten
-    WahltermindatenService ->> WahltermindatenService : Speicher Wahlbezirke der Basisdaten
-    WahltermindatenService ->> WahltermindatenService : Speicher Kopfdaten der Basisdaten
+    WahltermindatenService ->> WahltermindatenService : Speichere Wahlbezirke der Basisdaten
+    WahltermindatenService ->> WahltermindatenService : Speichere Kopfdaten der Basisdaten
 
     WahltermindatenService -->> AsyncWahltermindatenService : Starte Initialisierung der<br>Wahlvorschläge und Referendumvorlagen
 
-    AsyncWahltermindatenService ->>+ Wahlvorschlaege : lade request Wahlvorschläge für Bezirke der Wahlen
+    AsyncWahltermindatenService ->>+ Wahlvorschlaege : Lade Request Wahlvorschläge für Bezirke der Wahlen
     Wahlvorschlaege -->>- AsyncWahltermindatenService : Wahlvorschläge
     AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Wahlvorschläge
 
-    AsyncWahltermindatenService ->>+ Referendumvorlagen : request Referendumvorlagen für Bezirke der Wahlen
+    AsyncWahltermindatenService ->>+ Referendumvorlagen : Request Referendumvorlagen für Bezirke der Wahlen
     Referendumvorlagen -->>- AsyncWahltermindatenService : Referendumvorlagen
-    AsyncWahltermindatenService ->> AsyncWahltermindatenService : speichere Referendumvorlagen
+    AsyncWahltermindatenService ->> AsyncWahltermindatenService : Speichere Referendumvorlagen
 ```
 
 ### Fortschritt

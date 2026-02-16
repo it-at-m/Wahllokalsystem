@@ -3,6 +3,7 @@ import type {
   RouteLocationNormalizedGeneric,
 } from "vue-router";
 
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 type NavigationGuardFactory<T> = (options: T) => NavigationGuard;
@@ -14,6 +15,15 @@ export function useNavigationGuards() {
 
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlumgebungErfasst;
+
+  const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
+    useUserStore().isUWB;
+
+  const permitNavigationOnlyForWahlbezirksArtBwb: NavigationGuard = () =>
+    useUserStore().isBWB;
+
+  const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
+    !useUserStore().isUserLoggedIn;
 
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
@@ -34,5 +44,8 @@ export function useNavigationGuards() {
   return {
     isStepDoneInElectionState,
     permitNavigationWhenWahlumgebungIsErfasst,
+    permitNavigationOnlyForWahlbezirksArtUwb,
+    permitNavigationOnlyForWahlbezirksArtBwb,
+    permitNavigationOnlyIfUserIsLoggedOut,
   };
 }

@@ -6,8 +6,9 @@
 
 ## Kontext
 
-Ein Button mit dem `active`-Prop wird für den Nutzer hervorgehoben. Wenn dieser disabled ist, oder darüber gehovert
-wird, wird von vuetify ein overlay darüber gelegt, welches den Butten heller und somit schwieriger lesbar macht.
+Ein Button mit dem `active`-Prop wird für die Nutzer\*innen hervorgehoben. Wenn dieser disabled ist, oder darüber
+gehovert wird, wird von vuetify ein overlay darüber gelegt, welches den Button heller und somit schwieriger lesbar
+macht.
 
 ## Entscheidung
 

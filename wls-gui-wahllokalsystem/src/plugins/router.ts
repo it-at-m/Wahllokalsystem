@@ -40,22 +40,12 @@ import WahleroeffnungView from "@/views/wahlhandlung/WahleroeffnungView.vue";
 import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
-const { permitNavigationWhenWahlumgebungIsErfasst } = useNavigationGuards();
-
-const permitNavigationOnlyForWahlbezirksArtUwb = () => {
-  const { isUWB } = storeToRefs(useUserStore());
-  return isUWB.value;
-};
-
-const permitNavigationOnlyForWahlbezirksArtBwb = () => {
-  const { isBWB } = storeToRefs(useUserStore());
-  return isBWB.value;
-};
-
-const permitNavigationOnlyIfUserIsLoggedOut = () => {
-  const { isUserLoggedIn } = storeToRefs(useUserStore());
-  return !isUserLoggedIn.value;
-};
+const {
+  permitNavigationWhenWahlumgebungIsErfasst,
+  permitNavigationOnlyForWahlbezirksArtUwb,
+  permitNavigationOnlyForWahlbezirksArtBwb,
+  permitNavigationOnlyIfUserIsLoggedOut,
+} = useNavigationGuards();
 
 const routes = [
   {

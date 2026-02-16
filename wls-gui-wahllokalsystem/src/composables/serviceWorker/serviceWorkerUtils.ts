@@ -25,7 +25,9 @@ export function useServiceWorkerUtils() {
       numberOfChecker++;
     }
     const result = isServiceWorkerActive();
-    logDebug(`isServiceWorkerActive after ${numberOfChecker} attempts is ${result}`);
+    logDebug(
+      `isServiceWorkerActive after ${numberOfChecker} attempts is ${result}`
+    );
     return result;
   }
 

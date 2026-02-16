@@ -43,12 +43,10 @@ den Nutzer\*innen der Zugriff auf die Anwendung verwehrt, bei anderen, mit niedr
 die Anwendung trotzdem möglich. Das erfolgreiche Laden ermöglicht später auch eine reibungslose Nutzung im
 Offline-Modus.
 
-Folgende Daten werden bei einer **Kommunalwahl** von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk"
-geladen:
+Folgende Daten werden bei allen Wahlen von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk" geladen:
 *Wahlvorstand*, *Wahlvorschläge*, *Kopfdaten*, *Konfigurationen*, *Handbuch*, *Wahlvorbereitung*, *Eröffnungsuhrzeit*,
-*Ereignisse*, *Druckstatus*, *Stapel c - gültige Stimmzettel*, *Stapel c - ungültige Stimmzettel*, *Stapel b -
-ungekennzeichnete Stimmzettel*, *Begründung - Stapel a*, *Stapel d*, *Stapel a*, *Stapel b*, *Begründung Stapel ab*,
-*Stapel b-c*, *FortsetzungsUhrzeit*, *UnterbrechungsUhrzeit*
+*Ereignisse*, *Druckstatus*, *[Stapel der entsprechenden Wahl](./#usecase-stimmen-zaehlen)*, *FortsetzungsUhrzeit*,
+*UnterbrechungsUhrzeit*
 
 ::: info Kommunalwahl-Daten, die nur in einem Urnenwahlbezirk geladen werden {data-uwb="true"}
 *UngültigeWahlscheine*, *A-Werte*, *Wählerverzeichnis*, *Schließungsuhrzeit*, *Stimmabgabevermerke*, *Stimmzettel*,
@@ -283,6 +281,8 @@ Außerdem muss eine Uhrzeit mit erfasst werden, zu welcher die Wahlurne geöffne
 der Zukunft liegen und muss größer oder gleich der frühesten Schließungsuhrzeit sein
 (Konfiguration `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW`, Standardwert 18:00).
 :::
+
+{#usecase-stimmen-zaehlen}
 
 📃 **UseCase: `Stimmzettel auswerten und Stimmen zählen`**
 

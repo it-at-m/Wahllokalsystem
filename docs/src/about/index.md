@@ -45,7 +45,7 @@ Offline-Modus.
 
 Folgende Daten werden bei allen Wahlen von beiden Wahlbezirksarten "Urnenwahlbezirk" und "Briefwahlbezirk" geladen:
 *Wahlvorstand*, *Wahlvorschläge*, *Kopfdaten*, *Konfigurationen*, *Handbuch*, *Wahlvorbereitung*, *Eröffnungsuhrzeit*,
-*Ereignisse*, *Druckstatus*, *[Stapel der entsprechenden Wahl](./#usecase-stimmen-zaehlen)*, *FortsetzungsUhrzeit*,
+*Ereignisse*, *Druckstatus*, *[Stapel der entsprechenden Wahl(en)](./#usecase-stimmen-zaehlen)*, *FortsetzungsUhrzeit*,
 *UnterbrechungsUhrzeit*
 
 ::: info Kommunalwahl-Daten, die nur in einem Urnenwahlbezirk geladen werden {data-uwb="true"}

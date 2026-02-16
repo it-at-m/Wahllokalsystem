@@ -18,20 +18,26 @@
         </router-view>
       </v-container>
     </v-main>
+    <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
       v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
       data-test="wahlvorstand-anwesenheits-check-popup-dialog"
+    />
+    <the-wahlschluss-check-popup-dialog
+      v-if="isTimeToCheckWahlschlussInFuture"
     />
   </v-app>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlschlussCheckPopupDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
+import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
@@ -47,7 +53,9 @@ const { awaitServiceWorkerActive } = useServiceWorkerUtils();
 const { syncPin } = useServiceWorkerPinSyncer();
 
 const { loadUser } = useUserStore();
-const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
+const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
+  useInfomanagementStore()
+);
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
@@ -59,6 +67,13 @@ const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
 const isTimeToCheckAnwesenheitInFuture = computed(() =>
   dateTimeToCheckAnwesenheit.value
     ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
+    : false
+);
+const showTestdruckDialog = ref(false);
+
+const isTimeToCheckWahlschlussInFuture = computed(() =>
+  dateTimeToCheckWahlschluss.value
+    ? isTodayOrFuture(dateTimeToCheckWahlschluss.value)
     : false
 );
 
@@ -75,6 +90,8 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
+
+    showTestdruckDialog.value = true;
   } catch (error) {
     console.debug(error);
   }

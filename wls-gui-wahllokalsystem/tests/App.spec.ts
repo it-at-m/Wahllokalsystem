@@ -71,6 +71,7 @@ describe("App", () => {
     disconnect: vi.fn(),
   }));
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  vi.stubGlobal("visualViewport", new EventTarget());
 
   vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
   vi.mock(

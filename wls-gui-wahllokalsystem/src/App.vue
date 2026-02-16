@@ -47,7 +47,6 @@ const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit } = storeToRefs(useInfomanagementStore());
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
-const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 const { wahlenActions } = useWahlenStore();
 const { isTodayOrFuture } = useDateTimeUtils();
 
@@ -72,9 +71,8 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
-    if (hasAllTasksRun.value) {
-      showTestdruckDialog.value = true;
-    }
+
+    showTestdruckDialog.value = true;
   } catch (error) {
     console.debug(error);
   }

@@ -64,8 +64,8 @@ In folgenden Fällen versendet die Anwendung die PIN an den Service-Worker:
 - nachdem der Benutzer geladen wurde
 - wenn sich die PIN des Benutzers ändert
 - wenn es einen neuen Service-Worker gibt
-    - nach der erstmaligen Installation
-    - nach dem Update auf eine neue Version
+  - nach der erstmaligen Installation
+  - nach dem Update auf eine neue Version
 
 ### Strategien
 

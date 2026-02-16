@@ -5,6 +5,7 @@
         <base-table-wahlvorschlag-kandidaten-stimmen-erfassen
           :wahlvorschlag-nummer="wahlvorschlagModel.ordnungszahl"
           :model-value="wahlvorschlagModel.kandidatenErgebnisse"
+          @dirty="$emit('dirty')"
         />
       </v-form>
     </v-card-text>
@@ -41,6 +42,7 @@ defineProps({
 
 const emit = defineEmits<{
   doSave: [];
+  dirty: [];
 }>();
 
 const isFormValid = ref<boolean | null>(null);

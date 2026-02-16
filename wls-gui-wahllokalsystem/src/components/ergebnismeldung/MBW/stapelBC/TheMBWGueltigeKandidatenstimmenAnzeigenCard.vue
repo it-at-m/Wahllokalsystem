@@ -1,6 +1,8 @@
 <template>
   <v-card>
-    <v-card-title> Gültige Stimmen für die einzelnen Bewerber </v-card-title>
+    <v-card-title>
+      Gültige Stimmen für die einzelnen Kandidat*innen
+    </v-card-title>
     <v-card-text>
       <v-row>
         <v-col

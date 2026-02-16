@@ -5,7 +5,7 @@
     max-width="648px"
   >
     <v-card>
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         <v-icon
           :icon="icon"
           size="x-small"
@@ -20,6 +20,7 @@
         <base-text-button
           v-if="canceltext"
           data-test="basedialog-btn-cancel"
+          :is-disabled="cancelDisabled"
           @click="onCancelClicked"
         >
           {{ canceltext }}
@@ -43,6 +44,7 @@ defineProps<{
   visible: boolean;
   dialogtitle: string;
   canceltext?: string;
+  cancelDisabled?: boolean;
   confirmtext: string;
   icon: string;
 }>();

@@ -18,6 +18,7 @@
         </router-view>
       </v-container>
     </v-main>
+    <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
     <the-broadcast-read-confirmation-dialog />
     <the-wahlvorstand-anwesenheits-check-popup-dialog
       v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
@@ -31,11 +32,12 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
 import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlschlussCheckPopupDialog.vue";
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
+import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
@@ -62,6 +64,7 @@ const isTimeToCheckAnwesenheitInFuture = computed(() =>
     ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
     : false
 );
+const showTestdruckDialog = ref(false);
 
 const isTimeToCheckWahlschlussInFuture = computed(() =>
   dateTimeToCheckWahlschluss.value
@@ -80,6 +83,8 @@ onMounted(async () => {
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();
+
+    showTestdruckDialog.value = true;
   } catch (error) {
     console.debug(error);
   }

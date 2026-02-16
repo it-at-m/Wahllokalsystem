@@ -50,7 +50,10 @@
                 :key="wahlvorschlag.identifikator"
               >
                 <tr>
-                  <td class="foldingButtonColumn">
+                  <td
+                    :id="`kandidatenStimmenErfassen` + index"
+                    class="foldingButtonColumn"
+                  >
                     <base-button-folding v-model="expandedRows[index]" />
                   </td>
                   <td class="ordnungszahlColumn">
@@ -95,7 +98,7 @@
             </template>
           </v-confirm-edit>
         </tbody>
-        <tfoot>
+        <tfoot id="wahlvorschlaege-table-footer">
           <tr>
             <td
               :colspan="COUNT_COLUMNS_BEFORE_SUM"
@@ -127,13 +130,16 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Ref } from "vue";
 
-import { computed, onActivated, ref } from "vue";
+import { computed, nextTick, onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
+import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+
+const { scrollIntoView } = useViewportUtils();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
@@ -172,13 +178,8 @@ onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
 
-  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
-    (wahlvorschlagWithErgebnis, i) => {
-      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
-        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
-      );
-    }
-  );
+  _updateDirtyRowIcons();
+  _openNextCard(0);
 });
 
 const totalSumErgebnisse = computed(() => {
@@ -224,7 +225,44 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   save();
 
   await saveErgebnisse();
-  dirtyRows.value[rowIndex] = false;
+  _updateDirtyRowIcons();
+  _openNextCard(rowIndex);
+}
+
+function _openNextCard(index: number) {
+  expandedRows.value[index] = false;
+  const nextIndex = _getNextDirtyRowIndexOrNull(index);
+  if (nextIndex !== null) {
+    expandedRows.value[nextIndex] = true;
+    if (nextIndex > 0) {
+      nextTick(() => {
+        scrollIntoView("#kandidatenStimmenErfassen" + nextIndex);
+      });
+    }
+  } else {
+    scrollIntoView("#wahlvorschlaege-table-footer");
+  }
+}
+
+function _getNextDirtyRowIndexOrNull(index: number): number | null {
+  const length = wahlvorschlaegeWithKandidatenErgebnissen.value.length;
+  for (let i = 0; i < length; i++) {
+    const currentIndex = (index + i) % length;
+    if (dirtyRows.value[currentIndex]) {
+      return currentIndex;
+    }
+  }
+  return null;
+}
+
+function _updateDirtyRowIcons() {
+  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
+    (wahlvorschlagWithErgebnis, i) => {
+      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
+      );
+    }
+  );
 }
 </script>
 

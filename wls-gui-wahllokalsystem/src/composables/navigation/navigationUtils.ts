@@ -5,6 +5,7 @@ import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import {
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
@@ -67,6 +68,9 @@ export function useNavigationUtils() {
     }
     if (userStore.isBWB && !workflowStore.isWahlbriefeErfassenErfasst) {
       return routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE);
+    }
+    if (userStore.isBWB && !workflowStore.isWahlbriefeZulassenErfasst) {
+      return routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN);
     }
 
     //check all elections in their order

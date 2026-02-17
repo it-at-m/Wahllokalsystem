@@ -4,6 +4,7 @@ import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
@@ -59,6 +60,7 @@ describe("briefwahlService.ts", () => {
   const { createAxiosResponse } = useAxiosTestDataFactory();
 
   beforeEach(() => {
+    setActivePinia(createPinia());
     vi.resetAllMocks();
     vi.clearAllMocks();
   });

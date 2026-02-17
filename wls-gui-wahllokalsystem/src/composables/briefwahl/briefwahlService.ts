@@ -53,7 +53,12 @@ export function useBriefwahlService() {
       }
       const responseData = getNullOn204OrElseResponseData(response);
 
-      return responseData ? toModel(responseData) : null;
+      if (responseData) {
+        useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+        return toModel(responseData);
+      } else {
+        return null;
+      }
     } catch (e) {
       const errorMessage =
         "Die beanstandeten Wahlbriefe konnten nicht geladen werden.";
@@ -93,7 +98,7 @@ export function useBriefwahlService() {
           beanstandeteWahlbriefeDTO
         );
       }
-
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
       addNotification(
         "Die beanstandeten Wahlbriefe wurden erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS

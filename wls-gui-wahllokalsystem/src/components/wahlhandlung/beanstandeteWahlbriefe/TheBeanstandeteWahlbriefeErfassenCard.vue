@@ -18,6 +18,7 @@
       <base-button-save
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
+        save-text="Speichern und Weiter"
         @click="onSaveClicked"
       />
     </v-card-actions>
@@ -30,10 +31,13 @@ import { computed } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const { beanstandeteWahlbriefeActions } = useWahlenStore();
+const { getNextRoute } = useNavigationUtils();
 
 const isSaveButtonDisabled = computed(
   () => !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid
@@ -46,7 +50,8 @@ function onAddBeanstandeterWahlbriefClicked() {
   beanstandeteWahlbriefeActions.addBeanstandeterWahlbriefEntry();
 }
 
-function onSaveClicked() {
-  beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
+async function onSaveClicked() {
+  await beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
+  await router.push(getNextRoute());
 }
 </script>

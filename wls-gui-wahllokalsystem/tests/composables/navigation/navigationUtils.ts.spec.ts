@@ -16,6 +16,7 @@ import {
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
@@ -238,6 +239,21 @@ describe("navigationUtils.ts", () => {
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLUMGEBUNG));
+    });
+
+    it("should_returnRouteToErfassungWahlbriefe_when_allPreviousStepsAreDoneAndWahlbrieferfassungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)
+      );
     });
   });
 

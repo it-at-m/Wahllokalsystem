@@ -1,6 +1,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
+import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -15,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
   configurationConstructor: vi.fn().mockImplementation(() => ({})),
   mapDtoToModel: vi.fn(),
   addNotification: vi.fn(),
+  getWahlbriefdaten: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
@@ -23,7 +25,9 @@ vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
     setBeanstandeteWahlbriefe: mockDefinitions.setBeanstandeteWahlbriefe,
   })),
   Configuration: mockDefinitions.configurationConstructor,
-  WahlbriefdatenControllerApi: vi.fn(),
+  WahlbriefdatenControllerApi: vi.fn().mockImplementation(() => ({
+    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
+  })),
 }));
 
 vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({
@@ -44,11 +48,15 @@ describe("briefwahlService.ts", () => {
     createBeanstandeteWahlbriefe,
     prepareBeanstandeteWahlbriefeCreateDTO,
   } = useBeanstandeteWahlbriefeTestDataFactory();
-  const { getBeanstandeteWahlbriefe, postBeanstandeteWahlbriefe } =
-    useBriefwahlService();
+  const {
+    getBeanstandeteWahlbriefe,
+    postBeanstandeteWahlbriefe,
+    getWahlbriefdaten,
+  } = useBriefwahlService();
   const { generateRandomNumber, generateRandomString } =
     useCommonTestDataFactory();
   const { prepareWahl } = useWahlTestDataFactory();
+  const { createAxiosResponse } = useAxiosTestDataFactory();
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -197,5 +205,25 @@ describe("briefwahlService.ts", () => {
         ]);
       }
     );
+  });
+
+  describe("getWahlbriefdaten", () => {
+    it("should_returnWahlbriefdatenWithUndefinedValues_when-apiReturned204", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockReturnValue(
+        createAxiosResponse({ status: 204, data: "" })
+      );
+
+      const expectedResult = {
+        wahlbriefe: undefined,
+        verzeichnisseUngueltige: undefined,
+        nachtraege: undefined,
+        nachtraeglichUeberbrachte: undefined,
+        zeitNachtraeglichUeberbrachte: undefined,
+      };
+      const result = await getWahlbriefdaten(wahlbezirkID);
+
+      expect(result).toStrictEqual(expectedResult);
+    });
   });
 });

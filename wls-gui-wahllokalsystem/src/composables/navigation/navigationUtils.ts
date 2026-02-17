@@ -4,6 +4,7 @@ import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import {
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
@@ -63,6 +64,9 @@ export function useNavigationUtils() {
     // check wahlbriefzulassung steps (BWB)
     if (userStore.isBWB && !workflowStore.isWahlumgebungErfasst) {
       return routeWithName(ROUTE_WAHLUMGEBUNG);
+    }
+    if (userStore.isBWB && !workflowStore.isWahlbriefeErfassenErfasst) {
+      return routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE);
     }
 
     //check all elections in their order

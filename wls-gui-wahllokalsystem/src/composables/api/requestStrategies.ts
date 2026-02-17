@@ -5,6 +5,7 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
+import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 const {
   createResponseOkWithoutResponseBody,
@@ -18,7 +19,8 @@ const { log, logDebug, logError } = useLogging("requestStrategies");
 const indexDBSingleton = useIndexDB();
 
 self.addEventListener("message", async function (event) {
-  if (event.data.type === "PIN") {
+  if (event.data.type === ServiceWorkerMessageTypeEnum.PIN) {
+    logDebug("pin received");
     indexDBSingleton.setKey(event.data.payload);
   }
 });

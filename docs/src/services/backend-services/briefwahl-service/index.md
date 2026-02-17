@@ -14,10 +14,19 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 Wahlbriefdaten umfassen Informationen über die Menge an Wahlbriefen sowie Nachträgen.
 
-### beanstandete Wahlbriefe
+### Beanstandete Wahlbriefe
 
-Beanstandete Wahlbriefe sind Wahlbriefe welche genauer betrachtet wurden. Aus folgenden Gründen kann es zu Zurückweisungen kommen:
+Beanstandete Wahlbriefe sind Wahlscheine und Stimmzettelumschläge, welche nach Erhalt genauer betrachtet wurden,
+weil sie nicht zweifelsfrei gültig sind. Ist der Beschluss dann nicht `Zugelassen`, kann es aus folgenden Gründen zu
+Zurückweisungen kommen:
 
-- nicht wahlberechtigt
-- der Wahlschein ist ungültig
-- ...
+| Wahlscheine                       | Stimmzettelumschlag                         |
+|-----------------------------------|---------------------------------------------|
+| Wahlschein ungültig laut Liste    | Stimmzettelumschlag fehlt                   |
+| Kein Original-Wahlschein          | Lose Stimmzettel                            |
+| Unterschrift auf Wahlschein fehlt | Wahlbrief und Stimmzettelumschlag offen     |
+|                                   | Wahlscheine ungleich Stimmzettelumschläge   |
+|                                   | Nicht-amtlicher Stimmzettelumschlag         |
+|                                   | Stimmzettelumschlag gefährdet Wahlgeheimnis |
+|                                   | Gegenstand im Stimmzettelumschlag           |
+|                                   | Für diese Wahl nicht wahlberechtigt         |

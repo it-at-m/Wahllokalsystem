@@ -211,9 +211,21 @@ export function useWahlvorbereitungService() {
     sendNotification = true
   ): Promise<Wahlvorbereitung> {
     try {
-      return await briefwahlvorbereitungControllerAPI
-        .getBriefwahlvorbereitung(wahlbezirkID)
-        .then((response) => toBriefwahlvorbereitungModel(response.data));
+      const response =
+        await briefwahlvorbereitungControllerAPI.getBriefwahlvorbereitung(
+          wahlbezirkID
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+      if (responseData) {
+        useWorkflowStore().isWahlumgebungErfasst = true;
+        return toBriefwahlvorbereitungModel(responseData);
+      } else {
+        return {
+          urnenAnzahl: [],
+          wahlbezirkID: wahlbezirkID,
+          urneVersiegelt: false,
+        };
+      }
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -242,6 +254,7 @@ export function useWahlvorbereitungService() {
         "Briefwahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
+      useWorkflowStore().isWahlumgebungErfasst = true;
     } catch (error) {
       userNotificationService.addNotification(
         "Speichern der Briefwahlvorbereitung fehlgeschlagen.",

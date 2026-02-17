@@ -91,7 +91,7 @@ spring:
     gateway:
       routes:
         # ...
-        - id: gui-<frontend-name> // [!code focus:4]
+        - id: gui-<frontend-name> # [!code focus:4]
           uri: http://host.docker.internal:<PORT>/
           predicates:
             - Path=/<frontend-name>/**

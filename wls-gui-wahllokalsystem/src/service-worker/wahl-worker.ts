@@ -1,4 +1,5 @@
 /// <reference lib="WebWorker" />
+import type { ServiceWorkerMessage } from "@/types/serviceWorker/ServiceWorkerMessage.ts";
 import type { RouteHandlerCallbackOptions } from "workbox-core";
 
 import { clientsClaim } from "workbox-core";
@@ -8,6 +9,7 @@ import { registerRoute } from "workbox-routing";
 import { useRequestStrategyManager } from "@/composables/api/RequestStrategyManager.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 // declare let self: any;
 declare let self: ServiceWorkerGlobalScope;
@@ -79,5 +81,19 @@ async function getRequestHandler(options: RouteHandlerCallbackOptions) {
   log(`GET request identified - uri: ${options.url}`);
   return await handleRequestWithStrategy(options);
 }
+
+const installedMessage: ServiceWorkerMessage = {
+  type: ServiceWorkerMessageTypeEnum.SERVICE_WORKER_INSTALLED,
+  payload: undefined,
+};
+self.clients.matchAll().then((matchingClients) => {
+  log(`count clients: ${matchingClients.length}`);
+  matchingClients.forEach((client) => {
+    log(
+      `sending message that service worker is installed to client: ${client.id} URL: ${client.url} Type: ${client.type}`
+    );
+    client.postMessage(installedMessage);
+  });
+});
 
 log("service worker configured and initialized");

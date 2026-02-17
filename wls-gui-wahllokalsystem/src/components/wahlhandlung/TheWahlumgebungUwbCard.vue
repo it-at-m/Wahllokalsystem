@@ -140,13 +140,21 @@ const isMinimumRequired = computed(() => {
 });
 
 const checkboxLabelText = computed(() => {
-  if (wahlenState.value.wahlen && wahlenState.value.wahlen?.length > 1) {
-    return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
+  if (!hasMoreThanOneWahlurnen.value) {
+    return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
   }
-  return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
+  return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
 });
 
 function onSaveWahlumgebungUWBClicked() {
   urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
 }
+
+const hasMoreThanOneWahlurnen = computed(() => {
+  return (
+    (wahlenState.value.wahlen && wahlenState.value.wahlen.length > 1) ||
+    (urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl[0]
+      ?.anzahl || 0) > 1
+  );
+});
 </script>

@@ -219,11 +219,7 @@ function getStapelBErgebnisForWahlvorschlagIndex(index: number) {
 }
 
 function toggleRow(index: number) {
-  if (expandedRowIndex.value === index) {
-    expandedRowIndex.value = null;
-  } else {
-    expandedRowIndex.value = index;
-  }
+  expandedRowIndex.value = expandedRowIndex.value === index ? null : index;
 }
 
 function onInputChanged(rowIndex: number) {

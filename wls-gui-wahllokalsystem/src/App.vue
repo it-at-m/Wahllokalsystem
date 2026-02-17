@@ -42,10 +42,15 @@ import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
+import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+
+const { awaitServiceWorkerActive } = useServiceWorkerUtils();
+const { syncPin } = useServiceWorkerPinSyncer();
 
 const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
@@ -80,6 +85,8 @@ onMounted(async () => {
 
   try {
     await loadUser();
+    await awaitServiceWorkerActive();
+    await syncPin();
     await wahlenActions.initWahlen();
     startBroadcastMessageInterval();
     await initTasks();

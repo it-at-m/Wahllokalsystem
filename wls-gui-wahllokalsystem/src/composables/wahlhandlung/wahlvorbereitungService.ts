@@ -88,12 +88,15 @@ export function useWahlvorbereitungService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      if (!responseData) {
-        return null;
+      if (responseData) {
+        const eroeffnungsuhrzeit = new Date(responseData.eroeffnungsuhrzeit);
+        if (isValidDate(eroeffnungsuhrzeit)) {
+          useWorkflowStore().isWahleroeffnungErfasst = true;
+          return eroeffnungsuhrzeit;
+        }
       }
 
-      const eroeffnungsuhrzeit = new Date(responseData.eroeffnungsuhrzeit);
-      return isValidDate(eroeffnungsuhrzeit) ? eroeffnungsuhrzeit : null;
+      return null;
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -114,6 +117,7 @@ export function useWahlvorbereitungService() {
         wahlbezirkID,
         toEroeffnungsuhrzeitWriteDTO(eroeffnungsuhrzeit)
       );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
       userNotificationService.addNotification(
         "Eröffnungsuhrzeit erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS

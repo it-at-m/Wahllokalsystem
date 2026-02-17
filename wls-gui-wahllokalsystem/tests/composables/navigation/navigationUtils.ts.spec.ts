@@ -15,11 +15,16 @@ import {
 } from "vitest";
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
+import {
+  ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
@@ -221,6 +226,18 @@ describe("navigationUtils.ts", () => {
       expect(mockDefinitions.mbwGetNextRouteOrNull.mock.calls).toStrictEqual([
         [mbwStatus],
       ]);
+    });
+
+    it("should_returnRouteToWahlumgebung_when_allPreviousStepsAreDoneAndWahlumgebungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLUMGEBUNG));
     });
   });
 

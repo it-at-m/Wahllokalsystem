@@ -11,6 +11,7 @@ import { nextTick } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahleroeffnungCard from "@/components/wahlhandlung/BaseWahleroeffnungCard.vue";
+import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -26,6 +27,7 @@ declare module "@vue/runtime-core" {
 const mockDefinitions = vi.hoisted(() => ({
   postEroeffnungsuhrzeit: vi.fn(),
   saveEreignisse: vi.fn(),
+  routerPush: vi.fn(),
 }));
 
 vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
@@ -39,6 +41,8 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
     postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
   }),
 }));
+
+router.push = mockDefinitions.routerPush;
 
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;

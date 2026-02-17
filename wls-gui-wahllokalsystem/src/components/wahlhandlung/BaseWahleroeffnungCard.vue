@@ -22,6 +22,7 @@
         <base-button-save
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
+          save-text="Speichern und Weiter"
           @click="onSaveEroeffnungsuhrzeitClicked"
         />
       </v-card-actions>
@@ -69,10 +70,12 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
 } from "@/constants.ts";
+import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -88,6 +91,7 @@ const {
 
 const { toHhMm } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
+const { getNextRoute } = useNavigationUtils();
 
 const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
 const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
@@ -119,13 +123,14 @@ function updateValidationStateForBegruendung(): void {
     value.length <= maxLengthForBegruendung;
 }
 
-function onSaveEroeffnungsuhrzeitClicked() {
+async function onSaveEroeffnungsuhrzeitClicked() {
   if (
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
       createTodayWithTime(spaetesteEroeffnungsuhrzeit.value)
   ) {
-    eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+    await eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+    await router.push(getNextRoute());
   } else {
     isZuSpaet.value = true;
   }

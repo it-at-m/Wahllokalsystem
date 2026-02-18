@@ -61,11 +61,12 @@ export function useWahlvorbereitungService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      if (!responseData) {
+      if (responseData) {
+        useWorkflowStore().isStimmabgabeErfasst = true;
+        return toUrnenwahlSchliessungsuhrzeitModel(responseData);
+      } else {
         return null;
       }
-
-      return toUrnenwahlSchliessungsuhrzeitModel(responseData);
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -143,6 +144,7 @@ export function useWahlvorbereitungService() {
         wahlbezirkID,
         schliessungsuhrzeitWriteDTO
       );
+      useWorkflowStore().isStimmabgabeErfasst = true;
       userNotificationService.addNotification(
         "Schliessungsuhrzeit erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS

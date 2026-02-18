@@ -31,6 +31,7 @@
       :visible="isZuSpaet"
       dialogtitle="Verspäteter Beginn der Wahlhandlung"
       :is-save-disabled="!isBegruendungValid"
+      save-text="Speichern und Weiter"
       data-test="zuSpaetDialog"
       @cancel="onCancelBegruendung"
       @confirm="onConfirmBegruendung"
@@ -123,14 +124,13 @@ function updateValidationStateForBegruendung(): void {
     value.length <= maxLengthForBegruendung;
 }
 
-async function onSaveEroeffnungsuhrzeitClicked() {
+function onSaveEroeffnungsuhrzeitClicked() {
   if (
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit !== undefined &&
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
       createTodayWithTime(spaetesteEroeffnungsuhrzeit.value)
   ) {
-    await eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
-    await router.push(getNextRoute());
+    _saveEroeffnungsuhrzeitAndGetNextRoute();
   } else {
     isZuSpaet.value = true;
   }
@@ -151,6 +151,11 @@ function onConfirmBegruendung(): void {
   });
   sendEreignisse();
 
-  eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+  _saveEroeffnungsuhrzeitAndGetNextRoute();
+}
+
+async function _saveEroeffnungsuhrzeitAndGetNextRoute() {
+  await eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
+  await router.push(getNextRoute());
 }
 </script>

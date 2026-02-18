@@ -1,8 +1,8 @@
 # Zugriff auf Datenbanktabellen aller Services in einer Verbindung
 
-Für jeden Service gibt es einen separaten User für die Oracle Datenbank, die in Podman läuft.
-Diese User können nur die Tabellen sehen, die im jeweiligen Schema sind. Der User `wls_basisdaten_service` kann
-z.B. nur die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` sehen.
+Für jeden Service gibt es ein separates Benutzerkonto für die Oracle Datenbank, die in Podman läuft.
+Diese Benutzerkonten können nur die Tabellen sehen, die im jeweiligen Schema sind. Mit dem Benutzerkonto
+`wls_basisdaten_service` kann z.B. nur auf die Tabellen `handbuch`, `kandidat` oder `wahlvorschlag` zugegriffen werden.
 
 <details>
 
@@ -16,7 +16,7 @@ _so sieht man doch nur die Tabellen zum Basisdatenservice_
 
 </details>
 
-Mit dem User `system` kann man auf alle Schemata zugreifen und hat somit Zugriff auf alle Tabellen aller
+Mit dem Benutzerkonto `system` kann man auf alle Schemata zugreifen und hat somit Zugriff auf alle Tabellen aller
 Services. Das Passwort ist der Wert von `ORACLE_PASSWORD` aus dem `docker-compose.yml`-File. Dort sind auch die
 Verbindungsdaten enthalten die man zum Einrichten des Zugriffs benötigt.  
 Mit IntelliJ kann man bei den Properties der entsprechenden Datasource unter dem Reiter 'Schemas' auswählen, welche

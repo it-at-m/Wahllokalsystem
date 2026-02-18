@@ -2,6 +2,7 @@ import type {
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
@@ -465,7 +466,10 @@ describe("wahlvorbereitungService", () => {
         expectedBriefwahlvorbereitung
       );
       mockDefinitions.getBriefwahlvorbereitung.mockResolvedValue(
-        createBriefwahlvorbereitungDTO()
+        createAxiosResponse({
+          status: 200,
+          data: createBriefwahlvorbereitungDTO(),
+        })
       );
 
       const result = await getBriefwahlvorbereitung(wahlbezirkID);
@@ -491,6 +495,22 @@ describe("wahlvorbereitungService", () => {
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+    });
+
+    it("should_returnDefaultWahlvorbereitung_when_apiReturns204", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+      mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
+        createAxiosResponse({ status: 204, data: "" })
+      );
+
+      const result = await getBriefwahlvorbereitung(wahlbezirkID);
+
+      const expectedResult: Wahlvorbereitung = {
+        wahlbezirkID,
+        urneVersiegelt: false,
+        urnenAnzahl: [],
+      };
+      expect(result).toStrictEqual(expectedResult);
     });
 
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {

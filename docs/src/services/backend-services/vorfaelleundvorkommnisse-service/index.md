@@ -13,4 +13,27 @@ Der Service hat keine Abhängigkeiten zu anderen Services.
 
 ## Fachliches Datenmodell
 
-![Image of Ereignisse data model](/vorfaelleundvorkommnisse/fachliches_datenmodell_ereignisse.png)
+```mermaid
+classDiagram
+        direction TD
+
+        class Ereignisse {
+            wahlbezirkID: String
+            keineVorfaelle: Boolean
+            keineVorkommnisse: Boolean
+        }
+
+        class Ereignis {
+            beschreibung: String
+            uhrzeit: Timestamp
+        }
+
+        class EreignisartEnum {
+            <<enum>>
+            Vorfall
+            Vorkommnis
+        }
+
+        Ereignisse "1" --> "0..n" Ereignis : ereigniseintraege
+        Ereignis "1" --> "1" EreignisartEnum : ereignisart
+```

@@ -78,6 +78,15 @@ export const useStatusStore = defineStore(storeID, () => {
     return defaultStatus;
   }
 
+  function getDefaultMeldung() {
+    return {
+      validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+      gedruckt: false,
+      uebermittelt: undefined,
+      sendeuhrzeit: undefined,
+    };
+  }
+
   return {
     status,
     isStatusSaving,

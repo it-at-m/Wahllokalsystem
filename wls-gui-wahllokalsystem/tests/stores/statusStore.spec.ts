@@ -193,20 +193,25 @@ describe("statusStore.ts", () => {
 
       const result = unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
 
-      expect(unitUnderTest.status).toHaveLength(1);
       expect(result).toStrictEqual(unitUnderTest.status[0]);
       expect(result.bezirkUndWahlID).toStrictEqual({ wahlID, wahlbezirkID });
-      expect(result.schnellmeldung).toStrictEqual({
-        validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
-        gedruckt: false,
-        uebermittelt: undefined,
-        sendeuhrzeit: undefined,
-      });
-      expect(result.niederschrift).toStrictEqual({
-        validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
-        gedruckt: false,
-        uebermittelt: undefined,
-        sendeuhrzeit: undefined,
+      expect(result).toStrictEqual({
+        schnellmeldung: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        niederschrift: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        bezirkUndWahlID: {
+          wahlID,
+          wahlbezirkID,
+        },
       });
     });
 
@@ -216,10 +221,27 @@ describe("statusStore.ts", () => {
         .build();
       unitUnderTest.status = [otherStatus];
 
-      const result = unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
+      unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
 
       expect(unitUnderTest.status).toHaveLength(2);
-      expect(result.bezirkUndWahlID).toStrictEqual({ wahlID, wahlbezirkID });
+      expect(unitUnderTest.status).toContainEqual({
+        schnellmeldung: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        niederschrift: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        bezirkUndWahlID: {
+          wahlID,
+          wahlbezirkID,
+        },
+      });
     });
 
     it("should_returnCorrectEntry_when_multipleEntriesExist", () => {

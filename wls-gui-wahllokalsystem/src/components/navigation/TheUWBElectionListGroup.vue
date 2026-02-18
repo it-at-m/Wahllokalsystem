@@ -17,7 +17,7 @@
     <v-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
-      :disabled="disabled"
+      :disabled="disabled || !isWahlvorstandErfasst"
     />
     <v-list-item
       title="Wählerverzeichnis"
@@ -27,12 +27,12 @@
     <v-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
-      :disabled="disabled"
+      :disabled="disabled || !isWaehlerverzeichniserfasst"
     />
     <v-list-item
       title="Stimmabgabe"
       :to="routeWithName(ROUTE_STIMMABGABE)"
-      :disabled="disabled"
+      :disabled="disabled || !isWahleroeffnungErfasst"
     />
   </v-list-group>
 </template>
@@ -62,7 +62,12 @@ const properties = defineProps({
 });
 
 const { routeWithName } = useNavigationUtils();
-const { isWahlumgebungErfasst } = storeToRefs(useWorkflowStore());
+const {
+  isWahlvorstandErfasst,
+  isWahlumgebungErfasst,
+  isWaehlerverzeichniserfasst,
+  isWahleroeffnungErfasst,
+} = storeToRefs(useWorkflowStore());
 
 const groupActivatorListItemLines = computed(() =>
   properties.disabledMessage && properties.disabled ? false : "one"

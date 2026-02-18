@@ -13,6 +13,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   const isWahlbriefeErfassenErfasst = ref(false);
   const isWahlbriefeZulassenErfasst = ref(false);
   const isAnzahlWahlscheineErfasst = ref(false);
+  const isWaehlerverzeichniserfasst = ref(false);
 
   const electionWorkflowsStates = ref<ElectionWorkflowState[]>([]);
 
@@ -75,6 +76,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     isWahlbriefeErfassenErfasst,
     isWahlbriefeZulassenErfasst,
     isAnzahlWahlscheineErfasst,
+    isWaehlerverzeichniserfasst,
     getElectionWorkflowState,
     initElectionWorkflowState,
     isElectionFinished,

@@ -20,6 +20,7 @@ import {
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHEINE,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
@@ -127,6 +128,7 @@ describe("navigationUtils.ts", () => {
     it("should_returnRouteToHome_when_noElectionAreGiven", () => {
       useUserStore().user = prepareUser().wahlMetaData([]).build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichniserfasst = true;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
@@ -154,6 +156,7 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichniserfasst = true;
 
       useWorkflowStore().electionWorkflowsStates = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
@@ -194,6 +197,7 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichniserfasst = true;
 
       const mbwStatus = createStatusWithNiederschriftGedruckt(
         mbwWahlID,
@@ -287,6 +291,21 @@ describe("navigationUtils.ts", () => {
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLSCHEINE));
+    });
+
+    it("should_returnRouteToWaehlerverzeichnis_when_allPreviousStepsAreDoneAndWaehlerverzeichnisIsNotSetAndUserHasWahlbezirksartUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichniserfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS)
+      );
     });
   });
 

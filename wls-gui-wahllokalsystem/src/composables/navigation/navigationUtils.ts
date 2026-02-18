@@ -8,6 +8,7 @@ import {
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHEINE,
   ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants.ts";
@@ -75,6 +76,11 @@ export function useNavigationUtils() {
     }
     if (userStore.isBWB && !workflowStore.isAnzahlWahlscheineErfasst) {
       return routeWithName(ROUTE_WAHLSCHEINE);
+    }
+
+    // check wahlhandlung steps (UWB)
+    if (userStore.isUWB && !workflowStore.isWaehlerverzeichniserfasst) {
+      return routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS);
     }
 
     //check all elections in their order

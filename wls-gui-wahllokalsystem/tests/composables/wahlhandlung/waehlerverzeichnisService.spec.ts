@@ -2,7 +2,8 @@ import type { PflegeWaehlerverzeichnis } from "@/types/wahlbezirk/PflegeWaehlerv
 
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
@@ -42,6 +43,9 @@ const { createPflegeWaehlerverzeichnis, createWaehlerverzeichnisWriteDTO } =
 describe("waehlerverzeichnisService.ts", () => {
   const unitUnderTest = useWaehlerverzeichnisService();
 
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
   afterEach(() => {
     vi.clearAllMocks();
     vi.resetAllMocks();

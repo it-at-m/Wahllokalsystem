@@ -847,6 +847,9 @@ describe("ergebnismeldungStore.ts", () => {
 
       mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
       mockDefinitions.postNiederschrift.mockResolvedValue({});
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
 
       await unitUnderTest.sendNiederschrift(wahl);
 
@@ -879,8 +882,12 @@ describe("ergebnismeldungStore.ts", () => {
       mockDefinitions.postNiederschrift.mockRejectedValue(
         new Error("service call failed")
       );
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
 
       await unitUnderTest.sendNiederschrift(wahl);
+
       expect(statusToUpdate.niederschrift.uebermittelt).toBeFalsy();
     });
   });

@@ -2,7 +2,7 @@
   <base-ergebnismeldung-cards-container
     title="Niederschrift"
     subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
-    :is-sending="isSendingNiederschrift"
+    :is-sending="isNiederschriftAndStatusSaving"
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenValid"
     :is-drucken-loading="isDruckenLoading"

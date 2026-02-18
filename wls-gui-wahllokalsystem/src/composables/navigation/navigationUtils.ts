@@ -4,6 +4,7 @@ import type { WahlMetaData } from "@/types/wlsTypes/WahlMetaData.ts";
 import type { RouteLocationAsRelativeGeneric } from "vue-router";
 
 import {
+  ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHEINE,
@@ -81,6 +82,9 @@ export function useNavigationUtils() {
     // check wahlhandlung steps (UWB)
     if (userStore.isUWB && !workflowStore.isWaehlerverzeichniserfasst) {
       return routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS);
+    }
+    if (userStore.isUWB && !workflowStore.isWahleroeffnungErfasst) {
+      return routeWithName(ROUTE_BEGINN_STIMMABGABE);
     }
 
     //check all elections in their order

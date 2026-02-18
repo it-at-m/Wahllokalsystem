@@ -82,6 +82,7 @@
         :loading="
           pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnisIsSaving
         "
+        save-text="Speichern und Weiter"
         @click="onSavePflegeWaehlerverzeichnisClicked"
       />
     </v-card-actions>
@@ -93,15 +94,20 @@ import { storeToRefs } from "pinia";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE =
   "Der Wahlvorstand wurde unterrichtet, dass folgende Wahlscheine für ungültig erklärt worden sind (gemäß Anlage).";
 
+const { getNextRoute } = useNavigationUtils();
+
 const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 const { pflegeWaehlerverzeichnisState } = storeToRefs(useWahlbezirkStore());
 
-function onSavePflegeWaehlerverzeichnisClicked() {
-  pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+async function onSavePflegeWaehlerverzeichnisClicked() {
+  await pflegeWaehlerverzeichnisActions.sendPflegeWaehlerverzeichnis();
+  await router.push(getNextRoute());
 }
 </script>

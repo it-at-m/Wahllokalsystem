@@ -5,7 +5,7 @@
         <th>Familienname</th>
         <th>Vorname</th>
         <th>Funktion</th>
-        <th>Anwesend</th>
+        <th class="text-center">Anwesend</th>
       </tr>
     </thead>
 
@@ -17,7 +17,7 @@
         <td data-test="textFamilienname">{{ mitglied.familienname }}</td>
         <td data-test="textVorname">{{ mitglied.vorname }}</td>
         <td data-test="textFunktion">{{ mitglied.funktionsname }}</td>
-        <td>
+        <td class="d-flex justify-center align-center">
           <v-checkbox
             :model-value="mitglied.anwesend"
             :hide-details="true"

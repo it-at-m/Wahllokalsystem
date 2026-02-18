@@ -8,15 +8,18 @@ import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("navigationGuards.ts", () => {
   const DUMMY_TO = {} as unknown as RouteLocationNormalized;
@@ -32,7 +35,17 @@ describe("navigationGuards.ts", () => {
 
   const {
     isStepDoneInElectionState,
-    permitNavigationWhenWahlumgebungIsErfasst,
+    permitNavigationWhenWahlvorstandIsErfasst,
+    permitNavigationWhenWahleroeffnungUWBIsErfasst,
+    permitNavigationWhenWahleroeffnungBWBIsErfasst,
+    permitNavigationWhenWahlumgebungUWBIsErfasst,
+    permitNavigationWhenWahlumgebungBWBIsErfasst,
+    permitNavigationWhenWahlbriefeErfassenIsErfasst,
+    permitNavigationWhenWahlbriefeZulassenIsErfasst,
+    permitNavigationWhenWaehlerverzeichnisIsErfasst,
+    permitNavigationWhenStimmabgabeIsErfasst,
+    beforeEnterBeginnStimmabgabe,
+    beforeEnterWahlumgebung,
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
@@ -148,10 +161,130 @@ describe("navigationGuards.ts", () => {
     });
   });
 
-  describe("permitNavigationWhenWahlumgebungIsErfasst", () => {
+  describe("permitNavigationWhenWahlvorstandIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      const result = permitNavigationWhenWahlvorstandIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      const result = permitNavigationWhenWahlvorstandIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahleroeffnungUWBIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      const result = permitNavigationWhenWahleroeffnungUWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkartIsBWB", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = permitNavigationWhenWahleroeffnungUWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahleroeffnungErfasstIstErfasstIsTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = permitNavigationWhenWahleroeffnungUWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahleroeffnungBWBIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      const result = permitNavigationWhenWahleroeffnungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkartIsUWB", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = permitNavigationWhenWahleroeffnungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahleroeffnungErfasstIsTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = permitNavigationWhenWahleroeffnungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahlumgebungUWBIsErfasst", () => {
     it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
       useWorkflowStore().isWahlumgebungErfasst = false;
-      const result = permitNavigationWhenWahlumgebungIsErfasst(
+      const result = permitNavigationWhenWahlumgebungUWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkartIsBWB", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      const result = permitNavigationWhenWahlumgebungUWBIsErfasst(
         DUMMY_TO,
         DUMMY_FROM,
         DUMMY_NEXT_GUARD
@@ -160,8 +293,254 @@ describe("navigationGuards.ts", () => {
     });
 
     it("should_returnTrue_when_statusIsWahlumgebungIstErfasstIsTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
       useWorkflowStore().isWahlumgebungErfasst = true;
-      const result = permitNavigationWhenWahlumgebungIsErfasst(
+      const result = permitNavigationWhenWahlumgebungUWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahlumgebungBWBIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlumgebungErfasst = false;
+      const result = permitNavigationWhenWahlumgebungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkartIsUWB", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      const result = permitNavigationWhenWahlumgebungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlumgebungIstErfasstIsTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      const result = permitNavigationWhenWahlumgebungBWBIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahlbriefeErfassenIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+      useWorkflowStore().isWahlbriefeErfassenErfasst = false;
+      const result = permitNavigationWhenWahlbriefeErfassenIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      const result = permitNavigationWhenWahlbriefeErfassenIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWahlbriefeZulassenIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+      useWorkflowStore().isWahlbriefeZulassenErfasst = false;
+      const result = permitNavigationWhenWahlbriefeZulassenIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      const result = permitNavigationWhenWahlbriefeZulassenIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenWaehlerverzeichnisIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+      useWorkflowStore().isWaehlerverzeichnisErfasst = false;
+      const result = permitNavigationWhenWaehlerverzeichnisIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      const result = permitNavigationWhenWaehlerverzeichnisIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("beforeEnterBeginnStimmabgabe", () => {
+    it("should_returnFalse_when_usersWahlbezirkartIsUwbAndRequiredStepsAreFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      useWorkflowStore().isWahlumgebungErfasst = false;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = false;
+      const result = beforeEnterBeginnStimmabgabe(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_usersWahlbezirkartIsBwbAndRequiredStepsAreFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      const result = beforeEnterBeginnStimmabgabe(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkartIsUwbAndRequiredStepsAreTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      const result = beforeEnterBeginnStimmabgabe(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkartIsBwbAndRequiredStepsAreTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      const result = beforeEnterBeginnStimmabgabe(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("beforeEnterWahlumgebung", () => {
+    it("should_returnFalse_when_usersWahlbezirkartIsUwbAndRequiredStepsAreFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      const result = beforeEnterWahlumgebung(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_usersWahlbezirkartIsBwbAndRequiredStepsAreFalse", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      const result = beforeEnterWahlumgebung(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkartIsUwbAndRequiredStepsAreTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      const result = beforeEnterWahlumgebung(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_usersWahlbezirkartIsBwbAndRequiredStepsAreTrue", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = beforeEnterWahlumgebung(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("permitNavigationWhenStimmabgabeIsErfasst", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+      useWorkflowStore().isStimmabgabeErfasst = false;
+      const result = permitNavigationWhenStimmabgabeIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      const result = permitNavigationWhenStimmabgabeIsErfasst(
         DUMMY_TO,
         DUMMY_FROM,
         DUMMY_NEXT_GUARD

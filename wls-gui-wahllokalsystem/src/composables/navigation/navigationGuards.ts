@@ -13,8 +13,32 @@ export function useNavigationGuards() {
     (requiredStep) => (to) =>
       _isStepDone(to, requiredStep);
 
-  const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
-    useWorkflowStore().isWahlumgebungErfasst;
+  const permitNavigationWhenWahlvorstandIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlvorstandErfasst;
+
+  const permitNavigationWhenWahleroeffnungUWBIsErfasst: NavigationGuard = () =>
+    useUserStore().isUWB && useWorkflowStore().isWahleroeffnungErfasst;
+
+  const permitNavigationWhenWahleroeffnungBWBIsErfasst: NavigationGuard = () =>
+    useUserStore().isBWB && useWorkflowStore().isWahleroeffnungErfasst;
+
+  const permitNavigationWhenWahlumgebungUWBIsErfasst: NavigationGuard = () =>
+    useUserStore().isUWB && useWorkflowStore().isWahlumgebungErfasst;
+
+  const permitNavigationWhenWahlumgebungBWBIsErfasst: NavigationGuard = () =>
+    useUserStore().isBWB && useWorkflowStore().isWahlumgebungErfasst;
+
+  const permitNavigationWhenWahlbriefeErfassenIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlbriefeErfassenErfasst;
+
+  const permitNavigationWhenWahlbriefeZulassenIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlbriefeZulassenErfasst;
+
+  const permitNavigationWhenWaehlerverzeichnisIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWaehlerverzeichnisErfasst;
+
+  const permitNavigationWhenStimmabgabeIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isStimmabgabeErfasst;
 
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
@@ -24,6 +48,19 @@ export function useNavigationGuards() {
 
   const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
     !useUserStore().isUserLoggedIn;
+
+  const beforeEnterBeginnStimmabgabe: NavigationGuard = () =>
+    (useUserStore().isUWB &&
+      useWorkflowStore().isWahlvorstandErfasst &&
+      useWorkflowStore().isWahlumgebungErfasst &&
+      useWorkflowStore().isWaehlerverzeichnisErfasst) ||
+    (useUserStore().isBWB && useWorkflowStore().isWahlvorstandErfasst);
+
+  const beforeEnterWahlumgebung: NavigationGuard = () =>
+    (useUserStore().isUWB && useWorkflowStore().isWahlvorstandErfasst) ||
+    (useUserStore().isBWB &&
+      useWorkflowStore().isWahlvorstandErfasst &&
+      useWorkflowStore().isWahleroeffnungErfasst);
 
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
@@ -43,9 +80,19 @@ export function useNavigationGuards() {
 
   return {
     isStepDoneInElectionState,
-    permitNavigationWhenWahlumgebungIsErfasst,
+    permitNavigationWhenWahlvorstandIsErfasst,
+    permitNavigationWhenWahleroeffnungUWBIsErfasst,
+    permitNavigationWhenWahleroeffnungBWBIsErfasst,
+    permitNavigationWhenWahlumgebungUWBIsErfasst,
+    permitNavigationWhenWahlumgebungBWBIsErfasst,
+    permitNavigationWhenWahlbriefeErfassenIsErfasst,
+    permitNavigationWhenWahlbriefeZulassenIsErfasst,
+    permitNavigationWhenWaehlerverzeichnisIsErfasst,
+    permitNavigationWhenStimmabgabeIsErfasst,
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
+    beforeEnterBeginnStimmabgabe,
+    beforeEnterWahlumgebung,
   };
 }

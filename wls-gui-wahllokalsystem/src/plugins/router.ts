@@ -41,10 +41,20 @@ import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const {
-  permitNavigationWhenWahlumgebungIsErfasst,
+  permitNavigationWhenWahlumgebungBWBIsErfasst,
+  permitNavigationWhenWahlumgebungUWBIsErfasst,
   permitNavigationOnlyForWahlbezirksArtUwb,
   permitNavigationOnlyForWahlbezirksArtBwb,
   permitNavigationOnlyIfUserIsLoggedOut,
+  permitNavigationWhenWahleroeffnungUWBIsErfasst,
+  permitNavigationWhenWahleroeffnungBWBIsErfasst,
+  permitNavigationWhenWahlbriefeErfassenIsErfasst,
+  permitNavigationWhenWahlbriefeZulassenIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWaehlerverzeichnisIsErfasst,
+  permitNavigationWhenStimmabgabeIsErfasst,
+  beforeEnterBeginnStimmabgabe,
+  beforeEnterWahlumgebung,
 } = useNavigationGuards();
 
 const routes = [
@@ -64,17 +74,24 @@ const routes = [
     path: "/stimmabgabe",
     name: ROUTE_STIMMABGABE,
     component: UWBStimmabgabeView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtUwb,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlumgebungUWBIsErfasst,
+      permitNavigationWhenWahleroeffnungUWBIsErfasst,
+    ],
   },
   {
     path: "/wahlumgebung",
     name: ROUTE_WAHLUMGEBUNG,
     component: WahlumgebungView,
+    beforeEnter: beforeEnterWahlumgebung,
   },
   {
     path: "/beginnStimmabgabe",
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
+    beforeEnter: beforeEnterBeginnStimmabgabe,
   },
   {
     path: "/erfassungWahlbriefe",
@@ -82,7 +99,9 @@ const routes = [
     component: BWBWahlbriefErfassungView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
-      permitNavigationWhenWahlumgebungIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahleroeffnungBWBIsErfasst,
+      permitNavigationWhenWahlumgebungBWBIsErfasst,
     ],
   },
   {
@@ -91,14 +110,21 @@ const routes = [
     component: UWBWaehlerverzeichnisView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
-      permitNavigationWhenWahlumgebungIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlumgebungUWBIsErfasst,
     ],
   },
   {
     path: "/wahlbriefzulassung",
     name: ROUTE_WAHLBRIEFE_ZULASSEN,
     component: BwbWahlbriefZulassungView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtBwb,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahleroeffnungBWBIsErfasst,
+      permitNavigationWhenWahlumgebungBWBIsErfasst,
+      permitNavigationWhenWahlbriefeErfassenIsErfasst,
+    ],
   },
   {
     path: "/ereignisse",
@@ -110,13 +136,27 @@ const routes = [
     path: "/stimmabgabevermerke",
     name: ROUTE_STIMMABGABEVERMERKE,
     component: UWBStimmabgabevermerkeView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtUwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtUwb,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlumgebungUWBIsErfasst,
+      permitNavigationWhenWaehlerverzeichnisIsErfasst,
+      permitNavigationWhenWahleroeffnungUWBIsErfasst,
+      permitNavigationWhenStimmabgabeIsErfasst,
+    ],
   },
   {
     path: "/wahlscheine",
     name: ROUTE_WAHLSCHEINE,
     component: BWBWahlscheineView,
-    beforeEnter: permitNavigationOnlyForWahlbezirksArtBwb,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtBwb,
+      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahleroeffnungBWBIsErfasst,
+      permitNavigationWhenWahlumgebungBWBIsErfasst,
+      permitNavigationWhenWahlbriefeErfassenIsErfasst,
+      permitNavigationWhenWahlbriefeZulassenIsErfasst,
+    ],
   },
   {
     path: "/OBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelA",

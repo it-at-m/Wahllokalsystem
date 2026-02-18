@@ -6,13 +6,16 @@ import { ref } from "vue";
 const workflowStoreId = "workflow";
 
 export const useWorkflowStore = defineStore(workflowStoreId, () => {
+  // bwb + uwb
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
   const isTestseiteGedruckt = ref(false);
   const isWahleroeffnungErfasst = ref(false);
+  // bwb specific
   const isWahlbriefeErfassenErfasst = ref(false);
   const isWahlbriefeZulassenErfasst = ref(false);
   const isAnzahlWahlscheineErfasst = ref(false);
+  // uwb specific
   const isWaehlerverzeichniserfasst = ref(false);
   const isStimmabgabeErfasst = ref(false);
   const isStimmabgabevermerkeErfasst = ref(false);

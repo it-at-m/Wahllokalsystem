@@ -77,9 +77,6 @@ export function useNavigationUtils() {
     if (userStore.isBWB && !workflowStore.isWahlbriefeZulassenErfasst) {
       return routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN);
     }
-    if (userStore.isBWB && !workflowStore.isAnzahlWahlscheineErfasst) {
-      return routeWithName(ROUTE_WAHLSCHEINE);
-    }
 
     // check wahlhandlung steps (UWB)
     if (userStore.isUWB && !workflowStore.isWaehlerverzeichniserfasst) {
@@ -90,6 +87,11 @@ export function useNavigationUtils() {
     }
     if (userStore.isUWB && !workflowStore.isStimmabgabeErfasst) {
       return routeWithName(ROUTE_STIMMABGABE);
+    }
+
+    // check auszählung steps
+    if (userStore.isBWB && !workflowStore.isAnzahlWahlscheineErfasst) {
+      return routeWithName(ROUTE_WAHLSCHEINE);
     }
     if (userStore.isUWB && !workflowStore.isStimmabgabevermerkeErfasst) {
       return routeWithName(ROUTE_STIMMABGABEVERMERKE);

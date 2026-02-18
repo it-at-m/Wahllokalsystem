@@ -9,6 +9,7 @@ import { ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
@@ -256,6 +257,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
     if (wahlbezirkID) {
       const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
+      statusToUpdate.niederschrift.uebermittelt = true;
       try {
         await postNiederschrift(
           wahl.wahlID,
@@ -266,7 +268,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       } catch {
         statusToUpdate.niederschrift.uebermittelt = false;
       }
-      statusToUpdate.niederschrift.uebermittelt = true;
+
       statusToUpdate.niederschrift.sendeuhrzeit =
         toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
       try {

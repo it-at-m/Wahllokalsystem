@@ -830,7 +830,7 @@ describe("ergebnismeldungStore.ts", () => {
   });
 
   describe("sendNiederschrift", () => {
-    it("should_notThrowError_when_allApiCallsSucceed", async () => {
+    it("should_setNiederschriftUebermitteltToTrue_when_apiCallsSucceed", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();
@@ -880,9 +880,7 @@ describe("ergebnismeldungStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(unitUnderTest.sendNiederschrift(wahl)).rejects.toThrow(
-        "Fehler beim senden der Niederschrift."
-      );
+      await unitUnderTest.sendNiederschrift(wahl);
       expect(statusToUpdate.niederschrift.uebermittelt).toBeFalsy();
     });
   });

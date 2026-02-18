@@ -20,6 +20,7 @@ const { registerStoreHMR } = useHmrUpdate();
 const storeID = "ergebnismeldung";
 
 export const useErgebnismeldungStore = defineStore(storeID, () => {
+  const { logError } = useLogging("mbwUtils");
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
   const { currentUserHauptWahlID } = storeToRefs(useUserStore());
   const {
@@ -37,6 +38,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   const isErgebnisseSaving = ref<boolean>(false);
   const begruendungen = ref<Begruendung[]>([]);
   const isBegruendungSaving = ref<boolean>(false);
+  const isNiederschriftAndStatusSaving = ref<boolean>(false);
 
   function deleteErgebnisseWithNumIndexAbove(
     ergebnisseWahlID: string,
@@ -252,8 +254,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
 
   async function sendNiederschrift(wahl: Wahl) {
     const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
-    let niederschriftError: Error | null = null;
     if (wahlbezirkID) {
+      const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
       try {
         await postNiederschrift(
           wahl.wahlID,
@@ -262,16 +264,20 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
           currentUserHauptWahlID.value
         );
       } catch {
-        niederschriftError = new Error(`Fehler beim senden der Niederschrift.`);
+        statusToUpdate.niederschrift.uebermittelt = false;
       }
-      const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
-      statusToUpdate.niederschrift.uebermittelt = niederschriftError === null;
+      statusToUpdate.niederschrift.uebermittelt = true;
       statusToUpdate.niederschrift.sendeuhrzeit =
         toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-      await saveStatus(wahl.wahlID, wahlbezirkID);
-      if (niederschriftError) {
-        throw niederschriftError;
+      try {
+        await saveStatus(wahl.wahlID, wahlbezirkID);
+      } finally {
+        isNiederschriftAndStatusSaving.value = false;
       }
+    } else {
+      logError(
+        `Es wurde kein Wahlbezirk für die WahlID ${wahl.wahlID} gefunden`
+      );
     }
   }
 
@@ -290,6 +296,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     loadBegruendungForWahl,
     saveBegruendung,
     sendNiederschrift,
+    isNiederschriftAndStatusSaving,
   };
 });
 

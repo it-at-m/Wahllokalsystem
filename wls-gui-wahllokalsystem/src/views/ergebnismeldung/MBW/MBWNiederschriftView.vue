@@ -33,6 +33,7 @@
       <base-button-save
         save-text="Niederschrift senden"
         prepend-icon="$cloudUpload"
+        :loading="isNiederschriftAndStatusSaving"
         @click="onSendenClicked"
       />
       <base-button-save
@@ -52,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -69,6 +71,9 @@ const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { sendNiederschrift } = useErgebnismeldungStore();
+const { isNiederschriftAndStatusSaving } = storeToRefs(
+  useErgebnismeldungStore()
+);
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();

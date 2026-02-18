@@ -128,13 +128,31 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
     });
 
-    it("should_returnRouteToHome_when_noElectionAreGiven", () => {
-      useUserStore().user = prepareUser().wahlMetaData([]).build();
+    it("should_returnRouteToHome_when_noElectionAreGivenAndUsersWahlbezirkartIsUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([])
+        .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+    });
+
+    it("should_returnRouteToHome_when_noElectionAreGivenAndUsersWahlbezirkartIsBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([])
+        .build();
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isAnzahlWahlscheineErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));

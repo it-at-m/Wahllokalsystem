@@ -15,13 +15,6 @@ export const useStatusStore = defineStore(storeID, () => {
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
 
-  const DEFAULT_MELDUNG = {
-    validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
-    gedruckt: false,
-    uebermittelt: undefined,
-    sendeuhrzeit: undefined,
-  };
-
   async function loadStatus(
     wahlID: string,
     wahlbezirkID: string,
@@ -38,8 +31,8 @@ export const useStatusStore = defineStore(storeID, () => {
       } else {
         status.value.push({
           bezirkUndWahlID: { wahlID, wahlbezirkID },
-          schnellmeldung: DEFAULT_MELDUNG,
-          niederschrift: DEFAULT_MELDUNG,
+          schnellmeldung: getDefaultMeldung(),
+          niederschrift: getDefaultMeldung(),
         });
       }
     } catch {
@@ -69,13 +62,18 @@ export const useStatusStore = defineStore(storeID, () => {
 
     if (foundStatus) return foundStatus;
 
-    const defaultStatus: Status = {
-      bezirkUndWahlID: { wahlID, wahlbezirkID },
-      schnellmeldung: DEFAULT_MELDUNG,
-      niederschrift: DEFAULT_MELDUNG,
-    };
+    const defaultStatus: Status = getDefaultMeldung();
     status.value.push(defaultStatus);
     return defaultStatus;
+  }
+
+  function getDefaultMeldung() {
+    return {
+      validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+      gedruckt: false,
+      uebermittelt: undefined,
+      sendeuhrzeit: undefined,
+    };
   }
 
   return {

@@ -830,7 +830,7 @@ describe("ergebnismeldungStore.ts", () => {
   });
 
   describe("sendNiederschrift", () => {
-    it("should_setNiederschriftUebermitteltToTrue_when_apiCallsSucceed", async () => {
+    it("should_setNiederschriftUebermitteltToTrue_when_savingNiederschriftApiCallSucceed", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();
@@ -860,7 +860,7 @@ describe("ergebnismeldungStore.ts", () => {
       expect(statusToUpdate.niederschrift.uebermittelt).toBeTruthy();
     });
 
-    it("should_throwError_when_savingNiederschriftApiCallFailed", async () => {
+    it("should_setNiederschriftUebermitteltToTruer_when_savingNiederschriftApiCallFailed", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();

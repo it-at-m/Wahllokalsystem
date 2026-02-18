@@ -348,7 +348,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationWhenWahlbriefeErfassenIsErfasst", () => {
-    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+    it("should_returnFalse_when_statusIsWahlbriefeErfassenErfasstIsFalse", () => {
       useWorkflowStore().isWahlbriefeErfassenErfasst = false;
       const result = permitNavigationWhenWahlbriefeErfassenIsErfasst(
         DUMMY_TO,
@@ -358,7 +358,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+    it("should_returnTrue_when_statusIsWahlbriefeErfassenErfasstIsTrue", () => {
       useWorkflowStore().isWahlbriefeErfassenErfasst = true;
       const result = permitNavigationWhenWahlbriefeErfassenIsErfasst(
         DUMMY_TO,
@@ -370,7 +370,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationWhenWahlbriefeZulassenIsErfasst", () => {
-    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+    it("should_returnFalse_when_statusIsWahlbriefeZulassenErfasstIsFalse", () => {
       useWorkflowStore().isWahlbriefeZulassenErfasst = false;
       const result = permitNavigationWhenWahlbriefeZulassenIsErfasst(
         DUMMY_TO,
@@ -380,7 +380,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+    it("should_returnTrue_when_statusIsWahlbriefeZulassenErfasstIsTrue", () => {
       useWorkflowStore().isWahlbriefeZulassenErfasst = true;
       const result = permitNavigationWhenWahlbriefeZulassenIsErfasst(
         DUMMY_TO,
@@ -392,7 +392,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationWhenWaehlerverzeichnisIsErfasst", () => {
-    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+    it("should_returnFalse_when_statusIsWaehlerverzeichnisErfasstIsFalse", () => {
       useWorkflowStore().isWaehlerverzeichnisErfasst = false;
       const result = permitNavigationWhenWaehlerverzeichnisIsErfasst(
         DUMMY_TO,
@@ -402,7 +402,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+    it("should_returnTrue_when_statusIsWaehlerverzeichnisErfasstIsTrue", () => {
       useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       const result = permitNavigationWhenWaehlerverzeichnisIsErfasst(
         DUMMY_TO,

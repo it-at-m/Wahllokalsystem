@@ -19,6 +19,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_STIMMABGABE,
+  ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHEINE,
   ROUTE_WAHLUMGEBUNG,
@@ -133,6 +134,7 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isWaehlerverzeichniserfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
@@ -163,6 +165,7 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isWaehlerverzeichniserfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       useWorkflowStore().electionWorkflowsStates = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
@@ -206,6 +209,7 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isWaehlerverzeichniserfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       const mbwStatus = createStatusWithNiederschriftGedruckt(
         mbwWahlID,
@@ -345,6 +349,24 @@ describe("navigationUtils.ts", () => {
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_STIMMABGABE));
+    });
+
+    it("should_returnRouteToStimmabgabevermerke_when_allPreviousStepsAreDoneAndStimmabgabevermerkeIsNotSetAndUserHasWahlbezirksartUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_STIMMABGABEVERMERKE)
+      );
     });
   });
 

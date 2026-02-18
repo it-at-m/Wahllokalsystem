@@ -7,6 +7,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_STIMMABGABE,
+  ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLSCHEINE,
   ROUTE_WAHLUMGEBUNG,
@@ -89,6 +90,9 @@ export function useNavigationUtils() {
     }
     if (userStore.isUWB && !workflowStore.isStimmabgabeErfasst) {
       return routeWithName(ROUTE_STIMMABGABE);
+    }
+    if (userStore.isUWB && !workflowStore.isStimmabgabevermerkeErfasst) {
+      return routeWithName(ROUTE_STIMMABGABEVERMERKE);
     }
 
     //check all elections in their order

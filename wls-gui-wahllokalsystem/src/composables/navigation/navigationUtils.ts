@@ -79,7 +79,7 @@ export function useNavigationUtils() {
     }
 
     // check wahlhandlung steps (UWB)
-    if (userStore.isUWB && !workflowStore.isWaehlerverzeichniserfasst) {
+    if (userStore.isUWB && !workflowStore.isWaehlerverzeichnisErfasst) {
       return routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS);
     }
     if (userStore.isUWB && !workflowStore.isWahleroeffnungErfasst) {

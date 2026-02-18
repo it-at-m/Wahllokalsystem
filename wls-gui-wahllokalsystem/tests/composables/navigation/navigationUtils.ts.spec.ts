@@ -131,7 +131,7 @@ describe("navigationUtils.ts", () => {
     it("should_returnRouteToHome_when_noElectionAreGiven", () => {
       useUserStore().user = prepareUser().wahlMetaData([]).build();
       useWorkflowStore().isWahlvorstandErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
@@ -162,7 +162,7 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
@@ -206,7 +206,7 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
@@ -312,7 +312,7 @@ describe("navigationUtils.ts", () => {
 
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = false;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = false;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(
@@ -327,7 +327,7 @@ describe("navigationUtils.ts", () => {
 
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = false;
 
       const result = unitUnderTest.getNextRoute();
@@ -343,7 +343,7 @@ describe("navigationUtils.ts", () => {
 
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = false;
 
@@ -358,7 +358,7 @@ describe("navigationUtils.ts", () => {
 
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = false;

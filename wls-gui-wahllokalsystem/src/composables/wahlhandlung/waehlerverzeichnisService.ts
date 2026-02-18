@@ -34,7 +34,7 @@ export function useWaehlerverzeichnisService() {
         waehlerverzeichnisNummer,
         toWaehlerverzeichnisWriteDTO(pflegeWaehlerverzeichnis)
       );
-      useWorkflowStore().isWaehlerverzeichniserfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       if (sendNotification) {
         addNotification(
           "Die Hinweise zu Wahlscheinen wurden erfolgreich gespeichert.",
@@ -65,7 +65,7 @@ export function useWaehlerverzeichnisService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData) {
-        useWorkflowStore().isWaehlerverzeichniserfasst = true;
+        useWorkflowStore().isWaehlerverzeichnisErfasst = true;
         return toPflegeWaehlerverzeichnis(responseData);
       } else {
         return createDefaultPflegeWaehlerverzeichnis();

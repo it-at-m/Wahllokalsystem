@@ -27,7 +27,7 @@
     <v-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
-      :disabled="disabled || !isWaehlerverzeichniserfasst"
+      :disabled="disabled || !isWaehlerverzeichnisErfasst"
     />
     <v-list-item
       title="Stimmabgabe"
@@ -65,7 +65,7 @@ const { routeWithName } = useNavigationUtils();
 const {
   isWahlvorstandErfasst,
   isWahlumgebungErfasst,
-  isWaehlerverzeichniserfasst,
+  isWaehlerverzeichnisErfasst,
   isWahleroeffnungErfasst,
 } = storeToRefs(useWorkflowStore());
 

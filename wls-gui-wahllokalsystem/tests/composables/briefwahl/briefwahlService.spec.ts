@@ -210,7 +210,7 @@ describe("briefwahlService.ts", () => {
   });
 
   describe("getWahlbriefdaten", () => {
-    it("should_returnWahlbriefdatenWithUndefinedValues_when-apiReturned204", async () => {
+    it("should_returnWahlbriefdatenWithUndefinedValues_whenApiReturned204", async () => {
       const wahlbezirkID = generateRandomString(10);
       mockDefinitions.getWahlbriefdaten.mockReturnValue(
         createAxiosResponse({ status: 204, data: "" })

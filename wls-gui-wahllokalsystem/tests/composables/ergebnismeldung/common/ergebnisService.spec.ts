@@ -713,7 +713,7 @@ describe("ergebnisService.ts", () => {
   });
 
   describe("postNiederschrift", () => {
-    it("should_callClientWithoutSendingNotification_when_sendNotificationIsTrue_and_callSuccessful", async () => {
+    it("should_callClientAndSendingNotification_when_sendNotificationIsTrueAndCallSuccessful", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const hauptwahlbezirkID = generateRandomString(10);
@@ -736,7 +736,10 @@ describe("ergebnisService.ts", () => {
           hauptwahlbezirkID,
         ],
       ]);
-      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
     });
 
     it("should_callClientWithoutSendingNotification_when_sendNotificationIsFalseAndCallSuccessful", async () => {

@@ -130,7 +130,7 @@ function onSaveEroeffnungsuhrzeitClicked() {
     eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit <=
       createTodayWithTime(spaetesteEroeffnungsuhrzeit.value)
   ) {
-    _saveEroeffnungsuhrzeitAndGetNextRoute();
+    _saveEroeffnungsuhrzeitAndNavigateToNextRoute();
   } else {
     isZuSpaet.value = true;
   }
@@ -151,10 +151,10 @@ function onConfirmBegruendung(): void {
   });
   sendEreignisse();
 
-  _saveEroeffnungsuhrzeitAndGetNextRoute();
+  _saveEroeffnungsuhrzeitAndNavigateToNextRoute();
 }
 
-async function _saveEroeffnungsuhrzeitAndGetNextRoute() {
+async function _saveEroeffnungsuhrzeitAndNavigateToNextRoute() {
   await eroeffnungsuhrzeitActions.sendEroeffnungsuhrzeit();
   await router.push(getNextRoute());
 }

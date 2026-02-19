@@ -442,7 +442,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkartIsUwbAndRequiredStepsAreTrue", () => {
+    it("should_returnTrue_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreTrue", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );

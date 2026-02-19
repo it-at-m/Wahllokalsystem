@@ -76,7 +76,21 @@ describe("wahlscheineService.ts", () => {
       expect(result).toEqual(mockedWahlscheine);
     });
 
-    // todo on 204
+    it("should_returnNull_when_ApiReturned204", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlscheine.mockReturnValue(
+        Promise.resolve({
+          status: 204,
+          data: {},
+        })
+      );
+
+      const result = await getWahlscheine(wahlID, wahlbezirkID);
+
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
+      expect(result).toEqual(null);
+    });
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const wahlID = generateRandomString(10);

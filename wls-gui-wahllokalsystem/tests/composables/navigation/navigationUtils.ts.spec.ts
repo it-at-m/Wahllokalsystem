@@ -323,7 +323,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLSCHEINE));
     });
 
-    it("should_returnRouteToWaehlerverzeichnis_when_allPreviousStepsAreDoneAndWaehlerverzeichnisIsNotSetAndUserHasWahlbezirksartUWB", () => {
+    it("should_returnRouteToWaehlerverzeichnis_when_allPreviousStepsAreDoneAndWaehlerverzeichnisIsNotSetAndUserHasWahlbezirksArtUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .build();

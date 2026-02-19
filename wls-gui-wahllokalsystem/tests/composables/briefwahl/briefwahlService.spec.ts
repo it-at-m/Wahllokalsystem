@@ -1,6 +1,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
+import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
@@ -14,10 +15,13 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   getBeanstandeteWahlbriefe: vi.fn(),
   setBeanstandeteWahlbriefe: vi.fn(),
+  getWahlbriefdaten: vi.fn(),
+  postWahlbriefdaten: vi.fn(),
   configurationConstructor: vi.fn().mockImplementation(() => ({})),
   mapDtoToModel: vi.fn(),
+  toWahlbriefdatenModel: vi.fn(),
+  toWahlbriefdatenWriteDTO: vi.fn(),
   addNotification: vi.fn(),
-  getWahlbriefdaten: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
@@ -28,12 +32,20 @@ vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
   Configuration: mockDefinitions.configurationConstructor,
   WahlbriefdatenControllerApi: vi.fn().mockImplementation(() => ({
     getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
+    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
   })),
 }));
 
 vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({
   useBeanstandeteWahlbriefeMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
+  }),
+}));
+
+vi.mock("@/composables/briefwahl/briefwahlMapper.ts", () => ({
+  useBriefwahlMapper: () => ({
+    toWahlbriefdatenModel: mockDefinitions.toWahlbriefdatenModel,
+    toWahlbriefdatenWriteDTO: mockDefinitions.toWahlbriefdatenWriteDTO,
   }),
 }));
 
@@ -49,10 +61,13 @@ describe("briefwahlService.ts", () => {
     createBeanstandeteWahlbriefe,
     prepareBeanstandeteWahlbriefeCreateDTO,
   } = useBeanstandeteWahlbriefeTestDataFactory();
+  const { createWahlbriefdaten, createWahlbriefdatenDTO } =
+    useWahlbriefdatenTestDataFactory();
   const {
     getBeanstandeteWahlbriefe,
     postBeanstandeteWahlbriefe,
     getWahlbriefdaten,
+    postWahlbriefdaten,
   } = useBriefwahlService();
   const { generateRandomNumber, generateRandomString } =
     useCommonTestDataFactory();
@@ -210,6 +225,26 @@ describe("briefwahlService.ts", () => {
   });
 
   describe("getWahlbriefdaten", () => {
+    it("should_returnWahlbriefdaten_when_calledWithValidParams", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbriefdatenDTO = createWahlbriefdatenDTO();
+      const mockedWahlbriefdaten = createWahlbriefdaten();
+
+      mockDefinitions.getWahlbriefdaten.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: wahlbriefdatenDTO,
+        })
+      );
+      mockDefinitions.toWahlbriefdatenModel.mockReturnValue(
+        mockedWahlbriefdaten
+      );
+
+      const result = await getWahlbriefdaten(wahlbezirkID);
+
+      expect(result).toEqual(mockedWahlbriefdaten);
+    });
+
     it("should_returnWahlbriefdatenWithUndefinedValues_whenApiReturned204", async () => {
       const wahlbezirkID = generateRandomString(10);
       mockDefinitions.getWahlbriefdaten.mockReturnValue(
@@ -226,6 +261,86 @@ describe("briefwahlService.ts", () => {
       const result = await getWahlbriefdaten(wahlbezirkID);
 
       expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCallAndSendNotificationIsTrue", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getWahlbriefdaten(wahlbezirkID, true)
+      ).rejects.toThrowError();
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_notTriggerNotification_when_sendNotificationIsFalse", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getWahlbriefdaten(wahlbezirkID, false)
+      ).rejects.toThrowError();
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+  });
+
+  describe("postWahlbriefdaten", () => {
+    it("should_postWahlbriefdaten_when_calledWithValidParams", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbriefdaten = createWahlbriefdaten();
+      const mockedWahlbriefdatenDTO = createWahlbriefdatenDTO();
+
+      mockDefinitions.toWahlbriefdatenWriteDTO.mockReturnValue(
+        mockedWahlbriefdatenDTO
+      );
+      mockDefinitions.postWahlbriefdaten.mockReturnValue({});
+
+      await postWahlbriefdaten(wahlbezirkID, wahlbriefdaten);
+
+      expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
+        wahlbezirkID,
+        mockedWahlbriefdatenDTO
+      );
+      expect(mockDefinitions.toWahlbriefdatenWriteDTO).toHaveBeenCalledWith(
+        wahlbriefdaten
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.SUCCESS,
+      ]);
+    });
+
+    it("should_showUserNotification_when_apiCallFailed", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+      const wahlbriefdaten = createWahlbriefdaten();
+      const mockedWahlbriefdatenDTO = createWahlbriefdatenDTO();
+
+      mockDefinitions.toWahlbriefdatenWriteDTO.mockReturnValue(
+        mockedWahlbriefdatenDTO
+      );
+      mockDefinitions.postWahlbriefdaten.mockRejectedValueOnce(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        postWahlbriefdaten(wahlbezirkID, wahlbriefdaten)
+      ).rejects.toThrowError();
+      expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
+        wahlbezirkID,
+        mockedWahlbriefdatenDTO
+      );
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
     });
   });
 });

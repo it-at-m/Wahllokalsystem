@@ -143,7 +143,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
     });
 
-    it("should_returnRouteToHome_when_noElectionAreGivenAndUsersWahlbezirkartIsBWB", () => {
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirkartIsBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .wahlMetaData([])

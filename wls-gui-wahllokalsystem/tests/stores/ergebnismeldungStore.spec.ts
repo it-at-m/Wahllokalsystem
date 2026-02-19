@@ -830,6 +830,7 @@ describe("ergebnismeldungStore.ts", () => {
       const savePromise = unitUnderTest.saveBegruendung(begruendung);
 
       expect(unitUnderTest.isBegruendungSaving).toBe(true);
+      vi.advanceTimersByTime(100);
       await savePromise;
       expect(unitUnderTest.isBegruendungSaving).toBe(false);
     });

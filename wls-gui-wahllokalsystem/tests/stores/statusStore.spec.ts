@@ -134,12 +134,14 @@ describe("statusStore.ts", () => {
       expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        statusEntry1
+        statusEntry1,
+        true
       );
       expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        statusEntry2
+        statusEntry2,
+        true
       );
     });
 

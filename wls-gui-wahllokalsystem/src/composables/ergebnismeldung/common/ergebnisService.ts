@@ -285,6 +285,12 @@ export function useErgebnisService() {
         SendErgebnisseMeldungsartEnum.V1,
         hauptwahlbezirkID
       );
+      if (sendNotification) {
+        addNotification(
+          `Niederschrift erfolgreich versendet.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
     } catch (error) {
       if (sendNotification) {
         addNotification(

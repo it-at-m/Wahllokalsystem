@@ -354,7 +354,7 @@ describe("navigationUtils.ts", () => {
       );
     });
 
-    it("should_returnRouteToStimmabgabe_when_allPreviousStepsAreDoneAndStimmabgabeIsNotSetAndUserHasWahlbezirksartUWB", () => {
+    it("should_returnRouteToStimmabgabe_when_allPreviousStepsAreDoneAndStimmabgabeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .build();

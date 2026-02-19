@@ -64,6 +64,7 @@ const { prepareWahl } = useWahlTestDataFactory();
 const { createBegruendung } = useBegruendungTestDataFactory();
 const { prepareBezirkUndWahlIDStapelart } =
   useCommonErgebnismeldungTestDataFactory();
+const mockedNow = new Date();
 
 describe("ergebnismeldungStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useErgebnismeldungStore>;
@@ -71,10 +72,15 @@ describe("ergebnismeldungStore.ts", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     unitUnderTest = useErgebnismeldungStore();
+
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   describe("deleteErgebnisseWithNumIndexAbove", () => {
@@ -889,6 +895,46 @@ describe("ergebnismeldungStore.ts", () => {
       await unitUnderTest.sendNiederschrift(wahl);
 
       expect(statusToUpdate.niederschrift.uebermittelt).toBeFalsy();
+    });
+
+    it("should_updateIsSaving_when_sendSendNiederschriftIsCalled", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      const statusToUpdate = createStatus();
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.postNiederschrift.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
+
+      const promise = unitUnderTest.sendNiederschrift(wahl);
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
     });
   });
 });

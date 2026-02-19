@@ -256,6 +256,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
   async function sendNiederschrift(wahl: Wahl) {
     const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
     if (wahlbezirkID) {
+      isNiederschriftAndStatusSaving.value = true;
       const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
       statusToUpdate.niederschrift.uebermittelt = true;
       try {
@@ -272,7 +273,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       statusToUpdate.niederschrift.sendeuhrzeit =
         toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
       try {
-        await saveStatus(wahl.wahlID, wahlbezirkID);
+        await saveStatus(wahl.wahlID, wahlbezirkID, false);
       } finally {
         isNiederschriftAndStatusSaving.value = false;
       }

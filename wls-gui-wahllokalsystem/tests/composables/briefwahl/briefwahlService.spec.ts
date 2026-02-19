@@ -294,16 +294,8 @@ describe("briefwahlService.ts", () => {
       ]);
     });
 
-    it.each([
-      {
-        when: "wahlbezirkIdEmpty",
-        wahlbezirkID: "",
-      },
-      {
-        when: "wahlbezirkIdBlank",
-        wahlbezirkID: "  ",
-      },
-    ])("should_showUserNotification_when_$when", async ({ wahlbezirkID }) => {
+    it("should_showUserNotification_when_apiCallFailed", async () => {
+      const wahlbezirkID = "wahlbezirkID";
       const wahlbriefdaten = createWahlbriefdaten();
       const mockedWahlbriefdatenDTO = createWahlbriefdatenDTO();
 

@@ -17,13 +17,15 @@
         <td data-test="textFamilienname">{{ mitglied.familienname }}</td>
         <td data-test="textVorname">{{ mitglied.vorname }}</td>
         <td data-test="textFunktion">{{ mitglied.funktionsname }}</td>
-        <td class="d-flex justify-center align-center">
-          <v-checkbox
-            :model-value="mitglied.anwesend"
-            :hide-details="true"
-            data-test="checkboxAnwesend"
-            @update:model-value="onAnwesenheitChanged($event, mitglied)"
-          />
+        <td>
+          <div class="d-flex justify-center align-center">
+            <v-checkbox
+              :model-value="mitglied.anwesend"
+              :hide-details="true"
+              data-test="checkboxAnwesend"
+              @update:model-value="onAnwesenheitChanged($event, mitglied)"
+            />
+          </div>
         </td>
       </tr>
     </tbody>

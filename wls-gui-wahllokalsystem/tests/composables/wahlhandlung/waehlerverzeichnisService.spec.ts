@@ -6,6 +6,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -81,11 +82,14 @@ describe("waehlerverzeichnisService.ts", () => {
         mockedMappedApiResponseData
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
+
       const result = await unitUnderTest.getWaehlerverzeichnis(
         wahlbezirkID,
         wvzNummer
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(true);
       expect(result).toStrictEqual(mockedMappedApiResponseData);
       expect(mockDefinitions.getWaehlerverzeichnis.mock.calls).toStrictEqual([
         [wahlbezirkID, wvzNummer],
@@ -111,6 +115,7 @@ describe("waehlerverzeichnisService.ts", () => {
         wvzNummer
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
       expect(result).toStrictEqual(
         unitUnderTest.createDefaultPflegeWaehlerverzeichnis()
       );
@@ -132,6 +137,7 @@ describe("waehlerverzeichnisService.ts", () => {
       await expect(
         unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, wvzNummer)
       ).rejects.toThrowError(mockedApiError);
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
       expect(
         mockDefinitions.mapToPflegeWaehlerverzeichnis.mock.calls.length
       ).toStrictEqual(0);
@@ -150,6 +156,7 @@ describe("waehlerverzeichnisService.ts", () => {
       await expect(
         unitUnderTest.getWaehlerverzeichnis(wahlbezirkID, wvzNummer, false)
       ).rejects.toThrowError(mockedApiError);
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
       expect(
         mockDefinitions.mapToPflegeWaehlerverzeichnis.mock.calls.length
       ).toStrictEqual(0);
@@ -170,12 +177,15 @@ describe("waehlerverzeichnisService.ts", () => {
         mockedMappedRequestBody
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
+
       await unitUnderTest.postWaehlerverzeichnis(
         wahlbezirkID,
         wvzNummer,
         pflegeWaehlerverzeichnis
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(true);
       expect(
         mockDefinitions.mapToWaehlerverzeichnisWriteDTO.mock.calls
       ).toStrictEqual([[pflegeWaehlerverzeichnis]]);
@@ -197,6 +207,8 @@ describe("waehlerverzeichnisService.ts", () => {
         mockedMappedRequestBody
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
+
       await unitUnderTest.postWaehlerverzeichnis(
         wahlbezirkID,
         wvzNummer,
@@ -204,6 +216,7 @@ describe("waehlerverzeichnisService.ts", () => {
         false
       );
 
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(true);
       expect(
         mockDefinitions.mapToWaehlerverzeichnisWriteDTO.mock.calls
       ).toStrictEqual([[pflegeWaehlerverzeichnis]]);
@@ -237,7 +250,7 @@ describe("waehlerverzeichnisService.ts", () => {
           pflegeWaehlerverzeichnis
         )
       ).rejects.toThrow(mockedApiCallError);
-
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
@@ -266,7 +279,7 @@ describe("waehlerverzeichnisService.ts", () => {
           false
         )
       ).rejects.toThrow(mockedApiCallError);
-
+      expect(useWorkflowStore().isWaehlerverzeichnisErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );

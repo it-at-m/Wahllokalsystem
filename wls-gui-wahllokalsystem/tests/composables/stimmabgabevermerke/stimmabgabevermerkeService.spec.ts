@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -76,13 +77,18 @@ describe("stimmabgabevermekerService.ts", () => {
       );
       mockDefinitions.toModel.mockReturnValue(mockedStimmabgabevermerke);
 
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
+
       const result = await getStimmabgabevermerke(
         wahlbezirkID,
         waehlerverzeichnisNummer
       );
 
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(true);
       expect(result).toEqual(mockedStimmabgabevermerke);
     });
+
+    // todo on 204
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
@@ -95,7 +101,7 @@ describe("stimmabgabevermekerService.ts", () => {
       await expect(async () =>
         getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
@@ -112,7 +118,7 @@ describe("stimmabgabevermekerService.ts", () => {
       await expect(async () =>
         getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer, false)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -133,12 +139,15 @@ describe("stimmabgabevermekerService.ts", () => {
 
       mockDefinitions.toDto.mockReturnValue(stimmabgabevermerkeDTO);
 
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
+
       await postStimmabgabevermerke(
         stimmabgabevermerk.wahlbezirkID,
         stimmabgabevermerk.waehlerverzeichnisNummer,
         stimmabgabevermerk
       );
 
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(true);
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
         stimmabgabevermerk.wahlbezirkID,
         stimmabgabevermerk.waehlerverzeichnisNummer,
@@ -163,7 +172,7 @@ describe("stimmabgabevermekerService.ts", () => {
           stimmabgabevermerk
         )
       ).rejects.toThrow("Post Stimmabgabevermerke Failed");
-
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         1
       );

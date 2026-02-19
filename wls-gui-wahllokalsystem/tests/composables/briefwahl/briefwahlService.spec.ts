@@ -9,6 +9,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -96,8 +97,11 @@ describe("briefwahlService.ts", () => {
         mockedBeanstandeteWahlbriefe
       );
 
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+
       const result = await getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID);
 
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(true);
       expect(result).toEqual(mockedBeanstandeteWahlbriefe);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -115,7 +119,7 @@ describe("briefwahlService.ts", () => {
       await expect(async () =>
         getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, true)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
@@ -133,7 +137,7 @@ describe("briefwahlService.ts", () => {
       await expect(async () =>
         getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, false)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -160,11 +164,12 @@ describe("briefwahlService.ts", () => {
 
       mockDefinitions.setBeanstandeteWahlbriefe.mockReturnValue({});
 
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
       await postBeanstandeteWahlbriefe(
         mockedWahlenGroupedByWvzNr,
         wahlbezirkID
       );
-
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(true);
       expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
         wahlbezirkID,
         wvzNr,
@@ -211,7 +216,7 @@ describe("briefwahlService.ts", () => {
         await expect(async () =>
           postBeanstandeteWahlbriefe(mockedWahlenGroupedByWvzNr, wahlbezirkID)
         ).rejects.toThrowError();
-
+        expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
         expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
           wahlbezirkID,
           wvzNr,
@@ -240,8 +245,11 @@ describe("briefwahlService.ts", () => {
         mockedWahlbriefdaten
       );
 
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+
       const result = await getWahlbriefdaten(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(true);
       expect(result).toEqual(mockedWahlbriefdaten);
     });
 
@@ -259,7 +267,7 @@ describe("briefwahlService.ts", () => {
         zeitNachtraeglichUeberbrachte: undefined,
       };
       const result = await getWahlbriefdaten(wahlbezirkID);
-
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
       expect(result).toStrictEqual(expectedResult);
     });
 
@@ -272,6 +280,7 @@ describe("briefwahlService.ts", () => {
       await expect(async () =>
         getWahlbriefdaten(wahlbezirkID, true)
       ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
@@ -287,6 +296,7 @@ describe("briefwahlService.ts", () => {
       await expect(async () =>
         getWahlbriefdaten(wahlbezirkID, false)
       ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -304,8 +314,11 @@ describe("briefwahlService.ts", () => {
       );
       mockDefinitions.postWahlbriefdaten.mockReturnValue({});
 
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+
       await postWahlbriefdaten(wahlbezirkID, wahlbriefdaten);
 
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(true);
       expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
         wahlbezirkID,
         mockedWahlbriefdatenDTO
@@ -334,6 +347,7 @@ describe("briefwahlService.ts", () => {
       await expect(async () =>
         postWahlbriefdaten(wahlbezirkID, wahlbriefdaten)
       ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
       expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
         wahlbezirkID,
         mockedWahlbriefdatenDTO

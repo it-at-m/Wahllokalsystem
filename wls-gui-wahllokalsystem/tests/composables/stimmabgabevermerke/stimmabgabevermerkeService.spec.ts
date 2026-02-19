@@ -88,7 +88,22 @@ describe("stimmabgabevermekerService.ts", () => {
       expect(result).toEqual(mockedStimmabgabevermerke);
     });
 
-    // todo on 204
+    it("should_returnNull_when_ApiReturned204", async () => {
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getStimmabgabevermerke.mockReturnValue(
+        Promise.resolve({ status: 204, data: {} })
+      );
+
+      const result = await getStimmabgabevermerke(
+        wahlbezirkID,
+        waehlerverzeichnisNummer
+      );
+
+      expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
+      expect(result).toEqual(null);
+    });
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);

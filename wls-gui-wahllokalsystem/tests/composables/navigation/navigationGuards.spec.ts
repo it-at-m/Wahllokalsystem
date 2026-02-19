@@ -428,9 +428,10 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationOnlyForWahlbezirksArtUwb", () => {
-    it("should_returnFalse_when_usersWahlbezirkIdIsBwb", () => {
-      // @ts-expect-error: cannot set readonly
-      useUserStore().isUWB = false;
+    it("should_returnFalse_when_usersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
       const result = permitNavigationOnlyForWahlbezirksArtUwb(
         DUMMY_TO,
         DUMMY_FROM,
@@ -439,9 +440,10 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkIdIsUwb", () => {
-      // @ts-expect-error: cannot set readonly
-      useUserStore().isUWB = true;
+    it("should_returnTrue_when_usersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
       const result = permitNavigationOnlyForWahlbezirksArtUwb(
         DUMMY_TO,
         DUMMY_FROM,
@@ -452,9 +454,10 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationOnlyForWahlbezirksArtBwb", () => {
-    it("should_returnFalse_when_usersWahlbezirkIdIsUwb", () => {
-      // @ts-expect-error: cannot set readonly
-      useUserStore().isBWB = false;
+    it("should_returnFalse_when_usersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
       const result = permitNavigationOnlyForWahlbezirksArtBwb(
         DUMMY_TO,
         DUMMY_FROM,
@@ -463,9 +466,10 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkIdIsBwb", () => {
-      // @ts-expect-error: cannot set readonly
-      useUserStore().isBWB = true;
+    it("should_returnTrue_when_usersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
       const result = permitNavigationOnlyForWahlbezirksArtBwb(
         DUMMY_TO,
         DUMMY_FROM,

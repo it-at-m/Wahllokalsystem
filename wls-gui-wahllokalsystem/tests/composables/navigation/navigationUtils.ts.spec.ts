@@ -292,7 +292,7 @@ describe("navigationUtils.ts", () => {
       );
     });
 
-    it("should_returnRouteToWahlbriefeZulassen_when_allPreviousStepsAreDoneAndWahlbriefzulassungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+    it("should_returnRouteToWahlbriefeZulassen_when_allPreviousStepsAreDoneAndWahlbriefzulassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .build();

@@ -238,7 +238,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkartIsUWB", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkArtIsUWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );

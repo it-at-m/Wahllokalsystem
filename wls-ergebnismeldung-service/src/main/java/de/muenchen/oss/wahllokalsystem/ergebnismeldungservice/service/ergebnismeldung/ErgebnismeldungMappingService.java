@@ -89,8 +89,7 @@ public class ErgebnismeldungMappingService {
         "SENDERGEBNISSE BUSINESSAKTION #sendergebnis 3.2  c createErgebmismeldung hauptwahlbezirkID {}",
         hauptwahlbezirkID);
     if (wahlbezirkArtOfUser == WahlbezirkArtModel.BWB
-        && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)
-            && (wahlart.equals(WahlartModel.LTW) || wahlart.equals(WahlartModel.BZW)))) {
+        && (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT))) {
       long zurueckgewiesenGesamt =
           briefwahlClient.getAnzahlZurueckgewiesenerWahlbriefe(
               hauptwahlbezirkID, wahlID, waehlerverzeichnisNummer);

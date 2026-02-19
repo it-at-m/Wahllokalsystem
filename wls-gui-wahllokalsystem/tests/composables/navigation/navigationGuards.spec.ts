@@ -320,7 +320,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkartIsUWB", () => {
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkArtIsUWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );

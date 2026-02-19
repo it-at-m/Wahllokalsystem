@@ -277,7 +277,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLUMGEBUNG));
     });
 
-    it("should_returnRouteToErfassungWahlbriefe_when_allPreviousStepsAreDoneAndWahlbrieferfassungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+    it("should_returnRouteToErfassungWahlbriefe_when_allPreviousStepsAreDoneAndWahlbrieferfassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .build();

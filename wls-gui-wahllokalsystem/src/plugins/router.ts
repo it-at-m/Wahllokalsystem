@@ -41,13 +41,11 @@ import WahlumgebungView from "@/views/wahlhandlung/WahlumgebungView.vue";
 import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const {
-  permitNavigationWhenWahlumgebungBWBIsErfasst,
-  permitNavigationWhenWahlumgebungUWBIsErfasst,
+  permitNavigationWhenWahlumgebungIsErfasst,
   permitNavigationOnlyForWahlbezirksArtUwb,
   permitNavigationOnlyForWahlbezirksArtBwb,
   permitNavigationOnlyIfUserIsLoggedOut,
-  permitNavigationWhenWahleroeffnungUWBIsErfasst,
-  permitNavigationWhenWahleroeffnungBWBIsErfasst,
+  permitNavigationWhenWahleroeffnungIsErfasst,
   permitNavigationWhenWahlbriefeErfassenIsErfasst,
   permitNavigationWhenWahlbriefeZulassenIsErfasst,
   permitNavigationWhenWahlvorstandIsErfasst,
@@ -77,8 +75,8 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahlumgebungUWBIsErfasst,
-      permitNavigationWhenWahleroeffnungUWBIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
+      permitNavigationWhenWahleroeffnungIsErfasst,
     ],
   },
   {
@@ -100,8 +98,8 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahleroeffnungBWBIsErfasst,
-      permitNavigationWhenWahlumgebungBWBIsErfasst,
+      permitNavigationWhenWahleroeffnungIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
     ],
   },
   {
@@ -111,7 +109,7 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahlumgebungUWBIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
     ],
   },
   {
@@ -121,8 +119,8 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahleroeffnungBWBIsErfasst,
-      permitNavigationWhenWahlumgebungBWBIsErfasst,
+      permitNavigationWhenWahleroeffnungIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
     ],
   },
@@ -139,9 +137,9 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahlumgebungUWBIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWaehlerverzeichnisIsErfasst,
-      permitNavigationWhenWahleroeffnungUWBIsErfasst,
+      permitNavigationWhenWahleroeffnungIsErfasst,
       permitNavigationWhenStimmabgabeIsErfasst,
     ],
   },
@@ -152,8 +150,8 @@ const routes = [
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
       permitNavigationWhenWahlvorstandIsErfasst,
-      permitNavigationWhenWahleroeffnungBWBIsErfasst,
-      permitNavigationWhenWahlumgebungBWBIsErfasst,
+      permitNavigationWhenWahleroeffnungIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
       permitNavigationWhenWahlbriefeZulassenIsErfasst,
     ],

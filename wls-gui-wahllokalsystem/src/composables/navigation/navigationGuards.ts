@@ -16,17 +16,11 @@ export function useNavigationGuards() {
   const permitNavigationWhenWahlvorstandIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlvorstandErfasst;
 
-  const permitNavigationWhenWahleroeffnungUWBIsErfasst: NavigationGuard = () =>
-    useUserStore().isUWB && useWorkflowStore().isWahleroeffnungErfasst;
+  const permitNavigationWhenWahleroeffnungIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahleroeffnungErfasst;
 
-  const permitNavigationWhenWahleroeffnungBWBIsErfasst: NavigationGuard = () =>
-    useUserStore().isBWB && useWorkflowStore().isWahleroeffnungErfasst;
-
-  const permitNavigationWhenWahlumgebungUWBIsErfasst: NavigationGuard = () =>
-    useUserStore().isUWB && useWorkflowStore().isWahlumgebungErfasst;
-
-  const permitNavigationWhenWahlumgebungBWBIsErfasst: NavigationGuard = () =>
-    useUserStore().isBWB && useWorkflowStore().isWahlumgebungErfasst;
+  const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlumgebungErfasst;
 
   const permitNavigationWhenWahlbriefeErfassenIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlbriefeErfassenErfasst;
@@ -81,10 +75,8 @@ export function useNavigationGuards() {
   return {
     isStepDoneInElectionState,
     permitNavigationWhenWahlvorstandIsErfasst,
-    permitNavigationWhenWahleroeffnungUWBIsErfasst,
-    permitNavigationWhenWahleroeffnungBWBIsErfasst,
-    permitNavigationWhenWahlumgebungUWBIsErfasst,
-    permitNavigationWhenWahlumgebungBWBIsErfasst,
+    permitNavigationWhenWahleroeffnungIsErfasst,
+    permitNavigationWhenWahlumgebungIsErfasst,
     permitNavigationWhenWahlbriefeErfassenIsErfasst,
     permitNavigationWhenWahlbriefeZulassenIsErfasst,
     permitNavigationWhenWaehlerverzeichnisIsErfasst,

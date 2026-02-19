@@ -58,9 +58,9 @@ jobs:
           # - full semver: 1.2.3-RC2
           # - latest
           tags: |
-            type=match,pattern=(${{ inputs.service }})/(\d).\d.\d,group=2,enable=${{ inputs.tag != '' }}
-            type=match,pattern=(${{ inputs.service }})/(\d.\d).\d,group=2,enable=${{ inputs.tag != '' }}
-            type=match,pattern=(${{ inputs.service }})/(\d.\d.\d),group=2,enable=${{ inputs.tag != '' }}
+            type=match,pattern=(${{ inputs.service }})/(\d*).\d*.\d*,group=2,enable=${{ inputs.tag != '' }}
+            type=match,pattern=(${{ inputs.service }})/(\d*.\d*).\d*,group=2,enable=${{ inputs.tag != '' }}
+            type=match,pattern=(${{ inputs.service }})/(\d*.\d*.\d*),group=2,enable=${{ inputs.tag != '' }}
             type=match,pattern=(${{ inputs.service }})/(.*),group=2,enable=${{ inputs.tag != '' }}
             type=raw,value=latest,enable=${{ inputs.tag != '' }}
             type=raw,value=latest-dev

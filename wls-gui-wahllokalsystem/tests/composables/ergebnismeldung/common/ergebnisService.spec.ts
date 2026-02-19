@@ -115,7 +115,7 @@ describe("ergebnisService.ts", () => {
   } = useErgebnisService();
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterAll(() => {

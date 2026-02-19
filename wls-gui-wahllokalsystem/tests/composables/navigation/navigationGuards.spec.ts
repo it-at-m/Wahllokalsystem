@@ -197,7 +197,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkArtIsBWB", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirksArtIsBWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -238,7 +238,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirkArtIsUWB", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsTrueButUsersWahlbezirksArtIsUWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -279,7 +279,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkArtIsBWB", () => {
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirksArtIsBWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -320,7 +320,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirkArtIsUWB", () => {
+    it("should_returnFalse_when_statusIsWahlumgebungIstErfasstIsTrueButUsersWahlbezirksArtIsUWB", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -414,7 +414,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("beforeEnterBeginnStimmabgabe", () => {
-    it("should_returnFalse_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreFalse", () => {
+    it("should_returnFalse_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreFalse", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -429,7 +429,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_usersWahlbezirkArtIsBwbAndRequiredStepsAreFalse", () => {
+    it("should_returnFalse_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreFalse", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -442,7 +442,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreTrue", () => {
+    it("should_returnTrue_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreTrue", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -457,7 +457,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(true);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkArtIsBwbAndRequiredStepsAreTrue", () => {
+    it("should_returnTrue_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreTrue", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -472,7 +472,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("beforeEnterWahlumgebung", () => {
-    it("should_returnFalse_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreFalse", () => {
+    it("should_returnFalse_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreFalse", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -485,7 +485,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnFalse_when_usersWahlbezirkArtIsBwbAndRequiredStepsAreFalse", () => {
+    it("should_returnFalse_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreFalse", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
@@ -499,7 +499,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreTrue", () => {
+    it("should_returnTrue_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreTrue", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );
@@ -512,7 +512,7 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(true);
     });
 
-    it("should_returnTrue_when_usersWahlbezirkArtIsBwbAndRequiredStepsAreTrue", () => {
+    it("should_returnTrue_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreTrue", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );

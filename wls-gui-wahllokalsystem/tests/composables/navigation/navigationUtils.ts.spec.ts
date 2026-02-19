@@ -128,7 +128,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
     });
 
-    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirkartIsUWB", () => {
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .wahlMetaData([])
@@ -143,7 +143,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
     });
 
-    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirkartIsBWB", () => {
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .wahlMetaData([])

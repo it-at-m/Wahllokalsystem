@@ -472,7 +472,7 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("beforeEnterWahlumgebung", () => {
-    it("should_returnFalse_when_usersWahlbezirkartIsUwbAndRequiredStepsAreFalse", () => {
+    it("should_returnFalse_when_usersWahlbezirkArtIsUwbAndRequiredStepsAreFalse", () => {
       useUserStore().setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
       );

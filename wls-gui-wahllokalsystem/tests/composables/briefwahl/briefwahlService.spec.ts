@@ -288,6 +288,9 @@ describe("briefwahlService.ts", () => {
         wahlbezirkID,
         mockedWahlbriefdatenDTO
       );
+      expect(mockDefinitions.toWahlbriefdatenWriteDTO).toHaveBeenCalledWith(
+        wahlbriefdaten
+      );
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.SUCCESS,

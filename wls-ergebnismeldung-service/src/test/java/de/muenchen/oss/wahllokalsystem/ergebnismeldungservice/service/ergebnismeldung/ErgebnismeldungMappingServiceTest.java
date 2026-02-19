@@ -280,11 +280,12 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(mockedValidStapelModel);
         Mockito.when(stapelArtModelMapper.toModel(mockedInvalidStapel))
             .thenReturn(mockedInvalidStapelModel);
-        if (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT))
+        if (meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)) {
           Mockito.when(
                   briefwahlClient.getAnzahlZurueckgewiesenerWahlbriefe(
                       eq(hauptwahlbezirkID), eq(wahlID), eq(waehlverzeichnisNummer)))
               .thenReturn(mockedBriefwahlClientResponse);
+        }
 
         val result =
             unitUnderTest.createErgebnismeldung(
@@ -295,6 +296,10 @@ class ErgebnismeldungMappingServiceTest {
                 meldungsart,
                 hauptwahlbezirkID);
 
+        val expectedWahlbriefWerte =
+            meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)
+                ? new WahlbriefeWerteDTO().zurueckgewiesenGesamt(mockedBriefwahlClientResponse)
+                : null;
         val expectedBWerte = new BWerteDTO().b(mockedStimmzettelumschlaege.getAnzahlWaehler());
         val expectedResult =
             new ErgebnismeldungDTO()
@@ -306,12 +311,8 @@ class ErgebnismeldungMappingServiceTest {
                 .ergebnisse(mockedValidErgebniseMappedToDTO)
                 .ungueltigeStimmzettelAnzahl((long) mockedInvalidErgebnisse.getErgebnisse().size())
                 .ungueltigeStimmzettels(mockedInvalidErgebnisseMappedToUngueltigeStimmzettel)
-                .wahlbriefeWerte(
-                    new WahlbriefeWerteDTO().zurueckgewiesenGesamt(mockedBriefwahlClientResponse))
+                .wahlbriefeWerte(expectedWahlbriefWerte)
                 .wahlart(mockedMappedWahlart);
-        if (!meldungsart.equals(ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT)) {
-          expectedResult.wahlbriefeWerte(null);
-        }
 
         Assertions.assertThat(result)
             .usingRecursiveComparison()

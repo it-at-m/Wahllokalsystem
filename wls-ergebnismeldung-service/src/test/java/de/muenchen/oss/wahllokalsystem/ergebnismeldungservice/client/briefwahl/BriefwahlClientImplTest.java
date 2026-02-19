@@ -50,7 +50,10 @@ class BriefwahlClientImplTest {
           unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(
               wahlbezirkID, wahlID, waehlerverzeichnissNummer);
 
-      Assertions.assertThat(result).isEqualTo(Zurueckweisungsgrund.values().length - 2);
+      val ignoredZurueckweisungsgruend =
+          List.of(Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.LOSE_STIMMZETTEL);
+      Assertions.assertThat(result)
+          .isEqualTo(Zurueckweisungsgrund.values().length - ignoredZurueckweisungsgruend.size());
     }
 
     @Test

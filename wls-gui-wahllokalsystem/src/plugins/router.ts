@@ -51,7 +51,8 @@ const {
   permitNavigationWhenWahlvorstandIsErfasst,
   permitNavigationWhenWaehlerverzeichnisIsErfasst,
   permitNavigationWhenStimmabgabeIsErfasst,
-  beforeEnterBeginnStimmabgabe,
+  requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
+  requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
   beforeEnterWahlumgebung,
 } = useNavigationGuards();
 
@@ -89,7 +90,11 @@ const routes = [
     path: "/beginnStimmabgabe",
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
-    beforeEnter: beforeEnterBeginnStimmabgabe,
+    beforeEnter: [
+      permitNavigationWhenWahlvorstandIsErfasst,
+      requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
+      requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
+    ],
   },
   {
     path: "/erfassungWahlbriefe",

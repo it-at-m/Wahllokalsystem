@@ -22,6 +22,10 @@ export function useNavigationGuards() {
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlumgebungErfasst;
 
+  const requiresWahlumgebungErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB ? useWorkflowStore().isWahlumgebungErfasst : true;
+
   const permitNavigationWhenWahlbriefeErfassenIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlbriefeErfassenErfasst;
 
@@ -30,6 +34,12 @@ export function useNavigationGuards() {
 
   const permitNavigationWhenWaehlerverzeichnisIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWaehlerverzeichnisErfasst;
+
+  const requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB
+        ? useWorkflowStore().isWaehlerverzeichnisErfasst
+        : true;
 
   const permitNavigationWhenStimmabgabeIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isStimmabgabeErfasst;
@@ -42,13 +52,6 @@ export function useNavigationGuards() {
 
   const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
     !useUserStore().isUserLoggedIn;
-
-  const beforeEnterBeginnStimmabgabe: NavigationGuard = () =>
-    (useUserStore().isUWB &&
-      useWorkflowStore().isWahlvorstandErfasst &&
-      useWorkflowStore().isWahlumgebungErfasst &&
-      useWorkflowStore().isWaehlerverzeichnisErfasst) ||
-    (useUserStore().isBWB && useWorkflowStore().isWahlvorstandErfasst);
 
   const beforeEnterWahlumgebung: NavigationGuard = () =>
     (useUserStore().isUWB && useWorkflowStore().isWahlvorstandErfasst) ||
@@ -84,7 +87,8 @@ export function useNavigationGuards() {
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
-    beforeEnterBeginnStimmabgabe,
+    requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
+    requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
     beforeEnterWahlumgebung,
   };
 }

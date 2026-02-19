@@ -128,7 +128,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
     });
 
-    it("should_returnRouteToHome_when_noElectionAreGivenAndUsersWahlbezirkartIsUWB", () => {
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirkartIsUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .wahlMetaData([])

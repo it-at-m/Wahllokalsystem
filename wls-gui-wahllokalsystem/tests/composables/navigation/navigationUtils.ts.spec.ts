@@ -15,11 +15,23 @@ import {
 } from "vitest";
 
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
+import {
+  ROUTE_BEGINN_STIMMABGABE,
+  ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_STIMMABGABE,
+  ROUTE_STIMMABGABEVERMERKE,
+  ROUTE_WAHLBRIEFE_ZULASSEN,
+  ROUTE_WAHLSCHEINE,
+  ROUTE_WAHLUMGEBUNG,
+  ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
@@ -116,9 +128,31 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
     });
 
-    it("should_returnRouteToHome_when_noElectionAreGiven", () => {
-      useUserStore().user = prepareUser().wahlMetaData([]).build();
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .wahlMetaData([])
+        .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+    });
+
+    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .wahlMetaData([])
+        .build();
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isAnzahlWahlscheineErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
@@ -146,6 +180,10 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       useWorkflowStore().electionWorkflowsStates = [
         createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
@@ -186,6 +224,10 @@ describe("navigationUtils.ts", () => {
         ])
         .build();
       useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       const mbwStatus = createStatusWithNiederschriftGedruckt(
         mbwWahlID,
@@ -221,6 +263,128 @@ describe("navigationUtils.ts", () => {
       expect(mockDefinitions.mbwGetNextRouteOrNull.mock.calls).toStrictEqual([
         [mbwStatus],
       ]);
+    });
+
+    it("should_returnRouteToWahlumgebung_when_allPreviousStepsAreDoneAndWahlumgebungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLUMGEBUNG));
+    });
+
+    it("should_returnRouteToErfassungWahlbriefe_when_allPreviousStepsAreDoneAndWahlbrieferfassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)
+      );
+    });
+
+    it("should_returnRouteToWahlbriefeZulassen_when_allPreviousStepsAreDoneAndWahlbriefzulassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)
+      );
+    });
+
+    it("should_returnRouteToWahlscheineErfassen_when_allPreviousStepsAreDoneAndWahlscheinerfassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isAnzahlWahlscheineErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLSCHEINE));
+    });
+
+    it("should_returnRouteToWaehlerverzeichnis_when_allPreviousStepsAreDoneAndWaehlerverzeichnisIsNotSetAndUserHasWahlbezirksArtUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS)
+      );
+    });
+
+    it("should_returnRouteToBeginnStimmabgabe_when_allPreviousStepsAreDoneAndBeginnStimmabgabeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_BEGINN_STIMMABGABE)
+      );
+    });
+
+    it("should_returnRouteToStimmabgabe_when_allPreviousStepsAreDoneAndStimmabgabeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_STIMMABGABE));
+    });
+
+    it("should_returnRouteToStimmabgabevermerke_when_allPreviousStepsAreDoneAndStimmabgabevermerkeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+      useWorkflowStore().isStimmabgabevermerkeErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_STIMMABGABEVERMERKE)
+      );
     });
   });
 

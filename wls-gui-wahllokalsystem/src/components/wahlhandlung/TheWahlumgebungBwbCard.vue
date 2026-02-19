@@ -25,6 +25,7 @@
               :loading="
                 briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
               "
+              save-text="Speichern und Weiter"
               @click="onSaveWahlumgebungBWBClicked"
             />
           </v-card-actions>
@@ -40,8 +41,12 @@ import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+
+const { getNextRoute } = useNavigationUtils();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 
@@ -63,8 +68,9 @@ const checkboxLabelText = computed(() => {
   return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
 });
 
-function onSaveWahlumgebungBWBClicked() {
-  briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
+async function onSaveWahlumgebungBWBClicked() {
+  await briefwahlVorbereitungActions.sendBriefwahlvorbereitung();
+  await router.push(getNextRoute());
 }
 
 const hasMoreThanOneWahlurnen = computed(() => {

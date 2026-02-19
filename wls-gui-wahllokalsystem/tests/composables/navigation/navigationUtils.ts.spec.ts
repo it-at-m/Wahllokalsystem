@@ -308,7 +308,7 @@ describe("navigationUtils.ts", () => {
       );
     });
 
-    it("should_returnRouteToWahlscheineErfassen_when_allPreviousStepsAreDoneAndWahlscheinerfassungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+    it("should_returnRouteToWahlscheineErfassen_when_allPreviousStepsAreDoneAndWahlscheinerfassungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .build();

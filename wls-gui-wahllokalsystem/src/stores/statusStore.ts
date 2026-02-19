@@ -62,7 +62,11 @@ export const useStatusStore = defineStore(storeID, () => {
 
     if (foundStatus) return foundStatus;
 
-    const defaultStatus: Status = getDefaultMeldung();
+    const defaultStatus: Status = {
+      bezirkUndWahlID: { wahlID, wahlbezirkID },
+      schnellmeldung: getDefaultMeldung(),
+      niederschrift: getDefaultMeldung(),
+    };
     status.value.push(defaultStatus);
     return defaultStatus;
   }

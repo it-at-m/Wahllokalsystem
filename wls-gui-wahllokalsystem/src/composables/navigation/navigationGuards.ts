@@ -13,8 +13,40 @@ export function useNavigationGuards() {
     (requiredStep) => (to) =>
       _isStepDone(to, requiredStep);
 
+  const permitNavigationWhenWahlvorstandIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlvorstandErfasst;
+
+  const permitNavigationWhenWahleroeffnungIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahleroeffnungErfasst;
+
+  const requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb: NavigationGuard =
+    () =>
+      useUserStore().isBWB ? useWorkflowStore().isWahleroeffnungErfasst : true;
+
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlumgebungErfasst;
+
+  const requiresWahlumgebungErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB ? useWorkflowStore().isWahlumgebungErfasst : true;
+
+  const permitNavigationWhenWahlbriefeErfassenIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlbriefeErfassenErfasst;
+
+  const permitNavigationWhenWahlbriefeZulassenIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWahlbriefeZulassenErfasst;
+
+  const permitNavigationWhenWaehlerverzeichnisIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isWaehlerverzeichnisErfasst;
+
+  const requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB
+        ? useWorkflowStore().isWaehlerverzeichnisErfasst
+        : true;
+
+  const permitNavigationWhenStimmabgabeIsErfasst: NavigationGuard = () =>
+    useWorkflowStore().isStimmabgabeErfasst;
 
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
@@ -43,9 +75,18 @@ export function useNavigationGuards() {
 
   return {
     isStepDoneInElectionState,
+    permitNavigationWhenWahlvorstandIsErfasst,
+    permitNavigationWhenWahleroeffnungIsErfasst,
     permitNavigationWhenWahlumgebungIsErfasst,
+    permitNavigationWhenWahlbriefeErfassenIsErfasst,
+    permitNavigationWhenWahlbriefeZulassenIsErfasst,
+    permitNavigationWhenWaehlerverzeichnisIsErfasst,
+    permitNavigationWhenStimmabgabeIsErfasst,
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
+    requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
+    requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
+    requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
   };
 }

@@ -265,7 +265,7 @@ describe("navigationUtils.ts", () => {
       ]);
     });
 
-    it("should_returnRouteToWahlumgebung_when_allPreviousStepsAreDoneAndWahlumgebungIsNotSetAndUserHasWahlbezirksartBWB", () => {
+    it("should_returnRouteToWahlumgebung_when_allPreviousStepsAreDoneAndWahlumgebungIsNotSetAndUserHasWahlbezirksArtBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .build();

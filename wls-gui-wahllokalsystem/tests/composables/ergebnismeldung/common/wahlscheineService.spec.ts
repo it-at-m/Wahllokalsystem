@@ -76,7 +76,7 @@ describe("wahlscheineService.ts", () => {
       expect(result).toEqual(mockedWahlscheine);
     });
 
-    it("should_returnNull_when_ApiReturned204", async () => {
+    it("should_returnNull_when_apiReturned204", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       mockDefinitions.getWahlscheine.mockReturnValue(

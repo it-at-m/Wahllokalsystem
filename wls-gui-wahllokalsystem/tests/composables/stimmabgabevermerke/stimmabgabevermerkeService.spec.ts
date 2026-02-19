@@ -56,7 +56,7 @@ const {
   prepareStimmabgabevermerkeDTO,
 } = useStimmabgabevermerkeTestDataFactory();
 
-describe("stimmabgabevermekerService.ts", () => {
+describe("stimmabgabevermerkeService.ts", () => {
   const { getStimmabgabevermerke, postStimmabgabevermerke } =
     useStimmabgabevermerkeService();
 

@@ -253,7 +253,7 @@ describe("briefwahlService.ts", () => {
       expect(result).toEqual(mockedWahlbriefdaten);
     });
 
-    it("should_returnWahlbriefdatenWithUndefinedValues_whenApiReturned204", async () => {
+    it("should_returnWahlbriefdatenWithUndefinedValues_when_apiReturned204", async () => {
       const wahlbezirkID = generateRandomString(10);
       mockDefinitions.getWahlbriefdaten.mockReturnValue(
         createAxiosResponse({ status: 204, data: "" })

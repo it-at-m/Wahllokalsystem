@@ -369,7 +369,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_STIMMABGABE));
     });
 
-    it("should_returnRouteToStimmabgabevermerke_when_allPreviousStepsAreDoneAndStimmabgabevermerkeIsNotSetAndUserHasWahlbezirksartUWB", () => {
+    it("should_returnRouteToStimmabgabevermerke_when_allPreviousStepsAreDoneAndStimmabgabevermerkeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .build();

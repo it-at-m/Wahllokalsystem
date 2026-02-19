@@ -19,6 +19,10 @@ export function useNavigationGuards() {
   const permitNavigationWhenWahleroeffnungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahleroeffnungErfasst;
 
+  const requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb: NavigationGuard =
+    () =>
+      useUserStore().isBWB ? useWorkflowStore().isWahleroeffnungErfasst : true;
+
   const permitNavigationWhenWahlumgebungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahlumgebungErfasst;
 
@@ -53,12 +57,6 @@ export function useNavigationGuards() {
   const permitNavigationOnlyIfUserIsLoggedOut: NavigationGuard = () =>
     !useUserStore().isUserLoggedIn;
 
-  const beforeEnterWahlumgebung: NavigationGuard = () =>
-    (useUserStore().isUWB && useWorkflowStore().isWahlvorstandErfasst) ||
-    (useUserStore().isBWB &&
-      useWorkflowStore().isWahlvorstandErfasst &&
-      useWorkflowStore().isWahleroeffnungErfasst);
-
   function _isStepDone(
     to: RouteLocationNormalizedGeneric,
     requiredStep: string
@@ -89,6 +87,6 @@ export function useNavigationGuards() {
     permitNavigationOnlyIfUserIsLoggedOut,
     requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
     requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
-    beforeEnterWahlumgebung,
+    requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
   };
 }

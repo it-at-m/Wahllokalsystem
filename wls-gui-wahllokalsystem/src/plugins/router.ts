@@ -53,7 +53,7 @@ const {
   permitNavigationWhenStimmabgabeIsErfasst,
   requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
   requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
-  beforeEnterWahlumgebung,
+  requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
 } = useNavigationGuards();
 
 const routes = [
@@ -84,7 +84,10 @@ const routes = [
     path: "/wahlumgebung",
     name: ROUTE_WAHLUMGEBUNG,
     component: WahlumgebungView,
-    beforeEnter: beforeEnterWahlumgebung,
+    beforeEnter: [
+      permitNavigationWhenWahlvorstandIsErfasst,
+      requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
+    ],
   },
   {
     path: "/beginnStimmabgabe",

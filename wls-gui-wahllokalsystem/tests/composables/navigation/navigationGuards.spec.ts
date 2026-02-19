@@ -44,7 +44,7 @@ describe("navigationGuards.ts", () => {
     permitNavigationWhenStimmabgabeIsErfasst,
     requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
     requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
-    beforeEnterWahlumgebung,
+    requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
@@ -196,6 +196,47 @@ describe("navigationGuards.ts", () => {
     it("should_returnTrue_when_statusIsWahleroeffnungErfasstIsTrue", () => {
       useWorkflowStore().isWahleroeffnungErfasst = true;
       const result = permitNavigationWhenWahleroeffnungIsErfasst(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb", () => {
+    it("should_returnFalse_when_statusIsWahleroeffnungErfasstIsFalseAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      const result = requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahleroeffnungErfasstIsTrueAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      const result = requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsWahleroeffnungErfasstIsFalseAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      const result = requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb(
         DUMMY_TO,
         DUMMY_FROM,
         DUMMY_NEXT_GUARD
@@ -366,62 +407,6 @@ describe("navigationGuards.ts", () => {
       );
       useWorkflowStore().isWaehlerverzeichnisErfasst = false;
       const result = requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
-      expect(result).toStrictEqual(true);
-    });
-  });
-
-  describe("beforeEnterWahlumgebung", () => {
-    it("should_returnFalse_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreFalse", () => {
-      useUserStore().setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
-      );
-      useWorkflowStore().isWahlvorstandErfasst = false;
-      const result = beforeEnterWahlumgebung(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
-      expect(result).toStrictEqual(false);
-    });
-
-    it("should_returnFalse_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreFalse", () => {
-      useUserStore().setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
-      );
-      useWorkflowStore().isWahlvorstandErfasst = false;
-      useWorkflowStore().isWahleroeffnungErfasst = false;
-      const result = beforeEnterWahlumgebung(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
-      expect(result).toStrictEqual(false);
-    });
-
-    it("should_returnTrue_when_usersWahlbezirksArtIsUwbAndRequiredStepsAreTrue", () => {
-      useUserStore().setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
-      );
-      useWorkflowStore().isWahlvorstandErfasst = true;
-      const result = beforeEnterWahlumgebung(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
-      expect(result).toStrictEqual(true);
-    });
-
-    it("should_returnTrue_when_usersWahlbezirksArtIsBwbAndRequiredStepsAreTrue", () => {
-      useUserStore().setUser(
-        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
-      );
-      useWorkflowStore().isWahlvorstandErfasst = true;
-      useWorkflowStore().isWahleroeffnungErfasst = true;
-      const result = beforeEnterWahlumgebung(
         DUMMY_TO,
         DUMMY_FROM,
         DUMMY_NEXT_GUARD

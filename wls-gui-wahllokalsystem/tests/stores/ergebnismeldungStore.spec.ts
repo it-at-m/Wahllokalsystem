@@ -4,6 +4,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -15,11 +16,18 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
+const { createStatus } = useStatusTestDataFactory();
+
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
   postBegruendung: vi.fn(),
+  postNiederschrift: vi.fn(),
+  saveStatus: vi.fn(),
+  getStatusEntry: vi.fn(),
+  postStatus: vi.fn(),
+  toYyyyMmDdWithTimeWithoutTimezoneOffset: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -29,6 +37,21 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
     getBegruendungStimmzettelumschlaege:
       mockDefinitions.getBegruendungStimmzettelumschlaege,
     postBegruendung: mockDefinitions.postBegruendung,
+    postNiederschrift: mockDefinitions.postNiederschrift,
+  }),
+}));
+
+vi.mock("@/stores/statusStore.ts", () => ({
+  useStatusStore: () => ({
+    saveStatus: mockDefinitions.saveStatus,
+    getStatusEntry: mockDefinitions.getStatusEntry,
+  }),
+}));
+
+vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
+  useDateTimeFormatter: () => ({
+    toYyyyMmDdWithTimeWithoutTimezoneOffset:
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
   }),
 }));
 
@@ -41,6 +64,7 @@ const { prepareWahl } = useWahlTestDataFactory();
 const { createBegruendung } = useBegruendungTestDataFactory();
 const { prepareBezirkUndWahlIDStapelart } =
   useCommonErgebnismeldungTestDataFactory();
+const mockedNow = new Date();
 
 describe("ergebnismeldungStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useErgebnismeldungStore>;
@@ -48,10 +72,15 @@ describe("ergebnismeldungStore.ts", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     unitUnderTest = useErgebnismeldungStore();
+
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   describe("deleteErgebnisseWithNumIndexAbove", () => {
@@ -801,8 +830,112 @@ describe("ergebnismeldungStore.ts", () => {
       const savePromise = unitUnderTest.saveBegruendung(begruendung);
 
       expect(unitUnderTest.isBegruendungSaving).toBe(true);
+      vi.advanceTimersByTime(100);
       await savePromise;
       expect(unitUnderTest.isBegruendungSaving).toBe(false);
+    });
+  });
+
+  describe("sendNiederschrift", () => {
+    it("should_setNiederschriftUebermitteltToTrue_when_savingNiederschriftApiCallSucceed", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      const statusToUpdate = createStatus();
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
+      mockDefinitions.postNiederschrift.mockResolvedValue({});
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
+
+      await unitUnderTest.sendNiederschrift(wahl);
+
+      expect(mockDefinitions.postNiederschrift).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        wahl.waehlerverzeichnisNummer,
+        wahlID
+      );
+
+      expect(statusToUpdate.niederschrift.uebermittelt).toBeTruthy();
+    });
+
+    it("should_setNiederschriftUebermitteltToTruer_when_savingNiederschriftApiCallFailed", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      const statusToUpdate = createStatus();
+
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
+      mockDefinitions.postNiederschrift.mockRejectedValue(
+        new Error("service call failed")
+      );
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
+
+      await unitUnderTest.sendNiederschrift(wahl);
+
+      expect(statusToUpdate.niederschrift.uebermittelt).toBeFalsy();
+    });
+
+    it("should_updateIsSaving_when_sendSendNiederschriftIsCalled", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      const statusToUpdate = createStatus();
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser()
+          .wahlMetaData([
+            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
+          ])
+          .build()
+      );
+
+      mockDefinitions.postNiederschrift.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
+      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
+        "2026-02-18T15:36:30.169"
+      );
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
+
+      const promise = unitUnderTest.sendNiederschrift(wahl);
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(true);
+
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
     });
   });
 });

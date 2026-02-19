@@ -338,7 +338,7 @@ describe("navigationUtils.ts", () => {
       );
     });
 
-    it("should_returnRouteToBeginnStimmabgabe_when_allPreviousStepsAreDoneAndBeginnStimmabgabeIsNotSetAndUserHasWahlbezirksartUWB", () => {
+    it("should_returnRouteToBeginnStimmabgabe_when_allPreviousStepsAreDoneAndBeginnStimmabgabeIsNotSetAndUserHasWahlbezirksArtUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .build();

@@ -19,23 +19,25 @@ import org.springframework.stereotype.Component;
 @Profile(Profiles.NOT + Profiles.DUMMY_CLIENTS)
 public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagClient {
 
-    private final ExceptionFactory exceptionFactory;
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
-    private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    @Override
-    public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-        final KonfigurierterWahltagDTO konfigurierterWahltagDTO;
-        try {
-            konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
-        } catch (Exception exception) {
-            log.info("exception on getKonfigurierterWahltag from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
-        }
-
-        if (konfigurierterWahltagDTO == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.INFOMANAGEMENT_WAHLTAG_NULL_OR_EMPTY);
-        }
-        return konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+  @Override
+  public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
+    final KonfigurierterWahltagDTO konfigurierterWahltagDTO;
+    try {
+      konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
+    } catch (Exception exception) {
+      log.info("exception on getKonfigurierterWahltag from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_INFOMANAGEMENT);
     }
+
+    if (konfigurierterWahltagDTO == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.INFOMANAGEMENT_WAHLTAG_NULL_OR_EMPTY);
+    }
+    return konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+  }
 }

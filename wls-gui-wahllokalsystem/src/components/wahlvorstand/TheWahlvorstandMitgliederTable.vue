@@ -5,7 +5,7 @@
         <th>Familienname</th>
         <th>Vorname</th>
         <th>Funktion</th>
-        <th>Anwesend</th>
+        <th class="text-center">Anwesend</th>
       </tr>
     </thead>
 
@@ -18,12 +18,14 @@
         <td data-test="textVorname">{{ mitglied.vorname }}</td>
         <td data-test="textFunktion">{{ mitglied.funktionsname }}</td>
         <td>
-          <v-checkbox
-            :model-value="mitglied.anwesend"
-            :hide-details="true"
-            data-test="checkboxAnwesend"
-            @update:model-value="onAnwesenheitChanged($event, mitglied)"
-          />
+          <div class="d-flex justify-center align-center">
+            <v-checkbox
+              :model-value="mitglied.anwesend"
+              :hide-details="true"
+              data-test="checkboxAnwesend"
+              @update:model-value="onAnwesenheitChanged($event, mitglied)"
+            />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -34,7 +36,6 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { computed } from "vue";
-import { VCheckbox, VTable } from "vuetify/components";
 
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 

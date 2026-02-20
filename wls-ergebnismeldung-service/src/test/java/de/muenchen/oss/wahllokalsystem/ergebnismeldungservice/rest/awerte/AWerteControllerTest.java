@@ -18,44 +18,42 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class AWerteControllerTest {
 
-    @Mock
-    AWerteService awerteService;
+  @Mock AWerteService awerteService;
 
-    @Mock
-    AWerteDTOMapper awerteDTOMapper;
+  @Mock AWerteDTOMapper awerteDTOMapper;
 
-    @InjectMocks
-    AWerteController unitUnderTest;
+  @InjectMocks AWerteController unitUnderTest;
 
-    @Nested
-    class GetAWerte {
+  @Nested
+  class GetAWerte {
 
-        @Test
-        void should_returnHttp200AndData_when_dataIsFound() {
-            val wahlbezirkID = "wahlbezirkID01";
-            val mockedServiceModel = List.of(new AWerteModel(null, 0, null));
-            val mockedMappedServiceDTO = List.of(new AWerteDTO(new BezirkUndWahlID(null, null), 0, null));
+    @Test
+    void should_returnHttp200AndData_when_dataIsFound() {
+      val wahlbezirkID = "wahlbezirkID01";
+      val mockedServiceModel = List.of(new AWerteModel(null, 0, null));
+      val mockedMappedServiceDTO = List.of(new AWerteDTO(new BezirkUndWahlID(null, null), 0, null));
 
-            Mockito.when(awerteService.getAWerte(wahlbezirkID)).thenReturn(mockedServiceModel);
-            Mockito.when(awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(mockedServiceModel)).thenReturn(mockedMappedServiceDTO);
+      Mockito.when(awerteService.getAWerte(wahlbezirkID)).thenReturn(mockedServiceModel);
+      Mockito.when(awerteDTOMapper.fromListOfAWerteModelToListOfAWerteDTO(mockedServiceModel))
+          .thenReturn(mockedMappedServiceDTO);
 
-            val result = unitUnderTest.getAWerte(wahlbezirkID);
+      val result = unitUnderTest.getAWerte(wahlbezirkID);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isSameAs(mockedMappedServiceDTO);
     }
+  }
 
-    @Nested
-    class InitialiseAWerte {
+  @Nested
+  class InitialiseAWerte {
 
-        @Test
-        void should_notThrowException_when_serviceIsCalled() {
-            val requestBody = List.of("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3");
+    @Test
+    void should_notThrowException_when_serviceIsCalled() {
+      val requestBody = List.of("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3");
 
-            unitUnderTest.initialiseAWerte(requestBody);
+      unitUnderTest.initialiseAWerte(requestBody);
 
-            Mockito.verify(awerteService).initialiseAWerte(requestBody);
-        }
+      Mockito.verify(awerteService).initialiseAWerte(requestBody);
     }
+  }
 }

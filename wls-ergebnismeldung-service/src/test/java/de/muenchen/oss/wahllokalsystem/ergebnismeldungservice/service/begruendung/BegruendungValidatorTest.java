@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
@@ -23,72 +22,100 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BegruendungValidatorTest {
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @InjectMocks
-    BegruendungValidator unitUnderTest;
+  @InjectMocks BegruendungValidator unitUnderTest;
 
-    @Nested
-    class ValidBezirkUndWahlIdStapelartOrThrow {
+  @Nested
+  class ValidReferenceOrThrow {
 
-        @Test
-        void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
-            val id = new BegruendungReference("wahlID", "wahlbezirkID", Stapelart.LTW_BZW_A);
+    @Test
+    void should_notThrowException_when_bezirkUndWahlIDStapelartIsValid() {
+      val id = new BegruendungReferenceModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id));
-        }
-
-        @ParameterizedTest(name = "provided exception when {1}")
-        @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
-        void should_throwProvidedException_when_bezirkUndWahlIDStapelartIsNotValid(final ArgumentsAccessor arguments) {
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-            Assertions.assertThatException()
-                    .isThrownBy(() -> unitUnderTest.validReferenceOrThrow(arguments.get(0, BegruendungReference.class)))
-                    .isSameAs(mockedWlsException);
-        }
-
-        public static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
-            return Stream.of(
-                    Arguments.of(new BegruendungReference("wahlbezirkID", null, Stapelart.LTW_BZW_A), "wahlID is null"),
-                    Arguments.of(new BegruendungReference("wahlbezirkID", "", Stapelart.LTW_BZW_A), "wahlID is empty"),
-                    Arguments.of(new BegruendungReference("wahlbezirkID", "   ", Stapelart.LTW_BZW_A), "wahlID is blank"),
-                    Arguments.of(new BegruendungReference(null, "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is null"),
-                    Arguments.of(new BegruendungReference("", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is is empty"),
-                    Arguments.of(new BegruendungReference("   ", "wahlID", Stapelart.LTW_BZW_A), "wahlbezirkID is blank"),
-                    Arguments.of(new BegruendungReference("wahlbezirkID", "wahlID", null), "stapelart is null"));
-        }
+      Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validReferenceOrThrow(id));
     }
 
-    @Nested
-    class ValidBegruendungOrThrow {
-
-        @Test
-        void should_notThrowException_when_begruendungIsEmptyButNotNull() {
-            val begruendungModelToValidate = new BegruendungModel("", "", StapelartModel.LTW_BZW_A, "", "", true, true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelToValidate));
-        }
-
-        @Test
-        void should_throwFachlicheWlsException_when_grundParamsAreNull() {
-            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, null, true, true);
-
-            val mockedFachlicheWlsException = FachlicheWlsException.withCode("").buildWithMessage("sth failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedFachlicheWlsException);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate))
-                    .isSameAs(mockedFachlicheWlsException);
-        }
-
-        @Test
-        void should_notThrowFachlicheWlsException_when_onlyOneGrundIsNull() {
-            val begruendungModelModelToValidate = new BegruendungModel("wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, "grund2", true, true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate));
-        }
+    @ParameterizedTest(name = "provided exception when {1}")
+    @MethodSource("invalidWahlbezirkArgumentsWithTestcaseNameAppendix")
+    void should_throwProvidedException_when_bezirkUndWahlIDStapelartIsNotValid(
+        final ArgumentsAccessor arguments) {
+      val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.validReferenceOrThrow(
+                      arguments.get(0, BegruendungReferenceModel.class)))
+          .isSameAs(mockedWlsException);
     }
+
+    private static Stream<Arguments> invalidWahlbezirkArgumentsWithTestcaseNameAppendix() {
+      return Stream.of(
+          Arguments.of(
+              new BegruendungReferenceModel("wahlbezirkID", null, StapelartModel.LTW_BZW_A),
+              "wahlID is null"),
+          Arguments.of(
+              new BegruendungReferenceModel("wahlbezirkID", "", StapelartModel.LTW_BZW_A),
+              "wahlID is empty"),
+          Arguments.of(
+              new BegruendungReferenceModel("wahlbezirkID", "   ", StapelartModel.LTW_BZW_A),
+              "wahlID is blank"),
+          Arguments.of(
+              new BegruendungReferenceModel(null, "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is null"),
+          Arguments.of(
+              new BegruendungReferenceModel("", "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is empty"),
+          Arguments.of(
+              new BegruendungReferenceModel("   ", "wahlID", StapelartModel.LTW_BZW_A),
+              "wahlbezirkID is blank"),
+          Arguments.of(
+              new BegruendungReferenceModel("wahlbezirkID", "wahlID", null), "stapelart is null"));
+    }
+  }
+
+  @Nested
+  class ValidModelOrThrow {
+
+    @Test
+    void should_notThrowException_when_begruendungIsEmptyButNotNull() {
+      val begruendungModelToValidate =
+          new BegruendungModel("", "", StapelartModel.LTW_BZW_A, "", "", true, true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelToValidate));
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_grundParamsAreNull() {
+      val begruendungModelModelToValidate =
+          new BegruendungModel(
+              "wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, null, true, true);
+
+      val mockedFachlicheWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("sth failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedFachlicheWlsException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate))
+          .isSameAs(mockedFachlicheWlsException);
+    }
+
+    @Test
+    void should_notThrowFachlicheWlsException_when_onlyOneGrundIsNull() {
+      val begruendungModelModelToValidate =
+          new BegruendungModel(
+              "wahlbezirkID", "wahlID", StapelartModel.LTW_BZW_A, null, "grund2", true, true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.validModelOrThrow(begruendungModelModelToValidate));
+    }
+  }
 }

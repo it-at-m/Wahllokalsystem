@@ -1,0 +1,4 @@
+@use "vuetify/settings" with (
+  $button-colored-disabled: false,
+  $tab-slider-size: 3px
+);

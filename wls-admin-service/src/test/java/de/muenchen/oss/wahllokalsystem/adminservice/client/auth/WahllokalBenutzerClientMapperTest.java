@@ -16,179 +16,186 @@ import org.mapstruct.factory.Mappers;
 
 class WahllokalBenutzerClientMapperTest {
 
-    private final WahllokalBenutzerClientMapper unitUnderTest = Mappers.getMapper(WahllokalBenutzerClientMapper.class);
+  private final WahllokalBenutzerClientMapper unitUnderTest =
+      Mappers.getMapper(WahllokalBenutzerClientMapper.class);
+
+  @Nested
+  class ToDTO {
 
     @Nested
-    class ToDTO {
+    class ToWahllokalUserInfoDTO {
 
-        @Nested
-        class ToWahllokalUserInfoDTO {
+      @Test
+      void should_mapToWahllokalUserInfoDTO_when_givenModel() {
+        val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
 
-            @Test
-            void should_mapToWahllokalUserInfoDTO_when_givenModel() {
-                val wahllokalBenutzerModel = getWahllokalBenutzerModelWithBWB();
+        val result = unitUnderTest.toDTO(wahllokalBenutzerModel);
 
-                val result = unitUnderTest.toWahllokalUserInfoDTO(wahllokalBenutzerModel);
+        val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
 
-                val expectedWahllokalUserInfoDTO = getWahllokalUserInfoDTOWithBWB();
-
-                Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahllokalUserInfoDTO);
-            }
-        }
-
-        @Nested
-        class ToListOfWahllokalUserInfoDTO {
-
-            @Test
-            void should_returnNull_when_nullIsGiven() {
-                Assertions.assertThat(unitUnderTest.toListOfWahllokalUserInfoDTO(null)).isNull();
-            }
-
-            @Test
-            void should_mapToListOfWahllokalUserInfoDTO_when_givenListOfWahllokalBenutzerModel() {
-                val wahllokalBenutzerModels = getListOfWahlLokalBenutzerModels();
-
-                Assertions.assertThat(wahllokalBenutzerModels).isNotEmpty();
-
-                val result = unitUnderTest.toListOfWahllokalUserInfoDTO(wahllokalBenutzerModels);
-
-                val expectedWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
-
-                Assertions.assertThat(result).isEqualTo(expectedWahllokalUserInfoDTOs);
-            }
-        }
+        Assertions.assertThat(result)
+            .usingRecursiveComparison()
+            .isEqualTo(expectedWahllokalUserInfoDTO);
+      }
     }
 
     @Nested
-    class MapTripleToJsonAsString {
+    class ToListOfWahllokalUserInfoDTO {
 
-        @Test
-        void should_returnNull_when_nullIsGiven() throws JsonProcessingException {
-            Assertions.assertThat(unitUnderTest.mapTripleToJsonAsString(null)).isEqualTo("null");
-        }
+      @Test
+      void should_returnNull_when_nullIsGiven() {
+        Assertions.assertThat(unitUnderTest.toDTO((List<WahllokalBenutzerModel>) null)).isNull();
+      }
 
-        @Test
-        void should_mapToStringWbidWahlnummer_when_givenListOfTripleWbidWahlnummerWahlId() throws JsonProcessingException {
-            val wbidWahlnummerWahlIdList = getWahllokalBenutzerModelWithUWB().wbid_wahlnummer();
+      @Test
+      void should_mapToListOfWahllokalUserInfoDTO_when_givenListOfWahllokalBenutzerModel() {
+        val wahllokalBenutzerModels = getListOfWahlLokalBenutzerModels();
 
-            Assertions.assertThat(wbidWahlnummerWahlIdList).isNotEmpty();
+        Assertions.assertThat(wahllokalBenutzerModels).isNotEmpty();
 
-            val result = unitUnderTest.mapTripleToJsonAsString(wbidWahlnummerWahlIdList);
+        val result = unitUnderTest.toDTO(wahllokalBenutzerModels);
 
-            val expectedStringOfWbidWahlnummerWahlId = getWahllokalUserInfoDTOWithUWB().getWbidWahlnummer();
+        val expectedWahllokalUserInfoDTOs = getListOfWahlLokalUserInfoDTO();
 
-            Assertions.assertThat(expectedStringOfWbidWahlnummerWahlId).isEqualTo(result);
-        }
+        Assertions.assertThat(result).isEqualTo(expectedWahllokalUserInfoDTOs);
+      }
+    }
+  }
+
+  @Nested
+  class MapTripleToJsonAsString {
+
+    @Test
+    void should_returnNull_when_nullIsGiven() throws JsonProcessingException {
+      Assertions.assertThat(unitUnderTest.mapTripleToJsonAsString(null))
+          .isEqualTo("{\"wbid_wahlnummer\":null}");
     }
 
-    private List<WahllokalBenutzerModel> getListOfWahlLokalBenutzerModels() {
-        val wahltag = LocalDate.now();
-        List<WahllokalBenutzerModel> listOfWahlLokalBenutzerModel = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            WahlbezirkArtModel wahlbezirkModel = i % 2 == 0 ? WahlbezirkArtModel.UWB : WahlbezirkArtModel.BWB;
-            val wahllokalBenutzerModel = new WahllokalBenutzerModel(
-                    String.format("wahlbezirkID%s_0", i),
-                    String.format("000%s", i),
-                    wahltag,
-                    wahlbezirkModel,
-                    List.of(
-                            new TripleOfWahlbezirkIDWahlnummerWahlIDModel(String.format("wahlbezirkID%s_0", i), "0", "wahlID0"),
-                            new TripleOfWahlbezirkIDWahlnummerWahlIDModel(String.format("wahlbezirkID%s_1", i), "1", "wahlID1"),
-                            new TripleOfWahlbezirkIDWahlnummerWahlIDModel(String.format("wahlbezirkID%s_2", i), "2", "wahlID2")));
-            listOfWahlLokalBenutzerModel.add(wahllokalBenutzerModel);
-        }
-        return listOfWahlLokalBenutzerModel;
-    }
+    @Test
+    void should_mapToStringWbidWahlnummer_when_givenListOfTripleWbidWahlnummerWahlId()
+        throws JsonProcessingException {
+      val wbidWahlnummerWahlIdList = getWahllokalBenutzerModelWithUWB().wbid_wahlnummer();
 
-    private List<WahllokalUserInfoDTO> getListOfWahlLokalUserInfoDTO() {
-        val wahltag = LocalDate.now();
-        List<WahllokalUserInfoDTO> listOfWahlLokalUserInfoDTO = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            WahllokalUserInfoDTO.WahlbezirksartEnum wahlbezirkModel = i % 2 == 0 ? WahllokalUserInfoDTO.WahlbezirksartEnum.UWB
-                    : WahllokalUserInfoDTO.WahlbezirksartEnum.BWB;
-            val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
-            wahllokalUserInfoDTO.setWahlbezirkID(String.format("wahlbezirkID%s_0", i));
-            wahllokalUserInfoDTO.setWahlbezirknummer(String.format("000%s", i));
-            wahllokalUserInfoDTO.setWahltag(wahltag);
-            wahllokalUserInfoDTO.setWahlbezirksart(wahlbezirkModel);
-            wahllokalUserInfoDTO.setWbidWahlnummer(
-                    String.format("[" +
-                            "{\"wahlbezirkID\":\"wahlbezirkID%s_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
-                            "{\"wahlbezirkID\":\"wahlbezirkID%s_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
-                            "{\"wahlbezirkID\":\"wahlbezirkID%s_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                            "]", i, i, i));
-            listOfWahlLokalUserInfoDTO.add(wahllokalUserInfoDTO);
-        }
-        return listOfWahlLokalUserInfoDTO;
-    }
+      Assertions.assertThat(wbidWahlnummerWahlIdList).isNotEmpty();
 
-    /**
-     * Data should match with getWahllokalUserInfoDTOWithUWB
-     */
-    private WahllokalBenutzerModel getWahllokalBenutzerModelWithUWB() {
-        val wahltag = LocalDate.now();
-        return new WahllokalBenutzerModel(
-                "wahlbezirkID1_0",
-                "0001",
-                wahltag,
-                WahlbezirkArtModel.UWB,
-                List.of(
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
-    }
+      val result = unitUnderTest.mapTripleToJsonAsString(wbidWahlnummerWahlIdList);
 
-    /**
-     * Data should match with getWahllokalUserInfoDTOWithBWB
-     */
-    private WahllokalBenutzerModel getWahllokalBenutzerModelWithBWB() {
-        val wahltag = LocalDate.now();
-        return new WahllokalBenutzerModel(
-                "wahlbezirkID1_0",
-                "0001",
-                wahltag,
-                WahlbezirkArtModel.BWB,
-                List.of(
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
-                        new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
-    }
+      val expectedStringOfWbidWahlnummerWahlId =
+          getWahllokalUserInfoDTOWithUWB().getWbidWahlnummer();
 
-    /**
-     * Data should match with getWahllokalBenutzerModelWithUWB
-     */
-    private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithUWB() {
-        val wahltag = LocalDate.now();
-        val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
-        wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1s_0");
-        wahllokalUserInfoDTO.setWahlbezirknummer("0001");
-        wahllokalUserInfoDTO.setWahltag(wahltag);
-        wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.UWB);
-        wahllokalUserInfoDTO.setWbidWahlnummer(
-                "[" +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                        "]");
-        return wahllokalUserInfoDTO;
+      Assertions.assertThat(result).isEqualTo(expectedStringOfWbidWahlnummerWahlId);
     }
+  }
 
-    /**
-     * Data should match with getWahllokalBenutzerModelWithBWB
-     */
-    private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithBWB() {
-        val wahltag = LocalDate.now();
-        val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
-        wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1_0");
-        wahllokalUserInfoDTO.setWahlbezirknummer("0001");
-        wahllokalUserInfoDTO.setWahltag(wahltag);
-        wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.BWB);
-        wahllokalUserInfoDTO.setWbidWahlnummer(
-                "[" +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"}," +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"}," +
-                        "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}" +
-                        "]");
-        return wahllokalUserInfoDTO;
+  private List<WahllokalBenutzerModel> getListOfWahlLokalBenutzerModels() {
+    val wahltag = LocalDate.now();
+    List<WahllokalBenutzerModel> listOfWahlLokalBenutzerModel = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      WahlbezirkArtModel wahlbezirkModel =
+          i % 2 == 0 ? WahlbezirkArtModel.UWB : WahlbezirkArtModel.BWB;
+      val wahllokalBenutzerModel =
+          new WahllokalBenutzerModel(
+              String.format("wahlbezirkID%s_0", i),
+              String.format("000%s", i),
+              wahltag,
+              wahlbezirkModel,
+              List.of(
+                  new TripleOfWahlbezirkIDWahlnummerWahlIDModel(
+                      String.format("wahlbezirkID%s_0", i), "0", "wahlID0"),
+                  new TripleOfWahlbezirkIDWahlnummerWahlIDModel(
+                      String.format("wahlbezirkID%s_1", i), "1", "wahlID1"),
+                  new TripleOfWahlbezirkIDWahlnummerWahlIDModel(
+                      String.format("wahlbezirkID%s_2", i), "2", "wahlID2")));
+      listOfWahlLokalBenutzerModel.add(wahllokalBenutzerModel);
     }
+    return listOfWahlLokalBenutzerModel;
+  }
+
+  private List<WahllokalUserInfoDTO> getListOfWahlLokalUserInfoDTO() {
+    val wahltag = LocalDate.now();
+    List<WahllokalUserInfoDTO> listOfWahlLokalUserInfoDTO = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      WahllokalUserInfoDTO.WahlbezirksartEnum wahlbezirkModel =
+          i % 2 == 0
+              ? WahllokalUserInfoDTO.WahlbezirksartEnum.UWB
+              : WahllokalUserInfoDTO.WahlbezirksartEnum.BWB;
+      val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
+      wahllokalUserInfoDTO.setWahlbezirkID(String.format("wahlbezirkID%s_0", i));
+      wahllokalUserInfoDTO.setWahlbezirknummer(String.format("000%s", i));
+      wahllokalUserInfoDTO.setWahltag(wahltag);
+      wahllokalUserInfoDTO.setWahlbezirksart(wahlbezirkModel);
+      wahllokalUserInfoDTO.setWbidWahlnummer(
+          String.format(
+              "{\"wbid_wahlnummer\":["
+                  + "{\"wahlbezirkID\":\"wahlbezirkID%s_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"},"
+                  + "{\"wahlbezirkID\":\"wahlbezirkID%s_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"},"
+                  + "{\"wahlbezirkID\":\"wahlbezirkID%s_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}"
+                  + "]}",
+              i, i, i));
+      listOfWahlLokalUserInfoDTO.add(wahllokalUserInfoDTO);
+    }
+    return listOfWahlLokalUserInfoDTO;
+  }
+
+  /** Data should match with getWahllokalUserInfoDTOWithUWB */
+  private WahllokalBenutzerModel getWahllokalBenutzerModelWithUWB() {
+    val wahltag = LocalDate.now();
+    return new WahllokalBenutzerModel(
+        "wahlbezirkID1_0",
+        "0001",
+        wahltag,
+        WahlbezirkArtModel.UWB,
+        List.of(
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
+  }
+
+  /** Data should match with getWahllokalUserInfoDTOWithBWB */
+  private WahllokalBenutzerModel getWahllokalBenutzerModelWithBWB() {
+    val wahltag = LocalDate.now();
+    return new WahllokalBenutzerModel(
+        "wahlbezirkID1_0",
+        "0001",
+        wahltag,
+        WahlbezirkArtModel.BWB,
+        List.of(
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_0", "0", "wahlID0"),
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_1", "1", "wahlID1"),
+            new TripleOfWahlbezirkIDWahlnummerWahlIDModel("wahlbezirkID1_2", "2", "wahlID2")));
+  }
+
+  /** Data should match with getWahllokalBenutzerModelWithUWB */
+  private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithUWB() {
+    val wahltag = LocalDate.now();
+    val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
+    wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1s_0");
+    wahllokalUserInfoDTO.setWahlbezirknummer("0001");
+    wahllokalUserInfoDTO.setWahltag(wahltag);
+    wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.UWB);
+    wahllokalUserInfoDTO.setWbidWahlnummer(
+        "{\"wbid_wahlnummer\":["
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"},"
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"},"
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}"
+            + "]}");
+    return wahllokalUserInfoDTO;
+  }
+
+  /** Data should match with getWahllokalBenutzerModelWithBWB */
+  private WahllokalUserInfoDTO getWahllokalUserInfoDTOWithBWB() {
+    val wahltag = LocalDate.now();
+    val wahllokalUserInfoDTO = new WahllokalUserInfoDTO();
+    wahllokalUserInfoDTO.setWahlbezirkID("wahlbezirkID1_0");
+    wahllokalUserInfoDTO.setWahlbezirknummer("0001");
+    wahllokalUserInfoDTO.setWahltag(wahltag);
+    wahllokalUserInfoDTO.setWahlbezirksart(WahllokalUserInfoDTO.WahlbezirksartEnum.BWB);
+    wahllokalUserInfoDTO.setWbidWahlnummer(
+        "{\"wbid_wahlnummer\":["
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_0\",\"wahlnummer\":\"0\",\"wahlID\":\"wahlID0\"},"
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_1\",\"wahlnummer\":\"1\",\"wahlID\":\"wahlID1\"},"
+            + "{\"wahlbezirkID\":\"wahlbezirkID1_2\",\"wahlnummer\":\"2\",\"wahlID\":\"wahlID2\"}"
+            + "]}");
+    return wahllokalUserInfoDTO;
+  }
 }

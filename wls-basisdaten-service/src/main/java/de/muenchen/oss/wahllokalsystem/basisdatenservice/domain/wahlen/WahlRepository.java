@@ -12,45 +12,45 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("hasAuthority('Basisdaten_READ_Wahl')")
 public interface WahlRepository extends CrudRepository<Wahl, String> {
 
-    String CACHE = "WAHL_CACHE";
+  String CACHE = "WAHL_CACHE";
 
-    @Override
-    List<Wahl> findAll();
+  @Override
+  List<Wahl> findAll();
 
-    @Override
-    @Cacheable(value = CACHE, key = "#p0")
-    Optional<Wahl> findById(String wahlID);
+  @Override
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Wahl> findById(String wahlID);
 
-    @Override
-    @CachePut(value = CACHE, key = "#p0.wahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Wahl')")
-    <S extends Wahl> S save(S entity);
+  @Override
+  @CachePut(value = CACHE, key = "#p0.wahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_Wahl')")
+  <S extends Wahl> S save(S entity);
 
-    @Override
-    @PreAuthorize("hasAuthority('Basisdaten_WRITE_Wahl')")
-    <S extends Wahl> Iterable<S> saveAll(Iterable<S> entities);
+  @Override
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_Wahl')")
+  <S extends Wahl> Iterable<S> saveAll(Iterable<S> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
-    void deleteById(String wahlID);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
+  void deleteById(String wahlID);
 
-    @Override
-    @CacheEvict(value = CACHE, key = "#p0.wahlID")
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
-    void delete(Wahl entity);
+  @Override
+  @CacheEvict(value = CACHE, key = "#p0.wahlID")
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
+  void delete(Wahl entity);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
-    void deleteAll(Iterable<? extends Wahl> entities);
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
+  void deleteAll(Iterable<? extends Wahl> entities);
 
-    @Override
-    @CacheEvict(value = CACHE, allEntries = true)
-    @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
-    void deleteAll();
+  @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_DELETE_Wahl')")
+  void deleteAll();
 
-    List<Wahl> findByWahltagOrderByReihenfolge(LocalDate wahltag);
+  List<Wahl> findByWahltagOrderByReihenfolge(LocalDate wahltag);
 
-    boolean existsByWahltag(LocalDate wahltag);
+  boolean existsByWahltag(LocalDate wahltag);
 }

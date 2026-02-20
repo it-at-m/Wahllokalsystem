@@ -1,6 +1,5 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.exception;
 
-import de.muenchen.oss.wahllokalsystem.eaiservice.rest.common.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.errorhandler.AbstractExceptionHandler;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.DTOMapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -21,61 +20,80 @@ import org.springframework.web.context.request.ServletWebRequest;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends AbstractExceptionHandler {
-    private final ServiceIDFormatter serviceIDFormatter;
+  private final ServiceIDFormatter serviceIDFormatter;
 
-    private final MissingRequestParameterExceptionDataWrapperMapper missingRequestParameterExceptionDataWrapperMapper;
+  private final MissingRequestParameterExceptionDataWrapperMapper
+      missingRequestParameterExceptionDataWrapperMapper;
 
-    public GlobalExceptionHandler(final ServiceIDFormatter serviceIDFormatter, final DTOMapper dtoMapper,
-            final MissingRequestParameterExceptionDataWrapperMapper missingRequestParameterExceptionDataWrapperMappers) {
-        super(dtoMapper);
-        this.serviceIDFormatter = serviceIDFormatter;
-        this.missingRequestParameterExceptionDataWrapperMapper = missingRequestParameterExceptionDataWrapperMappers;
-    }
+  public GlobalExceptionHandler(
+      final ServiceIDFormatter serviceIDFormatter,
+      final DTOMapper dtoMapper,
+      final MissingRequestParameterExceptionDataWrapperMapper
+          missingRequestParameterExceptionDataWrapperMappers) {
+    super(dtoMapper);
+    this.serviceIDFormatter = serviceIDFormatter;
+    this.missingRequestParameterExceptionDataWrapperMapper =
+        missingRequestParameterExceptionDataWrapperMappers;
+  }
 
-    @ExceptionHandler
-    public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
-        log.info("handling throwable", throwable);
-        return createResponse(getWahlExceptionDTO(throwable));
-    }
+  @ExceptionHandler
+  public ResponseEntity<WlsExceptionDTO> handleThrowables(final Throwable throwable) {
+    log.info("handling throwable", throwable);
+    return createResponse(getWahlExceptionDTO(throwable));
+  }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public WlsExceptionDTO handleThrowable(final MissingServletRequestParameterException missingRequestParameter,
-            final ServletWebRequest webRequest) {
-        val requestParameterName = missingRequestParameter.getParameterName();
-        val requestURI = webRequest.getRequest().getRequestURI();
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public WlsExceptionDTO handleThrowable(
+      final MissingServletRequestParameterException missingRequestParameter,
+      final ServletWebRequest webRequest) {
+    val requestParameterName = missingRequestParameter.getParameterName();
+    val requestURI = webRequest.getRequest().getRequestURI();
 
-        log.info("missing request parameter -> {}", requestParameterName);
-        log.info("path > {}", requestURI);
+    log.info("missing request parameter -> {}", requestParameterName);
+    log.info("path > {}", requestURI);
 
-        return missingRequestParameterExceptionDataWrapperMapper.getExceptionDataWrapperForMissingRequestParameterByName(requestURI, requestParameterName)
-                .map(this::createFachlicheWlsExceptionDTO).orElseGet(this::createGenericMissingParameterExceptionDTO);
-    }
+    return missingRequestParameterExceptionDataWrapperMapper
+        .getExceptionDataWrapperForMissingRequestParameterByName(requestURI, requestParameterName)
+        .map(this::createFachlicheWlsExceptionDTO)
+        .orElseGet(this::createGenericMissingParameterExceptionDTO);
+  }
 
-    @ExceptionHandler
-    public ResponseEntity<Void> handleNotFoundException(final NotFoundException notFoundException) {
-        log.debug("not found entity {} with id {}", notFoundException.getEntityClass(), notFoundException.getRequestedID());
-        return ResponseEntity.notFound().build();
-    }
+  @ExceptionHandler
+  public ResponseEntity<Void> handleNotFoundException(final NotFoundException notFoundException) {
+    log.debug(
+        "not found entity {} with id {}",
+        notFoundException.getEntityClass(),
+        notFoundException.getRequestedID());
+    return ResponseEntity.notFound().build();
+  }
 
-    @ExceptionHandler
-    public ResponseEntity<Void> handleNoSearchResultFoundException(final NoSearchResultFoundException noSearchResultFoundException) {
-        log.debug("no search result of {} found for search parameter {}", noSearchResultFoundException.getNotFoundEntityClass(),
-                noSearchResultFoundException.getSearchParameter());
-        return ResponseEntity.notFound().build();
-    }
+  @ExceptionHandler
+  public ResponseEntity<Void> handleNoSearchResultFoundException(
+      final NoSearchResultFoundException noSearchResultFoundException) {
+    log.debug(
+        "no search result of {} found for search parameter {}",
+        noSearchResultFoundException.getNotFoundEntityClass(),
+        noSearchResultFoundException.getSearchParameter());
+    return ResponseEntity.notFound().build();
+  }
 
-    @Override
-    protected String getService() {
-        return serviceIDFormatter.getId();
-    }
+  @Override
+  protected String getService() {
+    return serviceIDFormatter.getId();
+  }
 
-    private WlsExceptionDTO createGenericMissingParameterExceptionDTO() {
-        return createFachlicheWlsExceptionDTO(ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
-    }
+  private WlsExceptionDTO createGenericMissingParameterExceptionDTO() {
+    return createFachlicheWlsExceptionDTO(ExceptionConstants.DATENALLGEMEIN_PARAMETER_FEHLEN);
+  }
 
-    private WlsExceptionDTO createFachlicheWlsExceptionDTO(final ExceptionDataWrapper exceptionDataWrapper) {
-        return new WlsExceptionDTO(WlsExceptionCategory.F, exceptionDataWrapper.code(), getService(), exceptionDataWrapper.message());
-    }
+  private WlsExceptionDTO createFachlicheWlsExceptionDTO(
+      final ExceptionDataWrapper exceptionDataWrapper) {
+    return new WlsExceptionDTO(
+        WlsExceptionCategory.F,
+        exceptionDataWrapper.code(),
+        getService(),
+        exceptionDataWrapper.message());
+  }
 }

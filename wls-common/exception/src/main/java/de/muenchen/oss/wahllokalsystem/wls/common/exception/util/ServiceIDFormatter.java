@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceIDFormatter {
 
-    private final String serviceName;
+  private final String serviceName;
 
-    public ServiceIDFormatter(@Value("${service.info.oid}") final String serviceName) {
-        this.serviceName = serviceName;
-    }
+  public ServiceIDFormatter(@Value("${service.info.oid}") final String serviceName) {
+    this.serviceName = serviceName;
+  }
 
-    public String getId() {
-        return serviceName;
-    }
+  public String getId() {
+    return serviceName;
+  }
 }

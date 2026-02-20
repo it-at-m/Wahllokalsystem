@@ -18,45 +18,47 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BegruendungService {
 
-    private final BegruendungRepository begruendungRepository;
+  private final BegruendungRepository begruendungRepository;
 
-    private final BegruendungModelMapper begruendungModelMapper;
+  private final BegruendungModelMapper begruendungModelMapper;
 
-    private final BegruendungValidator begruendungValidator;
+  private final BegruendungValidator begruendungValidator;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public BegruendungModel getBegruendung(@P("param") @NotNull final BegruendungReference begruendungReference) {
-        log.info("#getBegruendung");
-        begruendungValidator.validReferenceOrThrow(begruendungReference);
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBegruendung')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public BegruendungModel getBegruendung(
+      @P("param") @NotNull final BegruendungReferenceModel begruendungReferenceModel) {
+    log.info("#getBegruendung");
+    begruendungValidator.validReferenceOrThrow(begruendungReferenceModel);
 
-        BezirkUndWahlIDStapelart id = begruendungModelMapper.toEmbeddedId(begruendungReference);
-        val begruendungFromRepo = getOrNull(id);
-        return begruendungFromRepo == null ? null : begruendungModelMapper.toModel(begruendungFromRepo);
+    BezirkUndWahlIDStapelart id = begruendungModelMapper.toEmbeddedId(begruendungReferenceModel);
+    val begruendungFromRepo = getOrNull(id);
+    return begruendungFromRepo == null ? null : begruendungModelMapper.toModel(begruendungFromRepo);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public void postBegruendung(
+      @P("param") final BegruendungReferenceModel begruendungReferenceModel,
+      @NotNull final BegruendungModel begruendungToAdd) {
+    log.info("#postBegruendung");
+    begruendungValidator.validModelOrThrow(begruendungToAdd);
+    begruendungValidator.validReferenceOrThrow(begruendungReferenceModel);
+
+    try {
+      begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));
+    } catch (final Exception e) {
+      log.error("#postBegruendung unsaveable:", e);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.BEGRUENDUNG_UNSAVEABLE);
     }
+  }
 
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostBegruendung')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public void postBegruendung(@P("param") final BegruendungReference begruendungReference, @NotNull final BegruendungModel begruendungToAdd) {
-        log.info("#postBegruendung");
-        begruendungValidator.validModelOrThrow(begruendungToAdd);
-        begruendungValidator.validReferenceOrThrow(begruendungReference);
-
-        try {
-            begruendungRepository.save(begruendungModelMapper.toEntity(begruendungToAdd));
-        } catch (final Exception e) {
-            log.error("#postBegruendung unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.BEGRUENDUNG_UNSAVEABLE);
-        }
-    }
-
-    private Begruendung getOrNull(final BezirkUndWahlIDStapelart entityID) {
-        return begruendungRepository.findById(entityID).orElse(null);
-    }
+  private Begruendung getOrNull(final BezirkUndWahlIDStapelart entityID) {
+    return begruendungRepository.findById(entityID).orElse(null);
+  }
 }

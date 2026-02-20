@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.AsyncProgress;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.AsyncProgress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.val;
@@ -11,43 +11,92 @@ import org.mapstruct.factory.Mappers;
 
 class AsyncProgressDTOMapperTest {
 
-    AsyncProgressDTOMapper unitUnderTest = Mappers.getMapper(AsyncProgressDTOMapper.class);
+  AsyncProgressDTOMapper unitUnderTest = Mappers.getMapper(AsyncProgressDTOMapper.class);
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDto {
 
-        @Test
-        void should_returnDTO_when_asyncProgressIsDelivered() {
-            val wahltag = LocalDate.now();
-            val wahlnummer = "wahlnummer";
-            val lastStartTime = LocalDateTime.now().minusDays(2);
-            val lastFinishTime = LocalDateTime.now().minusDays(1);
-            val wahlvorschlaegeIsLoading = true;
-            val wahlvorschlaegeTotal = 23;
-            val wahlvorschlaegeFinished = 12;
-            val wahlvorschlaegeNext = "wahlvorschlagID13";
-            val referendumvorlagenIsLoading = false;
-            val referendumvorlagenTotal = 21;
-            val referendumvorlagenFinished = 20;
-            val referendumvorlagenNext = "referendumvorlagenID13";
+    @Test
+    void should_returnDTO_when_asyncProgressIsDelivered() {
+      val wahltag = LocalDate.now();
+      val wahlnummer = "wahlnummer";
+      val lastStartTime = LocalDateTime.now().minusDays(2);
+      val lastFinishTime = LocalDateTime.now().minusDays(1);
+      val wahlvorschlaegeIsLoading = true;
+      val wahlvorschlaegeTotal = 23;
+      val wahlvorschlaegeFinished = 12;
+      val wahlvorschlaegeNext = "wahlvorschlagID13";
+      val referendumvorlagenIsLoading = true;
+      val referendumvorlagenTotal = 21;
+      val referendumvorlagenFinished = 20;
+      val referendumvorlagenNext = "referendumvorlagenID13";
 
-            val asyncProgress = new AsyncProgress(wahltag, wahlnummer, lastStartTime, lastFinishTime, wahlvorschlaegeIsLoading, wahlvorschlaegeTotal,
-                    wahlvorschlaegeFinished, wahlvorschlaegeNext, referendumvorlagenIsLoading, referendumvorlagenTotal, referendumvorlagenFinished,
-                    referendumvorlagenNext);
+      val asyncProgress =
+          new AsyncProgress(
+              wahltag,
+              wahlnummer,
+              lastStartTime,
+              lastFinishTime,
+              wahlvorschlaegeTotal,
+              wahlvorschlaegeFinished,
+              wahlvorschlaegeNext,
+              referendumvorlagenTotal,
+              referendumvorlagenFinished,
+              referendumvorlagenNext);
 
-            val result = unitUnderTest.toDto(asyncProgress);
+      val result = unitUnderTest.toDto(asyncProgress);
 
-            val expectedResult = new AsyncProgressDTO(wahltag, wahlnummer, lastStartTime, lastFinishTime, wahlvorschlaegeIsLoading, wahlvorschlaegeTotal,
-                    wahlvorschlaegeFinished, wahlvorschlaegeNext, referendumvorlagenIsLoading, referendumvorlagenTotal, referendumvorlagenFinished,
-                    referendumvorlagenNext);
+      val expectedResult =
+          new AsyncProgressDTO(
+              wahltag,
+              wahlnummer,
+              lastStartTime,
+              lastFinishTime,
+              wahlvorschlaegeIsLoading,
+              wahlvorschlaegeTotal,
+              wahlvorschlaegeFinished,
+              wahlvorschlaegeNext,
+              referendumvorlagenIsLoading,
+              referendumvorlagenTotal,
+              referendumvorlagenFinished,
+              referendumvorlagenNext);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
-
-        @Test
-        void should_returnNull_when_parameterIsNull() {
-            Assertions.assertThat(unitUnderTest.toDto(null)).isNull();
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
+    @Test
+    void should_returnIsLoadingActiveFalse_when_totalIsEqualsFinished() {
+      val asyncProgress = new AsyncProgress(null, null, null, null, 10, 10, null, 13, 13, null);
+
+      val result = unitUnderTest.toDto(asyncProgress);
+
+      Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isFalse();
+      Assertions.assertThat(result.referendumLoadingActive()).isFalse();
+    }
+
+    @Test
+    void should_returnIsLoadingActiveFalse_when_totalIsSmallerThanFinished() {
+      val asyncProgress = new AsyncProgress(null, null, null, null, 10, 11, null, 13, 14, null);
+
+      val result = unitUnderTest.toDto(asyncProgress);
+
+      Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isFalse();
+      Assertions.assertThat(result.referendumLoadingActive()).isFalse();
+    }
+
+    @Test
+    void should_returnIsLoadingActiveTrue_when_totalIsNotEqualsFinished() {
+      val asyncProgress = new AsyncProgress(null, null, null, null, 10, 9, null, 13, 12, null);
+
+      val result = unitUnderTest.toDto(asyncProgress);
+
+      Assertions.assertThat(result.wahlvorschlaegeLoadingActive()).isTrue();
+      Assertions.assertThat(result.referendumLoadingActive()).isTrue();
+    }
+
+    @Test
+    void should_returnNull_when_parameterIsNull() {
+      Assertions.assertThat(unitUnderTest.toDto(null)).isNull();
+    }
+  }
 }

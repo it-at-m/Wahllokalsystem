@@ -12,18 +12,22 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StatusValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validBezirkUndWahlIdOrThrow(final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (bezirkUndWahlId == null || StringUtils.isBlank(bezirkUndWahlId.getWahlID()) || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
-            throw exceptionOnInvalid;
-        }
+  public void validBezirkUndWahlIdOrThrow(
+      final BezirkUndWahlID bezirkUndWahlId, final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (bezirkUndWahlId == null
+        || StringUtils.isBlank(bezirkUndWahlId.getWahlID())
+        || StringUtils.isBlank(bezirkUndWahlId.getWahlbezirkID())) {
+      throw exceptionOnInvalid;
     }
+  }
 
-    public void validStatusOrThrow(final StatusModel status) {
-        if (status == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validStatusOrThrow(final StatusModel status) {
+    if (status == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

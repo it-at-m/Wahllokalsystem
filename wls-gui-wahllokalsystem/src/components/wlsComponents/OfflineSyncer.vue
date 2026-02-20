@@ -1,90 +1,69 @@
 <template>
-  <div class="text-center">
-    <v-dialog
-      v-model="dialog"
-      max-width="400"
-      height="150"
-      persistent
-    >
-      <template #activator="{ props: dialogActivator }">
-        <v-tooltip text="sync offline data">
-          <template #activator="{ props: tooltipActivator }">
-            <v-btn
-              v-bind="mergeProps(dialogActivator, tooltipActivator)"
-              icon="$reload"
-              class="px-0"
-              size="x-small"
-              color="primary"
-              @click="synchronizeOfflineData"
-            >
-            </v-btn>
-          </template>
-        </v-tooltip>
-      </template>
+  <v-dialog
+    v-model="isDialogVisible"
+    max-width="400px"
+    persistent
+  >
+    <template #activator="{ props: dialogActivator }">
+      <v-tooltip text="sync offline data">
+        <template #activator="{ props: tooltipActivator }">
+          <v-btn
+            v-bind="mergeProps(dialogActivator, tooltipActivator)"
+            icon="$reload"
+            class="px-0"
+            size="x-small"
+            color="primary"
+            :loading="isSyncInProgress"
+            data-test="button-sync-offline-data"
+            @click="initiateOfflineDataSync"
+          />
+        </template>
+      </v-tooltip>
+    </template>
 
-      <v-card
-        title="Synchronizing"
-        :text="statusText"
-      ></v-card>
-    </v-dialog>
-  </div>
+    <v-card>
+      <v-card-title> Synchronizing </v-card-title>
+      <v-card-text>
+        <div>
+          {{ numberOfTasksFinished }} von {{ numberOfTasksToRun }} abgeschlossen
+        </div>
+        <v-progress-linear
+          :model-value="numberOfTasksFinished"
+          :max="numberOfTasksToRun"
+          :striped="isSyncInProgress"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <base-text-button @click="onCloseClicked">Schließen</base-text-button>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script setup lang="ts">
-import type IdbObject from "@/types/wlsTypes/IdbObject";
-
-import axios from "axios";
-import localforage from "localforage";
+import { storeToRefs } from "pinia";
 import { mergeProps, ref } from "vue";
-import { VBtn, VCard, VDialog, VTooltip } from "vuetify/components";
 
-import { basicPostConfig } from "@/api/axios-utils";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useInterval } from "@/composables/useInterval";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 
-const dialog = ref(false);
-const statusText = ref("");
+const { synchronizeOfflineData } = useDataSyncStore();
+const { isOfflineDataSyncing, numberOfTasksFinished, numberOfTasksToRun } =
+  storeToRefs(useDataSyncStore());
 
-// todo: synchronizing activated via click. uncomment to activate periodically
-/*
-useInterval(() => {
-  synchronizeOfflineData();
-}, 10000); // updates every 10 seconds
-*/
+const isDialogVisible = ref(false);
+const isSyncInProgress = ref(false);
 
-async function synchronizeOfflineData() {
-  dialog.value = true;
-  statusText.value = "Gathering dirty data in IDB...";
+async function initiateOfflineDataSync() {
+  isDialogVisible.value = true;
+  isSyncInProgress.value = true;
 
-  const dataToSync: IdbObject[] = [];
-  // gather dirty data
-  return localforage
-    .iterate((value: IdbObject) => {
-      if (value.dirty) {
-        dataToSync.push(value);
-      }
-    })
-    .then(async () => {
-      if (dataToSync.length > 0) {
-        statusText.value = "... syncing ... ";
-        for (const element of dataToSync) {
-          await axios
-            .request(basicPostConfig(element.url, undefined, element.data))
-            .then(() => {
-              statusText.value = "data has been synchronized successfully";
-            })
-            .catch(() => {
-              statusText.value = "offline. try again in a few secs";
-            });
-        }
-      } else {
-        statusText.value = "no dirty data found";
-      }
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // wait to show message
-      dialog.value = false;
-    })
-    .catch(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // wait to show message
-      dialog.value = false;
-    });
+  if (!isOfflineDataSyncing.value) {
+    await synchronizeOfflineData();
+  }
+  isSyncInProgress.value = false;
+}
+
+function onCloseClicked() {
+  isDialogVisible.value = false;
 }
 </script>

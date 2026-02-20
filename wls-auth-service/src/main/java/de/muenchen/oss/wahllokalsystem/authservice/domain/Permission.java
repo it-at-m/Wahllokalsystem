@@ -15,7 +15,5 @@ import lombok.ToString;
 @ToString(onlyExplicitlyIncluded = true)
 public class Permission extends BaseEntity {
 
-    @ToString.Include
-    private String permission;
-
+  @ToString.Include private String permission;
 }

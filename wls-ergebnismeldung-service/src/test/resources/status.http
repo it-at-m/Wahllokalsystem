@@ -2,43 +2,43 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET status wahlID/wahlbezirkID
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
+### GET status wahlID/wahlbezirkID | user wls_all_uwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST status with all done
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
+### POST status with all done | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID",
-    "wahlbezirkID": "wahlbezirkID"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "niederschrift": {
     "gedruckt": true,
-    "sendeuhrzeit": "2024-12-03T11:12:13",
+    "sendeuhrzeit": "2026-01-02T11:12:13",
     "uebermittelt": true,
     "validierungsstatus": "VALIDE"
   },
   "schnellmeldung": {
     "validierungsstatus": "VALIDE",
     "uebermittelt": true,
-    "sendeuhrzeit": "2024-12-03T09:10:11",
+    "sendeuhrzeit": "2026-01-02T09:10:11",
     "gedruckt": true
   }
 }
 
-### POST status with schnellmeldung done
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/wahlID/wahlbezirkID
+### POST status with schnellmeldung done | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID",
-    "wahlbezirkID": "wahlbezirkID"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
   "niederschrift": {
     "validierungsstatus": "NICHT_GESENDET",
@@ -47,7 +47,57 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "schnellmeldung": {
     "validierungsstatus": "VALIDE",
     "uebermittelt": true,
-    "sendeuhrzeit": "2024-12-03T09:10:11",
+    "sendeuhrzeit": "2026-01-02T09:10:11",
+    "gedruckt": true
+  }
+}
+
+### GET status wahlID/wahlbezirkID | user wls_all_bwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST status with all done | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "niederschrift": {
+    "gedruckt": true,
+    "sendeuhrzeit": "2026-01-02T11:12:13",
+    "uebermittelt": true,
+    "validierungsstatus": "VALIDE"
+  },
+  "schnellmeldung": {
+    "validierungsstatus": "VALIDE",
+    "uebermittelt": true,
+    "sendeuhrzeit": "2026-01-02T09:10:11",
+    "gedruckt": true
+  }
+}
+
+### POST status with schnellmeldung done | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "niederschrift": {
+    "validierungsstatus": "NICHT_GESENDET",
+    "gedruckt": false
+  },
+  "schnellmeldung": {
+    "validierungsstatus": "VALIDE",
+    "uebermittelt": true,
+    "sendeuhrzeit": "2026-01-02T09:10:11",
     "gedruckt": true
   }
 }

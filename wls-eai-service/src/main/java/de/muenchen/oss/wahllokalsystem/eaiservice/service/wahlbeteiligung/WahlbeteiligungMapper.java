@@ -8,9 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface WahlbeteiligungMapper {
 
-    WahlbeteiligungsMeldungDTO toDTO(Wahlbeteiligung entity);
+  WahlbeteiligungsMeldungDTO toDTO(Wahlbeteiligung entity);
 
-    @Mapping(target = "id", ignore = true)
-    Wahlbeteiligung toEntity(WahlbeteiligungsMeldungDTO dto);
-
+  @Mapping(target = "id", ignore = true)
+  Wahlbeteiligung toEntity(WahlbeteiligungsMeldungDTO dto);
 }

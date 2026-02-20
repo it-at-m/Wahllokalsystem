@@ -23,39 +23,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StatusController extends AbstractController {
 
-    private final StatusService statusService;
-    private final StatusDTOMapper statusDTOMapper;
+  private final StatusService statusService;
+  private final StatusDTOMapper statusDTOMapper;
 
-    @Operation(description = "Lesen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Es existiert ein Zustand",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = StatusDTO.class)) }
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Es existiert kein Zustand entsprechend der Kriterien",
-                            content = { @Content() }
-                    )
-            }
-    )
-    @GetMapping("{wahlID}/{wahlbezirkID}")
-    public ResponseEntity<StatusDTO> getStatus(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        val status = statusService.getStatus(new BezirkUndWahlID(wahlID, wahlbezirkID));
-        return okWithBodyOrNoContent(status.map(statusDTOMapper::toDTO));
-    }
+  @Operation(
+      description =
+          "Lesen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es existiert ein Zustand",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = StatusDTO.class))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es existiert kein Zustand entsprechend der Kriterien",
+            content = {@Content()})
+      })
+  @GetMapping("{wahlID}/{wahlbezirkID}")
+  public ResponseEntity<StatusDTO> getStatus(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    val status = statusService.getStatus(new BezirkUndWahlID(wahlID, wahlbezirkID));
+    return okWithBodyOrNoContent(status.map(statusDTOMapper::toDTO));
+  }
 
-    @Operation(description = "Setzen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Zustand erfolgreich gespeichert"
-                    )
-            }
-    )
-    @PostMapping("{wahlID}/{wahlbezirkID}")
-    public void setStatus(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID,
-            @RequestBody final StatusDTO statusDTO) {
-        statusService.setStatus(new BezirkUndWahlID(wahlID, wahlbezirkID), statusDTOMapper.toModel(statusDTO));
-    }
+  @Operation(
+      description =
+          "Setzen des Bearbeitungsstatus bei der Ergebnisermittlung eines Wahlbezirkes für eine Wahl")
+  @ApiResponses(
+      value = {@ApiResponse(responseCode = "200", description = "Zustand erfolgreich gespeichert")})
+  @PostMapping("{wahlID}/{wahlbezirkID}")
+  public void setStatus(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID,
+      @RequestBody final StatusDTO statusDTO) {
+    statusService.setStatus(
+        new BezirkUndWahlID(wahlID, wahlbezirkID), statusDTOMapper.toModel(statusDTO));
+  }
 }

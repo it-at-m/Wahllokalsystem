@@ -4,9 +4,9 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurationControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.authservice.eai.infomanagement.model.KonfigurationDTO;
-import de.muenchen.oss.wahllokalsystem.authservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.authservice.security.LegalLoginIntervalModel;
+import de.muenchen.oss.wahllokalsystem.authservice.rest.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.authservice.security.LoginTimeClient;
+import de.muenchen.oss.wahllokalsystem.authservice.service.LegalLoginIntervalModel;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WahltagClient;
 import de.muenchen.oss.wahllokalsystem.authservice.service.WelcomeClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
@@ -29,94 +29,102 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class InfomanagementServiceClient implements WelcomeClient, LoginTimeClient, WahltagClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final KonfigurationControllerApi konfigurationControllerApi;
+  private final KonfigurationControllerApi konfigurationControllerApi;
 
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
 
-    @Value("${service.config.clients.infomanagement.configkey.welcomeMessage}")
-    String konfigKeyWelcomeMessage;
+  @Value("${service.config.clients.infomanagement.configkey.welcomeMessage}")
+  String konfigKeyWelcomeMessage;
 
-    @Value("${service.config.clients.infomanagement.configkey.fruehesterLogin}")
-    String konfigKeyFruehesterLogin;
+  @Value("${service.config.clients.infomanagement.configkey.fruehesterLogin}")
+  String konfigKeyFruehesterLogin;
 
-    @Value("${service.config.clients.infomanagement.configkey.spaetesterLogin}")
-    String konfigKeySpaetesterLogin;
+  @Value("${service.config.clients.infomanagement.configkey.spaetesterLogin}")
+  String konfigKeySpaetesterLogin;
 
-    @Value("${service.config.welcomemessage.default}")
-    String defaultWelcomeMessage;
+  @Value("${service.config.welcomemessage.default}")
+  String defaultWelcomeMessage;
 
-    @Value("${service.config.clients.infomanagement.dateformat}")
-    String konfigDateFormat;
+  @Value("${service.config.clients.infomanagement.dateformat}")
+  String konfigDateFormat;
 
-    @Override
-    public String getWelcomeMessage() {
-        final KonfigurationDTO konfigurationDTO;
-        try {
-            konfigurationDTO = getKonfigurationKeyUnauthorized(konfigKeyWelcomeMessage);
-        } catch (final Exception e) {
-            log.warn("Fehler <{}> bei Abruf der Willkommensnachricht. Nutze Fallback: {}", e.getMessage(), defaultWelcomeMessage);
-            return defaultWelcomeMessage;
-        }
-
-        if (konfigurationDTO == null) {
-            return defaultWelcomeMessage;
-        } else {
-            return getValueOrDefault(konfigurationDTO);
-        }
+  @Override
+  public String getWelcomeMessage() {
+    final KonfigurationDTO konfigurationDTO;
+    try {
+      konfigurationDTO = getKonfigurationKeyUnauthorized(konfigKeyWelcomeMessage);
+    } catch (final Exception e) {
+      log.warn(
+          "Fehler <{}> bei Abruf der Willkommensnachricht. Nutze Fallback: {}",
+          e.getMessage(),
+          defaultWelcomeMessage);
+      return defaultWelcomeMessage;
     }
 
-    @Override
-    public LegalLoginIntervalModel getLegalLoginInterval() {
-        val fruehesterLogin = getKonfigurationKeyUnauthorized(konfigKeyFruehesterLogin).getWert();
-        val spaetesterLogin = getKonfigurationKeyUnauthorized(konfigKeySpaetesterLogin).getWert();
+    if (konfigurationDTO == null) {
+      return defaultWelcomeMessage;
+    } else {
+      return getValueOrDefault(konfigurationDTO);
+    }
+  }
 
-        return new LegalLoginIntervalModel(parseToDateTime(fruehesterLogin), parseToDateTime(spaetesterLogin));
+  @Override
+  public LegalLoginIntervalModel getLegalLoginInterval() {
+    val fruehesterLogin = getKonfigurationKeyUnauthorized(konfigKeyFruehesterLogin).getWert();
+    val spaetesterLogin = getKonfigurationKeyUnauthorized(konfigKeySpaetesterLogin).getWert();
+
+    return new LegalLoginIntervalModel(
+        parseToDateTime(fruehesterLogin), parseToDateTime(spaetesterLogin));
+  }
+
+  @Override
+  public boolean isWahltagActive(final String wahltagID) {
+    try {
+      return Boolean.TRUE.equals(konfigurierterWahltagControllerApi.isWahltagActive(wahltagID));
+    } catch (final WlsException wlsException) {
+      log.error("#isWahltagActive ({}) got wlsException", wahltagID, wlsException);
+      throw wlsException;
+    } catch (final Exception exception) {
+      log.error("#isWahltagActive ({}) got exception", wahltagID, exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE);
+    }
+  }
+
+  private LocalDateTime parseToDateTime(final String dateTimeString) {
+    if (dateTimeString == null) {
+      return null;
     }
 
-    @Override
-    public boolean isWahltagActive(final String wahltagID) {
-        try {
-            return Boolean.TRUE.equals(konfigurierterWahltagControllerApi.isWahltagActive(wahltagID));
-        } catch (final WlsException wlsException) {
-            log.error("#isWahltagActive ({}) got wlsException", wahltagID, wlsException);
-            throw wlsException;
-        } catch (final Exception exception) {
-            log.error("#isWahltagActive ({}) got exception", wahltagID, exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE);
-        }
+    try {
+      return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(konfigDateFormat));
+    } catch (final DateTimeParseException e1) {
+      throw new DateTimeException(
+          "Unable to construct a time or a date-time from the given configuration (\""
+              + dateTimeString
+              + "\").");
     }
+  }
 
-    private LocalDateTime parseToDateTime(final String dateTimeString) {
-        if (dateTimeString == null) {
-            return null;
-        }
-
-        try {
-            return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern(konfigDateFormat));
-        } catch (final DateTimeParseException e1) {
-            throw new DateTimeException(
-                    "Unable to construct a time or a date-time from the given configuration (\"" + dateTimeString + "\").");
-        }
+  private KonfigurationDTO getKonfigurationKeyUnauthorized(final String configKey) {
+    try {
+      return konfigurationControllerApi.getKonfigurationUnauthorized(configKey);
+    } catch (final WlsException wlsException) {
+      throw wlsException;
+    } catch (final Exception e) {
+      log.warn("#getKonfigurationUnauthorized got exception", e);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE);
     }
+  }
 
-    private KonfigurationDTO getKonfigurationKeyUnauthorized(final String configKey) {
-        try {
-            return konfigurationControllerApi.getKonfigurationUnauthorized(configKey);
-        } catch (final WlsException wlsException) {
-            throw wlsException;
-        } catch (final Exception e) {
-            log.warn("#getKonfigurationUnauthorized got exception", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_KONFIGSERVICE);
-        }
+  private String getValueOrDefault(final KonfigurationDTO konfigurationDTO) {
+    if (StringUtils.isBlank(konfigurationDTO.getWert())) {
+      return konfigurationDTO.getStandardwert();
+    } else {
+      return konfigurationDTO.getWert();
     }
-
-    private String getValueOrDefault(final KonfigurationDTO konfigurationDTO) {
-        if (StringUtils.isBlank(konfigurationDTO.getWert())) {
-            return konfigurationDTO.getStandardwert();
-        } else {
-            return konfigurationDTO.getWert();
-        }
-    }
+  }
 }

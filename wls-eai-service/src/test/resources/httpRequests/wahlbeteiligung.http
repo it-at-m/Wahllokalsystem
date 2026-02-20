@@ -2,16 +2,28 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Create - Set Wahlbeteiligung
+### POST Create - Set Wahlbeteiligung | user wls_all_uwb
 POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlID": "wahlID1",
-  "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "anzahlWaehler": 150,
-  "meldeZeitpunkt": "2024-07-18T09:10:31.179Z"
+  "meldeZeitpunkt": "2026-01-01T09:10:31.179Z"
+}
+
+### POST Create - Set Wahlbeteiligung | user wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahlbeteiligung
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "anzahlWaehler": 268,
+  "meldeZeitpunkt": "2026-01-01T09:10:31.179Z"
 }
 
 ### POST Create - Error: Set Wahlbeteiligung without wahlID

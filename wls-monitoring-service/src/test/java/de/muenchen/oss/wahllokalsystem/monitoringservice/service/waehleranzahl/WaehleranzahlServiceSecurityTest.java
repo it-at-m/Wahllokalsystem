@@ -27,123 +27,137 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 @AutoConfigureWireMock
 public class WaehleranzahlServiceSecurityTest {
 
-    @Autowired
-    WaehleranzahlService waehleranzahlService;
+  @Autowired WaehleranzahlService waehleranzahlService;
 
-    @Autowired
-    WaehleranzahlRepository waehleranzahlRepository;
+  @Autowired WaehleranzahlRepository waehleranzahlRepository;
 
-    @Autowired
-    WaehleranzahlDTOMapper waehleranzahlDTOMapper;
+  @Autowired WaehleranzahlDTOMapper waehleranzahlDTOMapper;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @MockBean
-    WaehleranzahlValidator waehleranzahlValidator;
+  @MockitoBean WaehleranzahlValidator waehleranzahlValidator;
 
-    @BeforeEach
-    void setup() {
-        clearContext();
+  @BeforeEach
+  void setup() {
+    clearContext();
+  }
+
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERANZAHL);
+    waehleranzahlRepository.deleteAll();
+  }
+
+  @Nested
+  class GetWahlbeteiligung {
+
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() {
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
+      waehleranzahlRepository.save(new Waehleranzahl(bezirkUndWahlID, 99, LocalDateTime.now()));
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID));
     }
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAEHLERANZAHL);
-        waehleranzahlRepository.deleteAll();
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_failWithAccessDeniedException_when_anyAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      Assertions.assertThatThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class GetWahlbeteiligung {
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
+    }
+  }
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() {
-            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
-            waehleranzahlRepository.save(new Waehleranzahl(bezirkUndWahlID, 99, LocalDateTime.now()));
+  @Nested
+  class PostWahlbeteiligung {
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
+    @Test
+    void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
+      String wahlID = "wahlID01";
+      String wahlbezirkID = "wahlbezirkID01";
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+      val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
 
-            Assertions.assertThatNoException().isThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID));
-        }
+      val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
+      WireMock.stubFor(
+          WireMock.post("/wahlbeteiligung")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
 
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_failWithAccessDeniedException_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
-            Assertions.assertThatThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
-        }
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave));
     }
 
-    @Nested
-    class PostWahlbeteiligung {
+    @Test
+    void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
 
-        @Test
-        void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
-            String wahlID = "wahlID01";
-            String wahlbezirkID = "wahlbezirkID01";
-            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-            val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
+      String wahlID = "wahlID01";
+      String wahlbezirkID = "wahlbezirkID01";
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+      val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
 
-            val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
-            WireMock.stubFor(WireMock.post("/wahlbeteiligung")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
+      val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
+      WireMock.stubFor(
+          WireMock.post("/wahlbeteiligung")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
 
-            Assertions.assertThatNoException().isThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave));
-        }
-
-        @Test
-        void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
-
-            String wahlID = "wahlID01";
-            String wahlbezirkID = "wahlbezirkID01";
-            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-            val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
-
-            val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
-            WireMock.stubFor(WireMock.post("/wahlbeteiligung")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
-
-            Assertions.assertThatThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_failWithTechnischeWlsException_when_repoAuthorityIsMissing() throws Exception {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERANZAHL);
-
-            String wahlID = "wahlID01";
-            String wahlbezirkID = "wahlbezirkID01";
-            BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
-            val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
-
-            val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
-            WireMock.stubFor(WireMock.post("/wahlbeteiligung")
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
-
-            Assertions.assertThatThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave)).isInstanceOf(TechnischeWlsException.class);
-        }
-
+      Assertions.assertThatThrownBy(
+              () -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
+    @Test
+    void should_failWithTechnischeWlsException_when_repoAuthorityIsMissing() throws Exception {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERANZAHL);
+
+      String wahlID = "wahlID01";
+      String wahlbezirkID = "wahlbezirkID01";
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID(wahlID, wahlbezirkID);
+      val waehleranzahlToSave = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
+
+      val waehleranzahlDTO = waehleranzahlDTOMapper.toDTO(waehleranzahlToSave);
+      WireMock.stubFor(
+          WireMock.post("/wahlbeteiligung")
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(waehleranzahlDTO))));
+
+      Assertions.assertThatThrownBy(
+              () -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+  }
 }

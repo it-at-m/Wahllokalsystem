@@ -16,43 +16,45 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BriefwahlvorbereitungService {
 
-    private final BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
-    private final BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
-    private final BriefwahlvorbereitungValidator briefwahlvorbereitungValidator;
-    private final ExceptionFactory exceptionFactory;
+  private final BriefwahlvorbereitungRepository briefwahlvorbereitungRepository;
+  private final BriefwahlvorbereitungModelMapper briefwahlvorbereitungModelMapper;
+  private final BriefwahlvorbereitungValidator briefwahlvorbereitungValidator;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public Optional<BriefwahlvorbereitungModel> getBriefwahlvorbereitung(@P("wahlbezirkID") final String wahlbezirkID) {
-        log.debug("#getBriefwahlvorbereitung");
-        log.debug("in: wahlbezirkID > {}", wahlbezirkID);
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_GetBriefwahlvorbereitung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<BriefwahlvorbereitungModel> getBriefwahlvorbereitung(
+      @P("wahlbezirkID") final String wahlbezirkID) {
+    log.debug("#getBriefwahlvorbereitung");
+    log.debug("in: wahlbezirkID > {}", wahlbezirkID);
 
-        briefwahlvorbereitungValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
+    briefwahlvorbereitungValidator.validWahlbezirkIDOrThrow(wahlbezirkID);
 
-        val dataFromRepo = briefwahlvorbereitungRepository.findById(wahlbezirkID);
+    val dataFromRepo = briefwahlvorbereitungRepository.findById(wahlbezirkID);
 
-        log.debug("out: briefwahlvorbereitung > {}", dataFromRepo.orElse(null));
+    log.debug("out: briefwahlvorbereitung > {}", dataFromRepo.orElse(null));
 
-        return dataFromRepo.map(briefwahlvorbereitungModelMapper::toModel);
+    return dataFromRepo.map(briefwahlvorbereitungModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)")
+  public void setBriefwahlvorbereitung(
+      @P("briefwahlvorbereitungToSet")
+          final BriefwahlvorbereitungModel briefwahlvorbereitungToSet) {
+    log.debug("#postBriefwahlvorbereitung");
+    log.debug("in: briefwahlvorbereitung > {}", briefwahlvorbereitungToSet);
+
+    briefwahlvorbereitungValidator.validModelToSetOrThrow(briefwahlvorbereitungToSet);
+
+    try {
+      briefwahlvorbereitungRepository.save(
+          briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungToSet));
+    } catch (final Exception e) {
+      log.error("Fehler beim speichern: ", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostBriefwahlvorbereitung')"
-                + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#briefwahlvorbereitungToSet.wahlbezirkID(), authentication)"
-    )
-    public void setBriefwahlvorbereitung(@P("briefwahlvorbereitungToSet") final BriefwahlvorbereitungModel briefwahlvorbereitungToSet) {
-        log.debug("#postBriefwahlvorbereitung");
-        log.debug("in: briefwahlvorbereitung > {}", briefwahlvorbereitungToSet);
-
-        briefwahlvorbereitungValidator.validModelToSetOrThrow(briefwahlvorbereitungToSet);
-
-        try {
-            briefwahlvorbereitungRepository.save(briefwahlvorbereitungModelMapper.toEntity(briefwahlvorbereitungToSet));
-        } catch (final Exception e) {
-            log.error("Fehler beim speichern: ", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.UNSAVEABLE);
-        }
-    }
+  }
 }

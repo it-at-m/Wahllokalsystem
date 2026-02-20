@@ -2,18 +2,34 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahleranzahl by wahlID and wahlbezirkID
-GET {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/wahlID01/wahlbezirkID01
+### get wahleranzahl by wahlID and wahlbezirkID | user wls_all_uwb
+GET {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST waehleranzahl
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/wahlID01/wahlbezirkID01
+### POST waehleranzahl | user wls_all_uwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlID": "wahlID01",
-  "wahlbezirkID": "wahlbezirk01",
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "anzahlWaehler": 99,
-  "uhrzeit": "2024-10-21T23:59:12.123"
+  "uhrzeit": "2026-01-01T23:59:12.123"
+}
+
+### get wahleranzahl by wahlID and wahlbezirkID | user wls_all_bwb
+GET {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST waehleranzahl | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/wahlbeteiligung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "anzahlWaehler": 168,
+  "uhrzeit": "2026-01-01T23:59:12.123"
 }

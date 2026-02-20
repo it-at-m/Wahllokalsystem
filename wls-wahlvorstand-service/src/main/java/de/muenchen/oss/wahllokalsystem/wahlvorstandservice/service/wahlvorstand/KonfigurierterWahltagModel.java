@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
-public record KonfigurierterWahltagModel(@NotNull LocalDate wahltag,
-                                         @NotNull @Size(max = 255) String nummer) {
-}
+public record KonfigurierterWahltagModel(
+    @NotNull LocalDate wahltag,
+    @NotNull String wahltagID,
+    @NotNull @Size(max = 255) String nummer) {}

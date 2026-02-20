@@ -7,5 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface KonfigurierterWahltagClientMapper {
 
-    KonfigurierterWahltagModel fromRemoteClientDTOToModel(KonfigurierterWahltagDTO konfigurierterWahltagDTO);
+  KonfigurierterWahltagModel fromRemoteClientDTOToModel(
+      KonfigurierterWahltagDTO konfigurierterWahltagDTO);
 }

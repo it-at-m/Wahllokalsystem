@@ -8,19 +8,25 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
 @Converter
-public class ZurueckweisungsgrundConverter implements AttributeConverter<Zurueckweisungsgrund[], String> {
+public class ZurueckweisungsgrundConverter
+    implements AttributeConverter<Zurueckweisungsgrund[], String> {
 
-    private static final String SPLIT_CHAR = ",";
+  private static final String SPLIT_CHAR = ",";
 
-    @Override
-    public String convertToDatabaseColumn(Zurueckweisungsgrund[] enumArray) {
-        return StringUtils.join(enumArray, SPLIT_CHAR);
+  @Override
+  public String convertToDatabaseColumn(Zurueckweisungsgrund[] enumArray) {
+    return StringUtils.join(enumArray, SPLIT_CHAR);
+  }
+
+  @Override
+  public Zurueckweisungsgrund[] convertToEntityAttribute(String dbData) {
+    if (dbData == null) {
+      return new Zurueckweisungsgrund[0];
     }
-
-    @Override
-    public Zurueckweisungsgrund[] convertToEntityAttribute(String dbData) {
-        val dbDataSplitted = dbData.split(SPLIT_CHAR);
-        return Arrays.stream(dbDataSplitted).filter(StringUtils::isNotBlank).map(Zurueckweisungsgrund::valueOf)
-                .toArray(Zurueckweisungsgrund[]::new);
-    }
+    val dbDataSplitted = dbData.split(SPLIT_CHAR);
+    return Arrays.stream(dbDataSplitted)
+        .filter(StringUtils::isNotBlank)
+        .map(Zurueckweisungsgrund::valueOf)
+        .toArray(Zurueckweisungsgrund[]::new);
+  }
 }

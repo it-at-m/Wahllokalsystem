@@ -18,12 +18,18 @@ spring:
   session:
     jdbc:
       table-name: SPRING_SESSION
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 security:
   # possible values: none, all, changing (With changing, only changing requests such as POST, PUT, DELETE are logged)
   logging.requests: all
 
 server:
+  forward-headers-strategy: native
   shutdown: "graceful"
   port: 8080
   error:
@@ -63,6 +69,10 @@ info.application.version: @project.version@
 
 service:
   config:
+    cors:
+      allowedOrigins:
+        - http://localhost:8083
+        - http://host.docker.internal:8083
     crypto:
       encryptionPrefix: "ENCRYPTED:"
     maxLoginAttempts: 5
@@ -83,6 +93,7 @@ service:
       userSearchFilter: uid={0}
     loginCheckMessage: notInActiveElectionDay
     oauth2:
+      logoutUri: https://auth.wls.host.docker.internal:58100/logout
       clients:
         wahllokalgui:
           id: wls

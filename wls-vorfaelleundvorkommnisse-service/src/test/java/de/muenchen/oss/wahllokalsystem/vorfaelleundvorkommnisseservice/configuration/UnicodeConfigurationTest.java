@@ -9,7 +9,8 @@ import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.Te
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisRepository;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.Ereignis;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.domain.ereignis.EreignisseRepository;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisseWriteDTO;
@@ -24,50 +25,53 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+    classes = {MicroServiceApplication.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+      "refarch.gracefulshutdown.pre-wait-seconds=0"
+    })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
-    private static final String ENTITY_ENDPOINT_URL = "/businessActions/ereignisse/";
+  private static final String ENTITY_ENDPOINT_URL = "/businessActions/ereignisse/";
 
-    /**
-     * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
-     */
-    private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
+  /** Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́" */
+  private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
 
-    /**
-     * Composed string: String "Ä-é" represented with unicode letters "Ä-é".
-     */
-    private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
+  /** Composed string: String "Ä-é" represented with unicode letters "Ä-é". */
+  private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private EreignisRepository ereignisRepository;
+  @Autowired private EreignisseRepository ereignisseRepository;
 
-    @Test
-    void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
-        val wahlbezirkID = "wahlbezirkID01";
-        // create a list of Ereignisse with only one Ereignis containing the TEXT_ATTRIBUTE_DECOMPOSED as 'beschreibung'
-        val ereignisDTO = new EreignisDTO(TEXT_ATTRIBUTE_DECOMPOSED, LocalDateTime.now().withNano(0), EreignisartDTO.VORFALL);
-        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), ereignisDTO.beschreibung().length());
-        val ereignisseWriteDTO = new EreignisseWriteDTO(Arrays.asList(ereignisDTO));
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() {
+    // Persist entity with decomposed string.
+    val wahlbezirkID = "wahlbezirkID01";
+    // create a list of Ereignisse with only one Ereignis containing the TEXT_ATTRIBUTE_DECOMPOSED
+    // as 'beschreibung'
+    val ereignisDTO =
+        new EreignisDTO(
+            TEXT_ATTRIBUTE_DECOMPOSED, LocalDateTime.now().withNano(0), EreignisartDTO.VORFALL);
+    assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), ereignisDTO.beschreibung().length());
+    val ereignisseWriteDTO = new EreignisseWriteDTO(true, true, Arrays.asList(ereignisDTO));
 
-        // store list of Ereignisse
-        testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), ereignisseWriteDTO,
-                Void.class);
+    // store list of Ereignisse
+    testRestTemplate.postForEntity(
+        URI.create(ENTITY_ENDPOINT_URL + wahlbezirkID), ereignisseWriteDTO, Void.class);
 
-        // Check persisted entity contains a composed string via JPA repository.
-        val ereignis = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED, ereignis.get(0).getBeschreibung());
-        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), ereignis.get(0).getBeschreibung().length());
+    // Check persisted entity contains a composed string via JPA repository.
+    val ereignisse = ereignisseRepository.findByWahlbezirkID(wahlbezirkID).orElseThrow();
+    val ereignisSet = ereignisse.getEreignisse();
+    var beschreibung = "";
+    val iterator = ereignisSet.iterator();
+    if (iterator.hasNext()) {
+      Ereignis erstesEreignis = iterator.next();
+      beschreibung = erstesEreignis.getBeschreibung();
     }
+    assertEquals(TEXT_ATTRIBUTE_COMPOSED, beschreibung);
+    assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), beschreibung.length());
+  }
 }

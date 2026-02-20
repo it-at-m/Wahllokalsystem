@@ -6,20 +6,24 @@ import de.muenchen.oss.wahllokalsystem.adminservice.eai.auth.model.WahllokalUser
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.TripleOfWahlbezirkIDWahlnummerWahlIDModel;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.wahllokalbenutzer.WahllokalBenutzerModel;
 import java.util.List;
+import lombok.val;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
 public interface WahllokalBenutzerClientMapper {
+  ObjectMapper objectMapper = new ObjectMapper();
 
-    ObjectMapper objectMapper = new ObjectMapper();
+  @Mapping(target = "wbidWahlnummer", source = "wbid_wahlnummer")
+  WahllokalUserInfoDTO toDTO(WahllokalBenutzerModel wahllokalBenutzerModel);
 
-    @Mapping(target = "wbidWahlnummer", source = "wbid_wahlnummer")
-    WahllokalUserInfoDTO toWahllokalUserInfoDTO(WahllokalBenutzerModel wahllokalBenutzerModel);
+  default String mapTripleToJsonAsString(
+      final List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer)
+      throws JsonProcessingException {
+    val root = objectMapper.createObjectNode();
+    root.set("wbid_wahlnummer", objectMapper.valueToTree(wbid_wahlnummer));
+    return objectMapper.writeValueAsString(root);
+  }
 
-    default String mapTripleToJsonAsString(final List<TripleOfWahlbezirkIDWahlnummerWahlIDModel> wbid_wahlnummer) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(wbid_wahlnummer);
-    }
-
-    List<WahllokalUserInfoDTO> toListOfWahllokalUserInfoDTO(List<WahllokalBenutzerModel> wahllokalBenutzerModelList);
+  List<WahllokalUserInfoDTO> toDTO(List<WahllokalBenutzerModel> wahllokalBenutzerModelList);
 }

@@ -2,9 +2,9 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.handbuch;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.FileResponseEntityModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.FileResponseEntityModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,52 +27,55 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @Slf4j
 public class HandbuchController {
 
-    private static final String HANDBUCH_FILE_CONTENT_TYPE = "application/pdf";
+  private static final String HANDBUCH_FILE_CONTENT_TYPE = "application/pdf";
 
-    @Value("${service.config.manual.filenamesuffix:Handbuch.pdf}")
-    String manualFileNameSuffix;
+  @Value("${service.config.manual.filenamesuffix:Handbuch.pdf}")
+  String manualFileNameSuffix;
 
-    private final HandbuchService handbuchService;
+  private final HandbuchService handbuchService;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final HandbuchDTOMapper handbuchDTOMapper;
+  private final HandbuchDTOMapper handbuchDTOMapper;
 
-    private final FileMapper fileMapper;
+  private final FileMapper fileMapper;
 
-    @GetMapping("{wahltagID}/{wahlbezirksart}")
-    @Operation(
-            description = "Abrufen des Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Handbuch erfolgreich zurückgegeben."
+  @GetMapping("{wahltagID}/{wahlbezirksart}")
+  @Operation(
+      description = "Abrufen des Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Handbuch erfolgreich zurückgegeben.")
+      })
+  public ResponseEntity<byte[]> getHandbuch(
+      @PathVariable("wahltagID") String wahltagID,
+      @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
+    val handbuchData =
+        handbuchService.getHandbuch(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
 
-                    )
-            }
-    )
-    public ResponseEntity<byte[]> getHandbuch(@PathVariable("wahltagID") String wahltagID,
-            @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO) {
-        val handbuchData = handbuchService.getHandbuch(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO));
+    val attachmentFilename = wahlbezirkArtDTO + manualFileNameSuffix;
+    return fileMapper.toResponseEntity(
+        new FileResponseEntityModel(handbuchData, HANDBUCH_FILE_CONTENT_TYPE, attachmentFilename));
+  }
 
-        val attachmentFilename = wahlbezirkArtDTO + manualFileNameSuffix;
-        return fileMapper.toResponseEntity(new FileResponseEntityModel(handbuchData, HANDBUCH_FILE_CONTENT_TYPE, attachmentFilename));
+  @PostMapping("{wahltagID}/{wahlbezirksart}")
+  @Operation(
+      description = "Speichern eines Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Handbuch erfolgreich gespeichert")
+      })
+  public void setHandbuch(
+      @PathVariable("wahltagID") String wahltagID,
+      @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
+      final MultipartHttpServletRequest request) {
+    try {
+      val handbuchData = fileMapper.fromRequest(request);
+      val modelToSet =
+          handbuchDTOMapper.toModel(
+              handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO), handbuchData);
+      handbuchService.setHandbuch(modelToSet);
+    } catch (final IOException e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH);
     }
-
-    @PostMapping("{wahltagID}/{wahlbezirksart}")
-    @Operation(
-            description = "Speichern eines Handbuches einer Wahl für eine bestimmte Wahlbezirksart",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Handbuch erfolgreich gespeichert")
-            }
-    )
-    public void setHandbuch(@PathVariable("wahltagID") String wahltagID, @PathVariable("wahlbezirksart") WahlbezirkArtDTO wahlbezirkArtDTO,
-            final MultipartHttpServletRequest request) {
-        try {
-            val handbuchData = fileMapper.fromRequest(request);
-            val modelToSet = handbuchDTOMapper.toModel(handbuchDTOMapper.toModel(wahltagID, wahlbezirkArtDTO), handbuchData);
-            handbuchService.setHandbuch(modelToSet);
-        } catch (final IOException e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POSTHANDBUCH_SPEICHERN_NICHT_ERFOLGREICH);
-        }
-    }
+  }
 }

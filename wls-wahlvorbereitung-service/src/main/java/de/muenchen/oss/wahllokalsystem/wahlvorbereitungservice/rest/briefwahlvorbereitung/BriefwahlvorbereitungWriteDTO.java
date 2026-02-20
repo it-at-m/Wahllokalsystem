@@ -5,6 +5,4 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
-public record BriefwahlvorbereitungWriteDTO(@NotNull java.util.List<WahlurneDTO> urnenAnzahl) {
-
-}
+public record BriefwahlvorbereitungWriteDTO(@NotNull java.util.List<WahlurneDTO> urnenAnzahl) {}

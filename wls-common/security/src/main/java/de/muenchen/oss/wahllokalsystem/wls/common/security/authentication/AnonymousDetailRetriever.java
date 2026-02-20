@@ -12,16 +12,16 @@ import org.springframework.util.Assert;
 @Profile(Profiles.NO_SECURITY)
 public class AnonymousDetailRetriever implements AuthDetailRetriever {
 
-    @Override
-    public boolean canHandle(Authentication authentication) {
-        Assert.notNull(authentication, "Authentication must not be null");
-        return authentication instanceof AnonymousAuthenticationToken;
-    }
+  @Override
+  public boolean canHandle(Authentication authentication) {
+    Assert.notNull(authentication, "Authentication must not be null");
+    return authentication instanceof AnonymousAuthenticationToken;
+  }
 
-    @Override
-    public Optional<String> getDetail(String detailKey, Authentication authentication) {
-        Assert.notNull(authentication, "Authentication must not be null");
-        Assert.notNull(detailKey, "detailKey must not be null");
-        return Optional.empty();
-    }
+  @Override
+  public Optional<String> getDetail(String detailKey, Authentication authentication) {
+    Assert.notNull(authentication, "Authentication must not be null");
+    Assert.notNull(detailKey, "detailKey must not be null");
+    return Optional.empty();
+  }
 }

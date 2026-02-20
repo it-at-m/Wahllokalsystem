@@ -1,0 +1,22 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "declarations.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "stories/**/*.ts"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./cache/tsconfig.app.tsbuildinfo",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@tests/*": ["./tests/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "noUncheckedSideEffectImports": true,
+    "types": ["unplugin-fonts/client"]
+  }
+}

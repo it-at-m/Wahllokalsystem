@@ -16,39 +16,61 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerDefaultConfiguration {
 
-    @Bean
-    public GlobalOpenApiCustomizer errorCustomizer() {
-        return api -> api.getPaths().values().forEach(path -> path.readOperations()
-                .forEach(operation -> addErrorToApi(operation, api.getComponents())));
-    }
+  @Bean
+  public GlobalOpenApiCustomizer errorCustomizer() {
+    return api ->
+        api.getPaths()
+            .values()
+            .forEach(
+                path ->
+                    path.readOperations()
+                        .forEach(operation -> addErrorToApi(operation, api.getComponents())));
+  }
 
-    // add response based on the behavior of the global exception handler
-    private void addErrorToApi(final Operation operation, final Components components) {
-        if (operation.getResponses() != null) {
-            addRequestBodyValidationErrorToAPI(operation, components);
-            addNotFoundErrorToAPI(operation);
-            addInternalErrorToAPI(operation, components);
-        }
+  // add response based on the behavior of the global exception handler
+  private void addErrorToApi(final Operation operation, final Components components) {
+    if (operation.getResponses() != null) {
+      addRequestBodyValidationErrorToAPI(operation, components);
+      addNotFoundErrorToAPI(operation);
+      addInternalErrorToAPI(operation, components);
     }
+  }
 
-    private void addRequestBodyValidationErrorToAPI(Operation operation, Components components) {
-        operation.getResponses().addApiResponse("400", new ApiResponse()
-                .description("request body validation failed")
-                .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
-    }
+  private void addRequestBodyValidationErrorToAPI(Operation operation, Components components) {
+    operation
+        .getResponses()
+        .addApiResponse(
+            "400",
+            new ApiResponse()
+                .description("Validierung des Requestbody fehlgeschlagen")
+                .content(
+                    new Content()
+                        .addMediaType(
+                            APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
+  }
 
-    private void addNotFoundErrorToAPI(Operation operation) {
-        operation.getResponses().addApiResponse("404", new ApiResponse()
-                .description("resource not found"));
-    }
+  private void addNotFoundErrorToAPI(Operation operation) {
+    operation
+        .getResponses()
+        .addApiResponse("404", new ApiResponse().description("Ressource nicht gefunden"));
+  }
 
-    private void addInternalErrorToAPI(Operation operation, Components components) {
-        operation.getResponses().addApiResponse("500", new ApiResponse()
-                .description("unhandled internal error e.g. communication with other system or some types of unhandled exception")
-                .content(new Content().addMediaType(APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
-    }
+  private void addInternalErrorToAPI(Operation operation, Components components) {
+    operation
+        .getResponses()
+        .addApiResponse(
+            "500",
+            new ApiResponse()
+                .description(
+                    "Unbehandelter interner Fehler, z.B. Kommunikation mit anderen Systemen oder andere Arten von unbehandelten Fehlern")
+                .content(
+                    new Content()
+                        .addMediaType(
+                            APPLICATION_JSON_VALUE, createWlsExceptionDTOMediaType(components))));
+  }
 
-    private MediaType createWlsExceptionDTOMediaType(final Components components) {
-        return new MediaType().schema(AnnotationsUtils.resolveSchemaFromType(WlsExceptionDTO.class, components, null));
-    }
+  private MediaType createWlsExceptionDTOMediaType(final Components components) {
+    return new MediaType()
+        .schema(AnnotationsUtils.resolveSchemaFromType(WlsExceptionDTO.class, components, null));
+  }
 }

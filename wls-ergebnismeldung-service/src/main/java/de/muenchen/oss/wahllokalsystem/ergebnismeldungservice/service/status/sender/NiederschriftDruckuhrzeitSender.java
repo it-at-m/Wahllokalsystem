@@ -8,26 +8,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class NiederschriftDruckuhrzeitSender extends AbstractStatusMonitoringSender {
 
-    public NiederschriftDruckuhrzeitSender(StatusClient monitoringClient) {
-        super(monitoringClient);
+  public NiederschriftDruckuhrzeitSender(StatusClient monitoringClient) {
+    super(monitoringClient);
+  }
+
+  @Override
+  public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
+    if (hasGedrucktChanged(newStatus, oldStatus) || (oldStatus == null && isGedruckt(newStatus))) {
+      getMonitoringClient().postNiederschriftDruckuhrzeit(id, LocalDateTime.now());
+    }
+  }
+
+  private boolean hasGedrucktChanged(final StatusModel newStatus, final StatusModel oldStatus) {
+    if (oldStatus == null
+        || oldStatus.niederschrift() == null
+        || newStatus.niederschrift() == null) {
+      return false;
     }
 
-    @Override
-    public void submitStatus(BezirkUndWahlID id, StatusModel newStatus, StatusModel oldStatus) {
-        if (hasGedrucktChanged(newStatus, oldStatus) || (oldStatus == null && isGedruckt(newStatus))) {
-            getMonitoringClient().postNiederschriftDruckuhrzeit(id, LocalDateTime.now());
-        }
-    }
+    return oldStatus.niederschrift().gedruckt() != newStatus.niederschrift().gedruckt();
+  }
 
-    private boolean hasGedrucktChanged(final StatusModel newStatus, final StatusModel oldStatus) {
-        if (oldStatus == null || oldStatus.niederschrift() == null || newStatus.niederschrift() == null) {
-            return false;
-        }
-
-        return oldStatus.niederschrift().gedruckt() != newStatus.niederschrift().gedruckt();
-    }
-
-    private boolean isGedruckt(final StatusModel status) {
-        return status.niederschrift() != null && status.niederschrift().gedruckt();
-    }
+  private boolean isGedruckt(final StatusModel status) {
+    return status.niederschrift() != null && status.niederschrift().gedruckt();
+  }
 }

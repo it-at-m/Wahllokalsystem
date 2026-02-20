@@ -22,136 +22,151 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ErgebnisseServiceTest {
 
-    @Mock
-    ErgebnisseRepository ergebnisseRepository;
+  @Mock ErgebnisseRepository ergebnisseRepository;
 
-    @Mock
-    ErgebnisseModelMapper ergebnisseModelMapper;
+  @Mock ErgebnisseModelMapper ergebnisseModelMapper;
 
-    @Mock
-    ErgebnisseValidator ergebnisseValidator;
+  @Mock ErgebnisseValidator ergebnisseValidator;
 
-    @InjectMocks
-    ErgebnisseService unitUnderTest;
+  @InjectMocks ErgebnisseService unitUnderTest;
 
-    @Mock
-    ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
-    @Nested
-    class GetErgebnisse {
+  @Nested
+  class GetErgebnisse {
 
-        @Test
-        void should_returnNull_when_repoIsEmpty() {
-            val reference = ErgebnisseReference.builder().build();
-            val mappedEntityId = new BezirkUndWahlIDStapelart();
+    @Test
+    void should_returnNull_when_repoIsEmpty() {
+      val reference = ErgebnisseReferenceModel.builder().build();
+      val mappedEntityId = new BezirkUndWahlIDStapelart();
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
 
-            Mockito.when(ergebnisseModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
-            Mockito.when(ergebnisseRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
+      Mockito.when(ergebnisseModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
+      Mockito.when(ergebnisseRepository.findById(mappedEntityId)).thenReturn(Optional.empty());
 
-            val result = unitUnderTest.getErgebnisse(reference);
+      val result = unitUnderTest.getErgebnisse(reference);
 
-            Assertions.assertThat(result).isEqualTo(Optional.empty());
+      Assertions.assertThat(result).isEqualTo(Optional.empty());
 
-            Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference, mockedWlsException);
-        }
-
-        @Test
-        void should_returnErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
-            val reference = ErgebnisseReference.builder().build();
-
-            val mappedEntityId = new BezirkUndWahlIDStapelart();
-            val entityFromRepo = new Ergebnisse();
-            val mappedEntity = ErgebnisseModel.builder().build();
-
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Mockito.when(ergebnisseModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
-            Mockito.when(ergebnisseRepository.findById(mappedEntityId)).thenReturn(Optional.of(entityFromRepo));
-            Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
-
-            val result = unitUnderTest.getErgebnisse(reference);
-
-            Assertions.assertThat(result).isEqualTo(Optional.of(mappedEntity));
-        }
+      Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference, mockedWlsException);
     }
 
-    @Nested
-    class GetAllErgebnisse {
+    @Test
+    void should_returnErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
+      val reference = ErgebnisseReferenceModel.builder().build();
 
-        @Test
-        void should_returnAllErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
-            val wahlbezirkID = "wahlbezirkID";
-            val wahlID = "wahlID";
+      val mappedEntityId = new BezirkUndWahlIDStapelart();
+      val entityFromRepo = new Ergebnisse();
+      val mappedEntity = ErgebnisseModel.builder().build();
 
-            val entityFromRepo = new Ergebnisse();
-            val mappedEntity = ErgebnisseModel.builder().build();
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
 
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
+      Mockito.when(ergebnisseModelMapper.toEmbeddedId(reference)).thenReturn(mappedEntityId);
+      Mockito.when(ergebnisseRepository.findById(mappedEntityId))
+          .thenReturn(Optional.of(entityFromRepo));
+      Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
 
-            Mockito.when(ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID)).thenReturn(List.of(entityFromRepo));
-            Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
+      val result = unitUnderTest.getErgebnisse(reference);
 
-            val result = unitUnderTest.getAllErgebnisse(wahlbezirkID, wahlID);
+      Assertions.assertThat(result).isEqualTo(Optional.of(mappedEntity));
+    }
+  }
 
-            Assertions.assertThat(result).isEqualTo(List.of(mappedEntity));
-        }
+  @Nested
+  class GetAllErgebnisse {
+
+    @Test
+    void should_returnAllErgebnisseModel_when_ergebnisseIsFoundFromRepo() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      val entityFromRepo = new Ergebnisse();
+      val mappedEntity = ErgebnisseModel.builder().build();
+
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
+
+      Mockito.when(ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID))
+          .thenReturn(List.of(entityFromRepo));
+      Mockito.when(ergebnisseModelMapper.toModel(entityFromRepo)).thenReturn(mappedEntity);
+
+      val result = unitUnderTest.getAllErgebnisse(wahlID, wahlbezirkID);
+
+      Assertions.assertThat(result).isEqualTo(List.of(mappedEntity));
+    }
+  }
+
+  @Nested
+  class PostErgebnisse {
+    @Test
+    void should_callValidator_when_posting() {
+
+      val reference = ErgebnisseReferenceModel.builder().build();
+      val invalidModel = ErgebnisseModel.builder().build();
+
+      unitUnderTest.postErgebnisse(reference, invalidModel);
+
+      Mockito.verify(ergebnisseValidator).validModelOrThrow(invalidModel);
     }
 
-    @Nested
-    class PostErgebnisse {
-        @Test
-        void should_callValidator_when_posting() {
+    @Test
+    void should_saveErgebnisse_when_called() {
+      val model = ErgebnisseModel.builder().build();
+      val reference = ErgebnisseReferenceModel.builder().build();
+      val mappedEntityOfModel = new Ergebnisse();
 
-            val reference = ErgebnisseReference.builder().build();
-            val invalidModel = ErgebnisseModel.builder().build();
+      val mockedWlsException =
+          FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
+      Mockito.when(
+              exceptionFactory.createFachlicheWlsException(
+                  ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
+          .thenReturn(mockedWlsException);
 
-            unitUnderTest.postErgebnisse(reference, invalidModel);
+      Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
 
-            Mockito.verify(ergebnisseValidator).validModelOrThrow(invalidModel);
-        }
+      unitUnderTest.postErgebnisse(reference, model);
 
-        @Test
-        void should_saveErgebnisse_when_called() {
-            val model = ErgebnisseModel.builder().build();
-            val reference = ErgebnisseReference.builder().build();
-            val mappedEntityOfModel = new Ergebnisse();
-
-            val mockedWlsException = FachlicheWlsException.withCode("").buildWithMessage("validation of parameters failed");
-            Mockito.when(exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG))
-                    .thenReturn(mockedWlsException);
-
-            Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mappedEntityOfModel);
-
-            unitUnderTest.postErgebnisse(reference, model);
-
-            Mockito.verify(ergebnisseRepository).save(mappedEntityOfModel);
-            Mockito.verify(ergebnisseValidator).validModelOrThrow(model);
-            Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference, mockedWlsException);
-        }
-
-        @Test
-        void should_throwTechnischeException_when_called() {
-            val model = ErgebnisseModel.builder().build();
-            val reference = ErgebnisseReference.builder().build();
-
-            val mockedModelAsEntity = Mockito.mock(Ergebnisse.class);
-            val mockedRepositorySaveException = new RuntimeException("saving failed");
-            val mockedExceptionFactoryWlsException = TechnischeWlsException.withCode("").buildWithMessage("save exception");
-
-            Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mockedModelAsEntity);
-            Mockito.doThrow(mockedRepositorySaveException).when(ergebnisseRepository).save(mockedModelAsEntity);
-            Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE))
-                    .thenReturn(mockedExceptionFactoryWlsException);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.postErgebnisse(reference, model)).isSameAs(mockedExceptionFactoryWlsException);
-        }
+      Mockito.verify(ergebnisseRepository).save(mappedEntityOfModel);
+      Mockito.verify(ergebnisseValidator).validModelOrThrow(model);
+      Mockito.verify(ergebnisseValidator).validReferenceOrThrow(reference, mockedWlsException);
     }
+
+    @Test
+    void should_throwTechnischeException_when_called() {
+      val model = ErgebnisseModel.builder().build();
+      val reference = ErgebnisseReferenceModel.builder().build();
+
+      val mockedModelAsEntity = Mockito.mock(Ergebnisse.class);
+      val mockedRepositorySaveException = new RuntimeException("saving failed");
+      val mockedExceptionFactoryWlsException =
+          TechnischeWlsException.withCode("").buildWithMessage("save exception");
+
+      Mockito.when(ergebnisseModelMapper.toEntity(model)).thenReturn(mockedModelAsEntity);
+      Mockito.doThrow(mockedRepositorySaveException)
+          .when(ergebnisseRepository)
+          .save(mockedModelAsEntity);
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.ERGEBNISSE_UNSAVEABLE))
+          .thenReturn(mockedExceptionFactoryWlsException);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.postErgebnisse(reference, model))
+          .isSameAs(mockedExceptionFactoryWlsException);
+    }
+  }
 }

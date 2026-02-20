@@ -4,8 +4,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.client.KonfigurierterWahltagControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagClient;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.kopfdaten.KonfigurierterWahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KonfigurierterWahltagClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KonfigurierterWahltagModel;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +19,24 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KonfigurierterWahltagClientImpl implements KonfigurierterWahltagClient {
 
-    private final ExceptionFactory exceptionFactory;
-    private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
-    private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
+  private final ExceptionFactory exceptionFactory;
+  private final KonfigurierterWahltagControllerApi konfigurierterWahltagControllerApi;
+  private final KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
 
-    @Override
-    public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
-        final KonfigurierterWahltagDTO konfigurierterWahltagDTO;
-        try {
-            konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
-        } catch (final Exception exception) {
-            log.info("exception on getKonfigurierterWahltag from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE);
-        }
-        if (konfigurierterWahltagDTO == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG);
-        }
-        return konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+  @Override
+  public KonfigurierterWahltagModel getKonfigurierterWahltag() throws WlsException {
+    final KonfigurierterWahltagDTO konfigurierterWahltagDTO;
+    try {
+      konfigurierterWahltagDTO = konfigurierterWahltagControllerApi.getKonfigurierterWahltag();
+    } catch (final Exception exception) {
+      log.info("exception on getKonfigurierterWahltag from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_SERVICE);
     }
+    if (konfigurierterWahltagDTO == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GETKOPFDATEN_NO_KONFIGURIERTERWAHLTAG);
+    }
+    return konfigurierterWahltagClientMapper.fromRemoteClientDTOToModel(konfigurierterWahltagDTO);
+  }
 }

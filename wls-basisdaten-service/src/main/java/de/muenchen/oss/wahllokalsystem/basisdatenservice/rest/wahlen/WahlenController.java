@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenWriteModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenWriteModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,48 +26,50 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahlenController {
 
-    private final WahlenService wahlenService;
+  private final WahlenService wahlenService;
 
-    private final WahlDTOMapper wahlDTOMapper;
+  private final WahlDTOMapper wahlDTOMapper;
 
-    @Operation(description = "Laden der Wahlen des Wahltages { wahltagID }.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Wahlen des Wahltags erfolgreich zurückgegeben",
-                            content = { @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = WahlDTO.class))) }
-                    )
-            }
-    )
-    @GetMapping("wahlen/{wahltagID}")
-    public List<WahlDTO> getWahlen(@PathVariable("wahltagID") String wahltagID) {
-        return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlenService.getWahlen(wahltagID));
-    }
+  @Operation(description = "Laden der Wahlen des Wahltages { wahltagID }.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Wahlen des Wahltags erfolgreich zurückgegeben",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = WahlDTO.class)))
+            })
+      })
+  @GetMapping("wahlen/{wahltagID}")
+  public List<WahlDTO> getWahlen(@PathVariable("wahltagID") String wahltagID) {
+    return wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(wahlenService.getWahlen(wahltagID));
+  }
 
-    @PostMapping("wahlen/{wahltagID}")
-    @Operation(
-            description = "Speichern einer Liste von Wahlen.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Wahlen erfolgreich abgespeichert.")
-            }
-    )
-    @ResponseStatus(HttpStatus.OK)
-    public void postWahlen(@PathVariable("wahltagID") String wahltagID, @RequestBody List<WahlDTO> wahlDTOs) {
-        wahlenService.postWahlen(new WahlenWriteModel(wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs)));
-    }
+  @PostMapping("wahlen/{wahltagID}")
+  @Operation(
+      description = "Speichern einer Liste von Wahlen.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Wahlen erfolgreich abgespeichert.")
+      })
+  @ResponseStatus(HttpStatus.OK)
+  public void postWahlen(
+      @PathVariable("wahltagID") String wahltagID, @RequestBody List<WahlDTO> wahlDTOs) {
+    wahlenService.postWahlen(
+        new WahlenWriteModel(
+            wahltagID, wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(wahlDTOs)));
+  }
 
-    @Operation(
-            description = "Setzt die Attribute Farbe, Reihenfolge und Waehlerverzeichnis der vorhandenen Wahlen auf die Standardwerte.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahlen wurden zurückgesetzt."
-                    )
-            }
-    )
-    @PostMapping("/resetWahlen")
-    @ResponseStatus(HttpStatus.OK)
-    public void resetWahlen() {
-        wahlenService.resetWahlen();
-    }
-
+  @Operation(
+      description =
+          "Setzt die Attribute Farbe, Reihenfolge und Waehlerverzeichnis der vorhandenen Wahlen auf die Standardwerte.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Die Wahlen wurden zurückgesetzt.")
+      })
+  @PostMapping("/resetWahlen")
+  @ResponseStatus(HttpStatus.OK)
+  public void resetWahlen() {
+    wahlenService.resetWahlen();
+  }
 }

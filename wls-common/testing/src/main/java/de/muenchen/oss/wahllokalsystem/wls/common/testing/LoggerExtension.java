@@ -11,23 +11,23 @@ import org.slf4j.LoggerFactory;
 
 public class LoggerExtension implements BeforeEachCallback, AfterEachCallback {
 
-    private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-    private final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+  private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+  private final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-    @Override
-    public void afterEach(ExtensionContext extensionContext) {
-        listAppender.stop();
-        listAppender.list.clear();
-        logger.detachAppender(listAppender);
-    }
+  @Override
+  public void afterEach(ExtensionContext extensionContext) {
+    listAppender.stop();
+    listAppender.list.clear();
+    logger.detachAppender(listAppender);
+  }
 
-    @Override
-    public void beforeEach(ExtensionContext extensionContext) {
-        logger.addAppender(listAppender);
-        listAppender.start();
-    }
+  @Override
+  public void beforeEach(ExtensionContext extensionContext) {
+    logger.addAppender(listAppender);
+    listAppender.start();
+  }
 
-    public List<String> getFormattedMessages() {
-        return listAppender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
-    }
+  public List<String> getFormattedMessages() {
+    return listAppender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
+  }
 }

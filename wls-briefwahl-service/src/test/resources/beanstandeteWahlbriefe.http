@@ -2,145 +2,22 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-###
-GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
+### GET beanstandeteWahlbriefe | user wls_all_bwb
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/9081145c-dc16-4a9b-8255-5c49ddb98c14/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-###
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "beanstandeteWahlbriefe": {
-    "wahl1": [
-      "ZUGELASSEN",
-      "KEIN_ORIGINAL_SCHEIN",
-      "UNTERSCHRIFT_FEHLT"
-    ]
-  }
-}
-
-###
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/wbz-1/1
+### POST beanstandeteWahlbriefe | user wls_all_bwb
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/beanstandeteWahlbriefe/9081145c-dc16-4a9b-8255-5c49ddb98c14/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "beanstandeteWahlbriefe": {
-    "wahl2": [
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
-      "ZUGELASSEN",
+    "28039463-3d3d-4ce5-acc1-0bef931a4409": [
       "ZUGELASSEN",
       "ZUGELASSEN"
     ],
-    "wahl3": [
-      "ZUGELASSEN",
-      "UNTERSCHRIFT_FEHLT",
+    "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1": [
       "ZUGELASSEN",
       "UNTERSCHRIFT_FEHLT"
     ]

@@ -9,7 +9,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
+import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
+import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
@@ -17,7 +19,10 @@ import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
@@ -26,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.config.Customizer;
@@ -43,146 +49,184 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-/**
- * The central class for configuration of all security aspects.
- */
+/** The central class for configuration of all security aspects. */
 @Configuration
 @Profile("!no-security")
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @Import(RestTemplateAutoConfiguration.class)
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
 
-    private final String LOGIN_PATH = "/login";
+  private final String LOGIN_PATH = "/login";
 
-    @Autowired
-    private CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
+  @Autowired private WlsFormLoginConfigurer<HttpSecurity> wlsFormLoginConfigurer;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Value("${service.config.oauth2.jwk.rsa.init.seed}")
-    String rsaKeyPairSeed;
+  @Value("${service.config.oauth2.jwk.rsa.init.seed}")
+  String rsaKeyPairSeed;
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-            throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());
-        http
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
-                .exceptionHandling((exceptions) -> exceptions
-                        .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint(LOGIN_PATH),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
-                .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()));
+  private final RSAConfigurationProperties rsaConfigurationProperties;
 
-        return http.build();
-    }
+  @Bean
+  @Order(1)
+  public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+      throws Exception {
+    OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+    http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
+    http
+        // Redirect to the login page when not authenticated from the
+        // authorization endpoint
+        .exceptionHandling(
+            (exceptions) ->
+                exceptions.defaultAuthenticationEntryPointFor(
+                    new LoginUrlAuthenticationEntryPoint(LOGIN_PATH),
+                    new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+        .oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
+        .logout(logoutspec -> logoutspec.clearAuthentication(true));
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry) throws Exception {
-        http
-                .authorizeHttpRequests((requests) -> requests.requestMatchers(
+    return http.build();
+  }
+
+  @Bean
+  @Order(2)
+  public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
+      throws Exception {
+    http.apply(wlsFormLoginConfigurer);
+
+    http.authorizeHttpRequests(
+            (requests) ->
+                requests
+                    .requestMatchers(
                         // allow access to /actuator/info
-                        AntPathRequestMatcher.antMatcher("/actuator/info"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/info"),
                         // allow access to /actuator/health for OpenShift Health Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/health"),
                         // allow access to /actuator/health/liveness for OpenShift Liveness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/liveness"),
+                        PathPatternRequestMatcher.withDefaults()
+                            .matcher("/actuator/health/liveness"),
                         // allow access to /actuator/health/readiness for OpenShift Readiness Check
-                        AntPathRequestMatcher.antMatcher("/actuator/health/readiness"),
+                        PathPatternRequestMatcher.withDefaults()
+                            .matcher("/actuator/health/readiness"),
                         // allow access to /actuator/metrics for Prometheus monitoring in OpenShift
-                        AntPathRequestMatcher.antMatcher("/actuator/metrics"),
-                        AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
-                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
-                        AntPathRequestMatcher.antMatcher("/"),
-                        AntPathRequestMatcher.antMatcher("/home"),
-                        AntPathRequestMatcher.antMatcher("/css/*"),
-                        AntPathRequestMatcher.antMatcher("/js/*"))
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> httpSecurityOAuth2ResourceServerConfigurer
-                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(new JwtUserInfoAuthenticationConverter(userService))))
-                .formLogin((form) -> form
-                        .loginPage(LOGIN_PATH)
-                        .permitAll())
-                .sessionManagement(customizer -> customizer
-                        .sessionFixation().migrateSession()
-                        .maximumSessions(1)
-                        .expiredUrl(LOGIN_PATH)
-                        .maxSessionsPreventsLogin(false)
-                        .sessionRegistry(sessionRegistry))
-                .logout(LogoutConfigurer::permitAll)
-                .securityContext(securityContext -> securityContext.requireExplicitSave(false))
-                .addFilterBefore(customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        PathPatternRequestMatcher.withDefaults().matcher("/actuator/metrics"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/home"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/css/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/js/*"),
+                        PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            httpSecurityOAuth2ResourceServerConfigurer ->
+                httpSecurityOAuth2ResourceServerConfigurer.jwt(
+                    jwtConfigurer ->
+                        jwtConfigurer.jwtAuthenticationConverter(
+                            new JwtUserInfoAuthenticationConverter(userService))))
+        .logout(LogoutConfigurer::permitAll)
+        .logout(
+            logoutspec ->
+                logoutspec
+                    .permitAll(true)
+                    .clearAuthentication(true)
+                    .logoutRequestMatcher(
+                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/logout"))
+                    .logoutSuccessHandler(
+                        (request, response, authentication) ->
+                            log.info(
+                                "logout successful for {}", AuthUtils.getUsername(authentication))))
+        .securityContext(securityContext -> securityContext.requireExplicitSave(false));
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public RegisteredClientRepository registeredClientRepository(final JdbcOperations jdbcOperations) {
-        return new JdbcRegisteredClientRepository(jdbcOperations);
-    }
+  @Bean
+  public RegisteredClientRepository registeredClientRepository(
+      final JdbcOperations jdbcOperations) {
+    return new JdbcRegisteredClientRepository(jdbcOperations);
+  }
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        KeyPair keyPair = generateRsaKey();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID("keyID")
-                .build();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return new ImmutableJWKSet<>(jwkSet);
-    }
+  @Bean
+  public JWKSource<SecurityContext> jwkSource() {
+    Pair<RSAPrivateKey, RSAPublicKey> keyPair = getKeyPair();
+    val rsaKey =
+        new RSAKey.Builder(keyPair.getValue()).privateKey(keyPair.getKey()).keyID("keyID").build();
+    JWKSet jwkSet = new JWKSet(rsaKey);
+    return new ImmutableJWKSet<>(jwkSet);
+  }
 
-    private KeyPair generateRsaKey() {
-        KeyPair keyPair;
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048, new SecureRandom(rsaKeyPairSeed.getBytes()));
-            keyPair = keyPairGenerator.generateKeyPair();
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex);
-        }
-        return keyPair;
-    }
+  private Pair<RSAPrivateKey, RSAPublicKey> getKeyPair() {
+    RSAPrivateKey privateKey;
+    RSAPublicKey publicKey;
+    if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.STATIC_KEY) {
+      publicKey = rsaConfigurationProperties.getPublicKey();
+      privateKey = rsaConfigurationProperties.getPrivateKey();
+    } else if (rsaConfigurationProperties.getRsaKeySetting() == RSAKeySetting.GENERATED_KEY) {
+      log.warn(
+          """
+                            ##############################
+                            ##                          ##
+                            ##  Generierte RSA-Keys     ##
+                            ##      werden verwendet    ##
+                            ##                          ##
+                            ##  NICHT FÜR DEN           ##
+                            ##  PRODUKTIVEINSATZ        ##
+                            ##  BESTIMMT                ##
+                            ##############################""");
 
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+      val keyPair = generateRsaKey();
+      publicKey = (RSAPublicKey) keyPair.getPublic();
+      privateKey = (RSAPrivateKey) keyPair.getPrivate();
+    } else {
+      throw new IllegalStateException("RSA settings not supported");
     }
+    return Pair.of(privateKey, publicKey);
+  }
 
-    @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+  private KeyPair generateRsaKey() {
+    KeyPair keyPair;
+    try {
+      KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+      keyPairGenerator.initialize(2048, new SecureRandom(rsaKeyPairSeed.getBytes()));
+      keyPair = keyPairGenerator.generateKeyPair();
+    } catch (Exception ex) {
+      throw new IllegalStateException(ex);
     }
+    return keyPair;
+  }
 
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
+  @Bean
+  public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+    return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+  }
 
-    @Bean
-    public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
-        return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
-    }
+  @Bean
+  public AuthorizationServerSettings authorizationServerSettings() {
+    return AuthorizationServerSettings.builder().build();
+  }
 
-    @Bean
-    public WlsUserTokenCustomizer wlsUserTokenCustomizer(final UserService userService) {
-        return new WlsUserTokenCustomizer(userService);
-    }
+  @Bean
+  public SessionRegistry sessionRegistry() {
+    return new SessionRegistryImpl();
+  }
+
+  @Bean
+  public ConcurrentSessionControlAuthenticationStrategy
+      concurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
+    return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+  }
+
+  @Bean
+  public WlsUserTokenCustomizer wlsUserTokenCustomizer(final UserService userService) {
+    return new WlsUserTokenCustomizer(userService);
+  }
 }

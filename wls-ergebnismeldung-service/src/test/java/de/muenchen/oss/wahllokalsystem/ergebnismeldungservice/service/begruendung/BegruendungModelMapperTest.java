@@ -12,52 +12,70 @@ import org.mapstruct.factory.Mappers;
 
 class BegruendungModelMapperTest {
 
-    private final BegruendungModelMapper unitUnderTest = Mappers.getMapper(BegruendungModelMapper.class);
+  private final BegruendungModelMapper unitUnderTest =
+      Mappers.getMapper(BegruendungModelMapper.class);
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-        }
-
-        @Test
-        void should_returnBegruendungModel_when_givenBegruendungEntity() {
-            val begruendung = new Begruendung(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);
-            val result = unitUnderTest.toModel(begruendung);
-
-            val expectedResult = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
-    @Nested
-    class ToEntity {
+    @Test
+    void should_returnBegruendungModel_when_givenBegruendungEntity() {
+      val begruendung =
+          new Begruendung(
+              new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A),
+              "grund1",
+              "grund2",
+              true,
+              true);
+      val result = unitUnderTest.toModel(begruendung);
 
-        @Test
-        void should_returnBegruendungEntity_when_givenBegruendungModel() {
-            val begruendungModel = new BegruendungModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
-            val result = unitUnderTest.toEntity(begruendungModel);
+      val expectedResult =
+          new BegruendungModel(
+              "bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
 
-            val expectedResult = new Begruendung(new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A), "grund1", "grund2", true, true);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToEmbeddedId {
+  @Nested
+  class ToEntity {
 
-        @Test
-        void should_returnEmbeddedId_when_givenBegruendungReference() {
-            val begruendungReference = new BegruendungReference("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
-            val result = unitUnderTest.toEmbeddedId(begruendungReference);
+    @Test
+    void should_returnBegruendungEntity_when_givenBegruendungModel() {
+      val begruendungModel =
+          new BegruendungModel(
+              "bezirkID", "wahlID", StapelartModel.LTW_BZW_A, "grund1", "grund2", true, true);
+      val result = unitUnderTest.toEntity(begruendungModel);
 
-            val expectedResult = new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+      val expectedResult =
+          new Begruendung(
+              new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A),
+              "grund1",
+              "grund2",
+              true,
+              true);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @Nested
+  class ToEmbeddedId {
+
+    @Test
+    void should_returnEmbeddedId_when_givenBegruendungReference() {
+      val begruendungReference =
+          new BegruendungReferenceModel("bezirkID", "wahlID", StapelartModel.LTW_BZW_A);
+      val result = unitUnderTest.toEmbeddedId(begruendungReference);
+
+      val expectedResult = new BezirkUndWahlIDStapelart("bezirkID", "wahlID", Stapelart.LTW_BZW_A);
+
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 }

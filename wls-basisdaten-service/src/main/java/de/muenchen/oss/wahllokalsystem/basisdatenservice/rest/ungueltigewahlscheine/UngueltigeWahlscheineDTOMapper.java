@@ -1,14 +1,16 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.ungueltigewahlscheine;
 
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common.WahlbezirkArtDTO;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineReferenceModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.ungueltigewahlscheine.UngueltigeWahlscheineWriteModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineReferenceModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineWriteModel;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface UngueltigeWahlscheineDTOMapper {
 
-    UngueltigeWahlscheineReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
+  UngueltigeWahlscheineReferenceModel toModel(String wahltagID, WahlbezirkArtDTO wahlbezirksart);
 
-    UngueltigeWahlscheineWriteModel toModel(UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel, byte[] ungueltigeWahlscheineData);
+  UngueltigeWahlscheineWriteModel toModel(
+      UngueltigeWahlscheineReferenceModel ungueltigeWahlscheineReferenceModel,
+      byte[] ungueltigeWahlscheineData);
 }

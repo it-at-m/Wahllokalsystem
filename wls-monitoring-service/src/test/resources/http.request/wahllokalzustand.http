@@ -2,8 +2,12 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST lastSeen
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/wahlbezirkID01
+### POST lastSeen | user wls_all_uwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST lastSeen | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST lastSeen - parameter invalid, expected "Parameter unvollstaendig"
@@ -13,8 +17,12 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/lastSeen/{{wahlbezirkID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST letzteAbmeldung
-POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/wahlbezirkID01
+### POST letzteAbmeldung | user wls_all_uwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST letzteAbmeldung | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### POST letzteAbmeldung - parameter invalid, expected "Parameter unvollstaendig"
@@ -24,17 +32,30 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/letzteAbmeldung/{{wahlbezirkID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST schnellmeldungSendungsuhrzeit
+### POST schnellmeldungSendungsuhrzeit | user wls_all_uwb
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungSendungsuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID01",
-    "wahlbezirkID": "wahlbezirk01"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
-  "sendungsuhrzeit": "2024-10-21T23:59:12.123"
+  "sendungsuhrzeit": "2026-01-01T23:59:12.123"
+}
+
+### POST schnellmeldungSendungsuhrzeit | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungSendungsuhrzeit
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "sendungsuhrzeit": "2026-01-01T23:59:12.123"
 }
 
 ### POST schnellmeldungSendungsuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
@@ -50,17 +71,30 @@ Content-Type: application/json
   "sendungsuhrzeit": "2024-10-21T23:59:12.123"
 }
 
-### POST schnellmeldungDruckuhrzeit
+### POST schnellmeldungDruckuhrzeit | user wls_all_uwb
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungDruckuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID01",
-    "wahlbezirkID": "wahlbezirk01"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
-  "druckuhrzeit": "2024-10-21T23:59:12.123"
+  "druckuhrzeit": "2026-01-01T23:59:12.123"
+}
+
+### POST schnellmeldungDruckuhrzeit | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/schnellmeldungDruckuhrzeit
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "druckuhrzeit": "2026-01-01T23:59:12.123"
 }
 
 ### POST schnellmeldungDruckuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
@@ -76,17 +110,30 @@ Content-Type: application/json
   "druckuhrzeit": "2024-10-21T23:59:12.123"
 }
 
-### POST niederschriftSendungsuhrzeit
+### POST niederschriftSendungsuhrzeit | user wls_all_uwb
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftSendungsuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID01",
-    "wahlbezirkID": "wahlbezirk01"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
-  "sendungsuhrzeit": "2024-10-21T23:59:12.123"
+  "sendungsuhrzeit": "2026-01-01T23:59:12.123"
+}
+
+### POST niederschriftSendungsuhrzeit | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftSendungsuhrzeit
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "sendungsuhrzeit": "2026-01-01T23:59:12.123"
 }
 
 ### POST niederschriftSendungsuhrzeit - parameter invalid, expected "Parameter unvollstaendig"
@@ -102,17 +149,30 @@ Content-Type: application/json
   "sendungsuhrzeit": "2024-10-21T23:59:12.123"
 }
 
-### POST niederschriftDruckuhrzeit
+### POST niederschriftDruckuhrzeit | user wls_all_uwb
 POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftDruckuhrzeit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID01",
-    "wahlbezirkID": "wahlbezirk01"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
   },
-  "druckuhrzeit": "2024-10-21T23:59:12.123"
+  "druckuhrzeit": "2026-01-01T23:59:12.123"
+}
+
+### POST niederschriftDruckuhrzeit | user wls_all_bwb
+POST {{ WLS_MONITORING_SERVICE_URL }}/businessActions/niederschriftDruckuhrzeit
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
+  },
+  "druckuhrzeit": "2026-01-01T23:59:12.123"
 }
 
 ### POST niederschriftDruckuhrzeit - parameter invalid, expected "Parameter unvollstaendig"

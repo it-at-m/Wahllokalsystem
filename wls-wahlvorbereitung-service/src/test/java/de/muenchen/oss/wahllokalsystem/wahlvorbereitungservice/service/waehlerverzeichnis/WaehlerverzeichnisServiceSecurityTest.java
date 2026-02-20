@@ -23,93 +23,133 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class WaehlerverzeichnisServiceSecurityTest {
 
-    @Autowired
-    WaehlerverzeichnisService unitUnderTest;
+  @Autowired WaehlerverzeichnisService unitUnderTest;
 
-    @MockBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @BeforeEach
-    void setup() {
-        SecurityContextHolder.clearContext();
+  @BeforeEach
+  void setup() {
+    SecurityContextHolder.clearContext();
+  }
+
+  @Nested
+  class GetWaehlerverzeichnis {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
+
+      val waehlerverzeichnisReference =
+          new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(waehlerverzeichnisReference.getWahlbezirkID()), any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference));
     }
 
-    @Nested
-    class GetWaehlerverzeichnis {
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
+      val waehlerverzeichnisReference =
+          new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(waehlerverzeichnisReference.getWahlbezirkID()), any()))
+          .thenReturn(false);
 
-            val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
-            SecurityUtils.runWith(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
-
-            val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(false);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} - {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyAuthorityMissing(final ArgumentsAccessor argumentsAccessor) {
-            SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-
-            val waehlerverzeichnisReference = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(waehlerverzeichnisReference.getWahlbezirkID()), any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(() -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
-        }
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class SetWaehlerverzeichnis {
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
-        @Test
-        void should_notThrowException_when_givenAllAuthorities() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS);
+      val waehlerverzeichnisReference =
+          new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 89L);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(waehlerverzeichnisReference.getWahlbezirkID()), any()))
+          .thenReturn(true);
 
-            val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
-
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
-
-            val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet)).isInstanceOf(AccessDeniedException.class);
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
-            SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
-
-            val modelToSet = new WaehlerverzeichnisModel(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L), true, true, false, true);
-
-            Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet)).isInstanceOf(TechnischeWlsException.class);
-        }
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.getWaehlerverzeichnis(waehlerverzeichnisReference))
+          .isInstanceOf(AccessDeniedException.class);
     }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAEHLERVERZEICHNIS);
+    }
+  }
+
+  @Nested
+  class SetWaehlerverzeichnis {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_WAEHLERVERZEICHNIS);
+
+      val modelToSet =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L),
+              true,
+              true,
+              false,
+              true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_serviceAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
+
+      val modelToSet =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L),
+              true,
+              true,
+              false,
+              true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_returnTechnischeWlsException_when_repoAuthorityIsMissing() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
+
+      val modelToSet =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L),
+              true,
+              true,
+              false,
+              true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+  }
 }

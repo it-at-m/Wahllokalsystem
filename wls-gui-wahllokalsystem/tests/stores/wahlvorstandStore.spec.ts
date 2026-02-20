@@ -1,12 +1,21 @@
+import type { User } from "@/types/User.ts";
+import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied.ts";
+
 import { createTestingPinia } from "@pinia/testing";
-import { createPinia, setActivePinia } from "pinia";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
+import { createPinia, setActivePinia, storeToRefs } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useUserStore } from "@/stores/user";
+import {
+  MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+  MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+} from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import User from "@/types/User";
-import { WahlvorstandBuilder } from "@/types/wahlvorstand/Wahlvorstand";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   isSchriftfuehrer: vi.fn(),
@@ -16,6 +25,13 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
+  WahlvorstandsmitgliedFunktionEnum: {
+    W: "W",
+    Sb: "SB",
+    Swb: "SWB",
+    Ssb: "SSB",
+    B: "B",
+  },
   isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
 }));
@@ -28,6 +44,12 @@ vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
 }));
 
 const mockedNow = new Date();
+const { prepareUser } = useUserTestDataFactory();
+const {
+  createWahlvorstand,
+  prepareWahlvorstand,
+  prepareWahlvorstandsmitglied,
+} = useWahlvorstandTestDataFactory();
 
 describe("wahlvorstandStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useWahlvorstandStore>;
@@ -59,16 +81,20 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(true);
 
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
     });
 
@@ -76,17 +102,23 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(true);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("SB"),
-        WahlvorstandsmitgliedBuilder.createMinimal().withFunktion("W"),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(false)
+          .build(),
       ];
 
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
 
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
-        "W"
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1]?.[0]).toStrictEqual(
+        WahlvorstandsmitgliedFunktionEnum.W
       );
     });
 
@@ -94,21 +126,142 @@ describe("wahlvorstandStore.ts", () => {
       mockDefinitions.isSchriftfuehrer.mockReturnValue(false);
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("SB")
-          .withAnwesend(true),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withFunktion("W")
-          .withAnwesend(true),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.Sb)
+          .anwesend(true)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .funktion(WahlvorstandsmitgliedFunktionEnum.W)
+          .anwesend(true)
+          .build(),
       ];
       expect(unitUnderTest.isSchriftfuehrerAnwesend).toStrictEqual(false);
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0][0]).toStrictEqual(
-        "SB"
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[0]?.[0]).toStrictEqual(
+        WahlvorstandsmitgliedFunktionEnum.Sb
       );
-      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1][0]).toStrictEqual(
-        "W"
+      expect(mockDefinitions.isSchriftfuehrer.mock.calls[1]?.[0]).toStrictEqual(
+        WahlvorstandsmitgliedFunktionEnum.W
       );
     });
+  });
+
+  describe("isWahlvorsteherAnwesend", () => {
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: true },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: true },
+    ])(
+      "should_returnTrue_when_atLeastOneMitgliedWithFunktion'$funktion'IsAnwesend",
+      ({ funktion, expected }) => {
+        mockDefinitions.isWahlvorsteher.mockReturnValue(true);
+
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
+        ];
+
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
+        expect(mockDefinitions.isWahlvorsteher).toHaveBeenCalledWith(funktion);
+      }
+    );
+
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.W, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Swb, expected: false },
+    ])(
+      "should_returnFalse_when_whenMitgliedWithFunktion'$funktion'ExistsButIsNotAnwesend",
+      ({ funktion, expected }) => {
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(false)
+            .build(),
+        ];
+
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
+        expect(
+          mockDefinitions.isWahlvorsteher.mock.calls[0]?.[0]
+        ).toStrictEqual(funktion);
+      }
+    );
+
+    it.each([
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Sb, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.Ssb, expected: false },
+      { funktion: WahlvorstandsmitgliedFunktionEnum.B, expected: false },
+    ])(
+      "should_returnFalse_when_mitgliedWithFunktion'$funktion'IsAnwesendButDoesNotMatch",
+      ({ funktion, expected }) => {
+        mockDefinitions.isWahlvorsteher.mockReturnValue(false);
+
+        unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
+          prepareWahlvorstandsmitglied()
+            .funktion(funktion)
+            .anwesend(true)
+            .build(),
+        ];
+
+        expect(unitUnderTest.isWahlvorsteherAnwesend).toStrictEqual(expected);
+        expect(
+          mockDefinitions.isWahlvorsteher.mock.calls[0]?.[0]
+        ).toStrictEqual(funktion);
+      }
+    );
+  });
+
+  describe("isMindestanwesenheitErreicht", () => {
+    it("should_returnFalse_when_noMitgliedExists", () => {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [];
+
+      expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(false);
+    });
+
+    it.each([
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG + 1,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        schliessungsuhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG + 1,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
+      ({ expected, schliessungsuhrzeit, anwesend }) => {
+        const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
+        schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
+          schliessungsuhrzeit;
+
+        _addAnwesendeWahlvorstandsmitglieder(anwesend);
+
+        expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(
+          expected
+        );
+      }
+    );
   });
 
   describe("isWahlvorstandAusreichendAnwesend", () => {
@@ -125,6 +278,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         true
@@ -136,6 +291,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = true;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -147,6 +304,8 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -158,6 +317,21 @@ describe("wahlvorstandStore.ts", () => {
       unitUnderTest.isWahlvorsteherAnwesend = false;
       // @ts-expect-error: cannot set readonly
       unitUnderTest.isSchriftfuehrerAnwesend = false;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = true;
+
+      expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
+        false
+      );
+    });
+
+    it("should_returnFalse_when_mindestanwesenheitIsNotGiven", () => {
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isWahlvorsteherAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isSchriftfuehrerAnwesend = true;
+      // @ts-expect-error: cannot set readonly
+      unitUnderTest.isMindestanwesenheitErreicht = false;
 
       expect(unitUnderTest.isWahlvorstandAusreichendAnwesend).toStrictEqual(
         false
@@ -169,9 +343,7 @@ describe("wahlvorstandStore.ts", () => {
     it("should_sendWahlvorstand_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(_createUser(wahlbezirkID));
 
       const mockedDatetime = new Date();
 
@@ -189,10 +361,7 @@ describe("wahlvorstandStore.ts", () => {
 
     it("should_setLastSend_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
       expect(unitUnderTest.lastSending).toBeNull();
 
@@ -207,67 +376,120 @@ describe("wahlvorstandStore.ts", () => {
       expect(unitUnderTest.lastSending).toStrictEqual(mockedNow);
     });
 
-    it("should_notSendWahlvorstand_when_wahlbezirkIDIsNotGiven", async () => {
+    it("should_setWahlvorstandErfasst_when_wahlvorstandIsSent", async () => {
       const userStore = useUserStore();
-      const user = new User();
-      user.wahlbezirkID = undefined;
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
       await unitUnderTest.sendWahlvorstand();
 
-      expect(mockDefinitions.saveWahlvorstand).toBeCalledTimes(0);
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
     });
   });
 
-  describe("loadWahlvorstand", () => {
+  describe("initWahlvorstand", () => {
+    it("should_loadWahlvorstand_when_called", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
+      mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
+
+      await unitUnderTest.initWahlvorstand();
+
+      expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
+      ]);
+    });
+
+    it("should_notLoadWahlvorstand_when_serviceCallFailed", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+      mockDefinitions.getWahlvorstand.mockRejectedValueOnce(
+        new Error("service call failed")
+      );
+
+      await expect(() =>
+        unitUnderTest.initWahlvorstand()
+      ).rejects.toThrowError();
+    });
+
+    it("should_setWahlvorstandErfasstFalse_when_called", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
+      mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
+
+      await unitUnderTest.initWahlvorstand();
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
+    });
+  });
+
+  describe("forceLoadWahlvorstand", () => {
     it("should_setWahlvorstand_when_userHasWahlbezirkID", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(_createUser(wahlbezirkID));
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
+      expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
+        [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
+      ]);
     });
 
     it("should_setLastLoading_when_wahlvorstandIsLoaded", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      const user = new User();
-      user.wahlbezirkID = wahlbezirkID;
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
-      const mockedGetWahlvorstand =
-        WahlvorstandBuilder.createEmptyWahlvorstand();
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
       expect(unitUnderTest.lastLoading).toBeNull();
 
-      await unitUnderTest.loadWahlvorstand();
+      await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
 
-    it.each([
-      { user: null, when: "userIsNull" },
-      {
-        user: createUser(undefined),
-        when: "usersWahlbezirkIdIsUndefined",
-      },
-    ])("should_notLoadWahlvorstand_when_$when", async ({ user }) => {
+    it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
-      userStore.setUser(user);
+      userStore.setUser(_createUser("wahlbezirkID"));
 
-      await unitUnderTest.loadWahlvorstand();
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
-      expect(mockDefinitions.getWahlvorstand).toHaveBeenCalledTimes(0);
+      mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
+        throw new Error("API Error");
+      });
+
       expect(unitUnderTest.lastLoading).toBeNull();
+
+      await expect(unitUnderTest.forceLoadWahlvorstand()).rejects.toThrow(
+        "API Error"
+      );
+
+      expect(unitUnderTest.lastLoading).toBeNull();
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
     });
   });
 
@@ -276,18 +498,21 @@ describe("wahlvorstandStore.ts", () => {
       const newAnwesenheit = true;
       const mitgliedID = "mitgliedID";
 
-      const mitgliedToChange = WahlvorstandsmitgliedBuilder.createMinimal()
-        .withIdentifikator(mitgliedID)
-        .withAnwesend(!newAnwesenheit);
+      const mitgliedToChange = prepareWahlvorstandsmitglied()
+        .identifikator(mitgliedID)
+        .anwesend(!newAnwesenheit)
+        .build();
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
         mitgliedToChange,
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -300,15 +525,18 @@ describe("wahlvorstandStore.ts", () => {
       const mitgliedID = "mitgliedID";
 
       unitUnderTest.wahlvorstand.wahlvorstandsmitglieder = [
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere2")
-          .withAnwesend(false),
-        WahlvorstandsmitgliedBuilder.createMinimal()
-          .withIdentifikator(mitgliedID + "andere3")
-          .withAnwesend(false),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere2")
+          .anwesend(false)
+          .build(),
+        prepareWahlvorstandsmitglied()
+          .identifikator(mitgliedID + "andere3")
+          .anwesend(false)
+          .build(),
       ];
 
       unitUnderTest.changeAnwesendOfMitglied(newAnwesenheit, mitgliedID);
@@ -318,13 +546,163 @@ describe("wahlvorstandStore.ts", () => {
       );
     });
   });
+
+  describe("isLoading", () => {
+    it("should_updateIsLoading_when_loadWahlvorstandIsCalled", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.forceLoadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+
+    it("should_updateIsLoading_when_loadWahlvorstandFails", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.getWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+
+      const promise = unitUnderTest.forceLoadWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isLoading).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isLoading).toBe(false);
+    });
+  });
+
+  describe("isSaving", () => {
+    it("should_updateIsSaving_when_sendWahlvorstandIsCalled", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({});
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await promise;
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+
+    it("should_updateIsSaving_when_sendWahlvorstandFails", async () => {
+      const timeout = 100;
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      // Verzögerung API-Aufruf simulieren, um die Asynchronität zu testen
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject("Mocked API Error");
+          }, timeout);
+        })
+      );
+
+      // vor dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+
+      const promise = unitUnderTest.sendWahlvorstand();
+
+      // während des API-Aufrufs
+      expect(unitUnderTest.isSaving).toBe(true);
+
+      // Zeit vorstellen, um die Promise aufzulösen
+      vi.advanceTimersByTime(timeout);
+      await expect(promise).rejects.toThrow("Mocked API Error");
+
+      // nach dem API-Aufruf
+      expect(unitUnderTest.isSaving).toBe(false);
+    });
+  });
+
+  describe("resetAllAnwesenheiten", () => {
+    it("should_setAnwesendFalseForAllWahlvorstandsmitglieder_when_wahlvorstandsmitgliederAreGiven", () => {
+      unitUnderTest.wahlvorstand = prepareWahlvorstand()
+        .wahlvorstandsmitglieder([
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(true).build(),
+          prepareWahlvorstandsmitglied().anwesend(false).build(),
+        ])
+        .build();
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
+      unitUnderTest.resetAllAnwesenheiten();
+
+      expect(unitUnderTest.wahlvorstand.wahlvorstandsmitglieder).toSatisfy(
+        (mitglieder: Wahlvorstandsmitglied[]) =>
+          mitglieder.every((mitglied) => !mitglied.anwesend)
+      );
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
+    });
+  });
+
+  function _addAnwesendeWahlvorstandsmitglieder(zahl: number) {
+    for (let i = 1; i <= zahl; i++) {
+      unitUnderTest.wahlvorstand.wahlvorstandsmitglieder.push(
+        prepareWahlvorstandsmitglied().anwesend(true).build()
+      );
+    }
+  }
 });
 
-function createUser(wahlbezirkID: string | undefined): User {
-  //TODO create Issue to use interface for User and provide BuilderImpl-Class => #853
-  const user = new User();
-
-  user.wahlbezirkID = wahlbezirkID;
-
-  return user;
+function _createUser(wahlbezirkID: string): User {
+  return prepareUser().wahlbezirkID(wahlbezirkID).build();
 }

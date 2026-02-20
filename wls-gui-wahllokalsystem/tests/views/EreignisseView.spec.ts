@@ -1,0 +1,141 @@
+import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+
+import { createTestingPinia } from "@pinia/testing";
+import {
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
+import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
+
+import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import vuetify from "@/plugins/vuetify";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
+import EreignisseView from "@/views/EreignisseView.vue";
+
+describe("TheEreignisseView", () => {
+  let wrapper: VueWrapper<InstanceType<typeof EreignisseView>>;
+
+  const ResizeObserverMock = vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+  beforeEach(() => {
+    wrapper = mount(EreignisseView, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            createSpy: vi.fn,
+          }),
+          vuetify,
+        ],
+      },
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe(COMPONENT_RENDER_TESTS, () => {
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsFalseAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
+      const ereignisStore = useEreignisStore();
+
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.isEreignisFlagsAndEreigniseintraegeInconsistent = false;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = false;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
+    });
+
+    it("should_renderSaveButtonEnabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
+      const ereignisStore = useEreignisStore();
+      const userStore = useUserStore();
+
+      // @ts-expect-error: cannot set readonly
+      userStore.currentUserWahltag = "2025-01-01";
+
+      const validEreignis: Ereignis = {
+        ereignisart: EreignisartEnum.Vorfall,
+        uhrzeit: new Date(),
+        beschreibung: "beschreibung",
+      };
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
+
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.isEreignisFlagsAndEreigniseintraegeInconsistent = false;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = true;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
+    });
+
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithInvalidDataAndEreignisFlagsAndEreigniseintraegeConsistent", async () => {
+      const ereignisStore = useEreignisStore();
+
+      const invalidEreignis: Ereignis = {
+        ereignisart: EreignisartEnum.Vorfall,
+        uhrzeit: new Date(),
+        beschreibung: "",
+      }; //pseudo event to set form invalid
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [invalidEreignis];
+
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.isEreignisFlagsAndEreigniseintraegeInconsistent = false;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = true;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+    });
+
+    it("should_renderSaveButtonDisabled_when_hasEintraegeIsTrueWithValidDataAndEreignisFlagsAndEreigniseintraegeInconsistent", async () => {
+      const ereignisStore = useEreignisStore();
+
+      const validEreignis: Ereignis = {
+        ereignisart: EreignisartEnum.Vorfall,
+        uhrzeit: new Date(),
+        beschreibung: "beschreibung",
+      }; //pseudo event to set form invalid
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [validEreignis];
+
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.isEreignisFlagsAndEreigniseintraegeInconsistent = true;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = true;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
+    });
+
+    it("should_renderSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isSaving = true;
+
+      await nextTick();
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      await expect(saveButton.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+  });
+});

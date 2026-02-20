@@ -1,0 +1,41 @@
+service.config.rsa:
+  rsa-key-setting: STATIC_KEY
+  public-key: |
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuqSjiFgUp6ZUzYQyE390
+    mA3iQJFuYivXABkj7z8Z2kPlopVt8CsGEnvjW89BYjVPDDg33cyOc0oXFT5ke6yD
+    MmyrSuUiH3COf4S92iY6Drxvw7PkSL9lMehJvdsPpTDZ/kqSc+kh+hByfaaT4XDm
+    oWD32VxPXWZNMuSgtvkWrkMikqfL+3uluu2Nve8PlAZ5d9uWMtzCmPdp/FkdYcMF
+    HGqgPpO3VwUdvbaKEnVjyF7wWfMyaIuoigpDFERoy1MdXZNqMCXp1d2u87Z1btrq
+    KhpSD8VlzwIjLstXrtI/pmxHRwU26PNV+XR2f51Di01aHDiW4yeni4aoh9EqpbMs
+    iQIDAQAB
+    -----END PUBLIC KEY-----
+  private-key: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC6pKOIWBSnplTN
+    hDITf3SYDeJAkW5iK9cAGSPvPxnaQ+WilW3wKwYSe+Nbz0FiNU8MODfdzI5zShcV
+    PmR7rIMybKtK5SIfcI5/hL3aJjoOvG/Ds+RIv2Ux6Em92w+lMNn+SpJz6SH6EHJ9
+    ppPhcOahYPfZXE9dZk0y5KC2+RauQyKSp8v7e6W67Y297w+UBnl325Yy3MKY92n8
+    WR1hwwUcaqA+k7dXBR29tooSdWPIXvBZ8zJoi6iKCkMURGjLUx1dk2owJenV3a7z
+    tnVu2uoqGlIPxWXPAiMuy1eu0j+mbEdHBTbo81X5dHZ/nUOLTVocOJbjJ6eLhqiH
+    0SqlsyyJAgMBAAECggEAIX6EPmaYJlHqLAuKNQeNc/Ah5zZyGboGVmUslrW7PPks
+    T5YDabM+3rhO3938vNQWQHoiRHJ+KeBk7hIJVExsKvNndgRSsFOxrt6yd2Ce0KAu
+    am9xC0EVtvQZr7GNSDbRGBpn19dBmq+y7CulpDJvoQxWzjILqBZAyl5PHSbsVA83
+    UD+YV70zOs82QrPH5AtFnyqTjn+4M897dkC/gVsL+Il73mzLwnM++XzDDL1iyhDk
+    eOf4Tkt0DT7fE6Rx2EmFoA/+kZF8xXyMgKx7Qcz/8GxKKkXHs1oUt3xeewEvTY9M
+    suwZJQ+8DbhZz/n/9Q14P2bGit5bwj1usSLmT3He1QKBgQDzTzItxacAVhFyYYYX
+    iR4wr3QtjXLD1hLTY2kqd/en0a9LGb3y2DcnIzoUALA5RgxxnLmvTDrYrevcEN1D
+    3igAjLMdSaqjED5spZusUTtIkzZ6PRcbMPQyEq8hlE39yNlzqlkoGbpiDKxsvfz0
+    Kuk7yT/7dlPQHGcc6ROUpERdFwKBgQDEYM2byXEQObrjnjBGbcpn2zpbf1Dni9n1
+    yiXImKKyYzs5zoPVRbAtTzNKhlgPHdTjewWjGiTsJDvpRtjX/IcfewOi0ti8Zo8s
+    bK/6Jnoh8Ho3rAYqNCRF7EPIwrHUlGbqz4Yd4/J4IH2bCwGhkSlMQUYveCBs6nM3
+    +rx3VB8HXwKBgAQHMqB5XjtuMVnAbZTkK0DJFtZOOjEt0R/4zFvsoof/u7Q1l+R2
+    Wetm9OYx4LkCBOC4pIZXb734mygIi3E9M1JXAfwhJRcQBMiNsVcX/TBFZ6h8bG6B
+    z/koQAgBSY1DDv6QOmukiWZoKU6fkpmEQFpCCbIjEl4mqjpbTXyvf4Y/AoGAa0v5
+    C4WlIRhp5LQp7FFQpi5CVHvb2KexD3rD6jZ7rrxJP+x2W7EX8am0fKOquZezGhe9
+    nMBMLDogAfWTxW9U5P5xniVWBpqC3+MCw8sCMEkUfhafx691oj7VSnwWbfAny2RY
+    Azzo3nniJzR8T6rgxalkj8sy7E+tZIi7MPflfEECgYATgg1iL4MECbv/UFEKLMOy
+    kJIWk11TLC3OTsRQklaFDyJBwWfaGIXHxJthTlpNvg9iHTwv50vTGmodsMEYBOKa
+    9WdmYw4OypqD46w5BU5jhJCraKe0aAKErzWmY+19B5dDWqjztfz07hVd2bCDn9v5
+    249bUkZF/ppDXUlAaHxqhw==
+    -----END PRIVATE KEY-----

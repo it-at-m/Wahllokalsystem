@@ -5,12 +5,16 @@ const PATH_SERVICES_BACKEND = PATH_SERVICES + "backend-services/";
 const PATH_SERVICES_FRONTEND = PATH_SERVICES + "frontend-services/";
 const PATH_TECHNIK = "/technik/";
 const PATH_ECOSYSTEM = PATH_TECHNIK + "ecosystem/";
+const PATH_ECOSTYSTEM_WORKFLOWS = `${PATH_ECOSYSTEM}workflowsAndArtifacts/`;
 const PATH_ADR = PATH_TECHNIK + "adr/";
+const PATH_ADR_UI = PATH_ADR + "ui/";
 const PATH_NAMING_CONVENTIONS = PATH_TECHNIK + "naming_conventions/";
 const PATH_GUIDES = PATH_TECHNIK + "guides/";
 const PATH_API_CLIENT_GENERATION = PATH_GUIDES + "api-client-generation/";
 const PATH_MICROSERVICE_GENERATION = PATH_GUIDES + "new-microservice/";
 const PATH_SYSSPEC = PATH_TECHNIK + "systemspecification/";
+const PATH_SYSSPEC_BACKEND = PATH_SYSSPEC + "backend/";
+const PATH_TESTCONCEPTS = PATH_TECHNIK + "testconcepts/";
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -19,6 +23,11 @@ export default withMermaid({
   lang: "de-DE",
   base: "/Wahllokalsystem/",
   srcDir: "src", //markdown files are located in that directory
+  vite: {
+    ssr: {
+      noExternal: ["vuetify"],
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -34,6 +43,7 @@ export default withMermaid({
 
     outline: {
       label: "Auf dieser Seite",
+      level: "deep",
     },
 
     sidebar: {
@@ -51,7 +61,17 @@ export default withMermaid({
               text: "Tools & Frameworks",
               link: `${PATH_ECOSYSTEM}toolsAndFrameworks`,
             },
-            { text: "Workflows", link: `${PATH_ECOSYSTEM}workflows` },
+            {
+              text: "Workflows & Artefakte",
+              link: `${PATH_ECOSTYSTEM_WORKFLOWS}`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_ECOSTYSTEM_WORKFLOWS}relations`,
+                },
+              ],
+            },
           ],
         },
         {
@@ -90,6 +110,61 @@ export default withMermaid({
             {
               text: "Kein i18n von Beginn an",
               link: `${PATH_ADR}adr-no-use-of-i18n-at-start`,
+            },
+            {
+              text: "Nutzung von defineModel()",
+              link: `${PATH_ADR}adr-use-defineModel`,
+            },
+            {
+              text: "Kleine Menge von Renovate-PRs",
+              link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
+            },
+            {
+              text: "Anpassung des Renovate-Schedulers",
+              link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
+            },
+            {
+              text: "Gendergerechte Sprache",
+              link: `${PATH_ADR}adr-gender-sensitive-language.md`,
+            },
+            {
+              text: "UI/UX",
+              link: `${PATH_ADR_UI}`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Keine Wertveränderung durch die Anwendung",
+                  link: `${PATH_ADR_UI}adr001-no-user-input-override.md`,
+                },
+                {
+                  text: "Begrenzte Interaktionsmöglichkeiten bei Benutzereingaben",
+                  link: `${PATH_ADR_UI}adr002-simplify-user-input-options.md`,
+                },
+                {
+                  text: "Abweichung von Tabreihenfolge in Leserichtung, wenn notwendig",
+                  link: `${PATH_ADR_UI}adr003-tab-order.md`,
+                },
+                {
+                  text: "Styling des active Button",
+                  link: `${PATH_ADR_UI}adr004-active-btn-styling.md`,
+                },
+                {
+                  text: "Löschen von Werten in Tabellen",
+                  link: `${PATH_ADR_UI}adr005-delete-table-values.md`,
+                },
+                {
+                  text: "Sichtbarkeit des Löschen-Buttons bei Formelementen",
+                  link: `${PATH_ADR_UI}adr006-delete-button-visibility-on-form-elements.md`,
+                },
+                {
+                  text: "Anordnung des active Button",
+                  link: `${PATH_ADR_UI}adr007-active-button-positioning.md`,
+                },
+                {
+                  text: "Styling von Tabellen",
+                  link: `${PATH_ADR_UI}adr008-tabellen-styling.md`,
+                },
+              ],
             },
           ],
         },
@@ -149,6 +224,18 @@ export default withMermaid({
               text: "ArchUnit Rules Testen",
               link: `${PATH_GUIDES}archunit-rule-tests.md`,
             },
+            {
+              text: "Aktualisierung von Images",
+              link: `${PATH_GUIDES}update-images.md`,
+            },
+            {
+              text: "Update embedded LDAP User",
+              link: `${PATH_GUIDES}update-ldif-file-data.md`,
+            },
+            {
+              text: "Zertifikate für SSL erstellen",
+              link: `${PATH_GUIDES}generate certs for ssl.md`,
+            },
           ],
         },
         {
@@ -161,8 +248,49 @@ export default withMermaid({
               link: `${PATH_SYSSPEC}security`,
             },
             {
+              text: "Backend",
+              link: `${PATH_SYSSPEC}backend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Beziehungen",
+                  link: `${PATH_SYSSPEC_BACKEND}relations.md`,
+                },
+              ],
+            },
+            {
               text: "Frontend",
               link: `${PATH_SYSSPEC}frontend`,
+              collapsed: true,
+              items: [
+                {
+                  text: "Offlinefähigkeit-Konzept",
+                  link: `${PATH_SYSSPEC}frontend/offlinefaehigkeit-konzept.md`,
+                },
+                {
+                  text: "Task-Factories",
+                  link: `${PATH_SYSSPEC}frontend/task-factories.md`,
+                },
+                {
+                  text: "Intervalle und Timeouts",
+                  link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
+                {
+                  text: "Navigation und Bearbeitungsreihenfolge",
+                  link: `${PATH_SYSSPEC}frontend/navigation-and-workflow.md`,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: "Testkonzepte",
+          link: `${PATH_TESTCONCEPTS}`,
+          collapsed: true,
+          items: [
+            {
+              text: "Backend",
+              link: `${PATH_TESTCONCEPTS}backend`,
             },
           ],
         },
@@ -232,6 +360,10 @@ export default withMermaid({
               text: "Wahllokalsystem",
               link: `${PATH_SERVICES_FRONTEND}wahllokalsystem/`,
             },
+            {
+              text: "Admintool",
+              link: `${PATH_SERVICES_FRONTEND}admintool/`,
+            },
           ],
         },
       ],
@@ -274,5 +406,10 @@ export default withMermaid({
   },
   mermaidPlugin: {
     class: "mermaid my-class", // set additional css classes for parent container
+  },
+  mermaid: {
+    flowchart: {
+      wrappingWidth: 600,
+    },
   },
 });

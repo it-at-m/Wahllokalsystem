@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
@@ -24,111 +25,143 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
+@ActiveProfiles(profiles = TestConstants.SPRING_TEST_PROFILE)
 @AutoConfigureMockMvc
 public class HandbuchControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceOid;
+  @Value("${service.info.oid}")
+  String serviceOid;
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    HandbuchRepository handbuchRepository;
+  @Autowired HandbuchRepository handbuchRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_HANDBUCH);
-        handbuchRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_HANDBUCH);
+    handbuchRepository.deleteAll();
+  }
+
+  @Nested
+  class GetHandbuch {
+
+    @Test
+    void should_returnData_when_callingGetHandbuch() throws Exception {
+      val handbuchContent = "dies ist ein Handbuch".getBytes();
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
+      handbuchRepository.save(
+          new Handbuch(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), handbuchContent));
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
+      val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
+      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsByteArray = response.getResponse().getContentAsByteArray();
+
+      Assertions.assertThat(response.getResponse().getHeader("Content-Type"))
+          .isEqualTo("application/pdf");
+      Assertions.assertThat(response.getResponse().getHeader("Content-Disposition"))
+          .isEqualTo("attachment; filename=UWBHandbuch.pdf");
+      Assertions.assertThat(responseBodyAsByteArray).isEqualTo(handbuchContent);
     }
 
-    @Nested
-    class GetHandbuch {
+    @Test
+    void should_throwInternalServerErrorException_when_noDataIsFoundInRepo() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
+      val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
 
-        @Test
-        void should_returnData_when_callingGetHandbuch() throws Exception {
-            val handbuchContent = "dies ist ein Handbuch".getBytes();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
-            handbuchRepository.save(new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), handbuchContent));
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.GETHANDBUCH_KEINE_DATEN.code(),
+              serviceOid,
+              ExceptionConstants.GETHANDBUCH_KEINE_DATEN.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
-            val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
-            val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsByteArray = response.getResponse().getContentAsByteArray();
+  @Nested
+  class SetHandbuch {
 
-            Assertions.assertThat(response.getResponse().getHeader("Content-Type")).isEqualTo("application/pdf");
-            Assertions.assertThat(response.getResponse().getHeader("Content-Disposition")).isEqualTo("attachment; filename=UWBHandbuch.pdf");
-            Assertions.assertThat(responseBodyAsByteArray).isEqualTo(handbuchContent);
-        }
+    @Test
+    void should_saveData_when_callingSaveHandbuch() throws Exception {
+      val handbuchContent = "dies ist ein Handbuch".getBytes();
 
-        @Test
-        void should_throwInternalServerErrorException_when_noDataIsFoundInRepo() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_HANDBUCH);
-            val request = MockMvcRequestBuilders.get("/businessActions/handbuch/wahltagID/UWB");
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB")
+              .file("manual", handbuchContent)
+              .with(csrf());
+      mockMvc.perform(request).andExpect(status().isOk());
 
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_HANDBUCH);
+      val savedHandbuch =
+          handbuchRepository
+              .findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB))
+              .get();
 
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionConstants.GETHANDBUCH_KEINE_DATEN.code(), serviceOid,
-                    ExceptionConstants.GETHANDBUCH_KEINE_DATEN.message());
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
-
+      Assertions.assertThat(savedHandbuch.getHandbuch()).isEqualTo(handbuchContent);
     }
 
-    @Nested
-    class SetHandbuch {
+    @Test
+    void should_replaceData_when_dataIsPresent() throws Exception {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
+      handbuchRepository.save(
+          new Handbuch(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB),
+              "alter handbuch content".getBytes()));
 
-        @Test
-        void should_saveData_when_callingSaveHandbuch() throws Exception {
-            val handbuchContent = "dies ist ein Handbuch".getBytes();
+      val handbuchContent = "dies ist ein Handbuch".getBytes();
 
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB").file("manual", handbuchContent).with(csrf());
-            mockMvc.perform(request).andExpect(status().isOk());
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB")
+              .file("manual", handbuchContent)
+              .with(csrf());
+      mockMvc.perform(request).andExpect(status().isOk());
 
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_HANDBUCH);
-            val savedHandbuch = handbuchRepository.findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB)).get();
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_HANDBUCH);
+      val savedHandbuch =
+          handbuchRepository
+              .findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB))
+              .get();
 
-            Assertions.assertThat(savedHandbuch.getHandbuch()).isEqualTo(handbuchContent);
-        }
-
-        @Test
-        void should_replaceData_when_dataIsPresent() throws Exception {
-            SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_HANDBUCH);
-            handbuchRepository.save(new Handbuch(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB), "alter handbuch content".getBytes()));
-
-            val handbuchContent = "dies ist ein Handbuch".getBytes();
-
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB").file("manual", handbuchContent).with(csrf());
-            mockMvc.perform(request).andExpect(status().isOk());
-
-            SecurityUtils.runWith(Authorities.REPOSITORY_READ_HANDBUCH);
-            val savedHandbuch = handbuchRepository.findById(new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB)).get();
-
-            Assertions.assertThat(savedHandbuch.getHandbuch()).isEqualTo(handbuchContent);
-        }
-
-        @Test
-        void should_returnInternalServerErrorException_when_attachmentIsMissing() throws Exception {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
-            val request = MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB").with(csrf());
-            val response = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT,
-                    serviceOid, "");
-
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(savedHandbuch.getHandbuch()).isEqualTo(handbuchContent);
     }
+
+    @Test
+    void should_returnInternalServerErrorException_when_attachmentIsMissing() throws Exception {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_HANDBUCH);
+      val request =
+          MockMvcRequestBuilders.multipart("/businessActions/handbuch/wahltagID/UWB").with(csrf());
+      val response =
+          mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T, ExceptionKonstanten.CODE_ALLGEMEIN_UNBEKANNT, serviceOid, "");
+
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 }

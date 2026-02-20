@@ -1,0 +1,39 @@
+### post Wahllokal Zustand | user wls_all_uwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "letzteAbmeldung": "2025-06-20T08:54:00.000",
+  "zuletztGesehen": "2025-06-20T08:54:00.000",
+  "druckzustaende": [
+    {
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+      "niederschriftDruckUhrzeit": "2025-06-20T08:54:00.000",
+      "schnellmeldungDruckUhrzeit": "2025-06-20T08:34:00.000",
+      "niederschriftSendenUhrzeit": "2025-06-20T08:44:00.000",
+      "schnellmeldungSendenUhrzeit": "2025-06-20T08:24:00.000"
+    }
+  ]
+}
+
+### post Wahllokal Zustand | user wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/wahllokalzustand
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "letzteAbmeldung": "2025-06-20T08:54:00.000",
+  "zuletztGesehen": "2025-06-20T08:54:00.000",
+  "druckzustaende": [
+    {
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+      "niederschriftDruckUhrzeit": "2025-06-20T08:54:00.000",
+      "schnellmeldungDruckUhrzeit": "2025-06-20T08:34:00.000",
+      "niederschriftSendenUhrzeit": "2025-06-20T08:44:00.000",
+      "schnellmeldungSendenUhrzeit": "2025-06-20T08:24:00.000"
+    }
+  ]
+}

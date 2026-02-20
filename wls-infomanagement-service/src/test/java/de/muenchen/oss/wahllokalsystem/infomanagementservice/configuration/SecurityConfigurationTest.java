@@ -10,8 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.rest.konfiguration.dto.KonfigurationSetDTO;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.KonfigurationService;
+import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KennbuchstabenListenModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.konfiguration.model.KonfigurationModel;
 import de.muenchen.oss.wahllokalsystem.infomanagementservice.service.wahltag.KonfigurierterWahltagService;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
@@ -21,283 +23,294 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
-    @MockBean
-    KonfigurierterWahltagService konfigurierterWahltagService;
+  @MockitoBean KonfigurierterWahltagService konfigurierterWahltagService;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @MockBean
-    KonfigurationService konfigurationService;
+  @MockitoBean KonfigurationService konfigurationService;
 
-    @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
-        api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
+    api.perform(get("/")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
-        api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnStatusUnauthorized_when_accessingSecuredResourceActuator() throws Exception {
+    api.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
-        api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorHealth() throws Exception {
+    api.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
-        api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorInfo() throws Exception {
+    api.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
-        api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceActuatorMetrics() throws Exception {
+    api.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceApiDocs() throws Exception {
-        api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceApiDocs() throws Exception {
+    api.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
-        api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+  @Test
+  void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
+    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class KonfigurierterWahltag {
+
+    @Nested
+    class GetKonfigurierterWahltag {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnNoContent_when_callingAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+
+        api.perform(request).andExpect(status().isNoContent());
+      }
     }
 
     @Nested
-    class KonfigurierterWahltag {
+    class SetKonfigurierterWahltag {
 
-        @Nested
-        class GetKonfigurierterWahltag {
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request =
+            MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}");
 
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
 
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        val request =
+            MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}");
 
-            @Test
-            @WithMockUser
-            void should_returnNoContent_when_callingAuthenticated() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfigurierterWahltag");
-
-                api.perform(request).andExpect(status().isNoContent());
-            }
-        }
-
-        @Nested
-        class SetKonfigurierterWahltag {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("{}");
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                val request = MockMvcRequestBuilders.post("/businessActions/konfigurierterWahltag").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content("{}");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class DeleteKonfigurierterWahltag {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.delete("/businessActions/konfigurierterWahltag/wahltagID").with(csrf());
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                val request = MockMvcRequestBuilders.delete("/businessActions/konfigurierterWahltag/wahltagID").with(csrf());
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class GetKonfigurierteWahltage {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class IsWahltagActive {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnOk_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/wahltagID");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/wahltagID");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
+        api.perform(request).andExpect(status().isOk());
+      }
     }
 
     @Nested
-    class Konfiguration {
+    class DeleteKonfigurierterWahltag {
 
-        @Nested
-        class GetKonfiguration {
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request =
+            MockMvcRequestBuilders.delete("/businessActions/konfigurierterWahltag/wahltagID")
+                .with(csrf());
 
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
 
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        val request =
+            MockMvcRequestBuilders.delete("/businessActions/konfigurierterWahltag/wahltagID")
+                .with(csrf());
 
-            @Test
-            @WithMockUser
-            void should_returnNoContent_when_callingAuthenticated() throws Exception {
-                Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
-
-                val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
-
-                api.perform(request).andExpect(status().isNoContent());
-            }
-        }
-
-        @Nested
-        class PostKonfiguration {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf());
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "default");
-                val request = MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody));
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class GetKonfigurations {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
-
-                val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class GetKennbuchstabenListen {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnUnauthorized_when_callingAnonymous() throws Exception {
-                val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
-
-                api.perform(request).andExpect(status().isUnauthorized());
-            }
-
-            @Test
-            @WithMockUser
-            void should_returnOk_when_callingAuthenticated() throws Exception {
-                Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
-
-                val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
-
-        @Nested
-        class GetKonfigurationUnauthorized {
-
-            @Test
-            @WithAnonymousUser
-            void should_returnOk_when_callingAnonymous() throws Exception {
-                Mockito.when(konfigurationService.getKonfigurationUnauthorized(any())).thenReturn(Optional.of(KonfigurationModel.builder().build()));
-
-                val request = MockMvcRequestBuilders.get("/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
-
-                api.perform(request).andExpect(status().isOk());
-            }
-        }
+        api.perform(request).andExpect(status().isOk());
+      }
     }
+
+    @Nested
+    class GetKonfigurierteWahltage {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfigurierteWahltage");
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+
+    @Nested
+    class IsWahltagActive {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnOk_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/wahltagID");
+
+        api.perform(request).andExpect(status().isOk());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/loginCheck/wahltagID");
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+  }
+
+  @Nested
+  class Konfiguration {
+
+    @Nested
+    class GetKonfiguration {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnNoContent_when_callingAuthenticated() throws Exception {
+        Mockito.when(konfigurationService.getKonfiguration(any())).thenReturn(Optional.empty());
+
+        val request = MockMvcRequestBuilders.get("/businessActions/konfiguration/ABSCHLUSSTEXT");
+
+        api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class PostKonfiguration {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request =
+            MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT")
+                .with(csrf());
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        val requestBody = new KonfigurationSetDTO("wert", "beschreibung", "default");
+        val request =
+            MockMvcRequestBuilders.post("/businessActions/konfiguration/ABSCHLUSSTEXT")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody));
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+
+    @Nested
+    class GetAllKonfigurations {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnNoContent_when_callingAuthenticated() throws Exception {
+        Mockito.when(konfigurationService.getAllKonfigurations())
+            .thenReturn(Collections.emptyList());
+
+        val request = MockMvcRequestBuilders.get("/businessActions/konfiguration");
+
+        api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class GetKennbuchstabenListen {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        Mockito.when(konfigurationService.getKennbuchstabenListen())
+            .thenReturn(KennbuchstabenListenModel.builder().build());
+
+        val request = MockMvcRequestBuilders.get("/businessActions/kennbuchstaben");
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+
+    @Nested
+    class GetKonfigurationUnauthorized {
+
+      @Test
+      @WithAnonymousUser
+      void should_returnOk_when_callingAnonymous() throws Exception {
+        Mockito.when(konfigurationService.getKonfigurationUnauthorized(any()))
+            .thenReturn(Optional.of(KonfigurationModel.builder().build()));
+
+        val request =
+            MockMvcRequestBuilders.get(
+                "/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+  }
 }

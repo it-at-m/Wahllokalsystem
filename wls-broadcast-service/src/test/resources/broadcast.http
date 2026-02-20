@@ -1,51 +1,38 @@
-### get user "wls_all"
+### get user
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Broadcast Message for wbz-1 and wbz-2
+### Broadcast Message for user wls_all_uwb + wls_all_bwb
 POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "wahlbezirkIDs": [
-    "wbz-1",
-    "wbz-2"
+    "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "9081145c-dc16-4a9b-8255-5c49ddb98c14"
   ],
   "nachricht": "Hallo welt"
 }
 
-###
-POST {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/broadcast
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-{
-  "wahlbezirkIDs": [
-    "wbz-1",
-    "wbz-3"
-  ],
-  "nachricht": "grüß gott"
-}
-
-### Get message for wbz-1
-GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-1
+### Get message | user wls_all_uwb
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 > {%
     client.global.set("nachrichtID", response.body.oid);
-    client.global.set("wbzID", response.body.wahlbezirkID);
 %}
 
-### Get message for wbz-2
-GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/{{wbzID}}
+
+### Get message | user wls_all_bwb
+GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Get message for wbz-x
-GET {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/getMessage/wbz-x
-Authorization: Bearer {{$auth.token("auth-service")}}
+> {%
+    client.global.set("nachrichtID", response.body.oid);
+%}
 
-### Delete lastest for wbz-1
+### Delete lastest | (get message oid from GET request) | user wls_all_uwb + wls_all_bwb
 POST  {{ WLS_BROADCAST_SERVICE_URL }}/businessActions/messageRead/{{nachrichtID}}
 Authorization: Bearer {{$auth.token("auth-service")}}
 

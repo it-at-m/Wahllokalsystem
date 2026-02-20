@@ -1,6 +1,12 @@
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { createTestingPinia } from "@pinia/testing";
+import {
+  COMPONENT_EVENT_TESTS,
+  COMPONENT_RENDER_TESTS,
+  getSnapshotFilename,
+} from "@tests/utils/testutils.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
@@ -19,8 +25,8 @@ import * as directives from "vuetify/directives";
 
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import { WahlvorstandsmitgliedBuilder } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
-import { getSnapshotFilename } from "../../utils/testutils";
+
+const { prepareWahlvorstandsmitglied } = useWahlvorstandTestDataFactory();
 
 describe("TheWahlvorstandMitgliederTable.vue", () => {
   let vuetify: ReturnType<typeof createVuetify>;
@@ -51,17 +57,19 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  describe("visual logic", () => {
+  describe(COMPONENT_RENDER_TESTS, () => {
     it("should_showMultipleLines_when_multipleWahlvorstandsmitgliederAreGiven", async (context) => {
       const wahlvorstandStore = useWahlvorstandStore();
 
       const wahlvorstandsmitglieder = [] as Wahlvorstandsmitglied[];
       for (let i = 0; i < 5; i++) {
         wahlvorstandsmitglieder.push(
-          WahlvorstandsmitgliedBuilder.createComplete()
-            .withFamilienname(`famname ${i}`)
-            .withVorname(`vorname ${i}`)
-            .withAnwesend(i % 2 === 0)
+          prepareWahlvorstandsmitglied()
+            .familienname(`famname ${i}`)
+            .vorname(`vorname ${i}`)
+            .anwesend(i % 2 === 0)
+            .funktionsname("funktion")
+            .build()
         );
       }
 
@@ -88,18 +96,20 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
     });
   });
 
-  describe("behavioral logic", () => {
+  describe(COMPONENT_EVENT_TESTS, () => {
     describe("update:model-value", () => {
       it("should_setAnwesendTrue_when_checkBoxForMitgliedThatIsNotAnwesendWasClicked", async () => {
         const wahlvorstandStore = useWahlvorstandStore();
 
         wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id1")
-            .withAnwesend(false),
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id2")
-            .withAnwesend(false),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id1")
+            .anwesend(false)
+            .build(),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id2")
+            .anwesend(false)
+            .build(),
         ];
 
         await nextTick();
@@ -108,7 +118,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
           '[data-test="checkboxAnwesend"]'
         )[1];
 
-        await secondCheckBox.setValue(true);
+        await secondCheckBox?.setValue(true);
 
         expect(
           wahlvorstandStore.changeAnwesendOfMitglied
@@ -123,12 +133,14 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
         const wahlvorstandStore = useWahlvorstandStore();
 
         wahlvorstandStore.wahlvorstand.wahlvorstandsmitglieder = [
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id1")
-            .withAnwesend(true),
-          WahlvorstandsmitgliedBuilder.createMinimal()
-            .withIdentifikator("id2")
-            .withAnwesend(true),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id1")
+            .anwesend(true)
+            .build(),
+          prepareWahlvorstandsmitglied()
+            .identifikator("id2")
+            .anwesend(true)
+            .build(),
         ];
 
         await nextTick();
@@ -137,7 +149,7 @@ describe("TheWahlvorstandMitgliederTable.vue", () => {
           '[data-test="checkboxAnwesend"]'
         )[1];
 
-        await secondCheckBox.setValue(false);
+        await secondCheckBox?.setValue(false);
 
         expect(
           wahlvorstandStore.changeAnwesendOfMitglied

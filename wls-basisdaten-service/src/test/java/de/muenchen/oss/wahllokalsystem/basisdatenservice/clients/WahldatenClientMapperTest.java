@@ -9,31 +9,41 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { WahldatenClientMapperImpl.class, WahlbezirkeClientMapperImpl.class, WahlenClientMapperImpl.class })
+@SpringBootTest(
+    classes = {
+      WahldatenClientMapperImpl.class,
+      WahlbezirkeClientMapperImpl.class,
+      WahlenClientMapperImpl.class
+    })
 class WahldatenClientMapperTest {
 
-    @Autowired
-    private WahldatenClientMapper unitUnderTest;
+  @Autowired private WahldatenClientMapper unitUnderTest;
 
-    @Nested
-    class FromRemoteClientDTOToModel {
+  @Nested
+  class FromRemoteClientDTOToModel {
 
-        @Test
-        void should_returnBasisdatenModel_when_givenBasisdatenDTO() {
+    @Test
+    void should_returnBasisdatenModel_when_givenBasisdatenDTO() {
 
-            val basisdatenDTO = MockDataFactory.createClientBasisdatenDTO(LocalDate.now());
+      val basisdatenDTO = MockDataFactory.createClientBasisdatenDTO(LocalDate.now());
 
-            Assertions.assertThat(basisdatenDTO).hasNoNullFieldsOrProperties();
+      Assertions.assertThat(basisdatenDTO).hasNoNullFieldsOrProperties();
 
-            val result = unitUnderTest.fromRemoteClientDTOToModel(basisdatenDTO);
+      val result = unitUnderTest.fromRemoteClientDTOToModel(basisdatenDTO);
 
-            val expectedBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
+      val expectedBasisdaten = MockDataFactory.createBasisdatenModel(LocalDate.now());
 
-            Assertions.assertThat(result.basisstrukturdaten()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.basisstrukturdaten());
-            Assertions.assertThat(result.wahlen()).usingRecursiveComparison().ignoringCollectionOrder()
-                    .ignoringFields("reihenfolge", "waehlerverzeichnisnummer", "farbe").isEqualTo(expectedBasisdaten.wahlen());
-            Assertions.assertThat(result.wahlbezirke()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.wahlbezirke());
-            Assertions.assertThat(result.stimmzettelgebiete()).containsExactlyInAnyOrderElementsOf(expectedBasisdaten.stimmzettelgebiete());
-        }
+      Assertions.assertThat(result.basisstrukturdaten())
+          .containsExactlyInAnyOrderElementsOf(expectedBasisdaten.basisstrukturdaten());
+      Assertions.assertThat(result.wahlen())
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .ignoringFields("reihenfolge", "waehlerverzeichnisNummer", "farbe")
+          .isEqualTo(expectedBasisdaten.wahlen());
+      Assertions.assertThat(result.wahlbezirke())
+          .containsExactlyInAnyOrderElementsOf(expectedBasisdaten.wahlbezirke());
+      Assertions.assertThat(result.stimmzettelgebiete())
+          .containsExactlyInAnyOrderElementsOf(expectedBasisdaten.stimmzettelgebiete());
     }
+  }
 }

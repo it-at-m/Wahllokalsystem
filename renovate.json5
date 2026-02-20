@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "github>it-at-m/refarch//refarch-tools/refarch-renovate/refarch-renovate-config.json5"
   ],
   "addLabels": [
     "renovate"
@@ -10,5 +10,24 @@
     "org.projectlombok:lombok",
     //#248 https://github.com/it-at-m/Wahllokalsystem/issues/248#issuecomment-2228404217
     "quay.io/keycloak/keycloak",
-  ]
+    "ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-admin-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-eai-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-auth-service",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-gui-wahllokalsystem",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-gui-admintool",
+    "ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway"
+  ],
+  prConcurrentLimit: 5,
+  schedule: [
+    "* * * * 1"
+  ],
 }

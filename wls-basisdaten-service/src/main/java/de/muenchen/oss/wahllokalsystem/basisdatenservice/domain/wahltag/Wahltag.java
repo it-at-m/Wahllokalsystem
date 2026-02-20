@@ -20,21 +20,15 @@ import lombok.ToString;
 @Table(name = "Wahltag")
 public class Wahltag {
 
-    @Id
-    @NotNull
-    @Size(max = 1024)
-    @ToString.Include
-    private String wahltagID;
+  @Id
+  @NotNull @Size(max = 1024) @ToString.Include
+  private String wahltagID;
 
-    @NotNull
-    @ToString.Include
-    private LocalDate wahltag;
+  @NotNull @ToString.Include private LocalDate wahltag;
 
-    @Size(max = 1024)
-    @ToString.Include
-    private String beschreibung;
+  @Size(max = 1024) @ToString.Include
+  private String beschreibung;
 
-    @Size(max = 1024)
-    @ToString.Include
-    private String nummer;
+  @Size(max = 1024) @ToString.Include
+  private String nummer;
 }

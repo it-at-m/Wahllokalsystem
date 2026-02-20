@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.referendumvorlagen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.referendumvorlagen.ReferendumvorlagenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,25 +17,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReferendumvorlagenController {
 
-    private final ReferendumvorlagenService referendumvorlagenService;
+  private final ReferendumvorlagenService referendumvorlagenService;
 
-    private final ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
+  private final ReferendumvorlagenDTOMapper referendumvorlagenDTOMapper;
 
-    @Operation(description = "Laden der Referendumsvorlagen des Wahllokals {wahlbezirkID} für eine Wahl {wahlID}.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Referendumvorlage erfolgreich zurückgegeben"
-                    ),
-                    @ApiResponse(
-                            responseCode = "204", description = "Keine Daten vom Fremdsystem geliefert",
-                            content = @Content(schema = @Schema())
-                    )
-            }
-    )
-    @GetMapping("{wahlID}/{wahlbezirkID}")
-    public ReferendumvorlagenDTO getReferendumvorlagen(@PathVariable("wahlID") final String wahlID, @PathVariable("wahlbezirkID") final String wahlbezirkID) {
-        return referendumvorlagenDTOMapper.toDTO(
-                referendumvorlagenService.getReferendumvorlagen(referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
-    }
+  @Operation(
+      description =
+          "Laden der Referendumsvorlagen des Wahllokals {wahlbezirkID} für eine Wahl {wahlID}.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Referendumvorlage erfolgreich zurückgegeben"),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Keine Daten vom Fremdsystem geliefert",
+            content = @Content(schema = @Schema()))
+      })
+  @GetMapping("{wahlID}/{wahlbezirkID}")
+  public ReferendumvorlagenDTO getReferendumvorlagen(
+      @PathVariable("wahlID") final String wahlID,
+      @PathVariable("wahlbezirkID") final String wahlbezirkID) {
+    return referendumvorlagenDTOMapper.toDTO(
+        referendumvorlagenService.getReferendumvorlagen(
+            referendumvorlagenDTOMapper.toModel(wahlbezirkID, wahlID)));
+  }
 }

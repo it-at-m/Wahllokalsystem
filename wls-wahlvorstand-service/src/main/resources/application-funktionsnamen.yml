@@ -8,129 +8,129 @@ mapping:
       B: "Beisitzer*in"
     BEB:
       W: "Wahlvorsteher*in"
-      SB: ${uwbFunktion.BTW.SB}
+      SB: ${mapping.UWB.BTW.SB}
       SWB: "Stellvertretung Wahlvorsteher*in"
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     BAW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
       SWB: "Stellvertretung Wahlvorsteher*in"
       SSB: "Stellvertretung Schriftführer*in"
-      B: ${uwbFunktion.BTW.B}
+      B: ${mapping.UWB.BTW.B}
     BZW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     EUW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     LTW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     MBW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     OBW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BAW.SWB}
-      SSB: ${uwbFunktion.BAW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BAW.SWB}
+      SSB: ${mapping.UWB.BAW.SSB}
+      B: ${mapping.UWB.BTW.B}
     SRW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BAW.SWB}
-      SSB: ${uwbFunktion.BAW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BAW.SWB}
+      SSB: ${mapping.UWB.BAW.SSB}
+      B: ${mapping.UWB.BTW.B}
     SVW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BAW.SWB}
-      SSB: ${uwbFunktion.BAW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BAW.SWB}
+      SSB: ${mapping.UWB.BAW.SSB}
+      B: ${mapping.UWB.BTW.B}
     VE:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
 
   BWB:
     BTW:
-      W: ${uwbFunktion.BTW.W}
-      SB: ${uwbFunktion.BTW.SB}
-      SWB: ${uwbFunktion.BTW.SWB}
-      SSB: ${uwbFunktion.BTW.SSB}
-      B: ${uwbFunktion.BTW.B}
+      W: ${mapping.UWB.BTW.W}
+      SB: ${mapping.UWB.BTW.SB}
+      SWB: ${mapping.UWB.BTW.SWB}
+      SSB: ${mapping.UWB.BTW.SSB}
+      B: ${mapping.UWB.BTW.B}
     BEB:
       W: "Briefwahlvorsteher*in"
-      SB: ${uwbFunktion.BEB.SB}
+      SB: ${mapping.UWB.BEB.SB}
       SWB: "Stellvertretung Briefwahlvorsteher*in"
-      SSB: ${uwbFunktion.BEB.SSB}
-      B: ${uwbFunktion.BEB.B}
+      SSB: ${mapping.UWB.BEB.SSB}
+      B: ${mapping.UWB.BEB.B}
     BAW:
-      W: ${uwbFunktion.BAW.W}
-      SB: ${uwbFunktion.BAW.SB}
-      SWB: ${uwbFunktion.BAW.SWB}
-      SSB: ${uwbFunktion.BAW.SSB}
-      B: ${uwbFunktion.BAW.B}
+      W: ${mapping.UWB.BAW.W}
+      SB: ${mapping.UWB.BAW.SB}
+      SWB: ${mapping.UWB.BAW.SWB}
+      SSB: ${mapping.UWB.BAW.SSB}
+      B: ${mapping.UWB.BAW.B}
     BZW:
-      W: ${uwbFunktion.BZW.W}
-      SB: ${uwbFunktion.BZW.SB}
-      SWB: ${uwbFunktion.BZW.SWB}
-      SSB: ${uwbFunktion.BZW.SSB}
-      B: ${uwbFunktion.BZW.B}
+      W: ${mapping.UWB.BZW.W}
+      SB: ${mapping.UWB.BZW.SB}
+      SWB: ${mapping.UWB.BZW.SWB}
+      SSB: ${mapping.UWB.BZW.SSB}
+      B: ${mapping.UWB.BZW.B}
     EUW:
-      W: ${uwbFunktion.EUW.W}
-      SB: ${uwbFunktion.EUW.SB}
-      SWB: ${uwbFunktion.EUW.SWB}
-      SSB: ${uwbFunktion.EUW.SSB}
-      B: ${uwbFunktion.EUW.B}
+      W: ${mapping.UWB.EUW.W}
+      SB: ${mapping.UWB.EUW.SB}
+      SWB: ${mapping.UWB.EUW.SWB}
+      SSB: ${mapping.UWB.EUW.SSB}
+      B: ${mapping.UWB.EUW.B}
     LTW:
-      W: ${uwbFunktion.LTW.W}
-      SB: ${uwbFunktion.LTW.SB}
-      SWB: ${uwbFunktion.LTW.SWB}
-      SSB: ${uwbFunktion.LTW.SSB}
-      B: ${uwbFunktion.LTW.B}
+      W: ${mapping.UWB.LTW.W}
+      SB: ${mapping.UWB.LTW.SB}
+      SWB: ${mapping.UWB.LTW.SWB}
+      SSB: ${mapping.UWB.LTW.SSB}
+      B: ${mapping.UWB.LTW.B}
     MBW:
-      W: ${uwbFunktion.MBW.W}
-      SB: ${uwbFunktion.MBW.SB}
-      SWB: ${uwbFunktion.MBW.SWB}
-      SSB: ${uwbFunktion.MBW.SSB}
-      B: ${uwbFunktion.MBW.B}
+      W: ${mapping.UWB.MBW.W}
+      SB: ${mapping.UWB.MBW.SB}
+      SWB: ${mapping.UWB.MBW.SWB}
+      SSB: ${mapping.UWB.MBW.SSB}
+      B: ${mapping.UWB.MBW.B}
     OBW:
-      W: ${uwbFunktion.OBW.W}
-      SB: ${uwbFunktion.OBW.SB}
-      SWB: ${uwbFunktion.OBW.SWB}
-      SSB: ${uwbFunktion.OBW.SSB}
-      B: ${uwbFunktion.OBW.B}
+      W: ${mapping.UWB.OBW.W}
+      SB: ${mapping.UWB.OBW.SB}
+      SWB: ${mapping.UWB.OBW.SWB}
+      SSB: ${mapping.UWB.OBW.SSB}
+      B: ${mapping.UWB.OBW.B}
     SRW:
-      W: ${uwbFunktion.SRW.W}
-      SB: ${uwbFunktion.SRW.SB}
-      SWB: ${uwbFunktion.SRW.SWB}
-      SSB: ${uwbFunktion.SRW.SSB}
-      B: ${uwbFunktion.SRW.B}
+      W: ${mapping.UWB.SRW.W}
+      SB: ${mapping.UWB.SRW.SB}
+      SWB: ${mapping.UWB.SRW.SWB}
+      SSB: ${mapping.UWB.SRW.SSB}
+      B: ${mapping.UWB.SRW.B}
     SVW:
-      W: ${uwbFunktion.SVW.W}
-      SB: ${uwbFunktion.SVW.SB}
-      SWB: ${uwbFunktion.SVW.SWB}
-      SSB: ${uwbFunktion.SVW.SSB}
-      B: ${uwbFunktion.SVW.B}
+      W: ${mapping.UWB.SVW.W}
+      SB: ${mapping.UWB.SVW.SB}
+      SWB: ${mapping.UWB.SVW.SWB}
+      SSB: ${mapping.UWB.SVW.SSB}
+      B: ${mapping.UWB.SVW.B}
     VE:
-      W: ${uwbFunktion.VE.W}
-      SB: ${uwbFunktion.VE.SB}
-      SWB: ${uwbFunktion.VE.SWB}
-      SSB: ${uwbFunktion.VE.SSB}
-      B: ${uwbFunktion.VE.B}
+      W: ${mapping.UWB.VE.W}
+      SB: ${mapping.UWB.VE.SB}
+      SWB: ${mapping.UWB.VE.SWB}
+      SSB: ${mapping.UWB.VE.SSB}
+      B: ${mapping.UWB.VE.B}

@@ -27,13 +27,11 @@ import org.hibernate.annotations.JdbcTypeCode;
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 public class Wahlvorstand extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    @JdbcTypeCode(VARCHAR)
-    private UUID wahlbezirkID;
+  @NotNull @ToString.Include
+  @JdbcTypeCode(VARCHAR)
+  private UUID wahlbezirkID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wahlvorstandid")
-    private Collection<Wahlvorstandsmitglied> mitglieder;
-
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "wahlvorstandid")
+  private Collection<Wahlvorstandsmitglied> mitglieder;
 }

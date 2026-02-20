@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenService;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenWriteModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenWriteModel;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -17,60 +17,62 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahlenControllerTest {
 
-    @Mock
-    WahlenService wahlenService;
+  @Mock WahlenService wahlenService;
 
-    @Mock
-    WahlDTOMapper wahlDTOMapper;
+  @Mock WahlDTOMapper wahlDTOMapper;
 
-    @InjectMocks
-    WahlenController unitUnderTest;
+  @InjectMocks WahlenController unitUnderTest;
 
-    @Nested
-    class GetWahlen {
+  @Nested
+  class GetWahlen {
 
-        @Test
-        void should_returnWahlDTOList_when_serviceIsCalled() {
-            val wahltagID = "wahltagID";
+    @Test
+    void should_returnWahlDTOList_when_serviceIsCalled() {
+      val wahltagID = "wahltagID";
 
-            val mockedServiceResponse = List.of(Mockito.mock(WahlModel.class), Mockito.mock(WahlModel.class));
-            val mockedMappedServiceResponse = List.of(Mockito.mock(WahlDTO.class), Mockito.mock(WahlDTO.class));
+      val mockedServiceResponse =
+          List.of(Mockito.mock(WahlModel.class), Mockito.mock(WahlModel.class));
+      val mockedMappedServiceResponse =
+          List.of(Mockito.mock(WahlDTO.class), Mockito.mock(WahlDTO.class));
 
-            Mockito.when(wahlenService.getWahlen(wahltagID)).thenReturn(mockedServiceResponse);
-            Mockito.when(wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(mockedServiceResponse)).thenReturn(mockedMappedServiceResponse);
+      Mockito.when(wahlenService.getWahlen(wahltagID)).thenReturn(mockedServiceResponse);
+      Mockito.when(wahlDTOMapper.fromListOfWahlModelToListOfWahlDTO(mockedServiceResponse))
+          .thenReturn(mockedMappedServiceResponse);
 
-            val result = unitUnderTest.getWahlen(wahltagID);
+      val result = unitUnderTest.getWahlen(wahltagID);
 
-            Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
-        }
+      Assertions.assertThat(result).isSameAs(mockedMappedServiceResponse);
     }
+  }
 
-    @Nested
-    class PostWahlen {
+  @Nested
+  class PostWahlen {
 
-        @Test
-        void should_returnOk_when_serviceIsCalled() {
-            val wahltagID = "wahltagID";
-            val requestBody = List.of(Mockito.mock(WahlDTO.class));
+    @Test
+    void should_returnOk_when_serviceIsCalled() {
+      val wahltagID = "wahltagID";
+      val requestBody = List.of(Mockito.mock(WahlDTO.class));
 
-            val mockedMappedRequest = List.of(Mockito.mock(WahlModel.class));
+      val mockedMappedRequest = List.of(Mockito.mock(WahlModel.class));
 
-            Mockito.when(wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(requestBody)).thenReturn(mockedMappedRequest);
+      Mockito.when(wahlDTOMapper.fromListOfWahlDTOtoListOfWahlModel(requestBody))
+          .thenReturn(mockedMappedRequest);
 
-            unitUnderTest.postWahlen(wahltagID, requestBody);
+      unitUnderTest.postWahlen(wahltagID, requestBody);
 
-            Mockito.verify(wahlenService).postWahlen(new WahlenWriteModel(wahltagID, mockedMappedRequest));
-        }
+      Mockito.verify(wahlenService)
+          .postWahlen(new WahlenWriteModel(wahltagID, mockedMappedRequest));
     }
+  }
 
-    @Nested
-    class ResetWahlen {
+  @Nested
+  class ResetWahlen {
 
-        @Test
-        void should_returnOk_when_serviceIsCalled() {
-            unitUnderTest.resetWahlen();
+    @Test
+    void should_returnOk_when_serviceIsCalled() {
+      unitUnderTest.resetWahlen();
 
-            Mockito.verify(wahlenService).resetWahlen();
-        }
+      Mockito.verify(wahlenService).resetWahlen();
     }
+  }
 }

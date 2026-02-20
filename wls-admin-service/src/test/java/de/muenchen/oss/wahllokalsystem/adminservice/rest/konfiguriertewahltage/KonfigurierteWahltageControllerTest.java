@@ -1,11 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.adminservice.rest.konfiguriertewahltage;
 
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierteWahltageController;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTO;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.KonfigurierterWahltagDTOMapper;
-import de.muenchen.oss.wahllokalsystem.adminservice.rest.konfigurierterwahltag.WahltagStatusDTO;
 import de.muenchen.oss.wahllokalsystem.adminservice.service.common.KonfigurierterWahltagModel;
-import de.muenchen.oss.wahllokalsystem.adminservice.service.konfigurierterwahltag.KonfigurierteWahltageService;
+import de.muenchen.oss.wahllokalsystem.adminservice.service.konfiguriertewahltage.KonfigurierteWahltageService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
@@ -21,49 +17,54 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KonfigurierteWahltageControllerTest {
 
-    @Mock
-    KonfigurierteWahltageService konfigurierteWahltageService;
+  @Mock KonfigurierteWahltageService konfigurierteWahltageService;
 
-    @Mock
-    KonfigurierterWahltagDTOMapper konfigurierterWahltagDTOMapper;
+  @Mock KonfigurierterWahltagDTOMapper konfigurierterWahltagDTOMapper;
 
-    @InjectMocks
-    KonfigurierteWahltageController unitUnderTest;
+  @InjectMocks KonfigurierteWahltageController unitUnderTest;
 
-    @Nested
-    class GetKonfigurierteWahltage {
+  @Nested
+  class GetKonfigurierteWahltage {
 
-        @Test
-        void should_callService_when_controllerIsCalled() {
-            val mockedServiceResponse = new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID", true, "0");
-            val mockedServiceResponseAsDTO = new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
+    @Test
+    void should_callService_when_controllerIsCalled() {
+      val mockedServiceResponse =
+          new KonfigurierterWahltagModel(LocalDate.now(), "wahltagID", true, "0");
+      val mockedServiceResponseAsDTO =
+          new KonfigurierterWahltagDTO(LocalDate.now(), "wahltagID", WahltagStatusDTO.AKTIV, "0");
 
-            Mockito.when(konfigurierteWahltageService.getKonfigurierteWahltage()).thenReturn(List.of(mockedServiceResponse));
-            Mockito.when(konfigurierterWahltagDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      Mockito.when(konfigurierteWahltageService.getKonfigurierteWahltage())
+          .thenReturn(List.of(mockedServiceResponse));
+      Mockito.when(konfigurierterWahltagDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            val result = unitUnderTest.getKonfigurierteWahltage();
+      val result = unitUnderTest.getKonfigurierteWahltage();
 
-            Assertions.assertThat(result.getBody()).isEqualTo(List.of(mockedServiceResponseAsDTO));
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(List.of(mockedServiceResponseAsDTO));
     }
+  }
 
-    @Nested
-    class PostKonfigurierteWahltage {
+  @Nested
+  class PostKonfigurierterWahltag {
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            val date = LocalDate.now();
-            val wahltagID = "wahltagID";
-            val nummer = "0";
+    @Test
+    void should_callServiceWithModel_when_calledWithData() {
+      val date = LocalDate.now();
+      val wahltagID = "wahltagID";
+      val nummer = "0";
 
-            val konfigurierterWahltagDTO = new KonfigurierterWahltagDTO(date, wahltagID, WahltagStatusDTO.AKTIV, nummer);
+      val konfigurierterWahltagDTO =
+          new KonfigurierterWahltagDTO(date, wahltagID, WahltagStatusDTO.AKTIV, nummer);
 
-            val mockedKonfigurierterWahltagModel = new KonfigurierterWahltagModel(date, wahltagID, true, nummer);
-            Mockito.when(konfigurierterWahltagDTOMapper.toModel(konfigurierterWahltagDTO)).thenReturn(mockedKonfigurierterWahltagModel);
+      val mockedKonfigurierterWahltagModel =
+          new KonfigurierterWahltagModel(date, wahltagID, true, nummer);
+      Mockito.when(konfigurierterWahltagDTOMapper.toModel(konfigurierterWahltagDTO))
+          .thenReturn(mockedKonfigurierterWahltagModel);
 
-            unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagDTO);
+      unitUnderTest.postKonfigurierterWahltag(konfigurierterWahltagDTO);
 
-            Mockito.verify(konfigurierteWahltageService).postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
-        }
+      Mockito.verify(konfigurierteWahltageService)
+          .postKonfigurierterWahltag(mockedKonfigurierterWahltagModel);
     }
+  }
 }

@@ -28,100 +28,116 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlbeteiligungControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceInfoOid;
+  @Value("${service.info.oid}")
+  String serviceInfoOid;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WahlbeteiligungRepository wahlbeteiligungRepository;
+  @Autowired WahlbeteiligungRepository wahlbeteiligungRepository;
 
-    @Autowired
-    WahlbeteiligungMapper wahlbeteiligungMapper;
+  @Autowired WahlbeteiligungMapper wahlbeteiligungMapper;
 
-    @SpyBean
-    WahlbeteiligungValidator wahlbeteiligungValidator;
+  @MockitoSpyBean WahlbeteiligungValidator wahlbeteiligungValidator;
 
-    @Autowired
-    ExceptionFactory exceptionFactory;
+  @Autowired ExceptionFactory exceptionFactory;
 
-    @Autowired
-    EntityManager entityManager;
+  @Autowired EntityManager entityManager;
 
-    @AfterEach
-    void teardown() {
-        wahlbeteiligungRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    wahlbeteiligungRepository.deleteAll();
+  }
+
+  @Nested
+  class SaveWahlbeteiligungsMeldung {
+
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
+    @Transactional
+    void should_setNewData_when_callingPost() throws Exception {
+      val wahlID = "wahlID1";
+      val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
+      val anzahlWaehler = 150;
+      val meldeZeitpunkt = LocalDateTime.now();
+
+      val requestBody =
+          new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
+      val request =
+          MockMvcRequestBuilders.post("/wahlbeteiligung")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+
+      val savedWahlbeteiligung = wahlbeteiligungRepository.findAll().iterator().next();
+
+      Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+
+      val expectedSavedWahlbeteiligung =
+          new Wahlbeteiligung(
+              requestBody.wahlID(),
+              requestBody.wahlbezirkID(),
+              requestBody.anzahlWaehler(),
+              requestBody.meldeZeitpunkt());
+
+      Assertions.assertThat(savedWahlbeteiligung)
+          .usingRecursiveComparison()
+          .ignoringFields("id")
+          .isEqualTo(expectedSavedWahlbeteiligung);
     }
 
-    @Nested
-    class SaveWahlbeteiligungsMeldung {
+    @Test
+    @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
+    @Transactional
+    void should_returnTechnischeWlsException_when_savingFailed() throws Exception {
 
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
-        @Transactional
-        void should_setNewData_when_callingPost() throws Exception {
-            val wahlID = "wahlID1";
-            val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
-            val anzahlWaehler = 150;
-            val meldeZeitpunkt = LocalDateTime.now();
+      val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
+      val anzahlWaehler = 150;
+      val meldeZeitpunkt = LocalDateTime.now();
 
-            val requestBody = new WahlbeteiligungsMeldungDTO(wahlID, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
-            val request = MockMvcRequestBuilders.post("/wahlbeteiligung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
+      val requestBody =
+          new WahlbeteiligungsMeldungDTO(null, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
+      val request =
+          MockMvcRequestBuilders.post("/wahlbeteiligung")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val mockedExceptionMessage = "mocked null pointer exception";
+      val mockedValidationException = new NullPointerException(mockedExceptionMessage);
+      Mockito.doThrow(mockedValidationException)
+          .when(wahlbeteiligungValidator)
+          .validDTOToSetOrThrow(any());
 
-            val savedWahlbeteiligung = wahlbeteiligungRepository.findAll().iterator().next();
+      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-            Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(WlsExceptionCategory.T, "999", "EAI-SERVICE", "");
 
-            val expectedSavedWahlbeteiligung = new Wahlbeteiligung(requestBody.wahlID(), requestBody.wahlbezirkID(), requestBody.anzahlWaehler(),
-                    requestBody.meldeZeitpunkt());
-
-            Assertions.assertThat(savedWahlbeteiligung).usingRecursiveComparison().ignoringFields("id").isEqualTo(expectedSavedWahlbeteiligung);
-        }
-
-        @Test
-        @WithMockUser(authorities = Authorities.SERVICE_SAVE_WAHLBETEILIGUNG)
-        @Transactional
-        void should_returnTechnischeWlsException_when_savingFailed() throws Exception {
-
-            val wahlbezirkID = "00000000-0000-0000-0000-000000000001";
-            val anzahlWaehler = 150;
-            val meldeZeitpunkt = LocalDateTime.now();
-
-            val requestBody = new WahlbeteiligungsMeldungDTO(null, wahlbezirkID, anzahlWaehler, meldeZeitpunkt);
-            val request = MockMvcRequestBuilders.post("/wahlbeteiligung").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            val mockedExceptionMessage = "mocked null pointer exception";
-            val mockedValidationException = new NullPointerException(mockedExceptionMessage);
-            Mockito.doThrow(mockedValidationException).when(wahlbeteiligungValidator).validDTOToSetOrThrow(any());
-
-            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T, "999", "EAI-SERVICE", "");
-
-            Assertions.assertThat(responseBodyDTO).usingRecursiveComparison().ignoringFields("message").isEqualTo(expectedWlsExceptionDTO);
-            Assertions.assertThat(responseBodyDTO.message()).contains(mockedExceptionMessage);
-        }
+      Assertions.assertThat(responseBodyDTO)
+          .usingRecursiveComparison()
+          .ignoringFields("message")
+          .isEqualTo(expectedWlsExceptionDTO);
+      Assertions.assertThat(responseBodyDTO.message()).contains(mockedExceptionMessage);
     }
+  }
 }

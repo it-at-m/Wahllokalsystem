@@ -1,8 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AuthService - local,db-oracle,dummy.ldap,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,sec">
+  <configuration default="false" name="AuthService - local,db-oracle,dummy.ldap,db-dummydata" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,oracle,sec">
     <option name="ACTIVE_PROFILES" value="local,db-oracle,dummy.ldap,db-dummydata" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.config.additional-location" />
+        <option name="value" value="file:../stack/run_configurations/additionalYmlFiles/application-rsa.yml" />
+      </param>
+    </additionalParameters>
     <module name="wls-auth-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication" />
+    <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

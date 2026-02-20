@@ -4,6 +4,7 @@ import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.Serv
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,36 +20,40 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 @Slf4j
 public class LdapConfiguration {
 
-    private final ServiceAuthLdapProperties serviceAuthLdapProperties;
+  private final ServiceAuthLdapProperties serviceAuthLdapProperties;
 
-    @Bean
-    AuthenticationManager authenticationManager(final BaseLdapPathContextSource contextSource) {
-        val factory = new LdapBindAuthenticationManagerFactory(contextSource);
-        factory.setUserSearchFilter(serviceAuthLdapProperties.getUserSearchFilter());
-        factory.setUserSearchBase(serviceAuthLdapProperties.getUserSearchBase());
-        return factory.createAuthenticationManager();
+  @Bean
+  AuthenticationManager authenticationManager(final BaseLdapPathContextSource contextSource) {
+    val factory = new LdapBindAuthenticationManagerFactory(contextSource);
+    factory.setUserSearchFilter(serviceAuthLdapProperties.getUserSearchFilter());
+    factory.setUserSearchBase(serviceAuthLdapProperties.getUserSearchBase());
+    return factory.createAuthenticationManager();
+  }
+
+  @Bean
+  @Profile(Profiles.NOT + Profiles.DUMMY_LDAP)
+  public LdapContextSource ldapContextSource() {
+    val contextSourceValue =
+        new DefaultSpringSecurityContextSource(serviceAuthLdapProperties.getContextSource());
+    contextSourceValue.setAnonymousReadOnly(serviceAuthLdapProperties.isAnonymousReadOnly());
+    contextSourceValue.setCacheEnvironmentProperties(
+        serviceAuthLdapProperties.isCacheEnvironmentProperties());
+    val userDn = serviceAuthLdapProperties.getUserDn();
+    if (userDn != null) {
+      contextSourceValue.setUserDn(userDn);
+      contextSourceValue.setPassword(serviceAuthLdapProperties.getUserDnPassword());
     }
+    contextSourceValue.afterPropertiesSet();
+    return contextSourceValue;
+  }
 
-    @Bean
-    @Profile(Profiles.NOT + Profiles.DUMMY_LDAP)
-    public LdapContextSource ldapContextSource() {
-        val contextSourceValue = new DefaultSpringSecurityContextSource(serviceAuthLdapProperties.getContextSource());
-        contextSourceValue.setAnonymousReadOnly(serviceAuthLdapProperties.isAnonymousReadOnly());
-        contextSourceValue.setCacheEnvironmentProperties(serviceAuthLdapProperties.isCacheEnvironmentProperties());
-        val userDn = serviceAuthLdapProperties.getUserDn();
-        if (userDn != null) {
-            contextSourceValue.setUserDn(userDn);
-            contextSourceValue.setPassword(serviceAuthLdapProperties.getUserDnPassword());
-        }
-        contextSourceValue.afterPropertiesSet();
-        return contextSourceValue;
-    }
-
-    @Bean
-    @Profile(Profiles.DUMMY_LDAP)
-    public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource() {
-        log.warn("using embeddedLdapContextSource");
-        return EmbeddedLdapServerContextSourceFactoryBean.fromEmbeddedLdapServer();
-    }
-
+  @Bean
+  @Profile(Profiles.DUMMY_LDAP)
+  public EmbeddedLdapServerContextSourceFactoryBean embeddedLdapContextSource(
+      @Value("${spring.ldap.embedded.ldif}") final String ldifResource) {
+    log.warn("using embeddedLdapContextSource");
+    val embeddedLdapServer = EmbeddedLdapServerContextSourceFactoryBean.fromEmbeddedLdapServer();
+    embeddedLdapServer.setLdif(ldifResource);
+    return embeddedLdapServer;
+  }
 }

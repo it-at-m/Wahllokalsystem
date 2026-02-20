@@ -8,6 +8,8 @@ on:
         type: choice
         description: service/directory to build (wls-broadcast-service, ...)
         options:
+          - wls-api-gateway
+          - wls-admin-service
           - wls-auth-service
           - wls-basisdaten-service
           - wls-briefwahl-service
@@ -16,11 +18,17 @@ on:
           - wls-ergebnismeldung-service
           - wls-infomanagement-service
           - wls-monitoring-service
+          - wls-vorfaelleundvorkommnisse-service
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
       tag:
         required: false
         description: 'optional: gittag'
+      javaVersion:
+        required: false
+        type: string
+        default: '17'
+        description: "optional: java version für den Build"
 
 jobs:
   build-github-container-image:
@@ -31,3 +39,4 @@ jobs:
     with:
       tag: ${{ github.event.inputs.tag }}
       service: ${{ github.event.inputs.service }}
+      javaVersion: ${{ github.event.inputs.javaVersion }}

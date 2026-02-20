@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface StatusModelMapper {
 
-    StatusModel toModel(Status entity);
+  StatusModel toModel(Status entity);
 
-    Status toEntity(StatusModel model);
+  Status toEntity(StatusModel model);
 }

@@ -7,31 +7,32 @@ import org.junit.jupiter.api.Test;
 
 class AsyncProgressTest {
 
-    AsyncProgress unitUnderTest = new AsyncProgress();
+  AsyncProgress unitUnderTest = new AsyncProgress();
 
-    @Nested
-    class IncAWerteFinished {
+  @Nested
+  class IncAWerteFinished {
 
-        @Test
-        void should_increaseNumberOfaWerteFinishedAndLoadingIsNotActive_when_biggerOrEqualThanAWerteTotal() {
-            val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
-            unitUnderTest.reset(0);
-            unitUnderTest.incAWerteFinished();
-            val numberOfFinishedAfterCall = unitUnderTest.getAWerteFinished();
+    @Test
+    void
+        should_increaseNumberOfaWerteFinishedAndLoadingIsNotActive_when_biggerOrEqualThanAWerteTotal() {
+      val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
+      unitUnderTest.reset(0);
+      unitUnderTest.incAWerteFinished();
+      val numberOfFinishedAfterCall = unitUnderTest.getAWerteFinished();
 
-            Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinishedBeforeCall + 1);
-            Assertions.assertThat(unitUnderTest.isAWerteLoadingActive()).isFalse();
-        }
-
-        @Test
-        void should_increaseNumberOfaWerteFinishedAndIsLoadingActive_when_smallerThanAWerteTotal() {
-            val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
-            unitUnderTest.reset(5);
-            unitUnderTest.incAWerteFinished();
-            val numberOfFinishedAfterCall = unitUnderTest.getAWerteFinished();
-
-            Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinishedBeforeCall + 1);
-            Assertions.assertThat(unitUnderTest.isAWerteLoadingActive()).isTrue();
-        }
+      Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinishedBeforeCall + 1);
+      Assertions.assertThat(unitUnderTest.isAWerteLoadingActive()).isFalse();
     }
+
+    @Test
+    void should_increaseNumberOfaWerteFinishedAndIsLoadingActive_when_smallerThanAWerteTotal() {
+      val numberOfFinishedBeforeCall = unitUnderTest.getAWerteFinished();
+      unitUnderTest.reset(5);
+      unitUnderTest.incAWerteFinished();
+      val numberOfFinishedAfterCall = unitUnderTest.getAWerteFinished();
+
+      Assertions.assertThat(numberOfFinishedAfterCall).isEqualTo(numberOfFinishedBeforeCall + 1);
+      Assertions.assertThat(unitUnderTest.isAWerteLoadingActive()).isTrue();
+    }
+  }
 }

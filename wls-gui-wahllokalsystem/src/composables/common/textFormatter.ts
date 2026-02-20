@@ -1,0 +1,38 @@
+import type { Wahl } from "@/types/wahl/Wahl.ts";
+
+import { storeToRefs } from "pinia";
+
+import { useLogging } from "@/composables/common/logging.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+
+export function useTextFormatter() {
+  function getStimmzettelTermForWahl(wahl: Wahl | undefined): string {
+    const { logDebug } = useLogging("textFormatter");
+
+    if (wahl) {
+      return getStimmzettelTermForWahlID(wahl.wahlID);
+    } else {
+      logDebug("Wahl not found");
+      return "";
+    }
+  }
+
+  function getStimmzettelTermForWahlID(wahlId: string): string {
+    const { isBWB, currentUserHauptWahlID } = storeToRefs(useUserStore());
+
+    return isBWB.value && wahlId === currentUserHauptWahlID.value
+      ? "Stimmzettelumschläge"
+      : "Stimmzettel";
+  }
+
+  function getWahlscheineOrStimmabgabevermerkeTerm(): string {
+    const { isUWB } = useUserStore();
+    return isUWB ? "Stimmabgabevermerke" : "Wahlscheine";
+  }
+
+  return {
+    getStimmzettelTermForWahl,
+    getStimmzettelTermForWahlID,
+    getWahlscheineOrStimmabgabevermerkeTerm,
+  };
+}

@@ -23,17 +23,13 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Wahl extends BaseEntity {
 
-    @NotNull
-    @ToString.Include
-    private String name;
+  @NotNull @ToString.Include private String name;
 
-    @NotNull
-    @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private Wahlart wahlart;
+  @NotNull @ToString.Include
+  @Enumerated(EnumType.STRING)
+  private Wahlart wahlart;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "wahltagID")
-    private Wahltag wahltag;
+  @NotNull @ManyToOne
+  @JoinColumn(name = "wahltagID")
+  private Wahltag wahltag;
 }

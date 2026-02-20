@@ -16,20 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AsyncProgressController {
 
-    private final AsyncProgressDTOMapper asyncProgressDTOMapper;
-    private final AsyncProgress asyncProgress;
+  private final AsyncProgressDTOMapper asyncProgressDTOMapper;
+  private final AsyncProgress asyncProgress;
 
-    @Operation(description = "Lesen des Bearbeitungsstandes der Initialisierung der AWerte.")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Auskunft über Bearbeitungszustand erhalten",
-                            content = { @Content(mediaType = "application/json", schema = @Schema(implementation = AsyncProgressDTO.class)) }
-                    )
-            }
-    )
-    @GetMapping
-    public AsyncProgressDTO getAsyncProgress() {
-        return asyncProgressDTOMapper.toDTO(asyncProgress);
-    }
+  @Operation(description = "Lesen des Bearbeitungsstandes der Initialisierung der AWerte.")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Auskunft über Bearbeitungszustand erhalten",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = AsyncProgressDTO.class))
+            })
+      })
+  @GetMapping
+  public AsyncProgressDTO getAsyncProgress() {
+    return asyncProgressDTOMapper.toDTO(asyncProgress);
+  }
 }

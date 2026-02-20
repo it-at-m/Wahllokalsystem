@@ -1,16 +1,17 @@
 <template>
   <div>
-    <v-icon icon="$send" /> Letzte Absendezeit:
-    {{ time(wahlvorstandStore.lastSending) }}
+    <v-icon
+      icon="$send"
+      class="mr-2"
+    />
+    Letzte Absendezeit: {{ toHhMmSs(wahlvorstandStore.lastSending) }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { VIcon } from "vuetify/components";
-
-import useFormatter from "@/composables/common/formatter";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const { time } = useFormatter();
+const { toHhMmSs } = useDateTimeFormatter();
 const wahlvorstandStore = useWahlvorstandStore();
 </script>

@@ -2,7 +2,7 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get Wahltag EU-Wahl
+### get Wahltag | user wls_all_uwb + wls_all_bwb
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=2024-01-01
 Authorization: Bearer {{$auth.token("auth-service")}}
 
@@ -14,48 +14,36 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahltage?includingSince=3024-01-01
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlen on EU-Wahl-Tag
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2024-06-09&withNummer=0
-Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlen on Kommunalwahl-Tag
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2020-03-15&withNummer=0
+### get wahlen | user wls_all_uwb + wls_all_bwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2026-01-01&withNummer=0
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get wahlen on day without elections
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlen?forDate=2034-06-09&withNummer=0
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlbezirke EU-Wahl
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2024-06-09&withNummer=0
+
+### get wahlbezirke | user wls_all_uwb + wls_all_bwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2026-01-01&withNummer=0
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get wahlbezirke Kommunalwahl (empty response)
 GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirk?forDate=2020-03-15&withNummer=0
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlberechtigte wahlbezirk-1
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000001/wahlberechtigte
+
+### get wahlberechtigte | user wls_all_uwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/9899cae4-df9a-4ffc-a940-f20cf2280171/wahlberechtigte
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlberechtigte wahlbezirk-2
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000002/wahlberechtigte
+### get wahlberechtigte | user wls_all_bwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/9081145c-dc16-4a9b-8255-5c49ddb98c14/wahlberechtigte
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlberechtigte wahlbezirk-3
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000003/wahlberechtigte
-Authorization: Bearer {{$auth.token("auth-service")}}
 
-### get wahlberechtigte wahlbezirk-4
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/wahlbezirke/00000000-0000-0000-0000-000000000004/wahlberechtigte
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### get Basistrukturdaten on EU-Wahl-Tag
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2024-06-09&withNummer=0
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### get Basistrukturdaten on Kommunalwahl-Tag
-GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2020-03-15&withNummer=0
+### get Basistrukturdaten | user wls_all_uwb + wls_all_bwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahldaten/basisdaten?forDate=2026-01-01&withNummer=0
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### get Basistrukturdaten on day without elections

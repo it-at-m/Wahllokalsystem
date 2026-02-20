@@ -1,40 +1,51 @@
-### get user "wls_all"
+### get user
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### create Users wahltagID1
-POST {{ WLS_AUTH_SERVICE }}/generateAndExportWahllokalbenutzer/wahltagID1
+// !! OVERRIDES user wls_all_uwb
+### create Users for wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_uwb
+POST {{ WLS_AUTH_SERVICE }}/generateAndExportWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
   {
-    "wahlbezirknummer": "1001",
-    "wahltag": "2024-10-29",
-    "wahlbezirkID": "wbzID-1",
+    "wahlbezirknummer": "9012",
+    "wahltag": "2026-01-01",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
     "wahlbezirksart": "UWB",
-    "wbid_wahlnummer": "0"
-  },
-  {
-    "wahlbezirknummer": "1002",
-    "wahltag": "2024-10-29",
-    "wahlbezirkID": "wbzID-2",
-    "wahlbezirksart": "UWB",
-    "wbid_wahlnummer": "0"
-  },
-  {
-    "wahlbezirknummer": "1003",
-    "wahltag": "2024-10-29",
-    "wahlbezirkID": "wbzID-3",
-    "wahlbezirksart": "UWB",
-    "wbid_wahlnummer": "0"
+    "wbid_wahlnummer": "{'wbid_wahlnummer': [{'wahlbezirkID': '9899cae4-df9a-4ffc-a940-f20cf2280171', 'wahlnummer': '0', 'wahlID': '28039463-3d3d-4ce5-acc1-0bef931a4409'}]}"
   }
 ]
 
-### get users of wahltagID1
-GET {{ WLS_AUTH_SERVICE }}/exportWahllokalbenutzer/wahltagID1
+### get users of wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_uwb
+GET {{ WLS_AUTH_SERVICE }}/exportWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### delete users of wahltagID1
-DELETE {{ WLS_AUTH_SERVICE }}/deleteWahllokalbenutzer/wahltagID1
+### delete users of wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_uwb
+DELETE {{ WLS_AUTH_SERVICE }}/deleteWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+// !! OVERRIDES user wls_all_bwb
+### create Users for wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_bwb
+POST {{ WLS_AUTH_SERVICE }}/generateAndExportWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+[
+  {
+    "wahlbezirknummer": "5678",
+    "wahltag": "2026-01-01",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlbezirksart": "BWB",
+    "wbid_wahlnummer": "{'wbid_wahlnummer': [{'wahlbezirkID': '9081145c-dc16-4a9b-8255-5c49ddb98c14', 'wahlnummer': '0', 'wahlID': '28039463-3d3d-4ce5-acc1-0bef931a4409'}]}"
+  }
+]
+
+### get users of wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_bwb
+GET {{ WLS_AUTH_SERVICE }}/exportWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### delete users of wahltagID 827e9e6a-ebe9-483f-a9cd-162b26f348e8 | user wls_all_bwb
+DELETE {{ WLS_AUTH_SERVICE }}/deleteWahllokalbenutzer/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}

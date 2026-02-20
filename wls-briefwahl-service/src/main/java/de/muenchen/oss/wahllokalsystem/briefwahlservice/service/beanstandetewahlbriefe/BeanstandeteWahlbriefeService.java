@@ -16,37 +16,41 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BeanstandeteWahlbriefeService {
 
-    private final BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
+  private final BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
 
-    private final BeanstandeteWahlbriefeModelMapper beanstandeteWahlbriefeModelMapper;
+  private final BeanstandeteWahlbriefeModelMapper beanstandeteWahlbriefeModelMapper;
 
-    private final BeanstandeteWahlbriefeValidator beanstandeteWahlbriefeValidator;
+  private final BeanstandeteWahlbriefeValidator beanstandeteWahlbriefeValidator;
 
-    @PreAuthorize(
-        "hasAuthority('Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public BeanstandeteWahlbriefeModel getBeanstandeteWahlbriefe(@P("param") @NotNull final BeanstandeteWahlbriefeReference beanstandeteWahlbriefeReference) {
-        log.info("#getBeanstandeteWahlbriefe");
-        beanstandeteWahlbriefeValidator.valideReferenceOrThrow(beanstandeteWahlbriefeReference);
+  @PreAuthorize(
+      "hasAuthority('Briefwahl_BUSINESSACTION_GetBeanstandeteWahlbriefe')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public BeanstandeteWahlbriefeModel getBeanstandeteWahlbriefe(
+      @P("param") @NotNull final BeanstandeteWahlbriefeReferenceModel beanstandeteWahlbriefeReference) {
+    log.info("#getBeanstandeteWahlbriefe");
+    beanstandeteWahlbriefeValidator.valideReferenceOrThrow(beanstandeteWahlbriefeReference);
 
-        BezirkIDUndWaehlerverzeichnisNummer id = beanstandeteWahlbriefeModelMapper.toEmbeddedId(beanstandeteWahlbriefeReference);
-        val beanstandeteWahlbriefeFromRepo = getOrNull(id);
-        return beanstandeteWahlbriefeFromRepo == null ? null : beanstandeteWahlbriefeModelMapper.toModel(beanstandeteWahlbriefeFromRepo);
-    }
+    BezirkIDUndWaehlerverzeichnisNummer id =
+        beanstandeteWahlbriefeModelMapper.toEmbeddedId(beanstandeteWahlbriefeReference);
+    val beanstandeteWahlbriefeFromRepo = getOrNull(id);
+    return beanstandeteWahlbriefeFromRepo == null
+        ? null
+        : beanstandeteWahlbriefeModelMapper.toModel(beanstandeteWahlbriefeFromRepo);
+  }
 
-    @PreAuthorize(
-        "hasAuthority('Briefwahl_BUSINESSACTION_PostBeanstandeteWahlbriefe')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public void setBeanstandeteWahlbriefe(@P("param") @NotNull BeanstandeteWahlbriefeModel beanstandeteWahlbriefeToAdd) {
-        log.info("#postBeanstandeteWahlbriefe");
-        beanstandeteWahlbriefeValidator.valideModelOrThrow(beanstandeteWahlbriefeToAdd);
+  @PreAuthorize(
+      "hasAuthority('Briefwahl_BUSINESSACTION_PostBeanstandeteWahlbriefe')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public void setBeanstandeteWahlbriefe(
+      @P("param") @NotNull BeanstandeteWahlbriefeModel beanstandeteWahlbriefeToAdd) {
+    log.info("#postBeanstandeteWahlbriefe");
+    beanstandeteWahlbriefeValidator.valideModelOrThrow(beanstandeteWahlbriefeToAdd);
 
-        beanstandeteWahlbriefeRepository.save(beanstandeteWahlbriefeModelMapper.toEntity(beanstandeteWahlbriefeToAdd));
-    }
+    beanstandeteWahlbriefeRepository.save(
+        beanstandeteWahlbriefeModelMapper.toEntity(beanstandeteWahlbriefeToAdd));
+  }
 
-    private BeanstandeteWahlbriefe getOrNull(final BezirkIDUndWaehlerverzeichnisNummer entityID) {
-        return beanstandeteWahlbriefeRepository.findById(entityID).orElse(null);
-    }
+  private BeanstandeteWahlbriefe getOrNull(final BezirkIDUndWaehlerverzeichnisNummer entityID) {
+    return beanstandeteWahlbriefeRepository.findById(entityID).orElse(null);
+  }
 }

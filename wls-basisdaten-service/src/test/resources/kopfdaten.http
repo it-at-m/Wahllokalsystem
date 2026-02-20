@@ -2,6 +2,10 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Get Basisdaten - working with dummy.client
-GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1
+### Get Kopfdaten - working with dummy.client | user wls_all_uwb
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/kopfdaten/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Get Kopfdaten - working with dummy.client | user wls_all_bwb
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/kopfdaten/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}

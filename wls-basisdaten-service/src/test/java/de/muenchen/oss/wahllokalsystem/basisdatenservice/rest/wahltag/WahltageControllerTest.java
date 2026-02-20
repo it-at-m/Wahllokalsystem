@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltagModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltag.WahltageService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltagModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import java.util.List;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -16,36 +16,36 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WahltageControllerTest {
 
-    @Mock
-    WahltageService wahltageService;
+  @Mock WahltageService wahltageService;
 
-    @Mock
-    WahltageDTOMapper wahltageDTOMapper;
+  @Mock WahltageDTOMapper wahltageDTOMapper;
 
-    @InjectMocks
-    WahltageController wahltageController;
+  @InjectMocks WahltageController wahltageController;
 
-    @Nested
-    class GetWahltage {
+  @Nested
+  class GetWahltage {
 
-        @Test
-        void should_returnWahltagDTOList_when_serviceIsCalled() {
-            val wahltagModels = List.of(
-                    WahltagModel.builder().build(),
-                    WahltagModel.builder().build(),
-                    WahltagModel.builder().build());
+    @Test
+    void should_returnWahltagDTOList_when_serviceIsCalled() {
+      val wahltagModels =
+          List.of(
+              WahltagModel.builder().build(),
+              WahltagModel.builder().build(),
+              WahltagModel.builder().build());
 
-            val wahltagDTOs = List.of(
-                    WahltagDTO.builder().build(),
-                    WahltagDTO.builder().build(),
-                    WahltagDTO.builder().build());
+      val wahltagDTOs =
+          List.of(
+              WahltagDTO.builder().build(),
+              WahltagDTO.builder().build(),
+              WahltagDTO.builder().build());
 
-            Mockito.when(wahltageService.getWahltage()).thenReturn(wahltagModels);
-            Mockito.when(wahltageDTOMapper.fromListOfWahltagModelToListOfWahltagDTO(wahltagModels)).thenReturn(wahltagDTOs);
+      Mockito.when(wahltageService.getWahltage()).thenReturn(wahltagModels);
+      Mockito.when(wahltageDTOMapper.fromListOfWahltagModelToListOfWahltagDTO(wahltagModels))
+          .thenReturn(wahltagDTOs);
 
-            val result = wahltageController.getWahltage();
+      val result = wahltageController.getWahltage();
 
-            Assertions.assertThat(result).isEqualTo(wahltagDTOs);
-        }
+      Assertions.assertThat(result).isEqualTo(wahltagDTOs);
     }
+  }
 }

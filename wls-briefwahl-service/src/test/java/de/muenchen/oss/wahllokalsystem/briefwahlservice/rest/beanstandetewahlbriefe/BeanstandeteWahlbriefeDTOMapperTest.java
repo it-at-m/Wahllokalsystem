@@ -2,7 +2,7 @@ package de.muenchen.oss.wahllokalsystem.briefwahlservice.rest.beanstandetewahlbr
 
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.common.beanstandetewahlbriefe.Zurueckweisungsgrund;
 import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeModel;
-import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReference;
+import de.muenchen.oss.wahllokalsystem.briefwahlservice.service.beanstandetewahlbriefe.BeanstandeteWahlbriefeReferenceModel;
 import java.util.HashMap;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -12,83 +12,109 @@ import org.mapstruct.factory.Mappers;
 
 class BeanstandeteWahlbriefeDTOMapperTest {
 
-    private final BeanstandeteWahlbriefeDTOMapper unitUnderTest = Mappers.getMapper(BeanstandeteWahlbriefeDTOMapper.class);
+  private final BeanstandeteWahlbriefeDTOMapper unitUnderTest =
+      Mappers.getMapper(BeanstandeteWahlbriefeDTOMapper.class);
 
-    @Nested
-    class ToCreateModel {
+  @Nested
+  class ToCreateModel {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toCreateModel(null, null, null)).isNull();
-        }
-
-        @Test
-        void should_returnBeanstandeteWahlbriefeModel_when_givenValidParams() {
-            val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
-            val dtoToMap = new BeanstandeteWahlbriefeCreateDTO(zurueckweisungen);
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 3L;
-
-            val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            expectedZurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
-            val expectedResult = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, expectedZurueckweisungen);
-
-            val result = unitUnderTest.toCreateModel(dtoToMap, wahlbezirkID, waehlerverzeichnisNummer);
-
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toCreateModel(null, null, null)).isNull();
     }
 
-    @Nested
-    class ToReferenceModel {
+    @Test
+    void should_returnBeanstandeteWahlbriefeModel_when_givenValidParams() {
+      val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      zurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      zurueckweisungen.put(
+          "wahl2", new Zurueckweisungsgrund[] {Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN});
+      val dtoToMap = new BeanstandeteWahlbriefeCreateDTO(zurueckweisungen);
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 3L;
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toReferenceModel(null, null)).isNull();
-        }
+      val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      expectedZurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      expectedZurueckweisungen.put(
+          "wahl2", new Zurueckweisungsgrund[] {Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN});
+      val expectedResult =
+          new BeanstandeteWahlbriefeModel(
+              wahlbezirkID, waehlerverzeichnisNummer, expectedZurueckweisungen);
 
-        @Test
-        void should_returnBeanstandeteWahlbriefeReferenceModel_when_givenValidParams() {
-            val wahlbezirkId = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 3L;
+      val result = unitUnderTest.toCreateModel(dtoToMap, wahlbezirkID, waehlerverzeichnisNummer);
 
-            val expectedResult = new BeanstandeteWahlbriefeReference(wahlbezirkId, waehlerverzeichnisNummer);
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+    }
+  }
 
-            val result = unitUnderTest.toReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
+  @Nested
+  class ToReferenceModel {
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toReferenceModel(null, null)).isNull();
     }
 
-    @Nested
-    class ToDTO {
+    @Test
+    void should_returnBeanstandeteWahlbriefeReferenceModel_when_givenValidParams() {
+      val wahlbezirkId = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 3L;
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
-        }
+      val expectedResult =
+          new BeanstandeteWahlbriefeReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
 
-        @Test
-        void should_returnBeanstandeteWahlbriefeDTO_when_givenValidModel() {
-            val wahlbezirkId = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 3L;
-            val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
-            zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG });
-            val modelToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
+      val result = unitUnderTest.toReferenceModel(wahlbezirkId, waehlerverzeichnisNummer);
 
-            val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            expectedZurueckweisungen.put("wahl1",
-                    new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN });
-            expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG });
-            val expectedResult = new BeanstandeteWahlbriefeDTO(wahlbezirkId, waehlerverzeichnisNummer, expectedZurueckweisungen);
-
-            val result = unitUnderTest.toDTO(modelToMap);
-
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
+
+  @Nested
+  class ToDTO {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toDTO(null)).isNull();
+    }
+
+    @Test
+    void should_returnBeanstandeteWahlbriefeDTO_when_givenValidModel() {
+      val wahlbezirkId = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 3L;
+      val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      zurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN
+          });
+      zurueckweisungen.put(
+          "wahl2", new Zurueckweisungsgrund[] {Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG});
+      val modelToMap =
+          new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
+
+      val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      expectedZurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN
+          });
+      expectedZurueckweisungen.put(
+          "wahl2", new Zurueckweisungsgrund[] {Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG});
+      val expectedResult =
+          new BeanstandeteWahlbriefeDTO(
+              wahlbezirkId, waehlerverzeichnisNummer, expectedZurueckweisungen);
+
+      val result = unitUnderTest.toDTO(modelToMap);
+
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
+import de.muenchen.oss.wahllokalsystem.authservice.service.ErrorMessageService;
 import de.muenchen.oss.wahllokalsystem.authservice.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,10 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -19,46 +22,66 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class LoginController {
 
-    private final LoginService loginService;
+  private static final String TEMPLATE_OBJECT_KEY_ERROR_MESSAGE = "error";
 
-    @Operation(
-            description = "Liefert die Login Ansicht zurück",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Login Ansicht erfolgreich geliefert."
-                    )
-            }
-    )
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
-        val loginView = new ModelAndView();
+  private final LoginService loginService;
 
-        if (hasParameterValue(request, response, "admin")) {
-            loginView.setViewName("loginat");
-        } else if (hasParameterValue(request, response, "no")) {
-            loginView.setViewName("nologin");
-        } else if (hasParameterValue(request, response, "error")) {
-            loginView.addObject("error", new RuntimeException("sth failed"));
-            loginView.setViewName("error");
-        } else {
-            setupLoginWLS(loginView);
-        }
+  private final ErrorMessageService errorMessageService;
 
-        return loginView;
+  @Operation(
+      description = "Liefert die Login Ansicht zurück",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Login Ansicht erfolgreich geliefert.")
+      })
+  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  public ModelAndView login(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      final @RequestParam(value = "error", required = false) String errorParameter) {
+    val loginView = new ModelAndView();
+
+    val errorMessage = getErrorMessageWhenAuthenticationExceptionExists(request);
+    if (errorMessage != null && errorParameter != null) {
+      loginView.addObject(TEMPLATE_OBJECT_KEY_ERROR_MESSAGE, errorMessage);
     }
 
-    private boolean hasParameterValue(final HttpServletRequest request, final HttpServletResponse response, final String parameterValue) {
-        val cacheHttpSessionRequest = new HttpSessionRequestCache().getRequest(request, response);
-
-        if (cacheHttpSessionRequest != null) {
-            return cacheHttpSessionRequest.getParameterValues(parameterValue) != null;
-        } else {
-            return request.getParameterValues(parameterValue) != null;
-        }
+    if (hasParameterValue(request, response, "admin")) {
+      loginView.setViewName("loginat");
+    } else if (hasParameterValue(request, response, "no")) {
+      loginView.setViewName("nologin");
+    } else {
+      setupLoginWLS(loginView);
     }
 
-    private void setupLoginWLS(final ModelAndView modelAndView) {
-        modelAndView.addObject("willkommensnachricht", loginService.getWelcomeMessage());
-        modelAndView.setViewName("loginwls");
+    return loginView;
+  }
+
+  private boolean hasParameterValue(
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final String parameterValue) {
+    val cacheHttpSessionRequest = new HttpSessionRequestCache().getRequest(request, response);
+
+    if (cacheHttpSessionRequest != null) {
+      return cacheHttpSessionRequest.getParameterValues(parameterValue) != null;
+    } else {
+      return request.getParameterValues(parameterValue) != null;
     }
+  }
+
+  private void setupLoginWLS(final ModelAndView modelAndView) {
+    modelAndView.addObject("willkommensnachricht", loginService.getWelcomeMessage());
+    modelAndView.setViewName("loginwls");
+  }
+
+  private String getErrorMessageWhenAuthenticationExceptionExists(
+      final HttpServletRequest request) {
+    if (request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
+      val exception =
+          (Exception) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      return errorMessageService.getErrorMessage(exception);
+    } else {
+      return null;
+    }
+  }
 }

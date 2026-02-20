@@ -2,19 +2,38 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Anzahl der Stimmzettelumschlaege für wahlID and wahlbezirkID
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID
+### GET Anzahl der Stimmzettelumschlaege für wahlID and wahlbezirkID | user wls_all_uwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Anzahl der Stimmzettelumschlaege
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID
+### POST Anzahl der Stimmzettelumschlaege - wahlbezirkID | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlID": {
-    "wahlID": "wahlID",
-    "wahlbezirkID": "wahlbezirkID"
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171"
+  },
+  "urneneroeffnungsUhrzeit": "2024-12-18T14:52:41.263Z",
+  "anzahlWaehler": 47,
+  "anzahlWaehler2": 11
+}
+
+### GET Anzahl der Stimmzettelumschlaege für wahlID and wahlbezirkID | user wls_all_bwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST Anzahl der Stimmzettelumschlaege - wahlbezirkID | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmzettelumschlaege/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlID": {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14"
   },
   "urneneroeffnungsUhrzeit": "2024-12-18T14:52:41.263Z",
   "anzahlWaehler": 47,

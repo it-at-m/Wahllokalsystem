@@ -29,149 +29,174 @@ import org.springframework.http.ResponseEntity;
 @ExtendWith(MockitoExtension.class)
 class KonfigurationControllerTest {
 
-    @Mock
-    KonfigurationService konfigurationService;
+  @Mock KonfigurationService konfigurationService;
 
-    @Mock
-    KonfigurationDTOMapper konfigurationDTOMapper;
+  @Mock KonfigurationDTOMapper konfigurationDTOMapper;
 
-    @InjectMocks
-    KonfigurationController unitUnderTest;
+  @InjectMocks KonfigurationController unitUnderTest;
 
-    @Nested
-    class GetKonfiguration {
+  @Nested
+  class GetKonfiguration {
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
 
-            val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
-            val mockedMapperResultToDTO = KonfigurationDTO.builder().build();
-            val mockedServiceResponseModel = KonfigurationModel.builder().build();
+      val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
+      val mockedMapperResultToDTO = KonfigurationDTO.builder().build();
+      val mockedServiceResponseModel = KonfigurationModel.builder().build();
 
-            Mockito.when(konfigurationDTOMapper.toModelKey(konfigurationKeyParameter)).thenReturn(mockedMapperResultToModelKey);
-            Mockito.when(konfigurationService.getKonfiguration(mockedMapperResultToModelKey)).thenReturn(Optional.of(mockedServiceResponseModel));
-            Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel)).thenReturn(mockedMapperResultToDTO);
+      Mockito.when(konfigurationDTOMapper.toModelKey(konfigurationKeyParameter))
+          .thenReturn(mockedMapperResultToModelKey);
+      Mockito.when(konfigurationService.getKonfiguration(mockedMapperResultToModelKey))
+          .thenReturn(Optional.of(mockedServiceResponseModel));
+      Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel))
+          .thenReturn(mockedMapperResultToDTO);
 
-            val result = unitUnderTest.getKonfiguration(KonfigurationKey.KENNBUCHSTABEN);
+      val result = unitUnderTest.getKonfiguration(KonfigurationKey.KENNBUCHSTABEN);
 
-            Assertions.assertThat(result).isEqualTo(ResponseEntity.ok(mockedMapperResultToDTO));
-        }
-
-        @Test
-        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
-
-            val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
-
-            Mockito.when(konfigurationDTOMapper.toModelKey(konfigurationKeyParameter)).thenReturn(mockedMapperResultToModelKey);
-            Mockito.when(konfigurationService.getKonfiguration(mockedMapperResultToModelKey)).thenReturn(Optional.empty());
-
-            val result = unitUnderTest.getKonfiguration(KonfigurationKey.KENNBUCHSTABEN);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
-        }
-
+      Assertions.assertThat(result).isEqualTo(ResponseEntity.ok(mockedMapperResultToDTO));
     }
 
-    @Nested
-    class PostKonfiguration {
+    @Test
+    void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val konfigurationKeyParameter = KonfigurationKey.KENNBUCHSTABEN;
 
-        @Test
-        void should_notThrowException_when_calledWithData() {
-            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
-            val requestDTO = new KonfigurationSetDTO("wert", "beschreibung", "standardwert");
+      val mockedMapperResultToModelKey = KonfigurationKonfigKey.WILLKOMMENSTEXT;
 
-            val mockedServiceSetModel = new KonfigurationSetModel(konfigKey.name(), requestDTO.wert(), requestDTO.beschreibung(), requestDTO.standardwert());
+      Mockito.when(konfigurationDTOMapper.toModelKey(konfigurationKeyParameter))
+          .thenReturn(mockedMapperResultToModelKey);
+      Mockito.when(konfigurationService.getKonfiguration(mockedMapperResultToModelKey))
+          .thenReturn(Optional.empty());
 
-            Mockito.when(konfigurationDTOMapper.toSetModel(eq(konfigKey), eq(requestDTO))).thenReturn(mockedServiceSetModel);
-            Mockito.doNothing().when(konfigurationService).setKonfiguration(mockedServiceSetModel);
+      val result = unitUnderTest.getKonfiguration(KonfigurationKey.KENNBUCHSTABEN);
 
-            Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.postKonfiguration(konfigKey, requestDTO));
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result).isEqualTo(ResponseEntity.noContent().build());
+    }
+  }
+
+  @Nested
+  class PostKonfiguration {
+
+    @Test
+    void should_notThrowException_when_calledWithData() {
+      val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+      val requestDTO = new KonfigurationSetDTO("wert", "beschreibung", "standardwert");
+
+      val mockedServiceSetModel =
+          new KonfigurationSetModel(
+              konfigKey.name(),
+              requestDTO.wert(),
+              requestDTO.beschreibung(),
+              requestDTO.standardwert());
+
+      Mockito.when(konfigurationDTOMapper.toSetModel(eq(konfigKey), eq(requestDTO)))
+          .thenReturn(mockedServiceSetModel);
+      Mockito.doNothing().when(konfigurationService).setKonfiguration(mockedServiceSetModel);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.postKonfiguration(konfigKey, requestDTO));
+    }
+  }
+
+  @Nested
+  class GetKonfigurations {
+
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val mockedServiceResponseModel =
+          List.of(
+              KonfigurationModel.builder().build(),
+              KonfigurationModel.builder().build(),
+              KonfigurationModel.builder().build());
+      val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
+
+      Mockito.when(konfigurationService.getAllKonfigurations())
+          .thenReturn(mockedServiceResponseModel);
+      Mockito.when(konfigurationDTOMapper.toDTO(any(KonfigurationModel.class)))
+          .thenReturn(mockedMappedModelAsDTO);
+
+      val result = unitUnderTest.getKonfigurations();
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).hasSize(mockedServiceResponseModel.size());
     }
 
-    @Nested
-    class GetKonfigurationen {
+    @Test
+    void should_returnNullWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(null);
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val mockedServiceResponseModel = List.of(
-                    KonfigurationModel.builder().build(),
-                    KonfigurationModel.builder().build(),
-                    KonfigurationModel.builder().build());
-            val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
+      val result = unitUnderTest.getKonfigurations();
 
-            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(mockedServiceResponseModel);
-            Mockito.when(konfigurationDTOMapper.toDTO(any(KonfigurationModel.class))).thenReturn(mockedMappedModelAsDTO);
-
-            val result = unitUnderTest.getKonfigurations();
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).hasSize(mockedServiceResponseModel.size());
-        }
-
-        @Test
-        void should_returnNullWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(null);
-
-            val result = unitUnderTest.getKonfigurations();
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
 
-    @Nested
-    class GetKennbuchstabenListen {
+    @Test
+    void should_returnNullWithHttpStatusNoContent_when_serviceReturnsEmptyCollection() {
+      Mockito.when(konfigurationService.getAllKonfigurations()).thenReturn(Collections.emptyList());
 
-        @Test
-        void should_returnDTO_when_serviceReturnedData() {
-            val mockedServiceResponse = new KennbuchstabenListenModel(Collections.emptyList());
-            val mockedMappedResponseAsDTO = new KennbuchstabenListenDTO(Collections.emptyList());
+      val result = unitUnderTest.getKonfigurations();
 
-            Mockito.when(konfigurationService.getKennbuchstabenListen()).thenReturn(mockedServiceResponse);
-            Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedMappedResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
+    }
+  }
 
-            val result = unitUnderTest.getKennbuchstabenListen();
+  @Nested
+  class GetKennbuchstabenListen {
 
-            Assertions.assertThat(result).isSameAs(mockedMappedResponseAsDTO);
-        }
+    @Test
+    void should_returnDTO_when_serviceReturnedData() {
+      val mockedServiceResponse = new KennbuchstabenListenModel(Collections.emptyList());
+      val mockedMappedResponseAsDTO = new KennbuchstabenListenDTO(Collections.emptyList());
+
+      Mockito.when(konfigurationService.getKennbuchstabenListen())
+          .thenReturn(mockedServiceResponse);
+      Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedMappedResponseAsDTO);
+
+      val result = unitUnderTest.getKennbuchstabenListen();
+
+      Assertions.assertThat(result).isSameAs(mockedMappedResponseAsDTO);
+    }
+  }
+
+  @Nested
+  class GetKonfigurationUnauthorized {
+
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+      val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
+      val mockedServiceResponseModel = KonfigurationModel.builder().build();
+      val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
+      Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel))
+          .thenReturn(Optional.of(mockedServiceResponseModel));
+      Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
+      Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel))
+          .thenReturn(mockedMappedModelAsDTO);
+
+      val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
+
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+      Assertions.assertThat(result.getBody()).isSameAs(mockedMappedModelAsDTO);
     }
 
-    @Nested
-    class GetKonfigurationUnauthorized {
+    @Test
+    void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
+      val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
-            val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
-            val mockedServiceResponseModel = KonfigurationModel.builder().build();
-            val mockedMappedModelAsDTO = KonfigurationDTO.builder().build();
-            Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel)).thenReturn(Optional.of(mockedServiceResponseModel));
-            Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
-            Mockito.when(konfigurationDTOMapper.toDTO(mockedServiceResponseModel)).thenReturn(mockedMappedModelAsDTO);
+      Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel))
+          .thenReturn(Optional.empty());
+      Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
 
-            val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
+      val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
 
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-            Assertions.assertThat(result.getBody()).isSameAs(mockedMappedModelAsDTO);
-        }
-
-        @Test
-        void should_returnNullBodyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val konfigKey = KonfigurationKey.KENNBUCHSTABEN;
-            val mockedKonfigKeyAsModel = KonfigurationKonfigKey.KENNBUCHSTABEN;
-
-            Mockito.when(konfigurationService.getKonfigurationUnauthorized(mockedKonfigKeyAsModel)).thenReturn(Optional.empty());
-            Mockito.when(konfigurationDTOMapper.toModelKey(konfigKey)).thenReturn(mockedKonfigKeyAsModel);
-
-            val result = unitUnderTest.getKonfigurationUnauthorized(konfigKey);
-
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-            Assertions.assertThat(result.getBody()).isNull();
-        }
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+      Assertions.assertThat(result.getBody()).isNull();
     }
-
+  }
 }

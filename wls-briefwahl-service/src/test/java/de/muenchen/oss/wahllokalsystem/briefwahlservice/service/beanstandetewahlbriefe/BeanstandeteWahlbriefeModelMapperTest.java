@@ -12,89 +12,132 @@ import org.mapstruct.factory.Mappers;
 
 class BeanstandeteWahlbriefeModelMapperTest {
 
-    private final BeanstandeteWahlbriefeModelMapper unitUnderTest = Mappers.getMapper(BeanstandeteWahlbriefeModelMapper.class);
+  private final BeanstandeteWahlbriefeModelMapper unitUnderTest =
+      Mappers.getMapper(BeanstandeteWahlbriefeModelMapper.class);
 
-    @Nested
-    class ToEmbeddedId {
+  @Nested
+  class ToEmbeddedId {
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toEmbeddedId(null)).isNull();
-        }
-
-        @Test
-        void should_returnBezirkIDUndWaehlerverzeichnisNummerEntity_when_givenBeanstandeteWahlbriefeReference() {
-            val wahlbezirkID = "wbzId";
-            val waehlerverzeichnisNummer = 123L;
-            val reference = new BeanstandeteWahlbriefeReference(wahlbezirkID, waehlerverzeichnisNummer);
-
-            val expectedResult = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-
-            val result = unitUnderTest.toEmbeddedId(reference);
-
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toEmbeddedId(null)).isNull();
     }
 
-    @Nested
-    class ToModel {
+    @Test
+    void
+        should_returnBezirkIDUndWaehlerverzeichnisNummerEntity_when_givenBeanstandeteWahlbriefeReference() {
+      val wahlbezirkID = "wbzId";
+      val waehlerverzeichnisNummer = 123L;
+      val reference =
+          new BeanstandeteWahlbriefeReferenceModel(wahlbezirkID, waehlerverzeichnisNummer);
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
-        }
+      val expectedResult =
+          new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
 
-        @Test
-        void should_returnBeanstandeteWahlbriefeModel_when_givenBeanstandeteWahlbriefeEntity() {
-            val wahlbezirkID = "wbzId";
-            val waehlerverzeichnisNummer = 123L;
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-            val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
-            zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
-                    Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            val beanstandeteWahlbriefe = new BeanstandeteWahlbriefe(id, zurueckweisungen);
+      val result = unitUnderTest.toEmbeddedId(reference);
 
-            val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            expectedZurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
-            expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
-                    Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            val expecetedResult = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, expectedZurueckweisungen);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+  }
 
-            val result = unitUnderTest.toModel(beanstandeteWahlbriefe);
+  @Nested
+  class ToModel {
 
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expecetedResult);
-        }
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
-    @Nested
-    class ToEntity {
+    @Test
+    void should_returnBeanstandeteWahlbriefeModel_when_givenBeanstandeteWahlbriefeEntity() {
+      val wahlbezirkID = "wbzId";
+      val waehlerverzeichnisNummer = 123L;
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      zurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT
+          });
+      zurueckweisungen.put(
+          "wahl2",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN,
+            Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      val beanstandeteWahlbriefe = new BeanstandeteWahlbriefe(id, zurueckweisungen);
 
-        @Test
-        void should_returnNull_when_givenNull() {
-            Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
-        }
+      val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      expectedZurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT
+          });
+      expectedZurueckweisungen.put(
+          "wahl2",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN,
+            Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      val expecetedResult =
+          new BeanstandeteWahlbriefeModel(
+              wahlbezirkID, waehlerverzeichnisNummer, expectedZurueckweisungen);
 
-        @Test
-        void should_returnBeanstandeteWahlbriefeEntity_when_givenBeanstandeteWahlbriefeModel() {
-            val wahlbezirkId = "wbzId";
-            val waehlerverzeichnisNummer = 2L;
-            val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            zurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
-            zurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
-                    Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            val objectToMap = new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
+      val result = unitUnderTest.toModel(beanstandeteWahlbriefe);
 
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkId, waehlerverzeichnisNummer);
-            val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
-            expectedZurueckweisungen.put("wahl1", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT });
-            expectedZurueckweisungen.put("wahl2", new Zurueckweisungsgrund[] { Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
-                    Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT });
-            val expectedResult = new BeanstandeteWahlbriefe(id, expectedZurueckweisungen);
-
-            val result = unitUnderTest.toEntity(objectToMap);
-
-            Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expecetedResult);
     }
+  }
+
+  @Nested
+  class ToEntity {
+
+    @Test
+    void should_returnNull_when_givenNull() {
+      Assertions.assertThat(unitUnderTest.toEntity(null)).isNull();
+    }
+
+    @Test
+    void should_returnBeanstandeteWahlbriefeEntity_when_givenBeanstandeteWahlbriefeModel() {
+      val wahlbezirkId = "wbzId";
+      val waehlerverzeichnisNummer = 2L;
+      val zurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      zurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT
+          });
+      zurueckweisungen.put(
+          "wahl2",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN,
+            Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      val objectToMap =
+          new BeanstandeteWahlbriefeModel(wahlbezirkId, waehlerverzeichnisNummer, zurueckweisungen);
+
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkId, waehlerverzeichnisNummer);
+      val expectedZurueckweisungen = new HashMap<String, Zurueckweisungsgrund[]>();
+      expectedZurueckweisungen.put(
+          "wahl1",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT
+          });
+      expectedZurueckweisungen.put(
+          "wahl2",
+          new Zurueckweisungsgrund[] {
+            Zurueckweisungsgrund.ZUGELASSEN,
+            Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT,
+            Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT
+          });
+      val expectedResult = new BeanstandeteWahlbriefe(id, expectedZurueckweisungen);
+
+      val result = unitUnderTest.toEntity(objectToMap);
+
+      Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedResult);
+    }
+  }
 }

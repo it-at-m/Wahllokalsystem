@@ -14,8 +14,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.Wa
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlvorschlag.WahlvorschlaegeValidator;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeValidator;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
@@ -32,212 +32,254 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 public class WahlvorschlaegeControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceID;
+  @Value("${service.info.oid}")
+  String serviceID;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WahlvorschlaegeDTOMapper dtoMapper;
+  @Autowired WahlvorschlaegeDTOMapper dtoMapper;
 
-    @Autowired
-    WahlvorschlaegeModelMapper modelMapper;
+  @Autowired WahlvorschlaegeModelMapper modelMapper;
 
-    @Autowired
-    WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
+  @Autowired WahlvorschlaegeClientMapper wahlvorschlaegeClientMapper;
 
-    @Autowired
-    WahlvorschlaegeRepository wahlvorschlaegeRepository;
+  @Autowired WahlvorschlaegeRepository wahlvorschlaegeRepository;
 
-    @Autowired
-    WahlvorschlagRepository wahlvorschlagRepository;
+  @Autowired WahlvorschlagRepository wahlvorschlagRepository;
 
-    @Autowired
-    KandidatRepository kandidatRepository;
+  @Autowired KandidatRepository kandidatRepository;
 
-    @SpyBean
-    WahlvorschlaegeValidator wahlvorschlaegeValidator;
+  @MockitoSpyBean WahlvorschlaegeValidator wahlvorschlaegeValidator;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
-        wahlvorschlaegeRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
+    wahlvorschlaegeRepository.deleteAll();
+  }
+
+  @BeforeEach
+  void setup() {
+    WireMock.resetAllRequests();
+  }
+
+  @Nested
+  class GetWahlvorschlaege {
+
+    @Test
+    void should_returnWahlvorschlaegeDTO_when_loadedFromExternal() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
+
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
+
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
+
+      val expectedResponseBody =
+          dtoMapper.toDTO(wahlvorschlaegeClientMapper.toModel(eaiWahlvorschlaege));
+
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
     }
 
-    @BeforeEach
-    void setup() {
-        WireMock.resetAllRequests();
+    @Test
+    @Transactional
+    void should_returnWahlvorschlaege_when_externalDataIsPersisted() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
+
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
+
+      api.perform(request).andExpect(status().isOk());
+
+      val dataFromRepo =
+          wahlvorschlaegeRepository
+              .findByBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID))
+              .get();
+
+      val expectedEntity =
+          modelMapper.toEntity(wahlvorschlaegeClientMapper.toModel(eaiWahlvorschlaege));
+
+      Assertions.assertThat(dataFromRepo)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .ignoringFields(
+              "id",
+              "wahlvorschlaege.id",
+              "wahlvorschlaege.wahlvorschlaeage",
+              "wahlvorschlaege.kandidaten.id",
+              "wahlvorschlaege.kandidaten.wahlvorschlag")
+          .isEqualTo(expectedEntity);
     }
 
-    @Nested
-    class GetWahlvorschlaege {
+    @Test
+    void should_returnWahlvorschlaegeDTO_when_loadedFromRepository() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        @Test
-        void should_returnWahlvorschlaegeDTO_when_loadedFromExternal() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
-
-            val expectedResponseBody = dtoMapper.toDTO(wahlvorschlaegeClientMapper.toModel(eaiWahlvorschlaege));
-
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
-        }
-
-        @Test
-        @Transactional
-        void should_returnWahlvorschlaege_when_externalDataIsPersisted() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val eaiWahlvorschlaege = createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID);
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-            api.perform(request).andExpect(status().isOk());
-
-            val dataFromRepo = wahlvorschlaegeRepository.findByBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID)).get();
-
-            val expectedEntity = modelMapper.toEntity(wahlvorschlaegeClientMapper.toModel(eaiWahlvorschlaege));
-
-            Assertions.assertThat(dataFromRepo).usingRecursiveComparison().ignoringCollectionOrder()
-                    .ignoringFields("id", "wahlvorschlaege.id", "wahlvorschlaege.wahlvorschlaeage",
-                            "wahlvorschlaege.kandidaten.id", "wahlvorschlaege.kandidaten.wahlvorschlag")
-                    .isEqualTo(expectedEntity);
-        }
-
-        @Test
-        void should_returnWahlvorschlaegeDTO_when_loadedFromRepository() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            val entityToFind = modelMapper.toEntity(
-                    wahlvorschlaegeClientMapper.toModel(createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID)));
-            val savedEntity = wahlvorschlaegeRepository.save(entityToFind);
-            entityToFind.getWahlvorschlaege().forEach(wahlvorschlag -> {
+      val entityToFind =
+          modelMapper.toEntity(
+              wahlvorschlaegeClientMapper.toModel(
+                  createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID)));
+      val savedEntity = wahlvorschlaegeRepository.save(entityToFind);
+      entityToFind
+          .getWahlvorschlaege()
+          .forEach(
+              wahlvorschlag -> {
                 wahlvorschlagRepository.save(wahlvorschlag);
                 kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
-            });
+              });
 
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
 
-            val response = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
 
-            val expectedResponseBody = dtoMapper.toDTO(modelMapper.toModel(savedEntity));
+      val expectedResponseBody = dtoMapper.toDTO(modelMapper.toModel(savedEntity));
 
-            Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
-            WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-
-            WireMock.stubFor(WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(), serviceID,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
+      WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
     }
 
-    private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO createClientWahlvorschlaegeDTO(final String wahlID,
-            final String wahlbezirkID) {
-        val stimmzettelgebietID = "stimmzettelgebietID";
+    @Test
+    void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
 
-        val clientWahlvorschlaegeDTO = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO();
-        clientWahlvorschlaegeDTO.setStimmzettelgebietID(stimmzettelgebietID);
-        clientWahlvorschlaegeDTO.setWahlID(wahlID);
-        clientWahlvorschlaegeDTO.setWahlbezirkID(wahlbezirkID);
+      WireMock.stubFor(
+          WireMock.get("/vorschlaege/wahl/" + wahlID + "/" + wahlbezirkID)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.NOT_FOUND.value())));
 
-        val wahlvorschlag1 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO();
-        wahlvorschlag1.setErhaeltStimmen(true);
-        wahlvorschlag1.setIdentifikator("identifikator1");
-        wahlvorschlag1.setKurzname("kurzname1");
-        wahlvorschlag1.setOrdnungszahl(1L);
+      val request =
+          MockMvcRequestBuilders.get(
+              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
 
-        val kandidat11 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat11.setIdentifikator("kandidat11");
-        kandidat11.setDirektkandidat(true);
-        kandidat11.setEinzelbewerber(true);
-        kandidat11.setName("name11");
-        kandidat11.setListenposition(1L);
-        kandidat11.setTabellenSpalteInNiederschrift(1L);
+      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-        val kandidat12 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat12.setIdentifikator("kandidat12");
-        kandidat12.setDirektkandidat(false);
-        kandidat12.setEinzelbewerber(false);
-        kandidat12.setName("name12");
-        kandidat12.setListenposition(2L);
-        kandidat12.setTabellenSpalteInNiederschrift(2L);
-        wahlvorschlag1.setKandidaten(Set.of(kandidat11, kandidat12));
-
-        val wahlvorschlag2 = new WahlvorschlagDTO();
-        wahlvorschlag2.setErhaeltStimmen(false);
-        wahlvorschlag2.setIdentifikator("identifikator2");
-        wahlvorschlag2.setKurzname("kurzname2");
-        wahlvorschlag2.setOrdnungszahl(2L);
-
-        val kandidat21 = new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
-        kandidat21.setIdentifikator("kandidat21");
-        kandidat21.setDirektkandidat(true);
-        kandidat21.setEinzelbewerber(true);
-        kandidat21.setName("name21");
-        kandidat21.setListenposition(3L);
-        kandidat21.setTabellenSpalteInNiederschrift(3L);
-
-        val kandidat22 = new KandidatDTO();
-        kandidat22.setIdentifikator("kandidat22");
-        kandidat22.setDirektkandidat(false);
-        kandidat22.setEinzelbewerber(false);
-        kandidat22.setName("name22");
-        kandidat22.setListenposition(4L);
-        kandidat22.setTabellenSpalteInNiederschrift(4L);
-        wahlvorschlag2.setKandidaten(Set.of(kandidat21, kandidat22));
-
-        val wahlvorschlaege = Set.of(wahlvorschlag1, wahlvorschlag2);
-        clientWahlvorschlaegeDTO.setWahlvorschlaege(wahlvorschlaege);
-
-        return clientWahlvorschlaegeDTO;
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(),
+              serviceID,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
     }
+  }
 
+  private de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO
+      createClientWahlvorschlaegeDTO(final String wahlID, final String wahlbezirkID) {
+    val stimmzettelgebietID = "stimmzettelgebietID";
+
+    val clientWahlvorschlaegeDTO =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO();
+    clientWahlvorschlaegeDTO.setStimmzettelgebietID(stimmzettelgebietID);
+    clientWahlvorschlaegeDTO.setWahlID(wahlID);
+    clientWahlvorschlaegeDTO.setWahlbezirkID(wahlbezirkID);
+
+    val wahlvorschlag1 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO();
+    wahlvorschlag1.setErhaeltStimmen(true);
+    wahlvorschlag1.setIdentifikator("identifikator1");
+    wahlvorschlag1.setKurzname("kurzname1");
+    wahlvorschlag1.setOrdnungszahl(1L);
+
+    val kandidat11 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
+    kandidat11.setIdentifikator("kandidat11");
+    kandidat11.setDirektkandidat(true);
+    kandidat11.setEinzelbewerber(true);
+    kandidat11.setName("name11");
+    kandidat11.setListenposition(1L);
+    kandidat11.setTabellenSpalteInNiederschrift(1L);
+
+    val kandidat12 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
+    kandidat12.setIdentifikator("kandidat12");
+    kandidat12.setDirektkandidat(false);
+    kandidat12.setEinzelbewerber(false);
+    kandidat12.setName("name12");
+    kandidat12.setListenposition(2L);
+    kandidat12.setTabellenSpalteInNiederschrift(2L);
+    wahlvorschlag1.setKandidaten(Set.of(kandidat11, kandidat12));
+
+    val wahlvorschlag2 = new WahlvorschlagDTO();
+    wahlvorschlag2.setErhaeltStimmen(false);
+    wahlvorschlag2.setIdentifikator("identifikator2");
+    wahlvorschlag2.setKurzname("kurzname2");
+    wahlvorschlag2.setOrdnungszahl(2L);
+
+    val kandidat21 =
+        new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
+    kandidat21.setIdentifikator("kandidat21");
+    kandidat21.setDirektkandidat(true);
+    kandidat21.setEinzelbewerber(true);
+    kandidat21.setName("name21");
+    kandidat21.setListenposition(3L);
+    kandidat21.setTabellenSpalteInNiederschrift(3L);
+
+    val kandidat22 = new KandidatDTO();
+    kandidat22.setIdentifikator("kandidat22");
+    kandidat22.setDirektkandidat(false);
+    kandidat22.setEinzelbewerber(false);
+    kandidat22.setName("name22");
+    kandidat22.setListenposition(4L);
+    kandidat22.setTabellenSpalteInNiederschrift(4L);
+    wahlvorschlag2.setKandidaten(Set.of(kandidat21, kandidat22));
+
+    val wahlvorschlaege = Set.of(wahlvorschlag1, wahlvorschlag2);
+    clientWahlvorschlaegeDTO.setWahlvorschlaege(wahlvorschlaege);
+
+    return clientWahlvorschlaegeDTO;
+  }
 }

@@ -1,34 +1,25 @@
-### Initialisiere A-Werte (needs profile 'dummy.clients', stores AWerte entity in local DB retrieved from DummyClient )
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/awerte/init
-Authorization: Bearer {{$auth.token("auth-service")}}
-Content-Type: application/json
-
-[
-  "wahlbezirkID"
-]
-
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID01/EUW_A
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_A
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID01",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_A"
   },
   "ergebnisse": [
     {
-      "wahlvorschlagID": "wahlvorschlagID1",
-      "kandidatID": "kandidatID1",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003",
+      "kandidatID": "00000000-0000-0000-0001-000000000011",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
     },
     {
-      "wahlvorschlagID": "wahlvorschlagID2",
-      "kandidatID": "kandidatID2",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001",
+      "kandidatID": "00000000-0000-0000-0001-000000000001",
       "wahlvorschlagsordnungszahl": 2,
       "ergebnis": 2,
       "numIndex": 2
@@ -36,28 +27,28 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID01/EUW_B_UNGEKENNZEICHNET
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_B_UNGEKENNZEICHNET
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID01",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_B_UNGEKENNZEICHNET"
   },
   "ergebnisse": [
     {
-      "wahlvorschlagID": "wahlvorschlagID1",
-      "kandidatID": "kandidatID1",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003",
+      "kandidatID": "00000000-0000-0000-0001-000000000011",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
     },
     {
-      "wahlvorschlagID": "wahlvorschlagID2",
-      "kandidatID": "kandidatID2",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001",
+      "kandidatID": "00000000-0000-0000-0001-000000000001",
       "wahlvorschlagsordnungszahl": 2,
       "ergebnis": 2,
       "numIndex": 2
@@ -65,28 +56,28 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID01/EUW_C_GUELTIG
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_GUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID01",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_C_GUELTIG"
   },
   "ergebnisse": [
     {
-      "wahlvorschlagID": "wahlvorschlagID1",
-      "kandidatID": "kandidatID1",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003",
+      "kandidatID": "00000000-0000-0000-0001-000000000011",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
     },
     {
-      "wahlvorschlagID": "wahlvorschlagID2",
-      "kandidatID": "kandidatID2",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001",
+      "kandidatID": "00000000-0000-0000-0001-000000000001",
       "wahlvorschlagsordnungszahl": 2,
       "ergebnis": 2,
       "numIndex": 2
@@ -94,28 +85,28 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/wahlbezirkID/wahlID01/EUW_C_UNGUELTIG
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_UNGUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID01",
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
     "stapelart": "EUW_C_UNGUELTIG"
   },
   "ergebnisse": [
     {
-      "wahlvorschlagID": "wahlvorschlagID1",
-      "kandidatID": "kandidatID1",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003",
+      "kandidatID": "00000000-0000-0000-0001-000000000011",
       "wahlvorschlagsordnungszahl": 1,
       "ergebnis": 1,
       "numIndex": 1
     },
     {
-      "wahlvorschlagID": "wahlvorschlagID2",
-      "kandidatID": "kandidatID2",
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001",
+      "kandidatID": "00000000-0000-0000-0001-000000000001",
       "wahlvorschlagsordnungszahl": 2,
       "ergebnis": 2,
       "numIndex": 2
@@ -123,20 +114,20 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### POST stimmabgabevermerke
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/wahlbezirkID/1
+### POST stimmabgabevermerke | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "wahlbezirkID",
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "waehlerverzeichnisNummer": 1,
   "anzahlBlaetter": 2,
   "wahldaten": [
     {
       "waehlerverzeichnisNummer": 1,
-      "wahlbezirkID": "wahlbezirkID",
-      "wahlID": "wahlID01",
+      "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
       "eingenommeneWahlscheine": [
         {
           "anzahl": 2,
@@ -153,7 +144,7 @@ Content-Type: application/json
       ],
       "vermerke": [
         {
-          "blattnummer": 1,
+          "blattnummer": 2,
           "stimmzettel": [
             {
               "anzahl": 1,
@@ -170,7 +161,126 @@ Content-Type: application/json
   ]
 }
 
-### Send Ergebnismeldung
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/wahlID01/wahlbezirkID/1/V1/wahlbezirkID
+### Send Ergebnismeldung | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171/1/V1/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+// --- wls_all_bwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_A | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_A
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "SRW_BAW_A"
+  },
+  "ergebnisse": [
+    {
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
+      "kandidatID": "00000000-0000-0000-0002-000000000016",
+      "wahlvorschlagsordnungszahl": 1,
+      "ergebnis": 1,
+      "numIndex": 1
+    }
+  ]
+}
+
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_B | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_B
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "SRW_BAW_B"
+  },
+  "ergebnisse": [
+    {
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
+      "kandidatID": "00000000-0000-0000-0002-000000000017",
+      "wahlvorschlagsordnungszahl": 1,
+      "ergebnis": 1,
+      "numIndex": 1
+    }
+  ]
+}
+
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_D_UNGUELTIG | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_D_UNGUELTIG
+Content-Type: application/json
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "SRW_BAW_D_UNGUELTIG"
+  },
+  "ergebnisse": [
+    {
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
+      "kandidatID": "00000000-0000-0000-0002-000000000018",
+      "wahlvorschlagsordnungszahl": 1,
+      "ergebnis": 1,
+      "numIndex": 1
+    }
+  ]
+}
+
+### POST stimmabgabevermerke | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "waehlerverzeichnisNummer": 1,
+  "anzahlBlaetter": 2,
+  "wahldaten": [
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+      "eingenommeneWahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        },
+        {
+          "anzahl": 4,
+          "stimmzettelart": "BEIDE"
+        },
+        {
+          "anzahl": 12,
+          "stimmzettelart": "GROSS"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 2,
+          "stimmzettel": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+### Send Ergebnismeldung | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/V1/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

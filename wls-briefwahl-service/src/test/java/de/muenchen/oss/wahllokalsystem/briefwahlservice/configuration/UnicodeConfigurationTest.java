@@ -23,63 +23,79 @@ import org.springframework.data.util.Streamable;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+    classes = {MicroServiceApplication.class},
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = {
+      "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
+      "refarch.gracefulshutdown.pre-wait-seconds=0"
+    })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
-    private static final String BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL = "/businessActions/beanstandeteWahlbriefe/";
+  private static final String BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL =
+      "/businessActions/beanstandeteWahlbriefe/";
 
-    /**
-     * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
-     */
-    private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
+  /** Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́" */
+  private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
 
-    /**
-     * Composed string: String "Ä-é" represented with unicode letters "Ä-é".
-     */
-    private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
+  /** Composed string: String "Ä-é" represented with unicode letters "Ä-é". */
+  private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+  @Autowired private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
+  @Autowired private BeanstandeteWahlbriefeRepository beanstandeteWahlbriefeRepository;
 
-    @Test
-    void should_returnComposedString_when_givenDecomposedString() {
-        // Persist entity with decomposed string.
-        val wahlbezirkID = "wahlbezirkID";
-        val waehlerVerzeichnisNummer = 1L;
-        val key1 = "key1";
-        val key2 = "key2";
-        val beanstandeteWahlbriefeDTO = createControllerBeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerVerzeichnisNummer, key1, key2,
-                TEXT_ATTRIBUTE_DECOMPOSED);
-        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[0])
-                .hasSize(key1.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
-        Assertions.assertThat((String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[1])
-                .hasSize(key2.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() {
+    // Persist entity with decomposed string.
+    val wahlbezirkID = "wahlbezirkID";
+    val waehlerVerzeichnisNummer = 1L;
+    val key1 = "key1";
+    val key2 = "key2";
+    val beanstandeteWahlbriefeDTO =
+        createControllerBeanstandeteWahlbriefeDTO(
+            wahlbezirkID, waehlerVerzeichnisNummer, key1, key2, TEXT_ATTRIBUTE_DECOMPOSED);
+    Assertions.assertThat(
+            (String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[0])
+        .hasSize(key1.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
+    Assertions.assertThat(
+            (String) beanstandeteWahlbriefeDTO.beanstandeteWahlbriefe().keySet().toArray()[1])
+        .hasSize(key2.length() + TEXT_ATTRIBUTE_DECOMPOSED.length());
 
-        testRestTemplate.postForEntity(URI.create(BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL + wahlbezirkID + "/" + waehlerVerzeichnisNummer),
-                beanstandeteWahlbriefeDTO, Void.class);
+    testRestTemplate.postForEntity(
+        URI.create(
+            BEANSTANDETE_WAHLBRIEFE_ENDPOINT_URL + wahlbezirkID + "/" + waehlerVerzeichnisNummer),
+        beanstandeteWahlbriefeDTO,
+        Void.class);
 
-        val beantstandeteWahlbriefeInRepo = Streamable.of(beanstandeteWahlbriefeRepository.findAll()).toList();
-        Assertions.assertThat(beantstandeteWahlbriefeInRepo).hasSize(1);
-        Assertions.assertThat(beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[0]).isEqualTo(key1 + TEXT_ATTRIBUTE_COMPOSED);
-        Assertions.assertThat(beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[1]).isEqualTo(key2 + TEXT_ATTRIBUTE_COMPOSED);
-    }
+    val beantstandeteWahlbriefeInRepo =
+        Streamable.of(beanstandeteWahlbriefeRepository.findAll()).toList();
+    Assertions.assertThat(beantstandeteWahlbriefeInRepo).hasSize(1);
+    Assertions.assertThat(
+            beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[0])
+        .isEqualTo(key1 + TEXT_ATTRIBUTE_COMPOSED);
+    Assertions.assertThat(
+            beantstandeteWahlbriefeInRepo.get(0).getBeanstandeteWahlbriefe().keySet().toArray()[1])
+        .isEqualTo(key2 + TEXT_ATTRIBUTE_COMPOSED);
+  }
 
-    private BeanstandeteWahlbriefeDTO createControllerBeanstandeteWahlbriefeDTO(String wahlbezirkID, Long waehlerverzeichnisNummer, String key1, String key2,
-            String textAttributeDecomposed) {
-        return new BeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer,
-                Map.of(key1 + textAttributeDecomposed,
-                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG },
-                        key2 + textAttributeDecomposed,
-                        new Zurueckweisungsgrund[] { Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL }));
-    }
+  private BeanstandeteWahlbriefeDTO createControllerBeanstandeteWahlbriefeDTO(
+      String wahlbezirkID,
+      Long waehlerverzeichnisNummer,
+      String key1,
+      String key2,
+      String textAttributeDecomposed) {
+    return new BeanstandeteWahlbriefeDTO(
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        Map.of(
+            key1 + textAttributeDecomposed,
+            new Zurueckweisungsgrund[] {
+              Zurueckweisungsgrund.NICHT_WAHLBERECHTIGT, Zurueckweisungsgrund.GEGENSTAND_IM_UMSCHLAG
+            },
+            key2 + textAttributeDecomposed,
+            new Zurueckweisungsgrund[] {
+              Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL
+            }));
+  }
 }

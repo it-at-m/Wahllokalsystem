@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local,standalone"
+mvn clean spring-boot:run -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local,standalone -Dspring.config.additional-location=file:../stack/run_configurations/additionalYmlFiles/application-rsa.yml"

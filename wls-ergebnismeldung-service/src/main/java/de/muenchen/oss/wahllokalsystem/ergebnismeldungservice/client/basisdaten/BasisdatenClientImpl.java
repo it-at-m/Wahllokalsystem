@@ -22,35 +22,43 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BasisdatenClientImpl implements WahlenClient {
 
-    private final WahlenControllerApi wahlenControllerApi;
+  private final WahlenControllerApi wahlenControllerApi;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final BasisdatenClientMapper basisdatenClientMapper;
+  private final BasisdatenClientMapper basisdatenClientMapper;
 
-    @Override
-    public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
-        val wahlartOfWahl = getWahlen(wahltagID, wahlID);
+  @Override
+  public WahlartModel getWahlart(final String wahltagID, final String wahlID) {
+    val wahlartOfWahl = getWahlen(wahltagID, wahlID);
 
-        return basisdatenClientMapper.toModel(wahlartOfWahl);
+    return basisdatenClientMapper.toModel(wahlartOfWahl);
+  }
+
+  private WahlDTO.WahlartEnum getWahlen(final String wahltagID, final String wahlID) {
+    final List<WahlDTO> wahlen;
+    try {
+      wahlen = wahlenControllerApi.getWahlen(wahltagID);
+    } catch (final WlsException wlsException) {
+      log.debug("found WlsException", wlsException);
+      throw wlsException;
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
     }
 
-    private WahlDTO.WahlartEnum getWahlen(final String wahltagID, final String wahlID) {
-        final List<WahlDTO> wahlen;
-        try {
-            wahlen = wahlenControllerApi.getWahlen(wahltagID);
-        } catch (final WlsException wlsException) {
-            log.debug("found WlsException", wlsException);
-            throw wlsException;
-        } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.KOMMUNIKATIONSFEHLER_MIT_BASISDATEN);
-        }
-
-        if (CollectionUtils.isEmpty(wahlen)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_WAHLEN_EMPTY);
-        }
-
-        return wahlen.stream().filter(wahl -> wahlID.equals(wahl.getWahlID())).findFirst().map(WahlDTO::getWahlart).orElseThrow(
-                () -> exceptionFactory.createFachlicheWlsException(ExceptionConstants.BASISDATEN_WAHL_NOT_FOUND));
+    if (CollectionUtils.isEmpty(wahlen)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.BASISDATEN_WAHLEN_EMPTY);
     }
+
+    return wahlen.stream()
+        .filter(wahl -> wahlID.equals(wahl.getWahlID()))
+        .findFirst()
+        .map(WahlDTO::getWahlart)
+        .orElseThrow(
+            () ->
+                exceptionFactory.createFachlicheWlsException(
+                    ExceptionConstants.BASISDATEN_WAHL_NOT_FOUND));
+  }
 }

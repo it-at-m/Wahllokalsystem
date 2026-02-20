@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PermissionRepository extends CrudRepository<Permission, UUID> {
 
-    Optional<Permission> findByPermission(String permission);
+  Optional<Permission> findByPermission(String permission);
 }

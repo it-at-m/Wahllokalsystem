@@ -1,10 +1,10 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.BezirkUndWahlIDStapelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.common.StapelartDTOMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReference;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungReferenceModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModel;
 import lombok.val;
@@ -21,82 +21,98 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 class BegruendungControllerTest {
 
-    @Mock
-    BegruendungService begruendungService;
+  @Mock BegruendungService begruendungService;
 
-    @Mock
-    BegruendungDTOMapper begruendungDTOMapper;
+  @Mock BegruendungDTOMapper begruendungDTOMapper;
 
-    @InjectMocks
-    BegruendungController unitUnderTest;
+  @Mock StapelartDTOMapper stapelartDTOMapper;
 
-    @Nested
-    class GetBegruendung {
+  @InjectMocks BegruendungController unitUnderTest;
 
-        @Test
-        void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelart = Stapelart.LTW_BZW_A;
-            val stapelartModel = StapelartModel.LTW_BZW_A;
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
+  @Nested
+  class GetBegruendung {
 
-            val mockedBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
-            val bezirkUndWahlIDStapelart = new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
-            val mockedServiceResponse = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
-            val mockedServiceResponseAsDTO = new BegruendungDTO(bezirkUndWahlIDStapelart, null, null, true, true);
+    @Test
+    void should_returnDTOWithHttpStatusOk_when_serviceReturnedData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartModel = StapelartModel.LTW_BZW_A;
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-            Mockito.when(begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelartDTO)).thenReturn(mockedBegruendungReference);
-            Mockito.when(begruendungService.getBegruendung(mockedBegruendungReference)).thenReturn(mockedServiceResponse);
-            Mockito.when(begruendungDTOMapper.toDTO(mockedServiceResponse)).thenReturn(mockedServiceResponseAsDTO);
+      val mockedBegruendungReference =
+          new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
+      val bezirkUndWahlIDStapelart =
+          new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
+      val mockedServiceResponse =
+          new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
+      val mockedServiceResponseAsDTO =
+          new BegruendungDTO(bezirkUndWahlIDStapelart, null, null, true, true);
 
-            val result = unitUnderTest.getBegruendung(wahlbezirkID, wahlID, stapelartDTO);
+      Mockito.when(begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelartDTO))
+          .thenReturn(mockedBegruendungReference);
+      Mockito.when(begruendungService.getBegruendung(mockedBegruendungReference))
+          .thenReturn(mockedServiceResponse);
+      Mockito.when(begruendungDTOMapper.toDTO(mockedServiceResponse))
+          .thenReturn(mockedServiceResponseAsDTO);
 
-            Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        }
+      val result = unitUnderTest.getBegruendung(wahlbezirkID, wahlID, stapelartDTO);
 
-        @Test
-        void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelart = Stapelart.LTW_BZW_A;
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
-
-            val mockedBegruendungReference = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
-
-            Mockito.when(begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelartDTO)).thenReturn(mockedBegruendungReference);
-            Mockito.when(begruendungService.getBegruendung(mockedBegruendungReference)).thenReturn(null);
-
-            val result = unitUnderTest.getBegruendung(wahlbezirkID, wahlID, stapelartDTO);
-
-            Assertions.assertThat(result.getBody()).isNull();
-            Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-        }
+      Assertions.assertThat(result.getBody()).isEqualTo(mockedServiceResponseAsDTO);
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Nested
-    class PostBegruendung {
+    @Test
+    void should_returnEmptyWithHttpStatusNoContent_when_serviceReturnsNoData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartModel = StapelartModel.LTW_BZW_A;
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
 
-        @Test
-        void should_callServiceWithModel_when_calledWithData() {
-            val wahlID = "wahlID";
-            val wahlbezirkID = "wahlbezirkID";
-            val stapelart = Stapelart.LTW_BZW_A;
-            val stapelartDTO = StapelartDTO.LTW_BZW_A;
-            val stapelartModel = StapelartModel.LTW_BZW_A;
+      val mockedBegruendungReference =
+          new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
 
-            val begruendungDTO = new BegruendungDTO(new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO), null, null, true, true);
-            val begruendungReferce = new BegruendungReference(wahlbezirkID, wahlID, stapelart);
+      Mockito.when(begruendungDTOMapper.toReferenceModel(wahlbezirkID, wahlID, stapelartDTO))
+          .thenReturn(mockedBegruendungReference);
+      Mockito.when(begruendungService.getBegruendung(mockedBegruendungReference)).thenReturn(null);
 
-            val mockedBegruendungModel = new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
-            Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);
-            Mockito.when(begruendungDTOMapper.toStapelart(stapelartDTO)).thenReturn(stapelart);
+      val result = unitUnderTest.getBegruendung(wahlbezirkID, wahlID, stapelartDTO);
 
-            unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelartDTO, begruendungDTO);
-
-            Mockito.verify(begruendungService)
-                    .postBegruendung(begruendungReferce, new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true));
-        }
+      Assertions.assertThat(result.getBody()).isNull();
+      Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
+  }
+
+  @Nested
+  class PostBegruendung {
+
+    @Test
+    void should_callServiceWithModel_when_calledWithData() {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
+      val stapelartModel = StapelartModel.LTW_BZW_A;
+
+      val begruendungDTO =
+          new BegruendungDTO(
+              new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO),
+              null,
+              null,
+              true,
+              true);
+      val begruendungReference =
+          new BegruendungReferenceModel(wahlbezirkID, wahlID, stapelartModel);
+
+      val mockedBegruendungModel =
+          new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true);
+      Mockito.when(begruendungDTOMapper.toModel(begruendungDTO)).thenReturn(mockedBegruendungModel);
+      Mockito.when(stapelartDTOMapper.toModel(stapelartDTO)).thenReturn(stapelartModel);
+
+      unitUnderTest.postBegruendung(wahlbezirkID, wahlID, stapelartDTO, begruendungDTO);
+
+      Mockito.verify(begruendungService)
+          .postBegruendung(
+              begruendungReference,
+              new BegruendungModel(wahlbezirkID, wahlID, stapelartModel, null, null, true, true));
+    }
+  }
 }

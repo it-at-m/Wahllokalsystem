@@ -2,14 +2,14 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Create - Set Ergebnismeldung
+### POST Create - Set Ergebnismeldung | user wls_all_uwb
 POST {{ WLS_EAI_SERVICE_URL }}/ergebnismeldung
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlID": "wahlID1",
-  "wahlbezirkID": "00000000-0000-0000-0000-000000000001",
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "meldungsart": "NIEDERSCHRIFT",
   "aWerte": {
     "a1": 3,
@@ -27,12 +27,12 @@ Content-Type: application/json
     {
       "stimmenart": "A",
       "anzahl": 2,
-      "wahlvorschlagID": "123"
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001"
     },
     {
       "stimmenart": "B",
       "anzahl": 3,
-      "wahlvorschlagID": "234"
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003"
     }
   ],
   "ungueltigeStimmzettelAnzahl": 4,
@@ -41,19 +41,61 @@ Content-Type: application/json
       "stimmenart": "B",
       "wahlvorschlagsordnungszahl": 5,
       "ergebnis": 3,
-      "wahlvorschlagID": "1456",
-      "kandidatID": "654321"
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000001",
+      "kandidatID": "00000000-0000-0000-0001-000000000005"
     },
     {
       "stimmenart": "A",
       "wahlvorschlagsordnungszahl": 9,
       "ergebnis": 2,
-      "wahlvorschlagID": "12450",
-      "kandidatID": "60154321"
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000003",
+      "kandidatID": "00000000-0000-0000-0001-000000000011"
     }
   ],
   "wahlart": "BTW",
-  "erstellungszeit": "2024-07-18T09:10:31.179Z"
+  "erstellungszeit": "2026-01-02T:10:31.179Z"
+}
+
+### POST Create - Set Ergebnismeldung | user wls_all_bwb
+POST {{ WLS_EAI_SERVICE_URL }}/ergebnismeldung
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "meldungsart": "NIEDERSCHRIFT",
+  "aWerte": {
+    "a1": 3,
+    "a2": 2
+  },
+  "bWerte": {
+    "b": 1,
+    "b1": 8,
+    "b2": 65
+  },
+  "wahlbriefeWerte": {
+    "zurueckgewiesenGesamt": 2
+  },
+  "ungueltigeStimmzettels": [
+    {
+      "stimmenart": "A",
+      "anzahl": 2,
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013"
+    }
+  ],
+  "ungueltigeStimmzettelAnzahl": 4,
+  "ergebnisse": [
+    {
+      "stimmenart": "B",
+      "wahlvorschlagsordnungszahl": 5,
+      "ergebnis": 3,
+      "wahlvorschlagID": "00000000-0000-0000-0001-000000000013",
+      "kandidatID": "00000000-0000-0000-0002-000000000018"
+    }
+  ],
+  "wahlart": "BTW",
+  "erstellungszeit": "2026-01-02T:10:31.179Z"
 }
 
 ### POST Create - Error: Set Ergebnismeldung without wahlID

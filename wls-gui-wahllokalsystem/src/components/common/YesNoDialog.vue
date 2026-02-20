@@ -6,22 +6,22 @@
   >
     <template #activator="{ props: open }">
       <template v-if="buttontext">
-        <v-btn
+        <base-text-button
           color="primary"
           v-bind="open"
         >
           {{ buttontext }}
-        </v-btn>
+        </base-text-button>
       </template>
       <template v-else-if="icontext">
-        <v-btn
+        <base-text-button
           color="primary"
           v-bind="open"
         >
           <v-icon size="large">
             {{ icontext }}
           </v-icon>
-        </v-btn>
+        </base-text-button>
       </template>
     </template>
     <v-card>
@@ -33,37 +33,25 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
+        <base-text-button
           id="yesnodialog-btn-no"
-          variant="text"
           @click="no"
         >
           Nein
-        </v-btn>
-        <v-btn
+        </base-text-button>
+        <base-text-button
           id="yesnodialog-btn-yes"
           color="primary"
           @click="yes"
         >
           Ja
-        </v-btn>
+        </base-text-button>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import {
-  VBtn,
-  VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
-  VDialog,
-  VIcon,
-  VSpacer,
-} from "vuetify/components";
-
 /**
  * The YesNo dialog is a generic dialog for yes/no queries to the user.
  * For example, it can be used to confirm the deletion of an entity.
@@ -84,6 +72,8 @@ import {
  *    @no="deleteDialog = false"
  *    @yes="deleteSome"></yes-no-dialog>
  */
+
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 
 defineProps<{
   /**

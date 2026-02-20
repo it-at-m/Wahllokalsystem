@@ -4,7 +4,6 @@ import static java.sql.Types.VARCHAR;
 
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +25,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Embeddable
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,29 +33,21 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 public class Wahlvorschlaege {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @UuidGenerator
-    @JdbcTypeCode(VARCHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(generator = "uuid")
+  @UuidGenerator
+  @JdbcTypeCode(VARCHAR)
+  private UUID id;
 
-    @Embedded
-    @NaturalId
-    @NotNull
-    @ToString.Include
-    private BezirkUndWahlID bezirkUndWahlID;
+  @Embedded @NaturalId @NotNull @ToString.Include private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    @ToString.Include
-    private String stimmzettelgebietID;
+  @NotNull @ToString.Include private String stimmzettelgebietID;
 
-    @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
-    @NotNull
-    @Size(min = 1)
-    private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
+  @OneToMany(mappedBy = "wahlvorschlaeage", orphanRemoval = true, cascade = CascadeType.PERSIST)
+  @NotNull @Size(min = 1) private Set<Wahlvorschlag> wahlvorschlaege = new LinkedHashSet<>();
 
-    public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
-        wahlvorschlag.setWahlvorschlaeage(this);
-        wahlvorschlaege.add(wahlvorschlag);
-    }
+  public void addWahlvorschlag(final Wahlvorschlag wahlvorschlag) {
+    wahlvorschlag.setWahlvorschlaeage(this);
+    wahlvorschlaege.add(wahlvorschlag);
+  }
 }

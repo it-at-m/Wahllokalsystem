@@ -8,13 +8,17 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface BeanstandeteWahlbriefeModelMapper {
 
-    BezirkIDUndWaehlerverzeichnisNummer toEmbeddedId(BeanstandeteWahlbriefeReference reference);
+  BezirkIDUndWaehlerverzeichnisNummer toEmbeddedId(BeanstandeteWahlbriefeReferenceModel reference);
 
-    @Mapping(target = "wahlbezirkID", source = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID")
-    @Mapping(target = "waehlerverzeichnisNummer", source = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer")
-    BeanstandeteWahlbriefeModel toModel(BeanstandeteWahlbriefe entity);
+  @Mapping(target = "wahlbezirkID", source = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID")
+  @Mapping(
+      target = "waehlerverzeichnisNummer",
+      source = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer")
+  BeanstandeteWahlbriefeModel toModel(BeanstandeteWahlbriefe entity);
 
-    @Mapping(target = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer", source = "waehlerverzeichnisNummer")
-    @Mapping(target = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID", source = "wahlbezirkID")
-    BeanstandeteWahlbriefe toEntity(BeanstandeteWahlbriefeModel model);
+  @Mapping(
+      target = "bezirkIDUndWaehlerverzeichnisNummer.waehlerverzeichnisNummer",
+      source = "waehlerverzeichnisNummer")
+  @Mapping(target = "bezirkIDUndWaehlerverzeichnisNummer.wahlbezirkID", source = "wahlbezirkID")
+  BeanstandeteWahlbriefe toEntity(BeanstandeteWahlbriefeModel model);
 }

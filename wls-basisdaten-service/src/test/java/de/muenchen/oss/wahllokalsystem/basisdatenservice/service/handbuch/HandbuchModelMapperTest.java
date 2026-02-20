@@ -1,0 +1,77 @@
+package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch;
+
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahlbezirkArt;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagIdUndWahlbezirksart;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.handbuch.Handbuch;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahlbezirkArtModel;
+import lombok.val;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mapstruct.factory.Mappers;
+
+class HandbuchModelMapperTest {
+
+  private final HandbuchModelMapper unitUnderTest = Mappers.getMapper(HandbuchModelMapper.class);
+
+  @Nested
+  class ToEntityID {
+
+    @Test
+    void should_returnWahltagIdUndWahlbezirksart_when_givenHandbuchReferenceModel() {
+      val modelToMap = new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.UWB);
+
+      val result = unitUnderTest.toEntityID(modelToMap);
+
+      val expectedResult = new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.UWB);
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest
+    @EnumSource(WahlbezirkArtModel.class)
+    void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchReferenceModel(
+        final WahlbezirkArtModel wahlbezirkArtModel) {
+      Assertions.assertThat(
+              unitUnderTest
+                  .toEntityID(new HandbuchReferenceModel("", wahlbezirkArtModel))
+                  .getWahlbezirksart()
+                  .toString())
+          .isEqualTo(wahlbezirkArtModel.toString());
+    }
+  }
+
+  @Nested
+  class ToEntity {
+
+    @Test
+    void should_returnHandbuchEntity_when_givenHandbuchWriteModel() {
+      val modelToMap =
+          new HandbuchWriteModel(
+              new HandbuchReferenceModel("wahltagID", WahlbezirkArtModel.BWB),
+              "helloWorld".getBytes());
+
+      val result = unitUnderTest.toEntity(modelToMap);
+
+      val expectedResult =
+          new Handbuch(
+              new WahltagIdUndWahlbezirksart("wahltagID", WahlbezirkArt.BWB),
+              "helloWorld".getBytes());
+      Assertions.assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @ParameterizedTest
+    @EnumSource(WahlbezirkArtModel.class)
+    void should_mapAllWahlbezirksArtEnumValues_when_givenHandbuchWriteModel(
+        final WahlbezirkArtModel wahlbezirkArtModel) {
+      val modelToMap =
+          new HandbuchWriteModel(new HandbuchReferenceModel("", wahlbezirkArtModel), "".getBytes());
+
+      val result = unitUnderTest.toEntity(modelToMap);
+
+      Assertions.assertThat(result.getWahltagIdUndWahlbezirksart().getWahlbezirksart().toString())
+          .isEqualTo(wahlbezirkArtModel.toString());
+    }
+  }
+}

@@ -11,26 +11,25 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 /**
- * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels
- * {@link UserInfoAuthoritiesService} vom /userinfo Endpoint des OIDC Providers
- * bezieht.
+ * Ein custom {@link JwtAuthenticationConverter}, der die Authorities mittels {@link
+ * UserInfoAuthoritiesRetriever} vom /userinfo Endpoint des OIDC Providers bezieht.
  */
-public class JwtUserInfoAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class JwtUserInfoAuthenticationConverter
+    implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final UserInfoAuthoritiesService userInfoService;
+  private final UserInfoAuthoritiesRetriever userInfoService;
 
-    /**
-     * Erzeugt eine neue Instanz von {@link JwtUserInfoAuthenticationConverter}.
-     *
-     * @param userInfoService ein {@link UserInfoAuthoritiesService}
-     */
-    public JwtUserInfoAuthenticationConverter(UserInfoAuthoritiesService userInfoService) {
-        this.userInfoService = userInfoService;
-    }
+  /**
+   * Erzeugt eine neue Instanz von {@link JwtUserInfoAuthenticationConverter}.
+   *
+   * @param userInfoService ein {@link UserInfoAuthoritiesRetriever}
+   */
+  public JwtUserInfoAuthenticationConverter(UserInfoAuthoritiesRetriever userInfoService) {
+    this.userInfoService = userInfoService;
+  }
 
-    @Override
-    public AbstractAuthenticationToken convert(Jwt source) {
-        return new JwtAuthenticationToken(source, this.userInfoService.loadAuthorities(source));
-    }
-
+  @Override
+  public AbstractAuthenticationToken convert(Jwt source) {
+    return new JwtAuthenticationToken(source, this.userInfoService.loadAuthorities(source));
+  }
 }

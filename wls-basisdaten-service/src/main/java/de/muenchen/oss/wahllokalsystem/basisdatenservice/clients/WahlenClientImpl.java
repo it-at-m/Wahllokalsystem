@@ -4,9 +4,9 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.client.WahldatenControllerApi;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.common.WahltagWithNummer;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModel;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlenClient;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.WahltagWithNummerModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
 import java.util.Set;
@@ -21,23 +21,26 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class WahlenClientImpl implements WahlenClient {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    private final WahldatenControllerApi wahldatenControllerApi;
-    private final WahlenClientMapper wahlenClientMapper;
+  private final WahldatenControllerApi wahldatenControllerApi;
+  private final WahlenClientMapper wahlenClientMapper;
 
-    @Override
-    public List<WahlModel> getWahlen(final WahltagWithNummer wahltagWithNummer) {
-        final Set<WahlDTO> wahlDTOs;
-        try {
-            wahlDTOs = wahldatenControllerApi.loadWahlen(wahltagWithNummer.wahltag(), wahltagWithNummer.wahltagNummer());
-        } catch (final Exception exception) {
-            log.info("exception on loadwahl from external", exception);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
-        }
-        if (wahlDTOs == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
-        }
-        return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  @Override
+  public List<WahlModel> getWahlen(final WahltagWithNummerModel wahltagWithNummerModel) {
+    final Set<WahlDTO> wahlDTOs;
+    try {
+      wahlDTOs =
+          wahldatenControllerApi.loadWahlen(
+              wahltagWithNummerModel.wahltag(), wahltagWithNummerModel.wahltagNummer());
+    } catch (final Exception exception) {
+      log.info("exception on loadwahl from external", exception);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI);
     }
+    if (wahlDTOs == null) {
+      throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.NULL_FROM_CLIENT);
+    }
+    return wahlenClientMapper.fromRemoteClientSetOfWahlDTOtoListOfWahlModel(wahlDTOs);
+  }
 }

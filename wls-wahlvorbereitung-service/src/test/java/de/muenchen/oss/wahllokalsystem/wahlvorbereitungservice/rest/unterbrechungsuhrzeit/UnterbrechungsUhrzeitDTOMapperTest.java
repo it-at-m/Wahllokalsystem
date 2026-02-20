@@ -9,42 +9,41 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { UnterbrechungsUhrzeitDTOMapperImpl.class })
+@SpringBootTest(classes = {UnterbrechungsUhrzeitDTOMapperImpl.class})
 class UnterbrechungsUhrzeitDTOMapperTest {
 
-    @Autowired
-    private UnterbrechungsUhrzeitDTOMapper unitUnderTest;
+  @Autowired private UnterbrechungsUhrzeitDTOMapper unitUnderTest;
 
-    @Nested
-    class ToDTO {
+  @Nested
+  class ToDTO {
 
-        @Test
-        void should_returnUnterbrechungsUhrzeitDTO_when_givenUnterbrechungsUhrzeitModel() {
-            val wahlbezirkID = "wahlbezirkID";
-            val unterbrechungsUhrzeit = LocalDateTime.now();
-            val modelToMap = new UnterbrechungsUhrzeitModel(wahlbezirkID, unterbrechungsUhrzeit);
+    @Test
+    void should_returnUnterbrechungsUhrzeitDTO_when_givenUnterbrechungsUhrzeitModel() {
+      val wahlbezirkID = "wahlbezirkID";
+      val unterbrechungsUhrzeit = LocalDateTime.now();
+      val modelToMap = new UnterbrechungsUhrzeitModel(wahlbezirkID, unterbrechungsUhrzeit);
 
-            val result = unitUnderTest.toDTO(modelToMap);
-            val expectedResult = new UnterbrechungsUhrzeitDTO(wahlbezirkID, unterbrechungsUhrzeit);
+      val result = unitUnderTest.toDTO(modelToMap);
+      val expectedResult = new UnterbrechungsUhrzeitDTO(wahlbezirkID, unterbrechungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 
-    @Nested
-    class ToModel {
+  @Nested
+  class ToModel {
 
-        @Test
-        void should_returnUnterbrechungsUhrzeitModel_when_givenUnterbrechungsUhrzeitDTO() {
-            val unterbrechungsUhrzeit = LocalDateTime.now();
-            val dtoToMap = new UnterbrechungsUhrzeitWriteDTO(unterbrechungsUhrzeit);
-            val wahlbezirkIDToMap = "wahlbezirkID";
+    @Test
+    void should_returnUnterbrechungsUhrzeitModel_when_givenUnterbrechungsUhrzeitDTO() {
+      val unterbrechungsUhrzeit = LocalDateTime.now();
+      val dtoToMap = new UnterbrechungsUhrzeitWriteDTO(unterbrechungsUhrzeit);
+      val wahlbezirkIDToMap = "wahlbezirkID";
 
-            val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
+      val result = unitUnderTest.toModel(wahlbezirkIDToMap, dtoToMap);
 
-            val expectedResult = new UnterbrechungsUhrzeitModel(wahlbezirkIDToMap, unterbrechungsUhrzeit);
+      val expectedResult = new UnterbrechungsUhrzeitModel(wahlbezirkIDToMap, unterbrechungsUhrzeit);
 
-            Assertions.assertThat(result).isEqualTo(expectedResult);
-        }
+      Assertions.assertThat(result).isEqualTo(expectedResult);
     }
+  }
 }

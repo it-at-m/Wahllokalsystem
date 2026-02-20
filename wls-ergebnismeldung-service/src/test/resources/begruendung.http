@@ -2,43 +2,93 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Begruendung (needs profile 'dummy.clients')
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+### GET Begruendung sent by POST | user wls_all_uwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Begruendung sent by POST
-GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wahlbezirkID/wahlID/LTW_BZW_A
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient )
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/STIMMZETTEL_UMSCHLAEGE
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID",
-    "stapelart": "LTW_BZW_A"
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "STIMMZETTEL_UMSCHLAEGE"
   },
-  "grund1": "grund1",
+  "grund": "grund",
   "grund2": "grund2",
   "nachzaehlung": true,
   "unstimmigkeiten": true
 }
 
-### Begründung ohne Grund 2
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/wbz-1/1/LTW_BZW_A
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c15/1/STIMMZETTEL_UMSCHLAEGE
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
   "bezirkUndWahlIDStapelart": {
-    "wahlbezirkID": "wahlbezirkID",
-    "wahlID": "wahlID",
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c15",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "stapelart": "STIMMZETTEL_UMSCHLAEGE"
+  },
+  "grund": "grund",
+  "grund2": "grund2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}
+
+### Begründung ohne Grund 2 | user wls_all_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9899cae4-df9a-4ffc-a940-f20cf2280171/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
     "stapelart": "LTW_BZW_A"
   },
-  "grund1": "ohne Grund 2",
+  "grund": "ohne Grund 2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}
+
+### GET Begruendung sent by POST | user wls_all_bwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "LTW_BZW_A"
+  },
+  "grund": "grund",
+  "grund2": "grund2",
+  "nachzaehlung": true,
+  "unstimmigkeiten": true
+}
+
+### Begründung ohne Grund 2 | user wls_all_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/LTW_BZW_A
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "bezirkUndWahlIDStapelart": {
+    "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "stapelart": "LTW_BZW_A"
+  },
+  "grund": "ohne Grund 2",
   "nachzaehlung": true,
   "unstimmigkeiten": true
 }

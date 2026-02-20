@@ -1,0 +1,4 @@
+spring:
+  ldap:
+    embedded:
+      ldif: "classpath:users.ldif"

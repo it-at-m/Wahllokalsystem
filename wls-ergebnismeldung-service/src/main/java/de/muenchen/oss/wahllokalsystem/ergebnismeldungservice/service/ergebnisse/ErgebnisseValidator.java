@@ -10,30 +10,32 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ErgebnisseValidator {
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validReferenceOrThrow(final ErgebnisseReference ergebnisseReference, final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (StringUtils.isBlank(
-                ergebnisseReference.wahlbezirkID()) ||
-                StringUtils.isBlank(
-                        ergebnisseReference.wahlID())
-                || ergebnisseReference.stapelart() == null) {
-            throw exceptionOnInvalid;
-        }
+  public void validReferenceOrThrow(
+      final ErgebnisseReferenceModel ergebnisseReferenceModel,
+      final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (StringUtils.isBlank(ergebnisseReferenceModel.wahlbezirkID())
+        || StringUtils.isBlank(ergebnisseReferenceModel.wahlID())
+        || ergebnisseReferenceModel.stapelart() == null) {
+      throw exceptionOnInvalid;
     }
+  }
 
-    public void validIDOrThrow(final String wahlID, String wahlbezirkID, final FachlicheWlsException exceptionOnInvalid)
-            throws FachlicheWlsException {
-        if (StringUtils.isBlank(wahlbezirkID) ||
-                StringUtils.isBlank(wahlID)) {
-            throw exceptionOnInvalid;
-        }
+  public void validIDOrThrow(
+      final String wahlID, String wahlbezirkID, final FachlicheWlsException exceptionOnInvalid)
+      throws FachlicheWlsException {
+    if (StringUtils.isBlank(wahlbezirkID) || StringUtils.isBlank(wahlID)) {
+      throw exceptionOnInvalid;
     }
+  }
 
-    public void validModelOrThrow(final ErgebnisseModel ergebnisseToAdd) throws FachlicheWlsException {
-        if (ergebnisseToAdd.ergebnisse() == null || ergebnisseToAdd.ergebnisse().isEmpty()) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validModelOrThrow(final ErgebnisseModel ergebnisseToAdd)
+      throws FachlicheWlsException {
+    if (ergebnisseToAdd.ergebnisse() == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG);
     }
+  }
 }

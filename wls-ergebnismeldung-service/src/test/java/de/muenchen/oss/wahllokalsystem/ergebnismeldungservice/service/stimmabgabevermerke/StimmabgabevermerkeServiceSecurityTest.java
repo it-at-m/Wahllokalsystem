@@ -27,130 +27,163 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
-@ActiveProfiles({ TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class StimmabgabevermerkeServiceSecurityTest {
 
-    @MockBean
-    BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-    @Autowired
-    StimmabgabevermerkeService stimmabgabevermerkeService;
+  @Autowired StimmabgabevermerkeService stimmabgabevermerkeService;
 
-    @Autowired
-    StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Autowired StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMABGABEVERMERKE);
-        stimmabgabevermerkeRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STIMMABGABEVERMERKE);
+    stimmabgabevermerkeRepository.deleteAll();
+  }
+
+  @Nested
+  class GetStimmabgabevermerke {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  stimmabgabevermerkeService.getStimmabgabevermerke(
+                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)));
     }
 
-    @Nested
-    class GetStimmabgabevermerke {
+    @ParameterizedTest(name = "{index} = {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(arguments.get(0, String[].class));
 
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
-
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> stimmabgabevermerkeService.getStimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)));
-        }
-
-        @ParameterizedTest(name = "{index} = {1} missing")
-        @MethodSource("getMissingAuthoritiesVariations")
-        void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(arguments.get(0, String[].class));
-
-            Assertions.assertThatThrownBy(() -> stimmabgabevermerkeService.getStimmabgabevermerke(new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariations() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
-        }
+      Assertions.assertThatThrownBy(
+              () ->
+                  stimmabgabevermerkeService.getStimmabgabevermerke(
+                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
-    @Nested
-    class PostStimmabgabevermerke {
-
-        @Test
-        void should_getAccess_when_allRequiredAuthoritiesArePresent() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(true);
-
-            Assertions.assertThatNoException()
-                    .isThrownBy(() -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)));
-        }
-
-        @Test
-        void should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDCheckReturnsFalse() {
-            SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE);
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(false);
-
-            Assertions.assertThatThrownBy(
-                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} = {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThatThrowAccessDenied")
-        void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(ArrayUtils.addAll(new String[] { Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE }, arguments.get(0, String[].class)));
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(
-                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
-                    .isInstanceOf(AccessDeniedException.class);
-        }
-
-        @ParameterizedTest(name = "{index} = {1} missing")
-        @MethodSource("getMissingAuthoritiesVariationsThatThrowTechnischeWlsException")
-        void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(final ArgumentsAccessor arguments) {
-            SecurityUtils.runWith(ArrayUtils.addAll(new String[] { Authorities.SERVICE_SET_STIMMABGABEVERMERKE }, arguments.get(0, String[].class)));
-
-            val wahlbezirkID = "wahlbezirkID";
-            val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
-
-            Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any())).thenReturn(true);
-
-            Assertions.assertThatThrownBy(
-                    () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
-                    .isInstanceOf(TechnischeWlsException.class);
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThatThrowAccessDenied() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-                    ArrayUtils.removeElement(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE, Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE));
-        }
-
-        private static Stream<Arguments> getMissingAuthoritiesVariationsThatThrowTechnischeWlsException() {
-            return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-                    ArrayUtils.removeElement(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE, Authorities.SERVICE_SET_STIMMABGABEVERMERKE));
-        }
-
-        private StimmabgabevermerkeModel createSavableModel(final BezirkIDUndWaehlerverzeichnisNummer id) {
-            val eingenommeneWahlscheine = Set.of(new EingenommenerWahlscheinModel(0L, StimmzettelartModel.BEIDE));
-
-            return new StimmabgabevermerkeModel(id, 0L, Set.of(
-                    new WahldatenModel(id.getWahlbezirkID(), "wahlID", id.getWaehlerverzeichnisNummer(),
-                            Collections.emptySet(), eingenommeneWahlscheine)));
-        }
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
     }
+  }
+
+  @Nested
+  class PostStimmabgabevermerke {
+
+    @Test
+    void should_getAccess_when_allRequiredAuthoritiesArePresent() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)));
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDCheckReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} = {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsThatThrowAccessDenied")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              new String[] {Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE},
+              arguments.get(0, String[].class)));
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} = {1} missing")
+    @MethodSource("getMissingAuthoritiesVariationsThatThrowTechnischeWlsException")
+    void should_throwTechnischeWlsException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor arguments) {
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              new String[] {Authorities.SERVICE_SET_STIMMABGABEVERMERKE},
+              arguments.get(0, String[].class)));
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L);
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+          .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariationsThatThrowAccessDenied() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          ArrayUtils.removeElement(
+              Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE,
+              Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE));
+    }
+
+    private static Stream<Arguments>
+        getMissingAuthoritiesVariationsThatThrowTechnischeWlsException() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          ArrayUtils.removeElement(
+              Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE,
+              Authorities.SERVICE_SET_STIMMABGABEVERMERKE));
+    }
+
+    private StimmabgabevermerkeModel createSavableModel(
+        final BezirkIDUndWaehlerverzeichnisNummer id) {
+      val eingenommeneWahlscheine =
+          Set.of(new EingenommenerWahlscheinModel(0L, StimmzettelartModel.BEIDE));
+
+      return new StimmabgabevermerkeModel(
+          id,
+          0L,
+          Set.of(
+              new WahldatenModel(
+                  id.getWahlbezirkID(),
+                  "wahlID",
+                  id.getWaehlerverzeichnisNummer(),
+                  Collections.emptySet(),
+                  eingenommeneWahlscheine)));
+    }
+  }
 }

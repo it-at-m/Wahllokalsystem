@@ -18,58 +18,66 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ErgebnisseService {
 
-    private final ErgebnisseRepository ergebnisseRepository;
+  private final ErgebnisseRepository ergebnisseRepository;
 
-    private final ErgebnisseModelMapper ergebnisseModelMapper;
+  private final ErgebnisseModelMapper ergebnisseModelMapper;
 
-    private final ErgebnisseValidator ergebnisseValidator;
+  private final ErgebnisseValidator ergebnisseValidator;
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public Optional<ErgebnisseModel> getErgebnisse(@P("param") @NotNull final ErgebnisseReference ergebnisseReference) {
-        log.info("#getErgebnisse");
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public Optional<ErgebnisseModel> getErgebnisse(
+      @P("param") @NotNull final ErgebnisseReferenceModel ergebnisseReferenceModel) {
+    log.info("#getErgebnisse");
 
-        ergebnisseValidator.validReferenceOrThrow(ergebnisseReference,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
+    ergebnisseValidator.validReferenceOrThrow(
+        ergebnisseReferenceModel,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
 
-        val ergebnisseFromRepo = ergebnisseRepository.findById(ergebnisseModelMapper.toEmbeddedId(ergebnisseReference));
-        return ergebnisseFromRepo.map(ergebnisseModelMapper::toModel);
+    val ergebnisseFromRepo =
+        ergebnisseRepository.findById(ergebnisseModelMapper.toEmbeddedId(ergebnisseReferenceModel));
+    return ergebnisseFromRepo.map(ergebnisseModelMapper::toModel);
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public List<ErgebnisseModel> getAllErgebnisse(
+      @NotNull final String wahlID, @P("wahlbezirkID") @NotNull final String wahlbezirkID) {
+    log.info("#getAllErgebnisse");
+
+    ergebnisseValidator.validIDOrThrow(
+        wahlID,
+        wahlbezirkID,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
+
+    val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID);
+    return ergebnisseFromRepo.stream().map(ergebnisseModelMapper::toModel).toList();
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
+  public void postErgebnisse(
+      @P("param") final ErgebnisseReferenceModel ergebnisseReferenceModel,
+      @NotNull final ErgebnisseModel ergebnisseToAdd) {
+    log.info("#postErgebnisse");
+    ergebnisseValidator.validModelOrThrow(ergebnisseToAdd);
+    ergebnisseValidator.validReferenceOrThrow(
+        ergebnisseReferenceModel,
+        exceptionFactory.createFachlicheWlsException(
+            ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
+
+    try {
+      ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
+    } catch (final Exception e) {
+      log.error("#postErgebnisse unsaveable:", e);
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
     }
-
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetErgebnisse')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)"
-    )
-    public List<ErgebnisseModel> getAllErgebnisse(@NotNull final String wahlID, @P("wahlbezirkID") @NotNull final String wahlbezirkID) {
-        log.info("#getErgebnisse");
-
-        ergebnisseValidator.validIDOrThrow(wahlID, wahlbezirkID,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
-
-        val ergebnisseFromRepo = ergebnisseRepository.findByWahlbezirkIDAndWahlD(wahlID, wahlbezirkID);
-        return ergebnisseFromRepo.stream().map(ergebnisseModelMapper::toModel).toList();
-    }
-
-    @PreAuthorize(
-        "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostErgebnisse')"
-                + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)"
-    )
-    public void postErgebnisse(@P("param") final ErgebnisseReference ergebnisseReference, @NotNull final ErgebnisseModel ergebnisseToAdd) {
-        log.info("#postErgebnisse");
-        ergebnisseValidator.validModelOrThrow(ergebnisseToAdd);
-        ergebnisseValidator.validReferenceOrThrow(ergebnisseReference,
-                exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG));
-
-        try {
-            ergebnisseRepository.save(ergebnisseModelMapper.toEntity(ergebnisseToAdd));
-        } catch (final Exception e) {
-            log.error("#postErgebnisse unsaveable:", e);
-            throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.ERGEBNISSE_UNSAVEABLE);
-
-        }
-    }
+  }
 }

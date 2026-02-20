@@ -7,14 +7,15 @@
     "fix": "prettier . --write && markdownlint -f ."
   },
   "dependencies": {
-    "@mdi/js": "^7.2.96"
+    "@mdi/js": "7.4.47",
+    "vuetify": "3.11.6"
   },
   "devDependencies": {
+    "@mdi/font": "7.4.47",
     "@muenchen/prettier-codeformat": "1.0.2",
-    "markdownlint-cli": "0.44.0",
-    "vitepress": "^1.0.0-rc.45",
-    "mermaid": "^11.0.0",
-    "vitepress-plugin-mermaid": "^2.0.16",
-    "@mdi/font": "^7.3.67"
+    "markdownlint-cli": "0.47.0",
+    "mermaid": "11.12.2",
+    "vitepress": "1.6.4",
+    "vitepress-plugin-mermaid": "2.0.17"
   }
 }

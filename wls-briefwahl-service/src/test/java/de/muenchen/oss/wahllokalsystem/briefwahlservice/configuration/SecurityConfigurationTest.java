@@ -24,160 +24,177 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SecurityConfigurationTest {
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @MockBean
-    BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
+  @MockitoBean BeanstandeteWahlbriefeService beanstandeteWahlbriefeService;
 
-    @MockBean
-    WahlbriefdatenService wahlbriefdatenService;
+  @MockitoBean WahlbriefdatenService wahlbriefdatenService;
 
-    @Test
-    void should_returnUnauthorized_when_accessingRoot() throws Exception {
-        api.perform(get("/"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnUnauthorized_when_accessingRoot() throws Exception {
+    api.perform(get("/")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnUnauthorized_when_accessingActuator() throws Exception {
-        api.perform(get("/actuator"))
-                .andExpect(status().isUnauthorized());
-    }
+  @Test
+  void should_returnUnauthorized_when_accessingActuator() throws Exception {
+    api.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
 
-    @Test
-    void should_returnOk_when_accessingActuatorHealth() throws Exception {
-        api.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnOk_when_accessingActuatorHealth() throws Exception {
+    api.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnOk_when_accessingActuatorInfo() throws Exception {
-        api.perform(get("/actuator/info"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnOk_when_accessingActuatorInfo() throws Exception {
+    api.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnOk_when_accessingActuatorMetrics() throws Exception {
-        api.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnOk_when_accessingActuatorMetrics() throws Exception {
+    api.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
 
-    @Test
-    void should_returnOk_when_accessingApiDocs() throws Exception {
-        api.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  void should_returnOk_when_accessingApiDocs() throws Exception {
+    api.perform(get("/v3/api-docs")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnOk_when_accessingSwaggerUi() throws Exception {
+    api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class BeanstandeteWahlbriefe {
 
     @Test
-    void should_returnOk_when_accessingSwaggerUi() throws Exception {
-        api.perform(get("/swagger-ui/index.html"))
-                .andExpect(status().isOk());
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2"))
+          .andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class BeanstandeteWahlbriefe {
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 13L;
+      val serviceResponse =
+          new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, new HashMap<>());
 
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
-            api.perform(get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2")).andExpect(status().isUnauthorized());
-        }
+      Mockito.when(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(Mockito.any()))
+          .thenReturn(serviceResponse);
 
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
-            val wahlbezirkID = "wahlbezirkID";
-            val waehlerverzeichnisNummer = 13L;
-            val serviceResponse = new BeanstandeteWahlbriefeModel(wahlbezirkID, waehlerverzeichnisNummer, new HashMap<>());
+      val expectedBeanstandeteWahlbriefeDTO =
+          new BeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer, new HashMap<>());
 
-            Mockito.when(beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(Mockito.any())).thenReturn(serviceResponse);
+      val result =
+          api.perform(get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2"))
+              .andExpect(status().isOk())
+              .andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              result.getResponse().getContentAsString(), BeanstandeteWahlbriefeDTO.class);
 
-            val expectedBeanstandeteWahlbriefeDTO = new BeanstandeteWahlbriefeDTO(wahlbezirkID, waehlerverzeichnisNummer, new HashMap<>());
-
-            val result = api.perform(get("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2")).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(result.getResponse().getContentAsString(), BeanstandeteWahlbriefeDTO.class);
-
-            Assertions.assertThat(responseBodyAsDTO).usingRecursiveComparison().isEqualTo(expectedBeanstandeteWahlbriefeDTO);
-
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-            val requestBodyAsString = objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
-            val request = post(
-                    "/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(requestBodyAsString);
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
-            val requestBodyAsString = objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
-            val request = post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBodyAsString);
-
-            Mockito.doNothing().when(beanstandeteWahlbriefeService).setBeanstandeteWahlbriefe(Mockito.any());
-
-            api.perform(request).andExpect(status().isOk());
-        }
+      Assertions.assertThat(responseBodyAsDTO)
+          .usingRecursiveComparison()
+          .isEqualTo(expectedBeanstandeteWahlbriefeDTO);
     }
 
-    @Nested
-    class Wahlbriefdaten {
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      val requestBodyAsString =
+          objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
+      val request =
+          post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBodyAsString);
 
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
-            val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
-            val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
-
-            api.perform(request).andExpect(status().isNoContent());
-        }
-
-        @Test
-        @WithAnonymousUser
-        void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-            val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
-            val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            api.perform(request).andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @WithMockUser
-        void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
-            val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
-            val request = post("/businessActions/wahlbriefdaten/wahlbezirkID").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsString(requestBody));
-
-            api.perform(request).andExpect(status().isOk());
-        }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
+      val requestBodyAsString =
+          objectMapper.writeValueAsString(new BeanstandeteWahlbriefeCreateDTO(new HashMap<>()));
+      val request =
+          post("/businessActions/beanstandeteWahlbriefe/wahlbezirkID/2")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBodyAsString);
+
+      Mockito.doNothing()
+          .when(beanstandeteWahlbriefeService)
+          .setBeanstandeteWahlbriefe(Mockito.any());
+
+      api.perform(request).andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class Wahlbriefdaten {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
+
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      val request = get("/businessActions/wahlbriefdaten/wahlbezirkID");
+
+      api.perform(request).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
+      val request =
+          post("/businessActions/wahlbriefdaten/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
+      val requestBody = new WahlbriefdatenWriteDTO(null, null, null, null, null);
+      val request =
+          post("/businessActions/wahlbriefdaten/wahlbezirkID")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+
+      api.perform(request).andExpect(status().isOk());
+    }
+  }
 }

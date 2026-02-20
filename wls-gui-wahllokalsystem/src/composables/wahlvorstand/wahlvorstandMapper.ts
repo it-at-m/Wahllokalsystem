@@ -7,7 +7,10 @@ import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import type { Wahlvorstandsmitglied } from "@/types/wahlvorstand/Wahlvorstandsmitglied";
 
 import { WahlvorstandsmitgliedDTOFunktionEnum } from "@/api/wls-clients/generated-wahlvorstand-api";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion";
+
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useWahlvorstandMapper() {
   function toModel(wahlvorstand: WahlvorstandDTO): Wahlvorstand {
@@ -30,7 +33,7 @@ export function useWahlvorstandMapper() {
       );
 
     return {
-      anwesenheitBeginn: datetime.toISOString(),
+      anwesenheitBeginn: toYyyyMmDdWithTimeWithoutTimezoneOffset(datetime),
       wahlvorstandsmitglieder: wahlvorstandsmitgliederAsDTO,
     };
   }
@@ -39,11 +42,11 @@ export function useWahlvorstandMapper() {
     wahlvorstandmitglied: WahlvorstandsmitgliedDTO
   ): Wahlvorstandsmitglied {
     return {
-      anwesend: wahlvorstandmitglied.anwesend ?? false,
+      anwesend: false,
       familienname: wahlvorstandmitglied.familienname,
       funktion: funktionDtoToFunktionModel(wahlvorstandmitglied.funktion),
       funktionsname: wahlvorstandmitglied.funktionsname,
-      identifikator: wahlvorstandmitglied.identifikator ?? "",
+      identifikator: wahlvorstandmitglied.identifikator,
       vorname: wahlvorstandmitglied.vorname,
     };
   }
@@ -62,12 +65,8 @@ export function useWahlvorstandMapper() {
   }
 
   function funktionModelToFunktionDto(
-    funktionAsModel?: WahlvorstandsmitgliedFunktionEnum
-  ): WahlvorstandsmitgliedDTOFunktionEnum | undefined {
-    if (!funktionAsModel) {
-      return undefined;
-    }
-
+    funktionAsModel: WahlvorstandsmitgliedFunktionEnum
+  ): WahlvorstandsmitgliedDTOFunktionEnum {
     switch (funktionAsModel) {
       case "SB":
         return WahlvorstandsmitgliedDTOFunktionEnum.Sb;
@@ -83,12 +82,8 @@ export function useWahlvorstandMapper() {
   }
 
   function funktionDtoToFunktionModel(
-    funktionAsModel?: WahlvorstandsmitgliedDTOFunktionEnum
-  ): WahlvorstandsmitgliedFunktionEnum | undefined {
-    if (!funktionAsModel) {
-      return undefined;
-    }
-
+    funktionAsModel: WahlvorstandsmitgliedDTOFunktionEnum
+  ): WahlvorstandsmitgliedFunktionEnum {
     switch (funktionAsModel) {
       case "SB":
         return WahlvorstandsmitgliedFunktionEnum.Sb;

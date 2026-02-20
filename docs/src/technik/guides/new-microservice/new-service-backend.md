@@ -11,6 +11,12 @@ Für den neuen Service wird ein Ordner parallel zu den anderen Services angelegt
 In dem Ordner wird das Maven-Projekt eingerichtet. Dazu aus den [RefArch-Templates](https://github.com/it-at-m/refarch-templates/tree/main/refarch-backend/)
 die Dateien des jeweiligen Unterordners in den erstellten Projektordner kopieren.
 
+> [!NOTE]
+>
+> Damit die [IntelliJ-Runconfigurationen](https://it-at-m.github.io/Wahllokalsystem/technik/get_started/#runconfigurations)
+> verwendbar sind, muss das Projekt importiert sein. Der Import
+> erfolgt über das Kontextmenü der `pom.xml` > `+ Add as Maven Project`.
+
 ### Pflege der Dependencies und Plugins
 
 Einen Überblick über die verwendeten Dependencies und Plugins geben die vorhandenen Services. Der Broadcast-Service ist
@@ -62,11 +68,55 @@ jobs:
       pom-dir: 'wls-<domain>-service'
 ```
 
+```yml {20} [dispatch-microservice-maven-release.yml]
+name: dispatch microservice maven release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        required: true
+        description: release version to build
+      development-version:
+        required: true
+        description: next development version to set
+      service:
+        required: true
+        type: choice
+        description: service/directory to build (wls-broadcast-service, ...)
+        options:
+          - wls-auth-service
+          - wls-basisdaten-service
+          # - further services -
+          - wls-<domain>-service
+```
+
+```yml {14} [dispatch-create-github-container-image.yml]
+name: dispatch build github container image
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        required: true
+        type: choice
+        description: service/directory to build (wls-broadcast-service, ...)
+        options:
+          - wls-auth-service
+          - wls-basisdaten-service
+          # - further services -
+          - wls-<domain>-service
+      tag:
+        required: false
+        description: 'optional: gittag'
+```
+
 :::
 <!-- prettier-ignore-end -->
 ## Datenbank einrichten
 
-Jeder Service hat einen eigenen Benutzer für die Datenbank. Diese sind im File `stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
+Jeder Service hat ein eigenes Benutzerkonto für die Datenbank. Diese sind im File
+`stack/oracle-database/add-user-on-startup.sql` hinterlegt. Die Zugriffs-URL ist für alle Services gleich:
 `jdbc:oracle:thin:@//localhost:1521/XEPDB1`
 
 Dabei sollte auf folgendes Schema geachtet werden:

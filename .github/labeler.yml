@@ -1,3 +1,6 @@
+"api-gateway":
+  - changed-files:
+      - any-glob-to-any-file: [ 'wls-api-gateway/**' ]
 "documentation":
   - changed-files:
       - any-glob-to-any-file: [ 'docs/**' ]
@@ -24,7 +27,7 @@
       - any-glob-to-any-file: [ 'wls-ergebnismeldung-service/**' ]
 "wls-gui-admin":
   - changed-files:
-      - any-glob-to-any-file: [ 'wls-gui-admin/**' ]
+      - any-glob-to-any-file: [ 'wls-gui-admintool/**' ]
 "wls-gui-wahllokalsystem":
   - changed-files:
       - any-glob-to-any-file: [ 'wls-gui-wahllokalsystem/**' ]

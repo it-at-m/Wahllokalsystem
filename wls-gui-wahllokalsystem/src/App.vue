@@ -1,183 +1,110 @@
 <template>
   <v-app>
-    <the-snackbar />
-    <v-app-bar color="primary">
-      <v-row align="center">
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-start"
-        >
-          <v-app-bar-nav-icon @click.stop="toggleDrawer()" />
-          <router-link to="/">
-            <v-toolbar-title class="font-weight-bold">
-              <span class="text-white">WLS</span>
-            </v-toolbar-title>
-          </router-link>
-        </v-col>
-        <v-col
-          cols="6"
-          class="d-flex align-center justify-center"
-        ></v-col>
-        <v-col
-          cols="3"
-          class="d-flex align-center justify-end"
-        >
-          <!-- heartbeat uses v-model for two-way-binding -->
-          <wls-heartbeat v-model:is-offline="isOffline"></wls-heartbeat>
-          <v-tooltip
-            location="bottom"
-            text="Backend Communication Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_BACKEND }"
-              >
-                <v-btn
-                  icon="$messageText"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Routing Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_ROUTES_NEWROUTE }"
-              >
-                <v-btn
-                  icon="$routes"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-          <v-tooltip
-            location="bottom"
-            text="Datenvalidierung Examples"
-          >
-            <template #activator="{ props }">
-              <router-link
-                v-bind="props"
-                :to="{ name: EXAMPLE_VALIDATION }"
-              >
-                <v-btn
-                  icon="$textBoxCheck"
-                  variant="text"
-                  density="comfortable"
-                  size="x-large"
-                  color="white"
-                >
-                </v-btn>
-              </router-link>
-            </template>
-          </v-tooltip>
-        </v-col>
-      </v-row>
-    </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
-      <v-list>
-        <v-list-item
-          title="Wahlvorstand"
-          :to="ROUTE_WAHLVORSTAND"
-        />
-      </v-list>
-    </v-navigation-drawer>
+    <the-wls-app-bar />
     <v-main>
       <v-container fluid>
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ route, Component }">
           <v-fade-transition mode="out-in">
-            <component :is="Component" />
+            <!-- Keep alive is fundamental for our app, to work correctly - see doc for frontend architecture -->
+            <keep-alive>
+              <component
+                :is="Component"
+                :key="route.fullPath"
+              >
+                <!-- :key attribute is fundamental for our app, to work correctly with keep alive - see doc for frontend architecture -->
+              </component>
+            </keep-alive>
           </v-fade-transition>
         </router-view>
       </v-container>
     </v-main>
+    <the-testseite-drucken-dialog v-if="showTestdruckDialog" />
+    <the-broadcast-read-confirmation-dialog />
+    <the-wahlvorstand-anwesenheits-check-popup-dialog
+      v-if="isUWB && isTimeToCheckAnwesenheitInFuture"
+      data-test="wahlvorstand-anwesenheits-check-popup-dialog"
+    />
+    <the-wahlschluss-check-popup-dialog
+      v-if="isTimeToCheckWahlschlussInFuture"
+    />
   </v-app>
 </template>
 
 <script setup lang="ts">
-import { useToggle } from "@vueuse/core";
-import localforage from "localforage";
-import { onMounted, ref } from "vue";
-import {
-  VApp,
-  VAppBar,
-  VAppBarNavIcon,
-  VBtn,
-  VCol,
-  VContainer,
-  VFadeTransition,
-  VList,
-  VListItem,
-  VMain,
-  VNavigationDrawer,
-  VRow,
-  VToolbarTitle,
-  VTooltip,
-} from "vuetify/components";
+import { storeToRefs } from "pinia";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
-import { getUser } from "@/api/user-client";
-import TheSnackbar from "@/components/TheSnackbar.vue";
-import WlsHeartbeat from "@/components/wlsComponents/WlsHeartbeat.vue";
-import {
-  EXAMPLE_ROUTES_BACKEND,
-  EXAMPLE_ROUTES_NEWROUTE,
-  EXAMPLE_VALIDATION,
-  ROUTE_WAHLVORSTAND,
-} from "@/constants";
-import { useUserStore } from "@/stores/user";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
-import User, { UserLocalDevelopment } from "@/types/User";
+import TheBroadcastReadConfirmationDialog from "@/components/broadcast/TheBroadcastReadConfirmationDialog.vue";
+import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlschlussCheckPopupDialog.vue";
+import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
+import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
+import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
+import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
+import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
+import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
+import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const userStore = useUserStore();
-const wahlvorstandStore = useWahlvorstandStore();
-const [drawer, toggleDrawer] = useToggle();
-const isOffline = ref(false);
+const { awaitServiceWorkerActive } = useServiceWorkerUtils();
+const { syncPin } = useServiceWorkerPinSyncer();
 
-onMounted(() => {
-  loadUser();
+const { loadUser } = useUserStore();
+const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
+  useInfomanagementStore()
+);
+const { isUWB } = storeToRefs(useUserStore());
+const { initTasks } = useInitTaskManagerStore();
+const { wahlenActions } = useWahlenStore();
+const { isTodayOrFuture } = useDateTimeUtils();
 
+const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
+  useBroadcastCronjobService();
+
+const isTimeToCheckAnwesenheitInFuture = computed(() =>
+  dateTimeToCheckAnwesenheit.value
+    ? isTodayOrFuture(dateTimeToCheckAnwesenheit.value)
+    : false
+);
+const showTestdruckDialog = ref(false);
+
+const isTimeToCheckWahlschlussInFuture = computed(() =>
+  dateTimeToCheckWahlschluss.value
+    ? isTodayOrFuture(dateTimeToCheckWahlschluss.value)
+    : false
+);
+
+const indexDBSingleton = useIndexDB();
+
+onMounted(async () => {
   // config for service worker indexed db (same config as in wahl-worker.js !)
-  localforage.config({
-    driver: localforage.INDEXEDDB,
-    name: "wahldb",
-    version: 1.0,
-    storeName: "wahlstore",
-    description: "store for wahlnumber",
-  });
+  indexDBSingleton.setupIndexDB();
+
+  try {
+    await loadUser();
+    await awaitServiceWorkerActive();
+    await syncPin();
+    await wahlenActions.initWahlen();
+    startBroadcastMessageInterval();
+    await initTasks();
+
+    showTestdruckDialog.value = true;
+  } catch (error) {
+    console.debug(error);
+  }
 });
 
-/**
- * Loads UserInfo from the backend and sets it in the store.
- */
-function loadUser(): void {
-  getUser()
-    .then((user: User) => userStore.setUser(user))
-    .catch(() => {
-      // No user info received, so fallback
-      if (import.meta.env.DEV) {
-        userStore.setUser(UserLocalDevelopment());
-      } else {
-        userStore.setUser(null);
-      }
-    })
-    .then(() => wahlvorstandStore.loadWahlvorstand());
-}
+onUnmounted(() => {
+  stopBroadcastMessageInterval();
+});
 </script>
 
 <style>
+@import "@fontsource/roboto/400.css";
+
 .main {
   background-color: white;
 }

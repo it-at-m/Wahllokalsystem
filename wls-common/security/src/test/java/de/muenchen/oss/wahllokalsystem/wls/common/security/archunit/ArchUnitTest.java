@@ -1,13 +1,18 @@
 package de.muenchen.oss.wahllokalsystem.wls.common.security.archunit;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.OAuth2TokenInterceptor;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.condition.NestedTestsuitesHaveMatchingMethodCondition;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,26 +20,67 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allTestClasses;
+  private static JavaClasses allTestClasses;
+  private static JavaClasses allClasses;
 
-    @BeforeAll
-    static void init() {
-        allTestClasses = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(OAuth2TokenInterceptor.class.getPackage().getName());
-    }
+  @BeforeAll
+  static void init() {
+    allTestClasses =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(OAuth2TokenInterceptor.class.getPackage().getName());
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("allTestClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allTestClasses);
-    }
+    allClasses =
+        new ClassFileImporter().importPackages(OAuth2TokenInterceptor.class.getPackage().getName());
+  }
 
-    public static Stream<Arguments> allTestClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of("TEST_NAMING_CONVENTION_RULE", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED", MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
-    }
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allTestClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(
+      final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allTestClasses);
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allClasses);
+  }
+
+  public static Stream<Arguments> allTestClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "TEST_NAMING_CONVENTION_RULE",
+            MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+        Arguments.of(
+            "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
+            MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
+  }
+
+  private static Stream<Arguments> allClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
+            RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+            MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
+  }
+
+  // override RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED to add custom
+  // TestNames to excluded Files
+  // cause: "ProfilesTest" has no matching methods in "Profiles", but @Nested classes are required
+  // to test different profiles
+  private static final ArchRule
+      RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED =
+          classes()
+              .that()
+              .areAnnotatedWith(Nested.class)
+              .should(new NestedTestsuitesHaveMatchingMethodCondition(Set.of("ProfilesTest")));
 }

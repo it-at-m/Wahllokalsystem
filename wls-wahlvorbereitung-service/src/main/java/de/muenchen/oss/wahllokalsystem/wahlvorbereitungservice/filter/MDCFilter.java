@@ -15,24 +15,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class MDCFilter implements Filter {
 
-    @Override
-    public void destroy() {
-    }
+  @Override
+  public void destroy() {}
 
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String user = (authentication != null && authentication.getPrincipal() != null) ? authentication.getPrincipal().toString() : "unknown";
-        MDC.put("principal", user);
+  @Override
+  public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+      throws IOException, ServletException {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String user =
+        (authentication != null && authentication.getPrincipal() != null)
+            ? authentication.getPrincipal().toString()
+            : "unknown";
+    MDC.put("principal", user);
 
-        try {
-            chain.doFilter(req, resp);
-        } finally {
-            MDC.remove("principal");
-        }
+    try {
+      chain.doFilter(req, resp);
+    } finally {
+      MDC.remove("principal");
     }
+  }
 
-    @Override
-    public void init(FilterConfig arg0) throws ServletException {
-    }
+  @Override
+  public void init(FilterConfig arg0) throws ServletException {}
 }

@@ -13,8 +13,8 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlbezirke.Wahl
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlen.WahlRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlbezirke.WahlbezirkModelMapper;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahlen.WahlModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModelMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
@@ -42,172 +42,218 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = MicroServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 public class WahlbezirkeControllerIntegrationTest {
 
-    @Value("${service.info.oid}")
-    String serviceID;
+  @Value("${service.info.oid}")
+  String serviceID;
 
-    @Autowired
-    MockMvc api;
+  @Autowired MockMvc api;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired ObjectMapper objectMapper;
 
-    @Autowired
-    WahlbezirkDTOMapper wahlbezirkDTOMapper;
+  @Autowired WahlbezirkDTOMapper wahlbezirkDTOMapper;
 
-    @Autowired
-    WahlbezirkModelMapper wahlbezirkModelMapper;
+  @Autowired WahlbezirkModelMapper wahlbezirkModelMapper;
 
-    @Autowired
-    WahlbezirkeClientMapper wahlbezirkeClientMapper;
+  @Autowired WahlbezirkeClientMapper wahlbezirkeClientMapper;
 
-    @Autowired
-    WahlModelMapper wahlModelMapper;
+  @Autowired WahlModelMapper wahlModelMapper;
 
-    @Autowired
-    WahlbezirkRepository wahlbezirkRepository;
+  @Autowired WahlbezirkRepository wahlbezirkRepository;
 
-    @Autowired
-    WahltagRepository wahltagRepository;
+  @Autowired WahltagRepository wahltagRepository;
 
-    @Autowired
-    WahlRepository wahlRepository;
+  @Autowired WahlRepository wahlRepository;
 
-    @Autowired
-    ExceptionFactory exceptionFactory;
+  @Autowired ExceptionFactory exceptionFactory;
 
-    @AfterEach
-    void teardown() {
-        SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLBEZIRK, Authorities.REPOSITORY_DELETE_WAHL, Authorities.REPOSITORY_DELETE_WAHLTAG);
-        wahlbezirkRepository.deleteAll();
-        wahlRepository.deleteAll();
-        wahltagRepository.deleteAll();
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(
+        Authorities.REPOSITORY_DELETE_WAHLBEZIRK,
+        Authorities.REPOSITORY_DELETE_WAHL,
+        Authorities.REPOSITORY_DELETE_WAHLTAG);
+    wahlbezirkRepository.deleteAll();
+    wahlRepository.deleteAll();
+    wahltagRepository.deleteAll();
+  }
+
+  @BeforeEach
+  void setup() {
+    WireMock.resetAllRequests();
+  }
+
+  @Nested
+  class GetWahlbezirke {
+
+    @Test
+    void should_returnWahlbezirkDTOList_when_loadedFromExternal() throws Exception {
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
+      val wahltagNummer = "nummerWahltag1";
+      val wahlen = MockDataFactory.createWahlEntityList();
+      wahlRepository.saveAll(wahlen);
+
+      val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+
+      val repoWahltage = MockDataFactory.createWahltagList("");
+      wahltagRepository.saveAll(repoWahltage);
+
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
+
+      val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsDTO =
+          objectMapper.readValue(
+              responseFromController.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO[]
+                  .class);
+
+      val expectedResponseBody =
+          wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
+              List.copyOf(
+                  wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke)));
+
+      Assertions.assertThat(responseBodyAsDTO)
+          .containsExactlyInAnyOrderElementsOf(expectedResponseBody);
     }
 
-    @BeforeEach
-    void setup() {
-        WireMock.resetAllRequests();
+    @Test
+    @Transactional
+    void should_returnWahlbezirkDTOList_when_externalDataIsPersisted() throws Exception {
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
+      val wahltagNummer = "nummerWahltag1";
+
+      val repoWahltage = MockDataFactory.createWahltagList("");
+      wahltagRepository.saveAll(repoWahltage);
+
+      val repoWahlen = MockDataFactory.createWahlEntityList();
+      wahlRepository.saveAll(repoWahlen);
+
+      val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.OK.value())
+                      .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
+
+      api.perform(request).andExpect(status().isOk()).andReturn();
+      val dataFromRepo = wahlbezirkRepository.findAll();
+      val expectedListOfData =
+          wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
+              (wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke))
+                  .stream().toList());
+      Assertions.assertThat(dataFromRepo)
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .isEqualTo(expectedListOfData);
     }
 
-    @Nested
-    class GetWahlbezirke {
+    @Test
+    void should_prioritizeRepo_when_loadedFromRemote() throws Exception {
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
 
-        @Test
-        void should_returnWahlbezirkDTOList_when_loadedFromExternal() throws Exception {
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-            val wahltagNummer = "nummerWahltag1";
-            val wahlen = MockDataFactory.createWahlEntityList();
-            wahlRepository.saveAll(wahlen);
+      val repoWahltage = MockDataFactory.createWahltagList("");
+      wahltagRepository.saveAll(repoWahltage);
 
-            val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
+      val entitiesToFindInRepository =
+          wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
+              wahlbezirkeClientMapper
+                  .fromRemoteSetOfDTOsToSetOfModels(
+                      MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate))
+                  .stream()
+                  .toList());
+      val savedEntitiesInRepository_1 = wahlbezirkRepository.saveAll(entitiesToFindInRepository);
 
-            val repoWahltage = MockDataFactory.createWahltagList("");
-            wahltagRepository.saveAll(repoWahltage);
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
 
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
+      val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyAsListOfDTOs =
+          objectMapper.readValue(
+              responseFromController.getResponse().getContentAsString(),
+              de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO[]
+                  .class);
 
-            val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsDTO = objectMapper.readValue(responseFromController.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO[].class);
+      WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
 
-            val expectedResponseBody = wahlbezirkDTOMapper
-                    .fromListOfWahlbezirkModelToListOfWahlbezirkDTO(List.copyOf(wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke)));
+      val expectedResponseBody_1 =
+          wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
+              wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(
+                  (List<Wahlbezirk>) savedEntitiesInRepository_1));
 
-            Assertions.assertThat(responseBodyAsDTO).containsExactlyInAnyOrderElementsOf(expectedResponseBody);
-        }
+      Assertions.assertThat(new ArrayList<>(Arrays.asList(responseBodyAsListOfDTOs)))
+          .usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .isEqualTo(expectedResponseBody_1);
 
-        @Test
-        @Transactional
-        void should_returnWahlbezirkDTOList_when_externalDataIsPersisted() throws Exception {
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-            val wahltagNummer = "nummerWahltag1";
+      val expectedResponseBody_2 =
+          wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
+              wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(
+                  wahlbezirkRepository.findAll()));
 
-            val repoWahltage = MockDataFactory.createWahltagList("");
-            wahltagRepository.saveAll(repoWahltage);
-
-            val repoWahlen = MockDataFactory.createWahlEntityList();
-            wahlRepository.saveAll(repoWahlen);
-
-            val eaiWahlbezirke = MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate);
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.OK.value())
-                            .withBody(objectMapper.writeValueAsBytes(eaiWahlbezirke))));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
-
-            api.perform(request).andExpect(status().isOk()).andReturn();
-            val dataFromRepo = wahlbezirkRepository.findAll();
-            val expectedListOfData = wahlbezirkModelMapper.fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(
-                    (wahlbezirkeClientMapper.fromRemoteSetOfDTOsToSetOfModels(eaiWahlbezirke)).stream().toList());
-            Assertions.assertThat(dataFromRepo).usingRecursiveComparison().ignoringCollectionOrder().isEqualTo(expectedListOfData);
-        }
-
-        @Test
-        void should_prioritizeRepo_when_loadedFromRemote() throws Exception {
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-
-            val repoWahltage = MockDataFactory.createWahltagList("");
-            wahltagRepository.saveAll(repoWahltage);
-
-            val entitiesToFindInRepository = wahlbezirkModelMapper
-                    .fromListOfWahlbezirkModeltoListOfWahlbezirkEntities(wahlbezirkeClientMapper
-                            .fromRemoteSetOfDTOsToSetOfModels(
-                                    MockDataFactory.createSetOfClientWahlbezirkDTO(forWahltagDate))
-                            .stream().toList());
-            val savedEntitiesInRepository_1 = wahlbezirkRepository.saveAll(entitiesToFindInRepository);
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
-
-            val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
-            val responseBodyAsListOfDTOs = objectMapper.readValue(responseFromController.getResponse().getContentAsString(),
-                    de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlbezirke.WahlbezirkDTO[].class);
-
-            WireMock.verify(0, WireMock.anyRequestedFor(WireMock.anyUrl()));
-
-            val expectedResponseBody_1 = wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
-                    wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel((List<Wahlbezirk>) savedEntitiesInRepository_1));
-
-            Assertions.assertThat(new ArrayList<>(Arrays.asList(responseBodyAsListOfDTOs)))
-                    .usingRecursiveComparison().ignoringCollectionOrder()
-                    .isEqualTo(expectedResponseBody_1);
-
-            val expectedResponseBody_2 = wahlbezirkDTOMapper.fromListOfWahlbezirkModelToListOfWahlbezirkDTO(
-                    wahlbezirkModelMapper.fromListOfWahlbezirkEntityToListOfWahlbezirkModel(wahlbezirkRepository.findAll()));
-
-            Assertions.assertThat(responseBodyAsListOfDTOs).containsExactlyInAnyOrderElementsOf(expectedResponseBody_2);
-        }
-
-        @Test
-        void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
-            val forWahltagDate = LocalDate.now().minusMonths(2);
-            val wahltagID = "_identifikatorWahltag1";
-            val wahltagNummer = "nummerWahltag1";
-            val repoWahltage = MockDataFactory.createWahltagList("");
-            wahltagRepository.saveAll(repoWahltage);
-
-            WireMock.stubFor(WireMock.get("/wahldaten/wahlbezirk?forDate=" + forWahltagDate + "&withNummer=" + wahltagNummer)
-                    .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json").withStatus(HttpStatus.NOT_FOUND.value())));
-
-            val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
-
-            val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
-            val responseBodyAsWlsExceptionDTO = objectMapper.readValue(response.getResponse().getContentAsString(), WlsExceptionDTO.class);
-
-            val expectedWlsExceptionDTO = new WlsExceptionDTO(WlsExceptionCategory.T,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(), serviceID,
-                    ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
-            Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
-        }
+      Assertions.assertThat(responseBodyAsListOfDTOs)
+          .containsExactlyInAnyOrderElementsOf(expectedResponseBody_2);
     }
+
+    @Test
+    void should_returnTechnischeWlsException_when_noExternalDataFound() throws Exception {
+      val forWahltagDate = LocalDate.now().minusMonths(2);
+      val wahltagID = "_identifikatorWahltag1";
+      val wahltagNummer = "nummerWahltag1";
+      val repoWahltage = MockDataFactory.createWahltagList("");
+      wahltagRepository.saveAll(repoWahltage);
+
+      WireMock.stubFor(
+          WireMock.get(
+                  "/wahldaten/wahlbezirk?forDate="
+                      + forWahltagDate
+                      + "&withNummer="
+                      + wahltagNummer)
+              .willReturn(
+                  WireMock.aResponse()
+                      .withHeader("Content-Type", "application/json")
+                      .withStatus(HttpStatus.NOT_FOUND.value())));
+
+      val request = MockMvcRequestBuilders.get("/businessActions/wahlbezirke/" + wahltagID);
+
+      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedWlsExceptionDTO =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.T,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.code(),
+              serviceID,
+              ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+  }
 }

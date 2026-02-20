@@ -2,63 +2,42 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Wahlen
-## Hier wird das Datum des Wahltages mit der wahltagID1 gesetzt (today - 2 months) - siehe DummyClient
-< {%
-    const wahltag = new Date();
-    wahltag.setMonth(wahltag.getMonth() - 2);
-    const wahltagAsDateString = wahltag.toJSON().substring(0, 10);
-    request.variables.set("dateOfWahltagID1", wahltagAsDateString);
-%}
-POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/wahltagID1
+### POST Wahlen | user wls_all_uwb + wls_all_bwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 [
   {
-    "wahlID": "wahl1",
-    "name": "aName_1",
+    "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+    "name": "Europawahl",
+    "reihenfolge": 2,
+    "waehlerverzeichnisNummer": 1,
+    "wahltag": "2026-01-01",
+    "wahlart": "EUW",
+    "farbe": {
+      "r": 0,
+      "g": 1,
+      "b": 2
+    },
+    "nummer": "2"
+  },
+  {
+    "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+    "name": "Stadtratswahl",
     "reihenfolge": 1,
-    "waehlerverzeichnisnummer": 1,
-    "wahltag": "{{ dateOfWahltagID1 }}",
-    "wahlart": "BTW",
+    "waehlerverzeichnisNummer": 1,
+    "wahltag": "2026-01-01",
+    "wahlart": "SRW",
     "farbe": {
       "r": 0,
       "g": 1,
       "b": 2
     },
     "nummer": "1"
-  },
-  {
-    "wahlID": "wahl2",
-    "name": "1",
-    "reihenfolge": 2,
-    "waehlerverzeichnisnummer": 1,
-    "wahltag": "{{ dateOfWahltagID1 }}",
-    "wahlart": "EUW",
-    "farbe": {
-      "r": 3,
-      "g": 4,
-      "b": 5
-    },
-    "nummer": "1"
-  },
-  {
-    "wahlID": "wahl3",
-    "name": "2-",
-    "reihenfolge": 3,
-    "waehlerverzeichnisnummer": 1,
-    "wahltag": "{{ dateOfWahltagID1 }}",
-    "wahlart": "LTW",
-    "farbe": {
-      "r": 6,
-      "g": 7,
-      "b": 8
-    },
-    "nummer": "1"
   }
 ]
 
-### GET Wahlen
-GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/wahltagID1
+### GET Wahlen | user wls_all_uwb + wls_all_bwb
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahlen/827e9e6a-ebe9-483f-a9cd-162b26f348e8
 Authorization: Bearer {{$auth.token("auth-service")}}

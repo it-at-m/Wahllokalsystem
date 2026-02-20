@@ -63,8 +63,11 @@ Im Terminal kann, wenn man sich innerhalb der `wls-gui-wahllokalsystem`-Director
 `openapi.json`-File mit folgendem Befehl der entsprechende Code generiert werden:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api
+openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api --type-mappings=set=Array
 ```
+
+> [!NOTE]
+> `--type-mappings=set=Array` sorgt dafür, dass an Stelle von Sets Arrays generiert werden.
 
 Dabei gilt:
 
@@ -79,12 +82,12 @@ Dabei gilt:
 Der komplette, zusammengesetzte Befehl für die Generierung der Broadcast API über das Terminal würde so aussehen:
 
 ```shell
-openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api
+openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api --type-mappings=set=Array
 ```
 
 :::
 
-#### 2) Ausführen des Skripts `gen:<domain>-api`
+### 2) Ausführen des Skripts `gen:<domain>-api`
 
 In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werden. Das sieht dann so aus:
 
@@ -92,7 +95,7 @@ In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werd
  "scripts": {
     "dev": "vite",
     /* ... */
-    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api " // [!code ++]
+    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/<openapi-file> -g typescript-axios -o src/api/wls-clients/generated-<domain>-api --type-mappings=set=Array" // [!code ++]
   },
 ```
 
@@ -101,7 +104,7 @@ Der komplette Befehl für die Generierung der Broadcast API über das `package.j
 
 ```json
  "scripts": {
-    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api "
+    "gen:<domain>-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api --type-mappings=set=Array"
   },
 ```
 
@@ -147,14 +150,11 @@ werden:
 
 ::: code-group
 
-```typescript [useBroadcastService.ts]
-import {
-  BroadcastControllerApi,
-  Configuration,
-} from "@/api/wls-clients/generated-broadcast-api";
+```typescript [broadcastService.ts]
+import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
-export function useBroadcastService() {
+export function broadcastService() {
   const broadcastCA = new BroadcastControllerApi(
     new Configuration({ basePath: BROADCAST_SERVICE_API_URL })
   );
@@ -164,32 +164,27 @@ export function useBroadcastService() {
 ```typescript [constants.ts]
 const WLS_SERVICE_API_URL = "/api/";
 
-export const BROADCAST_SERVICE_API_URL =
-  WLS_SERVICE_API_URL + "broadcast-service";
+export const BROADCAST_SERVICE_API_URL = WLS_SERVICE_API_URL + "broadcast-service";
 ```
 
 :::
 
 Die Api-Aufrufe erfolgen dann zum Beispiel so:
 
-```typescript {10,18}
-// useBroadcastService.ts
-import {
-  BroadcastControllerApi,
-  Configuration,
-} from "@/api/wls-clients/generated-broadcast-api";
+```typescript {10,17}
+// broadcastService.ts
+import { BroadcastControllerApi, Configuration } from "@/api/wls-clients/generated-broadcast-api";
 import { BROADCAST_SERVICE_API_URL } from "@/constants";
 
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(/* ... */);
 
-  async function getMessage(wahlbezirkID: string) { // [!code focus:23]
-    try {
+  async function getMessage(wahlbezirkID: string) { 
+    try { // [!code focus:15]
       const response = await broadcastCA.getMessage(wahlbezirkID);
       if (response.status == 204) {
         return { message: "", error: "Es konnten keine Daten gefunden werden" };
       }
-
       const messageDTO = response.data;
       const nachrichtID = messageDTO.oid;
       try {
@@ -200,13 +195,11 @@ export function useBroadcastService() {
           error: "Es ist ein Fehler beim Lesen der Nachricht aufgetreten",
         };
       }
-
       return { message: messageDTO.nachricht, error: "" };
     } catch (e) {
       return { message: "", error: (e as Error).message };
     }
   }
-
   return { getMessage };
 }
 ```
@@ -214,8 +207,8 @@ export function useBroadcastService() {
 Im Fall eines `400`er Codes in der Response, was in den meisten Fällen einer WlsException entspricht, können diese Werte
 dann wie folgt aufgerufen und weiterverarbeitet werden:
 
-```typescript {21-24}
-// useBroadcastService.ts
+```typescript {24-28}
+// broadcastService.ts
 import type { BroadcastMessageDTO } from "@/api/wls-clients/generated-broadcast-api";
 
 import axios from "axios";
@@ -230,31 +223,17 @@ import { BROADCAST_SERVICE_API_URL } from "@/constants";
 export function useBroadcastService() {
   const broadcastCA = new BroadcastControllerApi(/* ... */);
 
-  async function getMessage(wahlbezirkID: string) {
-    /* ... */
-  }
+  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) { 
+    const broadcastMessageDTO = { wahlbezirkIDs, nachricht } as BroadcastMessageDTO;
 
-  async function postMessage(nachricht: string, wahlbezirkIDs: string[]) {
-    // [!code focus:20]
-    const broadcastMessageDTO = {
-      wahlbezirkIDs,
-      nachricht,
-    } as BroadcastMessageDTO;
-
-    try {
+    try { // [!code focus:12]
       await broadcastCA.broadcast(broadcastMessageDTO);
       return { error: "" };
     } catch (e) {
       if (axios.isAxiosError(e)) {
         if (e.response) {
           const error: WLSError = e.response.data;
-          const errorMessage =
-            error.service +
-            " - " +
-            error.message +
-            " (Code: " +
-            error.code +
-            ")";
+          const errorMessage = error.service + " - " + error.message + " (Code: " + error.code + ")";
           return { error: errorMessage };
         } else {
           return { error: "Fehler beim Senden der Broadcast Nachricht" };
@@ -264,11 +243,7 @@ export function useBroadcastService() {
       }
     }
   }
-
-  return {
-    getMessage,
-    postMessage,
-  };
+  return { getMessage, postMessage };
 }
 ```
 

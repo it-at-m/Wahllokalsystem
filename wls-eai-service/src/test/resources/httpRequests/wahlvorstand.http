@@ -2,54 +2,82 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Wahlvorstand wbz1
-GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000001
+### GET Wahlvorstand | user wls_all_uwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Wahlvorstand wbz2
-GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000002
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### GET Wahlvorstand wbz3
-GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000003
-Authorization: Bearer {{$auth.token("auth-service")}}
-
-### GET Wahlvorstand wbz4
-GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-0000-0000-0000-000000000004
+### GET Wahlvorstand | user wls_all_bwb
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
 ### GET Wahlvorstand not found
-GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=00000000-9999-0000-0000-000000000000
+GET {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende?wahlbezirkID=wahlbezirkID_X
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### PUT Update Wahlvorstand wbz4
+### PUT Update Wahlvorstand | user wls_all_bwb
 PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "00000000-0000-0000-0000-000000000004",
-  "anwesenheitBeginn": "2024-06-14T19:01:12.456",
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "anwesenheitBeginn": "2026-01-01T19:01:12.456",
   "mitglieder": [
     {
       "anwesend": true,
-      "identifikator": "00000000-0000-0000-0004-000000000001"
+      "identifikator": "00000000-0000-0000-0002-000000000001"
     },
     {
       "anwesend": false,
-      "identifikator": "00000000-0000-0000-0004-000000000002"
+      "identifikator": "00000000-0000-0000-0002-000000000002"
     },
     {
       "anwesend": true,
-      "identifikator": "00000000-0000-0000-0004-000000000003"
+      "identifikator": "00000000-0000-0000-0002-000000000003"
     },
     {
       "anwesend": false,
-      "identifikator": "00000000-0000-0000-0004-000000000004"
+      "identifikator": "00000000-0000-0000-0002-000000000004"
     },
     {
       "anwesend": true,
-      "identifikator": "00000000-0000-0000-0004-000000000005"
+      "identifikator": "00000000-0000-0000-0002-000000000005"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0002-000000000006"
+    }
+  ]
+}
+
+### PUT Update Wahlvorstand | user wls_all_uwb
+PUT {{ WLS_EAI_SERVICE_URL }}/wahlvorstaende/anwesenheit
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "anwesenheitBeginn": "2026-01-01T19:01:12.456",
+  "mitglieder": [
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0001-000000000001"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0001-000000000002"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0001-000000000003"
+    },
+    {
+      "anwesend": false,
+      "identifikator": "00000000-0000-0000-0001-000000000004"
+    },
+    {
+      "anwesend": true,
+      "identifikator": "00000000-0000-0000-0001-000000000005"
     }
   ]
 }

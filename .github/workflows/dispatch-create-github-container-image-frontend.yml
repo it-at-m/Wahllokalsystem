@@ -9,6 +9,7 @@ on:
         description: frontend-service/directory to build (wls-gui-wahllokalsystem, ...)
         options:
           - wls-gui-wahllokalsystem
+          - wls-gui-admintool
       tag:
         required: false
         description: 'optional: gittag'

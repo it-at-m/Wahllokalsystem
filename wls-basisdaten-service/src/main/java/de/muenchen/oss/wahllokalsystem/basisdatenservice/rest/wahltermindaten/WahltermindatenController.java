@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahltermindaten;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.services.wahltermindaten.WahltermindatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.WahltermindatenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,33 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class WahltermindatenController {
 
-    private final WahltermindatenService wahltermindatenService;
+  private final WahltermindatenService wahltermindatenService;
 
-    @Operation(
-            description = "Triggert die Einrichtung der Wahltermindaten.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahltermindaten werden angelegt."
-                    )
-            }
-    )
-    @PutMapping("wahltermindaten/{wahltagID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void putWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
-        wahltermindatenService.putWahltermindaten(wahltagID);
-    }
+  @Operation(
+      description = "Triggert die Einrichtung der Wahltermindaten.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Die Wahltermindaten werden angelegt.")
+      })
+  @PutMapping("wahltermindaten/{wahltagID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void putWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+    wahltermindatenService.putWahltermindaten(wahltagID);
+  }
 
-    @Operation(
-            description = "Löscht die Wahltermindaten eines bestimmten Wahltags.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200", description = "Die Wahltermindaten werden gelöscht."
-                    )
-            }
-    )
-    @DeleteMapping("wahltermindaten/{wahltagID}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
-        wahltermindatenService.deleteWahltermindaten(wahltagID);
-    }
+  @Operation(
+      description = "Löscht die Wahltermindaten eines bestimmten Wahltags.",
+      responses = {
+        @ApiResponse(responseCode = "200", description = "Die Wahltermindaten werden gelöscht.")
+      })
+  @DeleteMapping("wahltermindaten/{wahltagID}")
+  @ResponseStatus(HttpStatus.OK)
+  public void deleteWahltermindaten(@PathVariable("wahltagID") String wahltagID) {
+    wahltermindatenService.deleteWahltermindaten(wahltagID);
+  }
 }

@@ -1,16 +1,17 @@
 <template>
   <div>
-    <v-icon icon="$updateTime" />Letzte Aktualisierungszeit:
-    {{ time(wahlvorstandStore.lastLoading) }}
+    <v-icon
+      icon="$updateTime"
+      class="mr-2"
+    />
+    Letzte Aktualisierungszeit: {{ toHhMmSs(wahlvorstandStore.lastLoading) }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { VIcon } from "vuetify/components";
-
-import useFormatter from "@/composables/common/formatter";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
-const { time } = useFormatter();
+const { toHhMmSs } = useDateTimeFormatter();
 const wahlvorstandStore = useWahlvorstandStore();
 </script>

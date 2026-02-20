@@ -1,19 +1,43 @@
 import "vuetify/styles";
 
 import {
+  mdiAlert,
+  mdiArrowRightBold,
+  mdiCheckCircle,
+  mdiCloudUpload,
   mdiContentSave,
+  mdiContentSaveCheck,
+  mdiDelete,
+  mdiDiameterVariant,
+  mdiEmail,
+  mdiFileDocumentOutline,
+  mdiHelpCircleOutline,
   mdiHome,
-  mdiMessageText,
+  mdiInformationOutline,
+  mdiLockOutline,
+  mdiLogout,
+  mdiMapSearch,
+  mdiPencil,
+  mdiPhone,
+  mdiPlus,
+  mdiPlusCircle,
+  mdiPrinter,
   mdiReload,
+  mdiRemoteDesktop,
   mdiRoutes,
   mdiSend,
   mdiSignalCellular3,
   mdiSignalOff,
   mdiTextBoxCheck,
+  mdiTextBoxOutline,
+  mdiToaster,
   mdiUpdate,
+  mdiVote,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
+
+import { PRIMARY_COLOR } from "@/constants.ts";
 
 export default createVuetify({
   icons: {
@@ -22,14 +46,36 @@ export default createVuetify({
       ...aliases,
       home: mdiHome,
       routes: mdiRoutes,
-      messageText: mdiMessageText,
       textBoxCheck: mdiTextBoxCheck,
       signalOffline: mdiSignalOff,
       signalOnline: mdiSignalCellular3,
       reload: mdiReload,
       save: mdiContentSave,
+      delete: mdiDelete,
+      add: mdiPlus,
       send: mdiSend,
       updateTime: mdiUpdate,
+      toaster: mdiToaster,
+      printer: mdiPrinter,
+      invalid: mdiDiameterVariant,
+      wahlbezirksartUWB: mdiVote,
+      wahlbezirksartBWB: mdiEmail,
+      information: mdiInformationOutline,
+      addCircle: mdiPlusCircle,
+      help: mdiHelpCircleOutline,
+      phone: mdiPhone,
+      fileDocument: mdiFileDocumentOutline,
+      mapSearch: mdiMapSearch,
+      remoteDesktop: mdiRemoteDesktop,
+      edit: mdiPencil,
+      valid: mdiCheckCircle,
+      summary: mdiTextBoxOutline,
+      alert: mdiAlert,
+      continue: mdiArrowRightBold,
+      cloudUpload: mdiCloudUpload,
+      logout: mdiLogout,
+      locked: mdiLockOutline,
+      saveSuccess: mdiContentSaveCheck,
     },
     sets: {
       mdi,
@@ -39,13 +85,40 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          primary: "#546e7a",
+          primary: PRIMARY_COLOR,
           secondary: "#FFCC00",
           accent: "#7BA4D9",
-          success: "#69BE28",
+          info: "#0000f0",
+          success: "#008c00",
           error: "#FF0000",
+          warning: "#E07400",
         },
       },
+    },
+  },
+  defaults: {
+    VCardTitle: {
+      class: "bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2",
+    },
+    VNumberInput: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VProgressLinear: {
+      height: 50,
+      color: "primary",
+    },
+    VAutocomplete: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VTextField: {
+      persistentClear: true,
+      clearable: true,
+    },
+    VTextarea: {
+      persistentClear: true,
+      clearable: true,
     },
   },
 });

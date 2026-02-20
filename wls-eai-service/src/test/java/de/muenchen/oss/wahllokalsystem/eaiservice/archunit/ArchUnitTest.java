@@ -5,6 +5,7 @@ import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import de.muenchen.oss.wahllokalsystem.eaiservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.ClassRules;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.archunit.rule.MethodRules;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,26 +16,98 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class ArchUnitTest {
 
-    private static JavaClasses allTestClasses;
+  private static JavaClasses allTestClasses;
+  private static JavaClasses allClasses;
+  private static JavaClasses allClassesWithoutTests;
 
-    @BeforeAll
-    static void init() {
-        allTestClasses = new ClassFileImporter()
-                .withImportOption(new ImportOption.OnlyIncludeTests())
-                .importPackages(MicroServiceApplication.class.getPackage().getName());
-    }
+  @BeforeAll
+  static void init() {
+    allTestClasses =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.OnlyIncludeTests())
+            .importPackages(MicroServiceApplication.class.getPackage().getName());
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("allTestClassesRulesToVerify")
-    void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(final ArgumentsAccessor arguments) {
-        arguments.get(1, ArchRule.class).check(allTestClasses);
-    }
+    allClasses =
+        new ClassFileImporter()
+            .importPackages(MicroServiceApplication.class.getPackage().getName());
 
-    public static Stream<Arguments> allTestClassesRulesToVerify() {
-        return Stream.of(
-                Arguments.of("RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED", MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
-                Arguments.of("RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED", MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
-                Arguments.of("TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED", MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
-    }
+    allClassesWithoutTests =
+        new ClassFileImporter()
+            .withImportOption(new ImportOption.DoNotIncludeTests())
+            .importPackages(MicroServiceApplication.class.getPackage().getName());
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allTestClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllTestClassesOfService_when_running(
+      final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allTestClasses);
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allClassesRulesToVerify")
+  void should_verifyArchUnitRuleForAllClasses_when_running(final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allClasses);
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("allClassesWithoutTestsRulesToVerify")
+  void should_verifyArchUnitRuleForAllClassesWithoutTests_when_running(
+      final ArgumentsAccessor arguments) {
+    arguments.get(1, ArchRule.class).check(allClassesWithoutTests);
+  }
+
+  public static Stream<Arguments> allTestClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED",
+            MethodRules.RULE_TEST_NAMING_CONVENTION_SHOULD_WHEN_MATCHED),
+        Arguments.of(
+            "RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_BEFORE_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED",
+            MethodRules.RULE_AFTER_EACH_NAMING_CONVENTION_MATCHED),
+        Arguments.of(
+            "TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED",
+            MethodRules.RULE_TEST_METHODS_ARE_PACKAGE_PRIVATE_CONVENTION_MATCHED));
+  }
+
+  private static Stream<Arguments> allClassesRulesToVerify() {
+    return Stream.of(
+        Arguments.of(
+            "RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED",
+            ClassRules.RULE_NESTED_TESTSUITE_HAS_CORRESPONDING_PUBLIC_METHOD_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED",
+            MethodRules.RULE_TESTCLASSES_END_WITH_TEST_CONVENTION_MATCHED));
+  }
+
+  private static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
+    return Stream.of(
+        // --- rest rules
+        Arguments.of(
+            "DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED",
+            ClassRules.RULE_DATAMODEL_IN_REST_ENDS_WITH_DTO_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED",
+            ClassRules.RULE_NO_DTOS_OR_CONTROLLERS_OUTSIDE_OF_REST_PACKAGE_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED",
+            ClassRules.RULE_NO_DATAMODEL_CROSS_DEPENDENCIES_INSIDE_REST_CONVENTION_MATCHED),
+        // --- service rules
+        Arguments.of(
+            "RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED",
+            ClassRules.RULE_NO_MODELS_OR_SERVICES_OUTSIDE_OF_SERVICE_PACKAGE_CONVENTION_MATCHED),
+        // --- domain rules
+        Arguments.of(
+            "RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED",
+            ClassRules.RULE_DATAMODEL_IN_DOMAIN_HAS_NO_ENDING_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED",
+            ClassRules.RULE_NO_ENTITIES_OR_REPOS_OUTSIDE_OF_DOMAIN_PACKAGE_CONVENTION_MATCHED),
+        Arguments.of(
+            "RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED",
+            ClassRules.RULE_NO_CROSS_DEPENDENCIES_INSIDE_DOMAIN_CONVENTION_MATCHED));
+  }
 }

@@ -22,7 +22,7 @@ Admintool bezeichnet werden.
 
 ::: code-group
 
-```yml {1,8-9,18} [wls-gui-&ltfrontend-name&gt_push-dev.yml]
+```yml {1,8-9,17} [wls-gui-&ltfrontend-name&gt_push-dev.yml]
 name: build push dev gui <frontend-name>
 
 on:
@@ -42,7 +42,7 @@ jobs:
       service: "wls-gui-<frontend-name>"
 ```
 
-```yml {1,6-7,14} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
+```yml {1,6-7,13} [wls-gui-&ltfrontend-name&gt_pull-request.yml]
 name: verify pull request gui <frontend-name>
 
 on:
@@ -58,12 +58,31 @@ jobs:
       package-dir: "wls-gui-<frontend-name>"
 ```
 
+```yml {13} [dispatch-create-github-container-image-frontend.yml]
+name: dispatch build github container image for frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        required: true
+        type: choice
+        description: frontend-service/directory to build (wls-gui-wahllokalsystem, ...)
+        options:
+          - wls-gui-wahllokalsystem
+          - wls-gui-admintool
+          - wls-gui-<domain>
+      tag:
+        required: false
+        description: 'optional: gittag'
+```
+
 :::
 
 ## Routing im Gateway einrichten
 
 Damit der Port und die URL für das neue Frontend-Projekt korrekt verknüpft wird, muss das
-[`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config/application-routes.yml)
+[`application-routes.yml`-File](https://github.com/it-at-m/Wahllokalsystem/blob/dev/stack/gateway_config_wls/application-routes.yml)
 entsprechend angepasst werden:
 
 ```yaml
@@ -72,8 +91,8 @@ spring:
     gateway:
       routes:
         # ...
-        - id: gui-<frontend-name> // [!code focus:4]
-          uri: http://kubernetes.docker.internal:<PORT>/
+        - id: gui-<frontend-name> # [!code focus:4]
+          uri: http://host.docker.internal:<PORT>/
           predicates:
             - Path=/<frontend-name>/**
 ```
@@ -85,5 +104,11 @@ spring:
 
 ## Ungenutzte Refarch-Elemente entfernen
 
-Damit der Code sauber und übersichtlich bleibt, sollten die Elemente des Refarch-Templates, die nicht für das Projekt
-benötigt werden, wie zum Beispiel [Mucatar](https://github.com/it-at-m/Wahllokalsystem/pull/661/files) entfernt werden.
+Folgende Elemente aus den Refarch-Templates können entfernt werden:
+
+- formatter.ts
+- Snackbar.ts und TheSnackbar.vue
+- SaveLeave.ts
+- Files zu Mucatar
+
+Im [Ticket](https://github.com/it-at-m/Wahllokalsystem/issues/903) wurde ein Frontend-Projekt, inklusive entfernen aller ungenutzten Elemente erstellt.

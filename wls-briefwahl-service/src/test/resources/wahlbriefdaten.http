@@ -2,8 +2,8 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wahlbriefdaten wbz-1
-POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wbz-1
+### POST wahlbriefdaten | user wls_all_uwb
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
@@ -12,9 +12,26 @@ Content-Type: application/json
   "nachtraeglichUeberbrachte": 1,
   "verzeichnisseUngueltige": 5,
   "wahlbriefe": 23,
-  "zeitNachtraeglichUeberbrachte": "2024-06-09T23:59:12.123"
+  "zeitNachtraeglichUeberbrachte": "2026-01-01T23:59:12.123"
 }
 
-### GET wahlbriefdaten wbz-1
-GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/wbz-1
+### GET wahlbriefdaten | user wls_all_uwb
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/9899cae4-df9a-4ffc-a940-f20cf2280171
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST wahlbriefdaten | user wls_all_bwb
+POST {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/9081145c-dc16-4a9b-8255-5c49ddb98c14
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "nachtraege": 12,
+  "nachtraeglichUeberbrachte": 1,
+  "verzeichnisseUngueltige": 5,
+  "wahlbriefe": 23,
+  "zeitNachtraeglichUeberbrachte": "2026-01-01T23:59:12.123"
+}
+
+### GET wahlbriefdaten | user wls_all_bwb
+GET {{ WLS_BRIEFWAHL_SERVICE_URL }}/businessActions/wahlbriefdaten/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}

@@ -4,66 +4,88 @@
  */
 package de.muenchen.oss.wahllokalsystem.adminservice.configuration;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.getAllServeEvents;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.adminservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.admin.model.ServeEventQuery;
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.adminservice.MicroServiceApplication;
-import org.junit.jupiter.api.Disabled;
+import de.muenchen.oss.wahllokalsystem.adminservice.rest.wahlen.WahlDTO;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(
-        classes = { MicroServiceApplication.class },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {
-                "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
-                "refarch.gracefulshutdown.pre-wait-seconds=0"
-        }
-)
-@ActiveProfiles(profiles = { SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE })
+    classes = MicroServiceApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+@AutoConfigureWireMock
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class UnicodeConfigurationTest {
 
-    //private static final String ENTITY_ENDPOINT_URL = "/theEntities";
+  @Autowired MockMvc api;
 
-    /**
-     * Decomposed string: String "Ä-é" represented with unicode letters "A◌̈-e◌́"
-     */
-    private static final String TEXT_ATTRIBUTE_DECOMPOSED = "\u0041\u0308-\u0065\u0301";
+  @Autowired private ObjectMapper objectMapper;
 
-    /**
-     * Composed string: String "Ä-é" represented with unicode letters "Ä-é".
-     */
-    private static final String TEXT_ATTRIBUTE_COMPOSED = "\u00c4-\u00e9";
+  @Test
+  void should_returnComposedString_when_givenDecomposedString() throws Exception {
+    val wahlID = "\u0041\u0308";
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+    val wahlenStubbing =
+        stubFor(
+            WireMock.post("/businessActions/wahlen/wahltagID1")
+                .willReturn(createWireMockResponse(HttpStatus.OK)));
 
-    //@Autowired
-    //private TheEntityRepository theEntityRepository;
+    List<de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO>
+        wahlenDTOListEai = new ArrayList<>();
+    val wahlenDTO = new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+    wahlenDTO.wahlID(wahlID);
+    wahlenDTOListEai.add(wahlenDTO);
 
-    @Test
-    @Disabled
-    void should_returnComposedString_when_givenDecomposedString() {
-        //        // Persist entity with decomposed string.
-        //        final TheEntityDto theEntityDto = new TheEntityDto();
-        //        theEntityDto.setTextAttribute(TEXT_ATTRIBUTE_DECOMPOSED);
-        //        assertEquals(TEXT_ATTRIBUTE_DECOMPOSED.length(), theEntityDto.getTextAttribute().length());
-        //        final TheEntityDto response = testRestTemplate.postForEntity(URI.create(ENTITY_ENDPOINT_URL), theEntityDto, TheEntityDto.class).getBody();
-        //
-        //        // Check whether response contains a composed string.
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, response.getTextAttribute());
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), response.getTextAttribute().length());
-        //
-        //        // Extract uuid from self link.
-        //        final UUID uuid = UUID.fromString(StringUtils.substringAfterLast(response.getRequiredLink("self").getHref(), "/"));
-        //
-        //        // Check persisted entity contains a composed string via JPA repository.
-        //        final TheEntity theEntity = theEntityRepository.findById(uuid).orElse(null);
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED, theEntity.getTextAttribute());
-        //        assertEquals(TEXT_ATTRIBUTE_COMPOSED.length(), theEntity.getTextAttribute().length());
-    }
+    val request =
+        MockMvcRequestBuilders.post("/businessActions/wahlen/wahltagID1")
+            .with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(wahlenDTOListEai));
 
+    api.perform(request).andExpect(status().isOk());
+
+    val wahlenRequest = getAllServeEvents(ServeEventQuery.forStubMapping(wahlenStubbing)).get(0);
+    List<WahlDTO> wahlenRequestList =
+        objectMapper.readValue(
+            wahlenRequest.getRequest().getBody(),
+            objectMapper.getTypeFactory().constructCollectionType(List.class, WahlDTO.class));
+    val requestedWahlenDTO = wahlenRequestList.get(0);
+
+    val expectedWahlenRequestBodyAsDTO =
+        new de.muenchen.oss.wahllokalsystem.adminservice.eai.basisdaten.model.WahlDTO();
+    expectedWahlenRequestBodyAsDTO.wahlID("\u00c4");
+
+    Assertions.assertThat(requestedWahlenDTO)
+        .usingRecursiveComparison()
+        .ignoringActualNullFields()
+        .isEqualTo(expectedWahlenRequestBodyAsDTO);
+  }
+
+  private ResponseDefinitionBuilder createWireMockResponse(final HttpStatus responseStatus) {
+    return aResponse().withStatus(responseStatus.value());
+  }
 }

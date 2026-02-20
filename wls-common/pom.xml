@@ -5,7 +5,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
     <artifactId>parent</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <name>wls-common</name>
     <packaging>pom</packaging>
     <description>Serviceübergreifende Aspekte</description>
@@ -23,9 +23,9 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.3.5</spring.boot.version>
-        <spring.cloud.version>2023.0.5</spring.cloud.version>
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <spring.boot.version>3.5.9</spring.boot.version>
+        <spring.cloud.version>2025.0.1</spring.cloud.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
@@ -130,7 +130,7 @@
                 <plugin>
                     <groupId>com.diffplug.spotless</groupId>
                     <artifactId>spotless-maven-plugin</artifactId>
-                    <version>2.43.0</version>
+                    <version>2.46.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>de.muenchen.oss</groupId>
@@ -149,6 +149,8 @@
                             </eclipse>
                             <trimTrailingWhitespace />
                             <endWithNewline />
+                            <googleJavaFormat />
+                            <formatAnnotations />
                         </java>
                     </configuration>
                     <executions>
@@ -178,7 +180,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.21.4</version>
+                            <version>10.26.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -187,17 +189,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.2.7</version>
+                    <version>3.2.8</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.7.0</version>
+                    <version>0.10.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -248,7 +250,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
+                <version>3.12.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -268,7 +270,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -320,6 +322,30 @@
             <name>GerhardPx</name>
             <organization>Landeshauptstadt München</organization>
             <url>https://github.com/GerhardPx</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>vjohnslhm</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/vjohnslhm</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>DanielOber</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/DanielOber</url>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>ThoGro</name>
+            <organization>Landeshauptstadt München</organization>
+            <url>https://github.com/ThoGro</url>
             <roles>
                 <role>developer</role>
             </roles>

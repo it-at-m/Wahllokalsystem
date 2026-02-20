@@ -14,10 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Wahlscheine {
 
-    @EmbeddedId
-    @NotNull
-    private BezirkUndWahlID bezirkUndWahlID;
+  @EmbeddedId @NotNull private BezirkUndWahlID bezirkUndWahlID;
 
-    @NotNull
-    private long stimmabgabevermerke;
+  @NotNull private long stimmabgabevermerke;
 }

@@ -1,0 +1,2 @@
+ALTER TABLE Wahl
+    ALTER COLUMN nummer DROP NOT NULL;

@@ -1,0 +1,142 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### Get Wahltage - working with dummy.client
+GET {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltage
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST ungueltige Wahlscheine | user wls_all_uwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/ungueltigews/827e9e6a-ebe9-483f-a9cd-162b26f348e8/UWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="ungueltigeWahlscheine.csv"
+
+< ../../wls-basisdaten-service/src/test/resources/attachements/ungueltigeWahlscheine.csv
+--boundary
+
+### Put Wahltermindaten | user wls_all_uwb
+PUT {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/wahltermindaten/827e9e6a-ebe9-483f-a9cd-162b26f348e8
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST konfigurierter Wahltag | user wls_all_bwb + wls_all_uwb
+POST {{ WLS_INFOMANAGEMENT_SERVICE_URL }}/businessActions/konfigurierterWahltag
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahltag": "2026-01-01",
+  "wahltagID": "827e9e6a-ebe9-483f-a9cd-162b26f348e8",
+  "wahltagStatus": "AKTIV",
+  "nummer": "nummer2"
+}
+
+### POST stimmabgabevermerke - 1 Wahldaten | user wls_all_uwb | wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280171/1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "waehlerverzeichnisNummer": 1,
+  "anzahlBlaetter": 2,
+  "wahldaten": [
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+      "eingenommeneWahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        },
+        {
+          "anzahl": 4,
+          "stimmzettelart": "BEIDE"
+        },
+        {
+          "anzahl": 12,
+          "stimmzettelart": "GROSS"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 2,
+          "stimmzettel": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+### POST stimmabgabevermerke - 1 Wahldaten | user wls_all_uwb | WahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280172
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280172/1
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+{
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+  "waehlerverzeichnisNummer": 1,
+  "anzahlBlaetter": 2,
+  "wahldaten": [
+    {
+      "waehlerverzeichnisNummer": 1,
+      "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280172",
+      "wahlID": "d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1",
+      "eingenommeneWahlscheine": [
+        {
+          "anzahl": 2,
+          "stimmzettelart": "KLEIN"
+        }
+      ],
+      "vermerke": [
+        {
+          "blattnummer": 2,
+          "stimmzettel": [
+            {
+              "anzahl": 1,
+              "stimmzettelart": "GROSS"
+            },
+            {
+              "anzahl": 1,
+              "stimmzettelart": "KLEIN"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+### POST Handbuch | user wls_komw_uwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/handbuch/827e9e6a-ebe9-483f-a9cd-162b26f348e8/UWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="helloWorld.pdf"
+
+< ./attachements/helloWorld.pdf
+--boundary
+
+### POST Handbuch | user wls_komw_bwb
+POST {{ WLS_BASISDATEN_SERVICE_URL }}/businessActions/handbuch/827e9e6a-ebe9-483f-a9cd-162b26f348e8/BWB
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="helloWorld.pdf"
+
+< ./attachements/helloWorld.pdf
+--boundary

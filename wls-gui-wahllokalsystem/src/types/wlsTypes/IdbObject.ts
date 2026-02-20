@@ -1,4 +1,4 @@
-export default interface IdbObject {
+export interface IdbObject {
   data: object;
   url: string;
   dirty: boolean;

@@ -1,0 +1,360 @@
+import type { Wahl } from "@/types/wahl/Wahl.ts";
+
+import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
+import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
+import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getBeanstandeteWahlbriefe: vi.fn(),
+  setBeanstandeteWahlbriefe: vi.fn(),
+  getWahlbriefdaten: vi.fn(),
+  postWahlbriefdaten: vi.fn(),
+  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  mapDtoToModel: vi.fn(),
+  toWahlbriefdatenModel: vi.fn(),
+  toWahlbriefdatenWriteDTO: vi.fn(),
+  addNotification: vi.fn(),
+}));
+
+vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
+  BeanstandeteWahlbriefeControllerApi: vi.fn().mockImplementation(() => ({
+    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+    setBeanstandeteWahlbriefe: mockDefinitions.setBeanstandeteWahlbriefe,
+  })),
+  Configuration: mockDefinitions.configurationConstructor,
+  WahlbriefdatenControllerApi: vi.fn().mockImplementation(() => ({
+    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
+    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
+  })),
+}));
+
+vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({
+  useBeanstandeteWahlbriefeMapper: () => ({
+    toModel: mockDefinitions.mapDtoToModel,
+  }),
+}));
+
+vi.mock("@/composables/briefwahl/briefwahlMapper.ts", () => ({
+  useBriefwahlMapper: () => ({
+    toWahlbriefdatenModel: mockDefinitions.toWahlbriefdatenModel,
+    toWahlbriefdatenWriteDTO: mockDefinitions.toWahlbriefdatenWriteDTO,
+  }),
+}));
+
+vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
+  useUserNotificationService: () => ({
+    addNotification: mockDefinitions.addNotification,
+  }),
+}));
+
+describe("briefwahlService.ts", () => {
+  const {
+    createBeanstandeteWahlbriefeDTO,
+    createBeanstandeteWahlbriefe,
+    prepareBeanstandeteWahlbriefeCreateDTO,
+  } = useBeanstandeteWahlbriefeTestDataFactory();
+  const { createWahlbriefdaten, createWahlbriefdatenDTO } =
+    useWahlbriefdatenTestDataFactory();
+  const {
+    getBeanstandeteWahlbriefe,
+    postBeanstandeteWahlbriefe,
+    getWahlbriefdaten,
+    postWahlbriefdaten,
+  } = useBriefwahlService();
+  const { generateRandomNumber, generateRandomString } =
+    useCommonTestDataFactory();
+  const { prepareWahl } = useWahlTestDataFactory();
+  const { createAxiosResponse } = useAxiosTestDataFactory();
+
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    vi.resetAllMocks();
+    vi.clearAllMocks();
+  });
+
+  describe("getBeanstandeteWahlbriefe", () => {
+    it("should_returnBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+      const mockedBeanstandeteWahlbriefe = createBeanstandeteWahlbriefe();
+
+      mockDefinitions.getBeanstandeteWahlbriefe.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: createBeanstandeteWahlbriefeDTO(),
+        })
+      );
+      mockDefinitions.mapDtoToModel.mockReturnValue(
+        mockedBeanstandeteWahlbriefe
+      );
+
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+
+      const result = await getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID);
+
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(true);
+      expect(result).toEqual(mockedBeanstandeteWahlbriefe);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
+
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCallAndSendNotificationIsTrue", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getBeanstandeteWahlbriefe.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, true)
+      ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_notTriggerNotification_when_sendNotificationIsFalse", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+
+      mockDefinitions.getBeanstandeteWahlbriefe.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getBeanstandeteWahlbriefe(wvzNr, wahlbezirkID, false)
+      ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+  });
+
+  describe("postBeanstandeteWahlbriefe", () => {
+    it("should_postBeanstandeteWahlbriefe_when_calledWithValidParams", async () => {
+      const wvzNr = generateRandomNumber(1);
+      const wahlbezirkID = generateRandomString(10);
+      const beanstandeteWahlbriefe = [ZurueckweisungsgrundEnum.Zugelassen];
+      const wahl = prepareWahl()
+        .beanstandeteWahlbriefe(beanstandeteWahlbriefe)
+        .waehlerverzeichnisNummer(wvzNr)
+        .build();
+      const mockedWahlenGroupedByWvzNr = new Map<number, Wahl[]>([
+        [wvzNr, [wahl]],
+      ]);
+      const dto = prepareBeanstandeteWahlbriefeCreateDTO()
+        .beanstandeteWahlbriefe({
+          [wahl.wahlID]: beanstandeteWahlbriefe,
+        })
+        .build();
+
+      mockDefinitions.setBeanstandeteWahlbriefe.mockReturnValue({});
+
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+      await postBeanstandeteWahlbriefe(
+        mockedWahlenGroupedByWvzNr,
+        wahlbezirkID
+      );
+      expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(true);
+      expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+        wahlbezirkID,
+        wvzNr,
+        dto
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.SUCCESS,
+      ]);
+    });
+
+    it.each([
+      {
+        when: "wahlbezirkIdEmpty",
+        wvzNr: generateRandomNumber(1),
+        wahlbezirkID: "",
+      },
+      {
+        when: "wahlbezirkIdBlank",
+        wvzNr: generateRandomNumber(1),
+        wahlbezirkID: "  ",
+      },
+    ])(
+      "should_showUserNotification_when_$when",
+      async ({ wvzNr, wahlbezirkID }) => {
+        const beanstandeteWahlbriefe = [ZurueckweisungsgrundEnum.Zugelassen];
+        const wahl = prepareWahl()
+          .beanstandeteWahlbriefe(beanstandeteWahlbriefe)
+          .waehlerverzeichnisNummer(wvzNr)
+          .build();
+        const mockedWahlenGroupedByWvzNr = new Map<number, Wahl[]>([
+          [wvzNr, [wahl]],
+        ]);
+        const dto = prepareBeanstandeteWahlbriefeCreateDTO()
+          .beanstandeteWahlbriefe({
+            [wahl.wahlID]: beanstandeteWahlbriefe,
+          })
+          .build();
+
+        mockDefinitions.setBeanstandeteWahlbriefe.mockRejectedValueOnce(
+          new Error("mocked api call failed")
+        );
+
+        await expect(async () =>
+          postBeanstandeteWahlbriefe(mockedWahlenGroupedByWvzNr, wahlbezirkID)
+        ).rejects.toThrowError();
+        expect(useWorkflowStore().isWahlbriefeZulassenErfasst).toBe(false);
+        expect(mockDefinitions.setBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+          wahlbezirkID,
+          wvzNr,
+          dto
+        );
+        expect(mockDefinitions.addNotification.mock.calls).toEqual([
+          [expect.any(String), UserNotificationCategoryEnum.ERROR],
+        ]);
+      }
+    );
+  });
+
+  describe("getWahlbriefdaten", () => {
+    it("should_returnWahlbriefdaten_when_calledWithValidParams", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbriefdatenDTO = createWahlbriefdatenDTO();
+      const mockedWahlbriefdaten = createWahlbriefdaten();
+
+      mockDefinitions.getWahlbriefdaten.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: wahlbriefdatenDTO,
+        })
+      );
+      mockDefinitions.toWahlbriefdatenModel.mockReturnValue(
+        mockedWahlbriefdaten
+      );
+
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+
+      const result = await getWahlbriefdaten(wahlbezirkID);
+
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(true);
+      expect(result).toEqual(mockedWahlbriefdaten);
+    });
+
+    it("should_returnWahlbriefdatenWithUndefinedValues_when_apiReturned204", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockReturnValue(
+        createAxiosResponse({ status: 204, data: "" })
+      );
+
+      const expectedResult = {
+        wahlbriefe: undefined,
+        verzeichnisseUngueltige: undefined,
+        nachtraege: undefined,
+        nachtraeglichUeberbrachte: undefined,
+        zeitNachtraeglichUeberbrachte: undefined,
+      };
+      const result = await getWahlbriefdaten(wahlbezirkID);
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+      expect(result).toStrictEqual(expectedResult);
+    });
+
+    it("should_triggerNotification_when_anExceptionOccurredDuringApiCallAndSendNotificationIsTrue", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getWahlbriefdaten(wahlbezirkID, true)
+      ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.ERROR,
+      ]);
+    });
+
+    it("should_notTriggerNotification_when_sendNotificationIsFalse", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlbriefdaten.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        getWahlbriefdaten(wahlbezirkID, false)
+      ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
+  });
+
+  describe("postWahlbriefdaten", () => {
+    it("should_postWahlbriefdaten_when_calledWithValidParams", async () => {
+      const wahlbezirkID = generateRandomString(10);
+      const wahlbriefdaten = createWahlbriefdaten();
+      const mockedWahlbriefdatenDTO = createWahlbriefdatenDTO();
+
+      mockDefinitions.toWahlbriefdatenWriteDTO.mockReturnValue(
+        mockedWahlbriefdatenDTO
+      );
+      mockDefinitions.postWahlbriefdaten.mockReturnValue({});
+
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+
+      await postWahlbriefdaten(wahlbezirkID, wahlbriefdaten);
+
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(true);
+      expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
+        wahlbezirkID,
+        mockedWahlbriefdatenDTO
+      );
+      expect(mockDefinitions.toWahlbriefdatenWriteDTO).toHaveBeenCalledWith(
+        wahlbriefdaten
+      );
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        UserNotificationCategoryEnum.SUCCESS,
+      ]);
+    });
+
+    it("should_showUserNotification_when_apiCallFailed", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+      const wahlbriefdaten = createWahlbriefdaten();
+      const mockedWahlbriefdatenDTO = createWahlbriefdatenDTO();
+
+      mockDefinitions.toWahlbriefdatenWriteDTO.mockReturnValue(
+        mockedWahlbriefdatenDTO
+      );
+      mockDefinitions.postWahlbriefdaten.mockRejectedValueOnce(
+        new Error("mocked api call failed")
+      );
+
+      await expect(async () =>
+        postWahlbriefdaten(wahlbezirkID, wahlbriefdaten)
+      ).rejects.toThrowError();
+      expect(useWorkflowStore().isWahlbriefeErfassenErfasst).toBe(false);
+      expect(mockDefinitions.postWahlbriefdaten).toHaveBeenCalledWith(
+        wahlbezirkID,
+        mockedWahlbriefdatenDTO
+      );
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
+    });
+  });
+});

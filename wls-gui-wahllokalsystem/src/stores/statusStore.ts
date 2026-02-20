@@ -15,13 +15,6 @@ export const useStatusStore = defineStore(storeID, () => {
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
 
-  const DEFAULT_MELDUNG = {
-    validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
-    gedruckt: false,
-    uebermittelt: undefined,
-    sendeuhrzeit: undefined,
-  };
-
   async function loadStatus(
     wahlID: string,
     wahlbezirkID: string,
@@ -38,8 +31,8 @@ export const useStatusStore = defineStore(storeID, () => {
       } else {
         status.value.push({
           bezirkUndWahlID: { wahlID, wahlbezirkID },
-          schnellmeldung: DEFAULT_MELDUNG,
-          niederschrift: DEFAULT_MELDUNG,
+          schnellmeldung: getDefaultMeldung(),
+          niederschrift: getDefaultMeldung(),
         });
       }
     } catch {
@@ -47,11 +40,15 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
-  async function saveStatus(wahlID: string, wahlbezirkID: string) {
+  async function saveStatus(
+    wahlID: string,
+    wahlbezirkID: string,
+    sendNotification = true
+  ) {
     isStatusSaving.value = true;
     try {
       for (const statusEntry of status.value) {
-        await postStatus(wahlID, wahlbezirkID, statusEntry);
+        await postStatus(wahlID, wahlbezirkID, statusEntry, sendNotification);
       }
     } catch {
       throw Error(`Fehler beim Speichern des Status für WahlID: ${wahlID}`);
@@ -60,11 +57,39 @@ export const useStatusStore = defineStore(storeID, () => {
     }
   }
 
+  function getStatusEntry(wahlID: string, wahlbezirkID: string): Status {
+    const foundStatus = status.value.find(
+      (status) =>
+        status.bezirkUndWahlID?.wahlID === wahlID &&
+        status.bezirkUndWahlID?.wahlbezirkID === wahlbezirkID
+    );
+
+    if (foundStatus) return foundStatus;
+
+    const defaultStatus: Status = {
+      bezirkUndWahlID: { wahlID, wahlbezirkID },
+      schnellmeldung: getDefaultMeldung(),
+      niederschrift: getDefaultMeldung(),
+    };
+    status.value.push(defaultStatus);
+    return defaultStatus;
+  }
+
+  function getDefaultMeldung() {
+    return {
+      validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+      gedruckt: false,
+      uebermittelt: undefined,
+      sendeuhrzeit: undefined,
+    };
+  }
+
   return {
     status,
     isStatusSaving,
     loadStatus,
     saveStatus,
+    getStatusEntry,
   };
 });
 

@@ -83,6 +83,7 @@
         <base-button-save
           :disabled="isSaveButtonDisabled"
           :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
+          save-text="Speichern und Weiter"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
@@ -99,11 +100,14 @@ import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCa
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const { maxNumber, minNumber, required } = useRules();
+const { getNextRoute } = useNavigationUtils();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 const abstimmungsschutzvorrichtungenValidForm = ref<null | boolean>(null);
@@ -140,13 +144,22 @@ const isMinimumRequired = computed(() => {
 });
 
 const checkboxLabelText = computed(() => {
-  if (wahlenState.value.wahlen && wahlenState.value.wahlen?.length > 1) {
-    return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
+  if (!hasMoreThanOneWahlurnen.value) {
+    return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
   }
-  return "Die Wahlurne war leer und wurde ordnungsgemäß versiegelt";
+  return "Die Wahlurnen waren leer und wurden ordnungsgemäß versiegelt";
 });
 
-function onSaveWahlumgebungUWBClicked() {
-  urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
+async function onSaveWahlumgebungUWBClicked() {
+  await urnenwahlVorbereitungActions.sendUrnenwahlvorbereitung();
+  await router.push(getNextRoute());
 }
+
+const hasMoreThanOneWahlurnen = computed(() => {
+  return (
+    (wahlenState.value.wahlen && wahlenState.value.wahlen.length > 1) ||
+    (urnenwahlVorbereitungState.value.urnenwahlVorbereitung.urnenAnzahl[0]
+      ?.anzahl || 0) > 1
+  );
+});
 </script>

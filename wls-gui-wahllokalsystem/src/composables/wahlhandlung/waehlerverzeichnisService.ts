@@ -8,6 +8,7 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWaehlerverzeichnisMapper } from "@/composables/wahlhandlung/waehlerverzeichnisMapper.ts";
 import { WAHLVORBEREITUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useWaehlerverzeichnisService() {
@@ -33,6 +34,7 @@ export function useWaehlerverzeichnisService() {
         waehlerverzeichnisNummer,
         toWaehlerverzeichnisWriteDTO(pflegeWaehlerverzeichnis)
       );
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
       if (sendNotification) {
         addNotification(
           "Die Hinweise zu Wahlscheinen wurden erfolgreich gespeichert.",
@@ -63,6 +65,7 @@ export function useWaehlerverzeichnisService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData) {
+        useWorkflowStore().isWaehlerverzeichnisErfasst = true;
         return toPflegeWaehlerverzeichnis(responseData);
       } else {
         return createDefaultPflegeWaehlerverzeichnis();

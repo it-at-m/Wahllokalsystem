@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
-const { createStatus } = useStatusTestDataFactory();
+const { createStatus, prepareStatus } = useStatusTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getStatus: vi.fn(),
@@ -134,12 +134,14 @@ describe("statusStore.ts", () => {
       expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        statusEntry1
+        statusEntry1,
+        true
       );
       expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        statusEntry2
+        statusEntry2,
+        true
       );
     });
 
@@ -172,6 +174,91 @@ describe("statusStore.ts", () => {
       await saveStatusPromise;
 
       expect(unitUnderTest.isStatusSaving).toBe(false);
+    });
+  });
+
+  describe("getStatusEntry", () => {
+    it("should_returnExistingStatus_when_entryExists", () => {
+      const existingStatus = prepareStatus()
+        .bezirkUndWahlID({ wahlID, wahlbezirkID })
+        .build();
+      unitUnderTest.status = [existingStatus];
+
+      const result = unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(existingStatus);
+      expect(unitUnderTest.status).toHaveLength(1);
+    });
+
+    it("should_addDefaultStatus_when_noExistingEntry", () => {
+      unitUnderTest.status = [];
+
+      const result = unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(unitUnderTest.status[0]);
+      expect(result.bezirkUndWahlID).toStrictEqual({ wahlID, wahlbezirkID });
+      expect(result).toStrictEqual({
+        schnellmeldung: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        niederschrift: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        bezirkUndWahlID: {
+          wahlID,
+          wahlbezirkID,
+        },
+      });
+    });
+
+    it("should_addNewEntry_when_onlyNonMatchingEntryExists", () => {
+      const otherStatus = prepareStatus()
+        .bezirkUndWahlID({ wahlID: "otherWahl", wahlbezirkID: "otherBez" })
+        .build();
+      unitUnderTest.status = [otherStatus];
+
+      unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
+
+      expect(unitUnderTest.status).toHaveLength(2);
+      expect(unitUnderTest.status).toContainEqual({
+        schnellmeldung: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        niederschrift: {
+          validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
+          gedruckt: false,
+          uebermittelt: undefined,
+          sendeuhrzeit: undefined,
+        },
+        bezirkUndWahlID: {
+          wahlID,
+          wahlbezirkID,
+        },
+      });
+    });
+
+    it("should_returnCorrectEntry_when_multipleEntriesExist", () => {
+      const statusOne = prepareStatus()
+        .bezirkUndWahlID({ wahlID, wahlbezirkID: "bezirkA" })
+        .build();
+      const statusTwo = prepareStatus()
+        .bezirkUndWahlID({ wahlID, wahlbezirkID })
+        .build();
+      unitUnderTest.status = [statusOne, statusTwo];
+
+      const result = unitUnderTest.getStatusEntry(wahlID, wahlbezirkID);
+
+      expect(result).toStrictEqual(statusTwo);
+      expect(unitUnderTest.status).toHaveLength(2);
     });
   });
 });

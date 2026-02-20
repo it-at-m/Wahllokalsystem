@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> Wähler </v-card-title>
+    <v-card-title> Wähler*innen </v-card-title>
     <v-card-text>
       <v-table>
         <thead>
@@ -70,15 +70,17 @@ const rows = computed(() =>
     ? [
         [
           "B1",
-          "Wähler mit Stimmabgabevermerken im Wählerverzeichnis",
+          "Wähler*innen mit Stimmabgabevermerken im Wählerverzeichnis",
           b1.value,
         ],
-        ["B2", "Wähler mit Wahlschein", b2.value],
+        ["B2", "Wähler*innen mit Wahlschein", b2.value],
       ]
     : []
 );
 const resultRow = computed(() =>
-  isUWB.value ? ["B1 + B2", "Wähler", b.value] : ["B", "Wähler", b.value]
+  isUWB.value
+    ? ["B1 + B2", "Wähler*innen", b.value]
+    : ["B", "Wähler*innen", b.value]
 );
 
 onActivated(async () => {

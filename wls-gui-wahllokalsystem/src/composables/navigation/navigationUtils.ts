@@ -68,6 +68,9 @@ export function useNavigationUtils() {
     }
 
     // check wahlbriefzulassung steps (BWB)
+    if (userStore.isBWB && !workflowStore.isWahleroeffnungErfasst) {
+      return routeWithName(ROUTE_BEGINN_STIMMABGABE);
+    }
     if (userStore.isBWB && !workflowStore.isWahlumgebungErfasst) {
       return routeWithName(ROUTE_WAHLUMGEBUNG);
     }

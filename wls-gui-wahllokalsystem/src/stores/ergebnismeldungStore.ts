@@ -23,7 +23,7 @@ const storeID = "ergebnismeldung";
 export const useErgebnismeldungStore = defineStore(storeID, () => {
   const { logError } = useLogging("mbwUtils");
   const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-  const { currentUserHauptWahlID } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
   const {
     getErgebnisse,
     postErgebnisse,
@@ -264,7 +264,7 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
           wahl.wahlID,
           wahlbezirkID,
           wahl.waehlerverzeichnisNummer,
-          currentUserHauptWahlID.value
+          currentUserWahlbezirkID.value
         );
       } catch {
         statusToUpdate.niederschrift.uebermittelt = false;

@@ -10,6 +10,7 @@ import { useStimmabgabevermerkeMapper } from "@/composables/stimmabgabevermerke/
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
@@ -37,7 +38,12 @@ export function useStimmabgabevermerkeService() {
           waehlerverzeichnisNummer
         );
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? toModel(responseData) : null;
+      if (responseData) {
+        useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+        return toModel(responseData);
+      } else {
+        return null;
+      }
     } catch (e) {
       if (sendNotification) {
         addNotification(
@@ -66,7 +72,7 @@ export function useStimmabgabevermerkeService() {
         waehlerverzeichnisNummer,
         toDto(stimmabgabevermerke)
       );
-
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
       addNotification(
         `Stimmabgabevermerke für ${wahlname} erfolgreich gespeichert`,
         UserNotificationCategoryEnum.SUCCESS

@@ -3,7 +3,7 @@
     <template #activator="{ props }">
       <v-list-item
         v-bind="props"
-        title="Wahlbriefzulassung"
+        :title="disabled ? '⛔ Wahlbriefzulassung' : 'Wahlbriefzulassung'"
         :lines="groupActivatorListItemLines"
       >
         <template

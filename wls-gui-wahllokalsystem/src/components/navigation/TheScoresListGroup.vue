@@ -8,16 +8,36 @@
     </template>
     <v-list-item
       v-if="isBWB"
-      title="Wahlscheine"
-      :disabled="!isWahlvorstandErfasst || !isWahlbriefeZulassenErfasst"
+      :title="isWahlscheineDisabled ? '⛔ Wahlscheine' : 'Wahlscheine'"
+      :disabled="isWahlscheineDisabled"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
-    />
+      :lines="groupActivatorListItemLines"
+    >
+      <template
+        v-if="isWahlscheineDisabled"
+        #subtitle
+      >
+        {{ disabledMessagePreviousStepsRequired }}
+      </template>
+    </v-list-item>
     <v-list-item
       v-if="isUWB"
-      title="Stimmabgabevermerke"
-      :disabled="!isWahlvorstandErfasst || !isStimmabgabeErfasst"
+      :title="
+        isStimmabgabevermerkeDisabled
+          ? '⛔ Stimmabgabevermerke'
+          : 'Stimmabgabevermerke'
+      "
+      :disabled="isStimmabgabevermerkeDisabled"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
-    />
+      :lines="groupActivatorListItemLines"
+    >
+      <template
+        v-if="isStimmabgabevermerkeDisabled"
+        #subtitle
+      >
+        {{ disabledMessagePreviousStepsRequired }}
+      </template>
+    </v-list-item>
     <the-scores-list-group-selector
       v-for="wahl in wahlenState.wahlen"
       :key="wahl.wahlID"
@@ -28,6 +48,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
@@ -45,4 +66,40 @@ const {
   isStimmabgabeErfasst,
   isWahlbriefeZulassenErfasst,
 } = storeToRefs(useWorkflowStore());
+
+const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
+  "Nicht genügend Mitglieder anwesend.";
+const DISABLED_SUBTITLE_WAHLVORBEREITUNG_MISSING =
+  "Wahlhandlung muss abgeschlossen sein.";
+const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
+  "Wahlbriefzulassung muss abgeschlossen sein.";
+
+const isStimmabgabevermerkeDisabled = computed(
+  () => !isWahlvorstandErfasst.value || !isStimmabgabeErfasst.value
+);
+const isWahlscheineDisabled = computed(
+  () => !isWahlvorstandErfasst.value || !isWahlbriefeZulassenErfasst.value
+);
+
+const disabledMessagePreviousStepsRequired = computed(() => {
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  } else if (isUWB.value && !isStimmabgabeErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORBEREITUNG_MISSING;
+  } else if (isBWB.value && !isWahlbriefeZulassenErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING;
+  } else {
+    return "";
+  }
+});
+
+const groupActivatorListItemLines = computed(() =>
+  isUWB.value
+    ? isStimmabgabevermerkeDisabled.value
+      ? false
+      : "one"
+    : isWahlscheineDisabled.value
+      ? false
+      : "one"
+);
 </script>

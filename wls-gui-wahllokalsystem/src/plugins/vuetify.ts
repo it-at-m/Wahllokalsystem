@@ -17,6 +17,7 @@ import {
   mdiLockOutline,
   mdiLogout,
   mdiMapSearch,
+  mdiMinusCircleOffOutline,
   mdiPencil,
   mdiPhone,
   mdiPlus,
@@ -76,6 +77,7 @@ export default createVuetify({
       logout: mdiLogout,
       locked: mdiLockOutline,
       saveSuccess: mdiContentSaveCheck,
+      disabled: mdiMinusCircleOffOutline,
     },
     sets: {
       mdi,

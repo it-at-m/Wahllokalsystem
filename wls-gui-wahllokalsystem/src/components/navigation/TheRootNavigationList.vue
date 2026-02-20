@@ -56,5 +56,5 @@ const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
 
-const disabledMessageUpdateAnwesenheitRequired = "Erst Anwesenheit erfassen";
+const disabledMessageUpdateAnwesenheitRequired = "Erst Anwesenheit erfassen.";
 </script>

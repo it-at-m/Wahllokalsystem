@@ -464,7 +464,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider https://127.0.0.1:443/nginx-health --no-check-certificate || exit 1"]
+      test: [ "CMD-SHELL", "curl -f --insecure https://localhost:443/nginx-health" ]
 
 networks:
   internal:

@@ -503,6 +503,12 @@ services:
       - ./reverse-proxy-auth-service/ssl:/etc/nginx/ssl
       - ./reverse-proxy-auth-service/nginx.conf:/etc/nginx/conf.d/default.conf
     restart: always
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      test: [ "CMD-SHELL", "curl -f --insecure https://localhost:443/nginx-health" ]
 
 networks:
   internal:

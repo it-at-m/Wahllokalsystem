@@ -276,6 +276,8 @@ services:
     depends_on:
       wls-auth-service:
         condition: service_healthy
+      wls-auth-service-reverse-proxy:
+        condition: service_healthy
     env_file:
       - .env
     ports:
@@ -313,6 +315,8 @@ services:
     image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest-dev
     depends_on:
       wls-auth-service:
+        condition: service_healthy
+      wls-auth-service-reverse-proxy:
         condition: service_healthy
     env_file:
       - .env
@@ -455,6 +459,12 @@ services:
       - ./reverse-proxy-auth-service/ssl:/etc/nginx/ssl
       - ./reverse-proxy-auth-service/nginx.conf:/etc/nginx/conf.d/default.conf
     restart: always
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      test: [ "CMD-SHELL", "curl -f --insecure https://localhost:443/nginx-health" ]
 
 networks:
   internal:

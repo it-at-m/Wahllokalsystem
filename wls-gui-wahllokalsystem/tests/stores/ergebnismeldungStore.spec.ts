@@ -840,12 +840,14 @@ describe("ergebnismeldungStore.ts", () => {
     it("should_setNiederschriftUebermitteltToTrue_when_savingNiederschriftApiCallSucceed", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
+      const userWahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();
       const statusToUpdate = createStatus();
 
       const userStore = useUserStore();
       userStore.setUser(
         prepareUser()
+          .wahlbezirkID(userWahlbezirkID)
           .wahlMetaData([
             { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
           ])
@@ -864,7 +866,7 @@ describe("ergebnismeldungStore.ts", () => {
         wahlID,
         wahlbezirkID,
         wahl.waehlerverzeichnisNummer,
-        wahlID
+        userWahlbezirkID
       );
 
       expect(statusToUpdate.niederschrift.uebermittelt).toBeTruthy();
@@ -873,12 +875,14 @@ describe("ergebnismeldungStore.ts", () => {
     it("should_setNiederschriftUebermitteltToTruer_when_savingNiederschriftApiCallFailed", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
+      const userWahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();
       const statusToUpdate = createStatus();
 
       const userStore = useUserStore();
       userStore.setUser(
         prepareUser()
+          .wahlbezirkID(userWahlbezirkID)
           .wahlMetaData([
             { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
           ])
@@ -901,12 +905,14 @@ describe("ergebnismeldungStore.ts", () => {
     it("should_updateIsSaving_when_sendSendNiederschriftIsCalled", async () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
+      const userWahlbezirkID = generateRandomString(10);
       const wahl = prepareWahl().wahlID(wahlID).build();
       const statusToUpdate = createStatus();
       const timeout = 100;
       const userStore = useUserStore();
       userStore.setUser(
         prepareUser()
+          .wahlbezirkID(userWahlbezirkID)
           .wahlMetaData([
             { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
           ])

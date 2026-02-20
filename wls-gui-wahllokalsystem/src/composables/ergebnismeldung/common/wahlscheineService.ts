@@ -10,6 +10,7 @@ import { useWahlscheineMapper } from "@/composables/ergebnismeldung/common/wahls
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { addNotification } = useUserNotificationService();
@@ -38,7 +39,12 @@ export function useWahlscheineService() {
         wahlbezirkID
       );
       const responseData = getNullOn204OrElseResponseData(response);
-      return responseData ? toModel(responseData) : null;
+      if (responseData) {
+        useWorkflowStore().isAnzahlWahlscheineErfasst = true;
+        return toModel(responseData);
+      } else {
+        return null;
+      }
     } catch {
       if (sendNotification) {
         addNotification(
@@ -63,7 +69,7 @@ export function useWahlscheineService() {
         wahlbezirkID,
         toDto(wahlscheine)
       );
-
+      useWorkflowStore().isAnzahlWahlscheineErfasst = true;
       addNotification(
         `Wahlscheine für ${wahlname} erfolgreich gespeichert`,
         UserNotificationCategoryEnum.SUCCESS

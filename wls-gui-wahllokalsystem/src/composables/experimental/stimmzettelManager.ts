@@ -1,3 +1,4 @@
+import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
 import { computed, ref } from "vue";
@@ -35,6 +36,7 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
    */
   const kandidatenVotes: Ref<Record<KandidatId, number>> = ref({});
   const discardedKandidatenIds: Ref<string[]> = ref([]);
+  const managedWahlvorschlaege: Ref<Wahlvorschlag[]> = ref([]);
 
   const kandidatenScores = computed(() =>
     Object.keys(kandidatenVotes.value).map((kandidatId) => ({
@@ -42,9 +44,43 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
       votes: kandidatenVotes.value[kandidatId] ?? 0,
     }))
   );
-  const requiredVotesLeftToFulfilListenkreuze = computed(() => {
-    return 0;
-  });
+  const requiredVotesLeftToFulfilListenkreuze = computed(
+    () => {
+      return selectedWahlvorschlaege.value.reduce((prev, current) => {
+        console.log(`wahlvorschlagID > ${current}`);
+        const kandidaten = managedWahlvorschlaege.value.find(
+          (wahlvorschlag) => wahlvorschlag.identifikator === current
+        )?.kandidaten;
+        if (!kandidaten) {
+          console.log(`wahlvorschlag hat keine Kandidaten`);
+          return prev;
+        } else {
+          console.log(
+            `wahlvorschlag hat kandidaten - count > ${kandidaten.length}`
+          );
+          const countNonDiscardedKandidaten = kandidaten.filter(
+            (kandidat) =>
+              !discardedKandidatenIds.value.some(
+                (kid) => kid === kandidat.identifikator
+              ) &&
+              (kandidatenVotes.value[kandidat.identifikator] === undefined ||
+                kandidatenVotes.value[kandidat.identifikator] === 0)
+          ).length;
+          console.log(
+            `countNonDiscardedKandidaten > ${countNonDiscardedKandidaten}`
+          );
+          return prev + countNonDiscardedKandidaten;
+        }
+      }, 0);
+    },
+    {
+      onTrigger: (event) => {
+        console.log(
+          `triggered ${event.type} ${event.newValue} ${event.oldValue}`
+        );
+      },
+    }
+  );
 
   const totalKandidatenScores = computed(() =>
     kandidatenScores.value.reduce((acc, curr) => acc + curr.votes, 0)
@@ -54,6 +90,13 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
       .map((score) => Math.min(score.votes, maxValidVotesPerKandidat))
       .reduce((acc, curr) => acc + curr, 0)
   );
+
+  function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
+    console.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
+    managedWahlvorschlaege.value = wahlvorschlaege;
+    //TODO objekte aufräume welche sich auf IDs der Wahlvorschläge beziehen könnten und dann out of sync sein könnten
+    //TODO ID in Wahlvorschlag und Kandidat sollten wir fix machen damit syntaktisch klar ist dass man sie nicht ändern kann
+  }
 
   function selectWahlvorschlag(wahlvorschlagId: string) {
     if (!selectedWahlvorschlaege.value.some((id) => id === wahlvorschlagId)) {
@@ -106,6 +149,8 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
 
     selectWahlvorschlag,
     deselectWahlvorschlag,
+
+    setWahlvorschlaege,
   };
 }
 

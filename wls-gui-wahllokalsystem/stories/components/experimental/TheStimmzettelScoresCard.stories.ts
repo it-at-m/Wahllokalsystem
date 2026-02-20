@@ -23,28 +23,26 @@ export const Default: Story = {
 function createTestData() {
   const result = {
     wahlvorschlaege: prepareWahlvorschlaege()
-      .wahlvorschlaege(
-        new Set([
-          prepareWahlvorschlag()
-            .ordnungszahl(1)
-            .kandidaten(createTestDataKandidaten())
-            .build(),
-          prepareWahlvorschlag()
-            .ordnungszahl(2)
-            .kandidaten(createTestDataKandidaten(7))
-            .build(),
-        ])
-      )
+      .wahlvorschlaege([
+        prepareWahlvorschlag()
+          .ordnungszahl(1)
+          .kandidaten(createTestDataKandidaten())
+          .build(),
+        prepareWahlvorschlag()
+          .ordnungszahl(2)
+          .kandidaten(createTestDataKandidaten(7))
+          .build(),
+      ])
       .build(),
   };
   return result;
 }
 
 function createTestDataKandidaten(countKandidaten = 10) {
-  const kandidatenSet = new Set<Kandidat>();
+  const kandidatenSet: Kandidat[] = [];
 
   for (let i = 0; i < countKandidaten; i++) {
-    kandidatenSet.add(
+    kandidatenSet.push(
       prepareKandidat()
         .listenposition(i + 1)
         .name(`Kandidat ${i + 1}`)

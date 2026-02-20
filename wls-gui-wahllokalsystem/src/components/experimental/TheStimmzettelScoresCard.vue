@@ -35,8 +35,9 @@ import { ref } from "vue";
 
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
+import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
-defineProps({
+const props = defineProps({
   wahlvorschlaege: {
     type: Object as PropType<Wahlvorschlaege>,
     required: true,
@@ -45,6 +46,12 @@ defineProps({
 
 const ergebnisse = ref<Ergebnis[]>([]);
 const tab = ref("1");
+
+const stimmzettelManager = getStimmzettelManger({
+  wahlId: "wahlId",
+  wahlbezirkId: "wahlbezirkId",
+});
+stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 </script>
 
 <style scoped></style>

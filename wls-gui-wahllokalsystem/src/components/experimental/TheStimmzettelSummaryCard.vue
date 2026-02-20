@@ -8,6 +8,10 @@
       >
         {{ wahlvorschlagId }}
       </div>
+      <div>
+        Required votes left to fulfil selected wahlvorschlaege:
+        {{ requiredVotesLeftToFulfilListenkreuze }}
+      </div>
     </v-card-text>
 
     <v-card-title>Kandidaten</v-card-title>
@@ -43,6 +47,7 @@ const {
   totalKandidatenScores,
   totalValidKandidatenScores,
   discardedKandidatenIds,
+  requiredVotesLeftToFulfilListenkreuze,
 } = getStimmzettelManger({
   wahlId,
   wahlbezirkId,

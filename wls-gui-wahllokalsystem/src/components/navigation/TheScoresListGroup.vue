@@ -9,11 +9,13 @@
     <v-list-item
       v-if="isBWB"
       title="Wahlscheine"
+      :disabled="!isWahlvorstandErfasst || !isWahlbriefeZulassenErfasst"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
     />
     <v-list-item
       v-if="isUWB"
       title="Stimmabgabevermerke"
+      :disabled="!isWahlvorstandErfasst || !isStimmabgabeErfasst"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
     />
     <the-scores-list-group-selector
@@ -32,9 +34,15 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import { ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { routeWithName } = useNavigationUtils();
 
+const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { wahlenState } = storeToRefs(useWahlenStore());
+const {
+  isWahlvorstandErfasst,
+  isStimmabgabeErfasst,
+  isWahlbriefeZulassenErfasst,
+} = storeToRefs(useWorkflowStore());
 </script>

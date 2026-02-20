@@ -34,6 +34,7 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
    * deprecated: internal only
    */
   const kandidatenVotes: Ref<Record<KandidatId, number>> = ref({});
+  const discardedKandidatenIds: Ref<string[]> = ref([]);
 
   const kandidatenScores = computed(() =>
     Object.keys(kandidatenVotes.value).map((kandidatId) => ({
@@ -41,6 +42,9 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
       votes: kandidatenVotes.value[kandidatId] ?? 0,
     }))
   );
+  const requiredVotesLeftToFulfilListenkreuze = computed(() => {
+    return 0;
+  });
 
   const totalKandidatenScores = computed(() =>
     kandidatenScores.value.reduce((acc, curr) => acc + curr.votes, 0)
@@ -75,14 +79,30 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
     }
   }
 
+  function discardKandidat(kandidatId: string) {
+    if (!discardedKandidatenIds.value.some((id) => id === kandidatId)) {
+      discardedKandidatenIds.value.push(kandidatId);
+    }
+  }
+  function revokeDiscardedKandidat(kandidatId: string) {
+    discardedKandidatenIds.value = discardedKandidatenIds.value.filter(
+      (id) => id !== kandidatId
+    );
+  }
+
   return {
     addKandidatVote,
     removeKandidatVote,
     selectedWahlvorschlaege: computed(() => selectedWahlvorschlaege.value),
     kandidatenVotes: computed(() => kandidatenVotes.value),
+    discardedKandidatenIds: computed(() => discardedKandidatenIds.value),
+    requiredVotesLeftToFulfilListenkreuze,
     kandidatenScores,
     totalKandidatenScores,
     totalValidKandidatenScores,
+
+    discardKandidat,
+    revokeDiscardedKandidat,
 
     selectWahlvorschlag,
     deselectWahlvorschlag,

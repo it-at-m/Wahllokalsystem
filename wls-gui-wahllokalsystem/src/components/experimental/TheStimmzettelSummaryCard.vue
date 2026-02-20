@@ -20,6 +20,13 @@
       >
         {{ kandidat.kandidatId }}: {{ kandidat.votes }}
       </div>
+      <div>Total Discarded Kandidaten: {{ discardedKandidatenIds.length }}</div>
+      <div
+        v-for="kandidatId in discardedKandidatenIds"
+        :key="kandidatId"
+      >
+        {{ kandidatId }}
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -35,6 +42,7 @@ const {
   kandidatenScores,
   totalKandidatenScores,
   totalValidKandidatenScores,
+  discardedKandidatenIds,
 } = getStimmzettelManger({
   wahlId,
   wahlbezirkId,

@@ -40,7 +40,13 @@ class BriefwahlClientImplTest {
 
       val mockedBeanstandeteWahlbriefe =
           new BeanstandeteWahlbriefeDTO()
-              .putBeanstandeteWahlbriefeItem(wahlID, List.of(Zurueckweisungsgrund.values()));
+              .putBeanstandeteWahlbriefeItem(
+                  wahlID,
+                  List.of(
+                      Zurueckweisungsgrund.SCHEINE_UNGLEICH_UMSCHLAEGE,
+                      Zurueckweisungsgrund.ZUGELASSEN,
+                      Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN,
+                      Zurueckweisungsgrund.SCHEIN_UNGUELTIG));
       Mockito.when(
               beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(
                   eq(wahlbezirkID), eq(waehlerverzeichnissNummer)))
@@ -50,10 +56,7 @@ class BriefwahlClientImplTest {
           unitUnderTest.getAnzahlZurueckgewiesenerWahlbriefe(
               wahlbezirkID, wahlID, waehlerverzeichnissNummer);
 
-      val ignoredZurueckweisungsgruend =
-          List.of(Zurueckweisungsgrund.ZUGELASSEN, Zurueckweisungsgrund.LOSE_STIMMZETTEL);
-      Assertions.assertThat(result)
-          .isEqualTo(Zurueckweisungsgrund.values().length - ignoredZurueckweisungsgruend.size());
+      Assertions.assertThat(result).isEqualTo(3);
     }
 
     @Test

@@ -36,9 +36,7 @@ public class BriefwahlClientImpl implements BriefwahlClient {
     } else {
       return beanstandeteWahlbriefeOfWahl.stream()
           .filter(
-              zurueckweisungsgrund ->
-                  !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN)
-                      && !zurueckweisungsgrund.equals(Zurueckweisungsgrund.LOSE_STIMMZETTEL))
+              zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN))
           .count();
     }
   }

@@ -6,7 +6,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomBoolean } =
+  useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
@@ -349,6 +350,46 @@ describe("workflowStore.ts", () => {
 
       useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
       expect(workflow.stepsDone[step]).toStrictEqual(true);
+    });
+  });
+
+  describe("isWahlbriefzulassungErfasst", () => {
+    it("should_returnTrue_when_allRequiredStepsAreTrue", () => {
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(true);
+    });
+
+    it("should_returnFalse_when_atLeastOneRequiredStepIsFalse", () => {
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      useWorkflowStore().isWahlumgebungErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahlbriefeErfassenErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahlbriefeZulassenErfasst = generateRandomBoolean();
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(false);
+    });
+  });
+
+  describe("isWahlhandlungErfasst", () => {
+    it("should_returnTrue_when_allRequiredStepsAreTrue", () => {
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+
+      expect(useWorkflowStore().isWahlhandlungErfasst).toBe(true);
+    });
+
+    it("should_returnFalse_when_atLeastOneRequiredStepIsFalse", () => {
+      useWorkflowStore().isWahlumgebungErfasst = false;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahleroeffnungErfasst = generateRandomBoolean();
+      useWorkflowStore().isStimmabgabeErfasst = generateRandomBoolean();
+
+      expect(useWorkflowStore().isWahlhandlungErfasst).toBe(false);
     });
   });
 

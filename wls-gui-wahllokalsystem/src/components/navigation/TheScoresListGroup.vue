@@ -8,7 +8,13 @@
     </template>
     <v-list-item
       v-if="isBWB"
-      :title="isWahlscheineDisabled ? '⛔ Wahlscheine' : 'Wahlscheine'"
+      :title="
+        isWahlscheineDisabled
+          ? '⛔ Wahlscheine'
+          : isAnzahlWahlscheineErfasst
+            ? '✅ Wahlscheine'
+            : '✏️ Wahlscheine'
+      "
       :disabled="isWahlscheineDisabled"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
       :lines="groupActivatorListItemLines"
@@ -25,7 +31,9 @@
       :title="
         isStimmabgabevermerkeDisabled
           ? '⛔ Stimmabgabevermerke'
-          : 'Stimmabgabevermerke'
+          : isStimmabgabevermerkeErfasst
+            ? '✅ Stimmabgabevermerke'
+            : '✏️ Stimmabgabevermerke'
       "
       :disabled="isStimmabgabevermerkeDisabled"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
@@ -63,30 +71,32 @@ const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { wahlenState } = storeToRefs(useWahlenStore());
 const {
   isWahlvorstandErfasst,
-  isStimmabgabeErfasst,
-  isWahlbriefeZulassenErfasst,
+  isAnzahlWahlscheineErfasst,
+  isStimmabgabevermerkeErfasst,
+  isWahlbriefzulassungErfasst,
+  isWahlhandlungErfasst,
 } = storeToRefs(useWorkflowStore());
 
 const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
   "Nicht genügend Mitglieder anwesend.";
-const DISABLED_SUBTITLE_WAHLVORBEREITUNG_MISSING =
+const DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING =
   "Wahlhandlung muss abgeschlossen sein.";
 const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
   "Wahlbriefzulassung muss abgeschlossen sein.";
 
 const isStimmabgabevermerkeDisabled = computed(
-  () => !isWahlvorstandErfasst.value || !isStimmabgabeErfasst.value
+  () => !isWahlvorstandErfasst.value || !isWahlhandlungErfasst.value
 );
 const isWahlscheineDisabled = computed(
-  () => !isWahlvorstandErfasst.value || !isWahlbriefeZulassenErfasst.value
+  () => !isWahlvorstandErfasst.value || !isWahlbriefzulassungErfasst.value
 );
 
 const disabledMessagePreviousStepsRequired = computed(() => {
   if (!isWahlvorstandErfasst.value) {
     return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
-  } else if (isUWB.value && !isStimmabgabeErfasst.value) {
-    return DISABLED_SUBTITLE_WAHLVORBEREITUNG_MISSING;
-  } else if (isBWB.value && !isWahlbriefeZulassenErfasst.value) {
+  } else if (isUWB.value && !isWahlhandlungErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING;
+  } else if (isBWB.value && !isWahlbriefzulassungErfasst.value) {
     return DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING;
   } else {
     return "";

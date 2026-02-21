@@ -9,9 +9,13 @@
       />
     </v-col>
     <v-col>
-      <span v-if="isDiscarded">🚮</span>
-      {{ kandidatenNummer }}
-      {{ kandidat.name }}
+      <div>
+        <span v-if="isDiscarded">🚮</span>
+        {{ kandidatenNummer }}
+      </div>
+      <div>
+        {{ kandidat.name }}
+      </div>
     </v-col>
     <v-col>
       <base-kandidate-votes :ergebnis="ergebnisModel" />

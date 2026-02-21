@@ -121,6 +121,9 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
       kandidatenVotes.value[kandidatId] = currentVotes - 1;
     }
   }
+  function setKandidatVote(kandidatId: string, countVotes: number) {
+    kandidatenVotes.value[kandidatId] = countVotes;
+  }
 
   function discardKandidat(kandidatId: string) {
     if (!discardedKandidatenIds.value.some((id) => id === kandidatId)) {
@@ -136,6 +139,8 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
   return {
     addKandidatVote,
     removeKandidatVote,
+    setKandidatVote,
+
     selectedWahlvorschlaege: computed(() => selectedWahlvorschlaege.value),
     kandidatenVotes: computed(() => kandidatenVotes.value),
     discardedKandidatenIds: computed(() => discardedKandidatenIds.value),

@@ -111,10 +111,11 @@ describe("ergebnisService.ts", () => {
     getStimmzettelumschlaege,
     getBegruendungStimmzettelumschlaege,
     postBegruendung,
+    postNiederschrift,
   } = useErgebnisService();
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   afterAll(() => {
@@ -708,6 +709,109 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.toBegruendungDto.mock.calls).toStrictEqual([
         [begruendung, wahlbezirkID],
       ]);
+    });
+  });
+
+  describe("postNiederschrift", () => {
+    it("should_callClientAndSendingNotification_when_sendNotificationIsTrueAndCallSuccessful", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
+
+      await postNiederschrift(
+        wahlID,
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        hauptwahlbezirkID,
+        true
+      );
+
+      expect(mockDefinitions.sendErgebnisse.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
+          SendErgebnisseMeldungsartEnum.V1,
+          hauptwahlbezirkID,
+        ],
+      ]);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
+      ]);
+    });
+
+    it("should_callClientWithoutSendingNotification_when_sendNotificationIsFalseAndCallSuccessful", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
+
+      await postNiederschrift(
+        wahlID,
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        hauptwahlbezirkID,
+        false
+      );
+
+      expect(mockDefinitions.sendErgebnisse.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
+          SendErgebnisseMeldungsartEnum.V1,
+          hauptwahlbezirkID,
+        ],
+      ]);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
+    });
+
+    it("should_callNotificationServiceAfterFailure_when_sendNotificationIsTrueAndCallFails", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
+      const mockedApiError = new Error("mocked api call failed");
+
+      mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
+
+      await expect(
+        postNiederschrift(
+          wahlID,
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
+          hauptwahlbezirkID,
+          true
+        )
+      ).rejects.toThrowError(mockedApiError);
+
+      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
+      expect(mockDefinitions.addNotification.mock.calls).toEqual([
+        [expect.any(String), UserNotificationCategoryEnum.ERROR],
+      ]);
+    });
+
+    it("should_notCallNotificationServiceAfterFailure_when_sendNotificationIsFalseAndCallFails", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
+      const mockedApiError = new Error("mocked api call failed");
+
+      mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
+
+      await expect(
+        postNiederschrift(
+          wahlID,
+          wahlbezirkID,
+          waehlerverzeichnisNummer,
+          hauptwahlbezirkID,
+          false
+        )
+      ).rejects.toThrowError(mockedApiError);
+      expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
     });
   });
 });

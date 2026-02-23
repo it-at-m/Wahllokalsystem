@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-broadcast-service</artifactId>
-    <version>0.4.8-SNAPSHOT</version>
+    <version>0.4.9-SNAPSHOT</version>
     <name>wls_broadcast_service</name>
 
     <properties>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.26.0.0.0</version>
+            <version>23.26.1.0.0</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>

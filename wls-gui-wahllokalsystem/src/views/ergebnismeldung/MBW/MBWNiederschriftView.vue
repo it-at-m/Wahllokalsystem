@@ -2,7 +2,7 @@
   <base-ergebnismeldung-cards-container
     title="Niederschrift"
     subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
-    :is-sending="isSendingNiederschrift"
+    :is-sending="isNiederschriftAndStatusSaving"
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenValid"
     :is-drucken-loading="isDruckenLoading"
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -44,14 +45,18 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
+const { sendNiederschrift } = useErgebnismeldungStore();
+const { isNiederschriftAndStatusSaving } = storeToRefs(
+  useErgebnismeldungStore()
+);
 
 // button logic to be implemented
-const isSendingNiederschrift = ref<boolean>(false);
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
@@ -67,7 +72,9 @@ if (!wahl) {
 }
 
 function onSendenClicked() {
-  // to be implemented
+  if (wahl) {
+    sendNiederschrift(wahl);
+  }
 }
 function onKorrigierenClicked() {
   // to be implemented

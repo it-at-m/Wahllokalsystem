@@ -21,6 +21,7 @@
       <base-button-save
         :loading="schliessungsuhrzeitState.schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
+        save-text="Speichern und Weiter"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
     </v-card-actions>
@@ -34,10 +35,13 @@ import { computed, ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
 const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
+const { getNextRoute } = useNavigationUtils();
 
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
@@ -49,7 +53,8 @@ const isSaveButtonDisabled = computed(
   () => schliessungsuhrzeitValidForm.value !== true
 );
 
-function onSaveSchliessungsuhrzeitClicked() {
-  schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
+async function onSaveSchliessungsuhrzeitClicked() {
+  await schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
+  await router.push(getNextRoute());
 }
 </script>

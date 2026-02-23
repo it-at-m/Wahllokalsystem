@@ -19,6 +19,7 @@
 ### Dokumentation
 - [ ] Links geprüft
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
+- [ ] Texte auf [gendergerechte Sprache][gender-sensitive-language] geprüft
 
 <!-- Frontend -->
 ### Frontend
@@ -28,6 +29,7 @@
   - [UI/UX-Adrs][ui-ux-adrs-link]
 - [ ] Unit-Tests gepflegt
 - [ ] Texte auf Rechtschreibung und Grammatik geprüft
+- [ ] Texte auf [gendergerechte Sprache][gender-sensitive-language] geprüft
 
 # Referenzen[^1]:
 
@@ -40,3 +42,4 @@ Closes #
 [naming-conventions-link]: https://it-at-m.github.io/Wahllokalsystem/technik/naming_conventions/
 [fachliche-beschreibung-link]: https://it-at-m.github.io/Wahllokalsystem/about/#fachliche-anforderungen
 [ui-ux-adrs-link]: https://it-at-m.github.io/Wahllokalsystem/technik/adr/ui/
+[gender-sensitive-language]: https://it-at-m.github.io/Wahllokalsystem/technik/adr/adr-gender-sensitive-language

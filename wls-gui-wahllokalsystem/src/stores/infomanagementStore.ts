@@ -15,6 +15,7 @@ const { registerStoreHMR } = useHmrUpdate();
 const { isValidDate } = useDateTimeUtils();
 
 const KONFIG_KEY_CHECK_ANWESENHEIT = "MELDUNGSZEIT_ANWESENHEIT_CHECK";
+const KONFIG_KEY_CHECK_WAHLSCHLUSS = "MELDUNGSZEIT_WAHL_SCHLIESSEN";
 
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
@@ -29,23 +30,13 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   const konfigurationsparameter = ref<Konfigurationsparameter[] | null>(null);
 
-  const dateTimeToCheckAnwesenheit = computed(() => {
-    const timeToCheckAnwesenheit = konfigurationsparameter.value?.find(
-      (parameter) => parameter.schluessel === KONFIG_KEY_CHECK_ANWESENHEIT
-    )?.wert;
+  const dateTimeToCheckAnwesenheit = computed(() =>
+    _getDateTimeToCheck(KONFIG_KEY_CHECK_ANWESENHEIT)
+  );
 
-    if (timeToCheckAnwesenheit && currentUserWahltag.value) {
-      const dateToCheckAnwesenheit = new Date(
-        `${currentUserWahltag.value}T${timeToCheckAnwesenheit}`
-      );
-
-      return isValidDate(dateToCheckAnwesenheit)
-        ? dateToCheckAnwesenheit
-        : undefined;
-    } else {
-      return undefined;
-    }
-  });
+  const dateTimeToCheckWahlschluss = computed(() =>
+    _getDateTimeToCheck(KONFIG_KEY_CHECK_WAHLSCHLUSS)
+  );
 
   const fruehesteEroeffnungsuhrzeit = computed(() => {
     switch (currentUserWahlbezirksArt.value) {
@@ -142,9 +133,24 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     return param?.wert || defaultValue;
   }
 
+  function _getDateTimeToCheck(configKey: string) {
+    const timeToCheck = konfigurationsparameter.value?.find(
+      (parameter) => parameter.schluessel === configKey
+    )?.wert;
+    if (timeToCheck && currentUserWahltag.value) {
+      const dateToCheck = new Date(
+        `${currentUserWahltag.value}T${timeToCheck}`
+      );
+      return isValidDate(dateToCheck) ? dateToCheck : undefined;
+    } else {
+      return undefined;
+    }
+  }
+
   return {
     konfigurationsparameter,
     dateTimeToCheckAnwesenheit,
+    dateTimeToCheckWahlschluss,
     initKonfigurationsparameter,
     /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
     fruehesteEroeffnungsuhrzeit,

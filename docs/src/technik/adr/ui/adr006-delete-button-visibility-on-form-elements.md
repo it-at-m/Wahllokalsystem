@@ -14,8 +14,8 @@ In einer Demo hatten wir besprochen, wie wir mit dem Mischbetrieb umgehen wollen
 
 ## Entscheidung
 
-Bei allen Elementen, bei denen der Benutzer einen Wert einträgt, sei es ein Text, ein Datum oder eine Auswahl, soll der
-Löschbutton immer angezeigt werden, sobald ein Wert eingetragen wurde.
+Bei allen Elementen, bei denen die Nutzer\*innen einen Wert eintragen, sei es ein Text, ein Datum oder eine Auswahl,
+soll der Löschbutton immer angezeigt werden, sobald ein Wert eingetragen wurde.
 
 ## Konsequenzen
 
@@ -28,8 +28,8 @@ Weniger individuelle Konfiguration.
 
 ### Negativ
 
-Den Benutzern werden mehr Steuerelemente angezeigt. In Bezug auf die Konfiguration gibt es keine negativen Folgen, da
-bei Bedarf weiterhin eine individuelle Konfiguration erfolgen kann.
+Den Nutzer\*innen werden mehr Steuerelemente angezeigt. In Bezug auf die Konfiguration gibt es keine negativen
+Folgen, da bei Bedarf weiterhin eine individuelle Konfiguration erfolgen kann.
 
 ## Ausnahmen
 

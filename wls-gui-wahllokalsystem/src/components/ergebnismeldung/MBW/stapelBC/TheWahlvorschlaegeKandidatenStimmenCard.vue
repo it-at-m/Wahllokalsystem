@@ -50,8 +50,14 @@
                 :key="wahlvorschlag.identifikator"
               >
                 <tr>
-                  <td class="foldingButtonColumn">
-                    <base-button-folding v-model="expandedRows[index]" />
+                  <td
+                    :id="`kandidatenStimmenErfassen` + index"
+                    class="foldingButtonColumn"
+                  >
+                    <base-button-folding
+                      :model-value="expandedRowIndex === index"
+                      @click="toggleRow(index)"
+                    />
                   </td>
                   <td class="ordnungszahlColumn">
                     D{{ wahlvorschlag.ordnungszahl }}
@@ -81,7 +87,7 @@
                     />
                   </td>
                 </tr>
-                <tr v-if="expandedRows[index]">
+                <tr v-if="expandedRowIndex === index">
                   <td :colspan="COLUMN_COUNT_FULL_COL_SPAN">
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
                       :model-value="proxyModel.value[index]!"
@@ -95,7 +101,7 @@
             </template>
           </v-confirm-edit>
         </tbody>
-        <tfoot>
+        <tfoot id="wahlvorschlaege-table-footer">
           <tr>
             <td
               :colspan="COUNT_COLUMNS_BEFORE_SUM"
@@ -125,15 +131,17 @@
 
 <script setup lang="ts">
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
-import type { Ref } from "vue";
 
-import { computed, onActivated, ref } from "vue";
+import { computed, nextTick, onActivated, ref } from "vue";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
+import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+
+const { scrollIntoView } = useViewportUtils();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
@@ -162,7 +170,7 @@ const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
 );
 
 const ergebnisseAndWahlvorschlaege = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
-const expandedRows: Ref<(boolean | undefined)[]> = ref([]);
+const expandedRowIndex = ref<number | null>(null);
 const dirtyRows = ref<Record<number, boolean>>({});
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;
@@ -172,13 +180,8 @@ onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
 
-  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
-    (wahlvorschlagWithErgebnis, i) => {
-      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
-        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
-      );
-    }
-  );
+  _updateDirtyRowIcons();
+  _openNextCard(0);
 });
 
 const totalSumErgebnisse = computed(() => {
@@ -215,6 +218,10 @@ function getStapelBErgebnisForWahlvorschlagIndex(index: number) {
   );
 }
 
+function toggleRow(index: number) {
+  expandedRowIndex.value = expandedRowIndex.value === index ? null : index;
+}
+
 function onInputChanged(rowIndex: number) {
   dirtyRows.value[rowIndex] = true;
 }
@@ -224,7 +231,44 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   save();
 
   await saveErgebnisse();
-  dirtyRows.value[rowIndex] = false;
+  _updateDirtyRowIcons();
+  _openNextCard(rowIndex);
+}
+
+function _openNextCard(index: number) {
+  expandedRowIndex.value = null;
+  const nextIndex = _getNextDirtyRowIndexOrNull(index);
+  if (nextIndex !== null) {
+    expandedRowIndex.value = nextIndex;
+    if (nextIndex > 0) {
+      nextTick(() => {
+        scrollIntoView("#kandidatenStimmenErfassen" + nextIndex);
+      });
+    }
+  } else {
+    scrollIntoView("#wahlvorschlaege-table-footer");
+  }
+}
+
+function _getNextDirtyRowIndexOrNull(index: number): number | null {
+  const length = wahlvorschlaegeWithKandidatenErgebnissen.value.length;
+  for (let i = 0; i < length; i++) {
+    const currentIndex = (index + i) % length;
+    if (dirtyRows.value[currentIndex]) {
+      return currentIndex;
+    }
+  }
+  return null;
+}
+
+function _updateDirtyRowIcons() {
+  wahlvorschlaegeWithKandidatenErgebnissen.value.forEach(
+    (wahlvorschlagWithErgebnis, i) => {
+      dirtyRows.value[i] = wahlvorschlagWithErgebnis.kandidatenErgebnisse.some(
+        (ergebnisAndKandidat) => ergebnisAndKandidat.ergebnis.ergebnis === null
+      );
+    }
+  );
 }
 </script>
 

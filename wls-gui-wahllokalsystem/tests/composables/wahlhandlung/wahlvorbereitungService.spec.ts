@@ -2,13 +2,16 @@ import type {
   UrnenwahlSchliessungsUhrzeitDTO,
   UrnenwahlSchliessungsUhrzeitWriteDTO,
 } from "@/api/wls-clients/generated-wahlvorbereitung-api";
+import type { Wahlvorbereitung } from "@/types/wahlhandlung/Wahlvorbereitung.ts";
 
 import { useAxiosTestDataFactory } from "@tests/utils/common/AxiosTestDataFactory.ts";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -28,9 +31,6 @@ const mockDefinitions = vi.hoisted(() => ({
   postBriefwahlvorbereitung: vi.fn(),
   toBriefwahlvorbereitungModel: vi.fn(),
   toBriefwahlvorbereitungWriteDto: vi.fn(),
-  workflowStoreMock: {
-    isWahlumgebungErfasst: false,
-  },
 }));
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
@@ -77,10 +77,6 @@ vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
   }),
 }));
 
-vi.mock("@/stores/workflowStore.ts", () => ({
-  useWorkflowStore: () => mockDefinitions.workflowStoreMock,
-}));
-
 const {
   getUrnenwahlSchliessungsUhrzeit,
   postUrnenwahlSchliessungsuhrzeit,
@@ -107,6 +103,8 @@ const { createAxiosResponse } = useAxiosTestDataFactory();
 
 describe("wahlvorbereitungService", () => {
   beforeEach(() => {
+    setActivePinia(createPinia());
+
     vi.resetAllMocks();
     vi.clearAllMocks();
   });
@@ -128,9 +126,12 @@ describe("wahlvorbereitungService", () => {
         mockedMappingResult
       );
 
-      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
-      expect(result).toBe(mockedMappingResult);
+      expect(useWorkflowStore().isStimmabgabeErfasst).toBe(false);
 
+      const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+
+      expect(useWorkflowStore().isStimmabgabeErfasst).toBe(true);
+      expect(result).toBe(mockedMappingResult);
       expect(
         mockDefinitions.getUrnenwahlSchliessungsUhrzeit
       ).toHaveBeenCalledWith(wahlbezirkID);
@@ -147,6 +148,8 @@ describe("wahlvorbereitungService", () => {
       );
 
       const result = await getUrnenwahlSchliessungsUhrzeit(wahlbezirkID);
+
+      expect(useWorkflowStore().isStimmabgabeErfasst).toBe(false);
       expect(result).toBeNull();
     });
 
@@ -165,6 +168,7 @@ describe("wahlvorbereitungService", () => {
             sendNotificationParameter
           )
         ).rejects.toThrow(mockedApiError);
+        expect(useWorkflowStore().isStimmabgabeErfasst).toBe(false);
         expect(
           mockDefinitions.getUrnenwahlSchliessungsUhrzeit
         ).toHaveBeenCalledWith(wahlbezirkID);
@@ -199,7 +203,7 @@ describe("wahlvorbereitungService", () => {
           new Date(schliessungsuhrzeit)
         )
       ).rejects.toThrow("API Error");
-
+      expect(useWorkflowStore().isStimmabgabeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
@@ -218,8 +222,11 @@ describe("wahlvorbereitungService", () => {
         createAxiosResponse({ status: 200, data: mockedApiResponseData })
       );
 
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
+
       const result = await getEroeffnungsuhrzeit(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(true);
       expect(result?.getTime()).toStrictEqual(
         new Date(mockedApiResponseData.eroeffnungsuhrzeit).getTime()
       );
@@ -237,6 +244,7 @@ describe("wahlvorbereitungService", () => {
 
       const result = await getEroeffnungsuhrzeit(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
       expect(result).toBeNull();
     });
 
@@ -249,6 +257,7 @@ describe("wahlvorbereitungService", () => {
       await expect(getEroeffnungsuhrzeit(wahlbezirkID)).rejects.toThrow(
         mockedApiError
       );
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
@@ -263,6 +272,7 @@ describe("wahlvorbereitungService", () => {
       await expect(getEroeffnungsuhrzeit(wahlbezirkID, false)).rejects.toThrow(
         mockedApiError
       );
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([]);
     });
   });
@@ -277,8 +287,11 @@ describe("wahlvorbereitungService", () => {
         mappedUhrzeitToDto
       );
 
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
+
       await postEroeffnungsuhrzeit(wahlbezirkID, uhrzeit);
 
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(true);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
@@ -302,7 +315,7 @@ describe("wahlvorbereitungService", () => {
       await expect(
         postEroeffnungsuhrzeit(wahlbezirkID, uhrzeit)
       ).rejects.toThrow(mockedApiError);
-
+      expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
@@ -326,14 +339,12 @@ describe("wahlvorbereitungService", () => {
           data: createUrnenwahlvorbereitungDTO(),
         })
       );
-      mockDefinitions.workflowStoreMock.isWahlumgebungErfasst = false;
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
 
       const result = await getUrnenwahlvorbereitung(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(true);
       expect(result).toEqual(expectedUrnenwahlvorbereitung);
-      expect(
-        mockDefinitions.workflowStoreMock.isWahlumgebungErfasst
-      ).toStrictEqual(true);
     });
 
     it("should_returnNull_when_apiReturns204", async () => {
@@ -344,14 +355,11 @@ describe("wahlvorbereitungService", () => {
           status: 204,
         })
       );
-      mockDefinitions.workflowStoreMock.isWahlumgebungErfasst = false;
 
       const result = await getUrnenwahlvorbereitung(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(result).toBeNull();
-      expect(
-        mockDefinitions.workflowStoreMock.isWahlumgebungErfasst
-      ).toStrictEqual(false);
     });
 
     it("should_throwErrorAndCallNotificationService_when_apiCallFails", async () => {
@@ -361,21 +369,17 @@ describe("wahlvorbereitungService", () => {
       mockDefinitions.getUrnenwahlVorbereitung.mockRejectedValue(
         mockedApiError
       );
-      mockDefinitions.workflowStoreMock.isWahlumgebungErfasst = false;
 
       await expect(getUrnenwahlvorbereitung(wahlbezirkID)).rejects.toThrow(
         "API Error"
       );
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [
           "Fehler beim Laden der Urnenwahlvorbereitung.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
-      expect(
-        mockDefinitions.workflowStoreMock.isWahlumgebungErfasst
-      ).toStrictEqual(false);
     });
 
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
@@ -389,7 +393,7 @@ describe("wahlvorbereitungService", () => {
       await expect(
         getUrnenwahlvorbereitung(wahlbezirkID, false)
       ).rejects.toThrow("API Error");
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -406,9 +410,11 @@ describe("wahlvorbereitungService", () => {
         mappedUrnenwahlvorbereitungDto
       );
 
-      mockDefinitions.workflowStoreMock.isWahlumgebungErfasst = false;
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
+
       await postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung);
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(true);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
           "Urnenwahlvorbereitung erfolgreich gespeichert.",
@@ -418,9 +424,6 @@ describe("wahlvorbereitungService", () => {
       expect(
         mockDefinitions.postUrnenwahlvorbereitung.mock.calls
       ).toStrictEqual([[wahlbezirkID, mappedUrnenwahlvorbereitungDto]]);
-      expect(
-        mockDefinitions.workflowStoreMock.isWahlumgebungErfasst
-      ).toStrictEqual(true);
     });
 
     it("should_throwApiErrorAndCallNotificationServiceWithError_when_apiCallFailed", async () => {
@@ -438,21 +441,16 @@ describe("wahlvorbereitungService", () => {
         mockedApiError
       );
 
-      mockDefinitions.workflowStoreMock.isWahlumgebungErfasst = false;
-
       await expect(
         postUrnenwahlvorbereitung(wahlbezirkID, urnenwahlvorbereitung)
       ).rejects.toThrow(mockedApiError);
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
           "Speichern der Urnenwahlvorbereitung fehlgeschlagen.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
-      expect(
-        mockDefinitions.workflowStoreMock.isWahlumgebungErfasst
-      ).toStrictEqual(false);
     });
   });
 
@@ -465,11 +463,17 @@ describe("wahlvorbereitungService", () => {
         expectedBriefwahlvorbereitung
       );
       mockDefinitions.getBriefwahlvorbereitung.mockResolvedValue(
-        createBriefwahlvorbereitungDTO()
+        createAxiosResponse({
+          status: 200,
+          data: createBriefwahlvorbereitungDTO(),
+        })
       );
+
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
 
       const result = await getBriefwahlvorbereitung(wahlbezirkID);
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(true);
       expect(result).toEqual(expectedBriefwahlvorbereitung);
     });
 
@@ -484,13 +488,30 @@ describe("wahlvorbereitungService", () => {
       await expect(getBriefwahlvorbereitung(wahlbezirkID)).rejects.toThrow(
         "API Error"
       );
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [
           "Fehler beim Laden der Briefwahlvorbereitung.",
           UserNotificationCategoryEnum.ERROR,
         ],
       ]);
+    });
+
+    it("should_returnDefaultWahlvorbereitung_when_apiReturns204", async () => {
+      const wahlbezirkID = "wahlbezirkID1";
+      mockDefinitions.getBriefwahlvorbereitung.mockReturnValue(
+        createAxiosResponse({ status: 204, data: "" })
+      );
+
+      const result = await getBriefwahlvorbereitung(wahlbezirkID);
+
+      const expectedResult: Wahlvorbereitung = {
+        wahlbezirkID,
+        urneVersiegelt: false,
+        urnenAnzahl: [],
+      };
+      expect(result).toStrictEqual(expectedResult);
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
     });
 
     it("should_notCallNotificationServiceAfterFailure_when_sendNotificationParameterIsFalse", async () => {
@@ -504,7 +525,7 @@ describe("wahlvorbereitungService", () => {
       await expect(
         getBriefwahlvorbereitung(wahlbezirkID, false)
       ).rejects.toThrow("API Error");
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -521,8 +542,11 @@ describe("wahlvorbereitungService", () => {
         mappedBriefwahlvorbereitungDto
       );
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
+
       await postBriefwahlvorbereitung(wahlbezirkID, briefwahlvorbereitung);
 
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(true);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
           "Briefwahlvorbereitung erfolgreich gespeichert.",
@@ -552,7 +576,7 @@ describe("wahlvorbereitungService", () => {
       await expect(
         postBriefwahlvorbereitung(wahlbezirkID, briefwahlvorbereitung)
       ).rejects.toThrow(mockedApiError);
-
+      expect(useWorkflowStore().isWahlumgebungErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [
           "Speichern der Briefwahlvorbereitung fehlgeschlagen.",

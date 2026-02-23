@@ -72,6 +72,7 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const router = useRouter();
 
@@ -87,8 +88,8 @@ const {
   failedTasks,
   hasAllTasksRunSuccessfully,
 } = storeToRefs(useInitTaskManagerStore());
-
 const { rerunFailedTasks } = useInitTaskManagerStore();
+const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 
 const isLoading = computed(() => {
   return (
@@ -97,8 +98,8 @@ const isLoading = computed(() => {
   );
 });
 
-watch(hasAllTasksRunSuccessfully, () => {
-  if (hasAllTasksRunSuccessfully.value) {
+watch([hasAllTasksRunSuccessfully, isTestseiteGedruckt], () => {
+  if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
     router.push(ROUTE_WAHLVORSTAND);
   }
 });

@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-briefwahl-service</artifactId>
-    <version>0.3.8-SNAPSHOT</version>
+    <version>0.3.9-SNAPSHOT</version>
     <name>wls_briefwahl_service</name>
 
 
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.26.0.0.0</version>
+            <version>23.26.1.0.0</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>

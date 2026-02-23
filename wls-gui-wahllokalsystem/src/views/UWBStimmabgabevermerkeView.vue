@@ -10,6 +10,7 @@
         <base-button-save
           :disabled="!stimmabgabevermerkeModel"
           :loading="isStimmabgabevermerkeSaving"
+          save-text="Speichern und Weiter"
           @click="
             checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine
           "

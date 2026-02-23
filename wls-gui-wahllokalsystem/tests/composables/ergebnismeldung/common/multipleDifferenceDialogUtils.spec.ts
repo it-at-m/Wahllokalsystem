@@ -10,6 +10,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 
 import { useMultipleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/multipleDifferenceDialogUtils.ts";
+import router from "@/plugins/router.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
@@ -24,6 +25,7 @@ const { prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
+  routerPush: vi.fn(),
   useDifferenceDialogUtils: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
@@ -31,6 +33,8 @@ const mockDefinitions = vi.hoisted(() => ({
   postStimmabgabevermerke: vi.fn(),
   postWahlscheine: vi.fn(),
 }));
+
+router.push = mockDefinitions.routerPush;
 
 vi.mock(
   "@/composables/ergebnismeldung/common/differenceDialogUtils.ts",
@@ -195,6 +199,7 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postBegruendung).toHaveBeenCalled();
       expect(DIALOG.isVisible).toStrictEqual(false);
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalled();
+      expect(mockDefinitions.routerPush).toHaveBeenCalled();
     });
 
     it("should_saveWahlscheineAndBegruendungAndCloseDialog_when_saveIsCalledInBWB", async () => {
@@ -224,6 +229,7 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postBegruendung).toHaveBeenCalled();
       expect(DIALOG.isVisible).toStrictEqual(false);
       expect(mockDefinitions.postWahlscheine).toHaveBeenCalled();
+      expect(mockDefinitions.routerPush).toHaveBeenCalled();
     });
   });
 

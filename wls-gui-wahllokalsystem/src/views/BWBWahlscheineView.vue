@@ -31,6 +31,7 @@
         <base-button-save
           :disabled="!isWahlscheineFormValid"
           :loading="isWahlscheineSaving"
+          save-text="Speichern und Weiter"
           @click="
             checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine
           "

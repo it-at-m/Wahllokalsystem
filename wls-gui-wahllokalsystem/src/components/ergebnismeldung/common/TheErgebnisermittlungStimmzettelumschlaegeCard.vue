@@ -26,6 +26,7 @@
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
+          save-text="Speichern und Weiter"
           @click="checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege"
         />
       </v-card-actions>

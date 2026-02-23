@@ -5,9 +5,13 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 export function useSingleDifferenceDialogUtils(wahlId: string) {
   const {
@@ -23,6 +27,8 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
     useErgebnisService();
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
     useTextFormatter();
+  const { getNextRoute } = useNavigationUtils();
+  const { setStepDone } = useWorkflowStore();
 
   const dialog = ref<DifferenceDialogItem>();
 
@@ -69,6 +75,15 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function _saveStimmzettelumschlaege() {
     await stimmzettelumschlaegeActions.saveStimmzettelumschlaege(wahlId);
+    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlId);
+    if (wahlbezirkId) {
+      setStepDone(
+        wahlId,
+        wahlbezirkId,
+        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+      );
+      await router.push(getNextRoute());
+    }
   }
 
   async function _getBegruendung() {

@@ -126,6 +126,15 @@
         </tfoot>
       </v-table>
     </v-card-text>
+    <v-card-actions>
+      <base-text-button
+        prepend-icon="$continue"
+        :disabled="isContinueDisabled"
+        active
+        @click="onContinueClicked"
+        >Weiter zur Niederschrift</base-text-button
+      >
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -133,15 +142,23 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { computed, nextTick, onActivated, ref } from "vue";
+import { useRouter } from "vue-router";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseCardWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseCardWahlvorschlagKandidatenStimmenErfassen.vue";
 import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
+const router = useRouter();
+const { setStepDone } = useWorkflowStore();
+const { getNextRoute } = useNavigationUtils();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
@@ -206,6 +223,10 @@ const totalSumVeraendert = computed(() => {
   );
 });
 
+const isContinueDisabled = computed(() => {
+  return Object.values(dirtyRows.value).some((dirtyRow) => dirtyRow === true);
+});
+
 function getStapelAErgebnisForWahlvorschlagIndex(index: number) {
   return (
     ergebnisseAndWahlvorschlaege.value[index]?.ergebnisStapelA.ergebnis ?? 0
@@ -233,6 +254,11 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
   await saveErgebnisse();
   _updateDirtyRowIcons();
   _openNextCard(rowIndex);
+}
+
+async function onContinueClicked() {
+  setStepDone(props.wahlID, props.wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_BC);
+  await router.push(getNextRoute());
 }
 
 function _openNextCard(index: number) {

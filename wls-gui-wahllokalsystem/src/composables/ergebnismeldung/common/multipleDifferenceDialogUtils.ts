@@ -7,6 +7,8 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -24,6 +26,7 @@ export function useMultipleDifferenceDialogUtils() {
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
     useTextFormatter();
   const { updateValidationStateForBegruendung } = useDifferenceDialogUtils();
+  const { getNextRoute } = useNavigationUtils();
 
   const dialogs = ref<DifferenceDialogItem[]>([]);
 
@@ -46,8 +49,10 @@ export function useMultipleDifferenceDialogUtils() {
     if (dialogs.value.filter((dialog) => dialog.isVisible).length === 0) {
       if (isUWB.value) {
         await saveStimmabgabevermerke();
+        await router.push(getNextRoute());
       } else {
         await saveWahlscheine();
+        await router.push(getNextRoute());
       }
     }
   }

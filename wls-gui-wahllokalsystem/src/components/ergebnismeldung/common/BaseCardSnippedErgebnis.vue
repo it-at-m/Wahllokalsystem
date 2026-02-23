@@ -13,6 +13,7 @@
         <base-button-save
           :loading="isErgebnisSaving"
           :disabled="!isFormValid"
+          save-text="Speichern und Weiter"
           @click="onSaveClicked"
         />
       </v-card-actions>

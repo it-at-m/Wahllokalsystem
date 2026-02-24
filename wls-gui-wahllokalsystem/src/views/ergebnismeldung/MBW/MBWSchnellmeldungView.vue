@@ -1,51 +1,32 @@
 <template>
-  <v-card>
-    <v-card-title class="font-weight-bold">Schnellmeldung</v-card-title>
-    <v-card-subtitle class="font-weight-bold mb-10"
-      >Kontrolle, Übermittlung und Druck der Schnellmeldung</v-card-subtitle
-    >
+  <base-ergebnismeldung-cards-container
+    title="Schnellmeldung"
+    subtitle="Kontrolle, Übermittlung und Druck der Schnellmeldung"
+    :is-sending="isSendingSchnellmeldung"
+    :is-korrigieren-active="isKorrigierenValid"
+    :is-drucken-active="isDruckenValid"
+    :is-drucken-loading="isDruckenLoading"
+    @save="onSendenClicked"
+    @edit="onKorrigierenClicked"
+    @print="onDruckenClicked"
+  >
     <the-m-b-w-wahlberechtigte-anzeigen-card
-      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-waehler-anzeigen-card
-      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-ungueltige-stimmen-anzeigen-card
-      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
     <the-m-b-w-gueltige-stimmen-anzeigen-card
-      class="ma-5"
       :wahlbezirk-id="wahlbezirkID"
       :wahl-id="wahlID"
     />
-    <v-card-actions>
-      <base-button-save
-        save-text="Schnellmeldung senden"
-        prepend-icon="$cloudUpload"
-        :loading="isSendingSchnellmeldung"
-        @click="onSendenClicked"
-      />
-      <base-button-save
-        save-text="Schnellmeldung korrigieren"
-        prepend-icon="$edit"
-        :disabled="!isKorrigierenValid"
-        @click="onKorrigierenClicked"
-      />
-      <base-button-save
-        save-text="Schnellmeldung drucken"
-        prepend-icon="$printer"
-        :disabled="!isDruckenValid"
-        :loading="isDruckenLoading"
-        @click="onDruckenClicked"
-      />
-    </v-card-actions>
-  </v-card>
+  </base-ergebnismeldung-cards-container>
 </template>
 
 <script setup lang="ts">
@@ -55,7 +36,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
 import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";

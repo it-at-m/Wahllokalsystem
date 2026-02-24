@@ -28,6 +28,7 @@
         <base-button-save
           data-test="basedialogbegruendung-btn-confirm"
           :disabled="isSaveDisabled"
+          :save-text="saveText"
           @click="onConfirmClicked"
         />
       </v-card-actions>
@@ -52,6 +53,10 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  saveText: {
+    type: String,
+    default: "Speichern",
   },
 });
 

@@ -58,12 +58,12 @@
     "@vue/eslint-config-typescript": "14.6.0",
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.8.1",
-    "axios": "1.13.2",
+    "axios": "1.13.5",
     "eslint": "9.39.2",
     "eslint-plugin-storybook": "0.12.0",
     "eslint-plugin-vue": "9.33.0",
     "jsdom": "26.1.0",
-    "msw": "2.12.7",
+    "msw": "2.12.10",
     "msw-storybook-addon": "2.0.6",
     "prettier": "3.7.4",
     "sass": "1.97.3",
@@ -88,5 +88,10 @@
     "workerDirectory": [
       ".msw/public"
     ]
+  },
+  "overrides": {
+    "@storybook/vue3": {
+      "vue-component-type-helpers": "3.2.5"
+    }
   }
 }

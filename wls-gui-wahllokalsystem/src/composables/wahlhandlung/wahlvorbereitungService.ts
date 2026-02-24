@@ -61,11 +61,12 @@ export function useWahlvorbereitungService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      if (!responseData) {
+      if (responseData) {
+        useWorkflowStore().isStimmabgabeErfasst = true;
+        return toUrnenwahlSchliessungsuhrzeitModel(responseData);
+      } else {
         return null;
       }
-
-      return toUrnenwahlSchliessungsuhrzeitModel(responseData);
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -88,12 +89,15 @@ export function useWahlvorbereitungService() {
         );
       const responseData = getNullOn204OrElseResponseData(response);
 
-      if (!responseData) {
-        return null;
+      if (responseData) {
+        const eroeffnungsuhrzeit = new Date(responseData.eroeffnungsuhrzeit);
+        if (isValidDate(eroeffnungsuhrzeit)) {
+          useWorkflowStore().isWahleroeffnungErfasst = true;
+          return eroeffnungsuhrzeit;
+        }
       }
 
-      const eroeffnungsuhrzeit = new Date(responseData.eroeffnungsuhrzeit);
-      return isValidDate(eroeffnungsuhrzeit) ? eroeffnungsuhrzeit : null;
+      return null;
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -114,6 +118,7 @@ export function useWahlvorbereitungService() {
         wahlbezirkID,
         toEroeffnungsuhrzeitWriteDTO(eroeffnungsuhrzeit)
       );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
       userNotificationService.addNotification(
         "Eröffnungsuhrzeit erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
@@ -139,6 +144,7 @@ export function useWahlvorbereitungService() {
         wahlbezirkID,
         schliessungsuhrzeitWriteDTO
       );
+      useWorkflowStore().isStimmabgabeErfasst = true;
       userNotificationService.addNotification(
         "Schliessungsuhrzeit erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
@@ -211,9 +217,21 @@ export function useWahlvorbereitungService() {
     sendNotification = true
   ): Promise<Wahlvorbereitung> {
     try {
-      return await briefwahlvorbereitungControllerAPI
-        .getBriefwahlvorbereitung(wahlbezirkID)
-        .then((response) => toBriefwahlvorbereitungModel(response.data));
+      const response =
+        await briefwahlvorbereitungControllerAPI.getBriefwahlvorbereitung(
+          wahlbezirkID
+        );
+      const responseData = getNullOn204OrElseResponseData(response);
+      if (responseData) {
+        useWorkflowStore().isWahlumgebungErfasst = true;
+        return toBriefwahlvorbereitungModel(responseData);
+      } else {
+        return {
+          urnenAnzahl: [],
+          wahlbezirkID: wahlbezirkID,
+          urneVersiegelt: false,
+        };
+      }
     } catch (error) {
       if (sendNotification) {
         userNotificationService.addNotification(
@@ -242,6 +260,7 @@ export function useWahlvorbereitungService() {
         "Briefwahlvorbereitung erfolgreich gespeichert.",
         UserNotificationCategoryEnum.SUCCESS
       );
+      useWorkflowStore().isWahlumgebungErfasst = true;
     } catch (error) {
       userNotificationService.addNotification(
         "Speichern der Briefwahlvorbereitung fehlgeschlagen.",

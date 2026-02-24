@@ -6,7 +6,8 @@ services:
     container_name: wls-broadcast-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-broadcast-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -26,7 +27,8 @@ services:
     container_name: wls-infomanagement-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-infomanagement-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -46,7 +48,8 @@ services:
     container_name: wls-briefwahl-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-briefwahl-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -66,7 +69,8 @@ services:
     container_name: wls-wahlvorbereitung-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorbereitung-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -86,7 +90,8 @@ services:
     container_name: wls-vorfaelleundvorkommnisse-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-vorfaelleundvorkommnisse-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -106,7 +111,8 @@ services:
     container_name: wls-basisdaten-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-basisdaten-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -128,7 +134,8 @@ services:
     container_name: wls-monitoring-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-monitoring-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -149,7 +156,8 @@ services:
     container_name: wls-wahlvorstand-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-wahlvorstand-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -172,7 +180,8 @@ services:
     container_name: wls-ergebnismeldung-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-ergebnismeldung-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -198,7 +207,8 @@ services:
     container_name: wls-admin-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-admin-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -222,7 +232,8 @@ services:
     container_name: wls-eai-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-eai-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -252,10 +263,21 @@ services:
       - './oracle-database:/container-entrypoint-startdb.d'
     networks:
       - services
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 120s
+      test: [ "CMD-SHELL", "/opt/oracle/healthcheck.sh" ]
 
   refarch-gateway-wls:
     container_name: wls-refarch-gateway-wls
     image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    depends_on:
+      wls-auth-service:
+        condition: service_healthy
+      wls-auth-service-reverse-proxy:
+        condition: service_healthy
     env_file:
       - .env
     ports:
@@ -283,14 +305,19 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
     security_opt:
       - no-new-privileges:true
 
   refarch-gateway-admin:
     container_name: wls-refarch-gateway-admin
     image: ghcr.io/it-at-m/wahllokalsystem-wls-api-gateway:latest
+    depends_on:
+      wls-auth-service:
+        condition: service_healthy
+      wls-auth-service-reverse-proxy:
+        condition: service_healthy
     env_file:
       - .env
     ports:
@@ -318,8 +345,8 @@ services:
       interval: 30s
       timeout: 60s
       retries: 3
-      start_period: 60s
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
     security_opt:
       - no-new-privileges:true
 
@@ -327,7 +354,8 @@ services:
     container_name: wls-auth-service
     image: ghcr.io/it-at-m/wahllokalsystem-wls-auth-service:latest
     depends_on:
-      - wls-db-oracle
+      wls-db-oracle:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -385,6 +413,12 @@ services:
       - 8100:8080
     networks:
       - services
+    healthcheck:
+      interval: 30s
+      timeout: 60s
+      retries: 3
+      start_period: 120s
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health" ]
 
   wls-gui-wahllokalsystem:
     container_name: wls-gui-wahllokalsystem
@@ -408,7 +442,7 @@ services:
 
   wls-refarch-gateway-wls-reverse-proxy:
     container_name: wls-refarch-gateway-wls-reverse-proxy
-    image: nginx:alpine@sha256:b0f7830b6bfaa1258f45d94c240ab668ced1b3651c8a222aefe6683447c7bf55
+    image: nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba
     ports:
       - "58083:443"
     volumes:
@@ -418,13 +452,19 @@ services:
 
   wls-auth-service-reverse-proxy:
     container_name: wls-auth-service-reverse-proxy
-    image: nginx:alpine@sha256:b0f7830b6bfaa1258f45d94c240ab668ced1b3651c8a222aefe6683447c7bf55
+    image: nginx:alpine@sha256:1d13701a5f9f3fb01aaa88cef2344d65b6b5bf6b7d9fa4cf0dca557a8d7702ba
     ports:
       - "58100:443"
     volumes:
       - ./reverse-proxy-auth-service/ssl:/etc/nginx/ssl
       - ./reverse-proxy-auth-service/nginx.conf:/etc/nginx/conf.d/default.conf
     restart: always
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      test: [ "CMD-SHELL", "curl -f --insecure https://localhost:443/nginx-health" ]
 
 networks:
   internal:

@@ -5,12 +5,8 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 export function useSingleDifferenceDialogUtils(
   wahlId: string,
@@ -28,8 +24,6 @@ export function useSingleDifferenceDialogUtils(
     useErgebnisService();
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
     useTextFormatter();
-  const { getNextRoute } = useNavigationUtils();
-  const { setStepDone } = useWorkflowStore();
 
   const dialog = ref<DifferenceDialogItem>();
 
@@ -76,12 +70,6 @@ export function useSingleDifferenceDialogUtils(
 
   async function _saveStimmzettelumschlaege() {
     await stimmzettelumschlaegeActions.saveStimmzettelumschlaege(wahlId);
-    setStepDone(
-      wahlId,
-      wahlbezirkId,
-      MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
-    );
-    await router.push(getNextRoute());
   }
 
   async function _getBegruendung() {
@@ -114,6 +102,7 @@ export function useSingleDifferenceDialogUtils(
 
   return {
     dialog,
+    isWahlscheineUnequalToStimmzettel,
     checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege,
     saveBegruendungAndStimmzettelumschlaege,
     updateValidationStateForBegruendung,

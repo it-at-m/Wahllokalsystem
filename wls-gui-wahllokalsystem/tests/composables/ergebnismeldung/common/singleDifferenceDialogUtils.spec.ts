@@ -8,25 +8,19 @@ import { ref } from "vue";
 
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
-import router from "@/plugins/router.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
-  routerPush: vi.fn(),
   useDifferenceDialogUtils: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   saveStimmzettelumschlaege: vi.fn(),
   getBegruendungStimmzettelumschlaege: vi.fn(),
   postBegruendung: vi.fn(),
-  setStepDone: vi.fn(),
 }));
-
-router.push = mockDefinitions.routerPush;
 
 vi.mock(
   "@/composables/ergebnismeldung/common/differenceDialogUtils.ts",
@@ -43,12 +37,6 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
     stimmzettelumschlaegeActions: {
       saveStimmzettelumschlaege: mockDefinitions.saveStimmzettelumschlaege,
     },
-  }),
-}));
-
-vi.mock("@/stores/workflowStore.ts", () => ({
-  useWorkflowStore: () => ({
-    setStepDone: mockDefinitions.setStepDone,
   }),
 }));
 
@@ -146,12 +134,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalledWith(
         WAHL_ID
       );
-      expect(mockDefinitions.routerPush).toHaveBeenCalled();
-      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
-        WAHL_ID,
-        WAHLBEZIRK_ID,
-        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
-      );
     });
 
     it("should_saveStimmzettel_when_saveIsCalledAndNoDialogExists", async () => {
@@ -164,12 +146,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
       expect(mockDefinitions.postBegruendung).not.toHaveBeenCalled();
       expect(mockDefinitions.saveStimmzettelumschlaege).toHaveBeenCalledWith(
         WAHL_ID
-      );
-      expect(mockDefinitions.routerPush).toHaveBeenCalled();
-      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
-        WAHL_ID,
-        WAHLBEZIRK_ID,
-        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
       );
     });
   });

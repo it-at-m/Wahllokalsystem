@@ -11,6 +11,7 @@ import { VNumberInput } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheWahlumgebungBwbCard from "@/components/wahlhandlung/TheWahlumgebungBwbCard.vue";
+import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -18,6 +19,7 @@ import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
+  routerPush: vi.fn(),
 }));
 
 vi.mock("@/composables/wahl/wahlservice", () => ({
@@ -25,6 +27,8 @@ vi.mock("@/composables/wahl/wahlservice", () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),
 }));
+
+router.push = mockDefinitions.routerPush;
 
 describe("TheWahlumgebungBwbCard.vue", () => {
   let wahlenStore: ReturnType<typeof useWahlenStore>;

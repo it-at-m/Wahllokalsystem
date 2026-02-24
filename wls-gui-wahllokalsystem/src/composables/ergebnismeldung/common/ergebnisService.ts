@@ -270,6 +270,38 @@ export function useErgebnisService() {
     }
   }
 
+  async function postNiederschrift(
+    wahlID: string,
+    wahlbezirkID: string,
+    waehlerverzeichnisNummer: number,
+    hauptwahlbezirkID: string,
+    sendNotification = true
+  ) {
+    try {
+      await ergebnismeldungsControllerApi.sendErgebnisse(
+        wahlID,
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        SendErgebnisseMeldungsartEnum.V1,
+        hauptwahlbezirkID
+      );
+      if (sendNotification) {
+        addNotification(
+          `Niederschrift erfolgreich versendet.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          `Senden der Niederschrift fehlgeschlagen.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     getErgebnisse,
     postErgebnisse,
@@ -278,5 +310,6 @@ export function useErgebnisService() {
     getStimmzettelumschlaege,
     getBegruendungStimmzettelumschlaege,
     postBegruendung,
+    postNiederschrift,
   };
 }

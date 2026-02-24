@@ -89,6 +89,7 @@ Es gibt kein Output.
 
 - [Github-Imageregistry][link-github-imageregistry]
   - das neue Image hat den Tag `latest-dev`
+  - es wird ein Multi-Arch-Image für `linux/amd64` und `linux/arm64` erzeugt
 
 ## Releasing
 
@@ -131,6 +132,7 @@ sequenceDiagram
   - bei Backend-Services wird die openAPI-Spezifikation den Assets beigelegt
 - [Github-Imageregistry][link-github-imageregistry]
   - das neue Image hat den Tag `latest` und bei Backend-Services zusätzliche Tags entsprechend der Version
+  - es wird ein Multi-Arch-Image für `linux/amd64` und `linux/arm64` erzeugt
 
 [link-github-tag]: https://github.com/it-at-m/Wahllokalsystem/tags
 [link-github-release]: https://github.com/it-at-m/Wahllokalsystem/releases

@@ -88,5 +88,10 @@
     "workerDirectory": [
       ".msw/public"
     ]
+  },
+  "overrides": {
+    "@storybook/vue3": {
+      "vue-component-type-helpers": "3.2.5"
+    }
   }
 }

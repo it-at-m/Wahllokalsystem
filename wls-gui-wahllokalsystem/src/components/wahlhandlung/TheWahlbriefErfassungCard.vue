@@ -93,6 +93,7 @@
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
+        save-text="Speichern und Weiter"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -109,7 +110,9 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
+import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
@@ -122,6 +125,7 @@ const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { toHhMm } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
+const { getNextRoute } = useNavigationUtils();
 
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
@@ -179,7 +183,8 @@ function isZeitNachtraegelichUeberbrachtRequired() {
   );
 }
 
-function onSaveBriefwahldatenClicked() {
-  wahlbriefDatenActions.sendWahlbriefdaten();
+async function onSaveBriefwahldatenClicked() {
+  await wahlbriefDatenActions.sendWahlbriefdaten();
+  await router.push(getNextRoute());
 }
 </script>

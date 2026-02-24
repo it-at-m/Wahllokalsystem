@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE}) /* , "dummy.nobezirkid.check"}) */
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class BeanstandeteWahlbriefeControllerIntegrationTest {
 
   @Autowired MockMvc api;
@@ -228,7 +228,7 @@ public class BeanstandeteWahlbriefeControllerIntegrationTest {
                               Authorities.REPOSITORY_READ_BEANSTANDETE_WAHLBRIEFE))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID1")));
 
-      api.perform(request).andExpect(status().isForbidden()).andReturn();
+      api.perform(request).andExpect(status().isForbidden());
     }
   }
 

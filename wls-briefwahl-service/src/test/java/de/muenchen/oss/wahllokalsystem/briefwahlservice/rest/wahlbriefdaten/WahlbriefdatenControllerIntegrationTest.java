@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE}) // , Profiles.NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlbriefdatenControllerIntegrationTest {
 
   @Autowired MockMvc api;
@@ -195,7 +195,7 @@ public class WahlbriefdatenControllerIntegrationTest {
               .with(
                   jwt()
                       .authorities(
-                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLBRIEFDATEN))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLBRIEFDATEN))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", userWahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)

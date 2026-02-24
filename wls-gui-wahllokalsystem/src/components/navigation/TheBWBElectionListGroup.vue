@@ -15,46 +15,22 @@
       </v-list-item>
     </template>
     <v-list-item
-      :title="
-        disabled
-          ? 'Beginn Stimmabgabe'
-          : isWahleroeffnungErfasst
-            ? '✅ Beginn Stimmabgabe'
-            : '✏️ Beginn Stimmabgabe'
-      "
+      title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
       :disabled="disabled || !isWahlvorstandErfasst"
     />
     <v-list-item
-      :title="
-        disabled || !isWahleroeffnungErfasst
-          ? 'Wahlumgebung'
-          : isWahlumgebungErfasst
-            ? '✅ Wahlumgebung'
-            : '✏️ Wahlumgebung'
-      "
+      title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
       :disabled="disabled || !isWahleroeffnungErfasst"
     />
     <v-list-item
-      :title="
-        disabled || !isWahlumgebungErfasst
-          ? 'Wahlbriefe erfassen'
-          : isWahlbriefeErfassenErfasst
-            ? '✅ Wahlbriefe erfassen'
-            : '✏️ Wahlbriefe erfassen'
-      "
+      title="Wahlbriefe erfassen"
       :to="routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)"
       :disabled="disabled || !isWahlumgebungErfasst"
     />
     <v-list-item
-      :title="
-        disabled || !isWahlbriefeErfassenErfasst
-          ? 'Wahlbriefe zulassen'
-          : isWahlbriefeZulassenErfasst
-            ? '✅ Wahlbriefe zulassen'
-            : '✏️ Wahlbriefe zulassen'
-      "
+      title="Wahlbriefe zulassen"
       :to="routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)"
       :disabled="disabled || !isWahlbriefeErfassenErfasst"
     />
@@ -90,7 +66,6 @@ const {
   isWahlumgebungErfasst,
   isWahleroeffnungErfasst,
   isWahlbriefeErfassenErfasst,
-  isWahlbriefeZulassenErfasst,
   isWahlvorstandErfasst,
 } = storeToRefs(useWorkflowStore());
 

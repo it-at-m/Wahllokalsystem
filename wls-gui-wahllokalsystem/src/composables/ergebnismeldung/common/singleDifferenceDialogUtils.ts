@@ -7,13 +7,15 @@ import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/d
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import router from "@/plugins/router.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-export function useSingleDifferenceDialogUtils(wahlId: string) {
+export function useSingleDifferenceDialogUtils(
+  wahlId: string,
+  wahlbezirkId: string
+) {
   const {
     anzahlWahlscheineOrStimmabgabevermerke,
     anzahlStimmzettel,
@@ -22,7 +24,6 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
   } = useDifferenceDialogUtils(wahlId);
   const { stimmzettelumschlaegeActions } = useWahlenStore();
   const { wahlenActions } = useWahlenStore();
-  const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
   const { getBegruendungStimmzettelumschlaege, postBegruendung } =
     useErgebnisService();
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
@@ -75,22 +76,18 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function _saveStimmzettelumschlaege() {
     await stimmzettelumschlaegeActions.saveStimmzettelumschlaege(wahlId);
-    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlId);
-    if (wahlbezirkId) {
-      setStepDone(
-        wahlId,
-        wahlbezirkId,
-        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
-      );
-      await router.push(getNextRoute());
-    }
+    setStepDone(
+      wahlId,
+      wahlbezirkId,
+      MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+    );
+    await router.push(getNextRoute());
   }
 
   async function _getBegruendung() {
     const wahl = wahlenActions.getWahlOrUndefinedById(wahlId);
-    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlId);
     let begruendungStimmzettel;
-    if (wahl && wahlbezirkId) {
+    if (wahl) {
       begruendungStimmzettel = await getBegruendungStimmzettelumschlaege(
         wahl,
         wahlbezirkId,
@@ -103,20 +100,15 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function _saveBegruendung() {
     if (dialog.value) {
-      const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(
-        dialog.value.differenceBegruendung.wahlId
+      await postBegruendung(
+        {
+          wahlID: dialog.value.differenceBegruendung.wahlId,
+          stapelart: StapelArtEnum.StimmzettelUmschlaege,
+          grund: dialog.value.differenceBegruendung.begruendung,
+          unstimmigkeiten: true,
+        },
+        wahlbezirkId
       );
-      if (wahlbezirkId) {
-        await postBegruendung(
-          {
-            wahlID: dialog.value.differenceBegruendung.wahlId,
-            stapelart: StapelArtEnum.StimmzettelUmschlaege,
-            grund: dialog.value.differenceBegruendung.begruendung,
-            unstimmigkeiten: true,
-          },
-          wahlbezirkId
-        );
-      }
     }
   }
 

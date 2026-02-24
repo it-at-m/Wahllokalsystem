@@ -96,6 +96,7 @@ const {
 
 const props = defineProps<{
   wahlId: string;
+  wahlbezirkId: string;
   title: string;
   useTime?: boolean;
 }>();
@@ -111,7 +112,7 @@ const {
   saveBegruendungAndStimmzettelumschlaege,
   updateValidationStateForBegruendung,
   getDialogContent,
-} = useSingleDifferenceDialogUtils(props.wahlId);
+} = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 

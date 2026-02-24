@@ -49,11 +49,10 @@ export function useMultipleDifferenceDialogUtils() {
     if (dialogs.value.filter((dialog) => dialog.isVisible).length === 0) {
       if (isUWB.value) {
         await saveStimmabgabevermerke();
-        await router.push(getNextRoute());
       } else {
         await saveWahlscheine();
-        await router.push(getNextRoute());
       }
+      await router.push(getNextRoute());
     }
   }
 

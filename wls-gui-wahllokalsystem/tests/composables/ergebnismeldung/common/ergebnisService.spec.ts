@@ -3,7 +3,16 @@ import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/comm
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStimmzettelumschlaegeTestDataFactory } from "@tests/utils/ergebnismeldung/common/StimmzettelumschlaegeTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
-import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
@@ -13,6 +22,7 @@ import {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -36,6 +46,15 @@ const mockDefinitions = vi.hoisted(() => ({
   postBegruendung: vi.fn(),
   toBegruendungModel: vi.fn(),
   toBegruendungDto: vi.fn(),
+  setStepDone: vi.fn(),
+}));
+
+vi.mock("@/stores/workflowStore.ts", () => ({
+  useWorkflowStore: () => ({
+    isMbwStapelAErfasst: false,
+    isMbwStapelBErfasst: true,
+    setStepDone: mockDefinitions.setStepDone,
+  }),
 }));
 
 vi.mock(
@@ -114,6 +133,10 @@ describe("ergebnisService.ts", () => {
     postNiederschrift,
   } = useErgebnisService();
 
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
   afterEach(() => {
     vi.resetAllMocks();
   });
@@ -185,6 +208,114 @@ describe("ergebnisService.ts", () => {
 
       expect(result).toBeNull();
       expect(mockDefinitions.toErgebnisseModel).not.toHaveBeenCalled();
+    });
+
+    it("should_setStepDone_when_wahlIDWahlbezirkIdAndStapelArtMbwDUngueltigGiven", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArtModel = StapelArtEnum.MbwDUngueltig;
+      const stapelArtDto = GetErgebnisseStapelartEnum.MbwDUngueltig;
+
+      const mockedErgebnisseModel = createErgebnisse();
+      const mockedErgebnisseDto = createErgebnisseDTO();
+
+      mockDefinitions.getErgebnisse.mockResolvedValue({
+        status: 200,
+        data: mockedErgebnisseDto,
+      });
+      mockDefinitions.toErgebnisseModel.mockReturnValue(mockedErgebnisseModel);
+      mockDefinitions.toGetErgebnisseStapelartEnum.mockReturnValue(
+        stapelArtDto
+      );
+
+      const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArtModel);
+
+      expect(result).toEqual(mockedErgebnisseModel);
+      expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
+        wahlbezirkID,
+        wahlID,
+        stapelArtDto
+      );
+      expect(mockDefinitions.toErgebnisseModel).toHaveBeenCalledWith(
+        mockedErgebnisseDto
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG
+      );
+    });
+
+    it("should_returnErgebnisseAndSetStepDoneForStapelAB_when_wahlIDWahlbezirkIdAndStapelArtMbwAGiven", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArtModel = StapelArtEnum.MbwA;
+      const stapelArtDto = GetErgebnisseStapelartEnum.MbwA;
+
+      const mockedErgebnisseModel = createErgebnisse();
+      const mockedErgebnisseDto = createErgebnisseDTO();
+
+      mockDefinitions.getErgebnisse.mockResolvedValue({
+        status: 200,
+        data: mockedErgebnisseDto,
+      });
+      mockDefinitions.toErgebnisseModel.mockReturnValue(mockedErgebnisseModel);
+      mockDefinitions.toGetErgebnisseStapelartEnum.mockReturnValue(
+        stapelArtDto
+      );
+
+      const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArtModel);
+
+      expect(result).toEqual(mockedErgebnisseModel);
+      expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
+        wahlbezirkID,
+        wahlID,
+        stapelArtDto
+      );
+      expect(mockDefinitions.toErgebnisseModel).toHaveBeenCalledWith(
+        mockedErgebnisseDto
+      );
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_STAPEL_A_AND_B
+      );
+    });
+
+    it("should_returnErgebnisseAndNotSetStepDone_when_wahlIDWahlbezirkIdAndStapelArtMbwBGiven", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const stapelArtModel = StapelArtEnum.MbwB;
+      const stapelArtDto = GetErgebnisseStapelartEnum.MbwB;
+
+      const mockedErgebnisseModel = createErgebnisse();
+      const mockedErgebnisseDto = createErgebnisseDTO();
+
+      mockDefinitions.getErgebnisse.mockResolvedValue({
+        status: 200,
+        data: mockedErgebnisseDto,
+      });
+      mockDefinitions.toErgebnisseModel.mockReturnValue(mockedErgebnisseModel);
+      mockDefinitions.toGetErgebnisseStapelartEnum.mockReturnValue(
+        stapelArtDto
+      );
+
+      const result = await getErgebnisse(wahlbezirkID, wahlID, stapelArtModel);
+
+      expect(result).toEqual(mockedErgebnisseModel);
+      expect(mockDefinitions.getErgebnisse).toHaveBeenCalledWith(
+        wahlbezirkID,
+        wahlID,
+        stapelArtDto
+      );
+      expect(mockDefinitions.toErgebnisseModel).toHaveBeenCalledWith(
+        mockedErgebnisseDto
+      );
+      expect(mockDefinitions.setStepDone).not.toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_STAPEL_A_AND_B
+      );
     });
   });
 
@@ -436,6 +567,11 @@ describe("ergebnisService.ts", () => {
         mockDefinitions.toStimmzettelumschlaegeModel.mock.calls
       ).toStrictEqual([[dto]]);
       expect(result).toStrictEqual(mockedStimmzettelumschlaege);
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahl.wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+      );
     });
 
     it("should_callNotificationServiceAfterSuccess_when_sendNotificationParameterIsTrue", async () => {

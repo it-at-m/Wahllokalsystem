@@ -15,7 +15,9 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const {
@@ -69,6 +71,44 @@ export function useErgebnisService() {
       }
 
       const responseData = getNullOn204OrElseResponseData(response);
+      if (
+        !responseData?.ergebnisse.find((ergebnis) => ergebnis.ergebnis === null)
+      ) {
+        const { isMbwStapelAErfasst, isMbwStapelBErfasst, setStepDone } =
+          useWorkflowStore();
+
+        switch (stapelArt) {
+          case StapelArtEnum.MbwDUngueltig:
+            setStepDone(
+              wahlID,
+              wahlbezirkID,
+              MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG
+            );
+            break;
+          case StapelArtEnum.MbwA:
+            if (isMbwStapelBErfasst) {
+              setStepDone(
+                wahlID,
+                wahlbezirkID,
+                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+              );
+            } else {
+              useWorkflowStore().isMbwStapelAErfasst = true;
+            }
+            break;
+          case StapelArtEnum.MbwB:
+            if (isMbwStapelAErfasst) {
+              setStepDone(
+                wahlID,
+                wahlbezirkID,
+                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+              );
+            } else {
+              useWorkflowStore().isMbwStapelBErfasst = true;
+            }
+            break;
+        }
+      }
       return responseData ? toErgebnisseModel(responseData) : null;
     } catch {
       if (sendNotification) {
@@ -198,6 +238,17 @@ export function useErgebnisService() {
         );
       }
       const responseData = getNullOn204OrElseResponseData(response);
+      if (
+        responseData?.anzahlWaehler !== null &&
+        responseData?.anzahlWaehler !== undefined
+      ) {
+        const { setStepDone } = useWorkflowStore();
+        setStepDone(
+          wahl.wahlID,
+          wahlbezirkID,
+          MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+        );
+      }
       return responseData ? toStimmzettelumschlaegeModel(responseData) : null;
     } catch (e) {
       if (sendNotification) {

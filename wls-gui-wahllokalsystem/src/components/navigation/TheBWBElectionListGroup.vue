@@ -12,28 +12,89 @@
         >
           {{ disabledMessage }}
         </template>
+        <template
+          v-if="disabled"
+          #prepend
+        >
+          <v-icon
+            :icon="disabled ? '$disabled' : ''"
+            size="small"
+          />
+        </template>
       </v-list-item>
     </template>
     <v-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
       :disabled="disabled || !isWahlvorstandErfasst"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          :icon="
+            disabled
+              ? '$disabled'
+              : isWahleroeffnungErfasst
+                ? '$valid'
+                : '$edit'
+          "
+          size="small"
+        />
+      </template>
+    </v-list-item>
     <v-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
       :disabled="disabled || !isWahleroeffnungErfasst"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          :icon="
+            disabled || !isWahleroeffnungErfasst
+              ? '$disabled'
+              : isWahlumgebungErfasst
+                ? '$valid'
+                : '$edit'
+          "
+          size="small"
+        />
+      </template>
+    </v-list-item>
     <v-list-item
       title="Wahlbriefe erfassen"
       :to="routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)"
       :disabled="disabled || !isWahlumgebungErfasst"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          :icon="
+            disabled || !isWahlumgebungErfasst
+              ? '$disabled'
+              : isWahlbriefeErfassenErfasst
+                ? '$valid'
+                : '$edit'
+          "
+          size="small"
+        />
+      </template>
+    </v-list-item>
     <v-list-item
       title="Wahlbriefe zulassen"
       :to="routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)"
       :disabled="disabled || !isWahlbriefeErfassenErfasst"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          :icon="
+            disabled || !isWahlbriefeErfassenErfasst
+              ? '$disabled'
+              : isWahlbriefeZulassenErfasst
+                ? '$valid'
+                : '$edit'
+          "
+          size="small"
+        />
+      </template>
+    </v-list-item>
   </v-list-group>
 </template>
 
@@ -66,6 +127,7 @@ const {
   isWahlumgebungErfasst,
   isWahleroeffnungErfasst,
   isWahlbriefeErfassenErfasst,
+  isWahlbriefeZulassenErfasst,
   isWahlvorstandErfasst,
 } = storeToRefs(useWorkflowStore());
 

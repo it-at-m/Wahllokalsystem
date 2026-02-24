@@ -19,6 +19,15 @@
       >
         {{ disabledMessagePreviousStepsRequired }}
       </template>
+      <template
+        v-if="isWahlscheineDisabled"
+        #prepend
+      >
+        <v-icon
+          :icon="isWahlscheineDisabled ? '$disabled' : ''"
+          size="small"
+        />
+      </template>
     </v-list-item>
     <v-list-item
       v-if="isUWB"
@@ -32,6 +41,15 @@
         #subtitle
       >
         {{ disabledMessagePreviousStepsRequired }}
+      </template>
+      <template
+        v-if="isStimmabgabevermerkeDisabled"
+        #prepend
+      >
+        <v-icon
+          :icon="isStimmabgabevermerkeDisabled ? '$disabled' : ''"
+          size="small"
+        />
       </template>
     </v-list-item>
     <the-scores-list-group-selector

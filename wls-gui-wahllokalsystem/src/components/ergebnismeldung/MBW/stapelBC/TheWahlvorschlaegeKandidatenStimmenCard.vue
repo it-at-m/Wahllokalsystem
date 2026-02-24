@@ -224,7 +224,11 @@ const totalSumVeraendert = computed(() => {
 });
 
 const isContinueDisabled = computed(() => {
-  return Object.values(dirtyRows.value).some((dirtyRow) => dirtyRow === true);
+  return (
+    isLoading.value ||
+    wahlvorschlaegeWithKandidatenErgebnissen.value.length === 0 ||
+    Object.values(dirtyRows.value).some((dirtyRow) => dirtyRow === true)
+  );
 });
 
 function getStapelAErgebnisForWahlvorschlagIndex(index: number) {

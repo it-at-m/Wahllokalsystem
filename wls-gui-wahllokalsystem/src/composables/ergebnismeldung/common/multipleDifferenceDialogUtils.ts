@@ -115,6 +115,7 @@ export function useMultipleDifferenceDialogUtils() {
   async function _openDialogsOrSave(saveFunction: () => Promise<void>) {
     if (dialogs.value.length === 0) {
       await saveFunction();
+      await router.push(getNextRoute());
     } else {
       dialogs.value.forEach((dialog) => {
         dialog.isVisible = true;

@@ -72,11 +72,12 @@ export function useErgebnisService() {
 
       const responseData = getNullOn204OrElseResponseData(response);
       if (
-        !responseData?.ergebnisse.find((ergebnis) => ergebnis.ergebnis === null)
+        responseData !== undefined &&
+        responseData !== null &&
+        !responseData.ergebnisse.find((ergebnis) => ergebnis.ergebnis === null)
       ) {
         const { isMbwStapelAErfasst, isMbwStapelBErfasst, setStepDone } =
           useWorkflowStore();
-
         switch (stapelArt) {
           case StapelArtEnum.MbwDUngueltig:
             setStepDone(

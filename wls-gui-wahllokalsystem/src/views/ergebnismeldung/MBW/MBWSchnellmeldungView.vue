@@ -6,6 +6,7 @@
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenValid"
     :is-drucken-loading="isDruckenLoading"
+    :is-senden-active="isSendenActive"
     @save="onSendenClicked"
     @edit="onKorrigierenClicked"
     @print="onDruckenClicked"
@@ -75,6 +76,7 @@ const { getNextRoute } = useNavigationUtils();
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
+const isSendenActive = ref<boolean>(true);
 
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
@@ -121,6 +123,7 @@ async function onDruckenClicked() {
         await router.push(getNextRoute());
       }
 
+      isSendenActive.value = false;
       // todo update status #2002
     }
   } catch {

@@ -114,9 +114,9 @@ async function onDruckenClicked() {
         printWindow.document.body.innerHTML = buildTemplateFromData(data);
         printWindow.print();
         printWindow.close();
+        isSendenActive.value = false;
       }
 
-      isSendenActive.value = false;
       // todo update status #2002
     }
   } catch {

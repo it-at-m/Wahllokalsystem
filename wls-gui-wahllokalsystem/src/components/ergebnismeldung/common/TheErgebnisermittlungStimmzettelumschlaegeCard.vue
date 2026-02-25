@@ -36,6 +36,7 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
+      save-text="Speichern und Weiter"
       @cancel="dialog.isVisible = false"
       @confirm="onConfirmClicked"
     >

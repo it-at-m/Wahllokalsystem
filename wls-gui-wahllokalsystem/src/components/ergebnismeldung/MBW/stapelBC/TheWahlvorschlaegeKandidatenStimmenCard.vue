@@ -142,7 +142,6 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { computed, nextTick, onActivated, ref } from "vue";
-import { useRouter } from "vue-router";
 
 import BaseButtonFolding from "@/components/common/buttons/BaseButtonFolding.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
@@ -152,11 +151,11 @@ import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/commo
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
-const router = useRouter();
 const { setStepDone } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 

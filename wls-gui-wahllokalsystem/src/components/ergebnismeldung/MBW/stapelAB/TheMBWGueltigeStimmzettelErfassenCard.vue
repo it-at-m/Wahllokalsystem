@@ -25,17 +25,16 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/
 import type { PropType } from "vue";
 
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { setStepDone } = useWorkflowStore();
-const router = useRouter();
 const { getNextRoute } = useNavigationUtils();
 
 const modelValue = defineModel({

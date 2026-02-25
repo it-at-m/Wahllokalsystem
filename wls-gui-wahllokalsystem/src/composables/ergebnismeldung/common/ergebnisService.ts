@@ -3,6 +3,8 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
+import { storeToRefs } from "pinia";
+
 import {
   BegruendungControllerApi,
   Configuration,
@@ -76,8 +78,9 @@ export function useErgebnisService() {
         responseData !== null &&
         !responseData.ergebnisse.find((ergebnis) => ergebnis.ergebnis === null)
       ) {
-        const { isMbwStapelAErfasst, isMbwStapelBErfasst, setStepDone } =
-          useWorkflowStore();
+        const { setStepDone } = useWorkflowStore();
+        const { isMbwStapelAErfasst, isMbwStapelBErfasst } =
+          storeToRefs(useWorkflowStore());
         switch (stapelArt) {
           case StapelArtEnum.MbwDUngueltig:
             setStepDone(
@@ -87,7 +90,7 @@ export function useErgebnisService() {
             );
             break;
           case StapelArtEnum.MbwA:
-            if (isMbwStapelBErfasst) {
+            if (isMbwStapelBErfasst.value) {
               setStepDone(
                 wahlID,
                 wahlbezirkID,
@@ -98,7 +101,7 @@ export function useErgebnisService() {
             }
             break;
           case StapelArtEnum.MbwB:
-            if (isMbwStapelAErfasst) {
+            if (isMbwStapelAErfasst.value) {
               setStepDone(
                 wahlID,
                 wahlbezirkID,
@@ -108,6 +111,7 @@ export function useErgebnisService() {
               useWorkflowStore().isMbwStapelBErfasst = true;
             }
             break;
+          //TODO Überprüfung für Stapel_BC wird mit #2471
         }
       }
       return responseData ? toErgebnisseModel(responseData) : null;

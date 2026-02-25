@@ -13,6 +13,7 @@ import {
   it,
   vi,
 } from "vitest";
+import { ref } from "vue";
 
 import {
   BezirkUndWahlIDStapelartDTOStapelartEnum as DtoStapelArtEnum,
@@ -51,8 +52,8 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("@/stores/workflowStore.ts", () => ({
   useWorkflowStore: () => ({
-    isMbwStapelAErfasst: false,
-    isMbwStapelBErfasst: true,
+    isMbwStapelAErfasst: ref(false),
+    isMbwStapelBErfasst: ref(true),
     setStepDone: mockDefinitions.setStepDone,
   }),
 }));

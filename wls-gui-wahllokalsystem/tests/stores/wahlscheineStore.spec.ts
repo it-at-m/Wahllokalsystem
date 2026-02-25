@@ -73,7 +73,7 @@ describe("wahlscheineStore.ts", () => {
       expect(unitUnderTest.wahlscheine).toStrictEqual([
         {
           bezirkUndWahlID: { wahlID, wahlbezirkID },
-          stimmabgabevermerke: 0,
+          stimmabgabevermerke: null,
         },
       ]);
     });

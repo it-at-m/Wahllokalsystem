@@ -6,7 +6,6 @@
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenValid"
     :is-drucken-loading="isDruckenLoading"
-    :is-senden-active="isSendenActive"
     @save="onSendenClicked"
     @edit="onKorrigierenClicked"
     @print="onDruckenClicked"
@@ -61,7 +60,6 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
-const isSendenActive = ref<boolean>(true);
 
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;

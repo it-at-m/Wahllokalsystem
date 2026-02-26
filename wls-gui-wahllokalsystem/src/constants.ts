@@ -51,3 +51,15 @@ export const MIN_LENGTH_FOR_BEGRUENDUNG = 3;
 export const MAX_LENGTH_FOR_TEXT_INPUT = 500;
 
 export const PRIMARY_COLOR = "#546e7a";
+
+export const DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED =
+  "Erst Anwesenheit erfassen.";
+export const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
+  "Nicht genügend Mitglieder anwesend.";
+export const DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING =
+  "Wahlhandlung muss abgeschlossen sein.";
+export const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
+  "Wahlbriefzulassung muss abgeschlossen sein.";
+export const DISABLED_SUBTITLE_WAHLSCHEINE_MISSING = "Erst Wahlbriefe zählen.";
+export const DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING =
+  "Erst Stimmabgabevermerke erfassen.";

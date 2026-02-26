@@ -9,6 +9,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.mockito.Mockito.mockStatic;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.monitoring.mod
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.wahlvorbereitung.model.UrnenwahlSchliessungsUhrzeitDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.WithMockUserAsJwt;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
@@ -65,6 +65,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -74,7 +75,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, "dummy.nobezirkid.check"})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class ErgebnismeldungControllerIntegrationTest {
 
   @Autowired MockMvc mockMvc;
@@ -133,14 +134,14 @@ class ErgebnismeldungControllerIntegrationTest {
       @Nested
       class ForUWB {
 
-        @WithMockUserAsJwt(
+/*        @WithMockUserAsJwt(
             claimProperties = "wahlbezirksArt=UWB",
             authorities = {
               Authorities.REPOSITORY_READ_STATUS,
               Authorities.REPOSITORY_WRITE_STATUS,
               Authorities.SERVICE_GET_STATUS,
               Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-            })
+            })*/
         @Test
         void
             should_sendSchnellmeldungToMonitoringService_when_statusForBezirkUndWahlRequiredSchnellmeldungToSend()
@@ -149,6 +150,7 @@ class ErgebnismeldungControllerIntegrationTest {
           val wahlID = "wahlID";
           val waehlerverzeichnisNummer = 1L;
 
+          SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STATUS);
           val statusToSend =
               new Status(
                   new BezirkUndWahlID(wahlID, wahlbezirkID),
@@ -175,7 +177,19 @@ class ErgebnismeldungControllerIntegrationTest {
                       createURISendErgebnismeldungForNiederschrift(
                           wahlbezirkID, wahlID, waehlerverzeichnisNummer))
                   .header("forceergebnismeldung", "true")
-                  .with(csrf());
+                  .with(csrf())
+                  .with(jwt()
+                              .authorities(
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS),
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                              )
+                              .jwt(jwt -> jwt
+                                      .claim("wahlbezirkID", wahlbezirkID)
+                                      .claim("wahlbezirksArt", "UWB")
+                              )
+                  );
           mockMvc.perform(request).andExpect(status().isOk());
 
           val statusRequest =
@@ -197,15 +211,59 @@ class ErgebnismeldungControllerIntegrationTest {
           Assertions.assertThat(sendStatusRequestBodyAsDTO)
               .isEqualTo(expectedSendStatusRequestBody);
         }
+          @Test
+          void
+          should_returnForbidden_when_wahlBezirkIdIsWrong()
+                  throws Exception {
+              val wahlbezirkID = "wahlbezirkID";
+              val wahlID = "wahlID";
+              val waehlerverzeichnisNummer = 1L;
 
-        @WithMockUserAsJwt(
+              SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STATUS);
+              val statusToSend =
+                      new Status(
+                              new BezirkUndWahlID(wahlID, wahlbezirkID),
+                              createMeldung(Validierungsstatus.VALIDE),
+                              createMeldung(Validierungsstatus.NICHT_GESENDET));
+              statusRepository.save(statusToSend);
+
+              val mockedNow = LocalDateTime.now();
+
+              val mockedUrnenwahlschliessungsUhrzeit =
+                      new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(mockedNow);
+              stubFor(
+                      get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+                              .willReturn(
+                                      createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
+
+              val request =
+                      MockMvcRequestBuilders.post(
+                                      createURISendErgebnismeldungForNiederschrift(
+                                              wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                              .header("forceergebnismeldung", "true")
+                              .with(csrf())
+                              .with(jwt()
+                                      .authorities(
+                                              new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
+                                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                                      )
+                                      .jwt(jwt -> jwt
+                                              .claim("wahlbezirkID", "wahlbezirkID1_Wrong")
+                                              .claim("wahlbezirksArt", "UWB")
+                                      )
+                              );
+              mockMvc.perform(request).andExpect(status().isForbidden());
+          }
+
+/*        @WithMockUserAsJwt(
             claimProperties = "wahlbezirksArt=UWB",
             authorities = {
               Authorities.REPOSITORY_READ_STATUS,
               Authorities.REPOSITORY_WRITE_STATUS,
               Authorities.SERVICE_GET_STATUS,
               Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-            })
+            })*/
         @Test
         @Disabled(
             "nicht durchführbar weil eine fehlende Schließungsuhrzeit zu einem Fehler führt welcher als geschlossen interpretiert wird #793")
@@ -214,7 +272,7 @@ class ErgebnismeldungControllerIntegrationTest {
           val wahlbezirkID = "wahlbezirkID";
           val wahlID = "wahlID";
           val waehlerverzeichnisNummer = 1L;
-
+          SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STATUS);
           val statusToSend =
               new Status(
                   new BezirkUndWahlID(wahlID, wahlbezirkID),
@@ -234,7 +292,17 @@ class ErgebnismeldungControllerIntegrationTest {
                       createURISendErgebnismeldungForNiederschrift(
                           wahlbezirkID, wahlID, waehlerverzeichnisNummer))
                   .header("forceergebnismeldung", "true")
-                  .with(csrf());
+                  .with(csrf())
+                      .with(jwt()
+                              .authorities(
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                              )
+                              .jwt(jwt -> jwt
+                                      .claim("wahlbezirkID", wahlbezirkID)
+                                      .claim("wahlbezirksArt", "UWB")
+                              ));
           val mockMvcResult =
               mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
           val resultBodyAsWlsExceptionDTO =
@@ -250,7 +318,7 @@ class ErgebnismeldungControllerIntegrationTest {
     @Nested
     class SendErgebnisseToEAI {
 
-      @WithMockUserAsJwt(
+     /* @WithMockUserAsJwt(
           claimProperties = "wahlbezirksArt=UWB",
           authorities = {
             Authorities.REPOSITORY_READ_STATUS,
@@ -267,54 +335,137 @@ class ErgebnismeldungControllerIntegrationTest {
             Authorities.REPOSITORY_READ_ERGEBNISSE,
             Authorities.REPOSITORY_WRITE_ERGEBNISSE,
             Authorities.SERVICE_GET_ERGEBNISSE,
-          })
-      @Test
-      void should_sendErgebnisseToEAI_when_ergebnisseAreValid() throws Exception {
-        val wahlbezirkID = "wahlbezirkID";
-        val wahlID = "wahlID";
-        val waehlerverzeichnisNummer = 1L;
+          })*/
+     @Test
+     void should_sendErgebnisseToEAI_when_ergebnisseAreValid() throws Exception {
+         val wahlbezirkID = "wahlbezirkID";
+         val wahlID = "wahlID";
+         val waehlerverzeichnisNummer = 1L;
+         SecurityUtils.runWith(
+                 Authorities.REPOSITORY_WRITE_STATUS,
+                 Authorities.REPOSITORY_WRITE_ERGEBNISSE,
+                 Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
+                 Authorities.REPOSITORY_WRITE_AWERTE
+         );
+         insertDataForErgebnismeldungIntoRepositories(
+                 wahlID, wahlbezirkID, waehlerverzeichnisNummer);
 
-        insertDataForErgebnismeldungIntoRepositories(
-            wahlID, wahlbezirkID, waehlerverzeichnisNummer);
+         // define wiremock stubbings
+         val mockedWahltagID = "wahltagID";
+         val mockedKonfigurierterWahltag = new KonfigurierterWahltagDTO().wahltagID(mockedWahltagID);
+         stubFor(
+                 get("/businessActions/konfigurierterWahltag")
+                         .willReturn(createWireMockResponse(mockedKonfigurierterWahltag, HttpStatus.OK)));
 
-        // define wiremock stubbings
-        val mockedWahltagID = "wahltagID";
-        val mockedKonfigurierterWahltag = new KonfigurierterWahltagDTO().wahltagID(mockedWahltagID);
-        stubFor(
-            get("/businessActions/konfigurierterWahltag")
-                .willReturn(createWireMockResponse(mockedKonfigurierterWahltag, HttpStatus.OK)));
+         val mockedWahlenOfWahltag =
+                 List.of(new WahlDTO().wahlart(WahlDTO.WahlartEnum.EUW).wahlID(wahlID));
+         stubFor(
+                 get("/businessActions/wahlen/" + mockedWahltagID)
+                         .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 
-        val mockedWahlenOfWahltag =
-            List.of(new WahlDTO().wahlart(WahlDTO.WahlartEnum.EUW).wahlID(wahlID));
-        stubFor(
-            get("/businessActions/wahlen/" + mockedWahltagID)
-                .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
+         val mockedUrnenwahlschliessungsUhrzeit =
+                 new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+         stubFor(
+                 get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+                         .willReturn(
+                                 createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
+         val eaiServiceStubbing =
+                 stubFor(post("/ergebnismeldung").willReturn(createWireMockResponse(HttpStatus.OK)));
 
-        val mockedUrnenwahlschliessungsUhrzeit =
-            new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
-        stubFor(
-            get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
-                .willReturn(
-                    createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
-        val eaiServiceStubbing =
-            stubFor(post("/ergebnismeldung").willReturn(createWireMockResponse(HttpStatus.OK)));
+         val request =
+                 MockMvcRequestBuilders.post(
+                                 createURISendErgebnismeldungForNiederschrift(
+                                         wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                         .with(csrf())
+                         .with(jwt()
+                                 .authorities(
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_SEND_ERGEBNISSE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_GET_STIMMABGABEVERMERKE),
+                                         new SimpleGrantedAuthority( Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_AWERTE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_AWERTE),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE),
+                                         new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE)
+                                 )
+                                 .jwt(jwt -> jwt
+                                         .claim("wahlbezirkID", wahlbezirkID)
+                                         .claim("wahlbezirksArt", "UWB")
+                                 ));
+         mockMvc.perform(request).andExpect(status().isOk());
 
-        val request =
-            MockMvcRequestBuilders.post(
-                    createURISendErgebnismeldungForNiederschrift(
-                        wahlbezirkID, wahlID, waehlerverzeichnisNummer))
-                .with(csrf());
-        mockMvc.perform(request).andExpect(status().isOk());
+         val eaiEvents = getAllServeEvents(ServeEventQuery.forStubMapping(eaiServiceStubbing));
+         Assertions.assertThat(eaiEvents.size()).isEqualTo(1);
 
-        val eaiEvents = getAllServeEvents(ServeEventQuery.forStubMapping(eaiServiceStubbing));
-        Assertions.assertThat(eaiEvents.size()).isEqualTo(1);
+         val sendErgebnismeldungToEAI =
+                 objectMapper.readValue(
+                         eaiEvents.get(0).getRequest().getBody(), ErgebnismeldungDTO.class);
+         Assertions.assertThat(sendErgebnismeldungToEAI.getWahlbezirkID()).isEqualTo(wahlbezirkID);
+         Assertions.assertThat(sendErgebnismeldungToEAI.getWahlID()).isEqualTo(wahlID);
+     }
+        @Test
+        void should_returnForbidden_when_wahlBezirkIdIsWrong() throws Exception {
+            val wahlbezirkID = "wahlbezirkID";
+            val wahlID = "wahlID";
+            val waehlerverzeichnisNummer = 1L;
+            SecurityUtils.runWith(
+                    Authorities.REPOSITORY_WRITE_STATUS,
+                    Authorities.REPOSITORY_WRITE_ERGEBNISSE,
+                    Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
+                    Authorities.REPOSITORY_WRITE_AWERTE
+            );
+            insertDataForErgebnismeldungIntoRepositories(
+                    wahlID, wahlbezirkID, waehlerverzeichnisNummer);
 
-        val sendErgebnismeldungToEAI =
-            objectMapper.readValue(
-                eaiEvents.get(0).getRequest().getBody(), ErgebnismeldungDTO.class);
-        Assertions.assertThat(sendErgebnismeldungToEAI.getWahlbezirkID()).isEqualTo(wahlbezirkID);
-        Assertions.assertThat(sendErgebnismeldungToEAI.getWahlID()).isEqualTo(wahlID);
-      }
+            // define wiremock stubbings
+            val mockedWahltagID = "wahltagID";
+            val mockedKonfigurierterWahltag = new KonfigurierterWahltagDTO().wahltagID(mockedWahltagID);
+            stubFor(
+                    get("/businessActions/konfigurierterWahltag")
+                            .willReturn(createWireMockResponse(mockedKonfigurierterWahltag, HttpStatus.OK)));
+
+            val mockedWahlenOfWahltag =
+                    List.of(new WahlDTO().wahlart(WahlDTO.WahlartEnum.EUW).wahlID(wahlID));
+            stubFor(
+                    get("/businessActions/wahlen/" + mockedWahltagID)
+                            .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
+
+            val mockedUrnenwahlschliessungsUhrzeit =
+                    new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            stubFor(
+                    get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
+                            .willReturn(
+                                    createWireMockResponse(mockedUrnenwahlschliessungsUhrzeit, HttpStatus.OK)));
+            val eaiServiceStubbing =
+                    stubFor(post("/ergebnismeldung").willReturn(createWireMockResponse(HttpStatus.OK)));
+
+            val request =
+                    MockMvcRequestBuilders.post(
+                                    createURISendErgebnismeldungForNiederschrift(
+                                            wahlbezirkID, wahlID, waehlerverzeichnisNummer))
+                            .header("forceergebnismeldung", "true")
+                            .with(csrf())
+                            .with(jwt()
+                                    .authorities(
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                                    )
+                                    .jwt(jwt -> jwt
+                                            .claim("wahlbezirkID", "wahlbezirkID_wrong")
+                                            .claim("wahlbezirksArt", "UWB")
+                                    ));
+            mockMvc.perform(request).andExpect(status().isForbidden());
+        }
 
       private void insertDataForErgebnismeldungIntoRepositories(
           String wahlID, String wahlbezirkID, long waehlerverzeichnisNummer) {

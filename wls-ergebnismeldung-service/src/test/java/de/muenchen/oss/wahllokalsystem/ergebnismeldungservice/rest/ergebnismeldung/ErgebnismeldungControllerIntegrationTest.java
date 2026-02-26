@@ -134,14 +134,6 @@ class ErgebnismeldungControllerIntegrationTest {
       @Nested
       class ForUWB {
 
-/*        @WithMockUserAsJwt(
-            claimProperties = "wahlbezirksArt=UWB",
-            authorities = {
-              Authorities.REPOSITORY_READ_STATUS,
-              Authorities.REPOSITORY_WRITE_STATUS,
-              Authorities.SERVICE_GET_STATUS,
-              Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-            })*/
         @Test
         void
             should_sendSchnellmeldungToMonitoringService_when_statusForBezirkUndWahlRequiredSchnellmeldungToSend()
@@ -246,7 +238,8 @@ class ErgebnismeldungControllerIntegrationTest {
                                       .authorities(
                                               new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
                                               new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
-                                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                                              new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS)
                                       )
                                       .jwt(jwt -> jwt
                                               .claim("wahlbezirkID", "wahlbezirkID1_Wrong")
@@ -256,14 +249,6 @@ class ErgebnismeldungControllerIntegrationTest {
               mockMvc.perform(request).andExpect(status().isForbidden());
           }
 
-/*        @WithMockUserAsJwt(
-            claimProperties = "wahlbezirksArt=UWB",
-            authorities = {
-              Authorities.REPOSITORY_READ_STATUS,
-              Authorities.REPOSITORY_WRITE_STATUS,
-              Authorities.SERVICE_GET_STATUS,
-              Authorities.SERVICE_UPDATE_SENDUNGSZEITEN
-            })*/
         @Test
         @Disabled(
             "nicht durchführbar weil eine fehlende Schließungsuhrzeit zu einem Fehler führt welcher als geschlossen interpretiert wird #793")
@@ -318,24 +303,6 @@ class ErgebnismeldungControllerIntegrationTest {
     @Nested
     class SendErgebnisseToEAI {
 
-     /* @WithMockUserAsJwt(
-          claimProperties = "wahlbezirksArt=UWB",
-          authorities = {
-            Authorities.REPOSITORY_READ_STATUS,
-            Authorities.REPOSITORY_WRITE_STATUS,
-            Authorities.SERVICE_GET_STATUS,
-            Authorities.SERVICE_SEND_ERGEBNISSE,
-            Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE,
-            Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
-            Authorities.SERVICE_GET_STIMMABGABEVERMERKE,
-            Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
-            Authorities.REPOSITORY_READ_AWERTE,
-            Authorities.REPOSITORY_WRITE_AWERTE,
-            Authorities.SERVICE_GET_AWERTE,
-            Authorities.REPOSITORY_READ_ERGEBNISSE,
-            Authorities.REPOSITORY_WRITE_ERGEBNISSE,
-            Authorities.SERVICE_GET_ERGEBNISSE,
-          })*/
      @Test
      void should_sendErgebnisseToEAI_when_ergebnisseAreValid() throws Exception {
          val wahlbezirkID = "wahlbezirkID";
@@ -389,7 +356,7 @@ class ErgebnismeldungControllerIntegrationTest {
                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE),
                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE),
                                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_STIMMABGABEVERMERKE),
-                                         new SimpleGrantedAuthority( Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE),
+                                         new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE),
                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_AWERTE),
                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_AWERTE),
                                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
@@ -458,7 +425,21 @@ class ErgebnismeldungControllerIntegrationTest {
                                     .authorities(
                                             new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
                                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
-                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS)
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_SEND_ERGEBNISSE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_STIMMABGABEVERMERKE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_AWERTE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_AWERTE),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE),
+                                            new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE),
+                                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE)
                                     )
                                     .jwt(jwt -> jwt
                                             .claim("wahlbezirkID", "wahlbezirkID_wrong")

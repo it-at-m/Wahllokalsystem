@@ -77,6 +77,12 @@ const isWahlscheineDisabled = computed(
   () => !isWahlvorstandErfasst.value || !isWahlbriefzulassungErfasst.value
 );
 
+const isWahlscheineOrStimmabgabevermerkeDisabled = computed(() =>
+  isUWB.value
+    ? isStimmabgabevermerkeDisabled.value
+    : isWahlscheineDisabled.value
+);
+
 const disabledMessagePreviousStepsRequired = computed(() => {
   if (!isWahlvorstandErfasst.value) {
     return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
@@ -90,12 +96,6 @@ const disabledMessagePreviousStepsRequired = computed(() => {
 });
 
 const groupActivatorListItemLines = computed(() =>
-  isUWB.value
-    ? isStimmabgabevermerkeDisabled.value
-      ? false
-      : "one"
-    : isWahlscheineDisabled.value
-      ? false
-      : "one"
+  isWahlscheineOrStimmabgabevermerkeDisabled.value ? false : "one"
 );
 </script>

@@ -11,7 +11,7 @@
           :disabled="!stimmabgabevermerkeModel"
           :loading="isStimmabgabevermerkeSaving"
           save-text="Speichern und Weiter"
-          @click="onSaveStimmabgabevermerkeClicked"
+          @click="onSaveClicked"
         /> </v-card-actions
     ></v-card>
     <base-dialog-begruendung
@@ -22,7 +22,7 @@
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
       save-text="Speichern und Weiter"
       @cancel="dialog.isVisible = false"
-      @confirm="onSaveBegruendungClicked(dialog)"
+      @confirm="onConfirmClicked(dialog)"
     >
       <div class="font-weight-bold mb-3">
         {{
@@ -95,15 +95,14 @@ const { getNextRoute } = useNavigationUtils();
 
 const stimmabgabevermerkeModel = ref(false);
 
-async function onSaveStimmabgabevermerkeClicked() {
+async function onSaveClicked() {
   await checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine();
-
-  if (!dialogs.value.some((dialog) => dialog.isVisible === true)) {
+  if (dialogs.value.length === 0) {
     await router.push(getNextRoute());
   }
 }
 
-async function onSaveBegruendungClicked(dialog: DifferenceDialogItem) {
+async function onConfirmClicked(dialog: DifferenceDialogItem) {
   await saveBegruendungAndStimmabgabevermerkeWahlscheine(dialog);
   await router.push(getNextRoute());
 }

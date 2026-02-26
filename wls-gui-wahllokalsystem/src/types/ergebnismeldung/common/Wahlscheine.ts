@@ -2,5 +2,5 @@ import type { BezirkUndWahlID } from "@/types/ergebnismeldung/common/BezirkUndWa
 
 export interface Wahlscheine {
   bezirkUndWahlID: BezirkUndWahlID;
-  stimmabgabevermerke: number;
+  stimmabgabevermerke: number | null;
 }

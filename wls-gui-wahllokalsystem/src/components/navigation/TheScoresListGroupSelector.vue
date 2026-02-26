@@ -40,6 +40,11 @@ import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import {
+  DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,
+  DISABLED_SUBTITLE_WAHLSCHEINE_MISSING,
+  DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -76,10 +81,12 @@ const isMBWAuszaehlungDisabled = computed(() => {
 });
 
 const disabledMessagePreviousStepsRequired = computed(() => {
-  if (isBWB.value && isMBWAuszaehlungDisabled.value) {
-    return "Erst Wahlbriefe zählen.";
-  } else if (isUWB.value && isMBWAuszaehlungDisabled.value) {
-    return "Erst Stimmabgabevermerke erfassen.";
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  } else if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLSCHEINE_MISSING;
+  } else if (isUWB.value && !isStimmabgabevermerkeErfasst.value) {
+    return DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING;
   } else {
     return "";
   }

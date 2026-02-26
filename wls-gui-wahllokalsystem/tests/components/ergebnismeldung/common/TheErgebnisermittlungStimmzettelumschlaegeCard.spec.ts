@@ -76,6 +76,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -102,6 +103,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -128,6 +130,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -154,6 +157,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -181,6 +185,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -207,6 +212,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });
@@ -235,6 +241,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
         },
         props: {
           wahlId: "123",
+          wahlbezirkId: "456",
           title: "Titel",
         },
       });

@@ -1,15 +1,15 @@
 <template>
   <base-dialog
     :visible="visible"
-    :dialogtitle="WAHLSCHLUSS_ERFASSEN"
-    :confirmtext="WAHLSCHLUSS_ERFASSEN"
+    :dialogtitle="titleBasedOnWahlbezirksArt"
+    :confirmtext="confirmTextBasedOnWahlbezirksArt"
     canceltext="Bleiben"
     icon="$information"
     @confirm="onConfirmClicked"
     @cancel="onCancelClicked"
   >
     <div>
-      Es ist {{ timeToCheck }} Uhr und der Wahlschluss sollte erfasst werden.
+      {{ descriptionBasedOnWahlbezirksArt }}
     </div>
     <div>
       Stimmen Sie der sofortigen Weiterleitung zu, oder führen Sie diese Aufgabe
@@ -35,6 +35,8 @@ const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 const { isUWB } = storeToRefs(useUserStore());
 
 const WAHLSCHLUSS_ERFASSEN = "Wahlschluss erfassen";
+const AUSZAEHLUNG_BEGINNEN = "Auszählung beginnen";
+const URNENOEFFNUNG_ERFASSEN = "Wahlurnenöffnung erfassen";
 
 const { setupTimer, clearTimer } = useDateOfActionTimeout(
   "Wahlschlusscheck Timeout",
@@ -49,6 +51,20 @@ const timeToCheck = computed(() => {
     ? toTimeWithHoursAndOptionalMinutes(dateTimeToCheckWahlschluss.value)
     : 0;
 });
+
+const titleBasedOnWahlbezirksArt = computed(() =>
+  isUWB.value ? WAHLSCHLUSS_ERFASSEN : AUSZAEHLUNG_BEGINNEN
+);
+
+const confirmTextBasedOnWahlbezirksArt = computed(() =>
+  isUWB.value ? WAHLSCHLUSS_ERFASSEN : URNENOEFFNUNG_ERFASSEN
+);
+
+const descriptionBasedOnWahlbezirksArt = computed(() =>
+  isUWB.value
+    ? `Es ist ${timeToCheck.value} Uhr und der Wahlschluss sollte erfasst werden.`
+    : `Es ist ${timeToCheck.value} Uhr und mit der Auszählung kann begonnen werden.`
+);
 
 onMounted(() => {
   setupTimer();

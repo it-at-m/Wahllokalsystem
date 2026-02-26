@@ -11,6 +11,7 @@
       <base-button-save
         :save-text="`${title} senden`"
         prepend-icon="$cloudUpload"
+        :disabled="!isSendenActive"
         :loading="isSending"
         @click="$emit('save')"
       />
@@ -21,7 +22,7 @@
         @click="$emit('edit')"
       />
       <base-button-save
-        :save-text="`${title} drucken`"
+        :save-text="`${title} drucken und weiter`"
         prepend-icon="$printer"
         :disabled="!isDruckenActive"
         :loading="isDruckenLoading"
@@ -41,6 +42,7 @@ defineProps<{
   isKorrigierenActive: boolean | null | undefined;
   isDruckenActive: boolean | null | undefined;
   isDruckenLoading: boolean;
+  isSendenActive: boolean;
 }>();
 
 defineEmits<{

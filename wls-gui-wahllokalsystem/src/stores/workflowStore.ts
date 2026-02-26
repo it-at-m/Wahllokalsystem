@@ -34,6 +34,9 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
       isStimmabgabeErfasst.value
   );
 
+  const isMbwStapelAErfasst = ref(false);
+  const isMbwStapelBErfasst = ref(false);
+
   const electionWorkflowsStates = ref<ElectionWorkflowState[]>([]);
 
   function getElectionWorkflowState(
@@ -100,6 +103,8 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     isStimmabgabevermerkeErfasst,
     isWahlbriefzulassungErfasst,
     isWahlhandlungErfasst,
+    isMbwStapelAErfasst,
+    isMbwStapelBErfasst,
     getElectionWorkflowState,
     initElectionWorkflowState,
     isElectionFinished,

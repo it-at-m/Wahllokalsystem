@@ -47,6 +47,18 @@
                   {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
                 </td>
               </tr>
+              <tr
+                v-if="Object.keys(groupedKandidatenByTabellenSpalte).length > 1"
+              >
+                <td class="border-b-sm"><!-- KandidatLaufendeNummer --></td>
+                <td class="font-weight-bold text-right border-e-md border-b-sm">
+                  {{
+                    group.reduce((sum, kandidat) => {
+                      return sum + (kandidat.ergebnis.ergebnis ?? 0);
+                    }, 0)
+                  }}
+                </td>
+              </tr>
             </tbody>
           </v-table>
         </v-col>

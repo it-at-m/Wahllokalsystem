@@ -4,6 +4,8 @@
       <tr>
         <th class="index-column" />
         <th class="font-weight-bold text-left">Wahlvorschlag</th>
+        <th class="font-weight-bold text-right">Stapel a</th>
+        <th class="font-weight-bold text-right">Stapel b</th>
         <th class="font-weight-bold text-right">Insgesamt</th>
       </tr>
     </thead>
@@ -17,6 +19,12 @@
         </td>
         <td>{{ vorschlag.wahlvorschlag.kurzname }}</td>
         <td class="text-right">
+          {{ vorschlag.ergebnisStapelA.ergebnis ?? 0 }}
+        </td>
+        <td class="text-right">
+          {{ vorschlag.ergebnisStapelB.ergebnis ?? 0 }}
+        </td>
+        <td class="text-right">
           {{
             (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
             (vorschlag.ergebnisStapelB.ergebnis ?? 0)
@@ -28,6 +36,8 @@
       <tr>
         <td class="font-weight-bold index-column">D</td>
         <td class="font-weight-bold">Gültige Stimmen</td>
+        <td><!-- Stapel a --></td>
+        <td><!-- Stapel b --></td>
         <td class="font-weight-bold text-right">{{ totalSum }}</td>
       </tr>
     </tfoot>

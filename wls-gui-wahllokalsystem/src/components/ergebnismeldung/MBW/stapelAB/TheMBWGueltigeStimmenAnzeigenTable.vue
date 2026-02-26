@@ -36,9 +36,11 @@
       <tr>
         <td class="font-weight-bold index-column">D</td>
         <td class="font-weight-bold">Gültige Stimmen</td>
-        <td><!-- Stapel a --></td>
-        <td><!-- Stapel b --></td>
-        <td class="font-weight-bold text-right">{{ totalSum }}</td>
+        <td class="font-weight-bold text-right">{{ totalSumStapelA }}</td>
+        <td class="font-weight-bold text-right">{{ totalSumStapelB }}</td>
+        <td class="font-weight-bold text-right">
+          {{ totalSumStapelA + totalSumStapelB }}
+        </td>
       </tr>
     </tfoot>
   </v-table>
@@ -67,14 +69,14 @@ const sortedModelValue = computed(() => {
   );
 });
 
-const totalSum = computed(() => {
-  let total = 0;
-  for (const vorschlag of props.ergebnisseAndWahlvorschlaege) {
-    total =
-      total +
-      (vorschlag.ergebnisStapelA.ergebnis ?? 0) +
-      (vorschlag.ergebnisStapelB.ergebnis ?? 0);
-  }
-  return total;
-});
+const totalSumStapelA = computed(() =>
+  props.ergebnisseAndWahlvorschlaege.reduce((sum, vorschlag) => {
+    return sum + (vorschlag.ergebnisStapelA.ergebnis ?? 0);
+  }, 0)
+);
+const totalSumStapelB = computed(() =>
+  props.ergebnisseAndWahlvorschlaege.reduce((sum, vorschlag) => {
+    return sum + (vorschlag.ergebnisStapelB.ergebnis ?? 0);
+  }, 0)
+);
 </script>

@@ -3,6 +3,7 @@
     v-if="wahl"
     :title="`Wahlurne öffnen und ${getStimmzettelTermForWahl(wahl)} zählen`"
     :wahl-id="wahlID"
+    :wahlbezirk-id="wahlbezirkId"
     :use-time="!isUWB"
   />
 </template>
@@ -24,6 +25,7 @@ const { wahlenActions } = useWahlenStore();
 const { getStimmzettelTermForWahl } = useTextFormatter();
 
 const wahlID = route.params.wahlId as string;
+const wahlbezirkId = route.params.wahlbezirkId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 
 if (!wahl) {

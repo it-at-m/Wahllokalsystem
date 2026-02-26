@@ -4,7 +4,6 @@ import {
 } from "vue-router";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import ErfassungStimmzettelView from "@/views/ergebnismeldung/common/ErfassungStimmzettelView.vue";
 import MBWNiederschriftView from "@/views/ergebnismeldung/MBW/MBWNiederschriftView.vue";
@@ -31,30 +30,38 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/stapelDUngueltig",
     component: MBWStapelDView,
+    beforeEnter: [
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+    ],
   },
   [MbwRoutesEnum.MBW_STAPEL_A_AND_B]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/stapelAandB",
     component: MBWStapelAandBView,
-    beforeEnter: [isStepDoneInElectionState(StapelArtEnum.MbwDUngueltig)],
+    beforeEnter: [
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
+    ],
   },
   [MbwRoutesEnum.MBW_SCHNELLMELDUNG]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/schnellmeldung",
     component: MBWSchnellmeldungView,
+    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B)],
   },
   [MbwRoutesEnum.MBW_STAPEL_BC]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelBC",
     component: MBWStapelBCView,
+    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG)],
   },
   [MbwRoutesEnum.MBW_NIEDERSCHRIFT]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/niederschrift",
     component: MBWNiederschriftView,
+    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_BC)],
   },
 };
 

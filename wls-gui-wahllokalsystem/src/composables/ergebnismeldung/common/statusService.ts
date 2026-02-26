@@ -9,6 +9,8 @@ import { useStatusMapper } from "@/composables/ergebnismeldung/common/statusMapp
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useStatusService() {
@@ -26,6 +28,7 @@ export function useStatusService() {
     sendNotification = true
   ) {
     const { wahlenActions } = useWahlenStore();
+    const { setStepDone } = useWorkflowStore();
     try {
       const response = await statusControllerApi.getStatus(
         wahlID,
@@ -41,6 +44,12 @@ export function useStatusService() {
         );
       }
       const responseData = getNullOn204OrElseResponseData(response);
+      if (responseData?.schnellmeldung.gedruckt) {
+        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
+      }
+      if (responseData?.niederschrift.gedruckt) {
+        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_NIEDERSCHRIFT);
+      }
       return responseData ? toModel(responseData) : null;
     } catch {
       const wahlname = wahlenActions.getWahlNameOrBlankStringById(wahlID) || "";

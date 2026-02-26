@@ -3,9 +3,11 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-const { createStatusDTO, createStatus } = useStatusTestDataFactory();
+const { createStatusDTO, createStatus, prepareStatusDTO, prepareMeldungDTO } =
+  useStatusTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getStatus: vi.fn(),
@@ -14,6 +16,7 @@ const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   mapDtoToModel: vi.fn(),
   mapModelToDto: vi.fn(),
+  setStepDone: vi.fn(),
 }));
 
 vi.mock(
@@ -30,6 +33,11 @@ vi.mock(
     };
   }
 );
+vi.mock("@/stores/workflowStore.ts", () => ({
+  useWorkflowStore: () => ({
+    setStepDone: mockDefinitions.setStepDone,
+  }),
+}));
 
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
   useUserNotificationService: () => ({
@@ -57,11 +65,13 @@ describe("statusService.ts", () => {
   });
 
   describe("getStatus", () => {
-    it("should_returnStatus_when_calledWithValidParameters", async () => {
+    it("should_returnStatusAndSetStepSchnellmeldung_when_calledWithValidParametersAndSchnellmeldungGedruckt", async () => {
       mockDefinitions.getStatus.mockReturnValue(
         Promise.resolve({
           status: 200,
-          data: createStatusDTO(),
+          data: prepareStatusDTO()
+            .schnellmeldung(prepareMeldungDTO().gedruckt(true).build())
+            .build(),
         })
       );
 
@@ -70,6 +80,33 @@ describe("statusService.ts", () => {
 
       const result = await getStatus(wahlID, wahlbezirkID);
       expect(result).toEqual(expectedResultModel);
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_SCHNELLMELDUNG
+      );
+    });
+
+    it("should_returnStatusAndSetStepNiederschrift_when_calledWithValidParametersAndNiederschriftGedruckt", async () => {
+      mockDefinitions.getStatus.mockReturnValue(
+        Promise.resolve({
+          status: 200,
+          data: prepareStatusDTO()
+            .niederschrift(prepareMeldungDTO().gedruckt(true).build())
+            .build(),
+        })
+      );
+
+      const expectedResultModel = createStatus();
+      mockDefinitions.mapDtoToModel.mockReturnValue(expectedResultModel);
+
+      const result = await getStatus(wahlID, wahlbezirkID);
+      expect(result).toEqual(expectedResultModel);
+      expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_NIEDERSCHRIFT
+      );
     });
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCallAndSendNotificationIsTrue", async () => {

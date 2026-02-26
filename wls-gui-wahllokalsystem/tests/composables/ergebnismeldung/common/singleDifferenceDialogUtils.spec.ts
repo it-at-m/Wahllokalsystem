@@ -77,7 +77,7 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
           differenceBegruendung.isBegruendungValid = true;
         }),
     });
-    unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID);
+    unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID, WAHLBEZIRK_ID);
     userStore = useUserStore();
   });
 
@@ -89,13 +89,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
     it("should_setDialog_when_checkIsCalledAndWahlscheineUnequalStimmzettel", async () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
-        .wahlMetaData([
-          {
-            wahlbezirkID: WAHLBEZIRK_ID,
-            wahlID: WAHL_ID,
-            wahlnummer: "0",
-          },
-        ])
         .build();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
         prepareWahl().build()
@@ -117,7 +110,7 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
         ...useDifferenceDialogUtils(WAHL_ID),
         isWahlscheineUnequalToStimmzettel: ref(false),
       });
-      unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID);
+      unitUnderTest = useSingleDifferenceDialogUtils(WAHL_ID, WAHLBEZIRK_ID);
 
       await unitUnderTest.checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege();
 
@@ -131,13 +124,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
     it("should_saveBegruendungAndStimmzettel_when_saveIsCalled", async () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
-        .wahlMetaData([
-          {
-            wahlbezirkID: WAHLBEZIRK_ID,
-            wahlID: WAHL_ID,
-            wahlnummer: "0",
-          },
-        ])
         .build();
       unitUnderTest.dialog.value = DIALOG;
 
@@ -153,13 +139,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
     it("should_saveStimmzettel_when_saveIsCalledAndNoDialogExists", async () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
-        .wahlMetaData([
-          {
-            wahlbezirkID: WAHLBEZIRK_ID,
-            wahlID: WAHL_ID,
-            wahlnummer: "0",
-          },
-        ])
         .build();
 
       await unitUnderTest.saveBegruendungAndStimmzettelumschlaege();
@@ -175,13 +154,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
     it("should_createDialogContent_when_isUWB", () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
-        .wahlMetaData([
-          {
-            wahlbezirkID: WAHLBEZIRK_ID,
-            wahlID: WAHL_ID,
-            wahlnummer: "0",
-          },
-        ])
         .build();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
         prepareWahl().build()
@@ -196,13 +168,6 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
     it("should_createDialogContent_when_isBWB", () => {
       userStore.user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
-        .wahlMetaData([
-          {
-            wahlbezirkID: WAHLBEZIRK_ID,
-            wahlID: WAHL_ID,
-            wahlnummer: "0",
-          },
-        ])
         .build();
       mockDefinitions.getWahlOrUndefinedById.mockReturnValue(
         prepareWahl().wahlID("xxx").build()

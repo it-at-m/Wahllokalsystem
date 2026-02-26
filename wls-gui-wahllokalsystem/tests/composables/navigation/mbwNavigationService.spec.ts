@@ -16,6 +16,10 @@ const { generateRandomString } = useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
+vi.mock("@/plugins/router.ts", () => {
+  return {};
+});
+
 describe("mbwNavigationService.ts", () => {
   const wahlID = generateRandomString(10);
   const wahlbezirkID = generateRandomString(10);

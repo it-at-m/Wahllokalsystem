@@ -43,11 +43,14 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useErgebnismeldungDruck } from "@/composables/ergebnismeldung/MBW/ergebnismeldungDruck.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const route = useRoute();
@@ -65,6 +68,8 @@ const {
   prepareDataForErgebnismeldungDruck,
 } = useMbwUtils(wahlID, wahlbezirkID);
 const { buildTemplateFromData } = useErgebnismeldungDruck();
+const { setStepDone } = useWorkflowStore();
+const { getNextRoute } = useNavigationUtils();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -112,6 +117,8 @@ async function onDruckenClicked() {
         printWindow.document.body.innerHTML = buildTemplateFromData(data);
         printWindow.print();
         printWindow.close();
+        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
+        await router.push(getNextRoute());
       }
 
       // todo update status #2002

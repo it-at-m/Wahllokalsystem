@@ -135,7 +135,7 @@ describe("wahlscheineService.ts", () => {
       const wahlschein = createWahlscheine();
       const wahlscheinDTO = prepareWahlscheineDTO()
         .bezirkUndWahlID(wahlschein.bezirkUndWahlID)
-        .stimmabgabevermerke(wahlschein.stimmabgabevermerke)
+        .stimmabgabevermerke(wahlschein.stimmabgabevermerke as number)
         .build();
 
       mockDefinitions.postWahlscheine.mockReturnValue(

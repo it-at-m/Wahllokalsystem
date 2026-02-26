@@ -9,6 +9,7 @@ import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 import HomeView from "@/views/HomeView.vue";
+import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue";
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
@@ -46,6 +47,11 @@ describe("MBWStapelDView", () => {
         name: ROUTE_NOTFOUND,
         component: HomeView,
         meta: {},
+      },
+      {
+        path: "/wahlvorstand",
+        name: "wahlvorstand",
+        component: WahlvorstandAnwesenheitView,
       },
       {
         path: "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId/stapelD",

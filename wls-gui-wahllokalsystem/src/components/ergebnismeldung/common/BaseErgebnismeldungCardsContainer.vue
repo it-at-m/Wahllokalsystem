@@ -22,7 +22,7 @@
         @click="$emit('edit')"
       />
       <base-button-save
-        :save-text="`${title} drucken`"
+        :save-text="`${title} drucken und weiter`"
         prepend-icon="$printer"
         :disabled="!isDruckenActive"
         :loading="isDruckenLoading"

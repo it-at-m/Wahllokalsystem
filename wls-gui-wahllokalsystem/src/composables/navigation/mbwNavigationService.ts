@@ -7,7 +7,6 @@ import { computed } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { createMbwRoute } from "@/plugins/router/mbwRoutes.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
@@ -43,7 +42,11 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: false,
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[
+              MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+            ]
+          : false,
       },
       {
         title: `Gültige Stimmzettel`,
@@ -53,7 +56,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlbezirkID
         ),
         disabled: mbwWorkflow.value
-          ? !mbwWorkflow.value.stepsDone[StapelArtEnum.MbwDUngueltig]
+          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]
           : false,
       },
       {
@@ -63,7 +66,9 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: false,
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_A_AND_B]
+          : false,
       },
       {
         title: `Kandidatinnen- und Kandidatenstimmen`,
@@ -72,7 +77,9 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: false,
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_SCHNELLMELDUNG]
+          : false,
       },
       {
         title: `Niederschrift`,
@@ -81,7 +88,9 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           wahlID,
           wahlbezirkID
         ),
-        disabled: false,
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_BC]
+          : false,
       },
     ];
   });

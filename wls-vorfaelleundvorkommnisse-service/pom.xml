@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-vorfaelleundvorkommnisse-service</artifactId>
-    <version>0.5.7-SNAPSHOT</version>
+    <version>0.5.8-SNAPSHOT</version>
     <name>wls_vorfaelleundvorkommnisse_service</name>
 
     <properties>
@@ -28,7 +28,7 @@
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Plugins -->
         <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.resources.plugin.version>3.4.0</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->

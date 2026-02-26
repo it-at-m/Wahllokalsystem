@@ -5,6 +5,7 @@
     :confirmtext="confirmText"
     canceltext="Schließen"
     icon="$information"
+    :is-confirm-active="false"
     @confirm="onConfirmClicked"
     @cancel="onCancelClicked"
   >

@@ -75,11 +75,19 @@ const isMBWAuszaehlungDisabled = computed(() => {
   }
 });
 
+const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
+  "Nicht genügend Mitglieder anwesend.";
+const DISABLED_SUBTITLE_WAHLSCHEINE_MISSING = "Erst Wahlbriefe zählen.";
+const DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING =
+  "Erst Stimmabgabevermerke erfassen.";
+
 const disabledMessagePreviousStepsRequired = computed(() => {
-  if (isBWB.value && isMBWAuszaehlungDisabled.value) {
-    return "Erst Wahlbriefe zählen.";
-  } else if (isUWB.value && isMBWAuszaehlungDisabled.value) {
-    return "Erst Stimmabgabevermerke erfassen.";
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  } else if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLSCHEINE_MISSING;
+  } else if (isUWB.value && !isStimmabgabevermerkeErfasst.value) {
+    return DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING;
   } else {
     return "";
   }

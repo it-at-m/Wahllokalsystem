@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> Ungültige Stimmen </v-card-title>
+    <v-card-title> Ungültige Stimmzettel </v-card-title>
     <v-card-text>
       <v-table>
         <thead>
@@ -13,7 +13,7 @@
         <tfoot>
           <tr>
             <td class="font-weight-bold index-column">C</td>
-            <td class="font-weight-bold">Ungültige Stimmen</td>
+            <td class="font-weight-bold">Ungültige Stimmzettel</td>
             <td class="font-weight-bold text-right">{{ ungueltigeStimmen }}</td>
           </tr>
         </tfoot>

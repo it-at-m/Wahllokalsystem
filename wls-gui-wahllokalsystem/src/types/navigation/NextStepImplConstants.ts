@@ -14,14 +14,16 @@ export const MBWNextStepImpl: ElectionSpecificNextStep = {
   getNextRouteOrNull(
     wahlstatus: ElectionWorkflowState
   ): RouteLocationAsRelativeGeneric | null {
-    if (!wahlstatus.isSchnellmeldungDone) {
-      return {
-        name: MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
-        params: {
-          wahlId: wahlstatus.bezirkUndWahlID.wahlID,
-          wahlbezirkId: wahlstatus.bezirkUndWahlID.wahlbezirkID,
-        },
-      };
+    for (const route of Object.values(MbwRoutesEnum)) {
+      if (!wahlstatus.stepsDone[route]) {
+        return {
+          name: route,
+          params: {
+            wahlId: wahlstatus.bezirkUndWahlID.wahlID,
+            wahlbezirkId: wahlstatus.bezirkUndWahlID.wahlbezirkID,
+          },
+        };
+      }
     }
     return null;
   },

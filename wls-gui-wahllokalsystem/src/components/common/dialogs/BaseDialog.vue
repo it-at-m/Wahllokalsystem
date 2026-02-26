@@ -27,7 +27,7 @@
         </base-text-button>
         <base-text-button
           data-test="basedialog-btn-confirm"
-          active
+          :active="isConfirmActive"
           @click="onConfirmClicked"
         >
           {{ confirmtext }}
@@ -40,14 +40,21 @@
 <script setup lang="ts">
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 
-defineProps<{
-  visible: boolean;
-  dialogtitle: string;
-  canceltext?: string;
-  cancelDisabled?: boolean;
-  confirmtext: string;
-  icon: string;
-}>();
+withDefaults(
+  defineProps<{
+    visible: boolean;
+    dialogtitle: string;
+    // eslint-disable-next-line vue/require-default-prop -- keinen Default-Wert für canceltext angegeben, da dadurch bestimmt wird, ob ein Cancel-Button angezeigt wird
+    canceltext?: string;
+    cancelDisabled?: boolean;
+    confirmtext: string;
+    icon: string;
+    isConfirmActive?: boolean;
+  }>(),
+  {
+    isConfirmActive: true,
+  }
+);
 
 const emit = defineEmits<{
   cancel: [];

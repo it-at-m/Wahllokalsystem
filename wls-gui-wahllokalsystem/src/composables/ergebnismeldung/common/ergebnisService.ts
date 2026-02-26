@@ -111,7 +111,7 @@ export function useErgebnisService() {
               useWorkflowStore().isMbwStapelBErfasst = true;
             }
             break;
-          //TODO Überprüfung für Stapel_BC wird mit #2471
+          //TODO Überprüfung für Stapel_BC wird mit #2471 umgesetzt
         }
       }
       return responseData ? toErgebnisseModel(responseData) : null;

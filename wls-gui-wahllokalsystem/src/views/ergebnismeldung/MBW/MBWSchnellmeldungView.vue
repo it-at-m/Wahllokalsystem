@@ -6,6 +6,7 @@
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="isDruckenValid"
     :is-drucken-loading="isDruckenLoading"
+    :is-senden-active="isSendenActive"
     @save="onSendenClicked"
     @edit="onKorrigierenClicked"
     @print="onDruckenClicked"
@@ -75,6 +76,7 @@ const { getNextRoute } = useNavigationUtils();
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
+const isSendenActive = ref<boolean>(true);
 
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
@@ -117,6 +119,7 @@ async function onDruckenClicked() {
         printWindow.document.body.innerHTML = buildTemplateFromData(data);
         printWindow.print();
         printWindow.close();
+        isSendenActive.value = false;
         setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
       }

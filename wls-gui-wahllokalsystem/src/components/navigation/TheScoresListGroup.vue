@@ -48,7 +48,13 @@ import { computed } from "vue";
 
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE } from "@/constants.ts";
+import {
+  DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING,
+  DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING,
+  DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+  ROUTE_STIMMABGABEVERMERKE,
+  ROUTE_WAHLSCHEINE,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -62,13 +68,6 @@ const {
   isWahlbriefzulassungErfasst,
   isWahlhandlungErfasst,
 } = storeToRefs(useWorkflowStore());
-
-const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
-  "Nicht genügend Mitglieder anwesend.";
-const DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING =
-  "Wahlhandlung muss abgeschlossen sein.";
-const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
-  "Wahlbriefzulassung muss abgeschlossen sein.";
 
 const isStimmabgabevermerkeDisabled = computed(
   () => !isWahlvorstandErfasst.value || !isWahlhandlungErfasst.value

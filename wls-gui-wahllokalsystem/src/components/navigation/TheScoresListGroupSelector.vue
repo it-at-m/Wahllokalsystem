@@ -40,6 +40,11 @@ import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import {
+  DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,
+  DISABLED_SUBTITLE_WAHLSCHEINE_MISSING,
+  DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
@@ -74,12 +79,6 @@ const isMBWAuszaehlungDisabled = computed(() => {
     return !isWahlvorstandErfasst.value || !isAnzahlWahlscheineErfasst.value;
   }
 });
-
-const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
-  "Nicht genügend Mitglieder anwesend.";
-const DISABLED_SUBTITLE_WAHLSCHEINE_MISSING = "Erst Wahlbriefe zählen.";
-const DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING =
-  "Erst Stimmabgabevermerke erfassen.";
 
 const disabledMessagePreviousStepsRequired = computed(() => {
   if (!isWahlvorstandErfasst.value) {

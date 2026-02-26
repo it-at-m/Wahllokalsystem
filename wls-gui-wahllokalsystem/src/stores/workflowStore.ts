@@ -1,4 +1,5 @@
 import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
+import type { RouteRecordNameGeneric } from "vue-router";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -48,6 +49,17 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
         statusEntry.bezirkUndWahlID.wahlID === wahlID &&
         statusEntry.bezirkUndWahlID.wahlbezirkID === wahlbezirkID
     );
+  }
+
+  function getWorkflowStateForRoute(
+    wahlID: string,
+    wahlbezirkID: string,
+    routeName: RouteRecordNameGeneric | undefined
+  ) {
+    if (typeof routeName === "string") {
+      return isStepDone(wahlID, wahlbezirkID, routeName);
+    }
+    return false;
   }
 
   function initElectionWorkflowState(wahlID: string, wahlbezirkID: string) {
@@ -106,6 +118,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     isMbwStapelAErfasst,
     isMbwStapelBErfasst,
     getElectionWorkflowState,
+    getWorkflowStateForRoute,
     initElectionWorkflowState,
     isElectionFinished,
     isStepDone,

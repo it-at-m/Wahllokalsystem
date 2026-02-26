@@ -26,7 +26,7 @@ export const useWahlscheineStore = defineStore(storeID, () => {
       } else {
         wahlscheine.value.push({
           bezirkUndWahlID: { wahlID, wahlbezirkID },
-          stimmabgabevermerke: 0,
+          stimmabgabevermerke: null,
         });
       }
     } catch {

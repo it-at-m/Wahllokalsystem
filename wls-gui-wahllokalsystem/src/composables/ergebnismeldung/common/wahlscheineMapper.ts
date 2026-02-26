@@ -14,6 +14,9 @@ export function useWahlscheineMapper() {
   }
 
   function toDto(model: Wahlscheine): WahlscheineDTO {
+    if (model.stimmabgabevermerke === null) {
+      throw new Error("Stimmabgabevermerke ist empty");
+    }
     return {
       bezirkUndWahlID: _toBezirkUndWahlIDDTO(model.bezirkUndWahlID),
       stimmabgabevermerke: model.stimmabgabevermerke,

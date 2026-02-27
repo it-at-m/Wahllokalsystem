@@ -32,7 +32,7 @@ export function useKopfdatenService() {
     } catch {
       if (sendNotification) {
         userNotificationService.addNotification(
-          "Fehler beim laden der Kopfdaten",
+          "Fehler beim Laden der Kopfdaten",
           UserNotificationCategoryEnum.ERROR
         );
       }

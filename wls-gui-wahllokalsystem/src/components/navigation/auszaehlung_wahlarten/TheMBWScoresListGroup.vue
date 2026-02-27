@@ -1,61 +1,30 @@
 <template>
   <v-list-group value="MBW_Scores">
     <template #activator="{ props }">
-      <v-list-item
+      <base-workflow-list-item
         v-bind="props"
         title="Wahl des Migrationsbeirats"
-        :lines="groupActivatorListItemLines"
-      >
-        <template
-          v-if="disabled"
-          #subtitle
-        >
-          {{ disabledMessage }}
-        </template>
-        <template #prepend>
-          <v-icon
-            :icon="
-              disabled
-                ? '$disabled'
-                : isElectionFinished(wahlId, wahlbezirkId)
-                  ? '$valid'
-                  : '$edit'
-            "
-            size="small"
-          />
-        </template>
-      </v-list-item>
+        :disabled="disabled"
+        :subtitle="disabledMessage"
+        :is-workflow-step-finished="isElectionFinished(wahlId, wahlbezirkId)"
+        list-group-activator
+      />
     </template>
-    <v-list-item
+    <base-workflow-list-item
       v-for="(route, index) in navigation"
       :key="index"
       :title="route.title"
       :to="route.targetRoute"
       :disabled="disabled || route.disabled"
-    >
-      <template #prepend>
-        <v-icon
-          :icon="
-            disabled || route.disabled
-              ? '$disabled'
-              : getWorkflowStateForRoute(
-                    wahlId,
-                    wahlbezirkId,
-                    route.targetRoute.name
-                  )
-                ? '$valid'
-                : '$edit'
-          "
-          size="small"
-        />
-      </template>
-    </v-list-item>
+      :is-workflow-step-finished="
+        getWorkflowStateForRoute(wahlId, wahlbezirkId, route.targetRoute.name)
+      "
+    />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
+import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
@@ -69,5 +38,4 @@ const { wahlbezirkId, wahlId, disabled } = defineProps<{
 }>();
 
 const { navigation } = useMbwNavigationService(wahlId, wahlbezirkId);
-const groupActivatorListItemLines = computed(() => (disabled ? false : "one"));
 </script>

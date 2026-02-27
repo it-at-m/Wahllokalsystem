@@ -6,52 +6,22 @@
         title="Ergebnisermittlung"
       />
     </template>
-    <v-list-item
+    <base-workflow-list-item
       v-if="isBWB"
       title="Wahlscheine"
       :disabled="isWahlscheineDisabled"
+      :subtitle="disabledMessagePreviousStepsRequired"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
-      :lines="groupActivatorListItemLines"
-    >
-      <template
-        v-if="isWahlscheineDisabled"
-        #subtitle
-      >
-        {{ disabledMessagePreviousStepsRequired }}
-      </template>
-      <template
-        v-if="isWahlscheineDisabled"
-        #prepend
-      >
-        <v-icon
-          :icon="isWahlscheineDisabled ? '$disabled' : ''"
-          size="small"
-        />
-      </template>
-    </v-list-item>
-    <v-list-item
+      :is-workflow-step-finished="isAnzahlWahlscheineErfasst"
+    />
+    <base-workflow-list-item
       v-if="isUWB"
       title="Stimmabgabevermerke"
       :disabled="isStimmabgabevermerkeDisabled"
+      :subtitle="disabledMessagePreviousStepsRequired"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
-      :lines="groupActivatorListItemLines"
-    >
-      <template
-        v-if="isStimmabgabevermerkeDisabled"
-        #subtitle
-      >
-        {{ disabledMessagePreviousStepsRequired }}
-      </template>
-      <template
-        v-if="isStimmabgabevermerkeDisabled"
-        #prepend
-      >
-        <v-icon
-          :icon="isStimmabgabevermerkeDisabled ? '$disabled' : ''"
-          size="small"
-        />
-      </template>
-    </v-list-item>
+      :is-workflow-step-finished="isStimmabgabevermerkeErfasst"
+    />
     <the-scores-list-group-selector
       v-for="wahl in wahlenState.wahlen"
       :key="wahl.wahlID"
@@ -64,6 +34,7 @@
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
+import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
@@ -85,6 +56,8 @@ const {
   isWahlvorstandErfasst,
   isWahlbriefzulassungErfasst,
   isWahlhandlungErfasst,
+  isStimmabgabevermerkeErfasst,
+  isAnzahlWahlscheineErfasst,
 } = storeToRefs(useWorkflowStore());
 
 const isStimmabgabevermerkeDisabled = computed(
@@ -92,12 +65,6 @@ const isStimmabgabevermerkeDisabled = computed(
 );
 const isWahlscheineDisabled = computed(
   () => !isWahlvorstandErfasst.value || !isWahlbriefzulassungErfasst.value
-);
-
-const isWahlscheineOrStimmabgabevermerkeDisabled = computed(() =>
-  isUWB.value
-    ? isStimmabgabevermerkeDisabled.value
-    : isWahlscheineDisabled.value
 );
 
 const disabledMessagePreviousStepsRequired = computed(() => {
@@ -111,8 +78,4 @@ const disabledMessagePreviousStepsRequired = computed(() => {
     return "";
   }
 });
-
-const groupActivatorListItemLines = computed(() =>
-  isWahlscheineOrStimmabgabevermerkeDisabled.value ? false : "one"
-);
 </script>

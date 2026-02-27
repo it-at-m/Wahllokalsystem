@@ -25,19 +25,21 @@ const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
 
 type RouteRecordRawWithoutName = Omit<RouteRecordRaw, "name">;
 
+const auszaehlungPrerequisiteGuards = [
+  permitNavigationWhenWahlvorstandIsErfasst,
+  requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
+  requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
+  requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
+  requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+];
+
 const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
   [MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
-    beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
-    ],
+    beforeEnter: [...auszaehlungPrerequisiteGuards],
   },
   [MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]: {
     path:
@@ -45,11 +47,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/stapelDUngueltig",
     component: MBWStapelDView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
     ],
   },
@@ -59,11 +57,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/stapelAandB",
     component: MBWStapelAandBView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
     ],
@@ -74,11 +68,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/schnellmeldung",
     component: MBWSchnellmeldungView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
@@ -89,11 +79,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelBC",
     component: MBWStapelBCView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
@@ -106,11 +92,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/niederschrift",
     component: MBWNiederschriftView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
-      requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
-      requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
-      requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
-      requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),

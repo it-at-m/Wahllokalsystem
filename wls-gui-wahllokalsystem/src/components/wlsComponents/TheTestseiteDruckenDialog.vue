@@ -1,11 +1,11 @@
 <template>
   <base-dialog
     :visible="visible"
-    dialogtitle="Testdruck"
+    dialogtitle="Optionalen Testdruck durchführen"
     :confirmtext="confirmText"
     canceltext="Schließen"
-    :cancel-disabled="cancelDisabled"
     icon="$information"
+    :is-confirm-active="false"
     @confirm="onConfirmClicked"
     @cancel="onCancelClicked"
   >
@@ -51,7 +51,6 @@ const { printTestdruck } = useHelpIconCallbacks();
 const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 
 const visible = ref(true);
-const cancelDisabled = ref(true);
 
 const confirmText = ref("Testdruck starten");
 
@@ -66,7 +65,6 @@ function onCancelClicked() {
 
 function onConfirmClicked() {
   printTestdruck();
-  cancelDisabled.value = false;
   confirmText.value = "Testdruck wiederholen";
 }
 </script>

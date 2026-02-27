@@ -1,7 +1,7 @@
 import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const workflowStoreId = "workflow";
 
@@ -15,10 +15,27 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   const isWahlbriefeErfassenErfasst = ref(false);
   const isWahlbriefeZulassenErfasst = ref(false);
   const isAnzahlWahlscheineErfasst = ref(false);
+  const isWahlbriefzulassungErfasst = computed(
+    () =>
+      isWahleroeffnungErfasst.value &&
+      isWahlumgebungErfasst.value &&
+      isWahlbriefeErfassenErfasst.value &&
+      isWahlbriefeZulassenErfasst.value
+  );
   // uwb specific
   const isWaehlerverzeichnisErfasst = ref(false);
   const isStimmabgabeErfasst = ref(false);
   const isStimmabgabevermerkeErfasst = ref(false);
+  const isWahlhandlungErfasst = computed(
+    () =>
+      isWahlumgebungErfasst.value &&
+      isWaehlerverzeichnisErfasst.value &&
+      isWahleroeffnungErfasst.value &&
+      isStimmabgabeErfasst.value
+  );
+
+  const isMbwStapelAErfasst = ref(false);
+  const isMbwStapelBErfasst = ref(false);
 
   const electionWorkflowsStates = ref<ElectionWorkflowState[]>([]);
 
@@ -84,6 +101,10 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     isWaehlerverzeichnisErfasst,
     isStimmabgabeErfasst,
     isStimmabgabevermerkeErfasst,
+    isWahlbriefzulassungErfasst,
+    isWahlhandlungErfasst,
+    isMbwStapelAErfasst,
+    isMbwStapelBErfasst,
     getElectionWorkflowState,
     initElectionWorkflowState,
     isElectionFinished,

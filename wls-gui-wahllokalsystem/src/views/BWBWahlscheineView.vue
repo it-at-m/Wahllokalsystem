@@ -31,9 +31,8 @@
         <base-button-save
           :disabled="!isWahlscheineFormValid"
           :loading="isWahlscheineSaving"
-          @click="
-            checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine
-          "
+          save-text="Speichern und Weiter"
+          @click="onSaveClicked"
         />
       </v-card-actions>
     </v-card>
@@ -43,8 +42,9 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.differenceBegruendung.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
+      save-text="Speichern und Weiter"
       @cancel="dialog.isVisible = false"
-      @confirm="saveBegruendungAndStimmabgabevermerkeWahlscheine(dialog)"
+      @confirm="onConfirmClicked(dialog)"
     >
       <div class="font-weight-bold mb-3">
         {{
@@ -77,6 +77,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
+import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/DifferenceDialogItem.ts";
 import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -88,10 +89,12 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useMultipleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/multipleDifferenceDialogUtils.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
 } from "@/constants.ts";
+import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
 
@@ -107,6 +110,19 @@ const {
   updateValidationStateForBegruendung,
   getDialogContent,
 } = useMultipleDifferenceDialogUtils();
+const { getNextRoute } = useNavigationUtils();
 
 const isWahlscheineFormValid: Ref<null | boolean> = ref(null);
+
+async function onSaveClicked() {
+  await checkForDifferencesAndAddDialogsOrSaveStimmabgabevermerkeWahlscheine();
+  if (dialogs.value.length === 0) {
+    await router.push(getNextRoute());
+  }
+}
+
+async function onConfirmClicked(dialog: DifferenceDialogItem) {
+  await saveBegruendungAndStimmabgabevermerkeWahlscheine(dialog);
+  await router.push(getNextRoute());
+}
 </script>

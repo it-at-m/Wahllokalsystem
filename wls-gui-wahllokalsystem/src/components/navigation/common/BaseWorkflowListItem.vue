@@ -6,7 +6,7 @@
     :lines="subtitle ? false : 'one'"
   >
     <template
-      v-if="disabled && subtitle"
+      v-if="subtitle"
       #subtitle
     >
       {{ subtitle }}

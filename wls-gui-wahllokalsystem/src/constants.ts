@@ -68,3 +68,7 @@ export const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
 export const DISABLED_SUBTITLE_WAHLSCHEINE_MISSING = "Erst Wahlbriefe zählen.";
 export const DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING =
   "Erst Stimmabgabevermerke erfassen.";
+export const SUBTITLE_WAEHLERANZAHL_IN_ARBEIT = "Wähleranzahl in Arbeit";
+export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
+export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
+export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";

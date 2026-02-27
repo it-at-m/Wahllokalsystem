@@ -10,7 +10,7 @@
       v-if="isBWB"
       title="Wahlscheine"
       :disabled="isWahlscheineDisabled"
-      :subtitle="disabledMessagePreviousStepsRequired"
+      :subtitle="subtitleWahlscheine"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
       :is-workflow-step-finished="isAnzahlWahlscheineErfasst"
     />
@@ -18,7 +18,7 @@
       v-if="isUWB"
       title="Stimmabgabevermerke"
       :disabled="isStimmabgabevermerkeDisabled"
-      :subtitle="disabledMessagePreviousStepsRequired"
+      :subtitle="subtitleStimmabgabevermerke"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
       :is-workflow-step-finished="isStimmabgabevermerkeErfasst"
     />
@@ -43,6 +43,8 @@ import {
   DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLSCHEINE,
+  SUBTITLE_WAEHLERANZAHL_ERFASST,
+  SUBTITLE_WAEHLERANZAHL_IN_ARBEIT,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -67,15 +69,29 @@ const isWahlscheineDisabled = computed(
   () => !isWahlvorstandErfasst.value || !isWahlbriefzulassungErfasst.value
 );
 
-const disabledMessagePreviousStepsRequired = computed(() => {
+const subtitleWahlscheine = computed(() => {
   if (!isWahlvorstandErfasst.value) {
     return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
-  } else if (isUWB.value && !isWahlhandlungErfasst.value) {
-    return DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING;
-  } else if (isBWB.value && !isWahlbriefzulassungErfasst.value) {
-    return DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING;
-  } else {
-    return "";
   }
+  if (!isWahlbriefzulassungErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING;
+  }
+  if (!isAnzahlWahlscheineErfasst.value) {
+    return SUBTITLE_WAEHLERANZAHL_IN_ARBEIT;
+  }
+  return SUBTITLE_WAEHLERANZAHL_ERFASST;
+});
+
+const subtitleStimmabgabevermerke = computed(() => {
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  }
+  if (!isWahlhandlungErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING;
+  }
+  if (!isStimmabgabevermerkeErfasst.value) {
+    return SUBTITLE_WAEHLERANZAHL_IN_ARBEIT;
+  }
+  return SUBTITLE_WAEHLERANZAHL_ERFASST;
 });
 </script>

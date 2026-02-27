@@ -6,7 +6,7 @@
         title="Wahl des Migrationsbeirats"
         :disabled="disabled"
         :subtitle="disabledMessage"
-        :is-workflow-step-finished="isElectionFinished(wahlId, wahlbezirkId)"
+        :is-workflow-step-finished="isWahlFinished"
         list-group-activator
       />
     </template>
@@ -28,13 +28,14 @@ import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowLis
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { isElectionFinished, getWorkflowStateForRoute } = useWorkflowStore();
+const { getWorkflowStateForRoute } = useWorkflowStore();
 
 const { wahlbezirkId, wahlId, disabled } = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
   disabled: boolean;
   disabledMessage: string;
+  isWahlFinished: boolean;
 }>();
 
 const { navigation } = useMbwNavigationService(wahlId, wahlbezirkId);

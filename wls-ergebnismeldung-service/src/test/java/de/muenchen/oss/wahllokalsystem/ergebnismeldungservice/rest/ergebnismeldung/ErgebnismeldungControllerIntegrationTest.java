@@ -346,9 +346,7 @@ class ErgebnismeldungControllerIntegrationTest {
                             new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_SENDUNGSZEITEN),
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
-                            new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS),
-                            new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
                             new SimpleGrantedAuthority(Authorities.SERVICE_SEND_ERGEBNISSE),
                             new SimpleGrantedAuthority(
                                 Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE),

@@ -13,8 +13,10 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -249,11 +251,63 @@ describe("wahlvorstandStore.ts", () => {
         expected: true,
       },
     ])(
-      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
+      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsUWB",
       ({ expected, schliessungsuhrzeit, anwesend }) => {
+        useUserStore().setUser(
+          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+        );
         const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
         schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
           schliessungsuhrzeit;
+
+        _addAnwesendeWahlvorstandsmitglieder(anwesend);
+
+        expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(
+          expected
+        );
+      }
+    );
+
+    it.each([
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG + 1,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG + 1,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_when_urnenEroeffnungsUhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsUWB",
+      ({ expected, urnenEroeffnungsUhrzeit, anwesend }) => {
+        useUserStore().setUser(
+          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+        );
+        const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
+        stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+          urnenEroeffnungsUhrzeit;
 
         _addAnwesendeWahlvorstandsmitglieder(anwesend);
 

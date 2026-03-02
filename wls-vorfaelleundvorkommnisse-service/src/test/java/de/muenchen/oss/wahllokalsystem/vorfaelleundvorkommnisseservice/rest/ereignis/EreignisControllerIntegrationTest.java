@@ -74,8 +74,10 @@ public class EreignisControllerIntegrationTest {
       void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
           val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID_Wrong").with(
                   jwt()
-                          .authorities()
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID_Wrong")));
+                          .authorities(
+                                  new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
+                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
+                          .jwt(jwt -> jwt.claim("wahlbezirkID", null)));
           api.perform(request).andExpect(status().isForbidden());
 
       }

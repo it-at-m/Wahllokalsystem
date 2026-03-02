@@ -300,7 +300,7 @@ describe("wahlvorstandStore.ts", () => {
         expected: true,
       },
     ])(
-      "should_return'$expected'_when_urnenEroeffnungsUhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsUWB",
+      "should_return'$expected'_when_urnenEroeffnungsUhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsBWB",
       ({ expected, urnenEroeffnungsUhrzeit, anwesend }) => {
         useUserStore().setUser(
           prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()

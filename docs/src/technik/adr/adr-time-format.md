@@ -16,6 +16,8 @@ Uhrzeiten werden prinzipiell im Format `hh:mm` angezeigt.
 Es gibt folgende Ausnahmen:
 
 - volle Stunden werden ohne Minuten und Sekunden angezeigt (`18:00 Uhr` wird zu `18 Uhr`)
+- für die Fehlermeldungen der Uhrzeit-Eingabefelder gilt diese Ausnahme nicht.
+Hier werden auch die Minuten bei einer vollen Stunde angezeigt, da das Eingabefeld das Format `hh:mm` erwartet
 - die WLS-Clock und die letzte Absendezeit beim Wahlvorstand wird mit Sekunden angezeigt
 - in fremdgesteuerten Drucktemplates (Ergebnismeldung) wird das Uhrzeitformat unverändert übernommen
 

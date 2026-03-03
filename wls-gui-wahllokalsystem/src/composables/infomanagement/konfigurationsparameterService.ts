@@ -28,7 +28,7 @@ export function useKonfigurationsparameterService() {
     } catch {
       if (sendNotification) {
         userNotificationService.addNotification(
-          "Fehler beim laden der Konfigurationsparameter",
+          "Fehler beim Laden der Konfigurationsparameter",
           UserNotificationCategoryEnum.ERROR
         );
       }

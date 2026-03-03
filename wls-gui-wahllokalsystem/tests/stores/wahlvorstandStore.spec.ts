@@ -456,12 +456,15 @@ describe("wahlvorstandStore.ts", () => {
       const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
+      expect(unitUnderTest.lastLoading).toBeNull();
+
       await unitUnderTest.initWahlvorstand();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
         [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
       ]);
+      expect(unitUnderTest.lastLoading).not.toEqual(null);
     });
 
     it("should_notLoadWahlvorstand_when_serviceCallFailed", async () => {

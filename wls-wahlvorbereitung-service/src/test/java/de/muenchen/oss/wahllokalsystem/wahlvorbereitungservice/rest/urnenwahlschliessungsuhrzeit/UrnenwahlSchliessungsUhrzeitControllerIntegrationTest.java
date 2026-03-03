@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.urnenwahlschliessungsuhrzeit;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,7 +42,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
 
   @Value("${service.info.oid}")
@@ -66,24 +68,25 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
   class GetUrnenwahlSchliessungsUhrzeit {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_returnData_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkIDToFind = "123";
       val urnenwahlSchliessungsUhrzeitToFind = new UrnenwahlSchliessungsUhrzeit();
       urnenwahlSchliessungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
       urnenwahlSchliessungsUhrzeitToFind.setSchliessungsuhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT);
       urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToFind);
       val expectedResponseBody =
           urnenwahlSchliessungsUhrzeitDTOMapper.toDTO(
               urnenwahlSchliessungsUhrzeitModelMapper.toModel(urnenwahlSchliessungsUhrzeitToFind));
 
-      val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkIDToFind);
+      val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkIDToFind)
+              .with(
+              jwt()
+                      .authorities(
+                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT),
+                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
       val responseBodyAsDTO =
@@ -94,39 +97,48 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_returnNoContent_when_noDataFound() throws Exception {
       val wahlbezirkIDEmpty = "123";
-
       val wahlbezirkIDNotEmpty = "456";
       val urnenwahlSchliessungsUhrzeitToFind = new UrnenwahlSchliessungsUhrzeit();
       urnenwahlSchliessungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
       urnenwahlSchliessungsUhrzeitToFind.setSchliessungsuhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT);
       urnenwahlSchliessungsUhrzeitRepository.save(urnenwahlSchliessungsUhrzeitToFind);
 
-      val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkIDEmpty);
+      val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkIDEmpty)
+              .with(
+                      jwt()
+                              .authorities(
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT),
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT))
+                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDEmpty)));
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
+      @Test
+      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+          String wahlbezirkID = null;
+
+          val request = get("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkID)
+                  .with(
+                          jwt()
+                                  .authorities(
+                                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLSCHLIESSUNGSUHRZEIT),
+                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLSCHLIESSUNGSUHRZEIT))
+                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+
+          mockMvc.perform(request).andExpect(status().isForbidden());
+      }
   }
 
   @Nested
   class PostUrnenwahlSchliessungsUhrzeit {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_setNewData_when_callingPost() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto =
@@ -148,11 +160,6 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_replaceData_when_dataIsPresent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto1 =
@@ -189,11 +196,6 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto = new UrnenwahlSchliessungsUhrzeitWriteDTO(null);
@@ -221,11 +223,6 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT
-        })
     void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
       val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
       val writeDto =
@@ -255,11 +252,26 @@ public class UrnenwahlSchliessungsUhrzeitControllerIntegrationTest {
           .usingRecursiveComparison()
           .isEqualTo(expectedExceptionDTO);
     }
+      @Test
+      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+          String wahlbezirkID = null;
+          val writeDto =
+                  new UrnenwahlSchliessungsUhrzeitWriteDTO(
+                          LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+          val request = buildPostRequest(wahlbezirkID, writeDto);
+          mockMvc.perform(request).andExpect(status().isForbidden());
+      }
 
     private RequestBuilder buildPostRequest(
         final String wahlbezirkID, final UrnenwahlSchliessungsUhrzeitWriteDTO requestBody)
         throws Exception {
       return post("/businessActions/urnenwahlSchliessungsUhrzeit/" + wahlbezirkID)
+              .with(
+                      jwt()
+                              .authorities(
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_URNENWAHLSCHLIESSUNGSUHRZEIT),
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_URNENWAHLSCHLIESSUNGSUHRZEIT))
+                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .with(csrf())
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));

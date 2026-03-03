@@ -117,7 +117,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
       void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
           String wahlbezirkID = null;
 
-          val request = get("/businessActions/briefwahlvorbereitung/" + wahlbezirkID)
+          val request = get("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkID)
                   .with(
                           jwt()
                                   .authorities(

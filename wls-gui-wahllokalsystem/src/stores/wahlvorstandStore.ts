@@ -11,6 +11,7 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { createEmptyWahlvorstand } from "@/types/wahlvorstand/Wahlvorstand";
 import {
@@ -24,9 +25,10 @@ export const storeID = "wahlvorstand";
 const { registerStoreHMR } = useHmrUpdate();
 
 export const useWahlvorstandStore = defineStore(storeID, () => {
-  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+  const { currentUserWahlbezirkID, isUWB } = storeToRefs(useUserStore());
   const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
   const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
+  const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 
   const isLoading = ref(false);
   const isSaving = ref(false);
@@ -48,7 +50,12 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
     const anwesend = wahlvorstand.value.wahlvorstandsmitglieder.filter(
       (mitglied) => mitglied.anwesend
     ).length;
-    if (!schliessungsuhrzeitState.value.schliessungsuhrzeitSent) {
+
+    const isWahlGeschlossen = isUWB.value
+      ? schliessungsuhrzeitState.value.schliessungsuhrzeitSent
+      : stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent;
+
+    if (!isWahlGeschlossen) {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG;
     } else {
       return anwesend >= MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG;

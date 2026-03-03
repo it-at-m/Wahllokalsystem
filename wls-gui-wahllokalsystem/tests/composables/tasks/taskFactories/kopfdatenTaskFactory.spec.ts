@@ -89,11 +89,13 @@ describe("kopfdatenTaskFactory.ts", () => {
       expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledWith(
         extendedWahlMetaDataOne.wahlID,
-        extendedWahlMetaDataOne.wahlbezirkID
+        extendedWahlMetaDataOne.wahlbezirkID,
+        false
       );
       expect(mockDefinitions.loadKopfdaten).toHaveBeenCalledWith(
         extendedWahlMetaDataTwo.wahlID,
-        extendedWahlMetaDataTwo.wahlbezirkID
+        extendedWahlMetaDataTwo.wahlbezirkID,
+        false
       );
     });
   });

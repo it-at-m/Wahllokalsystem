@@ -92,7 +92,7 @@ export const useStimmabgabevermerkeStore = defineStore(
         }
       } catch {
         throw Error(
-          `Fehler beim laden des Stimmabgabevermerks mit wahlbezirkID ${wahlbezirkID} und waehlerverzeichnisNummer ${waehlerverzeichnisNummer}`
+          `Fehler beim Laden des Stimmabgabevermerks mit wahlbezirkID ${wahlbezirkID} und waehlerverzeichnisNummer ${waehlerverzeichnisNummer}`
         );
       }
     }

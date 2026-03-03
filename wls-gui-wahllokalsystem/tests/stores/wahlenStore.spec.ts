@@ -678,6 +678,9 @@ describe("wahlenStore.ts", () => {
       expect(
         unitUnderTest.wahlenState.wahlen[0]?.stimmzettelumschlaege
       ).toStrictEqual(mockedStimmzettelumschlaege);
+      expect(
+        unitUnderTest.stimmzettelumschlaegeState.urneneroeffnungsUhrzeitSent
+      ).toStrictEqual(mockedStimmzettelumschlaege.urneneroeffnungsUhrzeit);
     });
 
     it("should_loadButNotUpdateStimmzettelumschlaege_when_calledWithCorrectWahlIdAndServiceReturned204", async () => {
@@ -699,6 +702,9 @@ describe("wahlenStore.ts", () => {
       expect(
         unitUnderTest.wahlenState.wahlen[0]?.stimmzettelumschlaege
       ).toStrictEqual({ anzahlWaehler: null });
+      expect(
+        unitUnderTest.stimmzettelumschlaegeState.urneneroeffnungsUhrzeitSent
+      ).toStrictEqual(undefined);
     });
   });
 });

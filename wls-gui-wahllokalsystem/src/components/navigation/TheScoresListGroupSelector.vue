@@ -24,6 +24,7 @@
       :wahlbezirk-id="wahlbezirkIdForWahl"
       :disabled="isMBWAuszaehlungDisabled"
       :disabled-message="disabledMessagePreviousStepsRequired"
+      :is-wahl-finished="isMBWAuszaehlungFinished"
     />
   </div>
 </template>
@@ -44,6 +45,8 @@ import {
   DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,
   DISABLED_SUBTITLE_WAHLSCHEINE_MISSING,
   DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+  SUBTITLE_AUSZAEHLUNG_ERFASST,
+  SUBTITLE_AUSZAEHLUNG_IN_ARBEIT,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -57,6 +60,7 @@ const props = defineProps({
 });
 
 const { getStimmzettelTermForWahl } = useTextFormatter();
+const { isElectionFinished } = useWorkflowStore();
 const {
   isAnzahlWahlscheineErfasst,
   isStimmabgabevermerkeErfasst,
@@ -80,15 +84,23 @@ const isMBWAuszaehlungDisabled = computed(() => {
   }
 });
 
+const isMBWAuszaehlungFinished = computed(() =>
+  isElectionFinished(props.wahl.wahlID, wahlbezirkIdForWahl.value ?? "")
+);
+
 const disabledMessagePreviousStepsRequired = computed(() => {
   if (!isWahlvorstandErfasst.value) {
     return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
-  } else if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {
-    return DISABLED_SUBTITLE_WAHLSCHEINE_MISSING;
-  } else if (isUWB.value && !isStimmabgabevermerkeErfasst.value) {
-    return DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING;
-  } else {
-    return "";
   }
+  if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLSCHEINE_MISSING;
+  }
+  if (isUWB.value && !isStimmabgabevermerkeErfasst.value) {
+    return DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING;
+  }
+  if (!isMBWAuszaehlungFinished.value) {
+    return SUBTITLE_AUSZAEHLUNG_IN_ARBEIT;
+  }
+  return SUBTITLE_AUSZAEHLUNG_ERFASST;
 });
 </script>

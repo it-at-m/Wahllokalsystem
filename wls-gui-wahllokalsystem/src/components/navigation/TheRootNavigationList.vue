@@ -21,12 +21,16 @@
       <the-b-w-b-election-list-group
         v-if="isBWB"
         :disabled="!isWahlvorstandErfasst"
-        :disabled-message="DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED"
+        :disabled-message="
+          isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
+        "
       />
       <the-u-w-b-election-list-group
         v-if="isUWB"
         :disabled="!isWahlvorstandErfasst"
-        :disabled-message="DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED"
+        :disabled-message="
+          isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
+        "
       />
       <v-list-item
         title="Ereignisse"

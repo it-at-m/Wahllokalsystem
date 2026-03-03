@@ -74,6 +74,7 @@ export const useWahlvorstandStore = defineStore(storeID, () => {
       sendNotification: sendNotification,
     });
     isWahlvorstandErfasst.value = false;
+    lastLoading.value = new Date();
   }
 
   async function forceLoadWahlvorstand() {

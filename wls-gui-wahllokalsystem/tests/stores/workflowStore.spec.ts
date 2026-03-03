@@ -5,6 +5,7 @@ import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTe
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { generateRandomString, generateRandomBoolean } =
   useCommonTestDataFactory();
@@ -67,6 +68,51 @@ describe("workflowStore.ts", () => {
       );
 
       expect(result).toStrictEqual(workflowToFind);
+    });
+  });
+
+  describe("getWorkflowStateForRoute", () => {
+    it("should_returnUndefined_when_workflowStateWithIDsDoesNotExist", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(
+          wahlID,
+          wahlbezirkID,
+          MbwRoutesEnum.MBW_NIEDERSCHRIFT
+        )
+      ).toBeUndefined();
+    });
+
+    it("should_returnFalse_when_routeNameDoesNotExist", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
+      useWorkflowStore().electionWorkflowsStates = [workflowToFind];
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(
+          wahlID,
+          wahlbezirkID,
+          "routeName"
+        )
+      ).toBe(false);
+    });
+
+    it("should_returnTrue_when_workflowSateFourRouteNameIsDone", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const step = MbwRoutesEnum.MBW_NIEDERSCHRIFT;
+
+      const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
+      workflowToFind.stepsDone[step] = true;
+      useWorkflowStore().electionWorkflowsStates = [workflowToFind];
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(wahlID, wahlbezirkID, step)
+      ).toStrictEqual(true);
     });
   });
 

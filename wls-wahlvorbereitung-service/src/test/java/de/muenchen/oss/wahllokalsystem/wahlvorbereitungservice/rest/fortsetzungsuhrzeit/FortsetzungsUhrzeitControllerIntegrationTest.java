@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.fortsetzungsuhrzeit;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,7 +16,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.fortsetzu
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -39,7 +39,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class FortsetzungsUhrzeitControllerIntegrationTest {
 
   @Autowired MockMvc mockMvc;
@@ -62,24 +62,25 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
   class GetFortsetzungsUhrzeit {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT
-        })
     void should_returnFortsetzungsuhrzeit_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkIDToFind = "123";
       val fortsetzungsUhrzeitToFind = new FortsetzungsUhrzeit();
       fortsetzungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
       fortsetzungsUhrzeitToFind.setFortsetzungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
       fortsetzungsUhrzeitRepository.save(fortsetzungsUhrzeitToFind);
       val expectedResponseBody =
           fortsetzungsUhrzeitDTOMapper.toDTO(
               fortsetzungsUhrzeitModelMapper.toModel(fortsetzungsUhrzeitToFind));
 
-      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDToFind);
+      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDToFind)
+              .with(
+              jwt()
+                      .authorities(
+                              new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
       val responseBodyAsDTO =
@@ -90,38 +91,47 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT
-        })
     void should_returnNoContent_when_noDataFound() throws Exception {
       val wahlbezirkIDEmpty = "123";
-
       val wahlbezirkIDNotEmpty = "456";
       val fortsetzungsUhrzeitToFind = new FortsetzungsUhrzeit();
       fortsetzungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
       fortsetzungsUhrzeitToFind.setFortsetzungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
       fortsetzungsUhrzeitRepository.save(fortsetzungsUhrzeitToFind);
 
-      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDEmpty);
+      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDEmpty)
+              .with(
+              jwt()
+                      .authorities(
+                              new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDEmpty)));
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
+      @Test
+      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+          String wahlbezirkID = null;
+
+          val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID)
+                  .with(
+                          jwt()
+                                  .authorities(
+                                          new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+
+          mockMvc.perform(request).andExpect(status().isForbidden());
+      }
   }
 
   @Nested
   class PostFortsetzungsUhrzeit {
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT
-        })
     void should_setNewData_when_callingPost() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto =
@@ -140,11 +150,6 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT
-        })
     void should_replaceData_when_dataIsPresent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto1 = new FortsetzungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
@@ -175,11 +180,6 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT
-        })
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto = new FortsetzungsUhrzeitWriteDTO(null);
@@ -206,11 +206,6 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_FORTSETZUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT
-        })
     void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
       val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
       val writeDto =
@@ -238,10 +233,24 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
           .usingRecursiveComparison()
           .isEqualTo(expectedExceptionDTO);
     }
+      @Test
+      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+          String wahlbezirkID = null;
+          val writeDto =
+                  new FortsetzungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+          val request = buildPostRequest(wahlbezirkID, writeDto);
+          mockMvc.perform(request).andExpect(status().isForbidden());
+      }
 
     private RequestBuilder buildPostRequest(
         final String wahlbezirkID, final FortsetzungsUhrzeitWriteDTO requestBody) throws Exception {
       return post("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID)
+              .with(
+                      jwt()
+                              .authorities(
+                                      new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT))
+                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .with(csrf())
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));

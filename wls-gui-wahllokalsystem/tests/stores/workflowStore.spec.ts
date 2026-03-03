@@ -72,7 +72,7 @@ describe("workflowStore.ts", () => {
   });
 
   describe("getWorkflowStateForRoute", () => {
-    it("should_returnUndefined_when_workflowStateWithIDsDoesNotExist", () => {
+    it("should_returnFalse_when_workflowStateWithIDsDoesNotExist", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
 
@@ -82,7 +82,7 @@ describe("workflowStore.ts", () => {
           wahlbezirkID,
           MbwRoutesEnum.MBW_NIEDERSCHRIFT
         )
-      ).toBeUndefined();
+      ).toBe(false);
     });
 
     it("should_returnFalse_when_routeNameDoesNotExist", () => {

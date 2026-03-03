@@ -48,6 +48,10 @@ describe("navigationGuards.ts", () => {
     permitNavigationOnlyForWahlbezirksArtUwb,
     permitNavigationOnlyForWahlbezirksArtBwb,
     permitNavigationOnlyIfUserIsLoggedOut,
+    requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
+    requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
+    requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
+    requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
   } = useNavigationGuards();
 
   describe("isStepDoneInElectionState", () => {
@@ -503,6 +507,176 @@ describe("navigationGuards.ts", () => {
     it("should_returnTrue_when_userIsLoggedOut", () => {
       useUserStore().isUserLoggedIn = false;
       const result = permitNavigationOnlyIfUserIsLoggedOut(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requiresWahlhandlungErfasstWhenWahlbezirksArtUwb", () => {
+    it("should_returnFalse_when_statusIsWahlhandlungErfasstIsFalseAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlhandlungErfasst = false;
+      const result = requiresWahlhandlungErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlhandlungErfasstIsTrueAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlhandlungErfasst = true;
+      const result = requiresWahlhandlungErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsWahlhandlungErfasstIsFalseAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlhandlungErfasst = false;
+      const result = requiresWahlhandlungErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb", () => {
+    it("should_returnFalse_when_statusIsWahlbriefzulassungErfasstIsFalseAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlbriefzulassungErfasst = false;
+      const result = requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsWahlbriefzulassungErfasstIsTrueAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlbriefzulassungErfasst = true;
+      const result = requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsWahlbriefzulassungErfasstIsFalseAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().isWahlbriefzulassungErfasst = false;
+      const result = requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb", () => {
+    it("should_returnFalse_when_statusIsStimmabgabevermerkeErfasstIsFalseAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isStimmabgabevermerkeErfasst = false;
+      const result = requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsStimmabgabevermerkeErfasstIsTrueAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isStimmabgabevermerkeErfasst = true;
+      const result = requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsStimmabgabevermerkeErfasstIsFalseAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isStimmabgabevermerkeErfasst = false;
+      const result = requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe("requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb", () => {
+    it("should_returnFalse_when_statusIsAnzahlWahlscheineErfasstIsFalseAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isAnzahlWahlscheineErfasst = false;
+      const result = requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_statusIsAnzahlWahlscheineErfasstIsTrueAndUsersWahlbezirksArtIsBwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+      useWorkflowStore().isAnzahlWahlscheineErfasst = true;
+      const result = requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb(
+        DUMMY_TO,
+        DUMMY_FROM,
+        DUMMY_NEXT_GUARD
+      );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsAnzahlWahlscheineErfasstIsFalseAndUsersWahlbezirksArtIsUwb", () => {
+      useUserStore().setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+      useWorkflowStore().isAnzahlWahlscheineErfasst = false;
+      const result = requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb(
         DUMMY_TO,
         DUMMY_FROM,
         DUMMY_NEXT_GUARD

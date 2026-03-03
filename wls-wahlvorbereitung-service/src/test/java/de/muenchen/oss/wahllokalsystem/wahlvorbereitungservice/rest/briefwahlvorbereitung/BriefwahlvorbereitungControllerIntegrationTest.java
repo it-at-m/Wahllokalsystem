@@ -19,7 +19,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.testdaten.WahlurneTestdatenfactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -34,7 +33,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -110,7 +108,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
                       .authorities(
                               new SimpleGrantedAuthority(Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG),
                               new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDEmpty)));;
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDEmpty)));
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
@@ -126,7 +124,7 @@ public class BriefwahlvorbereitungControllerIntegrationTest {
                           .authorities(
                                   new SimpleGrantedAuthority(Authorities.SERVICE_GET_BRIEFWAHLVORBEREITUNG),
                                   new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BRIEFWAHLVORBEREITUNG))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));;
+                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
 
           mockMvc.perform(request).andExpect(status().isForbidden());
       }

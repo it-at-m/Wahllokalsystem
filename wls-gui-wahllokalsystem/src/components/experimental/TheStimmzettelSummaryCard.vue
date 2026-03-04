@@ -35,6 +35,16 @@
         {{ kandidatId }}
       </div>
     </v-card-text>
+
+    <v-card-title
+      >Stimmzettel ist gültig: {{ isStimmzettelValid }}</v-card-title
+    >
+    <v-card-text>
+      <div v-if="!isAtLeastOneScoreGiven">Es wurden keine Stimmen vergeben</div>
+      <div v-if="!isMaxVotesFulfilled">
+        Es wurden mehr Stimmen vergeben als erlaubt
+      </div>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -46,6 +56,9 @@ const wahlbezirkId = "wahlbezirkId";
 
 const {
   selectedWahlvorschlaege,
+  isStimmzettelValid,
+  isAtLeastOneScoreGiven,
+  isMaxVotesFulfilled,
   kandidatenScores,
   totalKandidatenScores,
   totalValidKandidatenScores,

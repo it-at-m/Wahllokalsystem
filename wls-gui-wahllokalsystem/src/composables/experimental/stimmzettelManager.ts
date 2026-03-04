@@ -29,7 +29,10 @@ export function getStimmzettelManger(
   }
 }
 
-export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
+export function useStimmzettelManager(
+  maxValidVotesPerKandidat = 3,
+  maxTotalVotes = 20
+) {
   const selectedWahlvorschlaege: Ref<string[]> = ref([]);
   /**
    * deprecated: internal only
@@ -116,6 +119,17 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
       totalInvalidKandidatenScoresOfNonDiscardedKandidaten.value
   );
 
+  const isAtLeastOneScoreGiven = computed(
+    () => totalKandidatenScores.value > 0
+  );
+  const isMaxVotesFulfilled = computed(
+    () => totalKandidatenScores.value <= maxTotalVotes
+  );
+
+  const isStimmzettelValid = computed(
+    () => isMaxVotesFulfilled.value && isAtLeastOneScoreGiven.value
+  );
+
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
     console.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
     managedWahlvorschlaege.value = wahlvorschlaege;
@@ -165,6 +179,10 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
     addKandidatVote,
     removeKandidatVote,
     setKandidatVote,
+
+    isAtLeastOneScoreGiven,
+    isStimmzettelValid,
+    isMaxVotesFulfilled,
 
     selectedWahlvorschlaege: computed(() => selectedWahlvorschlaege.value),
     kandidatenVotes: computed(() => kandidatenVotes.value),

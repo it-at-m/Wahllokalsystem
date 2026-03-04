@@ -11,8 +11,8 @@
         <v-tabs-window-item value="1">
           <v-row>
             <v-col
-              v-for="(wahlvorschlag, index) in wahlvorschlaege.wahlvorschlaege"
-              :key="index"
+              v-for="wahlvorschlag in stimmzettelWahlvorschlaege"
+              :key="wahlvorschlag.identifikator"
             >
               <base-wahlvorschlag-scores-card :wahlvorschlag="wahlvorschlag" />
             </v-col>
@@ -52,6 +52,9 @@ const stimmzettelManager = getStimmzettelManger({
   wahlbezirkId: "wahlbezirkId",
 });
 stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
+
+const stimmzettelWahlvorschlaege =
+  stimmzettelManager.stimmzettelWahlvorschlaege;
 </script>
 
 <style scoped></style>

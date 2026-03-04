@@ -1,3 +1,6 @@
+import type { StimmzettelKandidat } from "@/types/experimental/StimmzettelKandidat.ts";
+import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
+import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import type { Ref } from "vue";
 
@@ -33,28 +36,42 @@ export function useStimmzettelManager(
   maxValidVotesPerKandidat = 3,
   maxTotalVotes = 20
 ) {
-  const selectedWahlvorschlaege: Ref<string[]> = ref([]);
+  // const selectedWahlvorschlaege: Ref<string[]> = ref([]);
   /**
    * deprecated: internal only
    */
-  const kandidatenVotes: Ref<Record<KandidatId, number>> = ref({});
-  const discardedKandidatenIds: Ref<string[]> = ref([]);
-  const managedWahlvorschlaege: Ref<Wahlvorschlag[]> = ref([]);
+  // const kandidatenVotes: Ref<Record<KandidatId, number>> = ref({});
+  // const discardedKandidatenIds: Ref<string[]> = ref([]);
+  /**
+   * deprecated: old
+   */
+  // const managedWahlvorschlaege: Ref<Wahlvorschlag[]> = ref([]);
 
-  const kandidatenScores = computed(() =>
-    Object.keys(kandidatenVotes.value).map((kandidatId) => ({
-      kandidatId,
-      votes: kandidatenVotes.value[kandidatId] ?? 0,
-    }))
+  const stimmzettelWahlvorschlaege: Ref<StimmzettelWahlvorschlag[]> = ref([]);
+  const selectedWahlvorschlaege = computed(() =>
+    stimmzettelWahlvorschlaege.value.filter(
+      (wahlvorschlag) => wahlvorschlag.isSelected
+    )
   );
+
+  const stimmzettelKandidaten = computed(() =>
+    stimmzettelWahlvorschlaege.value.flatMap(
+      (wahlvorschlag) => wahlvorschlag.kandidaten
+    )
+  );
+  const discardedKandidaten = computed(() =>
+    stimmzettelKandidaten.value.filter((kandidat) => kandidat.isDiscarded)
+  );
+
   const requiredVotesLeftToFulfilListenkreuze = computed(
     () => {
       return selectedWahlvorschlaege.value.length <= 1
         ? 0
         : selectedWahlvorschlaege.value.reduce((prev, current) => {
             console.log(`wahlvorschlagID > ${current}`);
-            const kandidaten = managedWahlvorschlaege.value.find(
-              (wahlvorschlag) => wahlvorschlag.identifikator === current
+            const kandidaten = stimmzettelWahlvorschlaege.value.find(
+              (wahlvorschlag) =>
+                wahlvorschlag.identifikator === current.identifikator
             )?.kandidaten;
             if (!kandidaten) {
               console.log(`wahlvorschlag hat keine Kandidaten`);
@@ -65,12 +82,14 @@ export function useStimmzettelManager(
               );
               const countNonDiscardedKandidaten = kandidaten.filter(
                 (kandidat) =>
-                  !discardedKandidatenIds.value.some(
-                    (kid) => kid === kandidat.identifikator
+                  !discardedKandidaten.value.some(
+                    (kid) => kid.identifikator === kandidat.identifikator
                   ) &&
-                  (kandidatenVotes.value[kandidat.identifikator] ===
-                    undefined ||
-                    kandidatenVotes.value[kandidat.identifikator] === 0)
+                  stimmzettelKandidaten.value.find(
+                    (sk) =>
+                      sk.identifikator === kandidat.identifikator &&
+                      sk.votesByVoter === 0
+                  )
               ).length;
               console.log(
                 `countNonDiscardedKandidaten > ${countNonDiscardedKandidaten}`
@@ -88,32 +107,29 @@ export function useStimmzettelManager(
     }
   );
 
-  const totalKandidatenScores = computed(() =>
-    kandidatenScores.value.reduce((acc, curr) => acc + curr.votes, 0)
+  const totalKandidatenScoresByVoter = computed(() =>
+    stimmzettelKandidaten.value.reduce(
+      (acc, curr) => acc + curr.votesByVoter,
+      0
+    )
   );
-  const totalValidKandidatenScores = computed(() =>
-    kandidatenScores.value
-      .filter(
-        (score) => !discardedKandidatenIds.value.includes(score.kandidatId)
-      )
-      .map((score) => Math.min(score.votes, maxValidVotesPerKandidat))
+  const totalValidKandidatenScoresByVoter = computed(() =>
+    stimmzettelKandidaten.value
+      .filter((kandidat) => !kandidat.isDiscarded)
+      .map((score) => Math.min(score.votesByVoter, maxValidVotesPerKandidat))
       .reduce((acc, curr) => acc + curr, 0)
   );
   const totalInvalidKandidatenScoresOfDiscardedKandidaten = computed(() =>
-    kandidatenScores.value
-      .filter((score) =>
-        discardedKandidatenIds.value.includes(score.kandidatId)
-      )
-      .map((score) => score.votes)
+    stimmzettelKandidaten.value
+      .filter((kandidat) => kandidat.isDiscarded)
+      .map((score) => score.votesByVoter)
       .reduce((acc, curr) => acc + curr, 0)
   );
   const totalInvalidKandidatenScoresOfNonDiscardedKandidaten = computed(() =>
-    kandidatenScores.value
-      .filter(
-        (score) => !discardedKandidatenIds.value.includes(score.kandidatId)
-      )
-      .filter((score) => score.votes > maxValidVotesPerKandidat)
-      .map((score) => score.votes - maxValidVotesPerKandidat)
+    stimmzettelKandidaten.value
+      .filter((kandidat) => !kandidat.isDiscarded)
+      .filter((score) => score.votesByVoter > maxValidVotesPerKandidat)
+      .map((score) => score.votesByVoter - maxValidVotesPerKandidat)
       .reduce((acc, curr) => acc + curr, 0)
   );
   const totalInvalidKandidatenScores = computed(
@@ -123,10 +139,10 @@ export function useStimmzettelManager(
   );
 
   const isAtLeastOneScoreGiven = computed(
-    () => totalKandidatenScores.value > 0
+    () => totalKandidatenScoresByVoter.value > 0
   );
   const isMaxVotesFulfilled = computed(
-    () => totalKandidatenScores.value <= maxTotalVotes
+    () => totalKandidatenScoresByVoter.value <= maxTotalVotes
   );
 
   const isStimmzettelValid = computed(
@@ -135,47 +151,73 @@ export function useStimmzettelManager(
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
     console.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
-    managedWahlvorschlaege.value = wahlvorschlaege;
+    stimmzettelWahlvorschlaege.value = wahlvorschlaege.map(
+      toStimmzettelWahlvorschlag
+    );
+
     //TODO objekte aufräume welche sich auf IDs der Wahlvorschläge beziehen könnten und dann out of sync sein könnten
     //TODO ID in Wahlvorschlag und Kandidat sollten wir fix machen damit syntaktisch klar ist dass man sie nicht ändern kann
   }
 
   function selectWahlvorschlag(wahlvorschlagId: string) {
-    if (!selectedWahlvorschlaege.value.some((id) => id === wahlvorschlagId)) {
-      selectedWahlvorschlaege.value.push(wahlvorschlagId);
+    const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
+      (wahlvorschlag) => wahlvorschlag.identifikator === wahlvorschlagId
+    );
+    if (wahlvorschlag) {
+      wahlvorschlag.isSelected = true;
     }
   }
 
   function deselectWahlvorschlag(wahlvorschlagId: string) {
-    selectedWahlvorschlaege.value = selectedWahlvorschlaege.value.filter(
-      (id) => id !== wahlvorschlagId
+    const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
+      (wahlvorschlag) => wahlvorschlag.identifikator === wahlvorschlagId
     );
+    if (wahlvorschlag) {
+      wahlvorschlag.isSelected = false;
+    }
   }
 
-  function addKandidatVote(kandidatId: string) {
-    const currentVotes = kandidatenVotes.value[kandidatId] || 0;
-    kandidatenVotes.value[kandidatId] = currentVotes + 1;
+  function addKandidatVote(kandidatId: string, countVotes = 1) {
+    const kandidat = stimmzettelKandidaten.value.find(
+      (kandidat) => kandidat.identifikator === kandidatId
+    );
+    if (kandidat) {
+      kandidat.votesByVoter = kandidat.votesByVoter + countVotes;
+    }
   }
 
-  function removeKandidatVote(kandidatId: string) {
-    const currentVotes = kandidatenVotes.value[kandidatId] || 0;
-    if (currentVotes > 0) {
-      kandidatenVotes.value[kandidatId] = currentVotes - 1;
+  function removeKandidatVote(kandidatId: string, countVotes = 1) {
+    const kandidat = stimmzettelKandidaten.value.find(
+      (kandidat) => kandidat.identifikator === kandidatId
+    );
+    if (kandidat && kandidat.votesByVoter > 0) {
+      kandidat.votesByVoter = kandidat.votesByVoter - countVotes;
     }
   }
   function setKandidatVote(kandidatId: string, countVotes: number) {
-    kandidatenVotes.value[kandidatId] = countVotes;
+    const kandidat = stimmzettelKandidaten.value.find(
+      (kandidat) => kandidat.identifikator === kandidatId
+    );
+    if (kandidat) {
+      kandidat.votesByVoter = countVotes;
+    }
   }
 
   function discardKandidat(kandidatId: string) {
-    if (!discardedKandidatenIds.value.some((id) => id === kandidatId)) {
-      discardedKandidatenIds.value.push(kandidatId);
+    const kandidat = stimmzettelKandidaten.value.find(
+      (kandidat) => kandidat.identifikator === kandidatId
+    );
+    if (kandidat) {
+      kandidat.isDiscarded = true;
     }
   }
   function revokeDiscardedKandidat(kandidatId: string) {
-    discardedKandidatenIds.value = discardedKandidatenIds.value.filter(
-      (id) => id !== kandidatId
+    const kandidat = stimmzettelKandidaten.value.find(
+      (kandidat) => kandidat.identifikator === kandidatId
     );
+    if (kandidat) {
+      kandidat.isDiscarded = false;
+    }
   }
 
   return {
@@ -187,13 +229,15 @@ export function useStimmzettelManager(
     isStimmzettelValid,
     isMaxVotesFulfilled,
 
+    stimmzettelWahlvorschlaege: computed(
+      () => stimmzettelWahlvorschlaege.value
+    ),
+    stimmzettelKandidaten: computed(() => stimmzettelKandidaten.value),
     selectedWahlvorschlaege: computed(() => selectedWahlvorschlaege.value),
-    kandidatenVotes: computed(() => kandidatenVotes.value),
-    discardedKandidatenIds: computed(() => discardedKandidatenIds.value),
+    discardedKandidaten: computed(() => discardedKandidaten.value),
     requiredVotesLeftToFulfilListenkreuze,
-    kandidatenScores,
-    totalKandidatenScores,
-    totalValidKandidatenScores,
+    totalKandidatenScores: totalKandidatenScoresByVoter,
+    totalValidKandidatenScores: totalValidKandidatenScoresByVoter,
     totalInvalidKandidatenScores,
 
     discardKandidat,
@@ -219,4 +263,42 @@ function serializeValue(value: unknown): string {
   if (value === null) return "null";
   if (typeof value === "object") return hashObject(value as object);
   return String(value);
+}
+
+function toStimmzettelWahlvorschlag(
+  wahlvorschlag: Wahlvorschlag
+): StimmzettelWahlvorschlag {
+  const result: StimmzettelWahlvorschlag = {
+    erhaeltStimmen: wahlvorschlag.erhaeltStimmen,
+    kurzname: wahlvorschlag.kurzname,
+    ordnungszahl: wahlvorschlag.ordnungszahl,
+    identifikator: wahlvorschlag.identifikator,
+    isSelected: false,
+    kandidaten: [],
+  };
+
+  result.kandidaten = wahlvorschlag.kandidaten
+    ? wahlvorschlag.kandidaten.map((kandidat) =>
+        toStimmzettelKandidat(kandidat, result)
+      )
+    : [];
+
+  return result;
+}
+
+function toStimmzettelKandidat(
+  kandidat: Kandidat,
+  wahlvorschlag: StimmzettelWahlvorschlag
+): StimmzettelKandidat {
+  return {
+    direktkandidat: kandidat.direktkandidat,
+    einzelbewerber: kandidat.einzelbewerber,
+    identifikator: kandidat.identifikator,
+    isDiscarded: false,
+    name: kandidat.name,
+    listenposition: kandidat.listenposition,
+    votesByVoter: 0,
+    votesByWahlvorschlag: 0,
+    wahlvorschlag: wahlvorschlag,
+  };
 }

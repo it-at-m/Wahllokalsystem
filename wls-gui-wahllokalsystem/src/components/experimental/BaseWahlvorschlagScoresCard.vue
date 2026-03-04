@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
-import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
+import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
 import type { PropType } from "vue";
 
 import { computed, ref } from "vue";
@@ -31,7 +31,7 @@ import { getStimmzettelManger } from "@/composables/experimental/stimmzettelMana
 
 const props = defineProps({
   wahlvorschlag: {
-    type: Object as PropType<Wahlvorschlag>,
+    type: Object as PropType<StimmzettelWahlvorschlag>,
     required: true,
   },
 });
@@ -55,7 +55,8 @@ const wahlvorschlagSelected = computed({
   },
   get: () => {
     return stimmzettelManager.selectedWahlvorschlaege.value.some(
-      (id) => id === props.wahlvorschlag.identifikator
+      (wahlvorschlag) =>
+        wahlvorschlag.identifikator === props.wahlvorschlag.identifikator
     );
   },
 });

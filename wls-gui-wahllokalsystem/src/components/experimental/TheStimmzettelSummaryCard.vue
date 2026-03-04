@@ -3,10 +3,10 @@
     <v-card-title>Wahlvorschläge</v-card-title>
     <v-card-text>
       <div
-        v-for="wahlvorschlagId in selectedWahlvorschlaege"
-        :key="wahlvorschlagId"
+        v-for="wahlvorschlag in selectedWahlvorschlaege"
+        :key="wahlvorschlag.identifikator"
       >
-        {{ wahlvorschlagId }}
+        {{ wahlvorschlag.identifikator }}
       </div>
       <div>
         Required votes left to fulfil selected wahlvorschlaege:
@@ -22,17 +22,17 @@
       </div>
       <div>Total Valid Kandidaten Votes: {{ totalValidKandidatenScores }}</div>
       <div
-        v-for="kandidat in kandidatenScores"
-        :key="kandidat.kandidatId"
+        v-for="kandidat in stimmzettelKandidaten"
+        :key="kandidat.identifikator"
       >
-        {{ kandidat.kandidatId }}: {{ kandidat.votes }}
+        {{ kandidat.identifikator }}: {{ kandidat.votesByVoter }}
       </div>
-      <div>Total Discarded Kandidaten: {{ discardedKandidatenIds.length }}</div>
+      <div>Total Discarded Kandidaten: {{ discardedKandidaten.length }}</div>
       <div
-        v-for="kandidatId in discardedKandidatenIds"
-        :key="kandidatId"
+        v-for="kandidat in discardedKandidaten"
+        :key="kandidat.identifikator"
       >
-        {{ kandidatId }}
+        {{ kandidat.identifikator }}
       </div>
     </v-card-text>
 
@@ -49,24 +49,35 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
 const wahlId = "wahlId";
 const wahlbezirkId = "wahlbezirkId";
 
 const {
-  selectedWahlvorschlaege,
   isStimmzettelValid,
   isAtLeastOneScoreGiven,
   isMaxVotesFulfilled,
-  kandidatenScores,
+  stimmzettelKandidaten,
+  stimmzettelWahlvorschlaege,
   totalKandidatenScores,
   totalValidKandidatenScores,
   totalInvalidKandidatenScores,
-  discardedKandidatenIds,
   requiredVotesLeftToFulfilListenkreuze,
 } = getStimmzettelManger({
   wahlId,
   wahlbezirkId,
 });
+
+const discardedKandidaten = computed(() =>
+  stimmzettelKandidaten.value.filter((kandidat) => kandidat.isDiscarded)
+);
+
+const selectedWahlvorschlaege = computed(() =>
+  stimmzettelWahlvorschlaege.value.filter(
+    (wahlvorschlag) => wahlvorschlag.isSelected
+  )
+);
 </script>

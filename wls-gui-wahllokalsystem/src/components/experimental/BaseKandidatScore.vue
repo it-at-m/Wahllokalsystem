@@ -18,14 +18,13 @@
       </div>
     </v-col>
     <v-col>
-      <base-kandidate-votes :ergebnis="ergebnisModel" />
+      <base-kandidate-votes :kandidat="kandidat" />
     </v-col>
   </v-row>
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
-import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
+import type { StimmzettelKandidat } from "@/types/experimental/StimmzettelKandidat.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";
@@ -34,18 +33,13 @@ import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue
 import BaseKandidatScoreOperator from "@/components/experimental/BaseKandidatScoreOperator.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
-const ergebnisModel = defineModel("modelValue", {
-  type: Object as PropType<Ergebnis>,
-  required: true,
-});
-
 const props = defineProps({
   listennummer: {
     type: Number,
     required: true,
   },
   kandidat: {
-    type: Object as PropType<Kandidat>,
+    type: Object as PropType<StimmzettelKandidat>,
     required: true,
   },
 });
@@ -59,19 +53,17 @@ const stimmzettelManager = getStimmzettelManger({
   wahlId: "wahlId",
 });
 const isDiscarded = computed(() =>
-  stimmzettelManager.discardedKandidatenIds.value.some(
-    (id) => id === props.kandidat.identifikator
+  stimmzettelManager.discardedKandidaten.value.some(
+    (kandidat) => kandidat.identifikator === props.kandidat.identifikator
   )
 );
 
 function onAddScore(count: number) {
-  ergebnisModel.value.ergebnis = (ergebnisModel.value.ergebnis ?? 0) + count;
-  stimmzettelManager.addKandidatVote(props.kandidat.identifikator);
+  stimmzettelManager.addKandidatVote(props.kandidat.identifikator, count);
 }
 
 function onSubtractScore(count: number) {
-  ergebnisModel.value.ergebnis = (ergebnisModel.value.ergebnis ?? 0) - count;
-  stimmzettelManager.removeKandidatVote(props.kandidat.identifikator);
+  stimmzettelManager.removeKandidatVote(props.kandidat.identifikator, count);
 }
 
 function onRevokeDiscard() {

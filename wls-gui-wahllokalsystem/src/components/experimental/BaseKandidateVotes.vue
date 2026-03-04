@@ -15,14 +15,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
+import type { StimmzettelKandidat } from "@/types/experimental/StimmzettelKandidat.ts";
 import type { PropType } from "vue";
 
 import { computed } from "vue";
 
 const props = defineProps({
-  ergebnis: {
-    type: Object as PropType<Ergebnis>,
+  kandidat: {
+    type: Object as PropType<StimmzettelKandidat>,
     required: true,
   },
   maxValidVotes: {
@@ -32,7 +32,7 @@ const props = defineProps({
   },
 });
 
-const ergebnis = computed(() => props.ergebnis?.ergebnis ?? 0);
+const ergebnis = computed(() => props.kandidat.votesByVoter);
 
 const invalidVotes = computed(() =>
   ergebnis.value > props.maxValidVotes

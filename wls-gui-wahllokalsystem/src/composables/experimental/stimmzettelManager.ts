@@ -49,32 +49,35 @@ export function useStimmzettelManager(
   );
   const requiredVotesLeftToFulfilListenkreuze = computed(
     () => {
-      return selectedWahlvorschlaege.value.reduce((prev, current) => {
-        console.log(`wahlvorschlagID > ${current}`);
-        const kandidaten = managedWahlvorschlaege.value.find(
-          (wahlvorschlag) => wahlvorschlag.identifikator === current
-        )?.kandidaten;
-        if (!kandidaten) {
-          console.log(`wahlvorschlag hat keine Kandidaten`);
-          return prev;
-        } else {
-          console.log(
-            `wahlvorschlag hat kandidaten - count > ${kandidaten.length}`
-          );
-          const countNonDiscardedKandidaten = kandidaten.filter(
-            (kandidat) =>
-              !discardedKandidatenIds.value.some(
-                (kid) => kid === kandidat.identifikator
-              ) &&
-              (kandidatenVotes.value[kandidat.identifikator] === undefined ||
-                kandidatenVotes.value[kandidat.identifikator] === 0)
-          ).length;
-          console.log(
-            `countNonDiscardedKandidaten > ${countNonDiscardedKandidaten}`
-          );
-          return prev + countNonDiscardedKandidaten;
-        }
-      }, 0);
+      return selectedWahlvorschlaege.value.length <= 1
+        ? 0
+        : selectedWahlvorschlaege.value.reduce((prev, current) => {
+            console.log(`wahlvorschlagID > ${current}`);
+            const kandidaten = managedWahlvorschlaege.value.find(
+              (wahlvorschlag) => wahlvorschlag.identifikator === current
+            )?.kandidaten;
+            if (!kandidaten) {
+              console.log(`wahlvorschlag hat keine Kandidaten`);
+              return prev;
+            } else {
+              console.log(
+                `wahlvorschlag hat kandidaten - count > ${kandidaten.length}`
+              );
+              const countNonDiscardedKandidaten = kandidaten.filter(
+                (kandidat) =>
+                  !discardedKandidatenIds.value.some(
+                    (kid) => kid === kandidat.identifikator
+                  ) &&
+                  (kandidatenVotes.value[kandidat.identifikator] ===
+                    undefined ||
+                    kandidatenVotes.value[kandidat.identifikator] === 0)
+              ).length;
+              console.log(
+                `countNonDiscardedKandidaten > ${countNonDiscardedKandidaten}`
+              );
+              return prev + countNonDiscardedKandidaten;
+            }
+          }, 0);
     },
     {
       onTrigger: (event) => {

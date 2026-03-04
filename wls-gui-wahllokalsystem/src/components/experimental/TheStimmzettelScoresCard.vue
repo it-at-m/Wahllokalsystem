@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/Ergebnis.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { PropType } from "vue";
 
@@ -44,7 +43,6 @@ const props = defineProps({
   },
 });
 
-const ergebnisse = ref<Ergebnis[]>([]);
 const tab = ref("1");
 
 const stimmzettelManager = getStimmzettelManger({

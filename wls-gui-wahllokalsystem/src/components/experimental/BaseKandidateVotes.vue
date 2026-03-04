@@ -25,17 +25,22 @@ const props = defineProps({
     type: Object as PropType<Ergebnis>,
     required: true,
   },
+  maxValidVotes: {
+    type: Number,
+    required: false,
+    default: 3,
+  },
 });
-
-const maxValidVotes = 3;
 
 const ergebnis = computed(() => props.ergebnis?.ergebnis ?? 0);
 
 const invalidVotes = computed(() =>
-  ergebnis.value > maxValidVotes ? ergebnis.value - maxValidVotes : 0
+  ergebnis.value > props.maxValidVotes
+    ? ergebnis.value - props.maxValidVotes
+    : 0
 );
 const validVotes = computed(() =>
-  ergebnis.value > maxValidVotes ? maxValidVotes : ergebnis.value
+  ergebnis.value > props.maxValidVotes ? props.maxValidVotes : ergebnis.value
 );
 </script>
 

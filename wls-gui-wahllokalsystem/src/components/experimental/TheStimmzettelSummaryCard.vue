@@ -17,6 +17,9 @@
     <v-card-title>Kandidaten</v-card-title>
     <v-card-text>
       <div>Total Kandidaten Votes: {{ totalKandidatenScores }}</div>
+      <div>
+        Total Invalid Kandidaten Votes: {{ totalInvalidKandidatenScores }}
+      </div>
       <div>Total Valid Kandidaten Votes: {{ totalValidKandidatenScores }}</div>
       <div
         v-for="kandidat in kandidatenScores"
@@ -46,6 +49,7 @@ const {
   kandidatenScores,
   totalKandidatenScores,
   totalValidKandidatenScores,
+  totalInvalidKandidatenScores,
   discardedKandidatenIds,
   requiredVotesLeftToFulfilListenkreuze,
 } = getStimmzettelManger({

@@ -87,8 +87,33 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
   );
   const totalValidKandidatenScores = computed(() =>
     kandidatenScores.value
+      .filter(
+        (score) => !discardedKandidatenIds.value.includes(score.kandidatId)
+      )
       .map((score) => Math.min(score.votes, maxValidVotesPerKandidat))
       .reduce((acc, curr) => acc + curr, 0)
+  );
+  const totalInvalidKandidatenScoresOfDiscardedKandidaten = computed(() =>
+    kandidatenScores.value
+      .filter((score) =>
+        discardedKandidatenIds.value.includes(score.kandidatId)
+      )
+      .map((score) => score.votes)
+      .reduce((acc, curr) => acc + curr, 0)
+  );
+  const totalInvalidKandidatenScoresOfNonDiscardedKandidaten = computed(() =>
+    kandidatenScores.value
+      .filter(
+        (score) => !discardedKandidatenIds.value.includes(score.kandidatId)
+      )
+      .filter((score) => score.votes > maxValidVotesPerKandidat)
+      .map((score) => score.votes - maxValidVotesPerKandidat)
+      .reduce((acc, curr) => acc + curr, 0)
+  );
+  const totalInvalidKandidatenScores = computed(
+    () =>
+      totalInvalidKandidatenScoresOfDiscardedKandidaten.value +
+      totalInvalidKandidatenScoresOfNonDiscardedKandidaten.value
   );
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
@@ -148,6 +173,7 @@ export function useStimmzettelManager(maxValidVotesPerKandidat = 3) {
     kandidatenScores,
     totalKandidatenScores,
     totalValidKandidatenScores,
+    totalInvalidKandidatenScores,
 
     discardKandidat,
     revokeDiscardedKandidat,

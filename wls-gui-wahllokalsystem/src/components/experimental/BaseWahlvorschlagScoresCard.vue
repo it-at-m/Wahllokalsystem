@@ -5,12 +5,20 @@
       <v-checkbox v-model="wahlvorschlagSelected"
     /></v-card-title>
     <v-card-text>
-      <base-kandidat-score
+      <template
         v-for="(kandidat, index) in wahlvorschlag.kandidaten"
         :key="index"
-        :kandidat="kandidat"
-        :listennummer="wahlvorschlag.ordnungszahl"
-      />
+      >
+        <base-kandidat-score
+          :kandidat="kandidat"
+          :listennummer="wahlvorschlag.ordnungszahl"
+        />
+        <v-divider
+          v-if="index < wahlvorschlag.kandidaten.length - 1"
+          thickness="2"
+          class="my-2"
+        />
+      </template>
     </v-card-text>
   </v-card>
 </template>

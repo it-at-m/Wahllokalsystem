@@ -72,16 +72,16 @@ export function useStimmzettelManager(
       return selectedWahlvorschlaege.value.length <= 1
         ? 0
         : selectedWahlvorschlaege.value.reduce((prev, current) => {
-            console.log(`wahlvorschlagID > ${current}`);
+            logger.log(`wahlvorschlagID > ${current}`);
             const kandidaten = stimmzettelWahlvorschlaege.value.find(
               (wahlvorschlag) =>
                 wahlvorschlag.identifikator === current.identifikator
             )?.kandidaten;
             if (!kandidaten) {
-              console.log(`wahlvorschlag hat keine Kandidaten`);
+              logger.log(`wahlvorschlag hat keine Kandidaten`);
               return prev;
             } else {
-              console.log(
+              logger.log(
                 `wahlvorschlag hat kandidaten - count > ${kandidaten.length}`
               );
               const countNonDiscardedKandidaten = kandidaten.filter(
@@ -95,7 +95,7 @@ export function useStimmzettelManager(
                       sk.votesByVoter === 0
                   )
               ).length;
-              console.log(
+              logger.log(
                 `countNonDiscardedKandidaten > ${countNonDiscardedKandidaten}`
               );
               return prev + countNonDiscardedKandidaten;
@@ -104,7 +104,7 @@ export function useStimmzettelManager(
     },
     {
       onTrigger: (event) => {
-        console.log(
+        logger.log(
           `triggered ${event.type} ${event.newValue} ${event.oldValue}`
         );
       },
@@ -160,7 +160,7 @@ export function useStimmzettelManager(
   );
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
-    console.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
+    logger.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
     stimmzettelWahlvorschlaege.value = wahlvorschlaege.map(
       toStimmzettelWahlvorschlag
     );

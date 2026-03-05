@@ -21,13 +21,20 @@ const managers = new Map<
 >();
 
 export function getStimmzettelManger(
-  wahlIdAndWahlbezirkId: WahlIdAndWahlbezirkId
+  wahlIdAndWahlbezirkId: WahlIdAndWahlbezirkId,
+  options?: {
+    maxValidVotesPerKandidat?: number;
+    maxTotalVotes?: number;
+  }
 ) {
   const manager = managers.get(hashObject(wahlIdAndWahlbezirkId));
   if (manager) {
     return manager;
   } else {
-    const newManager = useStimmzettelManager();
+    const newManager = useStimmzettelManager(
+      options.maxValidVotesPerKandidat,
+      options.maxTotalVotes
+    );
     managers.set(hashObject(wahlIdAndWahlbezirkId), newManager);
     return newManager;
   }

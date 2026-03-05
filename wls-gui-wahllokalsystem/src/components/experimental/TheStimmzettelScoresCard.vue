@@ -52,10 +52,16 @@ const props = defineProps({
 
 const tab = ref("1");
 
-const stimmzettelManager = getStimmzettelManger({
-  wahlId: "wahlId",
-  wahlbezirkId: "wahlbezirkId",
-});
+const stimmzettelManager = getStimmzettelManger(
+  {
+    wahlId: "wahlId",
+    wahlbezirkId: "wahlbezirkId",
+  },
+  {
+    maxValidVotesPerKandidat: MAX_VALID_VOTES_PER_KANDIDAT,
+    maxTotalVotes: MAX_TOTAL_VOTES,
+  }
+);
 stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 
 const stimmzettelWahlvorschlaege =

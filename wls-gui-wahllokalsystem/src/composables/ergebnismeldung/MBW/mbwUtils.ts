@@ -223,7 +223,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function prepareDataForErgebnismeldungDruck(
+  async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
     meldungsart: MeldungsartEnum
@@ -367,6 +367,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     getAWerteForWahlbezirkAndWahl,
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
-    prepareDataForErgebnismeldungDruck,
+    prepareDataForSchnellmeldungDruck,
   };
 }

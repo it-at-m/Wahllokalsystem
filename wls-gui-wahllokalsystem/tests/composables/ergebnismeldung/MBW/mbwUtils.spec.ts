@@ -710,7 +710,7 @@ describe("mbwUtils", () => {
     });
   });
 
-  describe("prepareDataForErgebnismeldungDruck", () => {
+  describe("prepareDataForSchnellmeldungDruck", () => {
     it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsart", async () => {
       const userStore = useUserStore(pinia);
       userStore.setUser(
@@ -943,7 +943,7 @@ describe("mbwUtils", () => {
         toHhMm(mockedNow) +
         " O";
 
-      const result = await unitUnderTest.prepareDataForErgebnismeldungDruck(
+      const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         wahl,
         status,
         meldungsArt

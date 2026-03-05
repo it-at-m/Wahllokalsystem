@@ -13,7 +13,9 @@ const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate } = useDateTimeFormatter();
 
 export function useSchnellmeldungDruck() {
-  function buildTemplateFromData(data: SchnellmeldungDruckInput): string {
+  function buildSchnellmeldungTemplateFromData(
+    data: SchnellmeldungDruckInput
+  ): string {
     return `
         <!DOCTYPE html>
         <html lang="de">
@@ -608,5 +610,5 @@ export function useSchnellmeldungDruck() {
     return convertToSixDigitArray(sum);
   }
 
-  return { buildTemplateFromData };
+  return { buildSchnellmeldungTemplateFromData };
 }

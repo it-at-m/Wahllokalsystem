@@ -66,9 +66,9 @@ const { status } = storeToRefs(useStatusStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
-  prepareDataForErgebnismeldungDruck,
+  prepareDataForSchnellmeldungDruck,
 } = useMbwUtils(wahlID, wahlbezirkID);
-const { buildTemplateFromData } = useSchnellmeldungDruck();
+const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 
@@ -103,7 +103,7 @@ async function onDruckenClicked() {
 
     if (wahl && statusForWahlAndWahlbezirk) {
       const data: SchnellmeldungDruckInput =
-        await prepareDataForErgebnismeldungDruck(
+        await prepareDataForSchnellmeldungDruck(
           wahl,
           statusForWahlAndWahlbezirk,
           MeldungsArtEnum.Schnellmeldung
@@ -116,7 +116,8 @@ async function onDruckenClicked() {
       );
 
       if (printWindow) {
-        printWindow.document.body.innerHTML = buildTemplateFromData(data);
+        printWindow.document.body.innerHTML =
+          buildSchnellmeldungTemplateFromData(data);
         printWindow.print();
         printWindow.close();
         isSendenActive.value = false;

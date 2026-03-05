@@ -3,7 +3,10 @@ import "vuetify/styles";
 import {
   mdiAlert,
   mdiArrowRightBold,
+  mdiCancel,
   mdiCheckCircle,
+  mdiCheckCircleOutline,
+  mdiCloseCircleOutline,
   mdiCloudUpload,
   mdiContentSave,
   mdiContentSaveCheck,
@@ -76,6 +79,8 @@ export default createVuetify({
       logout: mdiLogout,
       locked: mdiLockOutline,
       saveSuccess: mdiContentSaveCheck,
+      kandidatNonRemoved: mdiCheckCircleOutline,
+      kandidatRemoved: mdiCloseCircleOutline,
     },
     sets: {
       mdi,

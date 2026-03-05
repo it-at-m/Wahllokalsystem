@@ -9,7 +9,6 @@ import { computed, ref } from "vue";
 import { useLogging } from "@/composables/common/logging.ts";
 
 type StimmzettelManagerHash = string;
-type KandidatId = string;
 
 interface WahlIdAndWahlbezirkId {
   wahlId: string;

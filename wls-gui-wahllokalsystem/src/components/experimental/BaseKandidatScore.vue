@@ -3,6 +3,7 @@
     <v-col
       ><base-kandidat-score-operator
         v-model="userVotes"
+        v-model:is-discarded="isDiscarded"
         @add="onAddScore"
         @subtract="onSubtractScore"
         @discard="onDiscard"
@@ -59,11 +60,11 @@ const stimmzettelManager = getStimmzettelManger({
   wahlbezirkId: "wahlbezirkId",
   wahlId: "wahlId",
 });
-const isDiscarded = computed(() =>
-  stimmzettelManager.discardedKandidaten.value.some(
-    (kandidat) => kandidat.identifikator === props.kandidat.identifikator
-  )
-);
+const isDiscarded = computed({
+  get: () => props.kandidat.isDiscarded,
+  set: (newValue: boolean) =>
+    stimmzettelManager.discardKandidat(props.kandidat.identifikator, newValue),
+});
 
 function onAddScore(count: number) {
   stimmzettelManager.addKandidatVote(props.kandidat.identifikator, count);

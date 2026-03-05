@@ -203,12 +203,12 @@ export function useStimmzettelManager(
     }
   }
 
-  function discardKandidat(kandidatId: string) {
+  function discardKandidat(kandidatId: string, newDiscardState = true) {
     const kandidat = stimmzettelKandidaten.value.find(
       (kandidat) => kandidat.identifikator === kandidatId
     );
     if (kandidat) {
-      kandidat.isDiscarded = true;
+      kandidat.isDiscarded = newDiscardState;
     }
   }
   function revokeDiscardedKandidat(kandidatId: string) {

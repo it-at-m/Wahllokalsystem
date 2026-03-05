@@ -8,6 +8,7 @@
       :min="0"
     ></v-number-input>
     <v-switch
+      v-model="modelIsDiscarded"
       hide-details
       inset
     />
@@ -21,6 +22,10 @@
 <script setup lang="ts">
 const modelVotes = defineModel({
   type: Number,
+});
+
+const modelIsDiscarded = defineModel("isDiscarded", {
+  type: Boolean,
 });
 
 const emit = defineEmits<{

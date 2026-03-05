@@ -6,7 +6,7 @@
       density="compact"
       hide-details
       :min="0"
-    ></v-number-input>
+    />
   </div>
 </template>
 

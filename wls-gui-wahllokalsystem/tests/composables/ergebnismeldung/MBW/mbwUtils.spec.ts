@@ -120,7 +120,7 @@ const { prepareAWerte } = useAWerteTestDataFactory();
 const { prepareBWerte } = useBWerteTestDataFactory();
 const { prepareMbwErgebnisseAndWahlvorschlag } =
   useMbwErgebnisseAndWahlvorschlagTestDataFactory();
-const { prepareErgebnismeldungDruckInput } =
+const { prepareSchnellmeldungDruckInput } =
   useErgebnismeldungDruckInputTestDataFactory();
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
@@ -949,7 +949,7 @@ describe("mbwUtils", () => {
         meldungsArt
       );
 
-      const expectedResult = prepareErgebnismeldungDruckInput()
+      const expectedResult = prepareSchnellmeldungDruckInput()
         .meldungsArt(meldungsArt)
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .aktuelleWahl(wahl)

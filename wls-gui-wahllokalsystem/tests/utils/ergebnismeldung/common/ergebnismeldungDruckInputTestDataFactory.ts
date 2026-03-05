@@ -26,7 +26,7 @@ const { createMbwErgebnisseAndWahlvorschlag } =
 const { convertToSixDigitArray } = useNumberFormatter();
 
 export function useErgebnismeldungDruckInputTestDataFactory() {
-  function createErgebnismeldungDruckInput(): SchnellmeldungDruckInput {
+  function createSchnellmeldungDruckInput(): SchnellmeldungDruckInput {
     return {
       meldungsArt: MeldungsArtEnum.Schnellmeldung,
       wahlbezirksArt: WahlbezirksArtEnum.UWB,
@@ -54,11 +54,11 @@ export function useErgebnismeldungDruckInputTestDataFactory() {
     };
   }
 
-  function prepareErgebnismeldungDruckInput(): Builder<SchnellmeldungDruckInput> {
+  function prepareSchnellmeldungDruckInput(): Builder<SchnellmeldungDruckInput> {
     return proxyBuilder<SchnellmeldungDruckInput>(
-      createErgebnismeldungDruckInput()
+      createSchnellmeldungDruckInput()
     );
   }
 
-  return { createErgebnismeldungDruckInput, prepareErgebnismeldungDruckInput };
+  return { createSchnellmeldungDruckInput, prepareSchnellmeldungDruckInput };
 }

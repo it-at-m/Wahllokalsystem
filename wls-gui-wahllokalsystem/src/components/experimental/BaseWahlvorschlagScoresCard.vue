@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card style="min-width: 400px">
     <v-card-title
       >Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
       <v-checkbox v-model="wahlvorschlagSelected"

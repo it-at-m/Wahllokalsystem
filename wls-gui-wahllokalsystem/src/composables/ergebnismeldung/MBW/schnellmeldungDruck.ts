@@ -1,7 +1,7 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -12,8 +12,8 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate } = useDateTimeFormatter();
 
-export function useErgebnismeldungDruck() {
-  function buildTemplateFromData(data: ErgebnismeldungDruckInput): string {
+export function useSchnellmeldungDruck() {
+  function buildTemplateFromData(data: SchnellmeldungDruckInput): string {
     return `
         <!DOCTYPE html>
         <html lang="de">

@@ -26,12 +26,52 @@ function createTestData() {
       .wahlvorschlaege([
         prepareWahlvorschlag()
           .ordnungszahl(1)
-          .kandidaten(createTestDataKandidaten())
+          .kandidaten(createTestDataKandidaten(20))
           .build(),
         prepareWahlvorschlag()
           .ordnungszahl(2)
-          .kandidaten(createTestDataKandidaten(7))
+          .kandidaten(createTestDataKandidaten(14))
           .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(1)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(2)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(3)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(4)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(5)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(6)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(7)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(8)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(9)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
+        // prepareWahlvorschlag()
+        //   .ordnungszahl(10)
+        //   .kandidaten(createTestDataKandidaten(80))
+        //   .build(),
       ])
       .build(),
   };

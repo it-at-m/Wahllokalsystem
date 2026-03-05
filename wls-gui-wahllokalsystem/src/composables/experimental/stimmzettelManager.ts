@@ -141,12 +141,18 @@ export function useStimmzettelManager(
   const isAtLeastOneScoreGiven = computed(
     () => totalKandidatenScoresByVoter.value > 0
   );
+  const isAtLeastOneValidScoreGiven = computed(
+    () => totalValidKandidatenScoresByVoter.value > 0
+  );
   const isMaxVotesFulfilled = computed(
     () => totalKandidatenScoresByVoter.value <= maxTotalVotes
   );
 
   const isStimmzettelValid = computed(
-    () => isMaxVotesFulfilled.value && isAtLeastOneScoreGiven.value
+    () =>
+      isMaxVotesFulfilled.value &&
+      isAtLeastOneScoreGiven.value &&
+      isAtLeastOneValidScoreGiven.value
   );
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
@@ -226,6 +232,7 @@ export function useStimmzettelManager(
     setKandidatVote,
 
     isAtLeastOneScoreGiven,
+    isAtLeastOneValidScoreGiven,
     isStimmzettelValid,
     isMaxVotesFulfilled,
 

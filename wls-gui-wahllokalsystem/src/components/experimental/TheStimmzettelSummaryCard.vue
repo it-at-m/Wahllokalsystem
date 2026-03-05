@@ -44,6 +44,9 @@
       <div v-if="!isMaxVotesFulfilled">
         Es wurden mehr Stimmen vergeben als erlaubt
       </div>
+      <div v-if="!isAtLeastOneValidScoreGiven">
+        Es gibt nicht eine gültige Stimme
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -59,6 +62,7 @@ const wahlbezirkId = "wahlbezirkId";
 const {
   isStimmzettelValid,
   isAtLeastOneScoreGiven,
+  isAtLeastOneValidScoreGiven,
   isMaxVotesFulfilled,
   stimmzettelKandidaten,
   stimmzettelWahlvorschlaege,

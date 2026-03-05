@@ -233,29 +233,25 @@ export function useStimmzettelManager(
       `wahlvorschlaegeSelected.length > ${wahlvorschlaegeSelected.length}`
     );
     if (wahlvorschlaegeSelected.length > 0) {
+      const totalVotesByUser = stimmzettelWahlvorschlaege.value
+        .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
+        .map((kandidat) => kandidat.votesByVoter)
+        .reduce((prev, current) => prev + current, 0);
+      const wahlvorschlagVotesToSpent = maxTotalVotes - totalVotesByUser;
+      logger.log(`wahlvorschlagVotesToSpent > ${wahlvorschlagVotesToSpent}`);
+
       if (wahlvorschlaegeSelected.length === 1) {
         const wahlvorschlagToRefresh = selectedWahlvorschlaege.value[0];
         if (wahlvorschlagToRefresh) {
-          const totalVotesByUser = stimmzettelWahlvorschlaege.value
-            .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
-            .map((kandidat) => kandidat.votesByVoter)
-            .reduce((prev, current) => prev + current, 0);
-          const wahlvorschlagVotesToSpent = maxTotalVotes - totalVotesByUser;
-          logger.log(
-            `wahlvorschlagVotesToSpent > ${wahlvorschlagVotesToSpent}`
-          );
           let wahlvorschlagVotesSpend = 0;
           wahlvorschlagToRefresh.kandidaten.forEach((kandidat) => {
             logger.log(
               `onEach - kandidat.votesByVoter > ${kandidat.votesByVoter}, kandidat.votesByWahlvorschlag > ${kandidat.votesByWahlvorschlag}, wahlvorschlagVotesSpend > ${wahlvorschlagVotesSpend}`
             );
-            if (
-              kandidat.votesByVoter > 0 &&
-              kandidat.votesByWahlvorschlag !== 0
-            ) {
+            if (kandidat.votesByVoter > 0 || kandidat.isDiscarded) {
               kandidat.votesByWahlvorschlag = 0;
             }
-            if (kandidat.votesByVoter === 0) {
+            if (kandidat.votesByVoter === 0 && !kandidat.isDiscarded) {
               if (wahlvorschlagVotesSpend < wahlvorschlagVotesToSpent) {
                 kandidat.votesByWahlvorschlag =
                   COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
@@ -267,7 +263,36 @@ export function useStimmzettelManager(
           });
         }
       } else {
-        //TODO
+        //clear current wahlvorschlaege votes
+        wahlvorschlaegeSelected.forEach((wahlvorschlag) => {
+          wahlvorschlag.kandidaten.forEach(
+            (kandidat) => (kandidat.votesByWahlvorschlag = 0)
+          );
+        });
+
+        //set new wahlvorschlag votes
+        const kandidatenThatCouldGetWahlvorschlagVote = wahlvorschlaegeSelected
+          .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
+          .filter(
+            (kandidat) => !kandidat.isDiscarded && kandidat.votesByVoter === 0
+          );
+        const requiredVotesLeftToFulfilListenkreuze =
+          kandidatenThatCouldGetWahlvorschlagVote.length *
+          COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG;
+        if (requiredVotesLeftToFulfilListenkreuze > wahlvorschlagVotesToSpent) {
+          //reset all set wahlvorschlaege votes
+          wahlvorschlaegeSelected.forEach((wahlvorschlag) =>
+            wahlvorschlag.kandidaten.forEach(
+              (kandidat) => (kandidat.votesByWahlvorschlag = 0)
+            )
+          );
+        } else {
+          kandidatenThatCouldGetWahlvorschlagVote.forEach(
+            (kandidat) =>
+              (kandidat.votesByWahlvorschlag =
+                COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG)
+          );
+        }
       }
     }
   }
@@ -278,6 +303,7 @@ export function useStimmzettelManager(
     );
     if (kandidat) {
       kandidat.isDiscarded = newDiscardState;
+      _refreshWahlvorschlaegeVotes();
     }
   }
   function revokeDiscardedKandidat(kandidatId: string) {
@@ -286,6 +312,7 @@ export function useStimmzettelManager(
     );
     if (kandidat) {
       kandidat.isDiscarded = false;
+      _refreshWahlvorschlaegeVotes();
     }
   }
 

@@ -240,7 +240,7 @@ export function useStimmzettelManager(
             .flatMap((wahlvorschlag) => wahlvorschlag.kandidaten)
             .map((kandidat) => kandidat.votesByVoter)
             .reduce((prev, current) => prev + current, 0);
-          let wahlvorschlagVotesToSpent = maxTotalVotes - totalVotesByUser;
+          const wahlvorschlagVotesToSpent = maxTotalVotes - totalVotesByUser;
           logger.log(
             `wahlvorschlagVotesToSpent > ${wahlvorschlagVotesToSpent}`
           );

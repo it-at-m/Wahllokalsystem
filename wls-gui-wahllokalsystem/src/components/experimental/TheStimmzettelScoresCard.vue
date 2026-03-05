@@ -14,7 +14,11 @@
               v-for="wahlvorschlag in stimmzettelWahlvorschlaege"
               :key="wahlvorschlag.identifikator"
             >
-              <base-wahlvorschlag-scores-card :wahlvorschlag="wahlvorschlag" />
+              <base-wahlvorschlag-scores-card
+                :wahlvorschlag="wahlvorschlag"
+                :max-total-votes="MAX_TOTAL_VOTES"
+                :total-user-votes="totalUserVotes"
+              />
             </v-col>
           </v-row>
         </v-tabs-window-item>
@@ -36,6 +40,9 @@ import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorsc
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 
+const MAX_VALID_VOTES_PER_KANDIDAT = 3;
+const MAX_TOTAL_VOTES = 20;
+
 const props = defineProps({
   wahlvorschlaege: {
     type: Object as PropType<Wahlvorschlaege>,
@@ -53,6 +60,7 @@ stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 
 const stimmzettelWahlvorschlaege =
   stimmzettelManager.stimmzettelWahlvorschlaege;
+const totalUserVotes = stimmzettelManager.totalKandidatenScores;
 </script>
 
 <style scoped></style>

@@ -1,28 +1,43 @@
 <template>
-  <v-row>
-    <v-col
-      ><base-kandidat-score-operator
-        v-model="userVotes"
-        v-model:is-discarded="isDiscarded"
-        @add="onAddScore"
-        @subtract="onSubtractScore"
-        @discard="onDiscard"
-        @revoke-discard="onRevokeDiscard"
-      />
-    </v-col>
-    <v-col>
-      <div>
-        <span v-if="isDiscarded">🚮</span>
-        {{ kandidatenNummer }}
-      </div>
+  <div>
+    <div>
+      <v-row
+        class="align-center text-center"
+        size="12"
+      >
+        <v-col cols="2">
+          <base-button-kandidat-discard
+            v-model="isDiscarded"
+            :use-switch-component="true"
+          />
+        </v-col>
+        <v-col
+          class="text-end"
+          cols="2"
+          >{{ kandidatenNummer }}</v-col
+        >
+        <v-col cols="5">
+          <base-kandidat-score-operator
+            v-model="userVotes"
+            v-model:is-discarded="isDiscarded"
+            @add="onAddScore"
+            @subtract="onSubtractScore"
+            @discard="onDiscard"
+            @revoke-discard="onRevokeDiscard"
+          />
+        </v-col>
+        <v-col cols="3">
+          <base-kandidate-votes
+            class="justify-end"
+            :kandidat="kandidat"
+          />
+        </v-col>
+      </v-row>
       <div>
         {{ kandidat.name }}
       </div>
-    </v-col>
-    <v-col>
-      <base-kandidate-votes :kandidat="kandidat" />
-    </v-col>
-  </v-row>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +46,7 @@ import type { PropType } from "vue";
 
 import { computed } from "vue";
 
+import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
 import BaseKandidatScoreOperator from "@/components/experimental/BaseKandidatScoreOperator.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";

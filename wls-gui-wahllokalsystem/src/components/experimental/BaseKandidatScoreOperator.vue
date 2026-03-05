@@ -1,5 +1,16 @@
 <template>
   <div>
+    <v-number-input
+      v-model="modelVotes"
+      control-variant="stacked"
+      density="compact"
+      hide-details
+      :min="0"
+    ></v-number-input>
+    <v-switch
+      hide-details
+      inset
+    />
     <v-btn @click="onAddClicked">+</v-btn>
     <v-btn @click="onSubtractClicked">-</v-btn>
     <v-btn @click="onDiscardClicked">🚮</v-btn>
@@ -8,6 +19,10 @@
 </template>
 
 <script setup lang="ts">
+const modelVotes = defineModel({
+  type: Number,
+});
+
 const emit = defineEmits<{
   add: [count: number];
   subtract: [count: number];

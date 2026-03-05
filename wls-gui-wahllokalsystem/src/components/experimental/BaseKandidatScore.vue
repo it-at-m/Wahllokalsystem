@@ -2,6 +2,7 @@
   <v-row>
     <v-col
       ><base-kandidat-score-operator
+        v-model="userVotes"
         @add="onAddScore"
         @subtract="onSubtractScore"
         @discard="onDiscard"
@@ -42,6 +43,12 @@ const props = defineProps({
     type: Object as PropType<StimmzettelKandidat>,
     required: true,
   },
+});
+
+const userVotes = computed({
+  get: () => props.kandidat.votesByVoter,
+  set: (newValue: number) =>
+    stimmzettelManager.setKandidatVote(props.kandidat.identifikator, newValue),
 });
 
 const kandidatenNummer = computed(

@@ -172,6 +172,24 @@ export function useStimmzettelManager(
     if (wahlvorschlag) {
       wahlvorschlag.isSelected = true;
     }
+
+    //iteriere über kandidaten die nicht gestrichen sind und keine Stimmen vom User haben und gibt eine Listenstimme
+    const possibleKandidatenForWahlvorschlagVote =
+      wahlvorschlag.kandidaten.filter(
+        (kandidat) => !kandidat.isDiscarded && kandidat.votesByVoter === 0
+      );
+    const votesForWahlvorschlagLeft =
+      maxTotalVotes - totalKandidatenScoresByVoter.value;
+    for (
+      let i = 0;
+      i < votesForWahlvorschlagLeft &&
+      i < possibleKandidatenForWahlvorschlagVote.length;
+      i++
+    ) {
+      if (possibleKandidatenForWahlvorschlagVote[i]) {
+        possibleKandidatenForWahlvorschlagVote[i].votesByWahlvorschlag = 1;
+      }
+    }
   }
 
   function deselectWahlvorschlag(wahlvorschlagId: string) {
@@ -181,6 +199,11 @@ export function useStimmzettelManager(
     if (wahlvorschlag) {
       wahlvorschlag.isSelected = false;
     }
+
+    //alle Wahlvorschlagsstimmen der Kandidaten entfernen
+    wahlvorschlag.kandidaten.forEach(
+      (kandidat) => (kandidat.votesByWahlvorschlag = 0)
+    );
   }
 
   function addKandidatVote(kandidatId: string, countVotes = 1) {

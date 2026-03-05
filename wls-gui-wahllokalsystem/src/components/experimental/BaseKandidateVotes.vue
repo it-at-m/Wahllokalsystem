@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <v-chip v-if="ergebnis > 0">{{ ergebnis }}</v-chip>
+  <div class="d-flex flex-row ga-1">
+    <v-chip v-if="isVotesVisible">{{ userVotes }}</v-chip>
     <v-chip
-      v-if="invalidVotes > 0"
+      v-if="isInvalidVotesVisible"
       color="error"
       >{{ invalidVotes }}</v-chip
     >
     <v-chip
-      v-if="validVotes > 0"
+      v-if="isValidVotesVisible"
       color="success"
       >{{ validVotes }}</v-chip
+    >
+    <v-chip
+      v-if="isWahlvorschlageVotesVisible"
+      color="info"
+      >{{ wahlvorschlagVotes }}</v-chip
     >
   </div>
 </template>
@@ -30,17 +35,49 @@ const props = defineProps({
     required: false,
     default: 3,
   },
+  showInvalidVotes: {
+    type: Boolean,
+    default: true,
+    required: false,
+  },
+  showVotes: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  showValidVotes: {
+    type: Boolean,
+    default: true,
+    required: false,
+  },
+  showWahlvorschlagVotes: {
+    type: Boolean,
+    default: true,
+    required: false,
+  },
 });
 
-const ergebnis = computed(() => props.kandidat.votesByVoter);
+const userVotes = computed(() => props.kandidat.votesByVoter);
+const wahlvorschlagVotes = computed(() => props.kandidat.votesByWahlvorschlag);
 
 const invalidVotes = computed(() =>
-  ergebnis.value > props.maxValidVotes
-    ? ergebnis.value - props.maxValidVotes
+  userVotes.value > props.maxValidVotes
+    ? userVotes.value - props.maxValidVotes
     : 0
 );
 const validVotes = computed(() =>
-  ergebnis.value > props.maxValidVotes ? props.maxValidVotes : ergebnis.value
+  userVotes.value > props.maxValidVotes ? props.maxValidVotes : userVotes.value
+);
+
+const isInvalidVotesVisible = computed(
+  () => props.showInvalidVotes && invalidVotes.value > 0
+);
+const isValidVotesVisible = computed(
+  () => props.showValidVotes && validVotes.value > 0
+);
+const isVotesVisible = computed(() => props.showVotes && userVotes.value > 0);
+const isWahlvorschlageVotesVisible = computed(
+  () => props.showWahlvorschlagVotes && wahlvorschlagVotes.value > 0
 );
 </script>
 

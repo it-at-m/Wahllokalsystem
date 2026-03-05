@@ -60,14 +60,24 @@ const props = defineProps({
 const userVotes = computed(() => props.kandidat.votesByVoter);
 const wahlvorschlagVotes = computed(() => props.kandidat.votesByWahlvorschlag);
 
-const invalidVotes = computed(() =>
-  userVotes.value > props.maxValidVotes
-    ? userVotes.value - props.maxValidVotes
-    : 0
-);
-const validVotes = computed(() =>
-  userVotes.value > props.maxValidVotes ? props.maxValidVotes : userVotes.value
-);
+const invalidVotes = computed(() => {
+  if (props.kandidat.isDiscarded) {
+    return userVotes.value;
+  } else {
+    return userVotes.value > props.maxValidVotes
+      ? userVotes.value - props.maxValidVotes
+      : 0;
+  }
+});
+const validVotes = computed(() => {
+  if (props.kandidat.isDiscarded) {
+    return 0;
+  } else {
+    return userVotes.value > props.maxValidVotes
+      ? props.maxValidVotes
+      : userVotes.value;
+  }
+});
 
 const isInvalidVotesVisible = computed(
   () => props.showInvalidVotes && invalidVotes.value > 0

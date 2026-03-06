@@ -1,5 +1,4 @@
-import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
-import type { AbstractExpressionHandler } from "@/types/experimental/AbstractExpressionHandler.ts";
+import type { AbstractExpressionHandlerFunction } from "@/types/experimental/AbstractExpressionHandlerFunction.ts";
 import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent.ts";
 
 import { useLogging } from "@/composables/common/logging.ts";
@@ -9,7 +8,7 @@ export function useWahlvorschlagHandlers() {
   const REGEX = /^[W|w](\d+)$/;
   const logger = useLogging("useSetWahlvorschlagHandler");
 
-  const handleSetExpression: AbstractExpressionHandler = (
+  const handleSetExpression: AbstractExpressionHandlerFunction = (
     expression: string
   ) => {
     logger.log(`processing expression: ${expression}`);
@@ -24,9 +23,8 @@ export function useWahlvorschlagHandlers() {
       } as WahlvorschlagEvent;
     } else {
       logger.log("no match");
+      return null;
     }
-
-    return null;
   };
 
   return {

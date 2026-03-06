@@ -231,6 +231,34 @@ export function useStimmzettelManager(
     }
   }
 
+  function getKandidatIdForKandidatNummer(
+    kandidatNummer: number
+  ): string | null {
+    logger.log(`getKandidatIdForKandidatNummer > ${kandidatNummer}`);
+    const wahlvorschlagOrdnungszahl = Math.floor(kandidatNummer / 100);
+    const listenposition = kandidatNummer % 100;
+    logger.log(
+      `wahlvorschlagOrdnungszahl > ${wahlvorschlagOrdnungszahl}, listenposition > ${listenposition}`
+    );
+
+    const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
+      (wahlvorschlag) =>
+        wahlvorschlag.ordnungszahl === wahlvorschlagOrdnungszahl
+    );
+    if (wahlvorschlag) {
+      const kandidat = wahlvorschlag.kandidaten.find(
+        (kandidat) => kandidat.listenposition === listenposition
+      );
+      if (kandidat) {
+        logger.log(`kandidat gefunden - id > ${kandidat.identifikator}`);
+        return kandidat.identifikator;
+      }
+    }
+
+    logger.log(`kandidat nicht gefunden`);
+    return null;
+  }
+
   function _refreshWahlvorschlaegeVotes() {
     const wahlvorschlaegeSelected = stimmzettelWahlvorschlaege.value.filter(
       (wahlvorschlag) => wahlvorschlag.isSelected
@@ -326,6 +354,8 @@ export function useStimmzettelManager(
     addKandidatVote,
     removeKandidatVote,
     setKandidatVote,
+
+    getKandidatIdForKandidatNummer,
 
     isAtLeastOneScoreGiven,
     isAtLeastOneValidScoreGiven,

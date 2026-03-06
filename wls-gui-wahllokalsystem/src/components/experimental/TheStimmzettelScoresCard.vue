@@ -43,6 +43,7 @@ import { ref } from "vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
+import { useLogging } from "@/composables/common/logging.ts";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";
 import { WahlvorschlagEventTypeEnum } from "@/types/experimental/WahlvorschlagEventTypeEnum.ts";
@@ -58,6 +59,8 @@ const props = defineProps({
 });
 
 const tab = ref("1");
+
+const logger = useLogging("TheStimmzettelScoresCard");
 
 const stimmzettelManager = getStimmzettelManger(
   {
@@ -76,31 +79,73 @@ const stimmzettelWahlvorschlaege =
 const totalUserVotes = stimmzettelManager.totalKandidatenScores;
 
 function onQuickInputCommand(command: AbstractCommandEvent) {
+  logger.log(`processing command > ${JSON.stringify(command)}`);
+
   if (isWahlvorschlagEvent(command)) {
+    logger.log(`isWahlvorschlagEvent`);
+    stimmzettelManager.selectWahlvorschlagByOrdnungszahl(
+      command.wahlvorschlagOrdnungszahl
+    );
   } else if (isKandidatEvent(command)) {
+    logger.log(`isKandidatEvent`);
+    const kandidatId = stimmzettelManager.getKandidatIdForKandidatNummer(
+      command.kandidatNummer
+    );
+    if (!kandidatId) {
+      return;
+    }
+
+    switch (command.type) {
+      case KandidatEventTypeEnum.ADD_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.addKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
+      case KandidatEventTypeEnum.SET_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.setKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
+      case KandidatEventTypeEnum.DISCARD: {
+        stimmzettelManager.discardKandidat(kandidatId);
+        break;
+      }
+    }
   }
 }
 
 function isWahlvorschlagEvent(event: unknown): event is WahlvorschlagEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
+
+  const e = event as Record<string, unknown>;
+
   const hasCorrectType = Object.values(WahlvorschlagEventTypeEnum).includes(
-    event.type
+    e.type as never
   );
   const hasWahlvorschlagOrdnungszahl =
-    event.wahlvorschlagOrdnungszahl !== undefined &&
-    typeof event.wahlvorschlagOrdnungszahl === "number";
+    e.wahlvorschlagOrdnungszahl !== undefined &&
+    typeof e.wahlvorschlagOrdnungszahl === "number";
 
   return hasCorrectType && hasWahlvorschlagOrdnungszahl;
 }
 
 function isKandidatEvent(event: unknown): event is KandidatEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
+
+  const e = event as Record<string, unknown>;
+
   const hasCorrectType = Object.values(KandidatEventTypeEnum).includes(
-    event.type
+    e.type as never
   );
   const hasKandidatOrdnungszahl =
-    event.kandidatNummer !== undefined &&
-    typeof event.kandidatNummer === number;
-  const hasCount =
-    event.count !== undefined ? typeof event.count === "number" : true;
+    e.kandidatNummer !== undefined && typeof e.kandidatNummer === "number";
+  const hasCount = e.count !== undefined ? typeof e.count === "number" : true;
 
   return hasCorrectType && hasKandidatOrdnungszahl && hasCount;
 }

@@ -1,4 +1,4 @@
-import type { AbstractExpressionHandler } from "@/types/experimental/AbstractExpressionHandler.ts";
+import type { AbstractExpressionHandlerFunction } from "@/types/experimental/AbstractExpressionHandlerFunction.ts";
 import type { KandidatEvent } from "@/types/experimental/KandidatEvent.ts";
 
 import { useLogging } from "@/composables/common/logging.ts";
@@ -11,7 +11,7 @@ export function useKandidatHandlers() {
 
   const logger = useLogging("useKandidatHandlers");
 
-  const handleSetVotesExpression: AbstractExpressionHandler = (
+  const handleSetVotesExpression: AbstractExpressionHandlerFunction = (
     expression: string
   ) => {
     logger.log(`processing expression > ${expression}`);
@@ -26,10 +26,11 @@ export function useKandidatHandlers() {
       } as KandidatEvent;
     } else {
       logger.log(`no match`);
+      return null;
     }
   };
 
-  const handleAddVotesExpression: AbstractExpressionHandler = (
+  const handleAddVotesExpression: AbstractExpressionHandlerFunction = (
     expression: string
   ) => {
     logger.log(`processing expression > ${expression}`);
@@ -37,7 +38,7 @@ export function useKandidatHandlers() {
 
     if (match && match[1] !== undefined) {
       const kandidatNummer = Number.parseInt(match[1]);
-      const countVotes = match[2] ? Number.parseInt(match[2]) : 0;
+      const countVotes = match[2] ? Number.parseInt(match[2]) : 1;
       return {
         type: KandidatEventTypeEnum.ADD_VOTE,
         count: countVotes,
@@ -45,10 +46,11 @@ export function useKandidatHandlers() {
       } as KandidatEvent;
     } else {
       logger.log(`no match`);
+      return null;
     }
   };
 
-  const handleDiscardKandidatExpression: AbstractExpressionHandler = (
+  const handleDiscardKandidatExpression: AbstractExpressionHandlerFunction = (
     expression: string
   ) => {
     logger.log(`processing expression > ${expression}`);
@@ -62,6 +64,7 @@ export function useKandidatHandlers() {
       } as KandidatEvent;
     } else {
       logger.log(`no match`);
+      return null;
     }
   };
 

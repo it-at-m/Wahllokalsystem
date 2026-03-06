@@ -11,6 +11,7 @@ import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldung
 import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
+import MBWStimmzettelView from "@/views/ergebnismeldung/MBW/MBWStimmzettelView.vue";
 
 const {
   isStepDoneInElectionState,
@@ -73,6 +74,12 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
     ],
+  },
+  [MbwRoutesEnum.MBW_STIMMZETTEL]: {
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/stimmzettel",
+    component: MBWStimmzettelView,
   },
   [MbwRoutesEnum.MBW_STAPEL_BC]: {
     path:

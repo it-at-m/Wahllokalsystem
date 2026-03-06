@@ -71,6 +71,15 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           : false,
       },
       {
+        title: `Stimmzettel erfassen`,
+        targetRoute: createMbwRoute(
+          MbwRoutesEnum.MBW_STIMMZETTEL,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: false,
+      },
+      {
         title: `Kandidatinnen- und Kandidatenstimmen`,
         targetRoute: createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_BC,

@@ -500,6 +500,31 @@ export type StimmzettelDTOStimmzettelartEnum = typeof StimmzettelDTOStimmzettela
 /**
  * 
  * @export
+ * @interface StimmzettelKandidatDTO
+ */
+export interface StimmzettelKandidatDTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof StimmzettelKandidatDTO
+     */
+    'kandidatId'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StimmzettelKandidatDTO
+     */
+    'isDiscarded'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof StimmzettelKandidatDTO
+     */
+    'votesByVoter'?: number;
+}
+/**
+ * 
+ * @export
  * @interface StimmzettelumschlaegeDTO
  */
 export interface StimmzettelumschlaegeDTO {
@@ -546,6 +571,43 @@ export interface VermerkDTO {
      * @memberof VermerkDTO
      */
     'stimmzettel': Array<StimmzettelDTO>;
+}
+/**
+ * 
+ * @export
+ * @interface WaehlerStimmzettelDTO
+ */
+export interface WaehlerStimmzettelDTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof WaehlerStimmzettelDTO
+     */
+    'wahlbezirkID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WaehlerStimmzettelDTO
+     */
+    'wahlID'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof WaehlerStimmzettelDTO
+     */
+    'stimmzettelNummer'?: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof WaehlerStimmzettelDTO
+     */
+    'selectedWahlvorschlaegeOrdnungszahlen'?: Array<number>;
+    /**
+     * 
+     * @type {Array<StimmzettelKandidatDTO>}
+     * @memberof WaehlerStimmzettelDTO
+     */
+    'kandidaten'?: Array<StimmzettelKandidatDTO>;
 }
 /**
  * 
@@ -2569,17 +2631,17 @@ export const StimmzettelControllerApiAxiosParamCreator = function (configuration
          * 
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
-         * @param {Array<StimmzettelDTO>} stimmzettelDTO 
+         * @param {Array<WaehlerStimmzettelDTO>} waehlerStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postStimmzettel: async (wahlID: string, wahlbezirkID: string, stimmzettelDTO: Array<StimmzettelDTO>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postStimmzettel: async (wahlID: string, wahlbezirkID: string, waehlerStimmzettelDTO: Array<WaehlerStimmzettelDTO>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'wahlID' is not null or undefined
             assertParamExists('postStimmzettel', 'wahlID', wahlID)
             // verify required parameter 'wahlbezirkID' is not null or undefined
             assertParamExists('postStimmzettel', 'wahlbezirkID', wahlbezirkID)
-            // verify required parameter 'stimmzettelDTO' is not null or undefined
-            assertParamExists('postStimmzettel', 'stimmzettelDTO', stimmzettelDTO)
+            // verify required parameter 'waehlerStimmzettelDTO' is not null or undefined
+            assertParamExists('postStimmzettel', 'waehlerStimmzettelDTO', waehlerStimmzettelDTO)
             const localVarPath = `/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/stimmzettel`
                 .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
                 .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)));
@@ -2605,7 +2667,7 @@ export const StimmzettelControllerApiAxiosParamCreator = function (configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(stimmzettelDTO, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(waehlerStimmzettelDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2629,7 +2691,7 @@ export const StimmzettelControllerApiFp = function(configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getStimmzettel(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StimmzettelDTO>>> {
+        async getStimmzettel(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<WaehlerStimmzettelDTO>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getStimmzettel(wahlID, wahlbezirkID, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StimmzettelControllerApi.getStimmzettel']?.[localVarOperationServerIndex]?.url;
@@ -2639,12 +2701,12 @@ export const StimmzettelControllerApiFp = function(configuration?: Configuration
          * 
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
-         * @param {Array<StimmzettelDTO>} stimmzettelDTO 
+         * @param {Array<WaehlerStimmzettelDTO>} waehlerStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postStimmzettel(wahlID: string, wahlbezirkID: string, stimmzettelDTO: Array<StimmzettelDTO>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postStimmzettel(wahlID, wahlbezirkID, stimmzettelDTO, options);
+        async postStimmzettel(wahlID: string, wahlbezirkID: string, waehlerStimmzettelDTO: Array<WaehlerStimmzettelDTO>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postStimmzettel(wahlID, wahlbezirkID, waehlerStimmzettelDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['StimmzettelControllerApi.postStimmzettel']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2666,19 +2728,19 @@ export const StimmzettelControllerApiFactory = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStimmzettel(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<StimmzettelDTO>> {
+        getStimmzettel(wahlID: string, wahlbezirkID: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<WaehlerStimmzettelDTO>> {
             return localVarFp.getStimmzettel(wahlID, wahlbezirkID, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} wahlID 
          * @param {string} wahlbezirkID 
-         * @param {Array<StimmzettelDTO>} stimmzettelDTO 
+         * @param {Array<WaehlerStimmzettelDTO>} waehlerStimmzettelDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postStimmzettel(wahlID: string, wahlbezirkID: string, stimmzettelDTO: Array<StimmzettelDTO>, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.postStimmzettel(wahlID, wahlbezirkID, stimmzettelDTO, options).then((request) => request(axios, basePath));
+        postStimmzettel(wahlID: string, wahlbezirkID: string, waehlerStimmzettelDTO: Array<WaehlerStimmzettelDTO>, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postStimmzettel(wahlID, wahlbezirkID, waehlerStimmzettelDTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2706,13 +2768,13 @@ export class StimmzettelControllerApi extends BaseAPI {
      * 
      * @param {string} wahlID 
      * @param {string} wahlbezirkID 
-     * @param {Array<StimmzettelDTO>} stimmzettelDTO 
+     * @param {Array<WaehlerStimmzettelDTO>} waehlerStimmzettelDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StimmzettelControllerApi
      */
-    public postStimmzettel(wahlID: string, wahlbezirkID: string, stimmzettelDTO: Array<StimmzettelDTO>, options?: RawAxiosRequestConfig) {
-        return StimmzettelControllerApiFp(this.configuration).postStimmzettel(wahlID, wahlbezirkID, stimmzettelDTO, options).then((request) => request(this.axios, this.basePath));
+    public postStimmzettel(wahlID: string, wahlbezirkID: string, waehlerStimmzettelDTO: Array<WaehlerStimmzettelDTO>, options?: RawAxiosRequestConfig) {
+        return StimmzettelControllerApiFp(this.configuration).postStimmzettel(wahlID, wahlbezirkID, waehlerStimmzettelDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

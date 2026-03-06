@@ -19,7 +19,7 @@ public class StimmzettelController {
   private final StimmzettelDTOMapper stimmzettelDTOMapper;
 
   @GetMapping
-  public List<StimmzettelDTO> getStimmzettel(
+  public List<WaehlerStimmzettelDTO> getStimmzettel(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID) {
     return stimmzettelService.getStimmzettel(wahlID, wahlbezirkID).stream()
@@ -31,7 +31,7 @@ public class StimmzettelController {
   public void postStimmzettel(
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
-      @RequestBody final List<StimmzettelDTO> stimmzettelToSave) {
+      @RequestBody final List<WaehlerStimmzettelDTO> stimmzettelToSave) {
     stimmzettelService.saveStimmzettel(
         stimmzettelToSave.stream().map(stimmzettelDTOMapper::toModel).toList());
   }

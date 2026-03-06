@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface StimmzettelDTOMapper {
-  StimmzettelModel toModel(StimmzettelDTO dto);
+  StimmzettelModel toModel(WaehlerStimmzettelDTO dto);
 
-  StimmzettelDTO toDTO(StimmzettelModel model);
+  WaehlerStimmzettelDTO toDTO(StimmzettelModel model);
 }

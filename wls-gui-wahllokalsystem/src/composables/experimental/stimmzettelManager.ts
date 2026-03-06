@@ -46,16 +46,6 @@ export function useStimmzettelManager(
 ) {
   const COUNT_VOTES_GIVEN_BY_WAHLVORSCHLAG = 1;
   const logger = useLogging("useStimmzettelManager");
-  // const selectedWahlvorschlaege: Ref<string[]> = ref([]);
-  /**
-   * deprecated: internal only
-   */
-  // const kandidatenVotes: Ref<Record<KandidatId, number>> = ref({});
-  // const discardedKandidatenIds: Ref<string[]> = ref([]);
-  /**
-   * deprecated: old
-   */
-  // const managedWahlvorschlaege: Ref<Wahlvorschlag[]> = ref([]);
 
   const stimmzettelWahlvorschlaege: Ref<StimmzettelWahlvorschlag[]> = ref([]);
   const selectedWahlvorschlaege = computed(() =>

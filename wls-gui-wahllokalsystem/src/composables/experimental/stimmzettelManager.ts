@@ -1,4 +1,6 @@
 import type { StimmzettelKandidat } from "@/types/experimental/StimmzettelKandidat.ts";
+import type { StimmzettelKandidatSnapshot } from "@/types/experimental/StimmzettelKandidatSnapshot.ts";
+import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
 import type { Kandidat } from "@/types/wahlvorschlaege/Kandidat.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
@@ -154,6 +156,27 @@ export function useStimmzettelManager(
       isAtLeastOneScoreGiven.value &&
       isAtLeastOneValidScoreGiven.value
   );
+
+  function createSnapshot(): StimmzettelSnapshot {
+    const ordnungszahlenOfSelectedWahlvorschlaege =
+      selectedWahlvorschlaege.value.map(
+        (wahlvorschlag) => wahlvorschlag.ordnungszahl
+      );
+    const kandidatenWithStimmen: StimmzettelKandidatSnapshot[] =
+      stimmzettelKandidaten.value
+        .filter((kandidat) => kandidat.isDiscarded || kandidat.votesByVoter > 0)
+        .map((kandidat) => ({
+          kandidatId: kandidat.identifikator,
+          votesByVoter: kandidat.votesByVoter,
+          isDiscarded: kandidat.isDiscarded,
+        }));
+
+    return {
+      selectedWahlvorschlaegeOrdnungszahlen:
+        ordnungszahlenOfSelectedWahlvorschlaege,
+      kandidatenSnapshot: kandidatenWithStimmen,
+    };
+  }
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
     logger.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
@@ -372,6 +395,8 @@ export function useStimmzettelManager(
     totalKandidatenScores: totalKandidatenScoresByVoter,
     totalValidKandidatenScores: totalValidKandidatenScoresByVoter,
     totalInvalidKandidatenScores,
+
+    createSnapshot,
 
     discardKandidat,
     revokeDiscardedKandidat,

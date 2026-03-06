@@ -175,6 +175,16 @@ export function useStimmzettelManager(
 
     _refreshWahlvorschlaegeVotes();
   }
+  function selectWahlvorschlagByOrdnungszahl(ordnungszahl: number) {
+    const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
+      (wahlvorschlag) => wahlvorschlag.ordnungszahl === ordnungszahl
+    );
+    if (wahlvorschlag) {
+      wahlvorschlag.isSelected = true;
+    }
+
+    _refreshWahlvorschlaegeVotes();
+  }
 
   function deselectWahlvorschlag(wahlvorschlagId: string) {
     const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
@@ -337,6 +347,7 @@ export function useStimmzettelManager(
     revokeDiscardedKandidat,
 
     selectWahlvorschlag,
+    selectWahlvorschlagByOrdnungszahl,
     deselectWahlvorschlag,
 
     setWahlvorschlaege,

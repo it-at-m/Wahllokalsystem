@@ -9,6 +9,7 @@
 
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="1">
+          <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
           <v-row>
             <v-col
               v-for="wahlvorschlag in stimmzettelWahlvorschlaege"
@@ -31,14 +32,20 @@
 </template>
 
 <script setup lang="ts">
+import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
+import type { KandidatEvent } from "@/types/experimental/KandidatEvent.ts";
+import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { PropType } from "vue";
 
 import { ref } from "vue";
 
+import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
+import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";
+import { WahlvorschlagEventTypeEnum } from "@/types/experimental/WahlvorschlagEventTypeEnum.ts";
 
 const MAX_VALID_VOTES_PER_KANDIDAT = 3;
 const MAX_TOTAL_VOTES = 20;
@@ -67,6 +74,36 @@ stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 const stimmzettelWahlvorschlaege =
   stimmzettelManager.stimmzettelWahlvorschlaege;
 const totalUserVotes = stimmzettelManager.totalKandidatenScores;
+
+function onQuickInputCommand(command: AbstractCommandEvent) {
+  if (isWahlvorschlagEvent(command)) {
+  } else if (isKandidatEvent(command)) {
+  }
+}
+
+function isWahlvorschlagEvent(event: unknown): event is WahlvorschlagEvent {
+  const hasCorrectType = Object.values(WahlvorschlagEventTypeEnum).includes(
+    event.type
+  );
+  const hasWahlvorschlagOrdnungszahl =
+    event.wahlvorschlagOrdnungszahl !== undefined &&
+    typeof event.wahlvorschlagOrdnungszahl === "number";
+
+  return hasCorrectType && hasWahlvorschlagOrdnungszahl;
+}
+
+function isKandidatEvent(event: unknown): event is KandidatEvent {
+  const hasCorrectType = Object.values(KandidatEventTypeEnum).includes(
+    event.type
+  );
+  const hasKandidatOrdnungszahl =
+    event.kandidatNummer !== undefined &&
+    typeof event.kandidatNummer === number;
+  const hasCount =
+    event.count !== undefined ? typeof event.count === "number" : true;
+
+  return hasCorrectType && hasKandidatOrdnungszahl && hasCount;
+}
 </script>
 
 <style scoped></style>

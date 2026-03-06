@@ -508,19 +508,19 @@ export interface StimmzettelKandidatDTO {
      * @type {string}
      * @memberof StimmzettelKandidatDTO
      */
-    'kandidatId'?: string;
+    'kandidatId': string;
     /**
      * 
      * @type {boolean}
      * @memberof StimmzettelKandidatDTO
      */
-    'isDiscarded'?: boolean;
+    'isDiscarded': boolean;
     /**
      * 
      * @type {number}
      * @memberof StimmzettelKandidatDTO
      */
-    'votesByVoter'?: number;
+    'votesByVoter': number;
 }
 /**
  * 
@@ -583,31 +583,31 @@ export interface WaehlerStimmzettelDTO {
      * @type {string}
      * @memberof WaehlerStimmzettelDTO
      */
-    'wahlbezirkID'?: string;
+    'wahlbezirkID': string;
     /**
      * 
      * @type {string}
      * @memberof WaehlerStimmzettelDTO
      */
-    'wahlID'?: string;
+    'wahlID': string;
     /**
      * 
      * @type {number}
      * @memberof WaehlerStimmzettelDTO
      */
-    'stimmzettelNummer'?: number;
+    'stimmzettelNummer': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof WaehlerStimmzettelDTO
      */
-    'selectedWahlvorschlaegeOrdnungszahlen'?: Array<number>;
+    'selectedWahlvorschlaegeOrdnungszahlen': Array<number>;
     /**
      * 
      * @type {Array<StimmzettelKandidatDTO>}
      * @memberof WaehlerStimmzettelDTO
      */
-    'kandidaten'?: Array<StimmzettelKandidatDTO>;
+    'kandidaten': Array<StimmzettelKandidatDTO>;
 }
 /**
  * 

@@ -11,7 +11,7 @@ export function useStimmzettelQuickInputHandler() {
     handleAddVotesExpression,
     handleDiscardKandidatExpression,
   } = useKandidatHandlers();
-  const handler: AbstractExpressionHandlerFunction[] = [
+  const handlers: AbstractExpressionHandlerFunction[] = [
     handleSetExpression,
     handleDiscardKandidatExpression,
     handleSetVotesExpression,
@@ -23,9 +23,10 @@ export function useStimmzettelQuickInputHandler() {
   ): AbstractCommandEvent | null {
     let commandEvent: AbstractCommandEvent | null = null;
     //set result first return value of handler
-    for (let i = 0; i < handler.length && !commandEvent; ++i) {
-      if (handler[i] !== undefined) {
-        commandEvent = handler[i](quickInputString);
+    for (let i = 0; i < handlers.length && !commandEvent; ++i) {
+      const handler = handlers[i];
+      if (handler !== undefined) {
+        commandEvent = handler(quickInputString);
       }
     }
 

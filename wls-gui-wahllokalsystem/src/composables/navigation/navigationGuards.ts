@@ -48,6 +48,28 @@ export function useNavigationGuards() {
   const permitNavigationWhenStimmabgabeIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isStimmabgabeErfasst;
 
+  const requiresWahlhandlungErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB ? useWorkflowStore().isWahlhandlungErfasst : true;
+
+  const requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb: NavigationGuard =
+    () =>
+      useUserStore().isBWB
+        ? useWorkflowStore().isWahlbriefzulassungErfasst
+        : true;
+
+  const requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb: NavigationGuard =
+    () =>
+      useUserStore().isUWB
+        ? useWorkflowStore().isStimmabgabevermerkeErfasst
+        : true;
+
+  const requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb: NavigationGuard =
+    () =>
+      useUserStore().isBWB
+        ? useWorkflowStore().isAnzahlWahlscheineErfasst
+        : true;
+
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
 
@@ -88,5 +110,9 @@ export function useNavigationGuards() {
     requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
     requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
     requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
+    requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
+    requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
+    requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
+    requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
   };
 }

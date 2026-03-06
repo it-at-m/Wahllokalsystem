@@ -62,12 +62,15 @@ export function useNavigationUtils() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
-    //check if a non election specific step is next
+    // check if a non election specific step is next
     if (!workflowStore.isWahlvorstandErfasst) {
       return routeWithName(ROUTE_WAHLVORSTAND);
     }
 
     // check wahlbriefzulassung steps (BWB)
+    if (userStore.isBWB && !workflowStore.isWahleroeffnungErfasst) {
+      return routeWithName(ROUTE_BEGINN_STIMMABGABE);
+    }
     if (userStore.isBWB && !workflowStore.isWahlumgebungErfasst) {
       return routeWithName(ROUTE_WAHLUMGEBUNG);
     }
@@ -79,6 +82,9 @@ export function useNavigationUtils() {
     }
 
     // check wahlhandlung steps (UWB)
+    if (userStore.isUWB && !workflowStore.isWahlumgebungErfasst) {
+      return routeWithName(ROUTE_WAHLUMGEBUNG);
+    }
     if (userStore.isUWB && !workflowStore.isWaehlerverzeichnisErfasst) {
       return routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS);
     }
@@ -97,7 +103,7 @@ export function useNavigationUtils() {
       return routeWithName(ROUTE_STIMMABGABEVERMERKE);
     }
 
-    //check all elections in their order
+    // check all elections in their order
     const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
       (wahlMetaData) =>
         !workflowStore.isElectionFinished(

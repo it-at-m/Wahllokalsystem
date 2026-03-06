@@ -5,6 +5,7 @@ import {
   mdiArrowRightBold,
   mdiCancel,
   mdiCheckCircle,
+  mdiCircleOffOutline,
   mdiCheckCircleOutline,
   mdiCloseCircleOutline,
   mdiCloudUpload,
@@ -79,6 +80,7 @@ export default createVuetify({
       logout: mdiLogout,
       locked: mdiLockOutline,
       saveSuccess: mdiContentSaveCheck,
+      disabled: mdiCircleOffOutline,
       kandidatNonRemoved: mdiCheckCircleOutline,
       kandidatRemoved: mdiCloseCircleOutline,
     },
@@ -124,6 +126,9 @@ export default createVuetify({
     VTextarea: {
       persistentClear: true,
       clearable: true,
+    },
+    VListItem: {
+      prependGap: 10,
     },
   },
 });

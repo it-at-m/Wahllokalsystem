@@ -21,12 +21,16 @@
       <the-b-w-b-election-list-group
         v-if="isBWB"
         :disabled="!isWahlvorstandErfasst"
-        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
+        :disabled-message="
+          isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
+        "
       />
       <the-u-w-b-election-list-group
         v-if="isUWB"
         :disabled="!isWahlvorstandErfasst"
-        :disabled-message="disabledMessageUpdateAnwesenheitRequired"
+        :disabled-message="
+          isWahlvorstandErfasst ? '' : DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED
+        "
       />
       <v-list-item
         title="Ereignisse"
@@ -45,6 +49,7 @@ import TheScoresListGroup from "@/components/navigation/TheScoresListGroup.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {
+  DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED,
   ROUTE_EREIGNISSE,
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
@@ -55,6 +60,4 @@ import { useWorkflowStore } from "@/stores/workflowStore.ts";
 const { routeWithName } = useNavigationUtils();
 const { isUWB, isBWB } = storeToRefs(useUserStore());
 const { isWahlvorstandErfasst } = storeToRefs(useWorkflowStore());
-
-const disabledMessageUpdateAnwesenheitRequired = "Erst Anwesenheit erfassen";
 </script>

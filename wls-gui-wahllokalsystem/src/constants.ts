@@ -15,11 +15,6 @@ export const ROUTE_AUSZAEHLUNG_STIMMZETTEL = "auszaehlungStimmzettel";
 export const ROUTE_STAPEL_A = "stapelA";
 export const ROUTE_STAPEL_B = "stapelB";
 export const ROUTE_STAPEL_C = "stapelC";
-export const ROUTE_STAPEL_A_AND_B = "stapelAandB";
-export const ROUTE_STAPEL_D = "stapelD";
-export const ROUTE_SCHNELLMELDUNG = "schnellmeldung";
-export const ROUTE_STAPEL_BC = "stapelBC";
-export const ROUTE_NIEDERSCHRIFT = "niederschrift";
 
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
@@ -56,3 +51,19 @@ export const MIN_LENGTH_FOR_BEGRUENDUNG = 3;
 export const MAX_LENGTH_FOR_TEXT_INPUT = 500;
 
 export const PRIMARY_COLOR = "#546e7a";
+
+export const DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED =
+  "Erst Anwesenheit erfassen.";
+export const DISABLED_SUBTITLE_WAHLVORSTAND_MISSING =
+  "Nicht genügend Mitglieder anwesend.";
+export const DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING =
+  "Wahlhandlung muss abgeschlossen sein.";
+export const DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING =
+  "Wahlbriefzulassung muss abgeschlossen sein.";
+export const DISABLED_SUBTITLE_WAHLSCHEINE_MISSING = "Erst Wahlbriefe zählen.";
+export const DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING =
+  "Erst Stimmabgabevermerke erfassen.";
+export const SUBTITLE_WAEHLERANZAHL_IN_ARBEIT = "Wähleranzahl in Arbeit";
+export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
+export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
+export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";

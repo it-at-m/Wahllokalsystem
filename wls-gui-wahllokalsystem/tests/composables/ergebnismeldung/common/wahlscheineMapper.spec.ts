@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { useWahlscheineMapper } from "@/composables/ergebnismeldung/common/wahlscheineMapper.ts";
 
-const { createWahlscheineDTO, createWahlscheine } =
+const { createWahlscheineDTO, createWahlscheine, prepareWahlscheine } =
   useWahlscheineTestDataFactory();
 
 describe("wahlscheineMapper", () => {
@@ -39,10 +39,18 @@ describe("wahlscheineMapper", () => {
 
       const expectedObject: WahlscheineDTO = {
         bezirkUndWahlID: objectToMap.bezirkUndWahlID,
-        stimmabgabevermerke: objectToMap.stimmabgabevermerke,
+        stimmabgabevermerke: objectToMap.stimmabgabevermerke as number,
       };
 
       expect(result).toStrictEqual(expectedObject);
+    });
+
+    it("should_throwError_when_stimmabgabevermerkeIsNull", () => {
+      const objectToMap = prepareWahlscheine()
+        .stimmabgabevermerke(null)
+        .build();
+
+      expect(() => unitUnderTest.toDto(objectToMap)).toThrowError();
     });
   });
 });

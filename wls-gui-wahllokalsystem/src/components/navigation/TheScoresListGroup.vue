@@ -6,15 +6,21 @@
         title="Ergebnisermittlung"
       />
     </template>
-    <v-list-item
+    <base-workflow-list-item
       v-if="isBWB"
       title="Wahlscheine"
+      :disabled="isWahlscheineDisabled"
+      :subtitle="subtitleWahlscheine"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
+      :is-workflow-step-finished="isAnzahlWahlscheineErfasst"
     />
-    <v-list-item
+    <base-workflow-list-item
       v-if="isUWB"
       title="Stimmabgabevermerke"
+      :disabled="isStimmabgabevermerkeDisabled"
+      :subtitle="subtitleStimmabgabevermerke"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
+      :is-workflow-step-finished="isStimmabgabevermerkeErfasst"
     />
     <the-scores-list-group-selector
       v-for="wahl in wahlenState.wahlen"
@@ -26,15 +32,66 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
+import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_STIMMABGABEVERMERKE, ROUTE_WAHLSCHEINE } from "@/constants.ts";
+import {
+  DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING,
+  DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING,
+  DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+  ROUTE_STIMMABGABEVERMERKE,
+  ROUTE_WAHLSCHEINE,
+  SUBTITLE_WAEHLERANZAHL_ERFASST,
+  SUBTITLE_WAEHLERANZAHL_IN_ARBEIT,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { routeWithName } = useNavigationUtils();
 
+const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { wahlenState } = storeToRefs(useWahlenStore());
+const {
+  isWahlvorstandErfasst,
+  isWahlbriefzulassungErfasst,
+  isWahlhandlungErfasst,
+  isStimmabgabevermerkeErfasst,
+  isAnzahlWahlscheineErfasst,
+} = storeToRefs(useWorkflowStore());
+
+const isStimmabgabevermerkeDisabled = computed(
+  () => !isWahlvorstandErfasst.value || !isWahlhandlungErfasst.value
+);
+const isWahlscheineDisabled = computed(
+  () => !isWahlvorstandErfasst.value || !isWahlbriefzulassungErfasst.value
+);
+
+const subtitleWahlscheine = computed(() => {
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  }
+  if (!isWahlbriefzulassungErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING;
+  }
+  if (!isAnzahlWahlscheineErfasst.value) {
+    return SUBTITLE_WAEHLERANZAHL_IN_ARBEIT;
+  }
+  return SUBTITLE_WAEHLERANZAHL_ERFASST;
+});
+
+const subtitleStimmabgabevermerke = computed(() => {
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  }
+  if (!isWahlhandlungErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING;
+  }
+  if (!isStimmabgabevermerkeErfasst.value) {
+    return SUBTITLE_WAEHLERANZAHL_IN_ARBEIT;
+  }
+  return SUBTITLE_WAEHLERANZAHL_ERFASST;
+});
 </script>

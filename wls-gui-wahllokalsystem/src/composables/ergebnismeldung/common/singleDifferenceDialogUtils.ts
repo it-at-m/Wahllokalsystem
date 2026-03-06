@@ -5,11 +5,13 @@ import { ref } from "vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/differenceDialogUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
-export function useSingleDifferenceDialogUtils(wahlId: string) {
+export function useSingleDifferenceDialogUtils(
+  wahlId: string,
+  wahlbezirkId: string
+) {
   const {
     anzahlWahlscheineOrStimmabgabevermerke,
     anzahlStimmzettel,
@@ -18,7 +20,6 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
   } = useDifferenceDialogUtils(wahlId);
   const { stimmzettelumschlaegeActions } = useWahlenStore();
   const { wahlenActions } = useWahlenStore();
-  const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
   const { getBegruendungStimmzettelumschlaege, postBegruendung } =
     useErgebnisService();
   const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
@@ -73,9 +74,8 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function _getBegruendung() {
     const wahl = wahlenActions.getWahlOrUndefinedById(wahlId);
-    const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlId);
     let begruendungStimmzettel;
-    if (wahl && wahlbezirkId) {
+    if (wahl) {
       begruendungStimmzettel = await getBegruendungStimmzettelumschlaege(
         wahl,
         wahlbezirkId,
@@ -88,25 +88,21 @@ export function useSingleDifferenceDialogUtils(wahlId: string) {
 
   async function _saveBegruendung() {
     if (dialog.value) {
-      const wahlbezirkId = getWahlbezirkIdFromWahlMetaDataByWahlId(
-        dialog.value.differenceBegruendung.wahlId
+      await postBegruendung(
+        {
+          wahlID: dialog.value.differenceBegruendung.wahlId,
+          stapelart: StapelArtEnum.StimmzettelUmschlaege,
+          grund: dialog.value.differenceBegruendung.begruendung,
+          unstimmigkeiten: true,
+        },
+        wahlbezirkId
       );
-      if (wahlbezirkId) {
-        await postBegruendung(
-          {
-            wahlID: dialog.value.differenceBegruendung.wahlId,
-            stapelart: StapelArtEnum.StimmzettelUmschlaege,
-            grund: dialog.value.differenceBegruendung.begruendung,
-            unstimmigkeiten: true,
-          },
-          wahlbezirkId
-        );
-      }
     }
   }
 
   return {
     dialog,
+    isWahlscheineUnequalToStimmzettel,
     checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege,
     saveBegruendungAndStimmzettelumschlaege,
     updateValidationStateForBegruendung,

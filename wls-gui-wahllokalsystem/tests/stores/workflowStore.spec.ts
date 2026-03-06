@@ -5,8 +5,10 @@ import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTe
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomBoolean } =
+  useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
@@ -66,6 +68,51 @@ describe("workflowStore.ts", () => {
       );
 
       expect(result).toStrictEqual(workflowToFind);
+    });
+  });
+
+  describe("getWorkflowStateForRoute", () => {
+    it("should_returnFalse_when_workflowStateWithIDsDoesNotExist", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(
+          wahlID,
+          wahlbezirkID,
+          MbwRoutesEnum.MBW_NIEDERSCHRIFT
+        )
+      ).toBe(false);
+    });
+
+    it("should_returnFalse_when_routeNameDoesNotExist", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+
+      const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
+      useWorkflowStore().electionWorkflowsStates = [workflowToFind];
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(
+          wahlID,
+          wahlbezirkID,
+          "routeName"
+        )
+      ).toBe(false);
+    });
+
+    it("should_returnTrue_when_workflowSateFourRouteNameIsDone", () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const step = MbwRoutesEnum.MBW_NIEDERSCHRIFT;
+
+      const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
+      workflowToFind.stepsDone[step] = true;
+      useWorkflowStore().electionWorkflowsStates = [workflowToFind];
+
+      expect(
+        useWorkflowStore().getWorkflowStateForRoute(wahlID, wahlbezirkID, step)
+      ).toStrictEqual(true);
     });
   });
 
@@ -349,6 +396,46 @@ describe("workflowStore.ts", () => {
 
       useWorkflowStore().setStepDone(wahlID, wahlbezirkID, step);
       expect(workflow.stepsDone[step]).toStrictEqual(true);
+    });
+  });
+
+  describe("isWahlbriefzulassungErfasst", () => {
+    it("should_returnTrue_when_allRequiredStepsAreTrue", () => {
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(true);
+    });
+
+    it("should_returnFalse_when_atLeastOneRequiredStepIsFalse", () => {
+      useWorkflowStore().isWahleroeffnungErfasst = false;
+      useWorkflowStore().isWahlumgebungErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahlbriefeErfassenErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahlbriefeZulassenErfasst = generateRandomBoolean();
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(false);
+    });
+  });
+
+  describe("isWahlhandlungErfasst", () => {
+    it("should_returnTrue_when_allRequiredStepsAreTrue", () => {
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isStimmabgabeErfasst = true;
+
+      expect(useWorkflowStore().isWahlhandlungErfasst).toBe(true);
+    });
+
+    it("should_returnFalse_when_atLeastOneRequiredStepIsFalse", () => {
+      useWorkflowStore().isWahlumgebungErfasst = false;
+      useWorkflowStore().isWaehlerverzeichnisErfasst = generateRandomBoolean();
+      useWorkflowStore().isWahleroeffnungErfasst = generateRandomBoolean();
+      useWorkflowStore().isStimmabgabeErfasst = generateRandomBoolean();
+
+      expect(useWorkflowStore().isWahlhandlungErfasst).toBe(false);
     });
   });
 

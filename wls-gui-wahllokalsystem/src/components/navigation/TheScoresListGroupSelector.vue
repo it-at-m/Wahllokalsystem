@@ -22,6 +22,9 @@
       v-if="wahl.wahlart === WahlWahlartEnum.Mbw"
       :wahl-id="wahl.wahlID"
       :wahlbezirk-id="wahlbezirkIdForWahl"
+      :disabled="isMBWAuszaehlungDisabled"
+      :disabled-message="disabledMessagePreviousStepsRequired"
+      :is-wahl-finished="isMBWAuszaehlungFinished"
     />
   </div>
 </template>
@@ -30,6 +33,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { PropType } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import TheBAWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheBAWScoresListGroup.vue";
@@ -37,7 +41,15 @@ import TheMBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten
 import TheOBWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheOBWScoresListGroup.vue";
 import TheSRWScoresListGroup from "@/components/navigation/auszaehlung_wahlarten/TheSRWScoresListGroup.vue";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import {
+  DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING,
+  DISABLED_SUBTITLE_WAHLSCHEINE_MISSING,
+  DISABLED_SUBTITLE_WAHLVORSTAND_MISSING,
+  SUBTITLE_AUSZAEHLUNG_ERFASST,
+  SUBTITLE_AUSZAEHLUNG_IN_ARBEIT,
+} from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const props = defineProps({
@@ -48,6 +60,13 @@ const props = defineProps({
 });
 
 const { getStimmzettelTermForWahl } = useTextFormatter();
+const { isElectionFinished } = useWorkflowStore();
+const {
+  isAnzahlWahlscheineErfasst,
+  isStimmabgabevermerkeErfasst,
+  isWahlvorstandErfasst,
+} = storeToRefs(useWorkflowStore());
+const { isBWB, isUWB } = storeToRefs(useUserStore());
 
 const titleStimmenZaehlen = computed(
   () => `Zählen der ${getStimmzettelTermForWahl(props.wahl)}`
@@ -56,4 +75,32 @@ const titleStimmenZaehlen = computed(
 const wahlbezirkIdForWahl = computed(() =>
   useUserStore().getWahlbezirkIdFromWahlMetaDataByWahlId(props.wahl.wahlID)
 );
+
+const isMBWAuszaehlungDisabled = computed(() => {
+  if (isUWB.value) {
+    return !isWahlvorstandErfasst.value || !isStimmabgabevermerkeErfasst.value;
+  } else {
+    return !isWahlvorstandErfasst.value || !isAnzahlWahlscheineErfasst.value;
+  }
+});
+
+const isMBWAuszaehlungFinished = computed(() =>
+  isElectionFinished(props.wahl.wahlID, wahlbezirkIdForWahl.value ?? "")
+);
+
+const disabledMessagePreviousStepsRequired = computed(() => {
+  if (!isWahlvorstandErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLVORSTAND_MISSING;
+  }
+  if (isBWB.value && !isAnzahlWahlscheineErfasst.value) {
+    return DISABLED_SUBTITLE_WAHLSCHEINE_MISSING;
+  }
+  if (isUWB.value && !isStimmabgabevermerkeErfasst.value) {
+    return DISABLED_SUBTITLE_STIMMABGABEVERMERKE_MISSING;
+  }
+  if (!isMBWAuszaehlungFinished.value) {
+    return SUBTITLE_AUSZAEHLUNG_IN_ARBEIT;
+  }
+  return SUBTITLE_AUSZAEHLUNG_ERFASST;
+});
 </script>

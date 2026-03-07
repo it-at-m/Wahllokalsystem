@@ -33,7 +33,7 @@
           />
         </v-col>
       </v-row>
-      <div>
+      <div v-if="showKandidatName">
         {{ kandidat.name }}
       </div>
     </div>
@@ -59,6 +59,11 @@ const props = defineProps({
   kandidat: {
     type: Object as PropType<StimmzettelKandidat>,
     required: true,
+  },
+  showKandidatName: {
+    type: Boolean,
+    default: true,
+    required: false,
   },
 });
 

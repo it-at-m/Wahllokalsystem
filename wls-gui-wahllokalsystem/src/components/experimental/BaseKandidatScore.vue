@@ -20,10 +20,6 @@
           <base-kandidat-score-operator
             v-model="userVotes"
             v-model:is-discarded="isDiscarded"
-            @add="onAddScore"
-            @subtract="onSubtractScore"
-            @discard="onDiscard"
-            @revoke-discard="onRevokeDiscard"
           />
         </v-col>
         <v-col cols="3">
@@ -86,20 +82,4 @@ const isDiscarded = computed({
   set: (newValue: boolean) =>
     stimmzettelManager.discardKandidat(props.kandidat.identifikator, newValue),
 });
-
-function onAddScore(count: number) {
-  stimmzettelManager.addKandidatVote(props.kandidat.identifikator, count);
-}
-
-function onSubtractScore(count: number) {
-  stimmzettelManager.removeKandidatVote(props.kandidat.identifikator, count);
-}
-
-function onRevokeDiscard() {
-  stimmzettelManager.revokeDiscardedKandidat(props.kandidat.identifikator);
-}
-
-function onDiscard() {
-  stimmzettelManager.discardKandidat(props.kandidat.identifikator);
-}
 </script>

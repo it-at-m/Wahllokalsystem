@@ -14,11 +14,4 @@
 const modelVotes = defineModel({
   type: Number,
 });
-
-const emit = defineEmits<{
-  add: [count: number];
-  subtract: [count: number];
-  discard: [];
-  revokeDiscard: [];
-}>();
 </script>

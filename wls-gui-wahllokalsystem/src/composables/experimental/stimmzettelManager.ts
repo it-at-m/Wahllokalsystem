@@ -177,6 +177,32 @@ export function useStimmzettelManager(
       kandidatenSnapshot: kandidatenWithStimmen,
     };
   }
+  function loadSnapshot(snapshot: StimmzettelSnapshot) {
+    reset();
+    snapshot.kandidatenSnapshot.forEach((kandidatSnapshot) => {
+      setKandidatVote(
+        kandidatSnapshot.kandidatId,
+        kandidatSnapshot.votesByVoter
+      );
+      if (kandidatSnapshot.isDiscarded) {
+        discardKandidat(kandidatSnapshot.kandidatId);
+      }
+    });
+    snapshot.selectedWahlvorschlaegeOrdnungszahlen.forEach((ordnungszahl) => {
+      selectWahlvorschlagByOrdnungszahl(ordnungszahl);
+    });
+  }
+
+  function reset() {
+    stimmzettelWahlvorschlaege.value.forEach((wahlvorschlag) => {
+      wahlvorschlag.isSelected = false;
+      wahlvorschlag.kandidaten.forEach((kandidat) => {
+        kandidat.votesByWahlvorschlag = 0;
+        kandidat.votesByVoter = 0;
+        kandidat.isDiscarded = false;
+      });
+    });
+  }
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
     logger.log(`set wahlvorschlaege > ${JSON.stringify(wahlvorschlaege)}`);
@@ -397,6 +423,9 @@ export function useStimmzettelManager(
     totalInvalidKandidatenScores,
 
     createSnapshot,
+    loadSnapshot,
+
+    reset,
 
     discardKandidat,
     revokeDiscardedKandidat,

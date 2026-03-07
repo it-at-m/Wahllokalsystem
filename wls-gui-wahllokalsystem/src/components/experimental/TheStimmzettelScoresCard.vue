@@ -5,11 +5,20 @@
       <v-tabs v-model="tab">
         <v-tab value="1">Erfassung</v-tab>
         <v-tab value="2">Zusammenfassung</v-tab>
+        <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
       </v-tabs>
 
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="1">
           <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
+          <div class="d-flex ga-1 mb-3">
+            <v-btn
+              :loading="isSavingStimmzettel"
+              @click="onSaveClicked"
+              >Speichern</v-btn
+            >
+            <v-btn @click="onResetStimmzettelClicked">Zurücksetzen</v-btn>
+          </div>
           <v-row>
             <v-col
               v-for="wahlvorschlag in stimmzettelWahlvorschlaege"
@@ -23,8 +32,40 @@
             </v-col>
           </v-row>
         </v-tabs-window-item>
+
         <v-tabs-window-item value="2">
           <the-stimmzettel-summary-card />
+        </v-tabs-window-item>
+
+        <v-tabs-window-item value="3">
+          <div v-if="stimmzettelSnapshots.length > 0">
+            <template
+              v-for="(snapshot, index) in stimmzettelSnapshots"
+              :key="index"
+            >
+              <div>
+                {{ index }}
+                <v-btn
+                  class="ms-2"
+                  @click="onLoadStimmzettelSnapshotClicked(snapshot)"
+                  >Laden</v-btn
+                >
+              </div>
+              <div>
+                Anzahl erfasster Kandidaten:
+                {{ snapshot.kandidatenSnapshot.length }}
+              </div>
+              <div>
+                Anzahl gesetzter Listenkreuze:
+                {{ snapshot.selectedWahlvorschlaegeOrdnungszahlen.length }}
+              </div>
+              <v-divider
+                v-if="index < stimmzettelSnapshots.length - 1"
+                class="my-2"
+              />
+            </template>
+          </div>
+          <div v-else>Keine gespeicherten Stimmzettel</div>
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>
@@ -34,6 +75,7 @@
 <script setup lang="ts">
 import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
 import type { KandidatEvent } from "@/types/experimental/KandidatEvent.ts";
+import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { PropType } from "vue";
@@ -56,7 +98,20 @@ const props = defineProps({
     type: Object as PropType<Wahlvorschlaege>,
     required: true,
   },
+  stimmzettelSnapshots: {
+    type: Array as PropType<StimmzettelSnapshot[]>,
+    required: true,
+  },
+  isSavingStimmzettel: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
+
+const emit = defineEmits<{
+  snapshotCreated: [stimmzettelSnapshot: StimmzettelSnapshot];
+}>();
 
 const tab = ref("1");
 
@@ -77,6 +132,10 @@ stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 const stimmzettelWahlvorschlaege =
   stimmzettelManager.stimmzettelWahlvorschlaege;
 const totalUserVotes = stimmzettelManager.totalKandidatenScores;
+
+function onLoadStimmzettelSnapshotClicked(snapshot: StimmzettelSnapshot) {
+  stimmzettelManager.loadSnapshot(snapshot);
+}
 
 function onQuickInputCommand(command: AbstractCommandEvent) {
   logger.log(`processing command > ${JSON.stringify(command)}`);
@@ -114,6 +173,16 @@ function onQuickInputCommand(command: AbstractCommandEvent) {
       }
     }
   }
+}
+
+function onResetStimmzettelClicked() {
+  stimmzettelManager.reset();
+}
+
+function onSaveClicked() {
+  const stimmzettelSnapshot = stimmzettelManager.createSnapshot();
+  emit("snapshotCreated", stimmzettelSnapshot);
+  stimmzettelManager.reset();
 }
 
 function isWahlvorschlagEvent(event: unknown): event is WahlvorschlagEvent {

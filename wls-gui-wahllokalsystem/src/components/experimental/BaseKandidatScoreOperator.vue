@@ -2,6 +2,8 @@
   <div>
     <v-number-input
       v-model="modelVotes"
+      :persistent-clear="false"
+      :clearable="false"
       control-variant="split"
       density="compact"
       hide-details

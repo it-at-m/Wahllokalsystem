@@ -75,6 +75,7 @@
 <script setup lang="ts">
 import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
 import type { KandidatEvent } from "@/types/experimental/KandidatEvent.ts";
+import type { StimmzettelEvent } from "@/types/experimental/StimmzettelEvent.ts";
 import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
 import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent.ts";
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
@@ -88,6 +89,7 @@ import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelS
 import { useLogging } from "@/composables/common/logging.ts";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
 import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";
+import { StimmzettelEventTypeEnum } from "@/types/experimental/StimmzettelEventTypeEnum.ts";
 import { WahlvorschlagEventTypeEnum } from "@/types/experimental/WahlvorschlagEventTypeEnum.ts";
 
 const MAX_VALID_VOTES_PER_KANDIDAT = 3;
@@ -172,6 +174,8 @@ function onQuickInputCommand(command: AbstractCommandEvent) {
         break;
       }
     }
+  } else if (isStimmzettelEvent(command)) {
+    saveCurrentStimmzettelSnapshot();
   }
 }
 
@@ -180,6 +184,10 @@ function onResetStimmzettelClicked() {
 }
 
 function onSaveClicked() {
+  saveCurrentStimmzettelSnapshot();
+}
+
+function saveCurrentStimmzettelSnapshot() {
   const stimmzettelSnapshot = stimmzettelManager.createSnapshot();
   emit("snapshotCreated", stimmzettelSnapshot);
   stimmzettelManager.reset();
@@ -217,6 +225,20 @@ function isKandidatEvent(event: unknown): event is KandidatEvent {
   const hasCount = e.count !== undefined ? typeof e.count === "number" : true;
 
   return hasCorrectType && hasKandidatOrdnungszahl && hasCount;
+}
+
+function isStimmzettelEvent(event: unknown): event is StimmzettelEvent {
+  if (typeof event !== "object" || event === null) {
+    return false;
+  }
+
+  const e = event as Record<string, unknown>;
+
+  const hasCorrectType = Object.values(StimmzettelEventTypeEnum).includes(
+    e.stimmzettelEventType as never
+  );
+
+  return hasCorrectType;
 }
 </script>
 

@@ -1,8 +1,9 @@
 <template>
-  <v-form @submit="onSubmit">
+  <v-form>
     <v-text-field
       v-model="commandString"
       :error-messages="errorMessages"
+      placeholder="str + enter zum speichern"
       @keydown.enter.prevent="onSubmit"
     />
   </v-form>
@@ -10,11 +11,13 @@
 
 <script setup lang="ts">
 import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
+import type { StimmzettelEvent } from "@/types/experimental/StimmzettelEvent.ts";
 
 import { computed, ref, watch } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useStimmzettelQuickInputHandler } from "@/composables/experimental/stimmzettelQuickInputHandler.ts";
+import { StimmzettelEventTypeEnum } from "@/types/experimental/StimmzettelEventTypeEnum.ts";
 
 const logger = useLogging("baseFormStimmzettelQuickInput");
 
@@ -37,15 +40,26 @@ watch(commandString, (newValue) => {
   }
 });
 
-function onSubmit() {
+function onSubmit(event: KeyboardEvent) {
+  logger.log(
+    `event - event.ctrlKey > ${event.ctrlKey}, event.altKey > ${event.altKey}, event.shiftKey > ${event.shiftKey}, event.metaKey > ${event.metaKey}`
+  );
   logger.log(`on submit - commandString > ${commandString.value}`);
-  const commandEvent = handleQuickInput(commandString.value);
-  if (commandEvent) {
-    emit("command", commandEvent);
-    logger.log(`emitting command event > ${JSON.stringify(commandEvent)}`);
-    resetInput();
+
+  if (event.ctrlKey && !commandString.value) {
+    const saveCommand: StimmzettelEvent = {
+      stimmzettelEventType: StimmzettelEventTypeEnum.SAVE,
+    };
+    emit("command", saveCommand);
   } else {
-    errorMessage.value = "Eingabe ungültig";
+    const commandEvent = handleQuickInput(commandString.value);
+    if (commandEvent) {
+      emit("command", commandEvent);
+      logger.log(`emitting command event > ${JSON.stringify(commandEvent)}`);
+      resetInput();
+    } else {
+      errorMessage.value = "Eingabe ungültig";
+    }
   }
 }
 

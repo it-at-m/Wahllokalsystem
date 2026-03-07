@@ -2,6 +2,8 @@
   <v-checkbox
     v-model="modelValue"
     hide-details
+    :color="iconColor"
+    :base-color="iconColor"
     :true-value="false"
     true-icon="$kandidatNonRemoved"
     :false-value="true"
@@ -10,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 const modelValue = defineModel({
   type: Boolean,
 });
@@ -21,4 +25,6 @@ defineProps({
     default: false,
   },
 });
+
+const iconColor = computed(() => (!modelValue.value ? "success" : "error"));
 </script>

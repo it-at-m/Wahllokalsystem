@@ -38,7 +38,7 @@ Frontend
   ```
 - Auto-fix lintable issues:
   ```bash
-  npm run lint:fix
+  npm run fix
   ```
 - Build the frontend:
   ```bash
@@ -64,7 +64,7 @@ Documentation (Doc)
 Adjust the exact npm script names if your project uses different script names (for example: npm run docs:lint or npm run docs:build). The important part is: run lint, apply fixes, run tests, and build before opening a PR.
 
 ## Pull request checklist
-- [ ] All lint checks pass locally (use lint:fix where possible).
+- [ ] All lint checks pass locally (use fix where possible).
 - [ ] All tests pass locally (unit and integration where applicable).
 - [ ] Frontend/backend/docs build successfully.
 - [ ] Relevant documentation updated (if behavior or public API changed).

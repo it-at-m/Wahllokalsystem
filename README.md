@@ -17,7 +17,7 @@ The project is built with technologies we use in our projects
 
 ## Roadmap
 
-The Following graphic shows the Roadmap for the project. Changed to the Roadmap can always occur
+The Following graphic shows the Roadmap for the project. Changes to the Roadmap can always occur
 
 ![Roadmap](.github/images/Roadmap.png)
 

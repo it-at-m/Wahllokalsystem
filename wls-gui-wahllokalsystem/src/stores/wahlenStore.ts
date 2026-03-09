@@ -172,8 +172,10 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   /* --- stimmzettelumschlaege --- */
   const stimmzettelumschlaegeState: Ref<{
+    urneneroeffnungsUhrzeitSent: Date | undefined;
     isStimmzettelumschlaegeSaving: boolean;
   }> = ref({
+    urneneroeffnungsUhrzeitSent: undefined,
     isStimmzettelumschlaegeSaving: false,
   });
 
@@ -193,6 +195,8 @@ export const useWahlenStore = defineStore(storeID, () => {
 
         if (loadedStimmzettelumschlaege) {
           wahl.stimmzettelumschlaege = loadedStimmzettelumschlaege;
+          stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+            loadedStimmzettelumschlaege.urneneroeffnungsUhrzeit;
         }
       }
     },
@@ -209,6 +213,8 @@ export const useWahlenStore = defineStore(storeID, () => {
             wahl.stimmzettelumschlaege,
             getStimmzettelTermForWahl(wahl)
           );
+          stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+            wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit;
         } finally {
           stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;
         }

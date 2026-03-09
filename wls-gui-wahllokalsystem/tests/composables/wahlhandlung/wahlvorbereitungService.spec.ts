@@ -96,6 +96,7 @@ const {
   createUrnenwahlvorbereitungDTO,
   createWahlvorbereitung,
   createBriefwahlvorbereitungDTO,
+  prepareEroeffnungsuhrzeitDTO,
 } = useWahlvorbereitungTestDataFactory();
 const { generateRandomString, generateRandomDateTimeAsString } =
   useCommonTestDataFactory();
@@ -246,6 +247,24 @@ describe("wahlvorbereitungService", () => {
 
       expect(useWorkflowStore().isWahleroeffnungErfasst).toBe(false);
       expect(result).toBeNull();
+    });
+
+    it("should_returnNull_when_apiReturnsInvalideDate", async () => {
+      const wahlbezirkID = generateRandomString(10);
+
+      const mockedApiResponseData = prepareEroeffnungsuhrzeitDTO()
+        .eroeffnungsuhrzeit("invalid date")
+        .build();
+      mockDefinitions.getEroeffnungsuhrzeit.mockReturnValue(
+        createAxiosResponse({ status: 200, data: mockedApiResponseData })
+      );
+
+      const result = await getEroeffnungsuhrzeit(wahlbezirkID);
+
+      expect(result).toBeNull();
+      expect(mockDefinitions.getEroeffnungsuhrzeit.mock.calls).toStrictEqual([
+        [wahlbezirkID],
+      ]);
     });
 
     it("should_throwErrorAndSendNotification_when_apiFailed", async () => {

@@ -61,8 +61,6 @@ Documentation (Doc)
   npm run build
   ```
 
-Adjust the exact npm script names if your project uses different script names (for example: npm run docs:lint or npm run docs:build). The important part is: run lint, apply fixes, run tests, and build before opening a PR.
-
 ## Pull request checklist
 - [ ] All lint checks pass locally (use fix where possible).
 - [ ] All tests pass locally (unit and integration where applicable).

@@ -17,19 +17,16 @@ The project is built with technologies we use in our projects
 
 ## Roadmap
 
-We just started that is why a detailed roadmap is not available yet. All we can tell you today is that we plan about 4 phases:
+The Following graphic shows the Roadmap for the project. Changed to the Roadmap can always occur
 
-0. setup - getting familiar with the tools, the tech and the process and see what is todo
-1. updating the backend - done in 2024
-2. updating the frontend - started and done in 2025
-3. optimising the system
+![Roadmap](.github/images/Roadmap.png)
 
 See the [open issues](https://github.com/it-at-m/Wahllokalsystem/issues) for a full list of proposed features (and known issues).
 
 
 ## Set up
 
-*comming soon during the development when the first services appear*
+The Getting Started guide can be found in the documentation here: https://it-at-m.github.io/Wahllokalsystem/technik/get_started/.
 
 ## Documentation
 
@@ -38,20 +35,7 @@ this repository. After building the documentation is accessible via https://it-a
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please open an issue with the tag "enhancement", fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Open an issue with the tag "enhancement"
-2. Fork the Project
-3. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-4. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-5. Push to the Branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request
-
-More about this in the [CODE_OF_CONDUCT](/CODE_OF_CONDUCT.md) file.
-
+If you want to Contribute to the Project, please look into our [CONTRIBUTING.md](/CONTRIBUTING.md)
 
 ## License
 

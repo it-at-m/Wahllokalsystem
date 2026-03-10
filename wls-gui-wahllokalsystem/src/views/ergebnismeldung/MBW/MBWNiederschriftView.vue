@@ -42,8 +42,10 @@
 </template>
 
 <script setup lang="ts">
+import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
+
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -53,11 +55,12 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -67,8 +70,7 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
   useErgebnismeldungStore()
 );
 
-const { wahlbezirkEreignisse, ereigniseintraegeContainsVorkommnisse } =
-  storeToRefs(useEreignisStore());
+const { getEreignisse } = useEreignisService();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -78,6 +80,7 @@ const isSendenActive = ref<boolean>(true);
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+const ereignisse = ref<WahlbezirkEreignisse | null>(null);
 
 if (!wahl) {
   router.push({
@@ -85,10 +88,15 @@ if (!wahl) {
   });
 }
 
+onActivated(async () => {
+  ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
+});
+
 const hasDoneVorkommnisse = computed(
   () =>
-    ereigniseintraegeContainsVorkommnisse.value ||
-    wahlbezirkEreignisse.value.keineVorkommnisse
+    ereignisse.value?.ereigniseintraege.some(
+      (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
+    ) || ereignisse.value?.keineVorkommnisse
 );
 
 function onSendenClicked() {

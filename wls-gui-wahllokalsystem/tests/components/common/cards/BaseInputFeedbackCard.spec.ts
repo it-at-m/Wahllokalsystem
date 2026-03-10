@@ -83,6 +83,28 @@ describe("BaseInputFeedbackCard.vue", () => {
         getSnapshotFilename(context)
       );
     });
+
+    it("should_renderWithSubmitButton_when_submitButtonTextPropertyIsUsed", async (context) => {
+      const feedbackType = InputFeedbackTypeEnum.error;
+
+      wrapper = mount(BaseInputFeedbackCard, {
+        global: {
+          plugins: [vuetify],
+        },
+        props: {
+          title: "test title for component under test",
+          type: feedbackType,
+          submitButtonText: "Button-Text",
+        },
+        slots: {
+          default: "the default slot content",
+        },
+      });
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
   });
 
   function setupDefaultMockBehaviorForInputFeedbackUtils() {

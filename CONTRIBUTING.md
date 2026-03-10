@@ -52,7 +52,7 @@ Backend
   ```
 
 Documentation (Doc)
-- Check documentation linting (if docs use an npm tool):
+- Check documentation linting:
   ```bash
   npm run lint
   ```

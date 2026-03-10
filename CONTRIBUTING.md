@@ -39,11 +39,6 @@ Frontend
 - Auto-fix lintable issues:
   ```bash
   npm run fix
-  ```
-- Build the frontend:
-  ```bash
-  npm run build
-  ```
 
 Backend
 - Run the full Maven build, including tests and verification:
@@ -52,7 +47,7 @@ Backend
   ```
 
 Documentation (Doc)
-- Check documentation linting (if docs use an npm tool):
+- Check documentation linting:
   ```bash
   npm run lint
   ```

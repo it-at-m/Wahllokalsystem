@@ -249,7 +249,7 @@ describe("wahlvorbereitungService", () => {
       expect(result).toBeNull();
     });
 
-    it("should_returnNull_when_apiReturnsInvalideDate", async () => {
+    it("should_returnNull_when_apiReturnsInvalidDate", async () => {
       const wahlbezirkID = generateRandomString(10);
 
       const mockedApiResponseData = prepareEroeffnungsuhrzeitDTO()

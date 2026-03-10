@@ -39,11 +39,6 @@ Frontend
 - Auto-fix lintable issues:
   ```bash
   npm run fix
-  ```
-- Build the frontend:
-  ```bash
-  npm run build
-  ```
 
 Backend
 - Run the full Maven build, including tests and verification:

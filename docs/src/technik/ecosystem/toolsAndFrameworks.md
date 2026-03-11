@@ -15,7 +15,7 @@
 ### Zenhub
 
 Mit Zenhub organisieren wir unsere Entwicklung. Es basiert auf den GitHub-Issues. Die Pipelines von Zenhub unterstützen
-unseren Entwicklungsprozess nach Scrum hervorragend. Um diesen Prozess auch in Github leichter sichtbar zu machen,
+unseren Entwicklungsprozess nach Scrum hervorragend. Um diesen Prozess auch in GitHub leichter sichtbar zu machen,
 verwenden wir Labels. Diese werden automatisch beim Verschieben eines Issues von einer Pipeline zur nächsten aktualisiert.
 
 Alle Labels, die darstellen, in welchem Schritt des Entwicklungsprozesses sich das Issue befindet, beginnen mit

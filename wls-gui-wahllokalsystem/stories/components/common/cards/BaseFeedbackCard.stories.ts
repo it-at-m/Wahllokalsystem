@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const meta = {
-  component: BaseInputFeedbackCard,
+  component: BaseFeedbackCard,
   argTypes: {
     default: {
       description: "Inhalt, der neben dem Icon angezeigt wird",
@@ -18,7 +18,7 @@ const meta = {
     default: "Der Inhalt des Defaultslot",
     title: "Titel des Dialoges",
   },
-} satisfies Meta<typeof BaseInputFeedbackCard>;
+} satisfies Meta<typeof BaseFeedbackCard>;
 
 export default meta;
 

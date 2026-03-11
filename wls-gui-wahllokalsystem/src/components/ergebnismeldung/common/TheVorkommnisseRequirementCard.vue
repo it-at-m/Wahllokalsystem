@@ -1,5 +1,5 @@
 <template>
-  <base-input-feedback-card
+  <base-feedback-card
     :title="
       'Vorkommnisse ' +
       (type === InputFeedbackTypeEnum.error ? 'melden' : 'aktualisieren')
@@ -16,11 +16,11 @@
       Wenn sich während der Auszählung weitere Vorkommnisse ereignet haben,
       können diese hier erfasst werden.
     </div>
-  </base-input-feedback-card>
+  </base-feedback-card>
 </template>
 
 <script setup lang="ts">
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { ROUTE_EREIGNISSE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";

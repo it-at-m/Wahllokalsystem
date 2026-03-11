@@ -5,7 +5,7 @@ import {
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
@@ -28,7 +28,7 @@ vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
   }),
 }));
 
-describe("BaseInputFeedbackCard.vue", () => {
+describe("BaseFeedbackCard.vue", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
@@ -43,7 +43,7 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithoutAdditionalFeedback_when_additionalFeedbackSlotIsNotUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      wrapper = mount(BaseInputFeedbackCard, {
+      wrapper = mount(BaseFeedbackCard, {
         global: {
           plugins: [vuetify],
         },
@@ -64,7 +64,7 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithAdditionalFeedback_when_additionalFeedbackSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      wrapper = mount(BaseInputFeedbackCard, {
+      wrapper = mount(BaseFeedbackCard, {
         global: {
           plugins: [vuetify],
         },
@@ -87,7 +87,7 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithSubmitButton_when_submitButtonTextPropertyIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      wrapper = mount(BaseInputFeedbackCard, {
+      wrapper = mount(BaseFeedbackCard, {
         global: {
           plugins: [vuetify],
         },

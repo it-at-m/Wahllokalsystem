@@ -120,7 +120,7 @@ const { prepareAWerte } = useAWerteTestDataFactory();
 const { prepareBWerte } = useBWerteTestDataFactory();
 const { prepareMbwErgebnisseAndWahlvorschlag } =
   useMbwErgebnisseAndWahlvorschlagTestDataFactory();
-const { prepareErgebnismeldungDruckInput } =
+const { prepareSchnellmeldungDruckInput } =
   useErgebnismeldungDruckInputTestDataFactory();
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
@@ -710,7 +710,7 @@ describe("mbwUtils", () => {
     });
   });
 
-  describe("prepareDataForErgebnismeldungDruck", () => {
+  describe("prepareDataForSchnellmeldungDruck", () => {
     it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsart", async () => {
       const userStore = useUserStore(pinia);
       userStore.setUser(
@@ -943,13 +943,13 @@ describe("mbwUtils", () => {
         toHhMm(mockedNow) +
         " O";
 
-      const result = await unitUnderTest.prepareDataForErgebnismeldungDruck(
+      const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
         wahl,
         status,
         meldungsArt
       );
 
-      const expectedResult = prepareErgebnismeldungDruckInput()
+      const expectedResult = prepareSchnellmeldungDruckInput()
         .meldungsArt(meldungsArt)
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .aktuelleWahl(wahl)

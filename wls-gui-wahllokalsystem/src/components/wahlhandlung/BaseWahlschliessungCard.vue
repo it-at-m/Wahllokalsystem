@@ -75,7 +75,7 @@ const isSaveButtonDisabled = computed(
     !isVorkommnisseMaintained.value
 );
 
-async function onStoerungenBearbeiten() {
+async function onEreignisseBearbeiten() {
   await router.push(ROUTE_EREIGNISSE);
 }
 

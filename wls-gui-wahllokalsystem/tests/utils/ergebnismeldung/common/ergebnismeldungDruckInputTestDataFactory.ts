@@ -1,4 +1,4 @@
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
+import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { Builder } from "@tests/utils/Builder.ts";
 
 import { proxyBuilder } from "@tests/utils/Builder.ts";
@@ -26,7 +26,7 @@ const { createMbwErgebnisseAndWahlvorschlag } =
 const { convertToSixDigitArray } = useNumberFormatter();
 
 export function useErgebnismeldungDruckInputTestDataFactory() {
-  function createErgebnismeldungDruckInput(): ErgebnismeldungDruckInput {
+  function createSchnellmeldungDruckInput(): SchnellmeldungDruckInput {
     return {
       meldungsArt: MeldungsArtEnum.Schnellmeldung,
       wahlbezirksArt: WahlbezirksArtEnum.UWB,
@@ -54,11 +54,11 @@ export function useErgebnismeldungDruckInputTestDataFactory() {
     };
   }
 
-  function prepareErgebnismeldungDruckInput(): Builder<ErgebnismeldungDruckInput> {
-    return proxyBuilder<ErgebnismeldungDruckInput>(
-      createErgebnismeldungDruckInput()
+  function prepareSchnellmeldungDruckInput(): Builder<SchnellmeldungDruckInput> {
+    return proxyBuilder<SchnellmeldungDruckInput>(
+      createSchnellmeldungDruckInput()
     );
   }
 
-  return { createErgebnismeldungDruckInput, prepareErgebnismeldungDruckInput };
+  return { createSchnellmeldungDruckInput, prepareSchnellmeldungDruckInput };
 }

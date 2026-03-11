@@ -21,6 +21,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahlschliessungCard from "@/components/wahlhandlung/BaseWahlschliessungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
@@ -152,6 +153,8 @@ describe("BaseWahlschliessungCard.vue", () => {
       wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = new Date(
         "2025-05-23T17:30:00"
       );
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorkommnisseMaintained = true;
 
       await flushPromises();
 

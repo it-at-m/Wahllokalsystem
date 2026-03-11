@@ -22,7 +22,8 @@ import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
 const { loadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
 const { buildTemplateFromData } = useWahlvorstandNachbesetzungsDruck();
-const { toHhMm, toGermanDateWithLongMonth } = useDateTimeFormatter();
+const { toTimeWithHoursAndOptionalMinutes, toGermanDateWithLongMonth } =
+  useDateTimeFormatter();
 
 const { currentUserWahlbezirkNummer, isBWB, currentUserHauptWahlID } =
   storeToRefs(useUserStore());
@@ -46,7 +47,7 @@ function _openPrintDialog() {
       ) || "",
     wahlbezirknummer: currentUserWahlbezirkNummer.value || "",
     wahlvorstaende: wahlvorstand.value.wahlvorstandsmitglieder,
-    druckZeitpunkt: toHhMm(new Date()),
+    druckZeitpunkt: toTimeWithHoursAndOptionalMinutes(new Date()),
   };
 
   const printWindow = window.open(

@@ -10,8 +10,7 @@
   >
     <div v-if="type === InputFeedbackTypeEnum.error">
       Sie können die Niederschrift erst ausdrucken, wenn Sie über mögliche
-      eingetretene Störungen berichtet haben. Klicken Sie hier, um die
-      Ereignisse zu dokumentieren.
+      eingetretene Störungen berichtet haben.
     </div>
     <div v-else>
       Wenn sich während der Auszählung weitere Vorkommnisse ereignet haben,

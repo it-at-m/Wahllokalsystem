@@ -5,7 +5,7 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-export interface ErgebnismeldungDruckInput {
+export interface SchnellmeldungDruckInput {
   sendOk: boolean;
   barcode: string;
   wahlbezirkNummer: string;

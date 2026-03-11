@@ -12,11 +12,26 @@ import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.v
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 
-const { isStepDoneInElectionState } = useNavigationGuards();
+const {
+  isStepDoneInElectionState,
+  permitNavigationWhenWahlvorstandIsErfasst,
+  requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
+  requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
+  requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
+  requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+} = useNavigationGuards();
 const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
 type RouteRecordRawWithoutName = Omit<RouteRecordRaw, "name">;
+
+const auszaehlungPrerequisiteGuards = [
+  permitNavigationWhenWahlvorstandIsErfasst,
+  requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
+  requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
+  requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
+  requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+];
 
 const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
   [MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL]: {
@@ -24,6 +39,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/auszaehlungStimmzettel",
     component: ErfassungStimmzettelView,
+    beforeEnter: [...auszaehlungPrerequisiteGuards],
   },
   [MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]: {
     path:
@@ -31,6 +47,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/stapelDUngueltig",
     component: MBWStapelDView,
     beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
     ],
   },
@@ -40,6 +57,8 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       "/stapelAandB",
     component: MBWStapelAandBView,
     beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
     ],
   },
@@ -48,20 +67,38 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/schnellmeldung",
     component: MBWSchnellmeldungView,
-    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B)],
+    beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
+    ],
   },
   [MbwRoutesEnum.MBW_STAPEL_BC]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelBC",
     component: MBWStapelBCView,
-    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG)],
+    beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG),
+    ],
   },
   [MbwRoutesEnum.MBW_NIEDERSCHRIFT]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
       "/niederschrift",
     component: MBWNiederschriftView,
-    beforeEnter: [isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_BC)],
+    beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_BC),
+    ],
   },
 };
 

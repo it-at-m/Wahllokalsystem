@@ -435,7 +435,7 @@ describe("ereignisStore.ts", () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
-      unitUnderTest.isVorkommnisseMaintained = false;
+      unitUnderTest.isVorfaelleMaintained = false;
 
       const mockedWahlbezirkEreignisse =
         WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
@@ -446,13 +446,13 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.wahlbezirkEreignisse).toStrictEqual(
         mockedWahlbezirkEreignisse
       );
-      expect(unitUnderTest.isVorkommnisseMaintained).toBeTruthy();
+      expect(unitUnderTest.isVorfaelleMaintained).toBeTruthy();
     });
 
     it("should_handleError_when_getEreignisseThrowsError", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
-      unitUnderTest.isVorkommnisseMaintained = false;
+      unitUnderTest.isVorfaelleMaintained = false;
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedError = new Error("Network error");
@@ -460,7 +460,7 @@ describe("ereignisStore.ts", () => {
 
       await unitUnderTest.loadEreignisse();
       expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
-      expect(unitUnderTest.isVorkommnisseMaintained).toBeFalsy();
+      expect(unitUnderTest.isVorfaelleMaintained).toBeFalsy();
     });
   });
 
@@ -469,7 +469,7 @@ describe("ereignisStore.ts", () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
-      unitUnderTest.isVorkommnisseMaintained = false;
+      unitUnderTest.isVorfaelleMaintained = false;
 
       const mockedDatetime = new Date();
 
@@ -485,14 +485,14 @@ describe("ereignisStore.ts", () => {
         unitUnderTest.wahlbezirkEreignisse,
         true
       );
-      expect(unitUnderTest.isVorkommnisseMaintained).toBeTruthy();
+      expect(unitUnderTest.isVorfaelleMaintained).toBeTruthy();
     });
 
     it("should_notChangeVorkommnisseMaintained_when_postCallFailed", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
-      unitUnderTest.isVorkommnisseMaintained = false;
+      unitUnderTest.isVorfaelleMaintained = false;
 
       mockDefinitions.saveEreignisse.mockRejectedValue(
         new Error("error in service")
@@ -502,7 +502,7 @@ describe("ereignisStore.ts", () => {
 
       await nextTick();
 
-      expect(unitUnderTest.isVorkommnisseMaintained).toBeFalsy();
+      expect(unitUnderTest.isVorfaelleMaintained).toBeFalsy();
     });
   });
 

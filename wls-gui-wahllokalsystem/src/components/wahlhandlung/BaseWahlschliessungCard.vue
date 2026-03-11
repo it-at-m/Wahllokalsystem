@@ -17,13 +17,12 @@
         />
       </v-form>
       <base-input-feedback-card
-        v-if="!isVorkommnisseMaintained"
+        v-if="!isVorfaelleMaintained"
         title="Vorfälle Melden"
         :type="InputFeedbackTypeEnum.error"
       >
         Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
-        eingetretene Störungen berichtet und diese gespeichert haben. Klicken
-        Sie hier um die Störung zu Dokumentieren.
+        eingetretene Störungen berichtet und diese gespeichert haben.
         <template #additionalFeedback>
           <base-text-button @click="onEreignisseBearbeiten"
             >Zu den ereignissen</base-text-button
@@ -65,14 +64,13 @@ const { getNextRoute } = useNavigationUtils();
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { isVorkommnisseMaintained } = storeToRefs(useEreignisStore());
+const { isVorfaelleMaintained } = storeToRefs(useEreignisStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(
   () =>
-    schliessungsuhrzeitValidForm.value !== true ||
-    !isVorkommnisseMaintained.value
+    schliessungsuhrzeitValidForm.value !== true || !isVorfaelleMaintained.value
 );
 
 async function onEreignisseBearbeiten() {

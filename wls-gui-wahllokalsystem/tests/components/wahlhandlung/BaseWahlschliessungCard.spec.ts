@@ -154,7 +154,7 @@ describe("BaseWahlschliessungCard.vue", () => {
         "2025-05-23T17:30:00"
       );
       const ereignisStore = useEreignisStore();
-      ereignisStore.isVorkommnisseMaintained = true;
+      ereignisStore.isVorfaelleMaintained = true;
 
       await flushPromises();
 

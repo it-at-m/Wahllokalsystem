@@ -56,6 +56,7 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
+import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { required, maxLength, minLength, dateNotInFuture, dateGreaterOrEqual } =
@@ -65,8 +66,8 @@ const { toHhMm, toGermanDate } = useDateTimeFormatter();
 
 const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;
 
-defineProps({
-  lineNumber: {
+const { indexOfModel } = defineProps({
+  indexOfModel: {
     type: Number,
     required: true,
   },
@@ -77,6 +78,10 @@ const ereignisModel = defineModel({
   required: true,
 });
 
+const lineNumber = computed(() => indexOfModel + 1); //cause indexes start by 0
+
+const { updateUhrzeitByIndex } = useEreignisStore();
+
 const ereignisUhrzeit = computed(() => ereignisModel.value.uhrzeit);
 
 const { dateOnly, timeOnly, dateAndTimeCombined } =
@@ -84,7 +89,7 @@ const { dateOnly, timeOnly, dateAndTimeCombined } =
 
 watch(dateAndTimeCombined, (newValue) => {
   if (ereignisModel.value.uhrzeit?.getTime() !== newValue?.getTime()) {
-    ereignisModel.value.uhrzeit = newValue ?? undefined;
+    updateUhrzeitByIndex(newValue ?? undefined, indexOfModel);
   }
 });
 

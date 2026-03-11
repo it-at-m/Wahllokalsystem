@@ -4,7 +4,7 @@
       v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
       :key="index"
       :model-value="ereignis"
-      :line-number="index + 1"
+      :index-of-model="index"
       @delete="(ereignisPayload) => onDeleteIcon(index, ereignisPayload)"
     />
     <base-dialog

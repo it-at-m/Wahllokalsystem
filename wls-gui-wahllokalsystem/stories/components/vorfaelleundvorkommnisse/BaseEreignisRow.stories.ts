@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    lineNumber: 42,
+    indexOfModel: 42,
     modelValue: useVorfaelleundvorkommnisseTestDataFactory().createEreignis(),
   },
 };

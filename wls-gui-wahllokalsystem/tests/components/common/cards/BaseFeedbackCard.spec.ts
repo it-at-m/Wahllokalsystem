@@ -86,7 +86,7 @@ describe("BaseFeedbackCard.vue", () => {
       );
     });
 
-    it("should_renderWithActionButton_when_actionButtonSlotIsUsed", async (context) => {
+    it("should_renderWithActions_when_actionsSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
       wrapper = mount(BaseFeedbackCard, {
@@ -99,7 +99,7 @@ describe("BaseFeedbackCard.vue", () => {
         },
         slots: {
           default: "the default slot content",
-          actionButton: h(BaseTextButton),
+          actions: h(BaseTextButton),
         },
       });
 

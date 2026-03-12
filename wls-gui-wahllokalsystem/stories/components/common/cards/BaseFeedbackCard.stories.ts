@@ -13,6 +13,10 @@ const meta = {
       description:
         "Optionale zusätzliche Informationen, die unterhalb des Icons angezeigt werden",
     },
+    actions: {
+      description:
+        "Optionale Card-Actions, die am unteren Rand der Karte angezeigt werden",
+    },
   },
   args: {
     default: "Der Inhalt des Defaultslot",
@@ -34,6 +38,23 @@ export const Error: Story = {
 export const ErrorWithAdditionalFeedback: Story = {
   args: {
     additionalFeedback: "Es gibt noch mehr zu dem Fehler zu sagen",
+    title: "Titel zu einem Fehler",
+    type: InputFeedbackTypeEnum.error,
+  },
+};
+
+export const ErrorWithAction: Story = {
+  args: {
+    actions: "Abschließend wird eine Aktion angeboten",
+    title: "Titel zu einem Fehler",
+    type: InputFeedbackTypeEnum.error,
+  },
+};
+
+export const ErrorWithAdditionalFeedbackAndAction: Story = {
+  args: {
+    additionalFeedback: "Es gibt noch mehr zu dem Fehler zu sagen",
+    actions: "Abschließend wird eine Aktion angeboten",
     title: "Titel zu einem Fehler",
     type: InputFeedbackTypeEnum.error,
   },

@@ -14,7 +14,7 @@
       Wenn sich während der Auszählung weitere Vorkommnisse ereignet haben,
       können diese hier erfasst werden.
     </div>
-    <template #actionButton>
+    <template #actions>
       <base-text-button @click="onNavigationClicked"
         >Zu den Ereignissen</base-text-button
       >

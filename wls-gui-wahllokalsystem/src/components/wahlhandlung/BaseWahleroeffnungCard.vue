@@ -38,9 +38,13 @@
     >
       <div class="mb-3">
         Die eingetragene Uhrzeit ist nach
-        {{ toHhMm(createTodayWithTime(spaetesteEroeffnungsuhrzeit)) }} Uhr,
-        bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
-        eines besonderen Vorfalls.
+        {{
+          toTimeWithHoursAndOptionalMinutes(
+            createTodayWithTime(spaetesteEroeffnungsuhrzeit)
+          )
+        }}
+        Uhr, bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in
+        Form eines besonderen Vorfalls.
       </div>
       <v-textarea
         v-model="begruendung"
@@ -90,7 +94,7 @@ const {
   maxLength,
 } = useRules();
 
-const { toHhMm } = useDateTimeFormatter();
+const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
 const { getNextRoute } = useNavigationUtils();
 

@@ -208,6 +208,14 @@ describe("dateTimeFormatter.ts", () => {
         expectedTimeString: "22:22",
       },
       {
+        dateToParse: new Date("2025-02-18T09:00:00"),
+        expectedTimeString: "9",
+      },
+      {
+        dateToParse: new Date("2025-02-18T09:22:00"),
+        expectedTimeString: "09:22",
+      },
+      {
         dateToParse: new Date("2025-02-18T12:01"),
         expectedTimeString: "12:01",
       },

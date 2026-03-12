@@ -16,6 +16,6 @@ export class WahlbezirkEreignisseBuilder implements WahlbezirkEreignisse {
   ) {}
 
   static createEmptyWahlbezirkEreignisse(): WahlbezirkEreignisseBuilder {
-    return new WahlbezirkEreignisseBuilder("", [], undefined, undefined);
+    return new WahlbezirkEreignisseBuilder("", [], true, true);
   }
 }

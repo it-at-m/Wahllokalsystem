@@ -61,7 +61,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   watch(
     () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent,
-    _onSchliessunguhrzeitSentChanged
+    _onSchliessungsuhrzeitSentChanged
   );
 
   function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
@@ -181,13 +181,13 @@ export const useEreignisStore = defineStore(storeID, () => {
     };
   }
 
-  function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {
+  function _hasEintragOfEreignisart(ereignisart: EreignisartEnum): boolean {
     return wahlbezirkEreignisse.value.ereigniseintraege.some(
-      (eintrag) => eintrag.ereignisart === ereginisart
+      (eintrag) => eintrag.ereignisart === ereignisart
     );
   }
 
-  async function _onSchliessunguhrzeitSentChanged(
+  async function _onSchliessungsuhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
     wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {

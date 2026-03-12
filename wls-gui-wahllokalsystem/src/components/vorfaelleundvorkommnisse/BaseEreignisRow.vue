@@ -65,8 +65,8 @@ const { toHhMm, toGermanDate } = useDateTimeFormatter();
 
 const maxLengthForEreignisBeschreibung = MAX_LENGTH_FOR_TEXT_INPUT;
 
-const { indexOfModel } = defineProps({
-  indexOfModel: {
+defineProps({
+  lineNumber: {
     type: Number,
     required: true,
   },
@@ -76,8 +76,6 @@ const ereignisModel = defineModel({
   type: Object as PropType<Ereignis>,
   required: true,
 });
-
-const lineNumber = computed(() => indexOfModel + 1); //cause indexes start by 0
 
 const ereignisUhrzeit = computed(() => ereignisModel.value.uhrzeit);
 

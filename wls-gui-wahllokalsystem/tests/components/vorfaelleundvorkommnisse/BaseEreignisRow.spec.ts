@@ -38,7 +38,7 @@ describe("BaseEreignisRow.vue", () => {
         ],
       },
       props: {
-        indexOfModel: 0,
+        lineNumber: 1,
         modelValue: createEreignis(),
       },
     });
@@ -50,7 +50,7 @@ describe("BaseEreignisRow.vue", () => {
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderRowWithData_when_mounted", async (context) => {
       await wrapper.setProps({
-        indexOfModel: 41,
+        lineNumber: 42,
         modelValue: prepareEreignis()
           .beschreibung("dies ist eine Beschreibung")
           .uhrzeit(new Date("2025-07-29T15:36:42.23"))
@@ -64,7 +64,7 @@ describe("BaseEreignisRow.vue", () => {
 
     it("should_renderRowWithErrorMessages_when_mountedWithoutAnyData", async (context) => {
       await wrapper.setProps({
-        indexOfModel: 41,
+        lineNumber: 42,
         modelValue: prepareEreignis()
           .beschreibung(undefined)
           .uhrzeit(undefined)
@@ -87,7 +87,7 @@ describe("BaseEreignisRow.vue", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_emitDeleteEvent_when_deleteIconIsClicked", async () => {
       await wrapper.setProps({
-        indexOfModel: 0,
+        lineNumber: 1,
         modelValue: prepareEreignis()
           .beschreibung("Beschreibung")
           .uhrzeit(new Date("2025-07-29T15:36:42.23"))

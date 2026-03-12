@@ -4,7 +4,7 @@
       v-for="(ereignis, index) in wahlbezirkEreignisse.ereigniseintraege"
       :key="index"
       :model-value="ereignis"
-      :index-of-model="index"
+      :line-number="index + 1"
       @uhrzeit-changed="onEreignisUhrzeitChanged(index, $event)"
       @delete="(ereignisPayload) => onDeleteIcon(index, ereignisPayload)"
     />

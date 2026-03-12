@@ -5,6 +5,7 @@
       :key="index"
       :model-value="ereignis"
       :line-number="index + 1"
+      @uhrzeit-changed="onEreignisUhrzeitChanged(index, $event)"
       @delete="(ereignisPayload) => onDeleteIcon(index, ereignisPayload)"
     />
     <base-dialog
@@ -75,5 +76,12 @@ function onConfirmDelete() {
     deleteIndex.value = null;
   }
   closeDeleteDialog();
+}
+
+function onEreignisUhrzeitChanged(
+  indexOfEreignis: number,
+  newUhrzeit: Date | undefined
+) {
+  ereignisStore.updateUhrzeitByIndex(newUhrzeit, indexOfEreignis);
 }
 </script>

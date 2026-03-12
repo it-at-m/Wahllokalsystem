@@ -2,13 +2,13 @@
   <v-card>
     <v-card-title>Auf ungültige Wahlscheine hinweisen</v-card-title>
     <v-card-text>
-      <base-input-feedback-card
+      <base-feedback-card
         title="Bearbeitungshinweis"
         type="information"
         class="mb-2"
         >Das Wahlamt informiert Sie, wenn Sie auf dieser Maske Änderungen
         vornehmen müssen.
-      </base-input-feedback-card>
+      </base-feedback-card>
       <v-radio-group
         v-model="
           pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
@@ -60,7 +60,7 @@
           {{ TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE }}
         </template>
       </v-checkbox>
-      <base-input-feedback-card
+      <base-feedback-card
         v-if="
           !pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
             .mitteilungUeberUngueltigeWahlscheineErhalten
@@ -71,7 +71,7 @@
         >Bitte setzen sie einen Haken bei: "{{
           TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE
         }}"
-      </base-input-feedback-card>
+      </base-feedback-card>
     </v-card-text>
     <v-card-actions>
       <base-button-save
@@ -93,7 +93,7 @@
 import { storeToRefs } from "pinia";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

@@ -1,6 +1,5 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
-import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
@@ -15,6 +14,7 @@ import {
   EreignisartEnum,
   getEreignisArtForDateRelatedToSchliessungsuhrzeit,
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
+import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 const { compareEreignisseByUhrzeit } = useEreignisComparator();
 const { getEreignisse, saveEreignisse } = useEreignisService();

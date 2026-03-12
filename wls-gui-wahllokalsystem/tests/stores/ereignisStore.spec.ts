@@ -30,7 +30,7 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 
 const mockedNow = new Date();
 
-const { createEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
+const { prepareEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {
@@ -617,13 +617,18 @@ describe("ereignisStore.ts", () => {
 
   describe("watch", () => {
     describe("schliessungsuhrzeitSent", () => {
-      it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
+      it("should_setKeinVorfaelleTrue_when_schliessungsuhrzeitSentHasChangedAndOnlyVorkommnisseAreGiven", async () => {
         const schliessungsuhrzeitSend = new Date();
 
         const ereignisEintraege = [
-          createEreignis(),
-          createEreignis(),
-          createEreignis(),
+          prepareEreignis()
+            .ereignisart(EreignisartEnum.Vorkommnis)
+            .uhrzeit(new Date(schliessungsuhrzeitSend.getTime() + 1))
+            .build(),
+          prepareEreignis()
+            .ereignisart(EreignisartEnum.Vorkommnis)
+            .uhrzeit(new Date(schliessungsuhrzeitSend.getTime() + 2))
+            .build(),
         ];
         unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
           ereignisEintraege;
@@ -641,8 +646,46 @@ describe("ereignisStore.ts", () => {
         expect(
           spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls.length
         ).toStrictEqual(ereignisEintraege.length);
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          true
+        );
 
         spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+      });
+
+      it("should_setKeinVorfaelleTrue_when_schliessungsuhrzeitSentHasChangedAndNoEreignisseAreGiven", async () => {
+        const schliessungsuhrzeitSend = new Date();
+
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+          schliessungsuhrzeitSend;
+
+        await flushPromises();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          true
+        );
+      });
+
+      it("should_setKeinVorfaelleFalse_when_schliessungsuhrzeitSentHasChangedAndVorfaelleAreGiven", async () => {
+        const schliessungsuhrzeitSend = new Date();
+
+        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+          prepareEreignis()
+            .ereignisart(EreignisartEnum.Vorfall)
+            .uhrzeit(new Date(schliessungsuhrzeitSend.getTime()))
+            .build(),
+        ];
+
+        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
+          schliessungsuhrzeitSend;
+
+        await flushPromises();
+
+        expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+          false
+        );
       });
     });
   });

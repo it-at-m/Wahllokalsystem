@@ -488,7 +488,7 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.isVorfaelleMaintained).toBeTruthy();
     });
 
-    it("should_notChangeVorkommnisseMaintained_when_postCallFailed", async () => {
+    it("should_notChangeVorfaelleMaintained_when_postCallFailed", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());

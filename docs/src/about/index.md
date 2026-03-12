@@ -92,7 +92,7 @@ die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gi
 {#infobox-ereignisse-uwb}
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
 Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während oder vor der Stimmabgabe auftreten, und Vorkommnissen, die
-während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
+während der Auszählung auftreten (nach der Schließung), unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
 erfasst werden. Wird die Uhrzeit eines Vorkommnisses nachträglich auf vor der Wahlschließung gesetzt, passt sich auch
 die Ereignisart des Eintrags entsprechend an und wird zu einem Vorfall, und andersherum. Sobald die Schliessungsuhrzeit
 gespeichert wird, wird die Ereignisart der Ereignisse ebenfalls neu berechnet. Dementsprechend ist die

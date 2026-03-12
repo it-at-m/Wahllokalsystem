@@ -2,8 +2,12 @@
   <v-card>
     <v-card-title>
       Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor
-      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
-      übergeben wurden)
+      {{
+        toTimeWithHoursAndOptionalMinutes(
+          createTodayWithTime(fruehesteSchliessungsuhrzeit)
+        )
+      }}
+      Uhr übergeben wurden)
     </v-card-title>
     <v-card-text class="pb-0 pt-2">
       <v-form v-model="anzahlWahlbriefeValid">
@@ -48,8 +52,12 @@
     </v-card-text>
     <v-card-title>
       Anzahl der nach
-      {{ toHhMm(createTodayWithTime(fruehesteSchliessungsuhrzeit)) }} Uhr
-      nachgelieferten Wahlbriefe
+      {{
+        toTimeWithHoursAndOptionalMinutes(
+          createTodayWithTime(fruehesteSchliessungsuhrzeit)
+        )
+      }}
+      Uhr nachgelieferten Wahlbriefe
     </v-card-title>
     <v-card-text>
       <v-form
@@ -123,7 +131,7 @@ const { currentTime } = useCurrentTime();
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { toHhMm } = useDateTimeFormatter();
+const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
 const { getNextRoute } = useNavigationUtils();
 

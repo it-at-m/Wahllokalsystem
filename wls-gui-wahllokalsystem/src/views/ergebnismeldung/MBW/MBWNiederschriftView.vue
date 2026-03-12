@@ -4,7 +4,7 @@
     subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
     :is-sending="isNiederschriftAndStatusSaving"
     :is-korrigieren-active="isKorrigierenValid"
-    :is-drucken-active="hasDoneVorkommnisse"
+    :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
     :is-drucken-loading="isDruckenLoading"
     :is-senden-active="isSendenActive"
     @save="onSendenClicked"
@@ -33,7 +33,7 @@
     />
     <the-vorkommnisse-requirement-card
       :type="
-        hasDoneVorkommnisse
+        hasDoneVorkommnisse(ereignisse)
           ? InputFeedbackTypeEnum.information
           : InputFeedbackTypeEnum.error
       "
@@ -45,7 +45,7 @@
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onActivated, ref } from "vue";
+import { onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -56,11 +56,11 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
+import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -69,6 +69,7 @@ const { sendNiederschrift } = useErgebnismeldungStore();
 const { isNiederschriftAndStatusSaving } = storeToRefs(
   useErgebnismeldungStore()
 );
+const { hasDoneVorkommnisse } = useEreignisUtils();
 
 const { getEreignisse } = useEreignisService();
 
@@ -91,13 +92,6 @@ if (!wahl) {
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
 });
-
-const hasDoneVorkommnisse = computed(
-  () =>
-    ereignisse.value?.ereigniseintraege.some(
-      (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
-    ) || ereignisse.value?.keineVorkommnisse
-);
 
 function onSendenClicked() {
   if (wahl) {

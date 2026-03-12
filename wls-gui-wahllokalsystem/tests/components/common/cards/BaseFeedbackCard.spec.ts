@@ -4,7 +4,9 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { h } from "vue";
 
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
@@ -84,7 +86,7 @@ describe("BaseFeedbackCard.vue", () => {
       );
     });
 
-    it("should_renderWithSubmitButton_when_submitButtonTextPropertyIsUsed", async (context) => {
+    it("should_renderWithActionButton_when_actionButtonSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
       wrapper = mount(BaseFeedbackCard, {
@@ -94,10 +96,10 @@ describe("BaseFeedbackCard.vue", () => {
         props: {
           title: "test title for component under test",
           type: feedbackType,
-          submitButtonText: "Button-Text",
         },
         slots: {
           default: "the default slot content",
+          actionButton: h(BaseTextButton),
         },
       });
 

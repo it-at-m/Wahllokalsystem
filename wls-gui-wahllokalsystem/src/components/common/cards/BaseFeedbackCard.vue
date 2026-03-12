@@ -26,10 +26,8 @@
         <slot name="additionalFeedback" />
       </div>
     </v-card-text>
-    <v-card-actions v-if="submitButtonText">
-      <base-text-button @click="$emit('submit')">{{
-        submitButtonText
-      }}</base-text-button>
+    <v-card-actions v-if="hasActionButton">
+      <slot name="actionButton" />
     </v-card-actions>
   </v-card>
 </template>
@@ -39,7 +37,6 @@ import type { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum
 
 import { computed, useSlots } from "vue";
 
-import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import { useInputFeedbackUtils } from "@/composables/common/inputFeedbackUtils.ts";
 
 const {
@@ -54,11 +51,6 @@ const slots = useSlots();
 const props = defineProps<{
   title: string;
   type: InputFeedbackTypeEnum;
-  submitButtonText?: string;
-}>();
-
-defineEmits<{
-  submit: [];
 }>();
 
 const icon = computed(() => getIconForInputFeedbackType(props.type));
@@ -71,4 +63,5 @@ const bgColorAndBold = computed(() =>
 );
 
 const hasAdditionalFeedback = computed(() => !!slots?.additionalFeedback);
+const hasActionButton = computed(() => !!slots?.actionButton);
 </script>

@@ -102,7 +102,9 @@ export function useDateTimeFormatter() {
   ): string {
     const time = toHhMm(date);
     const [hours, minutes] = time.split(TIME_FIELD_SEPARATOR);
-    return minutes === "00" ? hours || NO_VALUE_DEFAULT : time;
+    return minutes === "00"
+      ? hours?.replace(/^0+/, "") || NO_VALUE_DEFAULT
+      : time;
   }
 
   function _returnParsedDateOrInvalid(

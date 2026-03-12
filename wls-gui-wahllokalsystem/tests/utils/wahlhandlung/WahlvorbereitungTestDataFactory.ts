@@ -87,6 +87,10 @@ export function useWahlvorbereitungTestDataFactory() {
     };
   }
 
+  function prepareEroeffnungsuhrzeitDTO(): Builder<EroeffnungsUhrzeitDTO> {
+    return proxyBuilder<EroeffnungsUhrzeitDTO>(createEroeffnungsUhrzeitDTO());
+  }
+
   function prepareUrnenwahlvorbereitung(): Builder<Urnenwahlvorbereitung> {
     return proxyBuilder<Urnenwahlvorbereitung>(createUrnenwahlvorbereitung());
   }
@@ -123,6 +127,7 @@ export function useWahlvorbereitungTestDataFactory() {
     createUrnenwahlvorbereitungDTO,
     createWahlvorbereitung,
     createBriefwahlvorbereitungDTO,
+    prepareEroeffnungsuhrzeitDTO,
     prepareUrnenwahlvorbereitung,
     prepareWahlvorbereitung,
   };

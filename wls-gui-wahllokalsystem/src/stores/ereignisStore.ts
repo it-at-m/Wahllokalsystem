@@ -195,18 +195,22 @@ export const useEreignisStore = defineStore(storeID, () => {
         );
       }
     });
-    _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState();
+    _updateKeineVorfaelleBasedOnCurrentState();
 
     await sendEreignisse(false);
   }
 
+  function _updateKeineVorfaelleBasedOnCurrentState() {
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
+  }
   function _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState() {
+    _updateKeineVorfaelleBasedOnCurrentState();
+
     if (schliessungsuhrzeitGetter.value.isAuszaehlungStarted) {
       wahlbezirkEreignisse.value.keineVorkommnisse =
         !ereigniseintraegeContainsVorkommnisse.value;
     }
-    wahlbezirkEreignisse.value.keineVorfaelle =
-      isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
   }
 
   function _sortEreignisse(ereigniseintraege: Ereignis[]) {

@@ -7,7 +7,7 @@ import { computed, ref, watch } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
-import { useEreignisComparator } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
+import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-const { compareEreignisseByUhrzeit } = useEreignisComparator();
+const { compareEreignisseByUhrzeit } = useEreignisUtils();
 const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 

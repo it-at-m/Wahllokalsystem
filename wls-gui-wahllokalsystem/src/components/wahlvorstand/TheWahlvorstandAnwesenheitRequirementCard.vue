@@ -1,5 +1,5 @@
 <template>
-  <base-input-feedback-card
+  <base-feedback-card
     title="Ungültige Zusammensetzung des Wahlvorstands"
     :type="InputFeedbackTypeEnum.error"
   >
@@ -23,13 +23,13 @@
       die Bezirksinspektion. Dort werden die Rollen im System richtig
       hinterlegt. Bis dahin bleiben Sie bitte auf dieser Seite.
     </template>
-  </base-input-feedback-card>
+  </base-feedback-card>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
   MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,

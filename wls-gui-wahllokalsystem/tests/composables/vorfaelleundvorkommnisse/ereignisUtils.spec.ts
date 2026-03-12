@@ -1,13 +1,67 @@
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
 
-import { useEreignisComparator } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
+import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
-const { prepareEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
+const { prepareWahlbezirkEreignisse, prepareEreignis } =
+  useVorfaelleundvorkommnisseTestDataFactory();
 
 describe("ereignisUtils.ts", () => {
-  const { compareEreignisseByUhrzeit } = useEreignisComparator();
+  const { hasDoneVorkommnisse, compareEreignisseByUhrzeit } =
+    useEreignisUtils();
+
+  describe("hasDoneVorkommnisse", () => {
+    it.each([
+      [
+        {
+          ereignisse: prepareWahlbezirkEreignisse()
+            .ereigniseintraege([])
+            .keineVorkommnisse(true)
+            .build(),
+          expected: true,
+        },
+      ],
+      [
+        {
+          ereignisse: prepareWahlbezirkEreignisse()
+            .ereigniseintraege([])
+            .keineVorkommnisse(false)
+            .build(),
+          expected: false,
+        },
+      ],
+      [
+        {
+          ereignisse: prepareWahlbezirkEreignisse()
+            .ereigniseintraege([
+              prepareEreignis().ereignisart(EreignisartEnum.Vorkommnis).build(),
+            ])
+            .keineVorkommnisse(false)
+            .build(),
+          expected: true,
+        },
+      ],
+      [
+        {
+          ereignisse: prepareWahlbezirkEreignisse()
+            .ereigniseintraege([
+              prepareEreignis().ereignisart(EreignisartEnum.Vorfall).build(),
+            ])
+            .keineVorkommnisse(false)
+            .build(),
+          expected: false,
+        },
+      ],
+    ])(
+      "should_return'$expected'_when_ereignisseIs'$ereignisse'",
+      ({ ereignisse, expected }) => {
+        const result = hasDoneVorkommnisse(ereignisse);
+
+        expect(result).toEqual(expected);
+      }
+    );
+  });
 
   describe("compareEreignisse", () => {
     it("should_compareEreignisseByUhrzeit_when_uhrzeitIsDifferent", () => {
@@ -44,8 +98,6 @@ describe("ereignisUtils.ts", () => {
     });
 
     it("should_placeEreignisseWithoutUhrzeitLast_when_compared", () => {
-      const { compareEreignisseByUhrzeit } = useEreignisComparator();
-
       const withTime = prepareEreignis()
         .ereignisart(EreignisartEnum.Vorfall)
         .uhrzeit(new Date("2025-04-28T08:15:00"))

@@ -16,7 +16,7 @@
           ]"
         />
       </v-form>
-      <base-input-feedback-card
+      <base-feedback-card
         v-if="!isVorfaelleMaintained"
         title="Vorfälle Melden"
         :type="InputFeedbackTypeEnum.error"
@@ -28,7 +28,7 @@
             >Zu den ereignissen</base-text-button
           >
         </template>
-      </base-input-feedback-card>
+      </base-feedback-card>
     </v-card-text>
     <v-card-actions>
       <base-button-save
@@ -47,7 +47,7 @@ import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";

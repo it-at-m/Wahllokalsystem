@@ -35,6 +35,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   const error = ref<string | null>(null);
   const isSaving = ref(false);
+  const isVorfaelleMaintained = ref(false);
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -123,6 +124,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         currentUserWahlbezirkID.value
       );
       _sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      _updateVorfaelleMaintained();
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
       logDebug("Fehler beim Laden der Ereignisse", e);
@@ -139,6 +141,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         wahlbezirkEreignisse.value,
         sendNotification
       );
+      _updateVorfaelleMaintained();
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
       logDebug("Fehler beim Speichern der Ereignisse", e);
@@ -213,6 +216,17 @@ export const useEreignisStore = defineStore(storeID, () => {
     return ereigniseintraege.sort(compareEreignisseByUhrzeit);
   }
 
+  function _updateVorfaelleMaintained() {
+    if (
+      (!wahlbezirkEreignisse.value.keineVorfaelle &&
+        _hasEintragOfEreignisart(EreignisartEnum.Vorfall)) ||
+      (wahlbezirkEreignisse.value.keineVorfaelle &&
+        !_hasEintragOfEreignisart(EreignisartEnum.Vorfall))
+    ) {
+      isVorfaelleMaintained.value = true;
+    }
+  }
+
   return {
     isEreignisFlagsAndEreigniseintraegeInconsistent,
     wahlbezirkEreignisse,
@@ -227,6 +241,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     updateUhrzeitByIndex,
     updateBeschreibungByIndex,
     error,
+    isVorfaelleMaintained,
   };
 });
 

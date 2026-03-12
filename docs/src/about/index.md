@@ -218,6 +218,8 @@ zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird übe
 Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schließung
 richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
 Auch diese darf nicht in der Zukunft liegen.
+Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt werden. Es erscheint ein Feedback-Dialog mit einem Button, der zur Seite
+mit den Ereignissen führt.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}

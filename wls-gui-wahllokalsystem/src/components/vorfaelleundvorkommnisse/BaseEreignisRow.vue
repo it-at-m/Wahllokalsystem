@@ -56,7 +56,6 @@ import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts"
 import { useDateTimeSyncer } from "@/composables/common/dateTimeSyncer.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
-import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const { required, maxLength, minLength, dateNotInFuture, dateGreaterOrEqual } =
@@ -80,8 +79,6 @@ const ereignisModel = defineModel({
 
 const lineNumber = computed(() => indexOfModel + 1); //cause indexes start by 0
 
-const { updateUhrzeitByIndex } = useEreignisStore();
-
 const ereignisUhrzeit = computed(() => ereignisModel.value.uhrzeit);
 
 const { dateOnly, timeOnly, dateAndTimeCombined } =
@@ -89,12 +86,13 @@ const { dateOnly, timeOnly, dateAndTimeCombined } =
 
 watch(dateAndTimeCombined, (newValue) => {
   if (ereignisModel.value.uhrzeit?.getTime() !== newValue?.getTime()) {
-    updateUhrzeitByIndex(newValue ?? undefined, indexOfModel);
+    emit("uhrzeitChanged", newValue ?? undefined);
   }
 });
 
 const emit = defineEmits<{
   delete: [erreignisPayload: EreignisPayload];
+  uhrzeitChanged: [newUhrzeit: Date | undefined];
 }>();
 
 function onDeleteIconClicked() {

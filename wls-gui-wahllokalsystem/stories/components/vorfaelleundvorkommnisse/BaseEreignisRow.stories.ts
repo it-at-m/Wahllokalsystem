@@ -26,6 +26,7 @@ const meta: Meta<typeof BaseEreignisRow> = {
   },
   args: {
     onDelete: fn(),
+    onUhrzeitChanged: fn(),
   },
 };
 
@@ -34,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    indexOfModel: 42,
+    indexOfModel: 0,
     modelValue: useVorfaelleundvorkommnisseTestDataFactory().createEreignis(),
   },
 };

@@ -4,6 +4,7 @@
     <v-card-text>
       <v-tabs v-model="tab">
         <v-tab value="1">Erfassung</v-tab>
+        <v-tab value="4">Reduzierte Erfassung</v-tab>
         <v-tab value="2">Zusammenfassung</v-tab>
         <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
       </v-tabs>
@@ -31,6 +32,13 @@
               />
             </v-col>
           </v-row>
+        </v-tabs-window-item>
+
+        <v-tabs-window-item value="4">
+          <the-simple-stimmzettel-erfassung
+            :votes-only="stimmzettelWahlvorschlaege"
+            @command="onQuickInputCommand"
+          />
         </v-tabs-window-item>
 
         <v-tabs-window-item value="2">
@@ -85,6 +93,7 @@ import { ref } from "vue";
 
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
+import TheSimpleStimmzettelErfassung from "@/components/experimental/TheSimpleStimmzettelErfassung.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";

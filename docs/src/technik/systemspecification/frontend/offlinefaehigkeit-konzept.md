@@ -158,7 +158,7 @@ sequenceDiagram
 - `/wahlvorstand/wahlbezirkID` (Wahlvorstand);
 
 Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
-ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben.
+ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurückgegeben.
 
 #### ONLINE_ONLY
 
@@ -225,7 +225,7 @@ Informationen enthält:
 
 - das Payload (`data` = Inhalt des Requests);
 - die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);
-- ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisert (`dirty:true`) ist;
+- ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisiert (`dirty:false`) ist;
 - der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (`timestamp`);
 - der Status des Requests (`200`, `201`, oder `204`).
 
@@ -244,7 +244,7 @@ Die Properties-Namen werden hier nur orientativ aufgeführt.
 
 Wenn also der Client (mit Wahlbezirk-ID „123“) beim ersten Anmelden (um dem obigen Beispiel zu folgen) die
 Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit
-dem Key "_/eroeffnungsuhrzeit/123_" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
+dem Key "eroeffnungsuhrzeit/wahlbezirkID123" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
 Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird unter dem obigen Key der neue Wert gespeichert.
 
 ### Behandlung der aus- oder eingehenden Requests oder Responses

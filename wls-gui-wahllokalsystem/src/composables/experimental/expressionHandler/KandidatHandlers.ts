@@ -8,6 +8,7 @@ export function useKandidatHandlers() {
   const REGEX_SET_VOTES = /^(\d+)$/;
   const REGEX_ADD_VOTES = /^(\d+)\+(\d*)$/;
   const REGEX_DISCARD_KANDIDAT = /^(\d+)x$/;
+  const REGEX_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY = /^-(\d+)$/;
 
   const logger = useLogging("useKandidatHandlers");
 
@@ -54,6 +55,16 @@ export function useKandidatHandlers() {
     expression: string
   ) => {
     logger.log(`processing expression > ${expression}`);
+    return (
+      _handleDiscardKandidatExpression(expression) ||
+      _handleDiscardKandidatExpressionWithNumblockOnly(expression)
+    );
+  };
+
+  const _handleDiscardKandidatExpression: AbstractExpressionHandlerFunction = (
+    expression: string
+  ) => {
+    logger.log(`processing expression > ${expression}`);
     const match = REGEX_DISCARD_KANDIDAT.exec(expression);
 
     if (match && match[1] !== undefined) {
@@ -67,6 +78,23 @@ export function useKandidatHandlers() {
       return null;
     }
   };
+
+  const _handleDiscardKandidatExpressionWithNumblockOnly: AbstractExpressionHandlerFunction =
+    (expression: string) => {
+      logger.log(`processing expression > ${expression}`);
+      const match = REGEX_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY.exec(expression);
+
+      if (match && match[1] !== undefined) {
+        const kandidatNummer = Number.parseInt(match[1]);
+        return {
+          type: KandidatEventTypeEnum.DISCARD,
+          kandidatNummer,
+        } as KandidatEvent;
+      } else {
+        logger.log(`no match`);
+        return null;
+      }
+    };
 
   return {
     handleAddVotesExpression,

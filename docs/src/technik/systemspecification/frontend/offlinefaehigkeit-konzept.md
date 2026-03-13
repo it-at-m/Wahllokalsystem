@@ -30,8 +30,8 @@ Beim Lesen und Schreiben werden die Netzwerk-Anfragen des Browsers vom Service W
 dem lokalen Speicher geladen, bzw. mit dem Backend ausgetauscht.
 Die Identifizierung der Anfragen erfolgt dabei allein anhand der URL des Requests, die in der `IndexedDB` als `Key`
 fungiert. Das `Value` das dem `Key` entspricht soll ein JSON-String sein, das neben dem Payload noch ein paar
-Informationen enthalten muss. Für mehrere Details siehe unten: [Beispiel eines möglichen IndexedDB-Eintrags]
-(#beispieleintrag-in-der-indexeddb).
+Informationen enthalten muss. Für mehrere Details siehe unten:
+[Beispiel eines möglichen IndexedDB-Eintrags](#beispieleintrag-in-der-indexeddb).
 
 ![Skizze OfflineKonzept](/offlinesyncer/offlinekonzept.png)
 
@@ -150,6 +150,16 @@ sequenceDiagram
     end
 ```
 
+##### Beispieldaten
+
+- `/ergebnismeldung/awerte/wahlbezirkID` (AWerte);
+- `/infomanagement/konfiguration` (Konfiguration);
+- `/basisdaten/ungueltigews/wahltagID/wahlbezirksart` (UngueltigeWahlscheine);
+- `/wahlvorstand/wahlbezirkID` (Wahlvorstand);
+
+Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
+ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben.
+
 #### ONLINE_ONLY
 
 Diese Strategie wird für Operationen benötigt, die nur remote relevant sind und im lokalen Speicher nicht gespeichert werden.
@@ -178,7 +188,13 @@ sequenceDiagram
     end    
 ```
 
-Für Beispiele für Ressourcen unter den nicht-default Strategien, siehe Kapitel [Beispieldaten pro Offline-Strategie](#beispieldaten-pro-offline-strategie).
+##### Beispieldaten
+
+- `/auth/user` (Der User des Wahlbezirks wird geladen);
+- `/broadcast/getMessage/wahlbezirkId` (Es wird nach für den Wahlbezirk vorhandenen Broadcast Informationen gesucht);
+- `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
+- `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
+- `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
 
 #### Definieren der Strategy
 
@@ -201,6 +217,35 @@ Anschließend wird die Initialisierungsseite des WLS aufgerufen. Auf dieser werd
 für die aktuelle Systemsituation (Art des Wahllokals, Anzahl und Arten der stattfindenden Wahlen) relevant sind
 einmalig aufgerufen. Da der SW alle Anfragen unterbricht und speichert, wird mit dieser Aktion sichergestellt, dass
 alle Daten ab sofort Offline zur Verfügung stehen.
+
+### Beispieleintrag in der IndexedDB
+
+Das `Value` das dem `Key` entspricht, soll ein JSON-String sein, das neben dem Payload noch die folgenden
+Informationen enthält:
+
+- das Payload (`data` = Inhalt des Requests);
+- die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);
+- ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisert (`dirty:true`) ist;
+- der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (`timestamp`);
+- der Status des Requests (`200`, `201`, oder `204`).
+
+Ein Beispiel für einen möglichen Eintrag in der IndexedDB wäre:
+
+- `Key`: `eroeffnungsuhrzeit/wahlbezirkID123`
+- `Value`: `{
+            "data":{"wahlbezirkID":"wahlbezirkID123", "eroeffnungsuhrzeit":"2025-03-11T05:05:00.000"},
+            "contentType":"application/json; charset=utf8",
+            "dirty":"false",
+            "timestamp":"2025-03-11T05:05:00.020Z",
+            "status":"200"
+         }`
+
+Die Properties-Namen werden hier nur orientativ aufgeführt.
+
+Wenn also der Client (mit Wahlbezirk-ID „123“) beim ersten Anmelden (um dem obigen Beispiel zu folgen) die
+Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit
+dem Key "_/eroeffnungsuhrzeit/123_" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
+Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird unter dem obigen Key der neue Wert gespeichert.
 
 ### Behandlung der aus- oder eingehenden Requests oder Responses
 
@@ -303,56 +348,7 @@ Daten werden NICHT gelöscht, wenn die Nutzer\*innen sich abmelden. Dadurch wird
 offline-erfasste Daten verloren gehen. Die Daten bleiben so lange im Offline-Speicher enthalten, bis sich mit einem
 anderen Benutzerkonto am gleichen Rechner angemeldet wird (siehe [Initialisierung](#initialisierung)).
 
-### Beispieleintrag in der IndexedDB
-
-Das `Value` das dem `Key` entspricht, soll ein JSON-String sein, das neben dem Payload noch die folgenden
-Informationen enthält:
-
-- das Payload (`data` = Inhalt des Requests);
-- die Art des Inhalts (`contentType` z.Bsp. `application/json; charset=utf8`, `text/csv; charset=utf8` usw.);
-- ob der Eintrag mit dem Backend unsynchronisiert (`dirty:true`) oder synchronisert (`dirty:true`) ist;
-- der Zeitpunkt der versuchten oder erfolgten Speicher-/Leseoperation (`timestamp`);
-- der Status des Requests (`200`, `201`, oder `204`).
-
-Ein Beispiel für einen möglichen Eintrag in der IndexedDB wäre:
-
-- `Key`: `eroeffnungsuhrzeit/wahlbezirkID123`
-- `Value`: `{
-            "data":{"wahlbezirkID":"wahlbezirkID123", "eroeffnungsuhrzeit":"2025-03-11T05:05:00.000"},
-            "contentType":"application/json; charset=utf8",
-            "dirty":"false",
-            "timestamp":"2025-03-11T05:05:00.020Z",
-            "status":"200"
-         }`
-
-Die Properties-Namen werden hier nur orientativ aufgeführt.
-
-Wenn also der Client (mit Wahlbezirk-ID „123“) beim ersten Anmelden (um dem obigen Beispiel zu folgen) die
-Eröffnungsuhrzeit lädt, um ggf. bereits erfasste Daten zu laden, wird im lokalen Speicher mit
-dem Key "_/eroeffnungsuhrzeit/123_" der Wert gespeichert der geladen wird (in unserem Beispiel wäre das JSON-Objekt `Eroeffnungsuhrzeit`).
-Arbeitet der Client nun weiter und erfasst eine neue Eroeffnungsuhrzeit, wird unter dem obigen Key der neue Wert gespeichert.
-
-### Beispieldaten pro Offline-Strategie
-
-#### ONLINE_FIRST
-
-- `/ergebnismeldung/awerte/wahlbezirkID` (AWerte);
-- `/infomanagement/konfiguration` (Konfiguration);
-- `/basisdaten/ungueltigews/wahltagID/wahlbezirksart` (UngueltigeWahlscheine);
-- `/wahlvorstand/wahlbezirkID` (Wahlvorstand);
-
-Daher wird mit dieser Strategie zuerst ein Request ans Backend geschickt. Ist dieser erfolgreich, werden die neuen Daten lokal gespeichert und zurückgegeben,
-ist er nicht erfolgreich, wird der ggf. vorhandene Eintrag aus der `IndexedDB` zurück gegeben.
-
-#### ONLINE_ONLY
-
-- `/auth/user` (Der User des Wahlbezirks wird geladen);
-- `/broadcast/getMessage/wahlbezirkId` (Es wird nach für den Wahlbezirk vorhandenen Broadcast Informationen gesucht);
-- `/broadcast/messageRead/nachrichtId` (Information, dass die Broadcast-Nachricht gelesen wurde);
-- `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
-- `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
-
-## Umsetzung
+## Technische Umsetzung
 
 ### Abläufe
 

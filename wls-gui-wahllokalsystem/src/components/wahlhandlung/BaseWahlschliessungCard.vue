@@ -76,7 +76,8 @@ const { getNextRoute } = useNavigationUtils();
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { isVorfaelleMaintained, hasEintraege } = storeToRefs(useEreignisStore());
+const { isVorfaelleMaintained, ereigniseintraegeContainsVorfaelle } =
+  storeToRefs(useEreignisStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
@@ -86,11 +87,13 @@ const isSaveButtonDisabled = computed(
 );
 
 const erinnerungTitle = computed(() =>
-  hasEintraege.value ? "Vorfälle aktualisieren" : "Vorfälle melden"
+  ereigniseintraegeContainsVorfaelle.value
+    ? "Vorfälle aktualisieren"
+    : "Vorfälle melden"
 );
 
 const erinnerungText = computed(() =>
-  hasEintraege.value
+  ereigniseintraegeContainsVorfaelle.value
     ? "Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben, können diese hier erfasst werden."
     : "Wenn sich während der Wahlhandlung Vorfälle ereignet haben, können diese hier erfasst werden."
 );

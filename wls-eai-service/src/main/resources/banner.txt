@@ -1,13 +1,12 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------------
-  ____                                  _                  _                                             _              _
- |  _ \                                | |                | |                      /\                   | |            | |
- | |_) |   __ _   _ __   _ __    __ _  | | __  _   _    __| |   __ _   ______     /  \     _ __    ___  | |__     ___  | |_   _   _   _ __     ___
- |  _ <   / _` | | '__| | '__|  / _` | | |/ / | | | |  / _` |  / _` | |______|   / /\ \   | '__|  / __| | '_ \   / _ \ | __| | | | | | '_ \   / _ \
- | |_) | | (_| | | |    | |    | (_| | |   <  | |_| | | (_| | | (_| |           / ____ \  | |    | (__  | | | | |  __/ | |_  | |_| | | |_) | |  __/
- |____/   \__,_| |_|    |_|     \__,_| |_|\_\  \__,_|  \__,_|  \__,_|          /_/    \_\ |_|     \___| |_| |_|  \___|  \__|  \__, | | .__/   \___|
-                                                                                                                               __/ | | |
-                                                                                                                              |___/  |_|    by CCSE
+${spring.application.name} (${spring.application.group})
 
- Application Name    : ${spring.application.name}
- Spring Boot Version : ${spring-boot.formatted-version}
+Application Version    : ${info.application.version}
+Java Version           : ${java.version}
+Spring Boot Version    : ${spring-boot.version}
+Active Spring Profiles : ${spring.profiles.active:}
+
+This project is based on the reference architecture of it@M maintained under https://github.com/it-at-m/refarch.
+Do you have suggestions for improvement? Please take a look at https://github.com/it-at-m/refarch/issues/new/choose to open an issue.
+If you want to provide a PR please take a look at our Contribution Guidelines.
 ---------------------------------------------------------------------------------------------------------------------------------------------------

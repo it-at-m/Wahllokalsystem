@@ -1,20 +1,20 @@
 <div>
   <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2">Uhrzeit Wahlende</div>
   <div class="v-card-text pb-0"> Bitte geben Sie hier die Uhrzeit ein, zu der die Wahl für geschlossen erklärt wurde. <form class="v-form" novalidate="">
-      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--error v-input--dirty v-text-field mt-5" style="max-width: 300px;" data-test="baseTimeInput">
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-input--dirty v-text-field mt-5" style="max-width: 300px;" data-test="baseTimeInput">
         <!---->
         <div class="v-input__control">
-          <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--error v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr">
+          <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--persistent-clear v-field--variant-filled v-theme--light v-locale--is-ltr">
             <div class="v-field__overlay"></div>
             <div class="v-field__loader">
               <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
                 <!---->
-                <div class="v-progress-linear__background bg-error"></div>
-                <div class="v-progress-linear__buffer bg-error" style="width: 0%;"></div>
+                <div class="v-progress-linear__background bg-primary"></div>
+                <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
                 <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
                   <div class="v-progress-linear__indeterminate">
-                    <div class="v-progress-linear__indeterminate long bg-error"></div>
-                    <div class="v-progress-linear__indeterminate short bg-error"></div>
+                    <div class="v-progress-linear__indeterminate long bg-primary"></div>
+                    <div class="v-progress-linear__indeterminate short bg-primary"></div>
                   </div>
                 </transition-stub>
                 <!---->
@@ -46,7 +46,7 @@
         <!---->
         <div id="input-v-1-messages" class="v-input__details" role="alert" aria-live="polite">
           <transition-group-stub name="slide-y-transition" tag="div" appear="false" persisted="false" css="true" class="v-messages">
-            <div class="v-messages__message">Eingabe muss größer oder gleich 18:00 sein.</div>
+            <!---->
           </transition-group-stub>
           <!---->
         </div>
@@ -70,11 +70,11 @@
       </div>
       <!---->
       <!---->
-      <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2 bg-info font-weight-bold" style="font-size: 1rem;">Vorfälle melden</div>
+      <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2 bg-info font-weight-bold" style="font-size: 1rem;">Vorfälle aktualisieren</div>
       <div class="v-card-text">
         <div class="d-flex align-center"><i class="v-icon notranslate v-theme--light v-icon--size-x-large text-info mr-5" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
               <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
-            </svg></i>Wenn sich während der Wahlhandlung Vorfälle ereignet haben, können diese hier erfasst werden. </div>
+            </svg></i>Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben, können diese hier erfasst werden. </div>
         <div class="mt-4"><button data-v-4343c08f="" type="button" class="v-btn v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
             <!----><span class="v-btn__content" data-no-activator="">Zu den Ereignissen</span>
             <!---->
@@ -86,7 +86,7 @@
       <!----><span class="v-card__underlay"></span>
     </div>
   </div>
-  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" disabled="" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern und Weiter</span>
+  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" data-test="buttonSave"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern und Weiter</span>
       <!---->
       <!---->
     </button></div>

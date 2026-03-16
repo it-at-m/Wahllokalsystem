@@ -18,14 +18,26 @@
       </v-form>
       <base-feedback-card
         v-if="!isVorfaelleMaintained"
-        title="Vorfälle Melden"
+        title="Vorfälle melden"
         :type="InputFeedbackTypeEnum.error"
       >
         Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
         eingetretene Störungen berichtet und diese gespeichert haben.
         <template #additionalFeedback>
           <base-text-button @click="onEreignisseBearbeiten"
-            >Zu den ereignissen</base-text-button
+            >Zu den Ereignissen</base-text-button
+          >
+        </template>
+      </base-feedback-card>
+      <base-feedback-card
+        v-else
+        :title="erinnerungTitle"
+        :type="InputFeedbackTypeEnum.information"
+      >
+        {{ erinnerungText }}
+        <template #additionalFeedback>
+          <base-text-button @click="onEreignisseBearbeiten"
+            >Zu den Ereignissen</base-text-button
           >
         </template>
       </base-feedback-card>
@@ -64,13 +76,23 @@ const { getNextRoute } = useNavigationUtils();
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { isVorfaelleMaintained } = storeToRefs(useEreignisStore());
+const { isVorfaelleMaintained, hasEintraege } = storeToRefs(useEreignisStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
 const isSaveButtonDisabled = computed(
   () =>
     schliessungsuhrzeitValidForm.value !== true || !isVorfaelleMaintained.value
+);
+
+const erinnerungTitle = computed(() =>
+  hasEintraege.value ? "Vorfälle aktualisieren" : "Vorfälle melden"
+);
+
+const erinnerungText = computed(() =>
+  hasEintraege.value
+    ? "Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben, können diese hier erfasst werden."
+    : "Wenn sich während der Wahlhandlung Vorfälle ereignet haben, können diese hier erfasst werden."
 );
 
 async function onEreignisseBearbeiten() {

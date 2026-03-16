@@ -2,6 +2,7 @@ spring:
   application:
     name: "@project.artifactId@"
     group: "@project.groupId@"
+    version: "@project.version@"
   banner.location: banner.txt
   profiles:
     group:

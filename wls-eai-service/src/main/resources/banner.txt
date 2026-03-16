@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 ${spring.application.name} (${spring.application.group})
 
-Application Version    : ${info.application.version}
+Application Version    : ${spring.application.version}
 Java Version           : ${java.version}
 Spring Boot Version    : ${spring-boot.version}
 Active Spring Profiles : ${spring.profiles.active:}

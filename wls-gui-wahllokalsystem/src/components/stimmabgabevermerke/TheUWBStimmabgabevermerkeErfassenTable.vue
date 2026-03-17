@@ -80,7 +80,8 @@
                 :key="stimmzettel.stimmzettelart"
                 v-model="stimmzettel.anzahl"
                 max-width="15rem"
-                :rules="[required, minNumber(0), maxNumber(50)]"
+                :max="50"
+                :rules="[required]"
               />
             </template>
           </td>

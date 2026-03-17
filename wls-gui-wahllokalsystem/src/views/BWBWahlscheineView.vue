@@ -20,7 +20,8 @@
                     wahlschein.bezirkUndWahlID.wahlID
                   )
                 "
-                :rules="[required, minNumber(1), maxNumber(9999)]"
+                :min="1"
+                :rules="[required]"
                 max-width="300"
               />
             </template>
@@ -99,7 +100,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
 
 const { wahlenActions } = useWahlenStore();
-const { minNumber, maxNumber, required, minLength, maxLength } = useRules();
+const { required, minLength, maxLength } = useRules();
 const { wahlscheine, isWahlscheineSaving } = storeToRefs(useWahlscheineStore());
 const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
   useTextFormatter();

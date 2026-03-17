@@ -8,7 +8,9 @@
       >
         <base-number-input
           :model-value="wahlscheinnummer"
-          :rules="[required, minNumber(1), maxNumber(9999999)]"
+          :min="1"
+          :max="9999999"
+          :rules="[required]"
           label="Wahlscheinnummer"
           max-width="300"
           data-test="number-input-wahlscheinnummer"
@@ -142,7 +144,7 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required, maxLength, minLength } = useRules();
+const { required, maxLength, minLength } = useRules();
 const { addEreignis, sendEreignisse } = useEreignisStore();
 
 const isFormValid = ref<boolean | null>(null);

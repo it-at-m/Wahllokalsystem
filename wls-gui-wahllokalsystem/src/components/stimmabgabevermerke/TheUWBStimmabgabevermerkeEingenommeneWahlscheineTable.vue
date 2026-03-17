@@ -32,7 +32,7 @@
             <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             <base-number-input
               max-width="15rem"
-              :rules="[required, minNumber(0)]"
+              :rules="[required]"
               :model-value="
                 getMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
@@ -64,7 +64,7 @@ import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.t
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
-const { required, minNumber } = useRules();
+const { required } = useRules();
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { wahlenActions } = useWahlenStore();
 

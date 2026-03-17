@@ -35,7 +35,8 @@
                     .anzahlWahltische
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max="99"
+                :rules="[required]"
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
@@ -48,7 +49,8 @@
                     .anzahlNebenraeume
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max="99"
+                :rules="[required]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
@@ -61,7 +63,8 @@
                     .anzahlWahlkabinen
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max="99"
+                :rules="[required]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
@@ -106,7 +109,7 @@ import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { required } = useRules();
 const { getNextRoute } = useNavigationUtils();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);

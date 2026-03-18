@@ -107,7 +107,8 @@ function onSendenClicked() {
 function onKorrigierenClicked() {
   // to be implemented
 }
-function onDruckenClicked() {
+
+async function onDruckenClicked() {
   isDruckenLoading.value = true;
   const pdfText = "<div>test</div>";
   const printWindow = window.open(

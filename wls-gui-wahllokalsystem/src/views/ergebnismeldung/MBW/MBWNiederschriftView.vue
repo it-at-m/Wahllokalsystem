@@ -129,7 +129,7 @@ function onDruckenClicked() {
   if (statusForWahlAndWahlbezirk) {
     statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
   }
-  sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
+  await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 
   isDruckenLoading.value = false;
 }

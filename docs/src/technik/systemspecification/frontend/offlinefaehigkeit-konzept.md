@@ -255,8 +255,8 @@ In diesem Fall wird davon ausgegangen, dass keine Probleme auftreten.
 
 Der Client sendet seine Anfrage und die enthaltenen Daten werden erfolgreich im Backend gespeichert.
 Alles, was der SW in diesem Fall tut, ist, seine lokalen Daten aktuell zu halten. Bedeutet: Der Client sendet Daten,
-diese leitet der SW ans Backend. Anschließend speichert er die gesendeten Daten wie unter [Umgesetztes Verhalten]
-(#umgesetztes-verhalten) beschrieben.
+diese leitet der SW ans Backend. Anschließend speichert er die gesendeten Daten wie unter
+[Umgesetztes Verhalten](#umgesetztes-verhalten) beschrieben.
 
 #### Ist `offline` oder `ein Fehler` ist aufgetreten
 

@@ -4,7 +4,6 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.common.WahltagId
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "Ungueltigews")
@@ -24,12 +25,14 @@ import lombok.ToString;
 @AllArgsConstructor
 public class UngueltigeWahlscheine {
 
-  // ========= //
-  // Variables //
-  // ========= //
-  @EmbeddedId private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
+    // ========= //
+    // Variables //
+    // ========= //
+    @EmbeddedId
+    private WahltagIdUndWahlbezirksart wahltagIdUndWahlbezirksart;
 
-  @Column(name = "ungueltigews")
-  @NotNull @Lob
-  private byte[] ungueltigeWahlscheine;
+    @Column(name = "ungueltigews")
+    @NotNull
+    @JdbcTypeCode(SqlTypes.LONGVARBINARY)
+    private byte[] ungueltigeWahlscheine;
 }

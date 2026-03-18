@@ -1,0 +1,2 @@
+ALTER TABLE kandidat
+ALTER COLUMN identifikator TYPE VARCHAR(1000);

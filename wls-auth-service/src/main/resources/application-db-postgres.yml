@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: wls_auth_service
+    password: secret
+    url: jdbc:postgresql://localhost:5432/wls_auth_service
+  flyway:
+    enabled: true
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: validate
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+

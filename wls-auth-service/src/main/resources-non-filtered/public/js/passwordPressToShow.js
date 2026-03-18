@@ -20,4 +20,7 @@ if (passwordInput && holdButton) {
     holdButton.addEventListener("keyup", (e) => {
         if (e.key === " ") hidePassword();
     });
+    holdButton.addEventListener("blur", hidePassword);
+    window.addEventListener("blur", hidePassword);
+    document.addEventListener("visibilitychange", hidePassword);
 }

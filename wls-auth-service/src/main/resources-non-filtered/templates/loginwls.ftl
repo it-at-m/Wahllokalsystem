@@ -13,6 +13,7 @@
         .material-form-input.password {
             margin: 40px 0;
             padding-bottom: 8px;
+            position: relative;
         }
 
         .material-placeholder {
@@ -77,17 +78,17 @@
                             <label class="material-label">
                                 <input class="material-input" autocomplete="off" type="password" id="password"
                                        name="password" required>
-                                <button type="button" id="password-press-to-show" class="password-press-to-show"
-                                        aria-label="Passwort anzeigen (gedrückt halten)">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2"
-                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                </button>
                                 <span class="material-placeholder">Passwort</span>
                             </label>
+                            <button type="button" id="password-press-to-show" class="password-press-to-show"
+                                    aria-label="Passwort anzeigen (gedrückt halten)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
                         </div>
                         <input type="hidden" id="csrf_token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <div onClick="javascript:this.parentNode.submit();" type="submit" id="submit" value="Login"

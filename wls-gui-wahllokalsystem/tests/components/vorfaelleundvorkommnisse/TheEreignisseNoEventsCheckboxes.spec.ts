@@ -31,6 +31,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
       global: {
         plugins: [
           createTestingPinia({
+            stubActions: false,
             createSpy: vi.fn,
           }),
           vuetify,

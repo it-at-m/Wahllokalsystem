@@ -55,12 +55,15 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
+import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -70,7 +73,7 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
   useErgebnismeldungStore()
 );
 const { hasDoneVorkommnisse } = useEreignisUtils();
-
+const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
 
 // button logic to be implemented
@@ -82,7 +85,10 @@ const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
-
+const { sendAusdruckNiederschrift } = useMbwUtils(
+  wahlID,
+  currentUserWahlbezirkID
+);
 if (!wahl) {
   router.push({
     name: ROUTE_NOTFOUND,
@@ -103,6 +109,7 @@ function onKorrigierenClicked() {
 }
 function onDruckenClicked() {
   isDruckenLoading.value = true;
+  const pdfText = "<div>test</div>";
   const printWindow = window.open(
     "",
     "",
@@ -110,10 +117,20 @@ function onDruckenClicked() {
   );
 
   if (printWindow) {
-    printWindow.document.body.innerHTML = "<div>test</div>";
+    printWindow.document.body.innerHTML = pdfText;
     printWindow.print();
     printWindow.close();
   }
+  const statusForWahlAndWahlbezirk = status.value.find(
+    (status) =>
+      status.bezirkUndWahlID.wahlID == wahlID &&
+      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
+  );
+  if (statusForWahlAndWahlbezirk) {
+    statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
+  }
+  sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
+
   isDruckenLoading.value = false;
 }
 </script>

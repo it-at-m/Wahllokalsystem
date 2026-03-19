@@ -25,14 +25,14 @@
             <base-number-input
               v-model="vorschlag.ergebnisStapelA.ergebnis"
               :tabindex="index + 1"
-              :rules="[required, minNumber(0), maxNumber(9999)]"
+              :rules="[required]"
             />
           </td>
           <td>
             <base-number-input
               v-model="vorschlag.ergebnisStapelB.ergebnis"
               :tabindex="modelValue.length + index + 1"
-              :rules="[required, minNumber(0), maxNumber(9999)]"
+              :rules="[required]"
             />
           </td>
           <td class="text-right">
@@ -66,7 +66,7 @@ import { computed } from "vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 
-const { required, minNumber, maxNumber } = useRules();
+const { required } = useRules();
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,

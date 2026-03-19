@@ -14,7 +14,8 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
-          :rules="[required, minNumber(1), maxNumber(9999)]"
+          :min-valid="1"
+          :rules="[required]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
           :max-width="WIDTH"
@@ -30,7 +31,7 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
-          :rules="[required, minNumber(0), maxNumber(9999)]"
+          :rules="[required]"
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
           :max-width="WIDTH"
@@ -43,7 +44,7 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.nachtraege"
           class="mr-4"
-          :rules="[required, minNumber(0), maxNumber(9999)]"
+          :rules="[required]"
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
           :max-width="WIDTH"
@@ -72,7 +73,6 @@
                 wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
               "
               class="mr-4"
-              :rules="[minNumber(0), maxNumber(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
               label="Anzahl Wahlbriefe"
               :min-width="WIDTH"
@@ -124,8 +124,7 @@ import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { maxNumber, minNumber, required, timeNotInFuture, timeGreaterOrEqual } =
-  useRules();
+const { required, timeNotInFuture, timeGreaterOrEqual } = useRules();
 const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();

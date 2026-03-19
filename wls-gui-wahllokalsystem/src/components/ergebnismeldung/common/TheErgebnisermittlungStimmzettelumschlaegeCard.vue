@@ -16,7 +16,7 @@
           />
           <base-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-            :rules="[required, minNumber(0), maxNumber(9999)]"
+            :rules="[required]"
             min-width="20rem"
             :label="`Anzahl der ${getStimmzettelTermForWahl(wahl)}`"
           />
@@ -89,15 +89,8 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-const {
-  maxNumber,
-  minNumber,
-  required,
-  timeGreaterOrEqual,
-  timeNotInFuture,
-  minLength,
-  maxLength,
-} = useRules();
+const { required, timeGreaterOrEqual, timeNotInFuture, minLength, maxLength } =
+  useRules();
 
 const props = defineProps<{
   wahlId: string;

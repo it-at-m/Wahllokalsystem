@@ -7,7 +7,7 @@
 - `callable-<kurzbeschreibung>.yml` ... [wiederverwendbare Workflows](https://docs.github.com/de/actions/using-workflows/reusing-workflows)
 - `dispatch-<kurzbeschreibung>.yml` ... [manuell ausführbare workflows](https://docs.github.com/de/actions/using-workflows/manually-running-a-workflow)
 - `<service-name>_<trigger>.yml` ... Workflows zu Jobs die durch ein bestimmtes Ereignis getriggert werden.
-- `any-service_<ereignis>-<kurzbeschreibung>.yml` ... Workflows, die unabhängig vom Service, bei einem bestimmten Ereignis ausgeführt werden
+- `any-service_<trigger>-<kurzbeschreibung>.yml` ... Workflows, die unabhängig vom Service, bei einem bestimmten Ereignis ausgeführt werden
 
 ## Beispiele
 

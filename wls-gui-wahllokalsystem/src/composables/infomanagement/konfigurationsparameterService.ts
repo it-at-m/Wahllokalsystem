@@ -8,9 +8,11 @@ import { useKonfigurationsparameterMapper } from "@/composables/infomanagement/k
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { INFOMANAGEMENT_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 
 const userNotificationService = useUserNotificationService();
 const { toModel } = useKonfigurationsparameterMapper();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useKonfigurationsparameterService() {
   const konfigurationControllerApi = new KonfigurationControllerApi(
@@ -23,7 +25,9 @@ export function useKonfigurationsparameterService() {
     sendNotification = true
   ): Promise<Konfigurationsparameter[]> {
     try {
-      const response = await konfigurationControllerApi.getKonfigurations();
+      const response = await konfigurationControllerApi.getKonfigurations(
+        axiosConfigWrapper().requestAsOnlineFirst()
+      );
       return toModel(response.data);
     } catch {
       if (sendNotification) {

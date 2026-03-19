@@ -20,7 +20,7 @@
                     wahlschein.bezirkUndWahlID.wahlID
                   )
                 "
-                :min="1"
+                :min-valid="1"
                 :rules="[required]"
                 max-width="300"
               />

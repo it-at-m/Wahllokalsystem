@@ -35,7 +35,7 @@
                     .anzahlWahltische
                 "
                 class="mr-4"
-                :max="99"
+                :max-valid="99"
                 :rules="[required]"
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
@@ -49,7 +49,7 @@
                     .anzahlNebenraeume
                 "
                 class="mr-4"
-                :max="99"
+                :max-valid="99"
                 :rules="[required]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
@@ -63,7 +63,7 @@
                     .anzahlWahlkabinen
                 "
                 class="mr-4"
-                :max="99"
+                :max-valid="99"
                 :rules="[required]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"

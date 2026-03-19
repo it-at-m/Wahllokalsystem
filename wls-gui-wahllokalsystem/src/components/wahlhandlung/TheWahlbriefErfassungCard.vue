@@ -14,7 +14,7 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
-          :min="1"
+          :min-valid="1"
           :rules="[required]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"

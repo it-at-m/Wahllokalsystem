@@ -5,8 +5,8 @@
       <v-card-text>
         <base-number-input
           v-model="modelValue.ergebnis"
-          :min="minValue"
-          :max="maxValue"
+          :min-valid="minValue"
+          :max-valid="maxValue"
           :rules="[required]"
           min-width="20rem"
         />

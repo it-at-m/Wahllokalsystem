@@ -2,7 +2,11 @@
   <v-number-input
     v-model="modelValue"
     :label="props.label"
-    :rules="[...props.rules, minNumber(props.min), maxNumber(props.max)]"
+    :rules="[
+      ...props.rules,
+      minNumber(props.minValid),
+      maxNumber(props.maxValid),
+    ]"
     control-variant="hidden"
     @keydown.capture="onKeyDownCapture"
   />
@@ -26,12 +30,12 @@ const props = defineProps({
     required: false,
     default: [],
   },
-  min: {
+  minValid: {
     type: Number,
     required: false,
     default: 0,
   },
-  max: {
+  maxValid: {
     type: Number,
     required: false,
     default: 9999,

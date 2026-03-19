@@ -8,8 +8,8 @@
       >
         <base-number-input
           :model-value="wahlscheinnummer"
-          :min="1"
-          :max="9999999"
+          :min-valid="1"
+          :max-valid="9999999"
           :rules="[required]"
           label="Wahlscheinnummer"
           max-width="300"

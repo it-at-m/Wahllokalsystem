@@ -69,7 +69,7 @@
             </div>
           </div>
         </v-form>
-        <base-input-feedback-card
+        <base-feedback-card
           v-show="isMinimumRequired"
           title="Ungültige Eingaben"
           :type="InputFeedbackTypeEnum.error"
@@ -77,7 +77,7 @@
         >
           Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
           betragen.
-        </base-input-feedback-card>
+        </base-feedback-card>
       </v-card-text>
       <v-card-actions>
         <base-button-save
@@ -96,7 +96,7 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useRules } from "@/composables/common/rules.ts";

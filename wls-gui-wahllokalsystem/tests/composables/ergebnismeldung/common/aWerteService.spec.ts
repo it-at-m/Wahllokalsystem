@@ -12,9 +12,9 @@ import {
 } from "vitest";
 
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   mapToModel: vi.fn(),
@@ -81,8 +81,9 @@ describe("aWerteService.ts", () => {
         wahlbezirkId,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
@@ -112,8 +113,9 @@ describe("aWerteService.ts", () => {
         wahlbezirkId,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
     });
@@ -133,8 +135,9 @@ describe("aWerteService.ts", () => {
         wahlbezirkId,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
     });
@@ -154,8 +157,9 @@ describe("aWerteService.ts", () => {
         wahlbezirkId,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
     });

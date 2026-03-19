@@ -2,10 +2,10 @@ import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/Wahlbezirk
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
@@ -69,8 +69,9 @@ describe("ungueltigeWahlscheineService.ts", () => {
         wahlbezirksArt,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
@@ -102,8 +103,9 @@ describe("ungueltigeWahlscheineService.ts", () => {
         wahlbezirksArt,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
     });
@@ -127,8 +129,9 @@ describe("ungueltigeWahlscheineService.ts", () => {
         wahlbezirksArt,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
@@ -155,8 +158,9 @@ describe("ungueltigeWahlscheineService.ts", () => {
         wahlbezirksArt,
         expect.objectContaining({
           headers: expect.objectContaining({
-            [REQUEST_HEADER_OFFLINE_STRATEGY]: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST
-          })
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
         })
       );
       expect(mockDefinitions.addNotification.mock.calls).toHaveLength(0);

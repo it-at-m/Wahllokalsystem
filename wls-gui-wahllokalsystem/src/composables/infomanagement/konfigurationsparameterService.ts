@@ -4,11 +4,11 @@ import {
   Configuration,
   KonfigurationControllerApi,
 } from "@/api/wls-clients/generated-infomanagement-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useKonfigurationsparameterMapper } from "@/composables/infomanagement/konfigurationsparameterMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { INFOMANAGEMENT_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
-import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 
 const userNotificationService = useUserNotificationService();
 const { toModel } = useKonfigurationsparameterMapper();

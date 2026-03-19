@@ -1,7 +1,7 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
@@ -223,11 +223,11 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function prepareDataForErgebnismeldungDruck(
+  async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
     meldungsart: MeldungsartEnum
-  ): Promise<ErgebnismeldungDruckInput> {
+  ): Promise<SchnellmeldungDruckInput> {
     let aWerte = undefined;
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
       aWerte = await getAWerteForWahlbezirkAndWahl();
@@ -367,6 +367,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     getAWerteForWahlbezirkAndWahl,
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
-    prepareDataForErgebnismeldungDruck,
+    prepareDataForSchnellmeldungDruck,
   };
 }

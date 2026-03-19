@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
+import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
@@ -42,8 +42,8 @@ import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
-import { useErgebnismeldungDruck } from "@/composables/ergebnismeldung/MBW/ergebnismeldungDruck.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
@@ -66,9 +66,9 @@ const { status } = storeToRefs(useStatusStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
-  prepareDataForErgebnismeldungDruck,
+  prepareDataForSchnellmeldungDruck,
 } = useMbwUtils(wahlID, wahlbezirkID);
-const { buildTemplateFromData } = useErgebnismeldungDruck();
+const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 
@@ -102,8 +102,8 @@ async function onDruckenClicked() {
     );
 
     if (wahl && statusForWahlAndWahlbezirk) {
-      const data: ErgebnismeldungDruckInput =
-        await prepareDataForErgebnismeldungDruck(
+      const data: SchnellmeldungDruckInput =
+        await prepareDataForSchnellmeldungDruck(
           wahl,
           statusForWahlAndWahlbezirk,
           MeldungsArtEnum.Schnellmeldung
@@ -116,7 +116,8 @@ async function onDruckenClicked() {
       );
 
       if (printWindow) {
-        printWindow.document.body.innerHTML = buildTemplateFromData(data);
+        printWindow.document.body.innerHTML =
+          buildSchnellmeldungTemplateFromData(data);
         printWindow.print();
         printWindow.close();
         isSendenActive.value = false;

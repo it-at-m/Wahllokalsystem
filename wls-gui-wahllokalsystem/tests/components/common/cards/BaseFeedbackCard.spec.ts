@@ -4,8 +4,10 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { h } from "vue";
 
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
@@ -28,7 +30,7 @@ vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
   }),
 }));
 
-describe("BaseInputFeedbackCard.vue", () => {
+describe("BaseFeedbackCard.vue", () => {
   let wrapper: VueWrapper;
 
   beforeEach(() => {
@@ -43,7 +45,7 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithoutAdditionalFeedback_when_additionalFeedbackSlotIsNotUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      wrapper = mount(BaseInputFeedbackCard, {
+      wrapper = mount(BaseFeedbackCard, {
         global: {
           plugins: [vuetify],
         },
@@ -64,7 +66,7 @@ describe("BaseInputFeedbackCard.vue", () => {
     it("should_renderWithAdditionalFeedback_when_additionalFeedbackSlotIsUsed", async (context) => {
       const feedbackType = InputFeedbackTypeEnum.error;
 
-      wrapper = mount(BaseInputFeedbackCard, {
+      wrapper = mount(BaseFeedbackCard, {
         global: {
           plugins: [vuetify],
         },
@@ -76,6 +78,28 @@ describe("BaseInputFeedbackCard.vue", () => {
           default: "the default slot content",
           additionalFeedback:
             "additional information to give user more feedback to its input",
+        },
+      });
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithActions_when_actionsSlotIsUsed", async (context) => {
+      const feedbackType = InputFeedbackTypeEnum.error;
+
+      wrapper = mount(BaseFeedbackCard, {
+        global: {
+          plugins: [vuetify],
+        },
+        props: {
+          title: "test title for component under test",
+          type: feedbackType,
+        },
+        slots: {
+          default: "the default slot content",
+          actions: h(BaseTextButton),
         },
       });
 

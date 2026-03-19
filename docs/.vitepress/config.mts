@@ -128,6 +128,10 @@ export default withMermaid({
               link: `${PATH_ADR}adr-gender-sensitive-language.md`,
             },
             {
+              text: "Uhrzeitformat in Texten der Anwendung",
+              link: `${PATH_ADR}adr-time-format.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,

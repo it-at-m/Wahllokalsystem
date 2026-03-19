@@ -1,4 +1,4 @@
-name: auto-assign.yml
+name: Auto Assign
 permissions:
   contents: read
   pull-requests: write

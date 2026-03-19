@@ -1,4 +1,4 @@
-# Naming Convetions für Workflows
+# Naming Conventions für Workflows
 
 > [!CAUTION]
 > Es ist zu beachten, dass alle Workflows im Ordner `workflows` liegen müssen. Sie dürfen nicht auf unterordner aufgeteilt werden.
@@ -7,6 +7,7 @@
 - `callable-<kurzbeschreibung>.yml` ... [wiederverwendbare Workflows](https://docs.github.com/de/actions/using-workflows/reusing-workflows)
 - `dispatch-<kurzbeschreibung>.yml` ... [manuell ausführbare workflows](https://docs.github.com/de/actions/using-workflows/manually-running-a-workflow)
 - `<service-name>_<trigger>.yml` ... Workflows zu Jobs die durch ein bestimmtes Ereignis getriggert werden.
+- `any-service_<trigger>-<kurzbeschreibung>.yml` ... Workflows, die unabhängig vom Service, bei einem bestimmten Ereignis ausgeführt werden
 
 ## Beispiele
 
@@ -23,3 +24,8 @@
 `wls-broadcast-service_push-dev-yml` ist der Workflow zum `wls-broadcast-service` der bei einem `push` auf `dev` ausgeführt wird.
 
 `doc_pull-request.yml` ist der Workflow zur Dokumentation, der bei einem `pull request` ausgeführt wird.
+
+### `any-service_<ereignis>-<kurzbeschreibung>.yml`
+
+`any-service_pull-request-dependency-review.yml` ist der Workflow zur Überprüfung der Lizenzen der Dependencies.
+Er wird bei jedem Pull Request ausgeführt.

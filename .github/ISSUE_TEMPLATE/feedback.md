@@ -1,8 +1,8 @@
 ---
-name: feedback issue
+name: demo feedback issue
 about: A "feedback"-Issue is used to track the feedback from Demos.
 title: ''
-labels: ["feedback"]
+labels: ["feedback demo"]
 assignees: []
 ---
 

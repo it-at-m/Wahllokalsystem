@@ -120,6 +120,18 @@ export default withMermaid({
               link: `${PATH_ADR}adr-lower-number-of-renovate-prs.md`,
             },
             {
+              text: "Anpassung des Renovate-Schedulers",
+              link: `${PATH_ADR}adr-renovate-non-refarch-scheduling.md`,
+            },
+            {
+              text: "Gendergerechte Sprache",
+              link: `${PATH_ADR}adr-gender-sensitive-language.md`,
+            },
+            {
+              text: "Uhrzeitformat in Texten der Anwendung",
+              link: `${PATH_ADR}adr-time-format.md`,
+            },
+            {
               text: "UI/UX",
               link: `${PATH_ADR_UI}`,
               collapsed: true,
@@ -266,6 +278,10 @@ export default withMermaid({
                 {
                   text: "Intervalle und Timeouts",
                   link: `${PATH_SYSSPEC}frontend/intervalle-und-timeouts.md`,
+                },
+                {
+                  text: "Navigation und Bearbeitungsreihenfolge",
+                  link: `${PATH_SYSSPEC}frontend/navigation-and-workflow.md`,
                 },
               ],
             },

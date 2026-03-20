@@ -5,7 +5,9 @@
       <v-card-text>
         <base-number-input
           v-model="modelValue.ergebnis"
-          :rules="[required, minNumber(minValue), maxNumber(maxValue)]"
+          :min-valid="minValue"
+          :max-valid="maxValue"
+          :rules="[required]"
           min-width="20rem"
         />
       </v-card-text>
@@ -13,6 +15,7 @@
         <base-button-save
           :loading="isErgebnisSaving"
           :disabled="!isFormValid"
+          save-text="Speichern und Weiter"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -29,7 +32,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { required } = useRules();
 
 const modelValue = defineModel<Ergebnis>({ required: true });
 

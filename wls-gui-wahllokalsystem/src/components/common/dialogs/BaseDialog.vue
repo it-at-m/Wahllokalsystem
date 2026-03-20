@@ -5,7 +5,7 @@
     max-width="648px"
   >
     <v-card>
-      <v-card-title>
+      <v-card-title class="d-flex align-center">
         <v-icon
           :icon="icon"
           size="x-small"
@@ -20,13 +20,14 @@
         <base-text-button
           v-if="canceltext"
           data-test="basedialog-btn-cancel"
+          :is-disabled="cancelDisabled"
           @click="onCancelClicked"
         >
           {{ canceltext }}
         </base-text-button>
         <base-text-button
           data-test="basedialog-btn-confirm"
-          active
+          :active="isConfirmActive"
           @click="onConfirmClicked"
         >
           {{ confirmtext }}
@@ -39,13 +40,21 @@
 <script setup lang="ts">
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 
-defineProps<{
-  visible: boolean;
-  dialogtitle: string;
-  canceltext?: string;
-  confirmtext: string;
-  icon: string;
-}>();
+withDefaults(
+  defineProps<{
+    visible: boolean;
+    dialogtitle: string;
+    // eslint-disable-next-line vue/require-default-prop -- keinen Default-Wert für canceltext angegeben, da dadurch bestimmt wird, ob ein Cancel-Button angezeigt wird
+    canceltext?: string;
+    cancelDisabled?: boolean;
+    confirmtext: string;
+    icon: string;
+    isConfirmActive?: boolean;
+  }>(),
+  {
+    isConfirmActive: true,
+  }
+);
 
 const emit = defineEmits<{
   cancel: [];

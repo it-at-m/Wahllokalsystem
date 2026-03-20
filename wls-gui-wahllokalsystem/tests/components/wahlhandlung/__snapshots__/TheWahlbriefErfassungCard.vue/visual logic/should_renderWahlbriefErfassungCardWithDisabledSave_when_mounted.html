@@ -16,7 +16,7 @@
   </div>
   <!---->
   <!---->
-  <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2"> Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor 18:00 Uhr übergeben wurden) </div>
+  <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2"> Anzahl der Wahlbriefe (aus Wahlurne und Wahlbriefe, die vor 18 Uhr übergeben wurden) </div>
   <div class="v-card-text pb-0 pt-2">
     <form class="v-form" novalidate="">
       <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-text-field v-number-input mr-4" style="max-width: 300px;" data-test="textFieldWahlbriefeAnzahl">
@@ -39,12 +39,12 @@
               </div>
             </div>
             <!---->
-            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-1" aria-hidden="true">
+            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
                 <!---->Anzahl Wahlbriefe
-              </label><label class="v-label v-field-label" for="input-v-1">
+              </label><label class="v-label v-field-label" id="input-v-1-label" aria-hidden="false" for="input-v-1">
                 <!---->Anzahl Wahlbriefe
               </label>
-              <!----><input size="1" type="text" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input">
+              <!----><input size="1" type="text" aria-labelledby="input-v-1-label" id="input-v-1" aria-describedby="input-v-1-messages" inputmode="decimal" class="v-field__input">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -53,7 +53,6 @@
                   </svg></i></div>
             </transition-stub>
             <div class="v-field__append-inner">
-              <!---->
               <!---->
             </div>
             <div class="v-field__outline">
@@ -95,12 +94,12 @@
               </div>
             </div>
             <!---->
-            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-4" aria-hidden="true">
+            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
                 <!---->Anzahl Verzeichnisse
-              </label><label class="v-label v-field-label" for="input-v-4">
+              </label><label class="v-label v-field-label" id="input-v-4-label" aria-hidden="false" for="input-v-4">
                 <!---->Anzahl Verzeichnisse
               </label>
-              <!----><input size="1" type="text" id="input-v-4" aria-describedby="input-v-4-messages" inputmode="decimal" class="v-field__input">
+              <!----><input size="1" type="text" aria-labelledby="input-v-4-label" id="input-v-4" aria-describedby="input-v-4-messages" inputmode="decimal" class="v-field__input">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -109,7 +108,6 @@
                   </svg></i></div>
             </transition-stub>
             <div class="v-field__append-inner">
-              <!---->
               <!---->
             </div>
             <div class="v-field__outline">
@@ -151,12 +149,12 @@
               </div>
             </div>
             <!---->
-            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-7" aria-hidden="true">
+            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
                 <!---->Anzahl Nachträge
-              </label><label class="v-label v-field-label" for="input-v-7">
+              </label><label class="v-label v-field-label" id="input-v-7-label" aria-hidden="false" for="input-v-7">
                 <!---->Anzahl Nachträge
               </label>
-              <!----><input size="1" type="text" id="input-v-7" aria-describedby="input-v-7-messages" inputmode="decimal" class="v-field__input">
+              <!----><input size="1" type="text" aria-labelledby="input-v-7-label" id="input-v-7" aria-describedby="input-v-7-messages" inputmode="decimal" class="v-field__input">
               <!---->
             </div>
             <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
@@ -165,7 +163,6 @@
                   </svg></i></div>
             </transition-stub>
             <div class="v-field__append-inner">
-              <!---->
               <!---->
             </div>
             <div class="v-field__outline">
@@ -184,7 +181,7 @@
       </div>
     </form>
   </div>
-  <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2"> Anzahl der nach 18:00 Uhr nachgelieferten Wahlbriefe </div>
+  <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2"> Anzahl der nach 18 Uhr nachgelieferten Wahlbriefe </div>
   <div class="v-card-text">
     <form class="v-form" novalidate="" data-test="nachtraeglichUeberbrachteForm">
       <div class="d-flex flex-wrap justify-start">
@@ -209,12 +206,12 @@
                   </div>
                 </div>
                 <!---->
-                <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-10" aria-hidden="true">
+                <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
                     <!---->Anzahl Wahlbriefe
-                  </label><label class="v-label v-field-label" for="input-v-10">
+                  </label><label class="v-label v-field-label" id="input-v-10-label" aria-hidden="false" for="input-v-10">
                     <!---->Anzahl Wahlbriefe
                   </label>
-                  <!----><input disabled="" size="1" type="text" id="input-v-10" aria-describedby="input-v-10-messages" inputmode="decimal" class="v-field__input">
+                  <!----><input disabled="" size="1" type="text" aria-labelledby="input-v-10-label" id="input-v-10" aria-describedby="input-v-10-messages" inputmode="decimal" class="v-field__input">
                   <!---->
                 </div>
                 <!---->
@@ -255,12 +252,12 @@
                   </div>
                 </div>
                 <!---->
-                <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" for="input-v-13" aria-hidden="false">
+                <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="false" for="input-v-13">
                     <!---->Uhrzeit
-                  </label><label class="v-label v-field-label" for="input-v-13">
+                  </label><label class="v-label v-field-label" id="input-v-13-label" aria-hidden="true">
                     <!---->Uhrzeit
                   </label>
-                  <!----><input disabled="" size="1" type="time" id="input-v-13" aria-describedby="input-v-13-messages" class="v-field__input" value="">
+                  <!----><input disabled="" size="1" type="time" aria-labelledby="input-v-13-label" id="input-v-13" aria-describedby="input-v-13-messages" class="v-field__input" value="">
                   <!---->
                 </div>
                 <!---->
@@ -283,7 +280,7 @@
       </div>
     </form>
   </div>
-  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" disabled="" data-test="button-save"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern</span>
+  <div class="v-card-actions"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-btn--slim v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button" disabled="" data-test="button-save"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Speichern und Weiter</span>
       <!---->
       <!---->
     </button></div>

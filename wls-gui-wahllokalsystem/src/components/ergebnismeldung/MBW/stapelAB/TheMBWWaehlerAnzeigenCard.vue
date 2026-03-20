@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> Wähler </v-card-title>
+    <v-card-title> Wähler*innen </v-card-title>
     <v-card-text>
       <v-table>
         <thead>
@@ -51,15 +51,10 @@
 import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 
-import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
-const { isUWB, isBWB } = storeToRefs(useUserStore());
-const { waehlerverzeichnisActions, wahlenActions } = useWahlenStore();
-const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
-const { getStimmzettelumschlaege } = useErgebnisService();
+const { isUWB } = storeToRefs(useUserStore());
 
 const props = defineProps<{
   wahlbezirkId: string;
@@ -75,51 +70,28 @@ const rows = computed(() =>
     ? [
         [
           "B1",
-          "Wähler mit Stimmabgabevermerken im Wählerverzeichnis",
+          "Wähler*innen mit Stimmabgabevermerken im Wählerverzeichnis",
           b1.value,
         ],
-        ["B2", "Wähler mit Wahlschein", b2.value],
+        ["B2", "Wähler*innen mit Wahlschein", b2.value],
       ]
     : []
 );
 const resultRow = computed(() =>
   isUWB.value
-    ? ["B1 + B2", "Wähler", b1.value + b2.value]
-    : ["B", "Wähler", b.value]
+    ? ["B1 + B2", "Wähler*innen", b.value]
+    : ["B", "Wähler*innen", b.value]
 );
 
 onActivated(async () => {
-  if (isUWB.value) {
-    const waehlerverzeichnisNummer =
-      waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
-        props.wahlId
-      );
-    if (waehlerverzeichnisNummer) {
-      const loadedStimmabgabevermerke = await getStimmabgabevermerke(
-        props.wahlbezirkId,
-        waehlerverzeichnisNummer
-      );
-      // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-      b1.value = loadedStimmabgabevermerke.wahldaten[0].vermerke
-        .flatMap((vermerk) => vermerk.stimmzettel)
-        .reduce((summe, stimmzettel) => summe + (stimmzettel.anzahl || 0), 0);
-      b2.value = Array.from(
-        // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-        loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
-      ).reduce((sum, value) => sum + value, 0);
-    }
-  }
-  if (isBWB.value) {
-    const wahl = wahlenActions.getWahlOrUndefinedById(props.wahlId);
-    if (wahl) {
-      const loadedStimmzettelumschlaege = await getStimmzettelumschlaege(
-        wahl,
-        props.wahlbezirkId,
-        "",
-        false
-      );
-      b.value = loadedStimmzettelumschlaege?.anzahlWaehler || 0;
-    }
-  }
+  const { getBWerteForWahlbezirkAndWahl } = useMbwUtils(
+    props.wahlId,
+    props.wahlbezirkId
+  );
+
+  const bWerte = await getBWerteForWahlbezirkAndWahl();
+  b.value = bWerte.b;
+  b1.value = bWerte.b1;
+  b2.value = bWerte.b2;
 });
 </script>

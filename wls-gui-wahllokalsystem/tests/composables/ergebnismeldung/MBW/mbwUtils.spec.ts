@@ -4,15 +4,28 @@ import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/
 import { createTestingPinia } from "@pinia/testing";
 import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
+import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
+import { useErgebnismeldungDruckInputTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnismeldungDruckInputTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useMbwErgebnisseAndWahlvorschlagTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),
@@ -22,6 +35,11 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
   sortWahlvorschlaegeByOrdnungszahl: vi.fn(),
+  getWaehlerverzeichnisNummerOrUndefinedById: vi.fn(),
+  getStimmabgabevermerke: vi.fn(),
+  getStimmzettelumschlaege: vi.fn(),
+  getAWerte: vi.fn(),
+  generateUuidv4: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -29,6 +47,7 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
     getErgebnisse: mockDefinitions.getErgebnisse,
     postSchnellmeldung: mockDefinitions.postSchnellmeldung,
+    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
   }),
 }));
 vi.mock(
@@ -56,8 +75,28 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
     wahlenActions: {
       getWahlOrUndefinedById: mockDefinitions.getWahlOrUndefinedById,
     },
+    waehlerverzeichnisActions: {
+      getWaehlerverzeichnisNummerOrUndefinedById:
+        mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById,
+    },
   }),
 }));
+vi.mock(
+  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
+  () => ({
+    useStimmabgabevermerkeService: () => ({
+      getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
+    }),
+  })
+);
+vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
+  useAWerteService: () => ({
+    getAWerte: mockDefinitions.getAWerte,
+  }),
+}));
+vi.mock("jsbarcode");
+
+crypto.randomUUID = mockDefinitions.generateUuidv4;
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createErgebnis, prepareErgebnisse, prepareErgebnis } =
@@ -68,8 +107,25 @@ const {
   prepareWahlvorschlag,
   prepareWahlvorschlaege,
 } = useWahlvorschlaegeTestDataFactory();
-const { createWahl } = useWahlTestDataFactory();
+const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
+const {
+  prepareWahldaten,
+  prepareStimmabgabevermerke,
+  prepareVermerk,
+  prepareStimmzettel,
+} = useStimmabgabevermerkeTestDataFactory();
+const { createStatus } = useStatusTestDataFactory();
+const { prepareAWerte } = useAWerteTestDataFactory();
+const { prepareBWerte } = useBWerteTestDataFactory();
+const { prepareMbwErgebnisseAndWahlvorschlag } =
+  useMbwErgebnisseAndWahlvorschlagTestDataFactory();
+const { prepareSchnellmeldungDruckInput } =
+  useErgebnismeldungDruckInputTestDataFactory();
+const { convertToSixDigitArray } = useNumberFormatter();
+const { toGermanDate, toHhMm } = useDateTimeFormatter();
+
+const mockedNow = new Date();
 
 describe("mbwUtils", () => {
   const wahlID = generateRandomString(10);
@@ -80,10 +136,15 @@ describe("mbwUtils", () => {
   beforeEach(() => {
     createTestingPinia({ createSpy: vi.fn, stubActions: false });
     unitUnderTest = useMbwUtils(wahlID, wahlbezirkID);
+
+    vi.useFakeTimers({
+      now: mockedNow,
+    });
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
   describe("saveGueltigeErgebnisse", () => {
@@ -532,6 +593,379 @@ describe("mbwUtils", () => {
       ]);
 
       spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
+    });
+  });
+
+  describe("getBWerteForWahlbezirkAndWahl", () => {
+    it("should_calculateBWerte_when_wahlbezirksartIsUWB", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        1
+      );
+
+      mockDefinitions.getStimmabgabevermerke.mockReturnValue(
+        prepareStimmabgabevermerke()
+          .wahlbezirkID(wahlbezirkID)
+          .waehlerverzeichnisNummer(1)
+          .wahldaten([
+            prepareWahldaten()
+              .eingenommeneWahlscheine(
+                new Map([
+                  [StimmzettelStimmzettelartEnum.Klein, 1],
+                  [StimmzettelStimmzettelartEnum.Beide, 1],
+                ])
+              )
+              .vermerke([
+                prepareVermerk()
+                  .blattnummer(1)
+                  .stimmzettel([
+                    prepareStimmzettel()
+                      .anzahl(1)
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
+                      .build(),
+                    prepareStimmzettel()
+                      .anzahl(1)
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
+                      .build(),
+                  ])
+                  .build(),
+                prepareVermerk()
+                  .blattnummer(2)
+                  .stimmzettel([
+                    prepareStimmzettel()
+                      .anzahl(1)
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
+                      .build(),
+                  ])
+                  .build(),
+              ])
+              .build(),
+          ])
+          .build()
+      );
+
+      const result = await unitUnderTest.getBWerteForWahlbezirkAndWahl();
+
+      expect(mockDefinitions.getStimmabgabevermerke).toHaveBeenCalledWith(
+        wahlbezirkID,
+        1
+      );
+      expect(result.b1).toBe(3);
+      expect(result.b2).toBe(2);
+      expect(result.b).toBe(5);
+    });
+
+    it("should_calculateBWerteAs0_when_wahlbezirksartIsUWBAndStimmabgabevermerkeIsNull", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        1
+      );
+
+      mockDefinitions.getStimmabgabevermerke.mockReturnValue(null);
+
+      const result = await unitUnderTest.getBWerteForWahlbezirkAndWahl();
+
+      expect(mockDefinitions.getStimmabgabevermerke).toHaveBeenCalledWith(
+        wahlbezirkID,
+        1
+      );
+      expect(result.b1).toBe(0);
+      expect(result.b2).toBe(0);
+      expect(result.b).toBe(0);
+    });
+
+    it("should_calculateOnlyValueB_when_wahlbezirksartIsBWB", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
+      const wahl = prepareWahl().wahlID(wahlID).build();
+
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(wahl);
+
+      mockDefinitions.getStimmzettelumschlaege.mockReturnValue({
+        anzahlWaehler: 4,
+      });
+
+      const result = await unitUnderTest.getBWerteForWahlbezirkAndWahl();
+
+      expect(mockDefinitions.getStimmzettelumschlaege).toHaveBeenCalledWith(
+        wahl,
+        wahlbezirkID,
+        "",
+        false
+      );
+      expect(result.b1).toBe(0);
+      expect(result.b2).toBe(0);
+      expect(result.b).toBe(4);
+    });
+  });
+
+  describe("prepareDataForSchnellmeldungDruck", () => {
+    it("should_returnErgebnismeldungDruckInput_when_givenWahlStatusAndMeldungsart", async () => {
+      const userStore = useUserStore(pinia);
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+      );
+
+      // --- prepare mock Values ---
+      const wahl = prepareWahl().wahlID(wahlID).build();
+      const status = createStatus();
+      status.schnellmeldung.validierungsstatus =
+        MeldungValidierungsstatusEnum.Valide;
+      const meldungsArt = MeldungsArtEnum.Schnellmeldung;
+
+      // mock aWerte
+      const aWerte = prepareAWerte()
+        .bezirkUndWahlID({
+          wahlbezirkID: wahlbezirkID,
+          wahlID: wahl.wahlID,
+        })
+        .build();
+      mockDefinitions.getAWerte.mockResolvedValue([aWerte]);
+
+      // mock bWerte
+      mockDefinitions.getWaehlerverzeichnisNummerOrUndefinedById.mockReturnValue(
+        wahl.waehlerverzeichnisNummer
+      );
+      mockDefinitions.getStimmabgabevermerke.mockReturnValue(
+        prepareStimmabgabevermerke()
+          .wahlbezirkID(wahlbezirkID)
+          .waehlerverzeichnisNummer(wahl.waehlerverzeichnisNummer)
+          .wahldaten([
+            prepareWahldaten()
+              .eingenommeneWahlscheine(
+                new Map([
+                  [StimmzettelStimmzettelartEnum.Klein, 1], // b2
+                  [StimmzettelStimmzettelartEnum.Beide, 1], // b2
+                ])
+              )
+              .vermerke([
+                prepareVermerk()
+                  .blattnummer(1)
+                  .stimmzettel([
+                    prepareStimmzettel()
+                      .anzahl(1) // b1
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
+                      .build(),
+                    prepareStimmzettel()
+                      .anzahl(1) // b1
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
+                      .build(),
+                  ])
+                  .build(),
+                prepareVermerk()
+                  .blattnummer(2)
+                  .stimmzettel([
+                    prepareStimmzettel()
+                      .anzahl(1) // b1
+                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
+                      .build(),
+                  ])
+                  .build(),
+              ])
+              .build(),
+          ])
+          .build()
+      );
+      const expectedBWerte = prepareBWerte()
+        .bezirkUndWahlID({
+          wahlbezirkID: wahlbezirkID,
+          wahlID: wahl.wahlID,
+        })
+        .b(5)
+        .b1(3)
+        .b2(2)
+        .build();
+
+      // wahlvorschlaege
+      const wahlvorschlag1 = prepareWahlvorschlag().ordnungszahl(1).build();
+      const wahlvorschlag2 = prepareWahlvorschlag().ordnungszahl(2).build();
+      const sortedWahlvorschlaege = prepareWahlvorschlaege()
+        .wahlID(wahlID)
+        .wahlbezirkID(wahlbezirkID)
+        .wahlvorschlaege([wahlvorschlag1, wahlvorschlag2])
+        .build();
+      mockDefinitions.getWahlvorschlaege.mockResolvedValue(
+        createWahlvorschlaege()
+      );
+      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl.mockReturnValue(
+        sortedWahlvorschlaege
+      );
+
+      // stapel A
+      const ergebnisA1 = prepareErgebnis()
+        .wahlvorschlagID(wahlvorschlag1.identifikator)
+        .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+        .build();
+      const ergebnisA2 = prepareErgebnis()
+        .wahlvorschlagID(wahlvorschlag2.identifikator)
+        .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+        .build();
+      const mockedErgebnisseStapelA: Ergebnisse = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwA,
+        })
+        .ergebnisse([
+          {
+            wahlvorschlagID: wahlvorschlag1.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
+            ergebnis: ergebnisA1.ergebnis,
+            numIndex: null,
+          },
+          {
+            wahlvorschlagID: wahlvorschlag2.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag2.ordnungszahl,
+            ergebnis: ergebnisA2.ergebnis,
+            numIndex: null,
+          },
+        ])
+        .build();
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(
+        mockedErgebnisseStapelA
+      );
+
+      // stapel b
+      const ergebnisB1 = prepareErgebnis()
+        .wahlvorschlagID(wahlvorschlag1.identifikator)
+        .wahlvorschlagsOrdnungszahl(wahlvorschlag1.ordnungszahl)
+        .build();
+      const ergebnisB2 = prepareErgebnis()
+        .wahlvorschlagID(wahlvorschlag2.identifikator)
+        .wahlvorschlagsOrdnungszahl(wahlvorschlag2.ordnungszahl)
+        .build();
+      const mockedErgebnisseStaplB = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwB,
+        })
+        .ergebnisse([
+          {
+            wahlvorschlagID: wahlvorschlag1.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
+            ergebnis: ergebnisB1.ergebnis,
+            numIndex: null,
+          },
+          {
+            wahlvorschlagID: wahlvorschlag2.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag2.ordnungszahl,
+            ergebnis: ergebnisB2.ergebnis,
+            numIndex: null,
+          },
+        ])
+        .build();
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(
+        mockedErgebnisseStaplB
+      );
+
+      // stapel d
+      const ergebnisD1 = createErgebnis();
+      const mockedErgebnisseStaplD = prepareErgebnisse()
+        .bezirkUndWahlIDStapelart({
+          wahlID: wahlID,
+          wahlbezirkID: wahlbezirkID,
+          stapelArt: StapelArtEnum.MbwDUngueltig,
+        })
+        .ergebnisse([
+          {
+            wahlvorschlagID: wahlvorschlag1.identifikator,
+            kandidatID: null,
+            wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
+            ergebnis: ergebnisD1.ergebnis,
+            numIndex: null,
+          },
+        ])
+        .build();
+      mockDefinitions.getErgebnisse.mockResolvedValueOnce(
+        mockedErgebnisseStaplD
+      );
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const expectedUngueltigeStimen = ergebnisD1.ergebnis!;
+
+      // combined gueltige ergebnisse
+      const ergebnisseAndWahlvorschlaege: MbwErgebnisseAndWahlvorschlag[] = [
+        prepareMbwErgebnisseAndWahlvorschlag()
+          .wahlvorschlag(wahlvorschlag1)
+          .ergebnisStapelA(ergebnisA1)
+          .ergebnisStapelB(ergebnisB1)
+          .build(),
+        prepareMbwErgebnisseAndWahlvorschlag()
+          .wahlvorschlag(wahlvorschlag2)
+          .ergebnisStapelA(ergebnisA2)
+          .ergebnisStapelB(ergebnisB2)
+          .build(),
+      ];
+      const expectedGueltigeStimmen =
+        /* eslint-disable @typescript-eslint/no-non-null-assertion */
+        // ergebnisse are explicitly set in test data factory, so they can not be null
+        ergebnisA1.ergebnis! +
+        ergebnisA2.ergebnis! +
+        ergebnisB1.ergebnis! +
+        ergebnisB2.ergebnis!;
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
+
+      // combined alle ergebnisse
+      const expectedAlleStimmen =
+        expectedGueltigeStimmen + expectedUngueltigeStimen;
+
+      // barcode
+      const dummyBarcodeUrl = "dummyUrl";
+      vi.spyOn(HTMLCanvasElement.prototype, "toDataURL").mockImplementationOnce(
+        () => {
+          return dummyBarcodeUrl;
+        }
+      );
+
+      // footer
+      const dummyUUID = "uuidv4";
+      mockDefinitions.generateUuidv4.mockReturnValue(dummyUUID);
+      const expectedFooter =
+        dummyUUID +
+        ", " +
+        toGermanDate(mockedNow) +
+        " " +
+        toHhMm(mockedNow) +
+        " O";
+
+      const result = await unitUnderTest.prepareDataForSchnellmeldungDruck(
+        wahl,
+        status,
+        meldungsArt
+      );
+
+      const expectedResult = prepareSchnellmeldungDruckInput()
+        .meldungsArt(meldungsArt)
+        .wahlbezirksArt(WahlbezirksArtEnum.UWB)
+        .aktuelleWahl(wahl)
+        .footer(expectedFooter)
+        .alleStimmen(convertToSixDigitArray(expectedAlleStimmen))
+        .gueltigeStimmenListe(ergebnisseAndWahlvorschlaege)
+        .gueltigeStimmenGesamt(convertToSixDigitArray(expectedGueltigeStimmen))
+        .ungueltigeStimmen(convertToSixDigitArray(expectedUngueltigeStimen))
+        .aWerte(aWerte)
+        .bWerte(expectedBWerte)
+        .wahlbezirkNummer("")
+        .barcode(dummyBarcodeUrl)
+        .sendOk(false)
+        .build();
+
+      expect(result).toStrictEqual(expectedResult);
     });
   });
 });

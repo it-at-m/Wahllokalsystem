@@ -23,7 +23,6 @@ export function useDateTimeFormatter() {
 
   const toHhMm = function (date: Date | string | null | undefined): string {
     const parsedDate = _returnParsedDateOrInvalid(date);
-
     if (isValidDate(parsedDate)) {
       return [
         _leftPadTwoDigitsWithZero(parsedDate.getHours()),
@@ -98,6 +97,16 @@ export function useDateTimeFormatter() {
     return `${fullYear}-${month}-${day}T${hour}:${minute}:${second}.${milliseconds}`;
   }
 
+  function toTimeWithHoursAndOptionalMinutes(
+    date: Date | string | null | undefined
+  ): string {
+    const time = toHhMm(date);
+    const [hours, minutes] = time.split(TIME_FIELD_SEPARATOR);
+    return minutes === "00"
+      ? hours?.replace(/^0+/, "") || NO_VALUE_DEFAULT
+      : time;
+  }
+
   function _returnParsedDateOrInvalid(
     date: Date | string | null | undefined
   ): Date {
@@ -127,5 +136,6 @@ export function useDateTimeFormatter() {
     toYyyyMmDdWithTimeWithoutTimezoneOffset,
     toGermanDate,
     toGermanDateWithLongMonth,
+    toTimeWithHoursAndOptionalMinutes,
   };
 }

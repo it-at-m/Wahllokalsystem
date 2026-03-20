@@ -17,17 +17,22 @@ import { useRoute, useRouter } from "vue-router";
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
+const { setStepDone } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { logError } = useLogging("requestStrategies");
+const { getNextRoute } = useNavigationUtils();
 
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -80,7 +85,7 @@ async function onSave() {
       ergebnisse: [ergebnis.value],
     } as Ergebnisse;
 
-    if (wahlbezirkID && ergebnisseToSend) {
+    if (wahlbezirkID) {
       await postErgebnisse(
         wahlbezirkID,
         wahlID,
@@ -88,6 +93,8 @@ async function onSave() {
         ergebnisseToSend,
         true
       );
+      setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG);
+      await router.push(getNextRoute());
     }
   } catch (error) {
     logError("Fehler beim Speichern der Ergebnisse: ", error);

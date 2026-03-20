@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createWahlscheine, prepareWahlscheineDTO } =
@@ -67,9 +68,28 @@ describe("wahlscheineService.ts", () => {
       );
       mockDefinitions.mapDtoToModel.mockReturnValue(mockedWahlscheine);
 
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
+
       const result = await getWahlscheine(wahlID, wahlbezirkID);
 
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(true);
       expect(result).toEqual(mockedWahlscheine);
+    });
+
+    it("should_returnNull_when_apiReturned204", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      mockDefinitions.getWahlscheine.mockReturnValue(
+        Promise.resolve({
+          status: 204,
+          data: {},
+        })
+      );
+
+      const result = await getWahlscheine(wahlID, wahlbezirkID);
+
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
+      expect(result).toEqual(null);
     });
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
@@ -85,7 +105,7 @@ describe("wahlscheineService.ts", () => {
       await expect(async () =>
         getWahlscheine(wahlID, wahlbezirkID)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
@@ -103,7 +123,7 @@ describe("wahlscheineService.ts", () => {
       await expect(async () =>
         getWahlscheine(wahlID, wahlbezirkID, false)
       ).rejects.toThrowError();
-
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
@@ -115,7 +135,7 @@ describe("wahlscheineService.ts", () => {
       const wahlschein = createWahlscheine();
       const wahlscheinDTO = prepareWahlscheineDTO()
         .bezirkUndWahlID(wahlschein.bezirkUndWahlID)
-        .stimmabgabevermerke(wahlschein.stimmabgabevermerke)
+        .stimmabgabevermerke(wahlschein.stimmabgabevermerke as number)
         .build();
 
       mockDefinitions.postWahlscheine.mockReturnValue(
@@ -124,12 +144,15 @@ describe("wahlscheineService.ts", () => {
 
       mockDefinitions.mapModelToDto.mockReturnValue(wahlscheinDTO);
 
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
+
       await postWahlscheine(
         wahlschein.bezirkUndWahlID.wahlID,
         wahlschein.bezirkUndWahlID.wahlbezirkID,
         wahlschein
       );
 
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(true);
       expect(mockDefinitions.postWahlscheine).toHaveBeenCalledWith(
         wahlschein.bezirkUndWahlID.wahlID,
         wahlschein.bezirkUndWahlID.wahlbezirkID,
@@ -155,7 +178,7 @@ describe("wahlscheineService.ts", () => {
           wahlschein
         )
       ).rejects.toThrow("Post Wahlscheine Failed");
-
+      expect(useWorkflowStore().isAnzahlWahlscheineErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         1
       );

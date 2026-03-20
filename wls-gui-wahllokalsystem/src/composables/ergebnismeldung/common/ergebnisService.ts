@@ -3,6 +3,8 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { Stimmzettelumschlaege } from "@/types/ergebnismeldung/common/Stimmzettelumschlaege.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
+import { storeToRefs } from "pinia";
+
 import {
   BegruendungControllerApi,
   Configuration,
@@ -15,7 +17,9 @@ import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisMapper } from "@/composables/ergebnismeldung/common/ergebnisMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const {
@@ -69,6 +73,47 @@ export function useErgebnisService() {
       }
 
       const responseData = getNullOn204OrElseResponseData(response);
+      if (
+        responseData !== undefined &&
+        responseData !== null &&
+        !responseData.ergebnisse.find((ergebnis) => ergebnis.ergebnis === null)
+      ) {
+        const { setStepDone } = useWorkflowStore();
+        const { isMbwStapelAErfasst, isMbwStapelBErfasst } =
+          storeToRefs(useWorkflowStore());
+        switch (stapelArt) {
+          case StapelArtEnum.MbwDUngueltig:
+            setStepDone(
+              wahlID,
+              wahlbezirkID,
+              MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG
+            );
+            break;
+          case StapelArtEnum.MbwA:
+            if (isMbwStapelBErfasst.value) {
+              setStepDone(
+                wahlID,
+                wahlbezirkID,
+                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+              );
+            } else {
+              useWorkflowStore().isMbwStapelAErfasst = true;
+            }
+            break;
+          case StapelArtEnum.MbwB:
+            if (isMbwStapelAErfasst.value) {
+              setStepDone(
+                wahlID,
+                wahlbezirkID,
+                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+              );
+            } else {
+              useWorkflowStore().isMbwStapelBErfasst = true;
+            }
+            break;
+          //TODO Überprüfung für Stapel_BC wird mit #2471 umgesetzt
+        }
+      }
       return responseData ? toErgebnisseModel(responseData) : null;
     } catch {
       if (sendNotification) {
@@ -198,6 +243,17 @@ export function useErgebnisService() {
         );
       }
       const responseData = getNullOn204OrElseResponseData(response);
+      if (
+        responseData?.anzahlWaehler !== null &&
+        responseData?.anzahlWaehler !== undefined
+      ) {
+        const { setStepDone } = useWorkflowStore();
+        setStepDone(
+          wahl.wahlID,
+          wahlbezirkID,
+          MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+        );
+      }
       return responseData ? toStimmzettelumschlaegeModel(responseData) : null;
     } catch (e) {
       if (sendNotification) {
@@ -270,6 +326,38 @@ export function useErgebnisService() {
     }
   }
 
+  async function postNiederschrift(
+    wahlID: string,
+    wahlbezirkID: string,
+    waehlerverzeichnisNummer: number,
+    hauptwahlbezirkID: string,
+    sendNotification = true
+  ) {
+    try {
+      await ergebnismeldungsControllerApi.sendErgebnisse(
+        wahlID,
+        wahlbezirkID,
+        waehlerverzeichnisNummer,
+        SendErgebnisseMeldungsartEnum.V1,
+        hauptwahlbezirkID
+      );
+      if (sendNotification) {
+        addNotification(
+          `Niederschrift erfolgreich versendet.`,
+          UserNotificationCategoryEnum.SUCCESS
+        );
+      }
+    } catch (error) {
+      if (sendNotification) {
+        addNotification(
+          `Senden der Niederschrift fehlgeschlagen.`,
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
+      throw error;
+    }
+  }
+
   return {
     getErgebnisse,
     postErgebnisse,
@@ -278,5 +366,6 @@ export function useErgebnisService() {
     getStimmzettelumschlaege,
     getBegruendungStimmzettelumschlaege,
     postBegruendung,
+    postNiederschrift,
   };
 }

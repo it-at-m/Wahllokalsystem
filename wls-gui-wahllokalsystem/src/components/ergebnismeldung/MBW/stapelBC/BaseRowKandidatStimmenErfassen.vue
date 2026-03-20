@@ -5,8 +5,9 @@
     <td>
       <base-number-input
         v-model="ergebnis.ergebnis"
-        :rules="[required, minNumber(0), maxNumber(9999)]"
+        :rules="[required]"
         class="styleErgebnisCell"
+        @update:model-value="$emit('dirty')"
       />
     </td>
   </tr>
@@ -24,7 +25,7 @@ import { useRules } from "@/composables/common/rules.ts";
 import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschlagUtils.ts";
 
 const { getKandidatLaufendeNummer } = useWahlvorschlagUtils();
-const { required, minNumber, maxNumber } = useRules();
+const { required } = useRules();
 
 const ergebnis = defineModel<Ergebnis>({ required: true });
 
@@ -45,6 +46,10 @@ const laufendeNummer = computed(() =>
     props.kandidat.listenposition
   )
 );
+
+defineEmits<{
+  dirty: [];
+}>();
 </script>
 
 <style scoped>

@@ -48,7 +48,7 @@
         prepend-icon="$continue"
         :disabled="isLoading"
         active
-        :to="routeWithName(ROUTE_WAHLVORSTAND)"
+        @click="onContinueClicked"
         >Weiter</base-text-button
       >
       <base-button-refresh
@@ -72,9 +72,11 @@ import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressL
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-const { routeWithName } = useNavigationUtils();
 const router = useRouter();
+
+const { getNextRoute } = useNavigationUtils();
 
 const {
   numberOfTasksToRun,
@@ -86,8 +88,8 @@ const {
   failedTasks,
   hasAllTasksRunSuccessfully,
 } = storeToRefs(useInitTaskManagerStore());
-
 const { rerunFailedTasks } = useInitTaskManagerStore();
+const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 
 const isLoading = computed(() => {
   return (
@@ -96,11 +98,15 @@ const isLoading = computed(() => {
   );
 });
 
-watch(hasAllTasksRunSuccessfully, () => {
-  if (hasAllTasksRunSuccessfully.value) {
+watch([hasAllTasksRunSuccessfully, isTestseiteGedruckt], () => {
+  if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
     router.push(ROUTE_WAHLVORSTAND);
   }
 });
+
+async function onContinueClicked() {
+  await router.push(getNextRoute());
+}
 
 async function onRefreshClicked() {
   await rerunFailedTasks();

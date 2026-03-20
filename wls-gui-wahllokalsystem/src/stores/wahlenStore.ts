@@ -91,13 +91,16 @@ export const useWahlenStore = defineStore(storeID, () => {
   }));
 
   const beanstandeteWahlbriefeActions = {
-    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe() {
+    initBeanstandeteWahlbriefe: async function initBeanstandeteWahlbriefe(
+      sendNotification = true
+    ) {
       for (const wvzNr of waehlerverzeichnisGetter.value
         .waehlerverzeichnisNummern) {
         const beanstandeteWahlbriefe =
           await briefwahlService.getBeanstandeteWahlbriefe(
             wvzNr,
-            currentUserWahlbezirkID.value
+            currentUserWahlbezirkID.value,
+            sendNotification
           );
         if (wahlenState.value.wahlen && beanstandeteWahlbriefe) {
           wahlenState.value.wahlen.forEach((wahl) => {
@@ -169,8 +172,10 @@ export const useWahlenStore = defineStore(storeID, () => {
 
   /* --- stimmzettelumschlaege --- */
   const stimmzettelumschlaegeState: Ref<{
+    urneneroeffnungsUhrzeitSent: Date | undefined;
     isStimmzettelumschlaegeSaving: boolean;
   }> = ref({
+    urneneroeffnungsUhrzeitSent: undefined,
     isStimmzettelumschlaegeSaving: false,
   });
 
@@ -190,6 +195,8 @@ export const useWahlenStore = defineStore(storeID, () => {
 
         if (loadedStimmzettelumschlaege) {
           wahl.stimmzettelumschlaege = loadedStimmzettelumschlaege;
+          stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+            loadedStimmzettelumschlaege.urneneroeffnungsUhrzeit;
         }
       }
     },
@@ -206,6 +213,8 @@ export const useWahlenStore = defineStore(storeID, () => {
             wahl.stimmzettelumschlaege,
             getStimmzettelTermForWahl(wahl)
           );
+          stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+            wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit;
         } finally {
           stimmzettelumschlaegeState.value.isStimmzettelumschlaegeSaving = false;
         }

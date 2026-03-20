@@ -47,7 +47,35 @@
                   {{ kandidatWithErgebnis.ergebnis.ergebnis ?? 0 }}
                 </td>
               </tr>
+              <tr
+                v-for="row in getPlaceholderRows(
+                  getMaxRows(groupedKandidatenByTabellenSpalte),
+                  group.length
+                )"
+                :key="row"
+              >
+                <td />
+                <td />
+              </tr>
             </tbody>
+            <tfoot
+              v-if="Object.keys(groupedKandidatenByTabellenSpalte).length > 1"
+            >
+              <tr>
+                <td class="border-b-sm top-border">
+                  <!-- KandidatLaufendeNummer -->
+                </td>
+                <td
+                  class="font-weight-bold text-right border-e-md border-b-sm top-border"
+                >
+                  {{
+                    group.reduce((sum, kandidat) => {
+                      return sum + (kandidat.ergebnis.ergebnis ?? 0);
+                    }, 0)
+                  }}
+                </td>
+              </tr>
+            </tfoot>
           </v-table>
         </v-col>
       </v-row>
@@ -108,6 +136,21 @@ function groupKandidatenAndErgebnisseByTabellenSpalteInNiederschrift(
     },
     {} as Record<number, ErgebnisAndKandidat[]>
   );
+}
+
+function getMaxRows(
+  groupedKandidatenByTabellenSpalte: Record<number, ErgebnisAndKandidat[]>
+) {
+  return Object.values(groupedKandidatenByTabellenSpalte).reduce(
+    (max, kandidatenArray) => {
+      return Math.max(max, kandidatenArray.length);
+    },
+    0
+  );
+}
+
+function getPlaceholderRows(maxRows: number, filledRows: number) {
+  return maxRows - filledRows;
 }
 </script>
 

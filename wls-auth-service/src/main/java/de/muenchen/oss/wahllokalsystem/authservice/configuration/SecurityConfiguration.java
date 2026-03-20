@@ -12,7 +12,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAConfigurationProperties;
 import de.muenchen.oss.wahllokalsystem.authservice.configuration.properties.RSAKeySetting;
 import de.muenchen.oss.wahllokalsystem.authservice.security.AuthUtils;
-import de.muenchen.oss.wahllokalsystem.authservice.security.CustomUsernamePasswordAuthenticationFilter;
 import de.muenchen.oss.wahllokalsystem.authservice.security.WlsUserTokenCustomizer;
 import de.muenchen.oss.wahllokalsystem.authservice.service.UserService;
 import java.security.KeyPair;
@@ -50,7 +49,6 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -67,8 +65,7 @@ public class SecurityConfiguration {
 
   private final String LOGIN_PATH = "/login";
 
-  @Autowired
-  private CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter;
+  @Autowired private WlsFormLoginConfigurer<HttpSecurity> wlsFormLoginConfigurer;
 
   @Autowired private UserService userService;
 
@@ -101,6 +98,8 @@ public class SecurityConfiguration {
   @Order(2)
   public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
       throws Exception {
+    http.apply(wlsFormLoginConfigurer);
+
     http.authorizeHttpRequests(
             (requests) ->
                 requests
@@ -133,7 +132,6 @@ public class SecurityConfiguration {
                     jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(
                             new JwtUserInfoAuthenticationConverter(userService))))
-        .formLogin((form) -> form.loginPage(LOGIN_PATH).permitAll())
         .logout(LogoutConfigurer::permitAll)
         .logout(
             logoutspec ->
@@ -146,9 +144,7 @@ public class SecurityConfiguration {
                         (request, response, authentication) ->
                             log.info(
                                 "logout successful for {}", AuthUtils.getUsername(authentication))))
-        .securityContext(securityContext -> securityContext.requireExplicitSave(false))
-        .addFilterBefore(
-            customUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .securityContext(securityContext -> securityContext.requireExplicitSave(false));
 
     return http.build();
   }

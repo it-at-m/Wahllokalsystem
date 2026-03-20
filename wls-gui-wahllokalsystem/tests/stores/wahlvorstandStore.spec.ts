@@ -13,7 +13,10 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 import { WahlvorstandsmitgliedFunktionEnum } from "@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -248,11 +251,63 @@ describe("wahlvorstandStore.ts", () => {
         expected: true,
       },
     ])(
-      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesend",
+      "should_return'$expected'_when_schliessungsuhrzeitIs'$schliessungsuhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsUWB",
       ({ expected, schliessungsuhrzeit, anwesend }) => {
+        useUserStore().setUser(
+          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.UWB).build()
+        );
         const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
         schliessungsuhrzeitState.value.schliessungsuhrzeitSent =
           schliessungsuhrzeit;
+
+        _addAnwesendeWahlvorstandsmitglieder(anwesend);
+
+        expect(unitUnderTest.isMindestanwesenheitErreicht).toStrictEqual(
+          expected
+        );
+      }
+    );
+
+    it.each([
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG - 1,
+        expected: false,
+      },
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: undefined,
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG + 1,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
+        expected: true,
+      },
+      {
+        urnenEroeffnungsUhrzeit: new Date("2025-03-31T13:31:37"),
+        anwesend: MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG + 1,
+        expected: true,
+      },
+    ])(
+      "should_return'$expected'_when_urnenEroeffnungsUhrzeitIs'$urnenEroeffnungsUhrzeit'And'$anwesend'MitgliederAreAnwesendAndWahlbezirksArtIsBWB",
+      ({ expected, urnenEroeffnungsUhrzeit, anwesend }) => {
+        useUserStore().setUser(
+          prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+        );
+        const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
+        stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent =
+          urnenEroeffnungsUhrzeit;
 
         _addAnwesendeWahlvorstandsmitglieder(anwesend);
 
@@ -374,6 +429,22 @@ describe("wahlvorstandStore.ts", () => {
 
       expect(unitUnderTest.lastSending).toStrictEqual(mockedNow);
     });
+
+    it("should_setWahlvorstandErfasst_when_wahlvorstandIsSent", async () => {
+      const userStore = useUserStore();
+      userStore.setUser(_createUser("wahlbezirkID"));
+
+      const mockedDatetime = new Date();
+
+      mockDefinitions.saveWahlvorstand.mockReturnValue(
+        Promise.resolve({ updateDatetime: mockedDatetime })
+      );
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
+      await unitUnderTest.sendWahlvorstand();
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
+    });
   });
 
   describe("initWahlvorstand", () => {
@@ -385,12 +456,15 @@ describe("wahlvorstandStore.ts", () => {
       const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
+      expect(unitUnderTest.lastLoading).toBeNull();
+
       await unitUnderTest.initWahlvorstand();
 
       expect(unitUnderTest.wahlvorstand).toStrictEqual(mockedGetWahlvorstand);
       expect(mockDefinitions.getWahlvorstand.mock.calls).toStrictEqual([
         [wahlbezirkID, { forceUpdate: true, sendNotification: true }],
       ]);
+      expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
     });
 
     it("should_notLoadWahlvorstand_when_serviceCallFailed", async () => {
@@ -404,6 +478,20 @@ describe("wahlvorstandStore.ts", () => {
       await expect(() =>
         unitUnderTest.initWahlvorstand()
       ).rejects.toThrowError();
+    });
+
+    it("should_setWahlvorstandErfasstFalse_when_called", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(_createUser(wahlbezirkID));
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
+      const mockedGetWahlvorstand = createWahlvorstand(0);
+      mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
+
+      await unitUnderTest.initWahlvorstand();
+
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
   });
 
@@ -428,6 +516,8 @@ describe("wahlvorstandStore.ts", () => {
       const userStore = useUserStore();
       userStore.setUser(_createUser("wahlbezirkID"));
 
+      useWorkflowStore().isWahlvorstandErfasst = true;
+
       const mockedGetWahlvorstand = createWahlvorstand(0);
       mockDefinitions.getWahlvorstand.mockReturnValue(mockedGetWahlvorstand);
 
@@ -436,11 +526,14 @@ describe("wahlvorstandStore.ts", () => {
       await unitUnderTest.forceLoadWahlvorstand();
 
       expect(unitUnderTest.lastLoading).toStrictEqual(mockedNow);
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
 
     it("should_notUpdateLastLoading_when_getWahlvorstandFails", async () => {
       const userStore = useUserStore();
       userStore.setUser(_createUser("wahlbezirkID"));
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       mockDefinitions.getWahlvorstand.mockImplementationOnce(() => {
         throw new Error("API Error");
@@ -453,6 +546,7 @@ describe("wahlvorstandStore.ts", () => {
       );
 
       expect(unitUnderTest.lastLoading).toBeNull();
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(true);
     });
   });
 
@@ -645,6 +739,7 @@ describe("wahlvorstandStore.ts", () => {
           prepareWahlvorstandsmitglied().anwesend(false).build(),
         ])
         .build();
+      useWorkflowStore().isWahlvorstandErfasst = true;
 
       unitUnderTest.resetAllAnwesenheiten();
 
@@ -652,6 +747,7 @@ describe("wahlvorstandStore.ts", () => {
         (mitglieder: Wahlvorstandsmitglied[]) =>
           mitglieder.every((mitglied) => !mitglied.anwesend)
       );
+      expect(useWorkflowStore().isWahlvorstandErfasst).toStrictEqual(false);
     });
   });
 

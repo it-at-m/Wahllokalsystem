@@ -34,7 +34,12 @@ export function useDateTimeUtils() {
     return date;
   };
 
+  function isTodayOrFuture(date: Date): boolean {
+    return isValidDate(date) && date.getTime() >= new Date().getTime();
+  }
+
   return {
+    isTodayOrFuture,
     isValidDate,
     createTodayWithTime,
   };

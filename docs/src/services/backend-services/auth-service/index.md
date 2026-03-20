@@ -3,7 +3,7 @@
 Zuständig für die Authentifizierung und Verwaltung der Rechte der User des Systems.
 
 Der Service stellt auch die Loginmaske zur Verfügung. Dazu wird [Freemarker](https://freemarker.apache.org/index.html)
-verwendet. Mittels [wro4j](https://github.com/wro4j/wro4j) werden JavaScript Ressource (jquery und Bootstrap)
+verwendet. Mittels [wro4j](https://github.com/wro4j/wro4j) werden JavaScript Ressourcen (jquery und Bootstrap)
 zur Verfügung gestellt. Im Projekt sind zusätzliche Ressourcen im Ordner `resources-non-filtered` hinterlegt.
 
 ## Abhängigkeiten
@@ -54,11 +54,11 @@ erDiagram
 Neben den [Standardclaims](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims) werden durch
 den Auth-Service folgende zusätzliche Claims gesetzt:
 
-| Claimname | Beschreibung | Datentyp |
-| --------- | ------------------------------------------------------------------- | -------- |
-| wahlbezirkID | technische ID des Hauptwahlbezirkes des Benutzers | UUIDv4 |
-| wahlbezirksArt | Art des Wahlbezirks (Urnenwahl oder Briefwahl) | Enum: [BWB, UWB] |
-| wahlbezirkid_wahlnummer | Wahlbezirke und Wahlen, die dem Benutzer zur Pflege zugewiesen sind | JSON-String |
+| Claimname               | Beschreibung                                                             | Datentyp         |
+|-------------------------|--------------------------------------------------------------------------|------------------|
+| wahlbezirkID            | technische ID des Hauptwahlbezirkes des Benutzerkontos                   | UUIDv4           |
+| wahlbezirksArt          | Art des Wahlbezirks (Urnenwahl oder Briefwahl)                           | Enum: [BWB, UWB] |
+| wahlbezirkid_wahlnummer | Wahlbezirke und Wahlen, die dem Benutzerkonto zur Pflege zugewiesen sind | JSON-String      |
 
 > [!NOTE] Aufbau `wahlbezirkid_wahlnummer`
 >
@@ -76,7 +76,7 @@ den Auth-Service folgende zusätzliche Claims gesetzt:
 >
 > - wahlbezirkID ... technische ID des Wahlbezirkes für die Wahl
 > - wahlnummer ... Nummer der Wahl in der Reihenfolge der abzuarbeitenden Wahlen
-> - wahlID ... technische ID der Wahl in welcher der Benutzer arbeitet
+> - wahlID ... technische ID der Wahl, welche durch das Benutzerkonto betreut wird
 
 Diese Informationen sind auch über den Userinfo-Endpunkt des Auth-Services abrufbar.
 
@@ -102,37 +102,41 @@ sequenceDiagram
         AuthService->>+InfomanagementService : get Willkommenstext Konfiguration
         InfomanagementService->>-AuthService : Willkommenstext
     end
-    AuthService->>AuthService: ergänze Werte für View
+    
+    opt Fehler beim Letzten Login
+        AuthService->>AuthService : Ergänze Fehlermeldung
+    end
 
     AuthService->>-User : LoginView
 ```
 
 ### Login
 
-Damit ein Benutzer sich anmelden darf, müssen zum einen die Logindaten entsprechend LDAP korrekt sein.
+Damit die Nutzer\*innen sich anmelden dürfen, müssen zum einen die Logindaten entsprechend LDAP korrekt sein.
 Des Weiteren müssen folgende Regeln beachtet werden:
 
-1. Ist der Nutzer gesperrt?
-1. Falls der Nutzer gesperrt ist, muss die Sperre abgelaufen sein
-1. darf der Nutzer sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
-1. erfolgte der Login über eine erlaubte Anwendung (Prüfung der clientID)
+1. Ist das Benutzerkonto gesperrt?
+2. Falls das Benutzerkonto gesperrt ist, muss die Sperre abgelaufen sein
+3. Dürfen die Nutzer\*innen sich nur innerhalb einer bestimmten Zeitspanne einloggen wird der Zeitraum validiert
+4. Erfolgte der Login über eine erlaubte Anwendung (Prüfung der clientID)
 
 > [!NOTE]
 > Ein erfolgreicher Login setzt alle vorherigen Loginversuche zurück
 
-### Erstellung der Benutzer
+### Erstellung der Benutzerkonten
 
 > [!IMPORTANT]
-> Damit Benutzer angelegt werden können muss die definierte Authority vorhanden sein die den Benutzern zugewiesen werden soll.
+> Damit Benutzerkonten angelegt werden können, muss die definierte Authority vorhanden sein die den entsprechenden
+> Konten zugewiesen werden soll.
 
 > [!NOTE]
 > Wird der Service mit dem Profil `db-dummydata` gestartet werden Testdaten erzeugt, welche die notwendige Authority umfasst.
 > Im regulären Betrieb werden die Authority sowie Permission mittels Skript erzeugt.
 
-Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzer. Dabei werden der
+Der Service erzeugt für eine Liste an Wahlbezirken eines Wahltermins (`wahltagID`) Benutzerkonten. Dabei werden der
 Benutzername und die PIN zufällig erzeugt.
 
-Die Benutzer die zuvor für den Wahltermin vorhanden waren werden gelöscht.
+Die Benutzerkonten die zuvor für den Wahltermin vorhanden waren werden gelöscht.
 
 ## Konfigurationsparameter
 

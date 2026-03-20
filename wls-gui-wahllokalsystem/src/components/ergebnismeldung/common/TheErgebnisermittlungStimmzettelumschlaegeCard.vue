@@ -16,7 +16,7 @@
           />
           <base-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-            :rules="[required, minNumber(0), maxNumber(9999)]"
+            :rules="[required]"
             min-width="20rem"
             :label="`Anzahl der ${getStimmzettelTermForWahl(wahl)}`"
           />
@@ -26,10 +26,44 @@
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isSaveButtonDisabled"
-          @click="onSaveAnzahlStimmzettelClicked"
+          save-text="Speichern und Weiter"
+          @click="onSaveClicked"
         />
       </v-card-actions>
     </v-card>
+    <base-dialog-begruendung
+      v-if="dialog"
+      :visible="dialog.isVisible"
+      :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
+      :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
+      save-text="Speichern und Weiter"
+      @cancel="dialog.isVisible = false"
+      @confirm="onConfirmClicked"
+    >
+      <div class="font-weight-bold mb-3">
+        {{ wahlenActions.getWahlNameOrBlankStringById(props.wahlId) }}
+      </div>
+      <div class="mb-3">
+        {{ getDialogContent() }}
+      </div>
+      <v-textarea
+        v-model="dialog.differenceBegruendung.begruendung"
+        :rules="[
+          minLength(MIN_LENGTH_FOR_BEGRUENDUNG),
+          maxLength(MAX_LENGTH_FOR_TEXT_INPUT),
+        ]"
+        rows="1"
+        label="Bitte begründen Sie hier die Abweichung"
+        auto-grow
+        autofocus
+        persistent-counter
+        :counter="MAX_LENGTH_FOR_TEXT_INPUT"
+        data-test="basedialogbegruendung-textarea"
+        @update:model-value="
+          updateValidationStateForBegruendung(dialog.differenceBegruendung)
+        "
+      />
+    </base-dialog-begruendung>
   </v-container>
 </template>
 
@@ -38,26 +72,48 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
+import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import {
+  MAX_LENGTH_FOR_TEXT_INPUT,
+  MIN_LENGTH_FOR_BEGRUENDUNG,
+} from "@/constants.ts";
+import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-const { maxNumber, minNumber, required, timeGreaterOrEqual, timeNotInFuture } =
+const { required, timeGreaterOrEqual, timeNotInFuture, minLength, maxLength } =
   useRules();
 
 const props = defineProps<{
   wahlId: string;
+  wahlbezirkId: string;
   title: string;
   useTime?: boolean;
 }>();
 
-const { wahlenActions, stimmzettelumschlaegeActions } = useWahlenStore();
+const { wahlenActions } = useWahlenStore();
 const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { getStimmzettelTermForWahl } = useTextFormatter();
+const { getStimmzettelTermForWahl, getWahlscheineOrStimmabgabevermerkeTerm } =
+  useTextFormatter();
+const {
+  dialog,
+  isWahlscheineUnequalToStimmzettel,
+  checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege,
+  saveBegruendungAndStimmzettelumschlaege,
+  updateValidationStateForBegruendung,
+  getDialogContent,
+} = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
+const { getNextRoute } = useNavigationUtils();
+const { setStepDone } = useWorkflowStore();
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -67,7 +123,24 @@ const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
 });
 
-function onSaveAnzahlStimmzettelClicked() {
-  stimmzettelumschlaegeActions.saveStimmzettelumschlaege(props.wahlId);
+async function onSaveClicked() {
+  await checkForDifferencesAndOpenDialogOrSaveStimmzettelumschlaege();
+  if (!isWahlscheineUnequalToStimmzettel.value) {
+    await continueInWorkflow();
+  }
+}
+
+async function onConfirmClicked() {
+  await saveBegruendungAndStimmzettelumschlaege();
+  await continueInWorkflow();
+}
+
+async function continueInWorkflow() {
+  setStepDone(
+    props.wahlId,
+    props.wahlbezirkId,
+    MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+  );
+  await router.push(getNextRoute());
 }
 </script>

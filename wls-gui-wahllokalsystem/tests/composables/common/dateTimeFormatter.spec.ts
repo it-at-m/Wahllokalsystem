@@ -11,6 +11,7 @@ describe("dateTimeFormatter.ts", () => {
     toGermanDateWithLongMonth,
     toYyyyMmDd,
     toYyyyMmDdWithTimeWithoutTimezoneOffset,
+    toTimeWithHoursAndOptionalMinutes,
   } = useDateTimeFormatter();
 
   beforeEach(() => {
@@ -194,5 +195,40 @@ describe("dateTimeFormatter.ts", () => {
       );
       expect(result).toStrictEqual("");
     });
+  });
+
+  describe("toTimeWithHoursAndOptionalMinutes", () => {
+    it.each([
+      {
+        dateToParse: new Date("2025-02-18T15:00:00"),
+        expectedTimeString: "15",
+      },
+      {
+        dateToParse: new Date("2025-02-18T22:22:00"),
+        expectedTimeString: "22:22",
+      },
+      {
+        dateToParse: new Date("2025-02-18T09:00:00"),
+        expectedTimeString: "9",
+      },
+      {
+        dateToParse: new Date("2025-02-18T09:22:00"),
+        expectedTimeString: "09:22",
+      },
+      {
+        dateToParse: new Date("2025-02-18T12:01"),
+        expectedTimeString: "12:01",
+      },
+      {
+        dateToParse: new Date(""),
+        expectedTimeString: "",
+      },
+    ])(
+      "should_returnTimeOnlyWithMinutes_when_minutesUnequal00'$dateToParse'",
+      ({ dateToParse, expectedTimeString }) => {
+        const result = toTimeWithHoursAndOptionalMinutes(dateToParse);
+        expect(result).toStrictEqual(expectedTimeString);
+      }
+    );
   });
 });

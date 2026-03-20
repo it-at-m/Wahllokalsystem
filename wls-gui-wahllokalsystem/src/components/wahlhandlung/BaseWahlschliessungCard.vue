@@ -17,24 +17,19 @@
         />
       </v-form>
       <base-feedback-card
-        v-if="!isVorfaelleMaintained"
-        title="Vorfälle melden"
-        :type="InputFeedbackTypeEnum.error"
+        :title="
+          'Vorfälle ' + (isVorfaelleMaintained ? 'aktualisieren' : 'melden')
+        "
+        :type="type"
       >
-        Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
-        eingetretene Störungen berichtet und diese gespeichert haben.
-        <template #additionalFeedback>
-          <base-text-button @click="onEreignisseBearbeiten"
-            >Zu den Ereignissen</base-text-button
-          >
-        </template>
-      </base-feedback-card>
-      <base-feedback-card
-        v-else
-        :title="erinnerungTitle"
-        :type="InputFeedbackTypeEnum.information"
-      >
-        {{ erinnerungText }}
+        <div v-if="isVorfaelleMaintained">
+          Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben,
+          können diese hier erfasst werden.
+        </div>
+        <div v-else>
+          Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
+          eingetretene Störungen berichtet und diese gespeichert haben.
+        </div>
         <template #additionalFeedback>
           <base-text-button @click="onEreignisseBearbeiten"
             >Zu den Ereignissen</base-text-button
@@ -76,8 +71,7 @@ const { getNextRoute } = useNavigationUtils();
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
-const { isVorfaelleMaintained, ereigniseintraegeContainsVorfaelle } =
-  storeToRefs(useEreignisStore());
+const { isVorfaelleMaintained } = storeToRefs(useEreignisStore());
 
 const schliessungsuhrzeitValidForm = ref<null | boolean>(null);
 
@@ -86,17 +80,9 @@ const isSaveButtonDisabled = computed(
     schliessungsuhrzeitValidForm.value !== true || !isVorfaelleMaintained.value
 );
 
-const erinnerungTitle = computed(() =>
-  ereigniseintraegeContainsVorfaelle.value
-    ? "Vorfälle aktualisieren"
-    : "Vorfälle melden"
-);
-
-const erinnerungText = computed(() =>
-  ereigniseintraegeContainsVorfaelle.value
-    ? "Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben, können diese hier erfasst werden."
-    : "Wenn sich während der Wahlhandlung Vorfälle ereignet haben, können diese hier erfasst werden."
-);
+defineProps<{
+  type: InputFeedbackTypeEnum;
+}>();
 
 async function onEreignisseBearbeiten() {
   await router.push(ROUTE_EREIGNISSE);

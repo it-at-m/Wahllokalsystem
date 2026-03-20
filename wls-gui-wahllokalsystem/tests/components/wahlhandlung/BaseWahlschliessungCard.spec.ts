@@ -122,7 +122,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
     });
 
-    it("should_renderWithErinnerungCard_VorfaelleAktualisieren_when_vorfaelleAreMaintainedAndHasEintraege", async (context) => {
+    it("should_renderWithErinnerungCard_VorfaelleAktualisieren_when_vorfaelleAreMaintained", async (context) => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
@@ -144,26 +144,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
     });
 
-    it("should_renderWithErinnerungCard_VorfaelleMelden_when_vorfaelleAreMaintainedAndHasNoEintraege", async (context) => {
-      const infomanagementStore = useInfomanagementStore();
-      // @ts-expect-error: cannot set readonly
-      infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
-
-      const date = new Date("2025-05-23T17:30:00");
-      const wahlbezirkStore = useWahlbezirkStore();
-      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
-      const ereignisStore = useEreignisStore();
-      ereignisStore.isVorfaelleMaintained = true;
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [];
-
-      await flushPromises();
-
-      await expect(wrapper.html()).toMatchFileSnapshot(
-        getSnapshotFilename(context)
-      );
-    });
-
-    it("should_render_WithErinnerungCard_VorfaelleMelden_when_vorfaelleAreMaintainedButHasOnlyVorkommnisAndNoVorfall", async (context) => {
+    it("should_render_WithErinnerungCard_VorfaelleMelden_when_vorfaelleAreNotMaintained", async (context) => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
@@ -171,14 +152,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
       const ereignisStore = useEreignisStore();
-      ereignisStore.isVorfaelleMaintained = true;
-      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [
-        {
-          uhrzeit: new Date("2025-05-23T17:45:00"),
-          ereignisart: EreignisartEnum.Vorkommnis,
-          beschreibung: "Testeintrag",
-        },
-      ];
+      ereignisStore.isVorfaelleMaintained = false;
       await flushPromises();
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)

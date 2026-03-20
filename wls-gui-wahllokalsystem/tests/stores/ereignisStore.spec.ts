@@ -30,7 +30,8 @@ vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
 
 const mockedNow = new Date();
 
-const { prepareEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
+const { prepareEreignis, prepareWahlbezirkEreignisse } =
+  useVorfaelleundvorkommnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {
@@ -437,8 +438,9 @@ describe("ereignisStore.ts", () => {
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
       unitUnderTest.isVorfaelleMaintained = false;
 
-      const mockedWahlbezirkEreignisse =
-        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
+      const mockedWahlbezirkEreignisse = prepareWahlbezirkEreignisse()
+        .ereigniseintraege([])
+        .build();
       mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
 
       await unitUnderTest.loadEreignisse();
@@ -446,7 +448,9 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.wahlbezirkEreignisse).toStrictEqual(
         mockedWahlbezirkEreignisse
       );
-      expect(unitUnderTest.isVorfaelleMaintained).toBeTruthy();
+      expect(unitUnderTest.isVorfaelleMaintained).toStrictEqual(
+        mockedWahlbezirkEreignisse.keineVorfaelle
+      );
     });
 
     it("should_handleError_when_getEreignisseThrowsError", async () => {
@@ -470,6 +474,10 @@ describe("ereignisStore.ts", () => {
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
       unitUnderTest.isVorfaelleMaintained = false;
+      unitUnderTest.wahlbezirkEreignisse = prepareWahlbezirkEreignisse()
+        .keineVorfaelle(true)
+        .ereigniseintraege([])
+        .build();
 
       const mockedDatetime = new Date();
 

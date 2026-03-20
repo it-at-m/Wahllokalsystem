@@ -14,6 +14,7 @@ import { ref } from "vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
+import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
@@ -55,6 +56,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     currentUserWahlbezirkID,
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
+
+  const { postAusdruck } = useAusdruckService();
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -276,6 +279,17 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     };
   }
 
+  async function sendAusdruckNiederschrift(
+    meldungsart: MeldungsartEnum,
+    ausdruck: string
+  ) {
+    try {
+      await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck);
+    } catch {
+      logError("Fehler beim Speichern des Ausdrucks");
+    }
+  }
+
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -368,5 +382,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
     prepareDataForSchnellmeldungDruck,
+    sendAusdruckNiederschrift,
   };
 }

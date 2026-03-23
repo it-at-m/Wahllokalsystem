@@ -34,7 +34,7 @@
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -69,7 +69,7 @@ const {
   prepareDataForSchnellmeldungDruck,
 } = useMbwUtils(wahlID, wahlbezirkID);
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 
 // button logic to be implemented
@@ -84,6 +84,10 @@ if (!wahl) {
     name: ROUTE_NOTFOUND,
   });
 }
+
+const workflowState = computed(() =>
+  getElectionWorkflowState(wahlID, wahlbezirkID)
+);
 
 function onSendenClicked() {
   sendSchnellmeldung();
@@ -123,6 +127,10 @@ async function onDruckenClicked() {
         isSendenActive.value = false;
         setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
+      }
+
+      if (workflowState.value) {
+        workflowState.value.isSchnellmeldungDone = true;
       }
 
       // todo update status #2002

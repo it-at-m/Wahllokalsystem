@@ -65,6 +65,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -76,7 +77,7 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
-const { getElectionWorkflowState } = useWorkflowStore();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -127,6 +128,15 @@ async function onDruckenClicked() {
     printWindow.document.body.innerHTML = pdfText;
     printWindow.print();
     printWindow.close();
+
+    setStepDone(
+      wahlID,
+      currentUserWahlbezirkID,
+      MbwRoutesEnum.MBW_NIEDERSCHRIFT
+    );
+    if (workflowState.value) {
+      workflowState.value.isNiederschriftDone = true;
+    }
   }
   const statusForWahlAndWahlbezirk = status.value.find(
     (status) =>
@@ -135,9 +145,6 @@ async function onDruckenClicked() {
   );
   if (statusForWahlAndWahlbezirk) {
     statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
-  }
-  if (workflowState.value) {
-    workflowState.value.isNiederschriftDone = true;
   }
   await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 

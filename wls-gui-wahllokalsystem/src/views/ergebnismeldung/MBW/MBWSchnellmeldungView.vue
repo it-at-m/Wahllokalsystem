@@ -127,10 +127,10 @@ async function onDruckenClicked() {
         isSendenActive.value = false;
         setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
-      }
 
-      if (workflowState.value) {
-        workflowState.value.isSchnellmeldungDone = true;
+        if (workflowState.value) {
+          workflowState.value.isSchnellmeldungDone = true;
+        }
       }
 
       // todo update status #2002

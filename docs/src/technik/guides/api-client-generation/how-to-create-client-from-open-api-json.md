@@ -8,7 +8,7 @@ Um aus der Spezifikation die Java-Klassen zu erstellen, muss das Generator-Plugi
 <plugin>
   <groupId>org.openapitools</groupId>
   <artifactId>openapi-generator-maven-plugin</artifactId>
-  <version>7.5.0</version>
+  <version>7.18.0</version>
   <executions>
   </executions>
 </plugin>
@@ -118,7 +118,7 @@ Damit die generierten Klassen compiliert werden können, muss folgende Dependenc
 <dependency>
   <groupId>org.openapitools</groupId>
   <artifactId>jackson-databind-nullable</artifactId>
-  <version>0.2.6</version>
+  <version>0.2.9</version>
 </dependency>
 ```
 
@@ -128,14 +128,14 @@ Des Weiteren wird für die abschließende Konfiguration der Beans `wls-common:ex
 <dependency>
   <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
   <artifactId>exception</artifactId>
-  <version>1.2.0</version>
+  <version>1.7.0</version>
 </dependency>
 
 <!-- Required for OAuth2TokenInterceptor -->
 <dependency>
  <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
  <artifactId>security</artifactId>
- <version>1.2.0</version>
+ <version>1.7.0</version>
 </dependency>
 ```
 

@@ -21,6 +21,7 @@ export const Default: Story = {
   args: {
     modelValue: prepareErgebnis().build(),
     snippedTitle: "Ungültige Stimmzettel",
+    isWahlFinished: false,
   },
 };
 
@@ -30,5 +31,6 @@ export const MinMaxValue: Story = {
     snippedTitle: "Ungültige Stimmzettel",
     minValue: 5,
     maxValue: 20,
+    isWahlFinished: false,
   },
 };

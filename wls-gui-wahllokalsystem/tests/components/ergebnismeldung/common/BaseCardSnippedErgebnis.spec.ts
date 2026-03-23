@@ -27,6 +27,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         props: {
           modelValue: prepareErgebnis().ergebnis(10000).build(),
           snippedTitle: "BaseCard",
+          isWahlFinished: false,
         },
       });
 
@@ -42,6 +43,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
           modelValue: prepareErgebnis().ergebnis(5).build(),
           snippedTitle: "BaseCard",
           minValue: 10,
+          isWahlFinished: false,
         },
       });
 
@@ -56,6 +58,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         props: {
           modelValue: prepareErgebnis().ergebnis(20).build(),
           snippedTitle: "BaseCard",
+          isWahlFinished: false,
         },
       });
 

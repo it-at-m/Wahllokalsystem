@@ -337,3 +337,5 @@ Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlni
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs 
+dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.

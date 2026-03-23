@@ -17,15 +17,22 @@
         />
       </v-form>
       <base-feedback-card
-        v-if="!isVorfaelleMaintained"
-        title="Vorfälle Melden"
-        :type="InputFeedbackTypeEnum.error"
+        :title="
+          'Vorfälle ' + (isVorfaelleMaintained ? 'aktualisieren' : 'melden')
+        "
+        :type="type"
       >
-        Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
-        eingetretene Störungen berichtet und diese gespeichert haben.
+        <div v-if="isVorfaelleMaintained">
+          Wenn sich während der Wahlhandlung weitere Vorfälle ereignet haben,
+          können diese hier erfasst werden.
+        </div>
+        <div v-else>
+          Sie können den Wahlschluss erst eingeben, wenn sie über mögliche
+          eingetretene Störungen berichtet und diese gespeichert haben.
+        </div>
         <template #additionalFeedback>
           <base-text-button @click="onEreignisseBearbeiten"
-            >Zu den ereignissen</base-text-button
+            >Zu den Ereignissen</base-text-button
           >
         </template>
       </base-feedback-card>
@@ -72,6 +79,10 @@ const isSaveButtonDisabled = computed(
   () =>
     schliessungsuhrzeitValidForm.value !== true || !isVorfaelleMaintained.value
 );
+
+defineProps<{
+  type: InputFeedbackTypeEnum;
+}>();
 
 async function onEreignisseBearbeiten() {
   await router.push(ROUTE_EREIGNISSE);

@@ -220,6 +220,8 @@ richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW`
 Auch diese darf nicht in der Zukunft liegen.
 Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt werden. Es erscheint ein Feedback-Dialog mit einem Button, der zur Seite
 mit den Ereignissen führt.
+Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
+Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}

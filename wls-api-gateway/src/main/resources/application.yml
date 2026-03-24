@@ -3,6 +3,10 @@ spring:
     name: "@project.artifactId@"
     group: "@project.groupId@"
     version: "@project.version@"
+  profiles:
+    group:
+      local:
+        - plainTextLogging
   main:
     web-application-type: reactive
     banner-mode: console

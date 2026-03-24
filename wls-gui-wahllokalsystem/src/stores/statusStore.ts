@@ -5,12 +5,13 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
-import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 
 export const storeID = "status";
 
 export const useStatusStore = defineStore(storeID, () => {
   const { getStatus, postStatus } = useStatusService();
+  const { getDefaultMeldung } = useStatusUtils();
 
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
@@ -73,15 +74,6 @@ export const useStatusStore = defineStore(storeID, () => {
     };
     status.value.push(defaultStatus);
     return defaultStatus;
-  }
-
-  function getDefaultMeldung() {
-    return {
-      validierungsstatus: MeldungValidierungsstatusEnum.NichtValidiert,
-      gedruckt: false,
-      uebermittelt: undefined,
-      sendeuhrzeit: undefined,
-    };
   }
 
   return {

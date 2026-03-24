@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
@@ -55,15 +56,18 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -73,8 +77,10 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
   useErgebnismeldungStore()
 );
 const { hasDoneVorkommnisse } = useEreignisUtils();
-const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
+const { getStatus, postStatus } = useStatusService();
+const { getInitialStatus } = useStatusUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -85,6 +91,7 @@ const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
+const status = ref<Status>();
 const { sendAusdruckNiederschrift } = useMbwUtils(
   wahlID,
   currentUserWahlbezirkID
@@ -97,11 +104,33 @@ if (!wahl) {
 
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
+  status.value =
+    (await getStatus(wahlID, currentUserWahlbezirkID, false)) ||
+    getInitialStatus(wahlID, currentUserWahlbezirkID);
 });
 
 function onSendenClicked() {
   if (wahl) {
-    sendNiederschrift(wahl);
+    sendNiederschrift(wahl)
+      .then(() => {
+        if (status.value) {
+          status.value.niederschrift.uebermittelt = true;
+        }
+      })
+      .catch(() => {
+        if (status.value) {
+          status.value.niederschrift.uebermittelt = false;
+        }
+      })
+      .finally(() => {
+        if (status.value) {
+          status.value.niederschrift.validierungsstatus =
+            MeldungValidierungsstatusEnum.Valide;
+          status.value.niederschrift.sendeuhrzeit =
+            toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+          postStatus(wahlID, currentUserWahlbezirkID, status.value, false);
+        }
+      });
   }
 }
 function onKorrigierenClicked() {
@@ -122,15 +151,15 @@ async function onDruckenClicked() {
     printWindow.print();
     printWindow.close();
   }
-  const statusForWahlAndWahlbezirk = status.value.find(
-    (status) =>
-      status.bezirkUndWahlID.wahlID == wahlID &&
-      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
+
+  sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText).then(
+    async () => {
+      if (status.value) {
+        status.value.niederschrift.gedruckt = true;
+        await postStatus(wahlID, currentUserWahlbezirkID, status.value, false);
+      }
+    }
   );
-  if (statusForWahlAndWahlbezirk) {
-    statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
-  }
-  await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 
   isDruckenLoading.value = false;
 }

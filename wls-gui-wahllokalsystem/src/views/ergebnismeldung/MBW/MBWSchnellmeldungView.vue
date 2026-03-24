@@ -32,9 +32,9 @@
 
 <script setup lang="ts">
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
-import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -42,15 +42,18 @@ import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWaehlerAnzeigenCard.vue";
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -62,7 +65,6 @@ const wahlID = route.params.wahlId as string;
 
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
-const { status } = storeToRefs(useStatusStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,
@@ -71,12 +73,17 @@ const {
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
+const { getStatus, postStatus } = useStatusService();
+const { getInitialStatus } = useStatusUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
 const isSendenActive = ref<boolean>(true);
+
+const status = ref<Status>();
 
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
@@ -85,8 +92,33 @@ if (!wahl) {
   });
 }
 
+onActivated(async () => {
+  status.value =
+    (await getStatus(wahlID, wahlbezirkID, false)) ||
+    getInitialStatus(wahlID, wahlbezirkID);
+});
+
 function onSendenClicked() {
-  sendSchnellmeldung();
+  sendSchnellmeldung()
+    .then(() => {
+      if (status.value) {
+        status.value.schnellmeldung.uebermittelt = true;
+      }
+    })
+    .catch(() => {
+      if (status.value) {
+        status.value.schnellmeldung.uebermittelt = false;
+      }
+    })
+    .finally(() => {
+      if (status.value) {
+        status.value.schnellmeldung.validierungsstatus =
+          MeldungValidierungsstatusEnum.Valide;
+        status.value.schnellmeldung.sendeuhrzeit =
+          toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+        postStatus(wahlID, wahlbezirkID, status.value, false);
+      }
+    });
 }
 function onKorrigierenClicked() {
   // to be implemented
@@ -95,17 +127,11 @@ function onKorrigierenClicked() {
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
   try {
-    const statusForWahlAndWahlbezirk = status.value.find(
-      (status) =>
-        status.bezirkUndWahlID.wahlID == wahlID &&
-        status.bezirkUndWahlID.wahlbezirkID == wahlbezirkID
-    );
-
-    if (wahl && statusForWahlAndWahlbezirk) {
+    if (wahl && status.value) {
       const data: SchnellmeldungDruckInput =
         await prepareDataForSchnellmeldungDruck(
           wahl,
-          statusForWahlAndWahlbezirk,
+          status.value,
           MeldungsArtEnum.Schnellmeldung
         );
 
@@ -121,11 +147,15 @@ async function onDruckenClicked() {
         printWindow.print();
         printWindow.close();
         isSendenActive.value = false;
+
+        if (status.value) {
+          status.value.schnellmeldung.gedruckt = true;
+          await postStatus(wahlID, wahlbezirkID, status.value, false);
+        }
+
         setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
       }
-
-      // todo update status #2002
     }
   } catch {
     addNotification(

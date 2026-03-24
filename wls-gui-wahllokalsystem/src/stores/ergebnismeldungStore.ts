@@ -7,12 +7,10 @@ import type { Wahl } from "@/types/wahl/Wahl.ts";
 import { defineStore, storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
@@ -32,8 +30,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     postNiederschrift,
   } = useErgebnisService();
   const { getStimmzettelTermForWahl } = useTextFormatter();
-  const { saveStatus, getStatusEntry } = useStatusStore();
-  const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
   const ergebnisse = ref<Ergebnisse[]>([]);
   const isErgebnisseSaving = ref<boolean>(false);
@@ -257,8 +253,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
     const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahl.wahlID);
     if (wahlbezirkID) {
       isNiederschriftAndStatusSaving.value = true;
-      const statusToUpdate = getStatusEntry(wahl.wahlID, wahlbezirkID);
-      statusToUpdate.niederschrift.uebermittelt = true;
       try {
         await postNiederschrift(
           wahl.wahlID,
@@ -266,14 +260,6 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
           wahl.waehlerverzeichnisNummer,
           currentUserWahlbezirkID.value
         );
-      } catch {
-        statusToUpdate.niederschrift.uebermittelt = false;
-      }
-
-      statusToUpdate.niederschrift.sendeuhrzeit =
-        toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-      try {
-        await saveStatus(wahl.wahlID, wahlbezirkID, false);
       } finally {
         isNiederschriftAndStatusSaving.value = false;
       }

@@ -51,6 +51,9 @@
         <!-- Testing -->
         <jacoco.version>0.8.14</jacoco.version>
 
+        <!-- Logging -->
+        <logstash.encoder>8.1</logstash.encoder>
+
         <!-- Release -->
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
 
@@ -118,6 +121,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.encoder}</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>

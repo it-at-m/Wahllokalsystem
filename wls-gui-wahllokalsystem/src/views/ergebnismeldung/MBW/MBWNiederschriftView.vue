@@ -152,15 +152,15 @@ async function onDruckenClicked() {
     printWindow.close();
   }
 
-  sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText).then(
-    async () => {
+  sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText)
+    .then(async () => {
       if (status.value) {
         status.value.niederschrift.gedruckt = true;
         await postStatus(wahlID, currentUserWahlbezirkID, status.value, false);
       }
-    }
-  ).finally(() => {
-    isDruckenLoading.value = false;
-  });
+    })
+    .finally(() => {
+      isDruckenLoading.value = false;
+    });
 }
 </script>

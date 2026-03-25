@@ -159,8 +159,8 @@ async function onDruckenClicked() {
         await postStatus(wahlID, currentUserWahlbezirkID, status.value, false);
       }
     }
-  );
-
-  isDruckenLoading.value = false;
+  ).finally(() => {
+    isDruckenLoading.value = false;
+  });
 }
 </script>

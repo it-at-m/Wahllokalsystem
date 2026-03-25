@@ -110,13 +110,13 @@ function onSendenClicked() {
         status.value.schnellmeldung.uebermittelt = false;
       }
     })
-    .finally(() => {
+    .finally(async () => {
       if (status.value) {
         status.value.schnellmeldung.validierungsstatus =
           MeldungValidierungsstatusEnum.Valide;
         status.value.schnellmeldung.sendeuhrzeit =
           toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-        postStatus(wahlID, wahlbezirkID, status.value, false);
+        await postStatus(wahlID, wahlbezirkID, status.value, false);
       }
     });
 }

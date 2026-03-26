@@ -17,7 +17,7 @@
     </appender>
 
     <!-- Logger -->
-    <logger name="de.muenchen.oss.wahllokalsystem.basisdatenservice"
+    <logger name="de.muenchen.oss.wahllokalsystem.apigateway"
             level="debug">
         <appender-ref ref="STDOUT" />
     </logger>

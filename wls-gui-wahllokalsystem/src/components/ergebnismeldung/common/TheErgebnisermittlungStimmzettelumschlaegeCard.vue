@@ -120,7 +120,7 @@ const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
 const isMBWAuszaehlungDone = computed(() =>
-  isElectionFinished(props.wahlId, props.wahlbezirkId ?? "")
+  isElectionFinished(props.wahlId, props.wahlbezirkId)
 );
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;

@@ -191,7 +191,7 @@ const expandedRowIndex = ref<number | null>(null);
 const dirtyRows = ref<Record<number, boolean>>({});
 
 const isMBWAuszaehlungDone = computed(() =>
-  isElectionFinished(props.wahlID, props.wahlbezirkID ?? "")
+  isElectionFinished(props.wahlID, props.wahlbezirkID)
 );
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;

@@ -62,7 +62,7 @@ const { isErgebnisseSaving, saveGueltigeErgebnisse } = useMbwUtils(
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
 const isMBWAuszaehlungDone = computed(() =>
-  isElectionFinished(props.wahlID, props.wahlbezirkID ?? "")
+  isElectionFinished(props.wahlID, props.wahlbezirkID)
 );
 
 async function onSaveClicked() {

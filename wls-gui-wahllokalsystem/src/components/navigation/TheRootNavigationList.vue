@@ -27,7 +27,7 @@
       title="Ereignisse"
       :to="routeWithName(ROUTE_EREIGNISSE)"
     />
-    <the-scores-list-group />
+    <the-scores-list-items />
   </v-list>
 </template>
 
@@ -36,7 +36,7 @@ import { storeToRefs } from "pinia";
 
 import BaseDividerListItem from "@/components/navigation/common/BaseDividerListItem.vue";
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
-import TheScoresListGroup from "@/components/navigation/TheScoresListGroup.vue";
+import TheScoresListItems from "@/components/navigation/TheScoresListItems.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import {

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-0">
+  <div>
     <base-divider-list-item title="Ergebnisermittlung" />
     <base-workflow-list-item
       v-if="isBWB"
@@ -22,7 +22,7 @@
       :key="wahl.wahlID"
       :wahl="wahl"
     />
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

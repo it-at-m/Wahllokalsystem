@@ -1,11 +1,6 @@
 <template>
-  <v-list-group value="Ergebnisse">
-    <template #activator="{ props }">
-      <v-list-item
-        v-bind="props"
-        title="Ergebnisermittlung"
-      />
-    </template>
+  <v-container class="pa-0">
+    <base-divider-list-item title="Ergebnisermittlung" />
     <base-workflow-list-item
       v-if="isBWB"
       title="Wahlscheine"
@@ -27,13 +22,14 @@
       :key="wahl.wahlID"
       :wahl="wahl"
     />
-  </v-list-group>
+  </v-container>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
+import BaseDividerListItem from "@/components/navigation/common/BaseDividerListItem.vue";
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";

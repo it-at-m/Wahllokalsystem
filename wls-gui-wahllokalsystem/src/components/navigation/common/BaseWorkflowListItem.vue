@@ -17,6 +17,7 @@
           disabled ? '$disabled' : isWorkflowStepFinished ? '$valid' : '$edit'
         "
         size="small"
+        :color="disabled ? '' : isWorkflowStepFinished ? 'success' : 'warning'"
       />
     </template>
   </v-list-item>

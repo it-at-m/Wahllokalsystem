@@ -2,6 +2,8 @@ import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomana
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKonfigurationsparameterService } from "@/composables/infomanagement/konfigurationsparameterService.ts";
+import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -59,6 +61,14 @@ describe("konfigurationsparameterService", () => {
       const result = await getKonfigurationsparameter();
 
       expect(result).toEqual(mockedMappedKonfigurationsparameter);
+      expect(mockDefinitions.getKonfigurations).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
     });
 
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
@@ -77,6 +87,14 @@ describe("konfigurationsparameterService", () => {
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
       ]);
+      expect(mockDefinitions.getKonfigurations).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
     });
 
     it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCallAndNotificationFlagFalse", async () => {
@@ -90,6 +108,14 @@ describe("konfigurationsparameterService", () => {
 
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
+      );
+      expect(mockDefinitions.getKonfigurations).toHaveBeenCalledWith(
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
       );
     });
   });

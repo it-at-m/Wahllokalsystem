@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-auth-service</artifactId>
-    <version>0.7.6-SNAPSHOT</version>
+    <version>0.7.7-SNAPSHOT</version>
     <name>wls_auth_service</name>
 
     <properties>
@@ -186,7 +186,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.8</version>
+            <version>0.2.9</version>
         </dependency>
 
         <!-- wls-common -->

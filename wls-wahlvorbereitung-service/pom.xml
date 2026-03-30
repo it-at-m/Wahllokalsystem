@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-wahlvorbereitung-service</artifactId>
-    <version>0.4.10-SNAPSHOT</version>
+    <version>0.4.11-SNAPSHOT</version>
     <name>wls_wahlvorbereitung_service</name>
 
 

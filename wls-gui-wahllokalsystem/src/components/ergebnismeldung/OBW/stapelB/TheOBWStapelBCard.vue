@@ -7,7 +7,7 @@
           <v-card-text>
             <base-number-input
               :model-value="ergebnisseStapelBLeer"
-              :rules="[required, minNumber(0), maxNumber(9999)]"
+              :rules="[required]"
               min-width="20rem"
               @update:model-value="
                 onModelValueStapelBChanged(StapelArtEnum.ObwBLeer, $event)
@@ -19,7 +19,7 @@
         <v-card-text>
           <base-number-input
             :model-value="ergebnisseStapelBUngekennzeichnet"
-            :rules="[required, minNumber(0), maxNumber(9999)]"
+            :rules="[required]"
             min-width="20rem"
             @update:model-value="
               onModelValueStapelBChanged(
@@ -56,7 +56,7 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { required } = useRules();
 
 const props = defineProps<{
   wahlId: string;

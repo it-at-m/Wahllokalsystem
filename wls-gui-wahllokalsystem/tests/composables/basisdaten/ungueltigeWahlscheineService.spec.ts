@@ -2,6 +2,8 @@ import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/Wahlbezirk
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUngueltigeWahlscheineService } from "@/composables/basisdaten/ungueltigeWahlscheineService.ts";
+import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -62,8 +64,15 @@ describe("ungueltigeWahlscheineService.ts", () => {
       expect(mockDefinitions.mapToModel.mock.calls).toStrictEqual([
         [mockedUngueltigeWahlscheineApiResponseData],
       ]);
-      expect(mockDefinitions.getUngueltigeWahlscheine.mock.calls).toStrictEqual(
-        [[wahltagID, wahlbezirksArt]]
+      expect(mockDefinitions.getUngueltigeWahlscheine).toHaveBeenCalledWith(
+        wahltagID,
+        wahlbezirksArt,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
       );
       expect(mockDefinitions.addNotification.mock.calls).toStrictEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -89,6 +98,16 @@ describe("ungueltigeWahlscheineService.ts", () => {
       await getUngueltigeWahlscheine(wahltagID, wahlbezirksArt, false);
 
       expect(mockDefinitions.addNotification.mock.calls).toHaveLength(0);
+      expect(mockDefinitions.getUngueltigeWahlscheine).toHaveBeenCalledWith(
+        wahltagID,
+        wahlbezirksArt,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
     });
 
     it("should_addNotification_when_apiCallFailed", async () => {
@@ -105,8 +124,15 @@ describe("ungueltigeWahlscheineService.ts", () => {
       ).rejects.toThrow(apiCallError);
 
       expect(mockDefinitions.mapToModel.mock.calls).toHaveLength(0);
-      expect(mockDefinitions.getUngueltigeWahlscheine.mock.calls).toStrictEqual(
-        [[wahltagID, wahlbezirksArt]]
+      expect(mockDefinitions.getUngueltigeWahlscheine).toHaveBeenCalledWith(
+        wahltagID,
+        wahlbezirksArt,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
       );
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
@@ -127,8 +153,15 @@ describe("ungueltigeWahlscheineService.ts", () => {
       ).rejects.toThrow(apiCallError);
 
       expect(mockDefinitions.mapToModel.mock.calls).toHaveLength(0);
-      expect(mockDefinitions.getUngueltigeWahlscheine.mock.calls).toStrictEqual(
-        [[wahltagID, wahlbezirksArt]]
+      expect(mockDefinitions.getUngueltigeWahlscheine).toHaveBeenCalledWith(
+        wahltagID,
+        wahlbezirksArt,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
       );
       expect(mockDefinitions.addNotification.mock.calls).toHaveLength(0);
     });

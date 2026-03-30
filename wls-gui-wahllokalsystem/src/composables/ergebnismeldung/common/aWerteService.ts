@@ -2,6 +2,7 @@ import {
   AWerteControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useAWerteMapper } from "@/composables/ergebnismeldung/common/aWerteMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
@@ -9,6 +10,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const { toModel } = useAWerteMapper();
 const { addNotification } = useUserNotificationService();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useAWerteService() {
   const aWerteController = new AWerteControllerApi(
@@ -17,7 +19,10 @@ export function useAWerteService() {
 
   async function getAWerte(wahlbezirkId: string, sendNotification = true) {
     try {
-      const response = await aWerteController.getAWerte(wahlbezirkId);
+      const response = await aWerteController.getAWerte(
+        wahlbezirkId,
+        axiosConfigWrapper().requestAsOnlineFirst()
+      );
       if (sendNotification) {
         addNotification(
           `AWerte erfolgreich geladen`,

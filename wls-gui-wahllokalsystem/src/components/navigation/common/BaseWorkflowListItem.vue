@@ -1,10 +1,14 @@
 <template>
   <v-list-item
-    :title="title"
     :to="to"
     :disabled="!listGroupActivator && disabled"
     :lines="subtitle ? false : 'one'"
   >
+    <template #title>
+      <div class="text-wrap">
+        {{ title }}
+      </div>
+    </template>
     <template
       v-if="subtitle"
       #subtitle
@@ -17,6 +21,7 @@
           disabled ? '$disabled' : isWorkflowStepFinished ? '$valid' : '$edit'
         "
         size="small"
+        :color="disabled ? '' : isWorkflowStepFinished ? 'success' : 'warning'"
       />
     </template>
   </v-list-item>

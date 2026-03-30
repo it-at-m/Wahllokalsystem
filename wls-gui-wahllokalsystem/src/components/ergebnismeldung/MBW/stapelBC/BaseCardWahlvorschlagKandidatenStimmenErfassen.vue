@@ -11,7 +11,7 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        :disabled="!isFormValid"
+        :disabled="isWahlFinished || !isFormValid"
         :loading="isSaving"
         @click="onSaveButtonClicked"
       />
@@ -35,6 +35,10 @@ const wahlvorschlagModel = defineModel("modelValue", {
 
 defineProps({
   isSaving: {
+    type: Boolean,
+    required: true,
+  },
+  isWahlFinished: {
     type: Boolean,
     required: true,
   },

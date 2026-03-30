@@ -92,6 +92,7 @@
                     <base-card-wahlvorschlag-kandidaten-stimmen-erfassen
                       :model-value="proxyModel.value[index]!"
                       :is-saving="isSaving"
+                      :is-wahl-finished="isMBWAuszaehlungDone"
                       @do-save="onSaveWahlvorschlag(index, save)"
                       @dirty="onInputChanged(index)"
                     />
@@ -156,7 +157,7 @@ import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
@@ -188,6 +189,10 @@ const { loadAndCombineErgebnisseAndWahlvorschlaege } = useMbwUtils(
 const ergebnisseAndWahlvorschlaege = ref<MbwErgebnisseAndWahlvorschlag[]>([]);
 const expandedRowIndex = ref<number | null>(null);
 const dirtyRows = ref<Record<number, boolean>>({});
+
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(props.wahlID, props.wahlbezirkID)
+);
 
 const COUNT_COLUMNS_BEFORE_SUM = 3;
 

@@ -57,7 +57,11 @@
         <wls-clock class="navbar-text mx-2 mt-1" />
       </v-col>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
+    <v-navigation-drawer
+      v-model="drawer"
+      permanent
+      :width="320"
+    >
       <the-root-navigation-list />
     </v-navigation-drawer>
   </div>

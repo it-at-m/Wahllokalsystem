@@ -59,33 +59,38 @@ public class EreignisControllerIntegrationTest {
     @Test
     @Transactional
     void should_returnEmptyResponse_when_noDataFound() throws Exception {
-      val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID").with(
-              jwt()
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID")
+              .with(
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
       val response = api.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
-      @Test
-      @Transactional
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID_Wrong").with(
-                  jwt()
-                          .authorities(
-                                  new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
-                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
-                          .jwt(jwt -> jwt.claim("wahlbezirkID", null)));
-          api.perform(request).andExpect(status().isForbidden());
 
-      }
+    @Test
+    @Transactional
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID_Wrong")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", null)));
+      api.perform(request).andExpect(status().isForbidden());
+    }
+
     @Test
     @Transactional
     void should_returnPersistedWahlbezirkEreignisseDTO_when_dataFound() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_EREIGNISSE);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_EREIGNISSE);
       val ereignisList =
           Set.of(
               TestdataFactory.CreateEreignisEntity.withData("beschreibung1"),
@@ -96,11 +101,13 @@ public class EreignisControllerIntegrationTest {
       val mockedEreignisseModel = ereignisModelMapper.toModel(ereignisse);
       val expectedResponseDTO = ereignisDTOMapper.toDTO(mockedEreignisseModel);
 
-      val request = MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID").with(
-              jwt()
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/ereignisse/wahlbezirkID")
+              .with(
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_EREIGNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_EREIGNISSE))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
       val response = api.perform(request).andExpect(status().isOk()).andReturn();
       val responseBodyAsDTO =
@@ -142,7 +149,8 @@ public class EreignisControllerIntegrationTest {
     @Test
     void should_overrideExistingEreignisse_when_newDataIsPosted() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE);
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_EREIGNISSE, Authorities.REPOSITORY_READ_EREIGNISSE);
       val ereignisList = Set.of(TestdataFactory.CreateEreignisEntity.withData("beschreibung1"));
       val ereignisseToOverride =
           TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
@@ -167,33 +175,33 @@ public class EreignisControllerIntegrationTest {
       val savedEreignisse = ereignisRepository.findByWahlbezirkID(wahlbezirkID);
       Assertions.assertThat(savedEreignisse.get()).isEqualTo(expectedSavedEreignisse);
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-        String wahlbezirkID = null;
 
-          val mockedEreignisDtoList =
-                  List.of(
-                          TestdataFactory.CreateEreignisDto.withData(),
-                          TestdataFactory.CreateEreignisDto.withData(),
-                          TestdataFactory.CreateEreignisDto.withData());
-          val mockedEreignisseWriteDto =
-                  TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
-          val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
-          api.perform(request).andExpect(status().isForbidden());
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
 
-      }
+      val mockedEreignisDtoList =
+          List.of(
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData(),
+              TestdataFactory.CreateEreignisDto.withData());
+      val mockedEreignisseWriteDto =
+          TestdataFactory.CreateEreignisseWriteDto.withData(mockedEreignisDtoList);
+      val request = createPostWithBody(wahlbezirkID, mockedEreignisseWriteDto);
+      api.perform(request).andExpect(status().isForbidden());
+    }
 
     private MockHttpServletRequestBuilder createPostWithBody(
         final String wahlbezirkID, final EreignisseWriteDTO ereignisseWriteDTO) throws Exception {
       return MockMvcRequestBuilders.post("/businessActions/ereignisse/" + wahlbezirkID)
           .with(csrf())
-              .with(
-                      jwt()
-                              .authorities(
-                                     new SimpleGrantedAuthority(Authorities.SERVICE_POST_EREIGNISSE),
-                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_DELETE_EREIGNISSE),
-                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_EREIGNISSE))
-                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_EREIGNISSE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_DELETE_EREIGNISSE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_EREIGNISSE))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(ereignisseWriteDTO));
     }

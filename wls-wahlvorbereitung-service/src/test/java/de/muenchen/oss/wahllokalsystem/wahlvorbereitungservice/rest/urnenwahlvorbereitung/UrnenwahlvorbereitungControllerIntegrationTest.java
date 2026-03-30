@@ -76,16 +76,18 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
       val wahlbezirk4 =
           UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
 
-        SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
       urnenwahlVorbereitungRepository.saveAll(
           List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
 
-      val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToFind)
+      val request =
+          get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToFind)
               .with(
-              jwt()
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -112,36 +114,41 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
           UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk3", "wahlID3").build();
       val wahlbezirk4 =
           UrnenwahlVorbereitungTestdatenfactory.initValid("wahlbezirk4", "wahlID4").build();
-        SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG);
       urnenwahlVorbereitungRepository.saveAll(
           List.of(wahlbezirk1, wahlbezirk2, wahlbezirkToFind, wahlbezirk4));
 
-      val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToLookup)
+      val request =
+          get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkIDToLookup)
               .with(
-              jwt()
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToLookup)));
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkID = null;
 
-          val request = get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID)
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
 
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+      val request =
+          get("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_URNENWAHLVORBEREITUNG),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_URNENWAHLVORBEREITUNG))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -188,7 +195,7 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
               requestBody.anzahlWahlkabinen(),
               requestBody.anzahlWahltische(),
               requestBody.anzahlNebenraeume());
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG);
       urnenwahlVorbereitungRepository.save(entityToWriteOver);
 
       mockMvc.perform(request).andExpect(status().isCreated());
@@ -262,23 +269,26 @@ public class UrnenwahlvorbereitungControllerIntegrationTest {
           .usingRecursiveComparison()
           .isEqualTo(expectedExceptionDTO);
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkID = null;
-          val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
-          val request = buildPostRequest(wahlbezirkID, requestBody);
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
+      val requestBody = UrnenwahlVorbereitungTestdatenfactory.initValidDTO("wahlID").build();
+      val request = buildPostRequest(wahlbezirkID, requestBody);
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
     private RequestBuilder buildPostRequest(
         final String wahlbezirkID, final UrnenwahlvorbereitungWriteDTO requestBody)
         throws Exception {
       return post("/businessActions/urnenwahlVorbereitung/" + wahlbezirkID)
-              .with(
-                      jwt()
-                              .authorities(
-                                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG),
-                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG))
-                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_URNENWAHLVORBEREITUNG),
+                      new SimpleGrantedAuthority(
+                          Authorities.REPOSITORY_WRITE_URNENWAHLVORBEREITUNG))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .with(csrf())
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));

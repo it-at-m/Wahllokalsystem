@@ -67,11 +67,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
   class PostWaehlerverzeichnis {
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
-          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
-        })*/
+    /*
+     * @WithMockUser(
+     * authorities = {
+     * Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+     * Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+     * })
+     */
     void should_setNewData_when_callingPost() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 89L;
@@ -79,12 +81,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
       val request =
           post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
@@ -108,16 +111,18 @@ public class WaehlerverzeichnisControllerIntegrationTest {
     }
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
-          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
-        })*/
+    /*
+     * @WithMockUser(
+     * authorities = {
+     * Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+     * Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+     * })
+     */
     void should_replaceData_when_dataIsPresent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 89L;
       val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS);
       waehlerverzeichnisRepository.save(
           new Waehlerverzeichnis(
               new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
@@ -128,12 +133,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
       val request =
           post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
@@ -158,11 +164,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
     }
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
-          Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
-        })*/
+    /*
+     * @WithMockUser(
+     * authorities = {
+     * Authorities.SERVICE_POST_WAEHLERVERZEICHNIS,
+     * Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS
+     * })
+     */
     void should_returnFachlicheWlsException_when_requestIsInvalidWhenParameterNotComplete()
         throws Exception {
       val wahlbezirkID = "wahlbezirkID";
@@ -171,12 +179,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
 
       val request =
           post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
@@ -201,36 +210,40 @@ public class WaehlerverzeichnisControllerIntegrationTest {
                   mockedValidationException.getServiceName(),
                   mockedValidationException.getMessage()));
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkID = null ;
-          val waehlerverzeichnisNummer = 89L;
-          val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
 
-          val request =
-                  post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
-                          .with(
-                                  jwt()
-                                          .authorities(
-                                                  new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
-                                                  new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
-                                          .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
-                          .with(csrf())
-                          .contentType(MediaType.APPLICATION_JSON)
-                          .content(objectMapper.writeValueAsString(requestBody));
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
+      val waehlerverzeichnisNummer = 89L;
+      val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
+
+      val request =
+          post(buildURL(wahlbezirkID, waehlerverzeichnisNummer))
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_WRITE_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
   class GetWaehlerverzeichnis {
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
-          Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
-        })*/
+    /*
+     * @WithMockUser(
+     * authorities = {
+     * Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
+     * Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
+     * })
+     */
     void should_returnData_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkIDToFind = "wahlbezirkIDToFind";
       val waehlerverzeichnisNummerToFind = 23L;
@@ -268,17 +281,19 @@ public class WaehlerverzeichnisControllerIntegrationTest {
               true,
               true);
 
-        SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
       waehlerverzeichnisRepository.saveAll(
           List.of(
               waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3, waehlerverzeichnis4));
 
-      val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
+      val request =
+          get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
               .with(
-              jwt()
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -293,11 +308,13 @@ public class WaehlerverzeichnisControllerIntegrationTest {
     }
 
     @Test
-/*    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
-          Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
-        })*/
+    /*
+     * @WithMockUser(
+     * authorities = {
+     * Authorities.SERVICE_GET_WAEHLERVERZEICHNIS,
+     * Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS
+     * })
+     */
     void should_returnNoContent_when_noDataFound() throws Exception {
       val wahlbezirkIDToFind = "wahlbezirkIDToFind";
       val waehlerverzeichnisNummerToFind = 23L;
@@ -327,36 +344,41 @@ public class WaehlerverzeichnisControllerIntegrationTest {
               true,
               true);
 
-        SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS);
       waehlerverzeichnisRepository.saveAll(
           List.of(waehlerverzeichnis1, waehlerverzeichnis2, waehlerverzeichnis3));
 
-      val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
+      val request =
+          get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
               .with(
-                      jwt()
-                              .authorities(
-                                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
-                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
-                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val result = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(result.getResponse().getContentAsString()).isEmpty();
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkIDToFind = null;
-          val waehlerverzeichnisNummerToFind = 23L;
-          val request = get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkIDToFind = null;
+      val waehlerverzeichnisNummerToFind = 23L;
+      val request =
+          get(buildURL(wahlbezirkIDToFind, waehlerverzeichnisNummerToFind))
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_WAEHLERVERZEICHNIS))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   private String buildURL(final String wahlbezirkID, final long waehlerverzeichnisnummer) {

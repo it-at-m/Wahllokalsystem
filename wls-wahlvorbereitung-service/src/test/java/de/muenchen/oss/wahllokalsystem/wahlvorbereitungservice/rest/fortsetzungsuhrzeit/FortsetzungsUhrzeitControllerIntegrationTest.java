@@ -68,18 +68,20 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
       fortsetzungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
       fortsetzungsUhrzeitToFind.setFortsetzungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
       fortsetzungsUhrzeitRepository.save(fortsetzungsUhrzeitToFind);
       val expectedResponseBody =
           fortsetzungsUhrzeitDTOMapper.toDTO(
               fortsetzungsUhrzeitModelMapper.toModel(fortsetzungsUhrzeitToFind));
 
-      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDToFind)
+      val request =
+          get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDToFind)
               .with(
-              jwt()
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDToFind)));
 
       val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
@@ -98,35 +100,40 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
       fortsetzungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
       fortsetzungsUhrzeitToFind.setFortsetzungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT);
       fortsetzungsUhrzeitRepository.save(fortsetzungsUhrzeitToFind);
 
-      val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDEmpty)
+      val request =
+          get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkIDEmpty)
               .with(
-              jwt()
+                  jwt()
                       .authorities(
-                              new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
-                              new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                          new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
                       .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkIDEmpty)));
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkID = null;
 
-          val request = get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID)
-                  .with(
-                          jwt()
-                                  .authorities(
-                                          new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
-                                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
-                                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
 
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+      val request =
+          get("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                          new SimpleGrantedAuthority(
+                              Authorities.REPOSITORY_READ_FORTSETZUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -233,24 +240,25 @@ public class FortsetzungsUhrzeitControllerIntegrationTest {
           .usingRecursiveComparison()
           .isEqualTo(expectedExceptionDTO);
     }
-      @Test
-      void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
-          String wahlbezirkID = null;
-          val writeDto =
-                  new FortsetzungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-          val request = buildPostRequest(wahlbezirkID, writeDto);
-          mockMvc.perform(request).andExpect(status().isForbidden());
-      }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = null;
+      val writeDto =
+          new FortsetzungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+      val request = buildPostRequest(wahlbezirkID, writeDto);
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
 
     private RequestBuilder buildPostRequest(
         final String wahlbezirkID, final FortsetzungsUhrzeitWriteDTO requestBody) throws Exception {
       return post("/businessActions/fortsetzungsUhrzeit/" + wahlbezirkID)
-              .with(
-                      jwt()
-                              .authorities(
-                                      new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
-                                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT))
-                              .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_FORTSETZUNGSUHRZEIT),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_FORTSETZUNGSUHRZEIT))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
           .with(csrf())
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));

@@ -15,7 +15,7 @@
         <base-button-save
           :loading="isErgebnisSaving"
           :disabled="!isFormValid"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -31,6 +31,7 @@ import { ref } from "vue";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 
 const { required } = useRules();
 

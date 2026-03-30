@@ -41,7 +41,7 @@
       <base-button-save
         :loading="schliessungsuhrzeitState.schliessungsuhrzeitIsSaving"
         :disabled="isSaveButtonDisabled"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveSchliessungsuhrzeitClicked"
       />
     </v-card-actions>
@@ -58,7 +58,7 @@ import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_EREIGNISSE } from "@/constants.ts";
+import { ROUTE_EREIGNISSE, SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";

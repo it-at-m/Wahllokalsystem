@@ -92,7 +92,7 @@ die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gi
 {#infobox-ereignisse-uwb}
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
 Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während oder vor der Stimmabgabe auftreten, und Vorkommnissen, die
-während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
+während der Auszählung auftreten (nach der Schließung), unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
 erfasst werden. Wird die Uhrzeit eines Vorkommnisses nachträglich auf vor der Wahlschließung gesetzt, passt sich auch
 die Ereignisart des Eintrags entsprechend an und wird zu einem Vorfall, und andersherum. Sobald die Schliessungsuhrzeit
 gespeichert wird, wird die Ereignisart der Ereignisse ebenfalls neu berechnet. Dementsprechend ist die
@@ -218,6 +218,10 @@ zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird übe
 Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schließung
 richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
 Auch diese darf nicht in der Zukunft liegen.
+Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt werden. Es erscheint ein Feedback-Dialog mit einem Button, der zur Seite
+mit den Ereignissen führt.
+Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
+Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}
@@ -333,3 +337,5 @@ Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlni
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
+dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.

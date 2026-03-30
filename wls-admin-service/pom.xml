@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-admin-service</artifactId>
-    <version>0.4.10-SNAPSHOT</version>
+    <version>0.4.11-SNAPSHOT</version>
     <name>wls_admin_service</name>
 
     <properties>
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.8</version>
+            <version>0.2.9</version>
         </dependency>
 
         <!-- Validation -->

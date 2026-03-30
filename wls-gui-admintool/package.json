@@ -26,10 +26,10 @@
     "@muenchen/appswitcher-vue": "2.2.0",
     "@vueuse/core": "14.2.1",
     "pinia": "3.0.4",
-    "vue": "3.5.27",
+    "vue": "3.5.30",
     "vue-router": "4.6.4",
     "vue3-toastify": "0.2.8",
-    "vuetify": "3.11.6"
+    "vuetify": "3.11.9"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.7",
@@ -51,11 +51,11 @@
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.8.1",
     "axios": "1.13.6",
-    "eslint": "9.39.3",
+    "eslint": "9.39.4",
     "eslint-plugin-storybook": "0.12.0",
     "eslint-plugin-vue": "9.33.0",
     "jsdom": "26.1.0",
-    "msw": "2.12.10",
+    "msw": "2.12.14",
     "msw-storybook-addon": "2.0.6",
     "prettier": "3.7.4",
     "storybook": "8.6.17",
@@ -79,7 +79,7 @@
   },
   "overrides": {
     "@storybook/vue3": {
-      "vue-component-type-helpers": "3.2.5"
+      "vue-component-type-helpers": "3.2.6"
     }
   }
 }

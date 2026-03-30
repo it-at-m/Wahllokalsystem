@@ -16,7 +16,7 @@
           />
           <base-number-input
             v-model="wahl.stimmzettelumschlaege.anzahlWaehler"
-            :rules="[required, minNumber(0), maxNumber(9999)]"
+            :rules="[required]"
             min-width="20rem"
             :label="`Anzahl der ${getStimmzettelTermForWahl(wahl)}`"
           />
@@ -25,7 +25,7 @@
       <v-card-actions>
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
-          :disabled="isSaveButtonDisabled"
+          :disabled="isMBWAuszaehlungDone || isSaveButtonDisabled"
           save-text="Speichern und Weiter"
           @click="onSaveClicked"
         />
@@ -89,15 +89,8 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-const {
-  maxNumber,
-  minNumber,
-  required,
-  timeGreaterOrEqual,
-  timeNotInFuture,
-  minLength,
-  maxLength,
-} = useRules();
+const { required, timeGreaterOrEqual, timeNotInFuture, minLength, maxLength } =
+  useRules();
 
 const props = defineProps<{
   wahlId: string;
@@ -120,12 +113,15 @@ const {
   getDialogContent,
 } = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
 const { getNextRoute } = useNavigationUtils();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(props.wahlId, props.wahlbezirkId)
+);
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
 });

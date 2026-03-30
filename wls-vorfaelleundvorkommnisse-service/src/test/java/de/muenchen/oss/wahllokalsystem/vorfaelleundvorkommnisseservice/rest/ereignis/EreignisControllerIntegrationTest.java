@@ -147,7 +147,6 @@ public class EreignisControllerIntegrationTest {
       val ereignisseToOverride =
           TestdataFactory.CreateEreignisseEntity.withData(wahlbezirkID, ereignisList);
       ereignisRepository.save(ereignisseToOverride);
-      /*SecurityUtils.runWith(Authorities.REPOSITORY_READ_EREIGNISSE);*/
 
       val mockedEreignisDtoList =
           List.of(

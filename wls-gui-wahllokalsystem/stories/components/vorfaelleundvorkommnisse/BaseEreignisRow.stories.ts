@@ -26,6 +26,7 @@ const meta: Meta<typeof BaseEreignisRow> = {
   },
   args: {
     onDelete: fn(),
+    onUhrzeitChanged: fn(),
   },
 };
 

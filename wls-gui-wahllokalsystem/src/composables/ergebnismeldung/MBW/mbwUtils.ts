@@ -1,7 +1,7 @@
 import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { BWerte } from "@/types/ergebnismeldung/common/BWerte.ts";
-import type { ErgebnismeldungDruckInput } from "@/types/ergebnismeldung/common/ErgebnismeldungDruckInput.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
@@ -14,6 +14,7 @@ import { ref } from "vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
+import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
@@ -55,6 +56,8 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     currentUserWahlbezirkID,
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
+
+  const { postAusdruck } = useAusdruckService();
 
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
@@ -223,11 +226,11 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function prepareDataForErgebnismeldungDruck(
+  async function prepareDataForSchnellmeldungDruck(
     wahl: Wahl,
     status: Status,
     meldungsart: MeldungsartEnum
-  ): Promise<ErgebnismeldungDruckInput> {
+  ): Promise<SchnellmeldungDruckInput> {
     let aWerte = undefined;
     if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
       aWerte = await getAWerteForWahlbezirkAndWahl();
@@ -274,6 +277,17 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       barcode: jpegUrl,
       sendOk: status.schnellmeldung.uebermittelt || false,
     };
+  }
+
+  async function sendAusdruckNiederschrift(
+    meldungsart: MeldungsartEnum,
+    ausdruck: string
+  ) {
+    try {
+      await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck);
+    } catch {
+      logError("Fehler beim Speichern des Ausdrucks");
+    }
   }
 
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
@@ -367,6 +381,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     getAWerteForWahlbezirkAndWahl,
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
-    prepareDataForErgebnismeldungDruck,
+    prepareDataForSchnellmeldungDruck,
+    sendAusdruckNiederschrift,
   };
 }

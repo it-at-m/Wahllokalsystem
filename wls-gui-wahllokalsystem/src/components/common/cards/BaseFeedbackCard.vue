@@ -26,6 +26,9 @@
         <slot name="additionalFeedback" />
       </div>
     </v-card-text>
+    <v-card-actions v-if="hasActions">
+      <slot name="actions" />
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -60,4 +63,5 @@ const bgColorAndBold = computed(() =>
 );
 
 const hasAdditionalFeedback = computed(() => !!slots?.additionalFeedback);
+const hasActions = computed(() => !!slots?.actions);
 </script>

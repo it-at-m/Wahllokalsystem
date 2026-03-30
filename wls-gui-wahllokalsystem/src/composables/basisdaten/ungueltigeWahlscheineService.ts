@@ -5,6 +5,7 @@ import {
   Configuration,
   UngueltigeWahlscheineControllerApi,
 } from "@/api/wls-clients/generated-basisdaten-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUngueltigeWahlscheineMapper } from "@/composables/basisdaten/ungueltigeWahlscheineMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
@@ -20,6 +21,7 @@ export function useUngueltigeWahlscheineService() {
 
   const { addNotification } = useUserNotificationService();
   const { toModel } = useUngueltigeWahlscheineMapper();
+  const { axiosConfigWrapper } = useCommonApiUtils();
 
   async function getUngueltigeWahlscheine(
     wahltagID: string,
@@ -30,7 +32,8 @@ export function useUngueltigeWahlscheineService() {
       const ungueltigeWahlscheineCSVString = (
         await ungueltigeWahlscheineControllerApi.getUngueltigeWahlscheine(
           wahltagID,
-          wahlbezirksArt
+          wahlbezirksArt,
+          axiosConfigWrapper().requestAsOnlineFirst()
         )
       ).data;
 

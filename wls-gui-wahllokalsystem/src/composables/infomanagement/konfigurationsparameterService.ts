@@ -4,6 +4,7 @@ import {
   Configuration,
   KonfigurationControllerApi,
 } from "@/api/wls-clients/generated-infomanagement-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useKonfigurationsparameterMapper } from "@/composables/infomanagement/konfigurationsparameterMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { INFOMANAGEMENT_SERVICE_API_URL } from "@/constants.ts";
@@ -11,6 +12,7 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const userNotificationService = useUserNotificationService();
 const { toModel } = useKonfigurationsparameterMapper();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 export function useKonfigurationsparameterService() {
   const konfigurationControllerApi = new KonfigurationControllerApi(
@@ -23,7 +25,9 @@ export function useKonfigurationsparameterService() {
     sendNotification = true
   ): Promise<Konfigurationsparameter[]> {
     try {
-      const response = await konfigurationControllerApi.getKonfigurations();
+      const response = await konfigurationControllerApi.getKonfigurations(
+        axiosConfigWrapper().requestAsOnlineFirst()
+      );
       return toModel(response.data);
     } catch {
       if (sendNotification) {

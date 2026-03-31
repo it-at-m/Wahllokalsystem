@@ -22,7 +22,7 @@
           Stapel a + Stapel b
         </th>
         <th class="font-weight-bold text-right smallText">
-          Gültig kumulierte und panaschierte insgesamt
+          Gültig kumulierte und panaschierte
         </th>
       </tr>
     </thead>

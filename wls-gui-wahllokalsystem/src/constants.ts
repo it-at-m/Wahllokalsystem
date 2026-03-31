@@ -67,3 +67,5 @@ export const SUBTITLE_WAEHLERANZAHL_IN_ARBEIT = "Wähleranzahl in Arbeit";
 export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
 export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
 export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";
+
+export const SAVE_CONTINUE = "Speichern und Weiter";

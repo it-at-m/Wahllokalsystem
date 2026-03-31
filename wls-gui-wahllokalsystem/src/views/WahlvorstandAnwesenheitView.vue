@@ -23,7 +23,7 @@
       <base-button-save
         :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveWahlvorstandCLicked"
       />
       <base-button-refresh
@@ -46,6 +46,7 @@ import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstan
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 

@@ -24,6 +24,7 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
@@ -74,6 +75,8 @@ describe("BaseWahlschliessungCard.vue", () => {
     it("should_renderWithDisabledSaveButton_when_noUhrzeitIsEntered", async (context) => {
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = undefined;
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorfaelleMaintained = true;
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -91,6 +94,8 @@ describe("BaseWahlschliessungCard.vue", () => {
       wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = new Date(
         "2025-05-23T17:30:00"
       );
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorfaelleMaintained = true;
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -107,9 +112,48 @@ describe("BaseWahlschliessungCard.vue", () => {
       const date = new Date("2025-05-23T17:30:00");
       const wahlbezirkStore = useWahlbezirkStore();
       wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorfaelleMaintained = true;
 
       await flushPromises(); //update databinding and enabled button
 
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_renderWithErinnerungCard_VorfaelleAktualisieren_when_vorfaelleAreMaintained", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
+      const date = new Date("2025-05-23T17:30:00");
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorfaelleMaintained = true;
+      ereignisStore.wahlbezirkEreignisse.ereigniseintraege = [
+        {
+          uhrzeit: new Date("2025-05-23T17:00:00"),
+          ereignisart: EreignisartEnum.Vorfall,
+          beschreibung: "Testeintrag",
+        },
+      ];
+      await flushPromises();
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+    });
+
+    it("should_render_WithErinnerungCard_VorfaelleMelden_when_vorfaelleAreNotMaintained", async (context) => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
+      const date = new Date("2025-05-23T17:30:00");
+      const wahlbezirkStore = useWahlbezirkStore();
+      wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeit = date;
+      const ereignisStore = useEreignisStore();
+      ereignisStore.isVorfaelleMaintained = false;
+      await flushPromises();
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );

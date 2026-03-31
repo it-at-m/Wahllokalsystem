@@ -12,8 +12,7 @@ on:
         type: string
         description: 'name of service to use'
       javaVersion:
-        required: false
-        default: '17'
+        required: true
         type: string
         description: 'java version to use for build'
 

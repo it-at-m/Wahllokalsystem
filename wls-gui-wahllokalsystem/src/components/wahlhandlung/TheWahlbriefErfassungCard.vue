@@ -101,7 +101,7 @@
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -120,6 +120,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

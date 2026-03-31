@@ -28,9 +28,9 @@ on:
           - wls-wahlvorbereitung-service
           - wls-wahlvorstand-service
       javaVersion:
-        required: false
+        required: true
         type: string
-        default: '17'
+        default: '21'
         description: "optional: java version für den Build"
 
 jobs:

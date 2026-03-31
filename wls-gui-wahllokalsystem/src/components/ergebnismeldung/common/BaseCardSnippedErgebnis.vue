@@ -14,7 +14,7 @@
       <v-card-actions>
         <base-button-save
           :loading="isErgebnisSaving"
-          :disabled="!isFormValid"
+          :disabled="isWahlFinished || !isFormValid"
           :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
@@ -56,6 +56,10 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  isWahlFinished: {
+    type: Boolean,
+    required: true,
   },
 });
 

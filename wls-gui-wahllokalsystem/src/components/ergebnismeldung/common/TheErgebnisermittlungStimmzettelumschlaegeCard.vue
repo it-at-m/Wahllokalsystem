@@ -25,7 +25,7 @@
       <v-card-actions>
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
-          :disabled="isSaveButtonDisabled"
+          :disabled="isMBWAuszaehlungDone || isSaveButtonDisabled"
           :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
@@ -114,12 +114,15 @@ const {
   getDialogContent,
 } = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
 const { getNextRoute } = useNavigationUtils();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(props.wahlId, props.wahlbezirkId)
+);
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
 });

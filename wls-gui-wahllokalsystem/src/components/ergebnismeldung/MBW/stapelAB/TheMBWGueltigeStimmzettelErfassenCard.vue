@@ -11,7 +11,9 @@
     </v-card-text>
     <v-card-actions>
       <base-button-save
-        :disabled="!isGueltigeStimmzettelErfassenTableValid"
+        :disabled="
+          isMBWAuszaehlungDone || !isGueltigeStimmzettelErfassenTableValid
+        "
         :loading="isErgebnisseSaving"
         :tabindex="modelValue.length * 2 + 1"
         :save-text="SAVE_CONTINUE"
@@ -24,7 +26,7 @@
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { PropType } from "vue";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
@@ -35,7 +37,7 @@ import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 
 const modelValue = defineModel({
@@ -60,6 +62,9 @@ const { isErgebnisseSaving, saveGueltigeErgebnisse } = useMbwUtils(
 );
 
 const isGueltigeStimmzettelErfassenTableValid = ref<boolean | null>(null);
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(props.wahlID, props.wahlbezirkID)
+);
 
 async function onSaveClicked() {
   await saveGueltigeErgebnisse(modelValue.value);

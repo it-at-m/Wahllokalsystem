@@ -12,3 +12,4 @@ jobs:
       ./.github/workflows/callable-run-mvn-verify.yml
     with:
       pom-dir: 'wls-briefwahl-service'
+      javaVersion: '21'

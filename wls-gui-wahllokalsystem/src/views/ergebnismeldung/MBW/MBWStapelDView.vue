@@ -3,6 +3,7 @@
     v-model="ergebnis"
     snipped-title="Ungültige Stimmzettel"
     :is-ergebnis-saving="isErgebnisSaving"
+    :is-wahl-finished="isMBWAuszaehlungDone"
     @save="onSave"
   />
 </template>
@@ -11,7 +12,7 @@
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
@@ -29,7 +30,7 @@ const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { logError } = useLogging("requestStrategies");
 const { getNextRoute } = useNavigationUtils();
@@ -47,6 +48,10 @@ const ergebnis = ref<Ergebnis>({
   ergebnis: null,
   numIndex: null,
 });
+
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(wahlID, wahlbezirkID ?? "")
+);
 
 if (!wahl) {
   router.push({

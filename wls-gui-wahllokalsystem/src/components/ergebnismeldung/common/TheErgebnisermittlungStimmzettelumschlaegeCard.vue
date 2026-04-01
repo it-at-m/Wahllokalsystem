@@ -26,7 +26,7 @@
         <base-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isMBWAuszaehlungDone || isSaveButtonDisabled"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -36,7 +36,7 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       @cancel="dialog.isVisible = false"
       @confirm="onConfirmClicked"
     >
@@ -82,6 +82,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";

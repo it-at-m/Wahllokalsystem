@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -68,7 +68,7 @@ const {
   updateStatusAfterSchnellmeldungDrucken,
 } = useMbwUtils(wahlID, wahlbezirkID);
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
 const { status, loadStatusToUpdate } = useStatusUtils();
 
@@ -84,6 +84,10 @@ if (!wahl) {
     name: ROUTE_NOTFOUND,
   });
 }
+
+const workflowState = computed(() =>
+  getElectionWorkflowState(wahlID, wahlbezirkID)
+);
 
 function onSendenClicked() {
   sendSchnellmeldung();
@@ -121,6 +125,10 @@ async function onDruckenClicked() {
 
         setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
+
+        if (workflowState.value) {
+          workflowState.value.isSchnellmeldungDone = true;
+        }
       }
     }
   } catch {

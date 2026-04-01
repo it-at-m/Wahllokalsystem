@@ -177,9 +177,32 @@ public class BroadcastServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_MESSAGE);
+      val wahlbezirkID = "wahlbezirkId";
+      val message =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "nachricht", LocalDateTime.now());
+      val savedMessage = messageRepository.save(message);
+      SecurityContextHolder.clearContext();
 
-      Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+      val userAuthorities =
+          Arrays.stream(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST)
+              .map(SimpleGrantedAuthority::new)
+              .toList();
+      val userJwtAuthenticationToken =
+          new JwtAuthenticationToken(
+              new Jwt(
+                  "tokenValue",
+                  Instant.now(),
+                  Instant.MAX,
+                  Map.of("key", "value"),
+                  Map.of("user_name", "USERNAME", "wahlbezirkID", wahlbezirkID)),
+              userAuthorities);
+
+      SecurityContextHolder.getContext().setAuthentication(userJwtAuthenticationToken);
+
+      Assertions.assertThatCode(
+              () -> broadcastService.deleteMessage(savedMessage.getOid().toString()))
           .doesNotThrowAnyException();
     }
 

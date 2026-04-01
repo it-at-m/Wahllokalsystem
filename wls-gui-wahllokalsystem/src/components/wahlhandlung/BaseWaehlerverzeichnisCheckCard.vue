@@ -82,7 +82,7 @@
         :loading="
           pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnisIsSaving
         "
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSavePflegeWaehlerverzeichnisClicked"
       />
     </v-card-actions>
@@ -95,6 +95,7 @@ import { storeToRefs } from "pinia";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 

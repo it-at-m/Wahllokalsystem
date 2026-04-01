@@ -22,7 +22,7 @@
         <base-button-save
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveEroeffnungsuhrzeitClicked"
         />
       </v-card-actions>
@@ -31,7 +31,7 @@
       :visible="isZuSpaet"
       dialogtitle="Verspäteter Beginn der Wahlhandlung"
       :is-save-disabled="!isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       data-test="zuSpaetDialog"
       @cancel="onCancelBegruendung"
       @confirm="onConfirmBegruendung"
@@ -79,6 +79,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";

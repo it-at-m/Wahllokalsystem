@@ -18,7 +18,7 @@
       <base-button-save
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveClicked"
       />
     </v-card-actions>
@@ -32,6 +32,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

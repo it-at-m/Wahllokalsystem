@@ -44,7 +44,7 @@ export function useNiederschriftDrcuk() {
             <div class="gridContainer_2_column_header_second marginTop_2"> 
                     <div class="fontSize_13 bold vertical">
                         <div>WAHLNIEDERSCHRIFT / Briefwahl (V1a)<br/>für die Wahl des Migrationsbeirates in der<br/>Landeshauptstadt München<br/>
-                        <span class="fontSize_11">am ${data.aktuelleWahl.wahltagFormatiert}</span></div>
+                        <span class="fontSize_11">am ${data.wahltagFormatiert}</span></div>
                     </div>
                     <div>
                         <div class="fontSize_8 border padding">
@@ -54,8 +54,7 @@ export function useNiederschriftDrcuk() {
             </div>
     `;
   }
-
-  function _dataForChatparOneWahlvorstand(data: NiederschriftDruckInput) {
+  function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInput) {
     return `
   <div class="fontSize_12 bold marginTop_2">Wahlhandlung</div>
             <div class="marginTop_1 marginBottom_5">
@@ -1139,7 +1138,7 @@ export function useNiederschriftDrcuk() {
                         return `<tr>
                             ${partei.maxcols
                               .map((col, idx) => {
-                                let kand =
+                                const kand =
                                   idx < zeile.length && zeile[idx]
                                     ? zeile[idx]
                                     : { laufendeNr: "", ergebnis: "" };
@@ -2091,8 +2090,8 @@ export function useNiederschriftDrcuk() {
             <html lang="de">
            ${_dataForHeader(data)}
 
-          
-            ${_dataForChatparOneWahlvorstand(data)}
+        
+            ${_dataForChapterOneWahlvorstand(data)}
             ${_dataForChapterTwo(data)}
             ${_dataForChapterThree(data)}
             ${_dataForChapterFour(data)}
@@ -2106,4 +2105,8 @@ export function useNiederschriftDrcuk() {
             
     `;
   }
+
+  return {
+    buildNiederschriftTemplateFromData,
+  };
 }

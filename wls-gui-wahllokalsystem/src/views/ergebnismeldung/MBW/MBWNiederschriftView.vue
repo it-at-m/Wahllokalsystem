@@ -56,6 +56,8 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
+import { useNiederschriftDrcuk } from "@/composables/ergebnismeldung/MBW/niederschriftDruck.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
@@ -89,6 +91,11 @@ const { sendAusdruckNiederschrift } = useMbwUtils(
   wahlID,
   currentUserWahlbezirkID
 );
+const { buildNiederschriftTemplateFromData } = useNiederschriftDrcuk();
+const { gatherDataForTemplate } = useMbtUtilsNiederschrift(
+  wahlID,
+  currentUserWahlbezirkID
+);
 if (!wahl) {
   router.push({
     name: ROUTE_NOTFOUND,
@@ -107,9 +114,9 @@ function onSendenClicked() {
 function onKorrigierenClicked() {
   // to be implemented
 }
-function onDruckenClicked() {
+async function onDruckenClicked() {
   isDruckenLoading.value = true;
-  const pdfText = "<div>test</div>";
+  const pdfText = await collectDataForTemplateBuild();
   const printWindow = window.open(
     "",
     "",
@@ -132,5 +139,22 @@ function onDruckenClicked() {
   await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 
   isDruckenLoading.value = false;
+}
+
+async function collectDataForTemplateBuild() {
+  const statusForWahlAndWahlbezirk = status.value.find(
+    (status) =>
+      status.bezirkUndWahlID.wahlID == wahlID &&
+      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
+  );
+  if (statusForWahlAndWahlbezirk) {
+    const templateData = await gatherDataForTemplate(
+      statusForWahlAndWahlbezirk,
+      MeldungsArtEnum.Niederschrift
+    );
+
+    return buildNiederschriftTemplateFromData(templateData);
+  }
+  return " ";
 }
 </script>

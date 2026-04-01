@@ -128,6 +128,11 @@
         </dependency>
         <dependency>
             <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>security</artifactId>
+            <version>${wls.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
             <artifactId>swagger</artifactId>
             <version>${wls.common.version}</version>
         </dependency>

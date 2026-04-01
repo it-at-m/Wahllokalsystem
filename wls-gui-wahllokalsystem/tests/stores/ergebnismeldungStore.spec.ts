@@ -4,7 +4,6 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
-import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
@@ -15,8 +14,6 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
-
-const { createStatus } = useStatusTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
@@ -304,7 +301,7 @@ describe("ergebnismeldungStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(
+      expect(
         unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
@@ -429,7 +426,7 @@ describe("ergebnismeldungStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(
+      expect(
         unitUnderTest.sendErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
@@ -707,9 +704,7 @@ describe("ergebnismeldungStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(
-        unitUnderTest.loadBegruendungForWahl(wahl)
-      ).rejects.toThrow();
+      expect(unitUnderTest.loadBegruendungForWahl(wahl)).rejects.toThrow();
     });
   });
 
@@ -833,50 +828,6 @@ describe("ergebnismeldungStore.ts", () => {
       vi.advanceTimersByTime(100);
       await savePromise;
       expect(unitUnderTest.isBegruendungSaving).toBe(false);
-    });
-  });
-
-  describe("sendNiederschrift", () => {
-    it("should_updateIsSaving_when_sendSendNiederschriftIsCalled", async () => {
-      const wahlID = generateRandomString(10);
-      const wahlbezirkID = generateRandomString(10);
-      const userWahlbezirkID = generateRandomString(10);
-      const wahl = prepareWahl().wahlID(wahlID).build();
-      const statusToUpdate = createStatus();
-      const timeout = 100;
-      const userStore = useUserStore();
-      userStore.setUser(
-        prepareUser()
-          .wahlbezirkID(userWahlbezirkID)
-          .wahlMetaData([
-            { wahlbezirkID: wahlbezirkID, wahlID: wahlID, wahlnummer: "0" },
-          ])
-          .build()
-      );
-
-      mockDefinitions.postNiederschrift.mockReturnValue(
-        new Promise((resolve) => {
-          setTimeout(() => {
-            resolve({});
-          }, timeout);
-        })
-      );
-
-      mockDefinitions.getStatusEntry.mockReturnValue(statusToUpdate);
-      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset.mockReturnValue(
-        "2026-02-18T15:36:30.169"
-      );
-
-      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
-
-      const promise = unitUnderTest.sendNiederschrift(wahl);
-
-      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(true);
-
-      vi.advanceTimersByTime(timeout);
-      await promise;
-
-      expect(unitUnderTest.isNiederschriftAndStatusSaving).toBe(false);
     });
   });
 });

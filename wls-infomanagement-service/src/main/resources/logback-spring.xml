@@ -79,6 +79,9 @@
                             }
                         </pattern>
                     </pattern>
+                    <stackTrace>
+                        <fieldName>stacktrace</fieldName>
+                    </stackTrace>
                 </providers>
             </encoder>
         </appender>

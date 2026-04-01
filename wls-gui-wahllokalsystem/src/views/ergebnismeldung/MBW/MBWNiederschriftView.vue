@@ -45,7 +45,7 @@
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
-import { onActivated, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
@@ -62,8 +62,10 @@ import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -75,6 +77,7 @@ const { isNiederschriftAndStatusSaving } = storeToRefs(
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -94,6 +97,10 @@ if (!wahl) {
     name: ROUTE_NOTFOUND,
   });
 }
+
+const workflowState = computed(() =>
+  getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
+);
 
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
@@ -121,6 +128,15 @@ async function onDruckenClicked() {
     printWindow.document.body.innerHTML = pdfText;
     printWindow.print();
     printWindow.close();
+
+    setStepDone(
+      wahlID,
+      currentUserWahlbezirkID,
+      MbwRoutesEnum.MBW_NIEDERSCHRIFT
+    );
+    if (workflowState.value) {
+      workflowState.value.isNiederschriftDone = true;
+    }
   }
   const statusForWahlAndWahlbezirk = status.value.find(
     (status) =>

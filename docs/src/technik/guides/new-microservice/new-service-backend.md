@@ -145,3 +145,8 @@ und die Zuordnung zu den Rollen vorgenommen.
 
 > [!NOTE]
 > Die Pflege der Rollen und Rechte erfolgt immer über neue, noch nicht im Default-Branch enthaltene, Flyway-Skripte.
+
+## Logging
+
+Für ein einheitliches Logging über alle Services hinweg, sollte analog zu den bestehenden Microservices eine
+`logback-spring.xml`-Datei erstellt werden.

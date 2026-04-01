@@ -28,7 +28,7 @@ on:
         required: true
         type: string
         default: '21'
-        description: "optional: java version für den Build"
+        description: "java version für den Build"
 
 jobs:
   build-github-container-image:

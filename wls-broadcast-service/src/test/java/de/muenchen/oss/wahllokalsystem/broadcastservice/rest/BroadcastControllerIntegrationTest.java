@@ -1,7 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.broadcastservice.rest;
 
-import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,39 +20,37 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @Slf4j
 @SpringBootTest(
     classes = {MicroServiceApplication.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
+@AutoConfigureMockMvc
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class BroadcastControllerIntegrationTest {
 
-  @Autowired WebApplicationContext context;
+  @Autowired MockMvc mvc;
 
   @Autowired MessageRepository messageRepository;
 
   @Autowired ObjectMapper objectMapper;
-
-  private AutoCloseable closeable;
-
-  MockMvc mvc;
 
   @Value("${local.server.port}")
   private int port;
@@ -71,19 +70,15 @@ public class BroadcastControllerIntegrationTest {
   void setup() {
     log.debug("Setting up test ...");
     log.debug("Port > {}", port);
-    closeable = MockitoAnnotations.openMocks(this);
-    mvc =
-        MockMvcBuilders.webAppContextSetup(context)
-            .apply(SecurityMockMvcConfigurers.springSecurity())
-            .build();
 
     SecurityUtils.runWith(Authorities.ALL_BROADCAST_AUTHORITIES);
     messageRepository.deleteAll();
+    SecurityContextHolder.clearContext();
   }
 
   @AfterEach
-  void teardown() throws Exception {
-    closeable.close();
+  void teardown() {
+    SecurityContextHolder.clearContext();
   }
 
   @Nested
@@ -93,14 +88,7 @@ public class BroadcastControllerIntegrationTest {
     void should_sendBroadcastMessage_when_messageSuccessfullySaved() throws Exception {
       log.debug("#BroadcastControllerIntegrationTest");
       MockHttpServletResponse result;
-      result =
-          mvc.perform(
-                  post(BROADCAST_URL)
-                      .content(TestdataFactory.asJsonString(BROADCAST_MESSAGE_DTO, objectMapper))
-                      .contentType(MediaType.APPLICATION_JSON_UTF8)
-                      .accept(MediaType.APPLICATION_JSON))
-              .andReturn()
-              .getResponse();
+      result = mvc.perform(createPostRequest(BROADCAST_MESSAGE_DTO)).andReturn().getResponse();
 
       int status = result.getStatus();
       Assertions.assertThat(status).isEqualTo(200);
@@ -111,11 +99,7 @@ public class BroadcastControllerIntegrationTest {
     void should_throwFachlicheWlsException_when_givenWahlbezirkIdIsNull() throws Exception {
       final BroadcastMessageDTO bmDTOIncomplete1 =
           new BroadcastMessageDTO(null, "Das ist ein Test");
-      mvc.perform(
-              post(BROADCAST_URL)
-                  .content(TestdataFactory.asJsonString(bmDTOIncomplete1, objectMapper))
-                  .contentType(MediaType.APPLICATION_JSON_UTF8)
-                  .accept(MediaType.APPLICATION_JSON))
+      mvc.perform(createPostRequest(bmDTOIncomplete1))
           .andExpect(status().isBadRequest())
           .andExpect(
               result -> {
@@ -135,11 +119,7 @@ public class BroadcastControllerIntegrationTest {
     void should_throwFachlicheWlsException_when_givenMessageIsNull() throws Exception {
       final BroadcastMessageDTO bmDTOIncomplete2 =
           new BroadcastMessageDTO(Arrays.asList("1", "2", "3", "4"), null);
-      mvc.perform(
-              post(BROADCAST_URL)
-                  .content(TestdataFactory.asJsonString(bmDTOIncomplete2, objectMapper))
-                  .contentType(MediaType.APPLICATION_JSON_UTF8)
-                  .accept(MediaType.APPLICATION_JSON))
+      mvc.perform(createPostRequest(bmDTOIncomplete2))
           .andExpect(status().isBadRequest())
           .andExpect(
               result -> {
@@ -154,6 +134,19 @@ public class BroadcastControllerIntegrationTest {
                         "Das Object BroadcastMessage ist nicht vollständig.");
               });
     }
+
+    private MockHttpServletRequestBuilder createPostRequest(final BroadcastMessageDTO requestBody) {
+      return post(BROADCAST_URL)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_MESSAGE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_MESSAGE)))
+          .with(csrf())
+          .content(TestdataFactory.asJsonString(requestBody, objectMapper))
+          .contentType(MediaType.APPLICATION_JSON_UTF8)
+          .accept(MediaType.APPLICATION_JSON);
+    }
   }
 
   @Nested
@@ -162,16 +155,14 @@ public class BroadcastControllerIntegrationTest {
     @Test
     void should_returnBroadcastMessage_when_givenWahlbezirkId() throws Exception {
       log.debug("#GetMessageIntegrationTest");
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_MESSAGE);
       messageRepository.save(
           TestdataFactory.CreateMessageEntity.withCustomParams(
               "123", "Das ist ein Test", LocalDateTime.now()));
+      SecurityContextHolder.clearContext();
+
       MockHttpServletResponse result =
-          mvc.perform(
-                  get(GETMESSAGE_URL + "123")
-                      .contentType(MediaType.APPLICATION_JSON_UTF8)
-                      .accept(MediaType.APPLICATION_JSON))
-              .andReturn()
-              .getResponse();
+          mvc.perform(createGetRequest("123")).andReturn().getResponse();
       String content = result.getContentAsString();
       Message message = objectMapper.readValue(content, Message.class);
       Assertions.assertThat(message.getNachricht()).isEqualTo("Das ist ein Test");
@@ -180,7 +171,7 @@ public class BroadcastControllerIntegrationTest {
     @Test
     void should_throwFachlicheWlsException_when_wahlbezirkIdIsBlank() throws Exception {
       log.debug("#GetMessageIntegrationTestGetParamBlank");
-      mvc.perform(get(GETMESSAGE_URL + "   ").contentType(MediaType.APPLICATION_JSON))
+      mvc.perform(createGetRequest("   "))
           .andExpect(status().isBadRequest())
           .andExpect(
               result -> {
@@ -201,7 +192,7 @@ public class BroadcastControllerIntegrationTest {
       log.debug("#GetMessageIntegrationTestGetParamEmpty");
       String wahlbezirkID = "";
 
-      mvc.perform(get(GETMESSAGE_URL + wahlbezirkID).contentType(MediaType.APPLICATION_JSON))
+      mvc.perform(createGetRequest(wahlbezirkID))
           .andExpect(status().isInternalServerError())
           .andExpect(
               result -> {
@@ -215,7 +206,7 @@ public class BroadcastControllerIntegrationTest {
     @Test
     void should_throwFachlicheWlsException_when_noMessageFound() throws Exception {
       log.debug("#GetMessageNoContentIntegrationTest");
-      mvc.perform(get(GETMESSAGE_URL + "123").contentType(MediaType.APPLICATION_JSON))
+      mvc.perform(createGetRequest("123"))
           .andExpect(status().isNoContent())
           .andExpect(
               result -> {
@@ -226,6 +217,17 @@ public class BroadcastControllerIntegrationTest {
                     .contains("204", serviceOid, "No message found");
               });
     }
+
+    private MockHttpServletRequestBuilder createGetRequest(final String wahlbezirkId) {
+      return get(GETMESSAGE_URL + wahlbezirkId)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_MESSAGE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_MESSAGE)))
+          .contentType(MediaType.APPLICATION_JSON_UTF8)
+          .accept(MediaType.APPLICATION_JSON);
+    }
   }
 
   @Nested
@@ -235,22 +237,23 @@ public class BroadcastControllerIntegrationTest {
     void should_notThrowException_when_givenValidWahlbezirkID() throws Exception {
       log.debug("#deleteIntegrationTest");
 
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_MESSAGE, Authorities.REPOSITORY_READ_MESSAGE);
+      val wahlbezirkID = "123";
       Message message =
           TestdataFactory.CreateMessageEntity.withCustomParams(
-              "123", "Das ist ein Test", LocalDateTime.now());
+              wahlbezirkID, "Das ist ein Test", LocalDateTime.now());
       messageRepository.save(message);
 
       List<Message> foundMessages =
           ((List<Message>) messageRepository.findAll())
-              .stream().filter((m) -> m.getWahlbezirkID().equals("123")).toList();
+              .stream().filter((m) -> m.getWahlbezirkID().equals(wahlbezirkID)).toList();
       Message foundMessage = foundMessages.stream().findFirst().get();
       Assertions.assertThat(foundMessage).isNotNull();
+      SecurityContextHolder.clearContext();
 
       MockHttpServletResponse result =
-          mvc.perform(
-                  post(DELETE_URL + foundMessage.getOid())
-                      .contentType(MediaType.APPLICATION_JSON_UTF8)
-                      .accept(MediaType.APPLICATION_JSON))
+          mvc.perform(createPostRequest(foundMessage.getOid().toString(), wahlbezirkID))
               .andReturn()
               .getResponse();
 
@@ -258,19 +261,18 @@ public class BroadcastControllerIntegrationTest {
       Assertions.assertThat(status).isEqualTo(200);
       log.info("Result > Status: {} ", status);
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_MESSAGE);
       foundMessages =
           ((List<Message>) messageRepository.findAll())
-              .stream().filter((m) -> m.getWahlbezirkID().equals("123")).toList();
+              .stream().filter((m) -> m.getWahlbezirkID().equals(wahlbezirkID)).toList();
+      SecurityContextHolder.clearContext();
       Assertions.assertThat(foundMessages).isEmpty();
     }
 
     @Test
     void should_throwFachlicheWlsException_when_givenBadFormatUUID() throws Exception {
       log.debug("#deleteIntegrationTestBadFormatUUID");
-      mvc.perform(
-              post(DELETE_URL + "badformatparam-u-u-i-d")
-                  .contentType(MediaType.APPLICATION_JSON_UTF8)
-                  .accept(MediaType.APPLICATION_JSON))
+      mvc.perform(createPostRequest("badformatparam-u-u-i-d", ""))
           .andExpect(status().isBadRequest())
           .andExpect(
               result -> {
@@ -280,6 +282,50 @@ public class BroadcastControllerIntegrationTest {
                     .extracting("code", "serviceName", "message")
                     .contains("150", serviceOid, "Nachricht-UUID bad format");
               });
+    }
+
+    @Test
+    void should_throw403_when_messageToDeleteIsNotOwnedByUser() throws Exception {
+
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_MESSAGE, Authorities.REPOSITORY_READ_MESSAGE);
+      val wahlbezirkID = "123";
+      Message message =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "Das ist ein Test", LocalDateTime.now());
+      messageRepository.save(message);
+
+      List<Message> foundMessages =
+          ((List<Message>) messageRepository.findAll())
+              .stream().filter((m) -> m.getWahlbezirkID().equals("123")).toList();
+      Message foundMessage = foundMessages.stream().findFirst().get();
+      Assertions.assertThat(foundMessage).isNotNull();
+      SecurityContextHolder.clearContext();
+
+      mvc.perform(createPostRequest(foundMessage.getOid().toString(), wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_MESSAGE);
+      foundMessages =
+          ((List<Message>) messageRepository.findAll())
+              .stream().filter((m) -> m.getWahlbezirkID().equals(wahlbezirkID)).toList();
+      SecurityContextHolder.clearContext();
+      Assertions.assertThat(foundMessages).isNotEmpty();
+    }
+
+    private MockHttpServletRequestBuilder createPostRequest(
+        final String messageUUId, final String claimWahlbezirkId) {
+      return post(DELETE_URL + messageUUId)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_READ_MESSAGE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_MESSAGE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_DELETE_MESSAGE))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkId)))
+          .with(csrf())
+          .contentType(MediaType.APPLICATION_JSON_UTF8)
+          .accept(MediaType.APPLICATION_JSON);
     }
   }
 }

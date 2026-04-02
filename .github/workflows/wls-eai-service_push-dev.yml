@@ -16,3 +16,4 @@ jobs:
       ./.github/workflows/callable-create-github-container-image.yml
     with:
       service: 'wls-eai-service'
+      javaVersion: '21'

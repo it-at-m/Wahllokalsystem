@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-basisdaten-service</artifactId>
-    <version>0.5.10-SNAPSHOT</version>
+    <version>0.5.11-SNAPSHOT</version>
     <name>wls_basisdaten_service</name>
 
     <properties>

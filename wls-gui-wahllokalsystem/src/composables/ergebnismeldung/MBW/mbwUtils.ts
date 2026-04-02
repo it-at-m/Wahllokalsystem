@@ -48,7 +48,7 @@ const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { addNotification } = useUserNotificationService();
 const { postStatus } = useStatusService();
-const { status, loadStatusToUpdate } = useStatusUtils();
+const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
@@ -216,7 +216,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
   async function sendSchnellmeldung() {
     isSendingSchnellmeldung.value = true;
-    await loadStatusToUpdate(wahlID, wahlbezirkID);
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
 
     try {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -230,23 +233,17 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
           wahl.waehlerverzeichnisNummer
         )
           .then(() => {
-            if (status.value) {
-              status.value.schnellmeldung.uebermittelt = true;
-            }
+            status.schnellmeldung.uebermittelt = true;
           })
           .catch(() => {
-            if (status.value) {
-              status.value.schnellmeldung.uebermittelt = false;
-            }
+            status.schnellmeldung.uebermittelt = false;
           })
           .finally(async () => {
-            if (status.value) {
-              status.value.schnellmeldung.validierungsstatus =
-                MeldungValidierungsstatusEnum.Valide;
-              status.value.schnellmeldung.sendeuhrzeit =
-                toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-              await postStatus(wahlID, wahlbezirkID, status.value, false);
-            }
+            status.schnellmeldung.validierungsstatus =
+              MeldungValidierungsstatusEnum.Valide;
+            status.schnellmeldung.sendeuhrzeit =
+              toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+            await postStatus(wahlID, wahlbezirkID, status, false);
           });
       }
     } finally {
@@ -308,16 +305,20 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   }
 
   async function updateStatusAfterSchnellmeldungDrucken() {
-    await loadStatusToUpdate(wahlID, wahlbezirkID);
-    if (status.value) {
-      status.value.schnellmeldung.gedruckt = true;
-      await postStatus(wahlID, wahlbezirkID, status.value, false);
-    }
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
+    status.schnellmeldung.gedruckt = true;
+    await postStatus(wahlID, wahlbezirkID, status, false);
   }
 
   async function sendNiederschrift() {
     isSendingNiederschrift.value = true;
-    await loadStatusToUpdate(wahlID, wahlbezirkID);
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
 
     try {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -331,23 +332,17 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
           currentUserWahlbezirkID.value
         )
           .then(() => {
-            if (status.value) {
-              status.value.niederschrift.uebermittelt = true;
-            }
+            status.niederschrift.uebermittelt = true;
           })
           .catch(() => {
-            if (status.value) {
-              status.value.niederschrift.uebermittelt = false;
-            }
+            status.niederschrift.uebermittelt = false;
           })
           .finally(() => {
-            if (status.value) {
-              status.value.niederschrift.validierungsstatus =
-                MeldungValidierungsstatusEnum.Valide;
-              status.value.niederschrift.sendeuhrzeit =
-                toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-              postStatus(wahlID, wahlbezirkID, status.value, false);
-            }
+            status.niederschrift.validierungsstatus =
+              MeldungValidierungsstatusEnum.Valide;
+            status.niederschrift.sendeuhrzeit =
+              toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+            postStatus(wahlID, wahlbezirkID, status, false);
           });
       }
     } finally {
@@ -359,14 +354,15 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     meldungsart: MeldungsartEnum,
     ausdruck: string
   ) {
-    await loadStatusToUpdate(wahlID, wahlbezirkID);
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
     try {
       await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck).then(
         async () => {
-          if (status.value) {
-            status.value.niederschrift.gedruckt = true;
-            await postStatus(wahlID, wahlbezirkID, status.value, false);
-          }
+          status.niederschrift.gedruckt = true;
+          await postStatus(wahlID, wahlbezirkID, status, false);
         }
       );
     } catch {

@@ -10,8 +10,9 @@ import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils
 export const storeID = "status";
 
 export const useStatusStore = defineStore(storeID, () => {
-  const { getStatus, postStatus } = useStatusService();
-  const { getDefaultMeldung } = useStatusUtils();
+  const { postStatus } = useStatusService();
+  const { loadStatusByWahlIdAndWahlbezirkId, getInitialStatus } =
+    useStatusUtils();
 
   const status = ref<Status[]>([]);
   const isStatusSaving = ref(false);
@@ -22,20 +23,12 @@ export const useStatusStore = defineStore(storeID, () => {
     sendNotification = true
   ) {
     try {
-      const statusForWahl = await getStatus(
+      const statusForWahl = await loadStatusByWahlIdAndWahlbezirkId(
         wahlID,
         wahlbezirkID,
         sendNotification
       );
-      if (statusForWahl) {
-        status.value.push(statusForWahl);
-      } else {
-        status.value.push({
-          bezirkUndWahlID: { wahlID, wahlbezirkID },
-          schnellmeldung: getDefaultMeldung(),
-          niederschrift: getDefaultMeldung(),
-        });
-      }
+      status.value.push(statusForWahl);
     } catch {
       throw Error(`Fehler beim Laden des Status für WahlID: ${wahlID}`);
     }
@@ -67,11 +60,7 @@ export const useStatusStore = defineStore(storeID, () => {
 
     if (foundStatus) return foundStatus;
 
-    const defaultStatus: Status = {
-      bezirkUndWahlID: { wahlID, wahlbezirkID },
-      schnellmeldung: getDefaultMeldung(),
-      niederschrift: getDefaultMeldung(),
-    };
+    const defaultStatus = getInitialStatus(wahlID, wahlbezirkID);
     status.value.push(defaultStatus);
     return defaultStatus;
   }

@@ -70,7 +70,7 @@ const {
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 const { getNextRoute } = useNavigationUtils();
-const { status, loadStatusToUpdate } = useStatusUtils();
+const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -98,13 +98,13 @@ function onKorrigierenClicked() {
 
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
-  await loadStatusToUpdate(wahlID, wahlbezirkID);
+  const status = await loadStatusByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
   try {
-    if (wahl && status.value) {
+    if (wahl) {
       const data: SchnellmeldungDruckInput =
         await prepareDataForSchnellmeldungDruck(
           wahl,
-          status.value,
+          status,
           MeldungsArtEnum.Schnellmeldung
         );
 

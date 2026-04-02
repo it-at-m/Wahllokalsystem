@@ -6,10 +6,13 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastDTOMapper;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.TestdataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.SicherheitsWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +38,8 @@ class BroadcastServiceTest {
   @Mock private BroadcastDTOMapper broadcastMapper;
 
   @Mock ExceptionFactory exceptionFactory;
+
+  @Mock BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
   @Nested
   class Broadcast {
@@ -209,9 +214,59 @@ class BroadcastServiceTest {
 
     @Test
     void should_deleteSingleBroadcastMessage_when_givenValidMessageId() {
-      Mockito.doNothing().when(messageRepo).deleteById(UUID.fromString("1-2-3-4-5"));
+      val nachrichtID = "1-2-3-4-5";
+      val wahlbezirkID = "4711";
+      val mockedMessageFromRepo =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "nachricht", LocalDateTime.now());
+
+      Mockito.when(messageRepo.findById(UUID.fromString(nachrichtID)))
+          .thenReturn(Optional.of(mockedMessageFromRepo));
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Mockito.doNothing().when(messageRepo).deleteById(UUID.fromString(nachrichtID));
       Assertions.assertThatNoException()
-          .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"));
+          .isThrownBy(() -> broadcastService.deleteMessage(nachrichtID));
+    }
+
+    @Test
+    void should_notCallDelete_when_noMessageForIdExists() {
+      val nachrichtID = "1-2-3-4-5";
+      Mockito.when(messageRepo.findById(UUID.fromString(nachrichtID))).thenReturn(Optional.empty());
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> broadcastService.deleteMessage(nachrichtID));
+      Mockito.verify(messageRepo, Mockito.never()).deleteById(UUID.fromString(nachrichtID));
+    }
+
+    @Test
+    void should_throwSecurityException_when_userNotOwnerOfMessageToDelete() {
+      val nachrichtID = "1-2-3-4-5";
+      val wahlbezirkID = "4711";
+      val mockedMessageFromRepo =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "nachricht", LocalDateTime.now());
+
+      Mockito.when(messageRepo.findById(UUID.fromString(nachrichtID)))
+          .thenReturn(Optional.of(mockedMessageFromRepo));
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      val mockedWlsSecurityException =
+          SicherheitsWlsException.withCode("code").buildWithMessage("mocked security exception");
+      Mockito.when(
+              exceptionFactory.createSicherheitsWlsException(
+                  BroadcastExceptionKonstanten.USER_NOT_OWNER_OF_MESSAGE))
+          .thenReturn(mockedWlsSecurityException);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> broadcastService.deleteMessage(nachrichtID))
+          .isEqualTo(mockedWlsSecurityException);
     }
 
     @Test

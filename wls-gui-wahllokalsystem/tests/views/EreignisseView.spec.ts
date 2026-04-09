@@ -12,7 +12,12 @@ import { nextTick } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import { ROUTE_EREIGNISSE, ROUTES_HOME, SAVE_CONTINUE } from "@/constants.ts";
+import {
+  CONTINUE_QUERY_PARAM,
+  ROUTE_EREIGNISSE,
+  ROUTES_HOME,
+  SAVE_CONTINUE,
+} from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -48,7 +53,7 @@ describe("TheEreignisseView", () => {
       meta: {},
     },
     {
-      path: "/ereignisse/:continue?",
+      path: "/ereignisse",
       name: ROUTE_EREIGNISSE,
       component: EreignisseView,
     },
@@ -175,7 +180,7 @@ describe("TheEreignisseView", () => {
 
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_navigateToNextRoute_when_parameterIsSet", async () => {
-      await router.push("/ereignisse/continue");
+      await router.push("/ereignisse?" + CONTINUE_QUERY_PARAM + "=1");
       await nextTick();
 
       const ereignisStore = useEreignisStore();
@@ -190,7 +195,7 @@ describe("TheEreignisseView", () => {
       const saveButton = wrapper.findComponent(BaseButtonSave);
       expect(saveButton.text()).toStrictEqual(SAVE_CONTINUE);
 
-      mockDefinitions.getNextRoute.mockResolvedValue({
+      mockDefinitions.getNextRoute.mockReturnValue({
         name: ROUTES_HOME,
       });
 

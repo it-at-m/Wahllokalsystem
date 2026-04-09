@@ -57,7 +57,7 @@ const { getNextRoute } = useNavigationUtils();
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 
 const shouldNavigate = computed(
-  () => route.params.continue === CONTINUE_QUERY_PARAM
+  () => route.query[CONTINUE_QUERY_PARAM] !== undefined
 );
 
 const isEreignisseFormInvalid = computed(

@@ -133,7 +133,7 @@ const routes = [
     ],
   },
   {
-    path: "/ereignisse/:continue?",
+    path: "/ereignisse",
     name: ROUTE_EREIGNISSE,
     component: EreignisseView,
     meta: {},

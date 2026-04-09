@@ -91,9 +91,7 @@ defineProps<{
 async function onEreignisseBearbeiten() {
   await router.push({
     name: ROUTE_EREIGNISSE,
-    params: {
-      continue: CONTINUE_QUERY_PARAM,
-    },
+    query: { [CONTINUE_QUERY_PARAM]: "1" },
   });
 }
 

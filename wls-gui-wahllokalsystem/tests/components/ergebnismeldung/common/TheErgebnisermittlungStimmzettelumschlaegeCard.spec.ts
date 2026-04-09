@@ -66,6 +66,10 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_RENDER_TESTS, () => {

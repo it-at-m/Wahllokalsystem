@@ -222,6 +222,9 @@ Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt we
 mit den Ereignissen führt.
 Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
 Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
+Nach dem Speichern der Schließungsuhrzeit erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}

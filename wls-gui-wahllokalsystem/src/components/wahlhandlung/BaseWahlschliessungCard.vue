@@ -67,6 +67,7 @@ import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
 const { getNextRoute } = useNavigationUtils();
+const { onSchliessungsuhrzeitSentChanged } = useEreignisStore();
 
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { schliessungsuhrzeitState } = storeToRefs(useWahlbezirkStore());
@@ -90,6 +91,9 @@ async function onEreignisseBearbeiten() {
 
 async function onSaveSchliessungsuhrzeitClicked() {
   await schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
+  await onSchliessungsuhrzeitSentChanged(
+    schliessungsuhrzeitState.value.schliessungsuhrzeitSent
+  );
   await router.push(getNextRoute());
 }
 </script>

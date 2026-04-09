@@ -22,11 +22,15 @@ import { VNumberInput } from "vuetify/components";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
+import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
+const { prepareWahl } = useWahlTestDataFactory();
+
 const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
+  resetAllAnwesenheiten: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -35,10 +39,14 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
   }),
 }));
 
+vi.mock("@/stores/wahlvorstandStore.ts", () => ({
+  useWahlvorstandStore: () => ({
+    resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
+  }),
+}));
+
 describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   let testPinia: TestingPinia;
-
-  const { prepareWahl } = useWahlTestDataFactory();
 
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
@@ -62,25 +70,11 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEnabledSaveButton_when_anzahlIsZeroAndUseTimeIsFalse", async (context) => {
-      const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl()
-          .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 0 })
-          .build(),
-      ];
+      _initWahlenStore(0);
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
+      router.push = vi.fn();
       await flushPromises(); //update databinding and keep button disabled
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -89,24 +83,9 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     });
 
     it("should_renderWithDisabledSaveButton_when_invalidAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
-      const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl()
-          .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: -1 })
-          .build(),
-      ];
+      _initWahlenStore(-1);
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -116,24 +95,9 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     });
 
     it("should_renderWithDisabledSaveButton_when_anzahlExceedsMaximumAndUseTimeIsFalse", async (context) => {
-      const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl()
-          .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 10000 })
-          .build(),
-      ];
+      _initWahlenStore(10000);
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       await flushPromises();
 
@@ -143,24 +107,9 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     });
 
     it("should_renderWithEnabledSaveButton_when_validAnzahlIsEnteredAndUseTimeIsFalse", async (context) => {
-      const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl()
-          .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 33 })
-          .build(),
-      ];
+      _initWahlenStore(33);
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       await flushPromises(); //update databinding and keep button disabled
 
@@ -179,16 +128,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       ];
       wahlenStore.stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving = true;
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
@@ -206,16 +146,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .build(),
       ];
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       const anzahlWaehler = wrapper.findComponent(VNumberInput);
 
@@ -227,24 +158,9 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     });
 
     it("should_callSaveStimmzettelumschlaege_when_saveButtonIsClickedAndUseTimeIsFalse", async () => {
-      const wahlenStore = useWahlenStore();
-      wahlenStore.wahlenState.wahlen = [
-        prepareWahl()
-          .wahlID("123")
-          .stimmzettelumschlaege({ anzahlWaehler: 33 })
-          .build(),
-      ];
+      _initWahlenStore(33);
 
-      const wrapper = mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
-        global: {
-          plugins: [testPinia, vuetify],
-        },
-        props: {
-          wahlId: "123",
-          wahlbezirkId: "456",
-          title: "Titel",
-        },
-      });
+      const wrapper = _mountComponent(testPinia);
 
       await flushPromises();
 
@@ -256,5 +172,48 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
       expect(mockDefinitions.postStimmzettelumschlaege).toHaveBeenCalled();
     });
+
+    it("should_resetAllAnwesenheiten_when_saveIsCompleted", async () => {
+      _initWahlenStore(33);
+
+      const wrapper = _mountComponent(testPinia);
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseButtonSave);
+      mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
+        Promise.resolve()
+      );
+      router.push = vi.fn();
+
+      await saveButton.trigger("click");
+
+      await flushPromises();
+
+      expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalled();
+    });
   });
 });
+
+function _mountComponent(testPinia: TestingPinia) {
+  return mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
+    global: {
+      plugins: [testPinia, vuetify],
+    },
+    props: {
+      wahlId: "123",
+      wahlbezirkId: "456",
+      title: "Titel",
+    },
+  });
+}
+
+function _initWahlenStore(anzahlWaehler: number) {
+  const wahlenStore = useWahlenStore();
+  wahlenStore.wahlenState.wahlen = [
+    prepareWahl()
+      .wahlID("123")
+      .stimmzettelumschlaege({ anzahlWaehler: anzahlWaehler })
+      .build(),
+  ];
+}

@@ -58,7 +58,11 @@ import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_EREIGNISSE, SAVE_CONTINUE } from "@/constants.ts";
+import {
+  CONTINUE_QUERY_PARAM,
+  ROUTE_EREIGNISSE,
+  SAVE_CONTINUE,
+} from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -85,7 +89,10 @@ defineProps<{
 }>();
 
 async function onEreignisseBearbeiten() {
-  await router.push(ROUTE_EREIGNISSE);
+  await router.push({
+    name: ROUTE_EREIGNISSE,
+    query: { [CONTINUE_QUERY_PARAM]: "1" },
+  });
 }
 
 async function onSaveSchliessungsuhrzeitClicked() {

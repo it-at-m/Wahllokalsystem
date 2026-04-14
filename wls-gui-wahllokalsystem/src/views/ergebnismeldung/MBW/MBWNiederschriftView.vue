@@ -58,6 +58,7 @@ import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MB
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDrcuk } from "@/composables/ergebnismeldung/MBW/niederschriftDruck.ts";
+import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
@@ -92,7 +93,8 @@ const { sendAusdruckNiederschrift } = useMbwUtils(
   currentUserWahlbezirkID
 );
 const { buildNiederschriftTemplateFromData } = useNiederschriftDrcuk();
-const { gatherDataForTemplate } = useMbtUtilsNiederschrift(
+const { gatherData } = useNiederschriftDruckUWB();
+const { prepareDataForNiederschriftDruck } = useMbtUtilsNiederschrift(
   wahlID,
   currentUserWahlbezirkID
 );
@@ -147,13 +149,15 @@ async function collectDataForTemplateBuild() {
       status.bezirkUndWahlID.wahlID == wahlID &&
       status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
   );
-  if (statusForWahlAndWahlbezirk) {
-    const templateData = await gatherDataForTemplate(
+  if (statusForWahlAndWahlbezirk && wahl) {
+    const templateData = await prepareDataForNiederschriftDruck(
       statusForWahlAndWahlbezirk,
-      MeldungsArtEnum.Niederschrift
+      MeldungsArtEnum.Niederschrift,
+      wahl
     );
+    console.log(JSON.stringify(templateData, null, 2));
 
-    return buildNiederschriftTemplateFromData(templateData);
+    return gatherData(templateData);
   }
   return " ";
 }

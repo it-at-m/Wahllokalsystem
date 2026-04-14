@@ -1,7 +1,7 @@
-import type { NiederschriftDruckInput } from "@/types/ergebnismeldung/common/NiederschriftDruckInput.ts";
+import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 
 export function useNiederschriftDrcuk() {
-  function _dataForHeader(data: NiederschriftDruckInput) {
+  function _dataForHeader(data: NiederschriftDruckInputBWB) {
     return `
      <head>
                 <meta charset="utf-8"/>
@@ -54,7 +54,7 @@ export function useNiederschriftDrcuk() {
             </div>
     `;
   }
-  function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInput) {
+  function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInputBWB) {
     return `
   <div class="fontSize_12 bold marginTop_2">Wahlhandlung</div>
             <div class="marginTop_1 marginBottom_5">
@@ -158,7 +158,7 @@ export function useNiederschriftDrcuk() {
             </div>
     `;
   }
-  function _dataForChapterTwo(data: NiederschriftDruckInput) {
+  function _dataForChapterTwo(data: NiederschriftDruckInputBWB) {
     return `
      <!-- 2. -->
             <div class="horizontal marginBottom_2">
@@ -246,15 +246,15 @@ export function useNiederschriftDrcuk() {
                 <div class="widthNumber">2.4.2</div>
                 <div class="vertical">
                     <div class="horizontal">
-                        <div class="paddingLeft fontSize_14 backendDataColor marginCheckbox">${!data.wahlbriefdaten.nachtraeglichUeberbrachte || 0 === parseInt(data.wahlbriefdaten.nachtraeglichUeberbrachte) ? "&#9746;" : "&#9744;"}</div>
+                        <div class="paddingLeft fontSize_14 backendDataColor marginCheckbox">${!data.wahlbriefdaten.nachtraeglichUeberbrachte || 0 === data.wahlbriefdaten.nachtraeglichUeberbrachte ? "&#9746;" : "&#9744;"}</div>
                         <div class="paddingLeft">
                             Es wurden keine weiteren Wahlbriefe überbracht.
                         </div>
                     </div>
                     <div class="horizontal marginBottom_2">
-                        <div class="paddingLeft fontSize_14 backendDataColor marginCheckbox">${parseInt(data.wahlbriefdaten.nachtraeglichUeberbrachte) > 0 ? "&#9746;" : "&#9744;"}</div>
+                        <div class="paddingLeft fontSize_14 backendDataColor marginCheckbox">${data.wahlbriefdaten.nachtraeglichUeberbrachte > 0 ? "&#9746;" : "&#9744;"}</div>
                         <div class="paddingLeft">
-                            Ein*e Beauftragte*r der Stadt überbrachte die noch bis 18 Uhr eingegangen</br></br><span class="backendData paddingLeftRight underline">${(parseInt(data.wahlbriefdaten.nachtraeglichUeberbrachte) || 0) > 0 ? data.wahlbriefdaten.nachtraeglichUeberbrachte : "___"}</span>Wahlbriefe. Sie wurden entsprechend Nr. 2.4.1 behandelt.
+                            Ein*e Beauftragte*r der Stadt überbrachte die noch bis 18 Uhr eingegangen</br></br><span class="backendData paddingLeftRight underline">${(data.wahlbriefdaten.nachtraeglichUeberbrachte || 0) > 0 ? data.wahlbriefdaten.nachtraeglichUeberbrachte : "___"}</span>Wahlbriefe. Sie wurden entsprechend Nr. 2.4.1 behandelt.
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@ export function useNiederschriftDrcuk() {
             <div class="horizontal marginBottom_2">
                 <div class="widthNumber">2.4.3</div>
                 <div>
-                    Die <b>Gesamtzahl</b> der zur Auswertung vorgelegten <b>Wahlbriefe</b> betrug<span class="underline paddingLeftRight">${(parseInt(data.wahlbriefdaten.wahlbriefe) || 0) + (parseInt(data.wahlbriefdaten.nachtraeglichUeberbrachte) || 0)}</span>.  
+                    Die <b>Gesamtzahl</b> der zur Auswertung vorgelegten <b>Wahlbriefe</b> betrug<span class="underline paddingLeftRight">${(parseInt(data.wahlbriefdaten.wahlbriefe) || 0) + (data.wahlbriefdaten.nachtraeglichUeberbrachte || 0)}</span>.  
                 </div>
             </div>
 
@@ -418,7 +418,7 @@ export function useNiederschriftDrcuk() {
 
     `;
   }
-  function _dataForChapterThree(data: NiederschriftDruckInput) {
+  function _dataForChapterThree(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 3 -->
             <div class="horizontal marginBottom_5">
@@ -896,7 +896,7 @@ export function useNiederschriftDrcuk() {
             </svg>
     `;
   }
-  function _dataForChapterFour(data: NiederschriftDruckInput) {
+  function _dataForChapterFour(data: NiederschriftDruckInputBWB) {
     return `
 <!-- 4. -->
             
@@ -1221,7 +1221,7 @@ export function useNiederschriftDrcuk() {
               .join("")}
     `;
   }
-  function _dataForChapterFive(data: NiederschriftDruckInput) {
+  function _dataForChapterFive(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 5. -->
                 
@@ -2084,7 +2084,9 @@ export function useNiederschriftDrcuk() {
     `;
   }
 
-  function buildNiederschriftTemplateFromData(data: NiederschriftDruckInput) {
+  function buildNiederschriftTemplateFromData(
+    data: NiederschriftDruckInputBWB
+  ) {
     return `
     <!DOCTYPE html>
             <html lang="de">

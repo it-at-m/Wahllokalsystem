@@ -1,14 +1,18 @@
+import type { AWerte } from "@/types/ergebnismeldung/common/AWerte.ts";
 import type { MeldungsartEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import type {
-  NiederschriftBeanstandeteWahlbriefe,
-  NiederschriftDruckInput,
-  NiederschriftGueltigeStimme,
-  NiederschriftGueltigeStimmenErgebnisGesamt,
-  NiederschriftUhrzeit,
-  NiederschriftWahlbriefdaten,
-  NiederschriftWahlvorstandsmitglied,
-} from "@/types/ergebnismeldung/common/NiederschriftDruckInput.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
+import type { NiederschriftBeanstandeteWahlbriefe } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftBeanstandeteWahlbriefe";
+import type { NiederschriftDruckInputBase } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBase.ts";
+import type {
+  NiederschriftDruckInputBWB,
+  NiederschriftUhrzeit,
+} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
+import type { NiederschriftEreignisse } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftEreignisse.ts";
+import type { NiederschriftGueltigeStimme } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftGueltigeStimme";
+import type { NiederschriftGueltigeStimmenErgebnisGesamt } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftGueltigeStimmenErgebnisGesamt";
+import type { NiederschriftWahlbriefdaten } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftWahlbriefdaten";
+import type { NiederschriftWahlvorstandsmitglied } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftWahlvorstandsmitglied";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 
@@ -18,8 +22,15 @@ import { ref } from "vue";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
+import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
+import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
+import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
@@ -27,11 +38,11 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
-import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import { Parteei } from "@/types/ergebnismeldung/common/NiederschriftDruckInput.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { Parteei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -41,16 +52,22 @@ const { addNotification } = useUserNotificationService();
 const { getErgebnisse } = useErgebnisService();
 
 export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
+  const { getAWerte } = useAWerteService();
+  const { getUrnenwahlvorbereitung } = useWahlvorbereitungService();
+  const { getStimmabgabevermerke } = useStimmabgabevermerkeService();
+  const { getBegruendungStimmzettelumschlaege } = useErgebnisService();
+  const { getWaehlerverzeichnis } = useWaehlerverzeichnisService();
+  const { getWahlvorstand } = useWahlvorstandService();
+  const { getWahlscheine } = useWahlscheineService();
+
   const { getErgebnisseByWahlIdAndStapelartOrUndefined } =
     useErgebnismeldungStore();
-
-  const { wahlenActions } = useWahlenStore();
-  const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
-    storeToRefs(useUserStore());
-  const { wahlvorstand } = storeToRefs(useWahlvorstandStore());
-
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
+
+  const { wahlenActions, waehlerverzeichnisActions } = useWahlenStore();
+  const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
+    storeToRefs(useUserStore());
   const {
     eroeffnungsuhrzeitState,
     schliessungsuhrzeitState,
@@ -58,24 +75,88 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   } = storeToRefs(useWahlbezirkStore());
   const { wahlbezirkEreignisse } = storeToRefs(useEreignisStore());
   const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
+
   const wahlvorschlaegeByWahlIDAndWahlbezirkID =
     getWahlvorschlaegeByWahlIDAndWahlbezirkID(wahlID, wahlbezirkID);
+  const { getBWerteForWahlbezirkAndWahl } = useMbwUtils();
   const gueltigeStimmenListe = ref<NiederschriftGueltigeStimme[]>([]);
   const gueltigeStimmenErgebnisGesamt =
-    ref<NiederschriftGueltigeStimmenErgebnisGesamt>({});
-  const vorfallArray = [];
-  const vorkommnisArray = [];
-  const { getBegruendungStimmzettelumschlaege } = useErgebnisService();
+    ref<NiederschriftGueltigeStimmenErgebnisGesamt>({
+      gesamt: 0,
+      stapelA: 0,
+      stapelB: 0,
+      stapelBC: 0,
+    });
 
-  async function gatherDataForTemplate(
+  async function prepareDataForNiederschriftDruck(
     status: Status,
-    meldungsart: MeldungsartEnum
-  ) {
-    const aktulleWahl = wahlenActions.getWahlOrUndefinedById(wahlID);
-    const barcode = _createBarcode(aktulleWahl, meldungsart);
+    meldungsart: MeldungsartEnum,
+    wahl: Wahl
+  ): Promise<NiederschriftDruckInputBWB | NiederschriftDruckInputUWB> {
+    const barcode = _createBarcode(wahl, meldungsart);
     const wahlbezirkNummer = currentUserWahlbezirkNummer.value;
-    const wahlvorstand = _getWahlvorstand();
-    const eroeffnungsuhrzeit: NiederschriftUhrzeit = {
+    const wahlvorstaende = await _getWahlvorstand();
+    const eroeffnungsuhrzeit: NiederschriftUhrzeit = _getEroeffnungsuhrzeit();
+    const schliessungsuhrzeit: NiederschriftUhrzeit = _getSchliessungsuhrzeit();
+    const wahltagFormatiert = toGermanDate(wahl.wahltag);
+    const anzahlStimmzettel = wahl.stimmzettelumschlaege.anzahlWaehler;
+    const anzahlWahlscheine = await _getAnzahlWahlscheine();
+    const bWerte = await getBWerteForWahlbezirkAndWahl();
+    const ereignisse = _getEreignisse();
+    const parteienListe = _getParteienListe();
+    const begruendung = await _getBegruendungStimmzettelumschlaege(wahl);
+    const ungueltigeStimmen = await _getUngueltigeStimmen();
+    _getStimmenListeUndErgebniseGesamt();
+    const footer = _createFooter(status, meldungsart);
+    console.log(gueltigeStimmenListe.value);
+    const niederschriftDruckInputBaseData: NiederschriftDruckInputBase = {
+      aktuelleWahl: wahl,
+      wahltagFormatiert: wahltagFormatiert || "",
+      barcode: barcode,
+      wahlbezirkNummer: wahlbezirkNummer,
+      wahlvorstaende: wahlvorstaende,
+      eroeffnungsuhrzeit: eroeffnungsuhrzeit,
+      schliessungsuhrzeit: schliessungsuhrzeit,
+      anzahlStimmzettel: anzahlStimmzettel || 0,
+      anzahlWahlscheine: anzahlWahlscheine,
+      begruendungStimmzettelumschlaege: { grund: begruendung },
+      bWerte: bWerte.b || 0,
+      ungueltigeStimmen: ungueltigeStimmen || 0,
+      gueltigeStimmenListe: gueltigeStimmenListe.value,
+      gueltigeStimmenErgebnisGesamt: gueltigeStimmenErgebnisGesamt.value,
+      parteienListe: parteienListe,
+      ereignisse: ereignisse,
+      footer: footer,
+    };
+
+    if (currentUserWahlbezirksArt.value == WahlbezirksArtEnum.UWB) {
+      const anzahlWahltische = await _getAnzahlWahltische();
+      const wvz = await _getWaehlerverzeichnisData();
+      const aWerte = await getAWerteForWahlbezirkAndWahl();
+      const aWerteGesamt = aWerte.a1 + (aWerte.a2 || 0);
+      return {
+        ...niederschriftDruckInputBaseData,
+        anzahlStimmabgabevermerke: bWerte.b,
+        aWerte: aWerteGesamt,
+        a1: aWerte.a1,
+        a2: aWerte.a2 || 0,
+        wvz: wvz,
+        anzahlWahltische: anzahlWahltische || 0,
+        b1: bWerte.b1,
+      };
+    } else {
+      const beanstandeteWahlbriefe = _getBeanstandteWahlbriefe();
+      const wahlbriefdaten = _getWahlbriefdaten();
+      return new Promise({
+        ...niederschriftDruckInputBaseData,
+        beanstandeteWahlbriefe: beanstandeteWahlbriefe,
+        wahlbriefdaten: wahlbriefdaten,
+      });
+    }
+  }
+
+  function _getEroeffnungsuhrzeit() {
+    return {
       stunde:
         eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit?.getHours.toString() ??
         "",
@@ -84,8 +165,10 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           ?.getMinutes()
           .toString() ?? "",
     };
+  }
 
-    const schliessungsuhrzeit: NiederschriftUhrzeit = {
+  function _getSchliessungsuhrzeit() {
+    return {
       stunde:
         schliessungsuhrzeitState.value.schliessungsuhrzeit?.getHours.toString() ??
         "",
@@ -94,57 +177,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           ?.getMinutes()
           .toString() ?? "",
     };
-
-    const wahlbriefdaten = _getWahlbriefdaten();
-    const beanstandteWahlbriefe = _getBeanstandteWahlbriefe();
-    const anzahlStimmzettell = aktulleWahl.stimmzettelumschlaege.anzahlWaehler;
-    const anzahlWahlscheine = stimmabgabevermerke.value.length;
-    const bWerte = aktulleWahl.stimmzettelumschlaege.anzahlWaehler;
-    const ungueltigeStimmen = _getUngueltigeStimmen();
-    getEreignisse();
-    let parteienListeForTemplate;
-    const stapelBC = getErgebnisseByWahlIdAndStapelartOrUndefined(
-      wahlID,
-      StapelArtEnum.MbwBC
-    );
-    if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
-      parteienListeForTemplate = _createParteeienListe(
-        wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege.sort((a, b) =>
-          a.ordnungszahl > b.ordnungszahl ? 1 : -1
-        ),
-        stapelBC,
-        true
-      );
-    }
-    const begruendung = await _getBegruendungStimmzettelumschlaege(aktulleWahl);
-
-    _getStimmenListeUndErgebniseGesamt();
-
-    const templateData: NiederschriftDruckInput = {
-      aktuelleWahl: aktulleWahl,
-      wahltagFormatiert: toGermanDate(aktulleWahl.wahltag),
-      barcode: barcode,
-      wahlbezirkNummer: wahlbezirkNummer,
-      wahlvorstaende: wahlvorstand,
-      eroeffnungsuhrzeit: eroeffnungsuhrzeit,
-      schliessungsuhrzeit: schliessungsuhrzeit,
-      wahlbriefdaten: wahlbriefdaten,
-      beanstandeteWahlbriefe: beanstandteWahlbriefe,
-      anzahlStimmzettel: anzahlStimmzettell,
-      anzahlWahlscheine: anzahlWahlscheine,
-      begruendungStimmzettelumschlaege: {
-        grund: begruendung,
-      }, // TODO noch nicht eingetragen
-      bWerte: bWerte,
-      ungueltigeStimmen: ungueltigeStimmen,
-      gueltigeStimmenListe: gueltigeStimmenListe.value,
-      gueltigeStimmenErgebnisGesamt: gueltigeStimmenErgebnisGesamt,
-      parteienListe: parteienListeForTemplate,
-      ereignisse: vorkommnisArray.concat(vorfallArray),
-      footer: _createFooter(status, meldungsart),
-    };
-    console.log(JSON.stringify(templateData));
-    return templateData;
   }
 
   function _createBarcode(wahl: Wahl, meldungsart: MeldungsartEnum) {
@@ -175,14 +207,19 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  function _getWahlvorstand(): NiederschriftWahlvorstandsmitglied[] {
-    return wahlvorstand.value.wahlvorstandsmitglieder.map((mitglied) => {
-      return {
+  async function _getWahlvorstand(): Promise<
+    NiederschriftWahlvorstandsmitglied[]
+  > {
+    try {
+      const wahlvorstand = await getWahlvorstand(wahlbezirkID);
+      return wahlvorstand.wahlvorstandsmitglieder.map((mitglied) => ({
         nachname: mitglied.familienname ?? "",
         vorname: mitglied.vorname ?? "",
         funktionsName: mitglied.funktionsname ?? "",
-      } as NiederschriftWahlvorstandsmitglied;
-    });
+      }));
+    } catch {
+      throw new Error("Wahlvorstand konnte nicht geladen werden");
+    }
   }
 
   function _getWahlbriefdaten(): NiederschriftWahlbriefdaten {
@@ -271,12 +308,10 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           beanstandeteWahlbriefe.gegenstandImUmschlag++;
           break;
         case ZurueckweisungsgrundEnum.NichtWahlberechtigt:
-          // In the legacy implementation this was counted as 'zugelassen' as well as a separate counter.
           beanstandeteWahlbriefe.gesamt++;
           beanstandeteWahlbriefe.zugelassen++;
           break;
         default:
-          // unknown / unhandled reasons - count towards total if present
           beanstandeteWahlbriefe.gesamt++;
           beanstandeteWahlbriefe.gesamtMinusZugelassen++;
           break;
@@ -468,16 +503,29 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     return partei;
   }
 
-  function getEreignisse() {
+  function _getEreignisse() {
+    const ereignisData: NiederschriftEreignisse = {
+      hasEreignisse: false,
+      vorfaelle: [],
+      vorkommnisse: [],
+    };
     wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {
       if (eintrag.ereignisart === "VORFALL") {
-        eintrag.uhrzeit = new Date(toHhMm(eintrag.uhrzeit));
-        vorfallArray.push(eintrag);
+        const uhrzeit = toHhMm(eintrag.uhrzeit);
+        ereignisData.vorfaelle.push({
+          uhrzeit: uhrzeit,
+          beschreibung: eintrag.beschreibung || "",
+        });
       } else {
-        eintrag.uhrzeit = new Date(toHhMm(eintrag.uhrzeit));
-        vorkommnisArray.push(eintrag);
+        const uhrzeit = toHhMm(eintrag.uhrzeit);
+        ereignisData.vorkommnisse.push({
+          uhrzeit: uhrzeit,
+          beschreibung: eintrag.beschreibung || "",
+        });
       }
     });
+
+    return ereignisData;
   }
 
   async function _getBegruendungStimmzettelumschlaege(wahl: Wahl) {
@@ -508,6 +556,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         `Fehler beim Laden der Begruendungen der Stimmzettelumschlaege`
       );
     }
+    return "";
   }
 
   function _createFooter(
@@ -535,7 +584,144 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
+  async function getAWerteForWahlbezirkAndWahl(): Promise<AWerte> {
+    let aWerte;
+    try {
+      aWerte = await getAWerte(wahlbezirkID, false);
+    } catch {
+      throw new Error(`Fehler beim Laden der AWerte`);
+    }
+
+    const filteredAWert = aWerte.find(
+      ({ bezirkUndWahlID }) => bezirkUndWahlID.wahlID === wahlID
+    );
+
+    if (!filteredAWert) {
+      throw new Error(`Kein AWert gefunden für wahlID: ${wahlID}`);
+    }
+    return filteredAWert;
+  }
+
+  async function getB1() {
+    const waehlerverzeichnisNummer =
+      waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+        wahlID
+      );
+    if (waehlerverzeichnisNummer) {
+      try {
+        const loadedStimmabgabevermerke = await getStimmabgabevermerke(
+          wahlbezirkID,
+          waehlerverzeichnisNummer
+        );
+        if (loadedStimmabgabevermerke) {
+          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+          return loadedStimmabgabevermerke.wahldaten[0].vermerke
+            .flatMap((vermerk) => vermerk.stimmzettel)
+            .reduce(
+              (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
+              0
+            );
+        }
+      } catch {
+        throw new Error(`Fehler beim Laden der BWerte`);
+      }
+    }
+  }
+
+  async function _getWaehlerverzeichnisData() {
+    try {
+      const waehlerverzeichnisNummer =
+        waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+          wahlID
+        );
+      if (waehlerverzeichnisNummer) {
+        const waehlerverzeichnis = await getWaehlerverzeichnis(
+          wahlbezirkID,
+          waehlerverzeichnisNummer
+        );
+        return {
+          nachtraeglicheBerichtigung:
+            waehlerverzeichnis.nachtraeglicheBerichtigung,
+          verzeichnisLagVor: waehlerverzeichnis.waehlerverzeichnisUnchanged,
+          berichtigungVorBeginnDerAbstimmung:
+            !waehlerverzeichnis.waehlerverzeichnisUnchanged,
+        };
+      }
+    } catch {
+      throw new Error(`Fehler beim Laden der BWerte`);
+    }
+  }
+
+  async function _getAnzahlWahltische() {
+    try {
+      const urnenwahlvorbereitung =
+        await getUrnenwahlvorbereitung(wahlbezirkID);
+      return urnenwahlvorbereitung ? urnenwahlvorbereitung.anzahlWahltische : 0;
+    } catch {
+      throw new Error("Fehler beim Laden der Urnenwahlvorbereitung");
+    }
+  }
+
+  function _getParteienListe() {
+    let parteienListeForTemplate;
+    const stapelBC = getErgebnisseByWahlIdAndStapelartOrUndefined(
+      wahlID,
+      StapelArtEnum.MbwBC
+    );
+
+    if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
+      parteienListeForTemplate = _createParteeienListe(
+        wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege.sort((a, b) =>
+          a.ordnungszahl > b.ordnungszahl ? 1 : -1
+        ),
+        stapelBC,
+        true
+      );
+    }
+    return parteienListeForTemplate;
+  }
+
+  async function _getAnzahlWahlscheine() {
+    try {
+      if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
+        const waehlerverzeichnisNummer =
+          waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+            wahlID
+          );
+        if (waehlerverzeichnisNummer) {
+          const loadedStimmabgabevermerke = await getStimmabgabevermerke(
+            wahlbezirkID,
+            waehlerverzeichnisNummer
+          );
+          if (loadedStimmabgabevermerke) {
+            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
+            const wahldatenForWahl = loadedStimmabgabevermerke.wahldaten.find(
+              (wahldaten) => wahldaten.wahlID === wahlID
+            );
+            if (
+              wahldatenForWahl?.eingenommeneWahlscheine &&
+              Array.isArray(wahldatenForWahl.eingenommeneWahlscheine)
+            ) {
+              const kleineWahlscheine =
+                wahldatenForWahl.eingenommeneWahlscheine.get(
+                  EingenommenerWahlscheinStimmzettelartEnum.Klein
+                );
+              return kleineWahlscheine ?? 0;
+            }
+          }
+        }
+      } else {
+        const loadedWahlscheine = await getWahlscheine(wahlID, wahlbezirkID);
+        if (loadedWahlscheine) {
+          return loadedWahlscheine.stimmabgabevermerke ?? 0;
+        }
+      }
+    } catch {
+      throw new Error(`Fehler beim Laden der BWerte`);
+    }
+  }
+
   return {
-    gatherDataForTemplate,
+    prepareDataForNiederschriftDruck,
   };
 }

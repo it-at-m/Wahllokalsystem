@@ -58,7 +58,11 @@ import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_EREIGNISSE, SAVE_CONTINUE } from "@/constants.ts";
+import {
+  CONTINUE_QUERY_PARAM,
+  ROUTE_EREIGNISSE,
+  SAVE_CONTINUE,
+} from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -68,6 +72,7 @@ import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
 const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
 const { getNextRoute } = useNavigationUtils();
+const { onSchliessungsuhrzeitSentChanged } = useEreignisStore();
 
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
@@ -87,12 +92,18 @@ defineProps<{
 }>();
 
 async function onEreignisseBearbeiten() {
-  await router.push(ROUTE_EREIGNISSE);
+  await router.push({
+    name: ROUTE_EREIGNISSE,
+    query: { [CONTINUE_QUERY_PARAM]: "1" },
+  });
 }
 
 async function onSaveSchliessungsuhrzeitClicked() {
   await schliessungsuhrzeitActions.sendSchliessungsuhrzeit();
   resetAllAnwesenheiten();
+  await onSchliessungsuhrzeitSentChanged(
+    schliessungsuhrzeitState.value.schliessungsuhrzeitSent
+  );
   await router.push(getNextRoute());
 }
 </script>

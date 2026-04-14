@@ -2,7 +2,7 @@
   <base-ergebnismeldung-cards-container
     title="Niederschrift"
     subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
-    :is-sending="isNiederschriftAndStatusSaving"
+    :is-sending="isSendingNiederschrift"
     :is-korrigieren-active="isKorrigierenValid"
     :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
     :is-drucken-loading="isDruckenLoading"
@@ -44,7 +44,6 @@
 <script setup lang="ts">
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -59,8 +58,6 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
@@ -70,12 +67,7 @@ import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
-const { sendNiederschrift } = useErgebnismeldungStore();
-const { isNiederschriftAndStatusSaving } = storeToRefs(
-  useErgebnismeldungStore()
-);
 const { hasDoneVorkommnisse } = useEreignisUtils();
-const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 
@@ -88,10 +80,9 @@ const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
-const { sendAusdruckNiederschrift } = useMbwUtils(
-  wahlID,
-  currentUserWahlbezirkID
-);
+const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
+  useMbwUtils(wahlID, currentUserWahlbezirkID);
+
 if (!wahl) {
   router.push({
     name: ROUTE_NOTFOUND,
@@ -107,9 +98,7 @@ onActivated(async () => {
 });
 
 function onSendenClicked() {
-  if (wahl) {
-    sendNiederschrift(wahl);
-  }
+  sendNiederschrift();
 }
 function onKorrigierenClicked() {
   // to be implemented
@@ -138,14 +127,7 @@ async function onDruckenClicked() {
       workflowState.value.isNiederschriftDone = true;
     }
   }
-  const statusForWahlAndWahlbezirk = status.value.find(
-    (status) =>
-      status.bezirkUndWahlID.wahlID == wahlID &&
-      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
-  );
-  if (statusForWahlAndWahlbezirk) {
-    statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
-  }
+
   await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
 
   isDruckenLoading.value = false;

@@ -331,11 +331,26 @@ Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
+Während des Versendens und Druckens der Schnellmeldung wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `schnellmeldung.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `schnellmeldung.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Schnellmeldung
+erfolgt ist, wird `schnellmeldung.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`schnellmeldung.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
 Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+
+Während des Versendens und Druckens der Niederschrift wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `niederschrift.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `niederschrift.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Niederschrift
+erfolgt ist, wird `niederschrift.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`niederschrift.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
 Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
 dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.

@@ -4,11 +4,11 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.4.13-SNAPSHOT</version>
+    <version>0.4.14-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>

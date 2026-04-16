@@ -93,6 +93,7 @@ const {
   user,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
+  currentUserWahlbezirkID,
   isUWB,
   isUserLoggedIn,
 } = storeToRefs(useUserStore());
@@ -111,7 +112,7 @@ const wahlbezirknummer = computed(() =>
 
 async function onLogoutClicked() {
   try {
-    await logout();
+    await logout(currentUserWahlbezirkID.value);
   } catch {
     addNotification(
       "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",

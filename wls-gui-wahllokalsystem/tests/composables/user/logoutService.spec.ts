@@ -20,6 +20,7 @@ import router from "@/plugins/router.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getLogoutUrl: vi.fn(),
+  postLetzteAbmeldung: vi.fn(),
   fetch: vi.fn(),
   isUserLoggedIn: undefined as Ref<boolean> | undefined,
   routerPush: vi.fn(),
@@ -36,6 +37,20 @@ vi.mock("@/api/wls-clients/generated-auth-api", async (importOriginal) => {
   };
 });
 
+vi.mock(
+  "@/api/wls-clients/generated-monitoring-api",
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...(mod as object),
+      WahllokalZustandControllerApi: vi.fn().mockImplementation(() => ({
+        postLetzteAbmeldung: mockDefinitions.postLetzteAbmeldung,
+      })),
+      Configuration: vi.fn(),
+    };
+  }
+);
+
 vi.mock("@/stores/userStore.ts", () => ({
   useUserStore: () => ({
     isUserLoggedIn: mockDefinitions.isUserLoggedIn,
@@ -50,6 +65,8 @@ const { createResolvedUrlDTO } = useResolvedUrlTestDataFactory();
 
 describe("logoutService.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogoutService>;
+
+  const WAHLBEZIRK_ID = "wahlbezirkID";
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -76,12 +93,15 @@ describe("logoutService.ts", () => {
         })
       );
 
+      mockDefinitions.postLetzteAbmeldung.mockResolvedValue(Promise.resolve());
+
       mockDefinitions.fetch.mockImplementation(() => {
         return Promise.resolve({ ok: true });
       });
 
-      await unitUnderTest.logout();
+      await unitUnderTest.logout(WAHLBEZIRK_ID);
 
+      expect(mockDefinitions.postLetzteAbmeldung).toHaveBeenCalledOnce();
       expect(mockDefinitions.fetch).toHaveBeenCalledTimes(2);
       expect(
         (mockDefinitions.fetch.mock.calls[0]?.[0] as Request)?.url
@@ -98,7 +118,7 @@ describe("logoutService.ts", () => {
       const mockedGetLogoutUrlError = new Error("mocked get logout url failed");
       mockDefinitions.getLogoutUrl.mockRejectedValue(mockedGetLogoutUrlError);
 
-      await expect(unitUnderTest.logout()).rejects.toThrow(
+      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow(
         mockedGetLogoutUrlError
       );
     });
@@ -123,7 +143,7 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout()).rejects.toThrow();
+      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
     });
 
     it("should_throwError_when_logoutOnGatewayFailed", async () => {
@@ -146,7 +166,16 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout()).rejects.toThrow();
+      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+    });
+
+    it("should_notPostLetzteAbmeldung_when_getLogoutUrlFailed", async () => {
+      mockDefinitions.getLogoutUrl.mockResolvedValue(
+        Promise.reject(new Error("no logout url"))
+      );
+
+      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      expect(mockDefinitions.postLetzteAbmeldung).not.toHaveBeenCalled();
     });
   });
 });

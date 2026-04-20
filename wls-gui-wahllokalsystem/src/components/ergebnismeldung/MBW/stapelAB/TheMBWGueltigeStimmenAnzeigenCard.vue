@@ -47,6 +47,8 @@ const {
 onActivated(async () => {
   ergebnisseAndWahlvorschlaege.value =
     await loadAndCombineErgebnisseAndWahlvorschlaege();
-  await loadWahlvorschlaegeAndErgebnisse();
+  if (!props.isSchnellmeldung) {
+    await loadWahlvorschlaegeAndErgebnisse();
+  }
 });
 </script>

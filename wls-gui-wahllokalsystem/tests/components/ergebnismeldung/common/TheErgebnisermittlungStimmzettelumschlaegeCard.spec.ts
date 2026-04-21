@@ -24,6 +24,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
+import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { prepareWahl } = useWahlTestDataFactory();
@@ -175,12 +176,26 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       await saveButton.trigger("click");
 
       expect(mockDefinitions.postStimmzettelumschlaege).toHaveBeenCalled();
+      expect(mockDefinitions.resetAllAnwesenheiten).not.toHaveBeenCalled();
     });
 
-    it("should_resetAllAnwesenheiten_when_saveIsCompleted", async () => {
-      _initWahlenStore(33);
+    it("should_resetAllAnwesenheiten_when_saveIsCompletedInBWB", async () => {
+      const infomanagementStore = useInfomanagementStore();
+      // @ts-expect-error: cannot set readonly
+      infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
 
-      const wrapper = _mountComponent(testPinia);
+      const wahlenStore = useWahlenStore();
+      wahlenStore.wahlenState.wahlen = [
+        prepareWahl()
+          .wahlID("123")
+          .stimmzettelumschlaege({
+            anzahlWaehler: 33,
+            urneneroeffnungsUhrzeit: new Date("2026-01-01T08:00:00"),
+          })
+          .build(),
+      ];
+
+      const wrapper = _mountComponent(testPinia, true);
 
       await flushPromises();
 
@@ -199,7 +214,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   });
 });
 
-function _mountComponent(testPinia: TestingPinia) {
+function _mountComponent(testPinia: TestingPinia, useTime = false) {
   return mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
     global: {
       plugins: [testPinia, vuetify],
@@ -208,6 +223,7 @@ function _mountComponent(testPinia: TestingPinia) {
       wahlId: "123",
       wahlbezirkId: "456",
       title: "Titel",
+      useTime: useTime,
     },
   });
 }

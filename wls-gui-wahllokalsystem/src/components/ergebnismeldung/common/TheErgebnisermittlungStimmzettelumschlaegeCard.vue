@@ -147,7 +147,9 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
-  resetAllAnwesenheiten();
+  if (props.useTime) {
+    resetAllAnwesenheiten();
+  }
   await router.push(getNextRoute());
 }
 </script>

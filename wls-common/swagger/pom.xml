@@ -22,7 +22,7 @@
   </scm>
     <properties>
         <wls.common.version>1.8.0-SNAPSHOT</wls.common.version>
-        <com.tngtech.archunit.version>1.4.1</com.tngtech.archunit.version>
+        <com.tngtech.archunit.version>1.4.2</com.tngtech.archunit.version>
     </properties>
 
     <dependencies>

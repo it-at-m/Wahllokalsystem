@@ -4,9 +4,14 @@ import {
   AuthServerControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-auth-api";
+import { WahllokalZustandControllerApi } from "@/api/wls-clients/generated-monitoring-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { AUTH_SERVICE_API_URL, ROUTE_LOGOUT } from "@/constants.ts";
+import {
+  AUTH_SERVICE_API_URL,
+  MONITORING_SERVICE_API_URL,
+  ROUTE_LOGOUT,
+} from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -25,13 +30,25 @@ export function useLogoutService() {
     })
   );
 
-  async function logout() {
+  const wahllokalZustandControllerApi = new WahllokalZustandControllerApi(
+    new Configuration({
+      basePath: MONITORING_SERVICE_API_URL,
+    })
+  );
+
+  async function logout(wahlbezirkID: string) {
     try {
       const logoutUrl = (
         await authServerControllerApi.getLogoutUrl(
           axiosConfigWrapper().requestAsOnlineOnly()
         )
       ).data.url;
+
+      await wahllokalZustandControllerApi.postLetzteAbmeldung(
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
+
       const request = new Request(logoutUrl, {
         method: "GET",
         credentials: "include",

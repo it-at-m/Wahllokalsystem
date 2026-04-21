@@ -6,6 +6,7 @@ import type { RouteLocationAsRelativeGeneric } from "vue-router";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_FINISHED,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -13,7 +14,6 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
-  ROUTES_HOME,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -121,7 +121,7 @@ export function useNavigationUtils() {
       }
     }
 
-    return routeWithName(ROUTES_HOME);
+    return routeWithName(ROUTE_FINISHED);
   }
 
   function _getNextStepOfElection(

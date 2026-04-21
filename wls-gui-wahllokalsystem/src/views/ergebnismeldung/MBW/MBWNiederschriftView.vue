@@ -56,6 +56,7 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
@@ -71,6 +72,7 @@ const { wahlenActions } = useWahlenStore();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
+const { getNextRoute } = useNavigationUtils();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -127,6 +129,8 @@ async function onDruckenClicked() {
     if (workflowState.value) {
       workflowState.value.isNiederschriftDone = true;
     }
+
+    await router.push(getNextRoute());
   }
 
   await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);

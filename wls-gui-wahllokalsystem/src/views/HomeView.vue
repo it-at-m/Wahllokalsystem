@@ -58,7 +58,7 @@ onMounted(async () => {
     if (!swEnabled.value) {
       // Service Worker wurde in about:config deaktiviert
       warnings.value.push(
-        'Aktivieren Sie den Serice-Worker unter "about:config" mit dem Flag "dom.serviceWorkers.enabled".'
+        'Aktivieren Sie den Service-Worker unter "about:config" mit dem Flag "dom.serviceWorkers.enabled".'
       );
     } else if (!swActive.value) {
       // Seite wurde mit Shift-Reload aufgerufen, oder Nutzer befindet sich auf unsicherer (HTTP) Seite.
@@ -69,7 +69,7 @@ onMounted(async () => {
         'Stellen Sie sicher, dass unter Einstellungen > "Datenschutz & Sicherheit" > "Cookies und Websitedaten" der Punkt "Behalten, bis" auf "sie nicht mehr gültig sind" gesetzt ist.'
       );
       warnings.value.push(
-        'Halten Sie beim aktualisieren der Seite nicht die "Umschalttaste" gedrückt.'
+        'Halten Sie beim Aktualisieren der Seite nicht die "Umschalttaste" gedrückt.'
       );
     }
 

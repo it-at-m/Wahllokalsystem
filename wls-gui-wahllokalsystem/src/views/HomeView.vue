@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
@@ -33,26 +33,30 @@ import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorker
 const { isServiceWorkerActive, isServiceWorkerEnabled } =
   useServiceWorkerUtils();
 
-const swActive = ref(false);
-const swEnabled = ref(false);
+const swEnabled = ref(isServiceWorkerEnabled());
+const swActive = ref(swEnabled.value && isServiceWorkerActive());
 const warnings = ref<string[]>([]);
 
+let swActiveInterval: ReturnType<typeof setInterval> | undefined;
+let swEnabledInterval: ReturnType<typeof setInterval> | undefined;
+let checkWarningsInterval: ReturnType<typeof setInterval> | undefined;
+
 onMounted(async () => {
-  const swActiveInterval = setInterval(() => {
+  swActiveInterval = setInterval(() => {
     swActive.value = isServiceWorkerActive();
     if (swActive.value === true) {
       clearInterval(swActiveInterval);
     }
   }, 500);
 
-  const swEnabledInterval = setInterval(() => {
+  swEnabledInterval = setInterval(() => {
     swEnabled.value = isServiceWorkerEnabled();
     if (swEnabled.value === true) {
       clearInterval(swEnabledInterval);
     }
   }, 500);
 
-  const checkWarningsInterval = setInterval(() => {
+  checkWarningsInterval = setInterval(() => {
     warnings.value = [];
 
     if (!swEnabled.value) {
@@ -77,5 +81,11 @@ onMounted(async () => {
       clearInterval(checkWarningsInterval);
     }
   }, 100);
+});
+
+onUnmounted(() => {
+  if (swActiveInterval) clearInterval(swActiveInterval);
+  if (swEnabledInterval) clearInterval(swEnabledInterval);
+  if (checkWarningsInterval) clearInterval(checkWarningsInterval);
 });
 </script>

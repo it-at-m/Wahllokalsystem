@@ -24,6 +24,7 @@
       :wahl-id="wahlID"
     />
     <the-m-b-w-gueltige-stimmen-anzeigen-card
+      :is-schnellmeldung="false"
       :wahlbezirk-id="currentUserWahlbezirkID"
       :wahl-id="wahlID"
     />

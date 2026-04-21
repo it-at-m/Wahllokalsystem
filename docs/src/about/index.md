@@ -222,6 +222,9 @@ Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt we
 mit den Ereignissen führt.
 Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
 Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
+Nach dem Speichern der Schließungsuhrzeit erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}
@@ -229,6 +232,9 @@ Im Briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine
 abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht. Die früheste Zeit, die
 übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
 Standardwert von 18 Uhr.
+Nach dem Speichern der Uhrzeit zur Öffnung der Wahlurne erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 📃 **UseCase: `Überprüfung der ungültigen Wahlscheine`**

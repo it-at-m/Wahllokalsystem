@@ -113,6 +113,7 @@ const {
   user,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
+  currentUserWahlbezirkID,
   isUWB,
   isUserLoggedIn,
 } = storeToRefs(useUserStore());
@@ -139,7 +140,7 @@ function onLogoutClicked() {
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
   try {
-    await logout();
+    await logout(currentUserWahlbezirkID.value);
   } catch {
     addNotification(
       "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",

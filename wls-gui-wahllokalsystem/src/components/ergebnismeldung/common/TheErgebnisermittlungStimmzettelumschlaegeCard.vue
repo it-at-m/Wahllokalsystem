@@ -87,6 +87,7 @@ import {
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
@@ -115,6 +116,7 @@ const {
 } = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
 const { getNextRoute } = useNavigationUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
+const { resetAllAnwesenheiten } = useWahlvorstandStore();
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -145,6 +147,7 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
+  resetAllAnwesenheiten();
   await router.push(getNextRoute());
 }
 </script>

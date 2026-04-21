@@ -4,6 +4,10 @@ import { type ServiceWorkerMessage } from "@/types/serviceWorker/ServiceWorkerMe
 export function useServiceWorkerUtils() {
   const { logDebug } = useLogging("useServiceWorkerUtils");
 
+  function isServiceWorkerEnabled() {
+    return !!navigator.serviceWorker;
+  }
+
   function isServiceWorkerActive() {
     return !!navigator.serviceWorker.controller;
   }
@@ -40,6 +44,7 @@ export function useServiceWorkerUtils() {
   return {
     awaitServiceWorkerActive,
     isServiceWorkerActive,
+    isServiceWorkerEnabled,
     sendMessage,
   };
 }

@@ -21,8 +21,8 @@ export function useServiceWorkerUtils() {
 
   async function awaitServiceWorkerActive(
     countTries = 3,
-    multiplier = 2,
-    retryDelayInMilliseconds = 100
+    retryDelayInMilliseconds = 100,
+    multiplier = 2
   ) {
     let numberOfChecker = 1;
     while (!isServiceWorkerActive() && numberOfChecker < countTries) {

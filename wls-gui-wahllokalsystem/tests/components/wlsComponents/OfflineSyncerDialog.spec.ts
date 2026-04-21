@@ -45,6 +45,7 @@ describe("OfflineSyncerDialog", () => {
     mockDefinitions.numberOfTasksFinished = ref(0);
     mockDefinitions.numberOfTasksToRun = ref(0);
     mockDefinitions.isOfflineDataSyncing = ref(false);
+    mockDefinitions.getSyncTasks.mockReturnValue([]);
     wrapper = mount(OfflineSyncerDialog, {
       global: {
         plugins: [vuetify, pinia],
@@ -65,7 +66,6 @@ describe("OfflineSyncerDialog", () => {
       mockDefinitions.synchronizeOfflineData.mockResolvedValueOnce(
         Promise.resolve()
       );
-      mockDefinitions.getSyncTasks.mockResolvedValueOnce([]);
 
       expect(mockDefinitions.synchronizeOfflineData).toHaveBeenCalledOnce();
     });
@@ -84,25 +84,20 @@ describe("OfflineSyncerDialog", () => {
 
     it("should_emitSyncSuccessEvent_when_noOpenTasksRemainAfterSync", async () => {
       await wrapper.setProps({ isDialogVisible: true });
-
       mockDefinitions.synchronizeOfflineData.mockResolvedValueOnce(
         Promise.resolve()
       );
-      mockDefinitions.getSyncTasks.mockResolvedValueOnce([]);
-
       await flushPromises();
 
       expect(wrapper.emitted()).toHaveProperty("syncSuccess");
     });
 
     it("should_emitSyncErrorEvent_when_openTasksRemainAfterSync", async () => {
+      mockDefinitions.getSyncTasks.mockResolvedValueOnce([{}]);
       await wrapper.setProps({ isDialogVisible: true });
-
       mockDefinitions.synchronizeOfflineData.mockResolvedValueOnce(
         Promise.resolve()
       );
-      mockDefinitions.getSyncTasks.mockResolvedValueOnce([{}]);
-
       await flushPromises();
 
       expect(wrapper.emitted()).toHaveProperty("syncError");

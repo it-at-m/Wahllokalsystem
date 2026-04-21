@@ -14,6 +14,7 @@ import {
 } from "vitest";
 import { ref } from "vue";
 
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { ROUTE_LOGOUT } from "@/constants.ts";
 import router from "@/plugins/router.ts";
@@ -62,6 +63,7 @@ global.fetch = mockDefinitions.fetch;
 
 const { createAxiosResponse } = useAxiosTestDataFactory();
 const { createResolvedUrlDTO } = useResolvedUrlTestDataFactory();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("logoutService.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogoutService>;
@@ -101,7 +103,10 @@ describe("logoutService.ts", () => {
 
       await unitUnderTest.logout(WAHLBEZIRK_ID);
 
-      expect(mockDefinitions.postLetzteAbmeldung).toHaveBeenCalledOnce();
+      expect(mockDefinitions.postLetzteAbmeldung).toHaveBeenCalledWith(
+        WAHLBEZIRK_ID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
       expect(mockDefinitions.fetch).toHaveBeenCalledTimes(2);
       expect(
         (mockDefinitions.fetch.mock.calls[0]?.[0] as Request)?.url

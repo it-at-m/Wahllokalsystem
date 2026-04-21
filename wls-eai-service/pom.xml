@@ -37,7 +37,7 @@
         <org.springdoc.version>2.8.15</org.springdoc.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <wls.common.version>1.7.0</wls.common.version>
-        <com.tngtech.archunit.version>1.4.1</com.tngtech.archunit.version>
+        <com.tngtech.archunit.version>1.4.2</com.tngtech.archunit.version>
     </properties>
 
     <dependencyManagement>

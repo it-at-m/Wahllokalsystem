@@ -17,12 +17,14 @@ export function useServiceWorkerUtils() {
 
   async function awaitServiceWorkerActive(
     countTries = 3,
+    multiplier = 2,
     retryDelayInMilliseconds = 100
   ) {
     let numberOfChecker = 1;
     while (!isServiceWorkerActive() && numberOfChecker < countTries) {
       await _sleep(retryDelayInMilliseconds);
       numberOfChecker++;
+      retryDelayInMilliseconds *= multiplier;
     }
     const result = isServiceWorkerActive();
     logDebug(

@@ -7,6 +7,7 @@ const storeID = "dataSync";
 export const useDataSyncStore = defineStore(storeID, () => {
   const {
     synchronizeOfflineData,
+    getSyncTasks,
     isOfflineDataSyncing,
     numberOfTasksFinished,
     numberOfTasksToRun,
@@ -17,5 +18,6 @@ export const useDataSyncStore = defineStore(storeID, () => {
     numberOfTasksToRun,
     isOfflineDataSyncing,
     synchronizeOfflineData,
+    getSyncTasks,
   };
 });

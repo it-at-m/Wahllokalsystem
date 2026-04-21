@@ -1,20 +1,18 @@
-import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 import type { Meta, StoryObj } from "@storybook/vue3";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
+import TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenSchnellmeldungTable.vue";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
-const { prepareWahlvorschlag, prepareKandidat } =
-  useWahlvorschlaegeTestDataFactory();
+const { prepareWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
 
 const meta = {
-  component: TheMBWGueltigeStimmenAnzeigenTable,
+  component: TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable,
   args: {},
-} satisfies Meta<typeof TheMBWGueltigeStimmenAnzeigenTable>;
+} satisfies Meta<typeof TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable>;
 
 export default meta;
 
@@ -22,8 +20,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     ergebnisseAndWahlvorschlaege: _getWahlvorschlaegeAndErgebnisseMbw(),
-    wahlvorschlaegeKandidatenErgebnisse:
-      _getWahlvorschlaegeKandidatenErgebnisse(),
   },
 };
 
@@ -46,25 +42,6 @@ function _getWahlvorschlaegeAndErgebnisseMbw() {
         .identifikator(`D${i}`)
         .ordnungszahl(i)
         .build(),
-    };
-  }
-  return ergebnisse;
-}
-
-function _getWahlvorschlaegeKandidatenErgebnisse() {
-  const ergebnisse: WahlvorschlagWithKandidatenErgebnissen[] = [];
-
-  for (let i = 0; i < 5; i++) {
-    ergebnisse[i] = {
-      kurzname: `Kurz${i}`,
-      identifikator: `D${i}`,
-      ordnungszahl: i,
-      kandidatenErgebnisse: [
-        {
-          ergebnis: prepareErgebnis().build(),
-          kandidat: prepareKandidat().build(),
-        },
-      ],
     };
   }
   return ergebnisse;

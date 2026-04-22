@@ -15,6 +15,7 @@ import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -76,6 +77,9 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       stubActions: false,
       createSpy: vi.fn,
     });
+
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {

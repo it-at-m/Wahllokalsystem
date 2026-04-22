@@ -24,6 +24,7 @@ import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -71,6 +72,9 @@ describe("BaseWahlschliessungCard.vue", () => {
         ],
       },
     });
+
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
   });
 
   afterEach(() => {

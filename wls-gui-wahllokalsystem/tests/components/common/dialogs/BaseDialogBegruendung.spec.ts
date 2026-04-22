@@ -1,3 +1,6 @@
+import type { TestingPinia } from "@pinia/testing";
+
+import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
@@ -8,11 +11,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
-import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 describe("BaseDialogBegruendung.vue", () => {
   let wrapper: VueWrapper;
+  let pinia: TestingPinia;
   vi.stubGlobal("visualViewport", new EventTarget());
   const ResizeObserverMock = vi.fn(() => ({
     observe: vi.fn(),
@@ -22,6 +26,11 @@ describe("BaseDialogBegruendung.vue", () => {
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {
+    pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
+
     wrapper = mount(BaseDialogBegruendung, {
       global: {
         plugins: [vuetify, pinia],

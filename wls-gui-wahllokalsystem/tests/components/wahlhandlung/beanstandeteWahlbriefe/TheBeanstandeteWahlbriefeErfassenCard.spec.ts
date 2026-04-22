@@ -26,6 +26,7 @@ import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   postBeanstandeteWahlbriefe: vi.fn(),
@@ -57,6 +58,10 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   beforeEach(async () => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
+
     vi.clearAllMocks();
   });
 

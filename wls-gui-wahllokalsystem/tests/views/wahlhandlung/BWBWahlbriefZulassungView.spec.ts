@@ -22,6 +22,7 @@ import { type VTab } from "vuetify/components";
 
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import BWBWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
 
 describe("BWBWahlbriefZulassungView", () => {
@@ -45,6 +46,8 @@ describe("BWBWahlbriefZulassungView", () => {
 
   beforeEach(async () => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
     vi.clearAllMocks();
   });
 

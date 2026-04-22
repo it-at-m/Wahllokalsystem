@@ -25,6 +25,7 @@ import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebni
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { prepareWahl } = useWahlTestDataFactory();
 
@@ -63,6 +64,8 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
   beforeEach(async () => {
     testPinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+    // @ts-expect-error: cannot set readonly
+    useWorkflowStore().areAllElectionsFinished = false;
     vi.clearAllMocks();
   });
 

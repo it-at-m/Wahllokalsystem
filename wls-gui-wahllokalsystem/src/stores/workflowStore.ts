@@ -79,6 +79,12 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     return electionStatus ? electionStatus.isNiederschriftDone : false;
   }
 
+  const areAllElectionsFinished = computed(() => {
+    return electionWorkflowsStates.value.every(
+      (state) => state.isNiederschriftDone === true
+    );
+  });
+
   function isStepDone(
     wahlID: string,
     wahlbezirkID: string,
@@ -121,6 +127,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     getWorkflowStateForRoute,
     initElectionWorkflowState,
     isElectionFinished,
+    areAllElectionsFinished,
     isStepDone,
     setStepDone,
   };

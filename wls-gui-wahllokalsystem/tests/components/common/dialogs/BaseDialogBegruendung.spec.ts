@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
+import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseDialogBegruendung.vue", () => {
@@ -23,7 +24,7 @@ describe("BaseDialogBegruendung.vue", () => {
   beforeEach(() => {
     wrapper = mount(BaseDialogBegruendung, {
       global: {
-        plugins: [vuetify],
+        plugins: [vuetify, pinia],
       },
       props: {
         visible: true,

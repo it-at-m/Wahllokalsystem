@@ -6,6 +6,8 @@
         class="checkmark self-center"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 52 52"
+        aria-hidden="true"
+        focusable="false"
       >
         <circle
           class="checkmark__circle"
@@ -102,6 +104,23 @@ svg {
 @keyframes fill {
   100% {
     box-shadow: inset 0px 0px 0px 30px rgb(var(--v-theme-success));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkmark,
+  .checkmark__circle,
+  .checkmark__check {
+    animation: none;
+  }
+
+  .checkmark {
+    box-shadow: inset 0px 0px 0px 30px rgb(var(--v-theme-success));
+  }
+
+  .checkmark__circle,
+  .checkmark__check {
+    stroke-dashoffset: 0;
   }
 }
 </style>

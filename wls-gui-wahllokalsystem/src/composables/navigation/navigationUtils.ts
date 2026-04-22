@@ -14,6 +14,7 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -112,16 +113,18 @@ export function useNavigationUtils() {
         )
     );
 
-    if (metaDataOfFirstUnfinishedElection) {
-      const nextStepOfElection = _getNextStepOfElection(
-        metaDataOfFirstUnfinishedElection
-      );
-      if (nextStepOfElection) {
-        return nextStepOfElection;
-      }
+    if (!metaDataOfFirstUnfinishedElection) {
+      return routeWithName(ROUTE_FINISHED);
     }
 
-    return routeWithName(ROUTE_FINISHED);
+    const nextStepOfElection = _getNextStepOfElection(
+      metaDataOfFirstUnfinishedElection
+    );
+    if (nextStepOfElection) {
+      return nextStepOfElection;
+    }
+
+    return routeWithName(ROUTES_HOME);
   }
 
   function _getNextStepOfElection(

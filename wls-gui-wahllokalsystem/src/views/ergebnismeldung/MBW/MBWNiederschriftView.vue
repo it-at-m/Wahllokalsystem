@@ -119,6 +119,7 @@ async function onDruckenClicked() {
     printWindow.print();
     printWindow.close();
 
+    isSendenActive.value = false;
     setStepDone(
       wahlID,
       currentUserWahlbezirkID,

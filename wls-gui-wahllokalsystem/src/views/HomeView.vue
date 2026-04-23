@@ -67,7 +67,7 @@ onMounted(async () => {
     } else if (!swActive.value) {
       // Seite wurde mit Shift-Reload aufgerufen, oder Nutzer befindet sich auf unsicherer (HTTP) Seite.
       warnings.value.push(
-        'Aktivieren Sie unter "about:config" "devtools.serviceWorkers.testing.enabled", wenn Sie sich auf der C1, C2 oder K1-Umgebung befinden.'
+        'Aktivieren Sie unter "about:config" "devtools.serviceWorkers.testing.enabled", wenn Sie sich auf einer Testumgebung befinden.'
       );
       warnings.value.push(
         'Stellen Sie sicher, dass unter Einstellungen > "Datenschutz & Sicherheit" > "Cookies und Websitedaten" der Punkt "Behalten, bis" auf "sie nicht mehr gültig sind" gesetzt ist.'

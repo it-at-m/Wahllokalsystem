@@ -80,9 +80,11 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   }
 
   const areAllElectionsFinished = computed(() => {
-    return electionWorkflowsStates.value.every(
-      (state) => state.isNiederschriftDone === true
-    );
+    return electionWorkflowsStates.value.length > 0
+      ? electionWorkflowsStates.value.every(
+          (state) => state.isNiederschriftDone === true
+        )
+      : false;
   });
 
   function isStepDone(

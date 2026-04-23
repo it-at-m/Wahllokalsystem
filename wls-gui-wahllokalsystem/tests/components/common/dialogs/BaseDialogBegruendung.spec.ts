@@ -12,7 +12,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 describe("BaseDialogBegruendung.vue", () => {
   let wrapper: VueWrapper;
@@ -27,9 +26,6 @@ describe("BaseDialogBegruendung.vue", () => {
 
   beforeEach(() => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
-
-    // @ts-expect-error: cannot set readonly
-    useWorkflowStore().areAllElectionsFinished = false;
 
     wrapper = mount(BaseDialogBegruendung, {
       global: {

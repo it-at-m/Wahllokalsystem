@@ -13,7 +13,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import BaseWaehlerverzeichnisCheckCard from "@/components/wahlhandlung/BaseWaehlerverzeichnisCheckCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { preparePflegeWaehlerverzeichnis } =
   usePflegeWaehlerverzeichnisTestDataFactory();
@@ -40,9 +39,6 @@ describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
       },
     });
     vi.clearAllMocks();
-
-    // @ts-expect-error: cannot set readonly
-    useWorkflowStore().areAllElectionsFinished = false;
   });
 
   describe(COMPONENT_RENDER_TESTS, () => {

@@ -14,7 +14,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import vuetify from "@/plugins/vuetify.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 
@@ -24,9 +23,6 @@ describe("BaseCardSnippedErgebnis.vue", () => {
 
   beforeEach(() => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
-
-    // @ts-expect-error: cannot set readonly
-    useWorkflowStore().areAllElectionsFinished = false;
   });
 
   enableAutoUnmount(afterEach);

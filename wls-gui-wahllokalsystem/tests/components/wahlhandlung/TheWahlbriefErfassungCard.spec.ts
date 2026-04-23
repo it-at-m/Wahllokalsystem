@@ -17,7 +17,6 @@ import TheWahlbriefErfassungCard from "@/components/wahlhandlung/TheWahlbriefErf
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
@@ -75,9 +74,6 @@ describe("TheWahlbriefErfassungCard.vue", () => {
       stubActions: false,
       createSpy: vi.fn,
     });
-
-    // @ts-expect-error: cannot set readonly
-    useWorkflowStore().areAllElectionsFinished = false;
 
     wrapper = mount(TheWahlbriefErfassungCard, {
       global: {

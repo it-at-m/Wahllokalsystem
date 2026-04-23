@@ -21,7 +21,6 @@ import {
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -77,9 +76,6 @@ describe("TheEreignisseView", () => {
         ],
       },
     });
-
-    // @ts-expect-error: cannot set readonly
-    useWorkflowStore().areAllElectionsFinished = false;
   });
 
   afterEach(() => {

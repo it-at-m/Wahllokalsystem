@@ -18,7 +18,6 @@ import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUng
 import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUngueltigeWahlscheine: vi.fn(),
@@ -60,9 +59,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         stubActions: false,
         createSpy: vi.fn,
       });
-
-      // @ts-expect-error: cannot set readonly
-      useWorkflowStore().areAllElectionsFinished = false;
 
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {
@@ -249,9 +245,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         createSpy: vi.fn,
         stubActions: false,
       });
-
-      // @ts-expect-error: cannot set readonly
-      useWorkflowStore().areAllElectionsFinished = false;
 
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {

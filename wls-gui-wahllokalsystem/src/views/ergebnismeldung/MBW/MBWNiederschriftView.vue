@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { computed, onActivated, ref } from "vue";
@@ -55,6 +56,7 @@ import TheMBWWaehlerAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB
 import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWWahlberechtigteAnzeigenCard.vue";
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
@@ -71,16 +73,18 @@ const { wahlenActions } = useWahlenStore();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
+const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
-const isSendenActive = ref<boolean>(true);
 
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
+const status = ref<Status | null>(null);
+
 const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
   useMbwUtils(wahlID, currentUserWahlbezirkID);
 
@@ -94,8 +98,18 @@ const workflowState = computed(() =>
   getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
 );
 
+const isSendenActive = computed(
+  () =>
+    !workflowState.value?.isNiederschriftDone &&
+    !status.value?.niederschrift.gedruckt
+);
+
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(
+    wahlID,
+    currentUserWahlbezirkID
+  );
 });
 
 function onSendenClicked() {
@@ -119,7 +133,6 @@ async function onDruckenClicked() {
     printWindow.print();
     printWindow.close();
 
-    isSendenActive.value = false;
     setStepDone(
       wahlID,
       currentUserWahlbezirkID,

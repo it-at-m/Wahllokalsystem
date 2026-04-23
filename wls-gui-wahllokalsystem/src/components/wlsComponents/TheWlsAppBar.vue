@@ -64,17 +64,37 @@
     >
       <the-root-navigation-list />
     </v-navigation-drawer>
+    <offline-syncer-dialog
+      :is-dialog-visible="isOfflineSyncDialogVisible"
+      @sync-success="onSyncSuccess"
+      @sync-error="onSyncError"
+    />
+    <base-dialog
+      :visible="isSyncErrorDialogVisible"
+      dialogtitle="Fehler bei der Synchronisation"
+      confirmtext="Hinweis schließen"
+      icon="$information"
+      @confirm="isSyncErrorDialogVisible = false"
+    >
+      <div class="mb-4">
+        Bei der Synchronisation der Offline-Daten ist ein Fehler aufgetreten. Um
+        zu verhindern, dass Daten verloren gehen, wurde die Abmeldung
+        abgebrochen.
+      </div>
+    </base-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, nextTick, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheRootNavigationList from "@/components/navigation/TheRootNavigationList.vue";
+import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -93,6 +113,7 @@ const {
   user,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
+  currentUserWahlbezirkID,
   isUWB,
   isUserLoggedIn,
 } = storeToRefs(useUserStore());
@@ -102,6 +123,9 @@ const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();
 const { addNotification } = useUserNotificationService();
 
+const isOfflineSyncDialogVisible = ref(false);
+const isSyncErrorDialogVisible = ref(false);
+
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""
 );
@@ -109,15 +133,25 @@ const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
 
-async function onLogoutClicked() {
+function onLogoutClicked() {
+  isOfflineSyncDialogVisible.value = true;
+}
+
+async function onSyncSuccess() {
+  isOfflineSyncDialogVisible.value = false;
   try {
-    await logout();
+    await logout(currentUserWahlbezirkID.value);
   } catch {
     addNotification(
       "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
       UserNotificationCategoryEnum.ERROR
     );
   }
+}
+
+function onSyncError() {
+  isOfflineSyncDialogVisible.value = false;
+  isSyncErrorDialogVisible.value = true;
 }
 
 watch(isUserLoggedIn, async () => {

@@ -214,6 +214,12 @@ describe("workflowStore.ts", () => {
   });
 
   describe("areAllElectionsFinished", () => {
+    it("should_returnFalse_when_noWahlenExist", () => {
+      useWorkflowStore().electionWorkflowsStates = [];
+
+      expect(useWorkflowStore().areAllElectionsFinished).toStrictEqual(false);
+    });
+
     it("should_returnFalse_when_atLeastOneUnfinishedWahlExists", () => {
       const workflow1 = createWorkflow(
         generateRandomString(10),

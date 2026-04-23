@@ -57,7 +57,6 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   beforeEach(async () => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
-
     vi.clearAllMocks();
   });
 

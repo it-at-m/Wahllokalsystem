@@ -59,7 +59,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         stubActions: false,
         createSpy: vi.fn,
       });
-
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],
@@ -245,7 +244,6 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
         createSpy: vi.fn,
         stubActions: false,
       });
-
       wrapper = mount(TheUnguetilgeWahlscheineVerifyCard, {
         global: {
           plugins: [testPinia, vuetify],

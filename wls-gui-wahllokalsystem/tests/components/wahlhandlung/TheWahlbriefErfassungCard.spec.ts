@@ -74,7 +74,6 @@ describe("TheWahlbriefErfassungCard.vue", () => {
       stubActions: false,
       createSpy: vi.fn,
     });
-
     wrapper = mount(TheWahlbriefErfassungCard, {
       global: {
         plugins: [testPinia, vuetify],

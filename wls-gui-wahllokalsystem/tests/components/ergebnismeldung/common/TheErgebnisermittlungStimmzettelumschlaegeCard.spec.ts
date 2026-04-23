@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
@@ -25,9 +26,12 @@ import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebni
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { prepareWahl } = useWahlTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   postStimmzettelumschlaege: vi.fn(),
@@ -180,6 +184,11 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
     });
 
     it("should_resetAllAnwesenheiten_when_saveIsCompletedInBWB", async () => {
+      const userStore = useUserStore();
+      userStore.setUser(
+        prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
+      );
+
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "08:00:00";
@@ -195,7 +204,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .build(),
       ];
 
-      const wrapper = _mountComponent(testPinia, true);
+      const wrapper = _mountComponent(testPinia);
 
       await flushPromises();
 
@@ -214,7 +223,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   });
 });
 
-function _mountComponent(testPinia: TestingPinia, useTime = false) {
+function _mountComponent(testPinia: TestingPinia) {
   return mount(TheErgebnisermittlungStimmzettelumschlaegeCard, {
     global: {
       plugins: [testPinia, vuetify],
@@ -223,7 +232,6 @@ function _mountComponent(testPinia: TestingPinia, useTime = false) {
       wahlId: "123",
       wahlbezirkId: "456",
       title: "Titel",
-      useTime: useTime,
     },
   });
 }

@@ -5,7 +5,7 @@
       <v-card-text class="pb-0 pt-2 mr-4">
         <v-form v-model="anzahlStimmzettelValidForm">
           <base-time-input
-            v-if="useTime"
+            v-if="isBWB"
             v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
             :rules="[
               timeNotInFuture,
@@ -86,6 +86,7 @@ import {
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -98,7 +99,6 @@ const props = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
   title: string;
-  useTime?: boolean;
 }>();
 
 const { wahlenActions } = useWahlenStore();
@@ -117,6 +117,7 @@ const {
 const { getNextRoute } = useNavigationUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
+const { isBWB } = storeToRefs(useUserStore());
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -147,7 +148,7 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
-  if (props.useTime) {
+  if (isBWB.value) {
     resetAllAnwesenheiten();
   }
   await router.push(getNextRoute());

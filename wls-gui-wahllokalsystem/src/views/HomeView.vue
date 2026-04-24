@@ -1,7 +1,7 @@
 <template>
   <v-container max-width="800px">
     <base-feedback-card
-      v-if="!swActive"
+      v-if="!isOfflineCacheReady"
       title="Service-Worker deaktiviert"
       type="warning"
     >
@@ -24,47 +24,29 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { onMounted, onUnmounted, ref } from "vue";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
-import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
-const { isServiceWorkerActive, isServiceWorkerEnabled } =
-  useServiceWorkerUtils();
+const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 
-const swEnabled = ref(isServiceWorkerEnabled());
-const swActive = ref(swEnabled.value && isServiceWorkerActive());
 const warnings = ref<string[]>([]);
 
-let swActiveInterval: ReturnType<typeof setInterval> | undefined;
-let swEnabledInterval: ReturnType<typeof setInterval> | undefined;
 let checkWarningsInterval: ReturnType<typeof setInterval> | undefined;
 
 onMounted(async () => {
-  swActiveInterval = setInterval(() => {
-    swActive.value = isServiceWorkerActive();
-    if (swActive.value === true) {
-      clearInterval(swActiveInterval);
-    }
-  }, 500);
-
-  swEnabledInterval = setInterval(() => {
-    swEnabled.value = isServiceWorkerEnabled();
-    if (swEnabled.value === true) {
-      clearInterval(swEnabledInterval);
-    }
-  }, 500);
-
   checkWarningsInterval = setInterval(() => {
     warnings.value = [];
 
-    if (!swEnabled.value) {
+    if (!navigator.serviceWorker) {
       // Service Worker wurde in about:config deaktiviert
       warnings.value.push(
         'Aktivieren Sie den Service-Worker unter "about:config" mit dem Flag "dom.serviceWorkers.enabled".'
       );
-    } else if (!swActive.value) {
+    } else if (!isOfflineCacheReady.value) {
       // Seite wurde mit Shift-Reload aufgerufen, oder Nutzer befindet sich auf unsicherer (HTTP) Seite.
       warnings.value.push(
         'Aktivieren Sie unter "about:config" "devtools.serviceWorkers.testing.enabled", wenn Sie sich auf einer Testumgebung befinden.'
@@ -76,16 +58,10 @@ onMounted(async () => {
         'Halten Sie beim Aktualisieren der Seite nicht die "Umschalttaste" gedrückt.'
       );
     }
-
-    if (warnings.value.length === 0) {
-      clearInterval(checkWarningsInterval);
-    }
   }, 100);
 });
 
 onUnmounted(() => {
-  if (swActiveInterval) clearInterval(swActiveInterval);
-  if (swEnabledInterval) clearInterval(swEnabledInterval);
   if (checkWarningsInterval) clearInterval(checkWarningsInterval);
 });
 </script>

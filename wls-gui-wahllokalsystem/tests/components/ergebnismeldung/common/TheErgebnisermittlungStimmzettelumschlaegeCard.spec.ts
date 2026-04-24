@@ -26,6 +26,7 @@ import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebni
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -203,6 +204,10 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           })
           .build(),
       ];
+
+      // without this value set the test is failing due to indirect dependencies,
+      // caused by the modified mounting behavior in App.vue (see PR #2633)
+      useOnlineOfflineStore().isOfflineCacheReady = true;
 
       const wrapper = _mountComponent(testPinia);
 

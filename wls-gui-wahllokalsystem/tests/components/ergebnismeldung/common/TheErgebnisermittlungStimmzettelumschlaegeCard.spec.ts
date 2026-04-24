@@ -26,6 +26,7 @@ import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebni
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -188,6 +189,8 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
+      // test if setting new value will avoid pipeline failing
+      useOnlineOfflineStore().isOfflineCacheReady = true;
 
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly

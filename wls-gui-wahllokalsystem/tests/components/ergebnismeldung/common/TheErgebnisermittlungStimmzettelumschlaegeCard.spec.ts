@@ -189,8 +189,6 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()
       );
-      // test if setting new value will avoid pipeline failing
-      useOnlineOfflineStore().isOfflineCacheReady = true;
 
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
@@ -206,6 +204,10 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           })
           .build(),
       ];
+
+      // without this value set the test is failing due to indirect dependencies,
+      // caused by the modified mounting behavior in App.vue (see PR #2633)
+      useOnlineOfflineStore().isOfflineCacheReady = true;
 
       const wrapper = _mountComponent(testPinia);
 

@@ -25,7 +25,6 @@ const stopBroadcastMessageIntervalMock = vi.fn();
 
 const mockDefinitions = vi.hoisted(() => ({
   awaitServiceWorkerActive: vi.fn(),
-  isServiceWorkerEnabled: vi.fn(),
   isServiceWorkerActive: vi.fn(),
   getWahlen: vi.fn(),
   postBeanstandeteWahlbriefe: vi.fn(),
@@ -58,7 +57,6 @@ vi.mock("@/composables/serviceWorker/serviceWorkerPinSyncer.ts", () => ({
 vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
   useServiceWorkerUtils: () => ({
     awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
-    isServiceWorkerEnabled: mockDefinitions.isServiceWorkerEnabled,
     isServiceWorkerActive: mockDefinitions.isServiceWorkerActive,
   }),
 }));

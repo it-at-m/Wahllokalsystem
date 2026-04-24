@@ -134,24 +134,6 @@ describe("serviceWorkerUtils.ts", () => {
     });
   });
 
-  describe("isServiceWorkerEnabled", () => {
-    it("should_returnTrue_when_serviceWorkerExists", () => {
-      Object.defineProperty(global.navigator, "serviceWorker", {
-        value: true,
-      });
-
-      expect(unitUnderTest.isServiceWorkerEnabled()).toStrictEqual(true);
-    });
-
-    it("should_returnFalse_when_serviceWorkerDoesNotExists", () => {
-      Object.defineProperty(global.navigator, "serviceWorker", {
-        value: false,
-      });
-
-      expect(unitUnderTest.isServiceWorkerEnabled()).toStrictEqual(false);
-    });
-  });
-
   describe("sendMessage", () => {
     it("should_sendMessage_when_serviceWorkerControllerExists", () => {
       Object.defineProperty(global.navigator, "serviceWorker", {

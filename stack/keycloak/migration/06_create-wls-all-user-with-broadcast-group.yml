@@ -1,0 +1,19 @@
+id: create user wls-all with broadcast group
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addUser:
+      name: wls_all
+      lastName: all
+      firstName: wls
+      enabled: true
+      emailVerified: true
+      email: wls_all@example.com
+      attributes:
+        user_name:
+          - wls_all
+      groups:
+        - allBroadcastAuthorities
+  - updateUserPassword:
+      name: wls_all
+      password: "test"

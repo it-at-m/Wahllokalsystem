@@ -1,0 +1,70 @@
+id: add authorities infomanagement konfigurierterwahltag
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+
+  - addRole:
+      name: Infomanagement_READ_KonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_WRITE_KonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_DELETE_KonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_READ_KonfigurierteWahltage
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_PostKonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_DeleteKonfigurierterWahltag
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_GetKonfigurierteWahltage
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_READ_KonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_WRITE_KonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_DELETE_KonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_READ_KonfigurierteWahltage
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_PostKonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_DeleteKonfigurierterWahltag
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_GetKonfigurierteWahltage
+      clientId: ${SSO_CLIENT_ID}

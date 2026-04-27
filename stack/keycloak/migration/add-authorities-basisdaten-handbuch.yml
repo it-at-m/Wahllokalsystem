@@ -1,0 +1,48 @@
+id: add authorities basisdaten handbuch
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetHandbuch
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetHandbuch
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_PostHandbuch
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_PostHandbuch
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Handbuch
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Handbuch
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_WRITE_Handbuch
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Handbuch
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_DELETE_Handbuch
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Handbuch
+      clientId: ${SSO_CLIENT_ID}

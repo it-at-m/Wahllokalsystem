@@ -1,0 +1,13 @@
+id: add authorities infomanagement kennbuchstaben
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_GetKennbuchstabenListen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_GetKennbuchstabenListen
+      clientId: ${SSO_CLIENT_ID}

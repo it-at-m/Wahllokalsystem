@@ -1,0 +1,30 @@
+id: add user attribute mapper wahlbezirksart
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Briefwahl_READ_Wahlbriefdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBriefwahlAuthorities
+      role: Briefwahl_READ_Wahlbriefdaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_READ_UrnenwahlVorbereitung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_READ_UrnenwahlVorbereitung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Wahlvorbereitung_READ_Waehlerverzeichnis
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allWahlvorbereitungAuthorities
+      role: Wahlvorbereitung_READ_Waehlerverzeichnis
+      clientId: ${SSO_CLIENT_ID}

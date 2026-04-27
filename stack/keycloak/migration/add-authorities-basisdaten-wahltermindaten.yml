@@ -1,0 +1,21 @@
+id: add authorities basisdaten wahltermindaten
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_PutWahltermindaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_PutWahltermindaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_DeleteWahltermindaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_DeleteWahltermindaten
+      clientId: ${SSO_CLIENT_ID}

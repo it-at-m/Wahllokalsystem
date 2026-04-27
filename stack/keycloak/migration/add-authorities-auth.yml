@@ -1,0 +1,12 @@
+id: add authorities auth user
+author: GerhardPx
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: ROLE_ADMIN_ADMIN
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allAuthAuthorities
+      role: ROLE_ADMIN_ADMIN
+      clientId: ${SSO_CLIENT_ID}

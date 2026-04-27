@@ -1,0 +1,37 @@
+id: add authorities basisdaten kopfdaten
+author: Nic12345678
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Basisdaten_BUSINESSACTION_GetKopfdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_BUSINESSACTION_GetKopfdaten
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Basisdaten_READ_Kopfdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_READ_Kopfdaten
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_WRITE_Kopfdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_WRITE_Kopfdaten
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Basisdaten_DELETE_Kopfdaten
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allBasisdatenAuthorities
+      role: Basisdaten_DELETE_Kopfdaten
+      clientId: ${SSO_CLIENT_ID}

@@ -1,0 +1,12 @@
+id: add authorities eai ergebnismeldung
+author: GerhardPx
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: aoueai_BUSINESSACTION_SaveErgebnismeldung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allEaiAuthorities
+      role: aoueai_BUSINESSACTION_SaveErgebnismeldung
+      clientId: ${SSO_CLIENT_ID}

@@ -1,0 +1,47 @@
+id: add wahlbezirksart to user
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addUserAttribute:
+      name: wls_all
+      attributeName: wahlbezirksArt
+      attributeValues:
+        - UWB
+
+  - addUser:
+      name: wls_all_uwb
+      lastName: all
+      firstName: wls_uwb
+      enabled: true
+      emailVerified: true
+      email: wls_all_uwb@example.com
+      attributes:
+        user_name:
+          - wls_all_uwb
+        wahlbezirksArt:
+          - UWB
+      groups:
+        - allBroadcastAuthorities
+        - allInfomanagementAuthorities
+  - updateUserPassword:
+      name: wls_all_uwb
+      password: "test"
+
+  - addUser:
+      name: wls_all_bwb
+      lastName: all
+      firstName: wls_bwb
+      enabled: true
+      emailVerified: true
+      email: wls_all_bwb@example.com
+      attributes:
+        user_name:
+          - wls_all_bwb
+        wahlbezirksArt:
+          - BWB
+      groups:
+        - allBroadcastAuthorities
+        - allInfomanagementAuthorities
+  - updateUserPassword:
+      name: wls_all_bwb
+      password: "test"

@@ -1,0 +1,53 @@
+id: add authorities infomanagement konfiguration
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Infomanagement_READ_Konfiguration
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_WRITE_Konfiguration
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_DELETE_Konfiguration
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_GetKonfiguration
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_GetKonfigurationen
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Infomanagement_BUSINESSACTION_PostKonfiguration
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_READ_Konfiguration
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_WRITE_Konfiguration
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_DELETE_Konfiguration
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_GetKonfiguration
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_GetKonfigurationen
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allInfomanagementAuthorities
+      role: Infomanagement_BUSINESSACTION_PostKonfiguration
+      clientId: ${SSO_CLIENT_ID}

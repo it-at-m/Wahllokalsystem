@@ -1,0 +1,48 @@
+id: add authorities vorfaelleundvorkommnisse
+author: vjohnslhm
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allVorfaelleUndVorkommnisseAuthorities
+      role: VorfaelleUndVorkommnisse_BUSINESSACTION_GetEreignisse
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allVorfaelleUndVorkommnisseAuthorities
+      role: VorfaelleUndVorkommnisse_BUSINESSACTION_PostEreignisse
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: VorfaelleUndVorkommnisse_READ_Ereignisse
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allVorfaelleUndVorkommnisseAuthorities
+      role: VorfaelleUndVorkommnisse_READ_Ereignisse
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: VorfaelleUndVorkommnisse_WRITE_Ereignisse
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allVorfaelleUndVorkommnisseAuthorities
+      role: VorfaelleUndVorkommnisse_WRITE_Ereignisse
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: VorfaelleUndVorkommnisse_DELETE_Ereignisse
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allVorfaelleUndVorkommnisseAuthorities
+      role: VorfaelleUndVorkommnisse_DELETE_Ereignisse
+      clientId: ${SSO_CLIENT_ID}

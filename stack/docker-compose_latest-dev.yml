@@ -466,6 +466,61 @@ services:
       start_period: 10s
       test: [ "CMD-SHELL", "curl -f --insecure https://localhost:443/nginx-health" ]
 
+  ## Keycloak
+  wls-keycloak:
+    container_name: wls-keycloak
+    image: quay.io/keycloak/keycloak:25.0.2
+    command:
+      - start-dev
+      - '--import-realm'
+    depends_on:
+      - wls-db-postgres-keycloak
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_HOSTNAME_STRICT=${KEYCLOAK_HOSTNAME_STRICT}
+      - KC_DB=${KEYCLOAK_DB_TYPE}
+      - KC_DB_URL=jdbc:postgresql://wls-db-postgres-keycloak:5432/${KEYCLOAK_DB}
+      - KC_DB_USERNAME=${KEYCLOAK_DB_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      - KC_HTTP_RELATIVE_PATH=${KEYCLOAK_RELATIV_PATH}
+    volumes:
+      - './keycloak/import:/opt/keycloak/data/import'
+    ports:
+      - 8101:8080
+    networks:
+      - keycloak
+      - services
+
+  wls-init-keycloak:
+    container_name: wls-init-keycloak
+    image: klg71/keycloakmigration:0.2.69
+    depends_on:
+      - wls-keycloak
+    env_file:
+      - .env
+    environment:
+      - ADMIN_USER=${KEYCLOAK_ADMIN}
+      - ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - BASEURL=${KEYCLOAK_MIGRATION_KEYCLOAK_URL} # uses internal docker network to access the keycloak via its back channel port
+      - WAIT_FOR_KEYCLOAK=true
+      - KEYCLOAK_CHANGELOG=/migration/keycloak-changelog.yml
+    volumes:
+      - './keycloak/migration:/migration'
+    networks:
+      - keycloak
+
+  wls-db-postgres-keycloak:
+    container_name: wls-db-postgres-keycloak
+    image: postgres:16.3-alpine3.18
+    environment:
+      - POSTGRES_DB=${KEYCLOAK_DB}
+      - POSTGRES_USER=${KEYCLOAK_DB_USER}
+      - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+    networks:
+      - keycloak
+
 networks:
   internal:
   services:
+  keycloak:

@@ -1,0 +1,46 @@
+id: add authorities monitoring waehleranzahl
+author: dragonfly28
+realm: ${SSO_REALM}
+changes:
+  - addRole:
+      name: Monitoring_BUSINESSACTION_GetWahlbeteiligung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allMonitoringAuthorities
+      role: Monitoring_BUSINESSACTION_GetWahlbeteiligung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Monitoring_BUSINESSACTION_PostWahlbeteiligung
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allMonitoringAuthorities
+      role: Monitoring_BUSINESSACTION_PostWahlbeteiligung
+      clientId: ${SSO_CLIENT_ID}
+
+  - addRole:
+      name: Monitoring_READ_Waehleranzahl
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allMonitoringAuthorities
+      role: Monitoring_READ_Waehleranzahl
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Monitoring_WRITE_Waehleranzahl
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allMonitoringAuthorities
+      role: Monitoring_WRITE_Waehleranzahl
+      clientId: ${SSO_CLIENT_ID}
+  - addRole:
+      name: Monitoring_DELETE_Waehleranzahl
+      clientRole: true
+      clientId: ${SSO_CLIENT_ID}
+  - assignRoleToGroup:
+      group: allMonitoringAuthorities
+      role: Monitoring_DELETE_Waehleranzahl
+      clientId: ${SSO_CLIENT_ID}

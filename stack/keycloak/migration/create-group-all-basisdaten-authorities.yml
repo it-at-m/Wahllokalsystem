@@ -1,0 +1,15 @@
+id: create group allBasisdatenAuthorities and link wls_all*
+author: MrSebastian
+realm: ${SSO_REALM}
+changes:
+  - addGroup:
+      name: allBasisdatenAuthorities
+  - assignGroup:
+      user: wls_all
+      group: allBasisdatenAuthorities
+  - assignGroup:
+      user: wls_all_uwb
+      group: allBasisdatenAuthorities
+  - assignGroup:
+      user: wls_all_bwb
+      group: allBasisdatenAuthorities

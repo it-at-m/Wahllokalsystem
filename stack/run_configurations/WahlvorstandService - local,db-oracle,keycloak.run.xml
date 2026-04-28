@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="WahlvorstandService - local,db-oracle" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,oracle,sec">
-    <option name="ACTIVE_PROFILES" value="local,db-oracle" />
+  <configuration default="false" name="WahlvorstandService - local,db-oracle,keycloak" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="local,integrated,oracle,sec,keycloak">
+    <option name="ACTIVE_PROFILES" value="local,db-oracle,keycloak" />
     <module name="wls-wahlvorstand-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.wahlvorstandservice.MicroServiceApplication" />
     <method v="2">

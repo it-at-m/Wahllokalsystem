@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://host.docker.internal:8101/auth/realms/${service.config.auth.realm}
+      client:
+        provider:
+          sso:
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
+        registration:
+          sso:
+            provider: sso
+            client-id: wls
+            client-secret: top-secret
+            scope: profile, openid
+service:
+  config:
+    auth:
+      realm: wls_realm

@@ -1,0 +1,17 @@
+security:
+  oauth2:
+    resource.user-info-uri: http://host.docker.internal:8100/user
+
+# Define the local keycloak realm here
+realm: wls_realm
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://host.docker.internal:8101/auth/realms/wls_realm/protocol/openid-connect/certs
+service:
+  config:
+    auth:
+      realm: wls_realm

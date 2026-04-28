@@ -1,0 +1,15 @@
+security:
+  oauth2:
+    resource.user-info-uri: http://host.docker.internal:8100/user
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://host.docker.internal:8101/auth/realms/${service.config.auth.realm}
+          jwk-set-uri: http://host.docker.internal:8101/auth/realms/wls_realm/protocol/openid-connect/certs
+service:
+  config:
+    auth:
+      realm: wls_realm

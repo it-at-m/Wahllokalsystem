@@ -74,8 +74,8 @@ public class SecurityConfiguration {
 
   private final RSAConfigurationProperties rsaConfigurationProperties;
 
-  @Bean
-  @Order(1)
+//  @Bean
+//  @Order(1)
   public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
       throws Exception {
     OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
@@ -98,7 +98,7 @@ public class SecurityConfiguration {
   @Order(2)
   public SecurityFilterChain filterChain(HttpSecurity http, SessionRegistry sessionRegistry)
       throws Exception {
-    http.apply(wlsFormLoginConfigurer);
+//    http.apply(wlsFormLoginConfigurer);
 
     http.authorizeHttpRequests(
             (requests) ->
@@ -132,19 +132,20 @@ public class SecurityConfiguration {
                     jwtConfigurer ->
                         jwtConfigurer.jwtAuthenticationConverter(
                             new JwtUserInfoAuthenticationConverter(userService))))
-        .logout(LogoutConfigurer::permitAll)
-        .logout(
-            logoutspec ->
-                logoutspec
-                    .permitAll(true)
-                    .clearAuthentication(true)
-                    .logoutRequestMatcher(
-                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/logout"))
-                    .logoutSuccessHandler(
-                        (request, response, authentication) ->
-                            log.info(
-                                "logout successful for {}", AuthUtils.getUsername(authentication))))
-        .securityContext(securityContext -> securityContext.requireExplicitSave(false));
+//        .logout(LogoutConfigurer::permitAll)
+//        .logout(
+//            logoutspec ->
+//                logoutspec
+//                    .permitAll(true)
+//                    .clearAuthentication(true)
+//                    .logoutRequestMatcher(
+//                        PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/logout"))
+//                    .logoutSuccessHandler(
+//                        (request, response, authentication) ->
+//                            log.info(
+//                                "logout successful for {}", AuthUtils.getUsername(authentication))))
+//        .securityContext(securityContext -> securityContext.requireExplicitSave(false))
+            ;
 
     return http.build();
   }
@@ -155,7 +156,7 @@ public class SecurityConfiguration {
     return new JdbcRegisteredClientRepository(jdbcOperations);
   }
 
-  @Bean
+//  @Bean
   public JWKSource<SecurityContext> jwkSource() {
     Pair<RSAPrivateKey, RSAPublicKey> keyPair = getKeyPair();
     val rsaKey =
@@ -204,12 +205,12 @@ public class SecurityConfiguration {
     return keyPair;
   }
 
-  @Bean
+//  @Bean
   public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
     return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
   }
 
-  @Bean
+//  @Bean
   public AuthorizationServerSettings authorizationServerSettings() {
     return AuthorizationServerSettings.builder().build();
   }
@@ -219,13 +220,13 @@ public class SecurityConfiguration {
     return new SessionRegistryImpl();
   }
 
-  @Bean
+//  @Bean
   public ConcurrentSessionControlAuthenticationStrategy
       concurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
     return new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
   }
 
-  @Bean
+//  @Bean
   public WlsUserTokenCustomizer wlsUserTokenCustomizer(final UserService userService) {
     return new WlsUserTokenCustomizer(userService);
   }

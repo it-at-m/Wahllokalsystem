@@ -1,14 +1,8 @@
-import type {
-  NiederschriftDruckInputBWB
-} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
-import type {
-  NiederschriftDruckInputUWB
-} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
+import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
 
-import {
-  useBeanstandeteWahlbriefeTestDataFactory
-} from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
+import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
@@ -16,17 +10,11 @@ import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bW
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
-import {
-  useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import {
-  useVorfaelleundvorkommnisseTestDataFactory
-} from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
-import {
-  usePflegeWaehlerverzeichnisTestDataFactory
-} from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";

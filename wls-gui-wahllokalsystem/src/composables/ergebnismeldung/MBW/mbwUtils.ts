@@ -286,7 +286,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     try {
       await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck);
     } catch {
-      logError("Fehler beim Speichern des Ausdrucks");
+      throw new Error("Fehler beim Speichern des Ausdrucks");
     }
   }
 

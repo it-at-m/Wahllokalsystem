@@ -23,5 +23,5 @@ export interface NiederschriftDruckInputBase {
   gueltigeStimmenErgebnisGesamt: NiederschriftGueltigeStimmenErgebnisGesamt;
   parteienListe: NiederschriftPartei[];
   ereignisse: NiederschriftEreignisse;
-  footer: any;
+  footer?: string;
 }

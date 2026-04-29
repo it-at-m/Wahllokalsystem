@@ -57,8 +57,8 @@ import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnisme
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
-import { useNiederschriftDrcuk } from "@/composables/ergebnismeldung/MBW/niederschriftDruck.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
@@ -67,6 +67,7 @@ import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -75,6 +76,7 @@ const { sendNiederschrift } = useErgebnismeldungStore();
 const { isNiederschriftAndStatusSaving } = storeToRefs(
   useErgebnismeldungStore()
 );
+const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
@@ -92,7 +94,6 @@ const { sendAusdruckNiederschrift } = useMbwUtils(
   wahlID,
   currentUserWahlbezirkID
 );
-const { buildNiederschriftTemplateFromData } = useNiederschriftDrcuk();
 const { gatherData } = useNiederschriftDruckUWB();
 const { prepareDataForNiederschriftDruck } = useMbtUtilsNiederschrift(
   wahlID,
@@ -118,29 +119,36 @@ function onKorrigierenClicked() {
 }
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
-  const pdfText = await collectDataForTemplateBuild();
-  const printWindow = window.open(
-    "",
-    "",
-    "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-  );
+  try {
+    const pdfText = await collectDataForTemplateBuild();
+    const printWindow = window.open(
+      "",
+      "",
+      "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+    );
 
-  if (printWindow) {
-    printWindow.document.body.innerHTML = pdfText;
-    printWindow.print();
-    printWindow.close();
+    if (printWindow) {
+      printWindow.document.body.innerHTML = pdfText;
+      printWindow.print();
+      printWindow.close();
+    }
+    const statusForWahlAndWahlbezirk = status.value.find(
+      (status) =>
+        status.bezirkUndWahlID.wahlID == wahlID &&
+        status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
+    );
+    if (statusForWahlAndWahlbezirk) {
+      statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
+    }
+    await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
+  } catch {
+    addNotification(
+      "Fehler beim Drucken der Niederschrift.",
+      UserNotificationCategoryEnum.WARNING
+    );
+  } finally {
+    isDruckenLoading.value = false;
   }
-  const statusForWahlAndWahlbezirk = status.value.find(
-    (status) =>
-      status.bezirkUndWahlID.wahlID == wahlID &&
-      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
-  );
-  if (statusForWahlAndWahlbezirk) {
-    statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
-  }
-  await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
-
-  isDruckenLoading.value = false;
 }
 
 async function collectDataForTemplateBuild() {
@@ -155,8 +163,6 @@ async function collectDataForTemplateBuild() {
       MeldungsArtEnum.Niederschrift,
       wahl
     );
-    console.log(JSON.stringify(templateData, null, 2));
-
     return gatherData(templateData);
   }
   return " ";

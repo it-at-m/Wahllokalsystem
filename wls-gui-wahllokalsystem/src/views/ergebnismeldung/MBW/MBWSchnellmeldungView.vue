@@ -1,4 +1,5 @@
 <template>
+  <div>
   <base-ergebnismeldung-cards-container
     title="Schnellmeldung"
     subtitle="Kontrolle, Übermittlung und Druck der Schnellmeldung"
@@ -29,6 +30,25 @@
       :wahl-id="wahlID"
     />
   </base-ergebnismeldung-cards-container>
+    <offline-syncer-dialog
+        :is-dialog-visible="isOfflineSyncDialogVisible"
+        @sync-success="onSyncSuccess"
+        @sync-error="onSyncError"
+    />
+    <base-dialog
+        :visible="isSyncErrorDialogVisible"
+        dialogtitle="Fehler bei der Synchronisation"
+        confirmtext="Hinweis schließen"
+        icon="$information"
+        @confirm="isSyncErrorDialogVisible = false"
+    >
+      <div class="mb-4">
+        Bei der Synchronisation der Offline-Daten ist ein Fehler aufgetreten. Um
+        zu verhindern, dass beim Senden der Schnellmeldung unvollständige Daten
+        verschickt werden, wurde der Vorgang abgebrochen.
+      </div>
+    </base-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -53,6 +73,8 @@ import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
+import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -79,6 +101,9 @@ const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
 const isSendenActive = ref<boolean>(true);
 
+const isOfflineSyncDialogVisible = ref(false);
+const isSyncErrorDialogVisible = ref(false);
+
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
   router.push({
@@ -91,8 +116,19 @@ const workflowState = computed(() =>
 );
 
 function onSendenClicked() {
-  sendSchnellmeldung();
+  isOfflineSyncDialogVisible.value = true;
 }
+
+async function onSyncSuccess() {
+  isOfflineSyncDialogVisible.value = false;
+  await sendSchnellmeldung();
+}
+
+function onSyncError() {
+  isOfflineSyncDialogVisible.value = false;
+  isSyncErrorDialogVisible.value = true;
+}
+
 function onKorrigierenClicked() {
   // to be implemented
 }

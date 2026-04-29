@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <base-ergebnismeldung-cards-container
       title="Niederschrift"
       subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
@@ -59,7 +59,7 @@
         verschickt werden, wurde der Vorgang abgebrochen.
       </div>
     </base-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

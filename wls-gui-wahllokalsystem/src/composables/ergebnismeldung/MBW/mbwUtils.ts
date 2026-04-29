@@ -383,5 +383,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     sendSchnellmeldung,
     prepareDataForSchnellmeldungDruck,
     sendAusdruckNiederschrift,
+    _createBarcode,
+    _createFooter,
   };
 }

@@ -2091,8 +2091,6 @@ export function useNiederschriftDrcuk() {
     <!DOCTYPE html>
             <html lang="de">
            ${_dataForHeader(data)}
-
-        
             ${_dataForChapterOneWahlvorstand(data)}
             ${_dataForChapterTwo(data)}
             ${_dataForChapterThree(data)}
@@ -2102,9 +2100,6 @@ export function useNiederschriftDrcuk() {
             </body>
             <div class="footer">${data.footer}</div>
             </html>
-            
-
-            
     `;
   }
 

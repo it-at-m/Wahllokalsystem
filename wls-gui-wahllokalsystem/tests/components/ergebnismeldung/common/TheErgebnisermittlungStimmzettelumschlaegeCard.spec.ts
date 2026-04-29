@@ -20,7 +20,7 @@ import {
 } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
@@ -168,7 +168,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );
@@ -184,7 +184,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );

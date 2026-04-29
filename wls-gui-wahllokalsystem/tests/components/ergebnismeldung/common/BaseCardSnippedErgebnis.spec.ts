@@ -11,7 +11,7 @@ import {
 } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -38,7 +38,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         },
       });
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toStrictEqual(true);
     });
@@ -54,7 +54,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         },
       });
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toStrictEqual(true);
     });
@@ -71,7 +71,7 @@ describe("BaseCardSnippedErgebnis.vue", () => {
 
       await flushPromises();
 
-      await wrapper.findComponent(BaseButtonSave).trigger("click");
+      await wrapper.findComponent(BaseWlsButtonSave).trigger("click");
 
       expect(wrapper.emitted()).toHaveProperty("save");
     });

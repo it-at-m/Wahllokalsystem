@@ -25,7 +25,7 @@
         >
           Eingaben ändern
         </base-text-button>
-        <base-button-save
+        <base-wls-button-save
           data-test="basedialogbegruendung-btn-confirm"
           :disabled="isSaveDisabled"
           :save-text="saveText"
@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 
 defineProps({
   visible: {

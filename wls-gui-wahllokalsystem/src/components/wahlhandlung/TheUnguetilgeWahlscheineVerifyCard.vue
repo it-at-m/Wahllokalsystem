@@ -74,7 +74,7 @@
                 </v-form>
               </v-col>
               <v-col>
-                <base-button-save
+                <base-wls-button-save
                   class="mt-2 ml-5"
                   save-text="Beschluss speichern"
                   :disabled="!isAbstimmungsergebnisFormValid"
@@ -134,8 +134,8 @@ import { computed, ref, useTemplateRef } from "vue";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";

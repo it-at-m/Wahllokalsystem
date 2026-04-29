@@ -9,7 +9,7 @@ import {
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
@@ -76,7 +76,8 @@ describe("BaseDialogBegruendung.vue", () => {
           default: "Es wurde eine Abweichung erkannt.",
         },
       });
-      const saveButton = dialogWithDisabledButton.findComponent(BaseButtonSave);
+      const saveButton =
+        dialogWithDisabledButton.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       dialogWithDisabledButton.unmount();

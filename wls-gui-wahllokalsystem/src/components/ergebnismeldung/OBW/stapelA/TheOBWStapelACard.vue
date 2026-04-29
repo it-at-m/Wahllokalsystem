@@ -40,7 +40,7 @@
         </v-table>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="!isFormValid"
           @click="onSaveClicked"
         />
@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseRowObwStapelA from "@/components/ergebnismeldung/OBW/stapelA/BaseRowOBWStapelA.vue";
 import { useOBWStapelAUtils } from "@/composables/ergebnismeldung/OBW/obwStapelAUtils.ts";
 import { useOBWStapelCUtils } from "@/composables/ergebnismeldung/OBW/obwStapelCUtils.ts";

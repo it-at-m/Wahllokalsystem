@@ -1,5 +1,5 @@
 <template>
-  <base-button-save
+  <base-wls-button-save
     v-if="isBWB"
     prepend-icon="$printer"
     save-text="Nachbesetzung drucken"
@@ -13,7 +13,7 @@ import type { NachbesetzungsDruckInput } from "@/types/wahlvorstand/Nachbesetzun
 
 import { storeToRefs } from "pinia";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useWahlvorstandNachbesetzungsDruck } from "@/composables/wahlvorstand/wahlvorstandNachbesetzungsDruck.ts";
 import { useUserStore } from "@/stores/userStore.ts";

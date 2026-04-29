@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       "org.springframework.data.jpa.convert.threeten",
       "de.muenchen.oss.wahllokalsystem.broadcastservice",
       "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+      "de.muenchen.oss.wahllokalsystem.wls.common.security",
       "de.muenchen.oss.wahllokalsystem.wls.common.swagger"
     })
 public class MicroServiceApplication {

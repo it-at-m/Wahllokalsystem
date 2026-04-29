@@ -1,53 +1,75 @@
 <template>
-  <base-ergebnismeldung-cards-container
-    title="Niederschrift"
-    subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
-    :is-sending="isNiederschriftAndStatusSaving"
-    :is-korrigieren-active="isKorrigierenValid"
-    :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
-    :is-drucken-loading="isDruckenLoading"
-    :is-senden-active="isSendenActive"
-    @save="onSendenClicked"
-    @edit="onKorrigierenClicked"
-    @print="onDruckenClicked"
-  >
-    <the-m-b-w-wahlberechtigte-anzeigen-card
-      :wahlbezirk-id="currentUserWahlbezirkID"
-      :wahl-id="wahlID"
+  <div>
+    <base-ergebnismeldung-cards-container
+      title="Niederschrift"
+      subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
+      :is-sending="isSendingNiederschrift"
+      :is-korrigieren-active="isKorrigierenValid"
+      :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
+      :is-drucken-loading="isDruckenLoading"
+      :is-senden-active="isSendenActive"
+      @save="onSendenClicked"
+      @edit="onKorrigierenClicked"
+      @print="onDruckenClicked"
+    >
+      <the-m-b-w-wahlberechtigte-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-waehler-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-ungueltige-stimmen-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-gueltige-stimmen-anzeigen-card
+        :is-schnellmeldung="false"
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-m-b-w-gueltige-kandidatenstimmen-anzeigen-card
+        :wahlbezirk-id="currentUserWahlbezirkID"
+        :wahl-id="wahlID"
+      />
+      <the-vorkommnisse-requirement-card
+        :type="
+          hasDoneVorkommnisse(ereignisse)
+            ? InputFeedbackTypeEnum.information
+            : InputFeedbackTypeEnum.error
+        "
+      />
+    </base-ergebnismeldung-cards-container>
+    <offline-syncer-dialog
+      :is-dialog-visible="isOfflineSyncDialogVisible"
+      @sync-success="onSyncSuccess"
+      @sync-error="onSyncError"
     />
-    <the-m-b-w-waehler-anzeigen-card
-      :wahlbezirk-id="currentUserWahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-ungueltige-stimmen-anzeigen-card
-      :wahlbezirk-id="currentUserWahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-gueltige-stimmen-anzeigen-card
-      :wahlbezirk-id="currentUserWahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-m-b-w-gueltige-kandidatenstimmen-anzeigen-card
-      :wahlbezirk-id="currentUserWahlbezirkID"
-      :wahl-id="wahlID"
-    />
-    <the-vorkommnisse-requirement-card
-      :type="
-        hasDoneVorkommnisse(ereignisse)
-          ? InputFeedbackTypeEnum.information
-          : InputFeedbackTypeEnum.error
-      "
-    />
-  </base-ergebnismeldung-cards-container>
+    <base-dialog
+      :visible="isSyncErrorDialogVisible"
+      dialogtitle="Fehler bei der Synchronisation"
+      confirmtext="Hinweis schließen"
+      icon="$information"
+      @confirm="isSyncErrorDialogVisible = false"
+    >
+      <div class="mb-4">
+        Bei der Synchronisation der Offline-Daten ist ein Fehler aufgetreten. Um
+        zu verhindern, dass beim Senden der Niederschrift unvollständige Daten
+        verschickt werden, wurde der Vorgang abgebrochen.
+      </div>
+    </base-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
-import { onActivated, ref } from "vue";
+import { onActivated, ref,computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseErgebnismeldungCardsContainer from "@/components/ergebnismeldung/common/BaseErgebnismeldungCardsContainer.vue";
 import TheVorkommnisseRequirementCard from "@/components/ergebnismeldung/common/TheVorkommnisseRequirementCard.vue";
 import TheMBWGueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenCard.vue";
@@ -59,15 +81,20 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -80,16 +107,23 @@ const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
 const isSendenActive = ref<boolean>(true);
 
+const isOfflineSyncDialogVisible = ref(false);
+const isSyncErrorDialogVisible = ref(false);
+
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
+const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
+  useMbwUtils(wahlID, currentUserWahlbezirkID);
+
 const { sendAusdruckNiederschrift } = useMbwUtils(
   wahlID,
   currentUserWahlbezirkID
@@ -105,15 +139,28 @@ if (!wahl) {
   });
 }
 
+const workflowState = computed(() =>
+  getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
+);
+
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
 });
 
 function onSendenClicked() {
-  if (wahl) {
-    sendNiederschrift(wahl);
-  }
+  isOfflineSyncDialogVisible.value = true;
 }
+
+async function onSyncSuccess() {
+  isOfflineSyncDialogVisible.value = false;
+  await sendNiederschrift();
+}
+
+function onSyncError() {
+  isOfflineSyncDialogVisible.value = false;
+  isSyncErrorDialogVisible.value = true;
+}
+
 function onKorrigierenClicked() {
   // to be implemented
 }

@@ -17,10 +17,11 @@
         @click="onAddEreignisClicked()"
         >Ereignis hinzufügen</base-text-button
       >
-      <base-button-save
+      <base-wls-button-save
         :active="false"
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
+        :save-text="shouldNavigate ? SAVE_CONTINUE : 'Speichern'"
         @click="onSaveClicked"
       />
     </v-card-actions>
@@ -32,11 +33,15 @@ import type { Ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { CONTINUE_QUERY_PARAM, SAVE_CONTINUE } from "@/constants.ts";
+import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 const ereignisStore = useEreignisStore();
@@ -46,8 +51,14 @@ const {
   isSaving,
 } = storeToRefs(ereignisStore);
 const { addEreignis, sendEreignisse } = ereignisStore;
+const route = useRoute();
+const { getNextRoute } = useNavigationUtils();
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
+
+const shouldNavigate = computed(
+  () => route.query[CONTINUE_QUERY_PARAM] !== undefined
+);
 
 const isEreignisseFormInvalid = computed(
   () => ereignisseValidForm.value !== true
@@ -62,7 +73,10 @@ function onAddEreignisClicked() {
   addEreignis();
 }
 
-function onSaveClicked() {
-  sendEreignisse();
+async function onSaveClicked() {
+  await sendEreignisse();
+  if (shouldNavigate.value) {
+    await router.push(getNextRoute());
+  }
 }
 </script>

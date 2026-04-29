@@ -14,7 +14,8 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.wahlbriefe"
           class="mr-4"
-          :rules="[required, minNumber(1), maxNumber(9999)]"
+          :min-valid="1"
+          :rules="[required]"
           data-test="textFieldWahlbriefeAnzahl"
           label="Anzahl Wahlbriefe"
           :max-width="WIDTH"
@@ -30,7 +31,7 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.verzeichnisseUngueltige"
           class="mr-4"
-          :rules="[required, minNumber(0), maxNumber(9999)]"
+          :rules="[required]"
           data-test="textFieldVerzeichnisseAnzahl"
           label="Anzahl Verzeichnisse"
           :max-width="WIDTH"
@@ -43,7 +44,7 @@
         <base-number-input
           v-model="wahlbriefDatenState.wahlbriefDaten.nachtraege"
           class="mr-4"
-          :rules="[required, minNumber(0), maxNumber(9999)]"
+          :rules="[required]"
           data-test="textFieldNachtraegeAnzahl"
           label="Anzahl Nachträge"
           :max-width="WIDTH"
@@ -72,7 +73,6 @@
                 wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
               "
               class="mr-4"
-              :rules="[minNumber(0), maxNumber(9999)]"
               data-test="textFieldNachtraeglichUeberbrachteAnzahl"
               label="Anzahl Wahlbriefe"
               :min-width="WIDTH"
@@ -97,11 +97,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -112,7 +112,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -120,12 +120,12 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { maxNumber, minNumber, required, timeNotInFuture, timeGreaterOrEqual } =
-  useRules();
+const { required, timeNotInFuture, timeGreaterOrEqual } = useRules();
 const { currentTime } = useCurrentTime();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();

@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import {
   CONTINUE_QUERY_PARAM,
   ROUTE_EREIGNISSE,
@@ -93,7 +93,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
@@ -118,7 +118,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
@@ -139,7 +139,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
@@ -160,7 +160,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
@@ -171,7 +171,7 @@ describe("TheEreignisseView", () => {
       await nextTick();
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await expect(saveButton.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
@@ -192,7 +192,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.text()).toStrictEqual(SAVE_CONTINUE);
 
       mockDefinitions.getNextRoute.mockReturnValue({

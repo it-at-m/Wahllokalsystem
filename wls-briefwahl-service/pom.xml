@@ -4,12 +4,12 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-briefwahl-service</artifactId>
-    <version>0.3.10-SNAPSHOT</version>
+    <version>0.3.12-SNAPSHOT</version>
     <name>wls_briefwahl_service</name>
 
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -38,7 +38,7 @@
         <org.springdoc.version>2.8.15</org.springdoc.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <wls.common.version>1.7.0</wls.common.version>
-        <com.tngtech.archunit.version>1.4.1</com.tngtech.archunit.version>
+        <com.tngtech.archunit.version>1.4.2</com.tngtech.archunit.version>
     </properties>
 
     <dependencyManagement>

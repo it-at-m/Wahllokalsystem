@@ -97,11 +97,11 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveBriefwahldatenClicked"
       />
     </v-card-actions>
@@ -112,7 +112,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -120,6 +120,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";

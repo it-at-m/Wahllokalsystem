@@ -9,7 +9,7 @@ import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheWahlumgebungBwbCard from "@/components/wahlhandlung/TheWahlumgebungBwbCard.vue";
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
@@ -90,7 +90,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       });
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(0);
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -112,7 +112,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
       });
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(2);
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -142,7 +142,7 @@ describe("TheWahlumgebungBwbCard.vue", () => {
           .urneVersiegelt
       ).toBe(false);
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await checkbox.setValue(true);

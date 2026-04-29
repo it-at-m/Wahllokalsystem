@@ -2,7 +2,7 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useLogging } from "@/composables/common/logging.ts";
@@ -58,11 +58,6 @@ export const useEreignisStore = defineStore(storeID, () => {
             schliessungsuhrzeitGetter.value.isAuszaehlungStarted)
       : _isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
   });
-
-  watch(
-    () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent,
-    _onSchliessungsuhrzeitSentChanged
-  );
 
   function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
     const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
@@ -187,7 +182,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     );
   }
 
-  async function _onSchliessungsuhrzeitSentChanged(
+  async function onSchliessungsuhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
     wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {
@@ -246,6 +241,7 @@ export const useEreignisStore = defineStore(storeID, () => {
     updateBeschreibungByIndex,
     error,
     isVorfaelleMaintained,
+    onSchliessungsuhrzeitSentChanged,
   };
 });
 

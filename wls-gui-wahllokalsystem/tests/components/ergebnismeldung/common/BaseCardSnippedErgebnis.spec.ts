@@ -1,3 +1,6 @@
+import type { TestingPinia } from "@pinia/testing";
+
+import { createTestingPinia } from "@pinia/testing";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
 import {
@@ -6,17 +9,21 @@ import {
   mount,
   VueWrapper,
 } from "@vue/test-utils";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
-import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 
 describe("BaseCardSnippedErgebnis.vue", () => {
   let wrapper: VueWrapper;
+  let pinia: TestingPinia;
+
+  beforeEach(() => {
+    pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+  });
 
   enableAutoUnmount(afterEach);
 
@@ -27,10 +34,11 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         props: {
           modelValue: prepareErgebnis().ergebnis(10000).build(),
           snippedTitle: "BaseCard",
+          isWahlFinished: false,
         },
       });
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toStrictEqual(true);
     });
@@ -42,10 +50,11 @@ describe("BaseCardSnippedErgebnis.vue", () => {
           modelValue: prepareErgebnis().ergebnis(5).build(),
           snippedTitle: "BaseCard",
           minValue: 10,
+          isWahlFinished: false,
         },
       });
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toStrictEqual(true);
     });
@@ -56,12 +65,13 @@ describe("BaseCardSnippedErgebnis.vue", () => {
         props: {
           modelValue: prepareErgebnis().ergebnis(20).build(),
           snippedTitle: "BaseCard",
+          isWahlFinished: false,
         },
       });
 
       await flushPromises();
 
-      await wrapper.findComponent(BaseButtonSave).trigger("click");
+      await wrapper.findComponent(BaseWlsButtonSave).trigger("click");
 
       expect(wrapper.emitted()).toHaveProperty("save");
     });

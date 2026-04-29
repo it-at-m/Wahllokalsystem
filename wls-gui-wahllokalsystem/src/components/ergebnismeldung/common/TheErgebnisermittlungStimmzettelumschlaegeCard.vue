@@ -5,7 +5,7 @@
       <v-card-text class="pb-0 pt-2 mr-4">
         <v-form v-model="anzahlStimmzettelValidForm">
           <base-time-input
-            v-if="useTime"
+            v-if="isBWB"
             v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
             :rules="[
               timeNotInFuture,
@@ -23,10 +23,10 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
-          :disabled="isSaveButtonDisabled"
-          save-text="Speichern und Weiter"
+          :disabled="isMBWAuszaehlungDone || isSaveButtonDisabled"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -36,7 +36,7 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahl)} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       @cancel="dialog.isVisible = false"
       @confirm="onConfirmClicked"
     >
@@ -71,7 +71,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
@@ -82,10 +82,13 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
@@ -96,7 +99,6 @@ const props = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
   title: string;
-  useTime?: boolean;
 }>();
 
 const { wahlenActions } = useWahlenStore();
@@ -113,12 +115,17 @@ const {
   getDialogContent,
 } = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
 const { getNextRoute } = useNavigationUtils();
-const { setStepDone } = useWorkflowStore();
+const { setStepDone, isElectionFinished } = useWorkflowStore();
+const { resetAllAnwesenheiten } = useWahlvorstandStore();
+const { isBWB } = storeToRefs(useUserStore());
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
 const anzahlStimmzettelValidForm = ref<null | boolean>(null);
 
+const isMBWAuszaehlungDone = computed(() =>
+  isElectionFinished(props.wahlId, props.wahlbezirkId)
+);
 const isSaveButtonDisabled = computed(() => {
   return !anzahlStimmzettelValidForm.value;
 });
@@ -141,6 +148,9 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
+  if (isBWB.value) {
+    resetAllAnwesenheiten();
+  }
   await router.push(getNextRoute());
 }
 </script>

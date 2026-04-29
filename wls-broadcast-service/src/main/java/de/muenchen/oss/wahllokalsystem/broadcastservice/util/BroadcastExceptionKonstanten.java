@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class BroadcastExceptionKonstanten {
 
   public static final String CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG = "150";
+  public static final String CODE_USER_NOT_OWNER_OF_MESSAGE = "200";
 
   public static final ExceptionDataWrapper BROADCAST_PARAMETER_UNVOLLSTAENDIG =
       new ExceptionDataWrapper(
@@ -29,4 +30,7 @@ public class BroadcastExceptionKonstanten {
   public static final ExceptionDataWrapper BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID =
       new ExceptionDataWrapper(
           CODE_NACHRICHTENABRUFEN_PARAMETER_UNVOLLSTAENDIG, "Nachricht-UUID bad format");
+
+  public static final ExceptionDataWrapper USER_NOT_OWNER_OF_MESSAGE =
+      new ExceptionDataWrapper(CODE_USER_NOT_OWNER_OF_MESSAGE, "User is not owner of message");
 }

@@ -13,7 +13,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput, VTextarea } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -378,7 +378,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   }
 
   function getSaveBeschlussButton() {
-    return wrapper.findComponent(BaseButtonSave);
+    return wrapper.findComponent(BaseWlsButtonSave);
   }
 
   function getRefreshButton() {

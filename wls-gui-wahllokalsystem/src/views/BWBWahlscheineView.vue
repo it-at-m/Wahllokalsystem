@@ -29,10 +29,10 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="!isWahlscheineFormValid"
           :loading="isWahlscheineSaving"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -43,7 +43,7 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.differenceBegruendung.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       @cancel="dialog.isVisible = false"
       @confirm="onConfirmClicked(dialog)"
     >
@@ -84,7 +84,7 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
@@ -94,6 +94,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

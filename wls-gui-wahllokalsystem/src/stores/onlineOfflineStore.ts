@@ -14,6 +14,7 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
 
   const isCheckingStatus = ref<boolean>(false);
   const isOnline = ref<boolean>(true); //because when u can load the application you are online
+  const isOfflineCacheReady = ref<null | boolean>(null);
 
   async function checkConnectionState() {
     isCheckingStatus.value = true;
@@ -39,6 +40,7 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
   return {
     isCheckingStatus,
     isOnline,
+    isOfflineCacheReady,
     checkConnectionState,
   };
 });

@@ -53,6 +53,8 @@ on:
 
 jobs:
   verify-pull-request:
+    permissions:
+      contents: read
     uses: ./.github/workflows/callable-run-npm-build.yml
     with:
       package-dir: "wls-gui-<frontend-name>"

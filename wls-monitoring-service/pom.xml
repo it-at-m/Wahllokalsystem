@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-monitoring-service</artifactId>
-    <version>0.3.13-SNAPSHOT</version>
+    <version>0.3.14-SNAPSHOT</version>
     <name>wls_monitoring_service</name>
 
     <properties>
@@ -23,7 +23,7 @@
         <apache.commons.text>1.15.0</apache.commons.text>
         <apache.commons.validator>1.10.1</apache.commons.validator>
         <!-- SonarQube -->
-        <sonar.scanner.version>5.5.0.6356</sonar.scanner.version>
+        <sonar.scanner.version>5.6.0.6792</sonar.scanner.version>
         <!-- TestCoverage -->
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Plugins -->

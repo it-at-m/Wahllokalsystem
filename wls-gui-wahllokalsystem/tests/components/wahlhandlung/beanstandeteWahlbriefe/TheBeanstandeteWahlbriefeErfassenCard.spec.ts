@@ -22,7 +22,7 @@ import {
 import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -70,7 +70,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         },
       });
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -101,7 +101,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(true);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -132,7 +132,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -182,7 +182,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises(); // wait for save button to be enabled
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
       expect(saveButton.props("disabled")).toBe(false);
 
       await saveButton.trigger("click");

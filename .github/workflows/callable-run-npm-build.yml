@@ -10,6 +10,8 @@ on:
 jobs:
   checkout-and-verify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: './${{ inputs.package-dir }}'

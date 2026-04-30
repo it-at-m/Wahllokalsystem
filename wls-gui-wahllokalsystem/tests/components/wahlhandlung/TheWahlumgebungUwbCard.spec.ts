@@ -9,7 +9,7 @@ import { mount } from "@vue/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheWahlumgebungUwbCard from "@/components/wahlhandlung/TheWahlumgebungUwbCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -89,7 +89,7 @@ describe("TheWahlumgebungUwbCard.vue", () => {
       });
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(3);
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -111,7 +111,7 @@ describe("TheWahlumgebungUwbCard.vue", () => {
       });
 
       expect(wrapper.findAllComponents(VNumberInput).length).toBe(5);
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await expect(wrapper.html()).toMatchFileSnapshot(

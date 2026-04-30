@@ -43,7 +43,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="!areStapelCGueltigeErgebnisseValid"
           :loading="isSaving"
           @click="onSaveClicked"
@@ -63,7 +63,7 @@ import type { ErgebnisWithNumIndexAndStapel } from "@/types/ergebnismeldung/comm
 
 import { computed, onMounted, ref, useTemplateRef } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.vue";
 import BaseRowStapelC from "@/components/ergebnismeldung/OBW/stapelC/BaseRowStapelC.vue";
 import TheOBWStapelCDeletionDeniedDialog from "@/components/ergebnismeldung/OBW/stapelC/TheOBWStapelCDeletionDeniedDialog.vue";

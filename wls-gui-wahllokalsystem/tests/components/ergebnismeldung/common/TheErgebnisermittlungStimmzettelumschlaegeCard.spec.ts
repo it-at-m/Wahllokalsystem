@@ -21,11 +21,12 @@ import {
 } from "vitest";
 import { VNumberInput } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheErgebnisermittlungStimmzettelumschlaegeCard from "@/components/ergebnismeldung/common/TheErgebnisermittlungStimmzettelumschlaegeCard.vue";
 import router from "@/plugins/router.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -173,7 +174,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );
@@ -204,11 +205,15 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
           .build(),
       ];
 
+      // without this value set the test is failing due to indirect dependencies,
+      // caused by the modified mounting behavior in App.vue (see PR #2633)
+      useOnlineOfflineStore().isOfflineCacheReady = true;
+
       const wrapper = _mountComponent(testPinia);
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       mockDefinitions.postStimmzettelumschlaege.mockReturnValue(
         Promise.resolve()
       );

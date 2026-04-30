@@ -1527,7 +1527,7 @@ export function useNiederschriftDrcuk() {
                 <br/><h1>Anlage V1a Vorfälle und Vorkommnisse</h1><br/>` +
                   data.ereignisse.vorfaelle
                     .map((vorfall, i) => {
-                      let counter = i + 1;
+                      const counter = i + 1;
                       return (
                         `<div>Um ` +
                         vorfall.uhrzeit +
@@ -1552,7 +1552,7 @@ export function useNiederschriftDrcuk() {
                 <br/><h1>Anlage V1a Vorfälle und Vorkommnisse</h1><br/>` +
                   data.ereignisse.vorkommnisse
                     .map((vorkommnis, i) => {
-                      let counter = i + data.ereignisse.vorfaelle.length + 1;
+                      const counter = i + data.ereignisse.vorfaelle.length + 1;
                       return (
                         `<div>Um ` +
                         vorkommnis.uhrzeit +

@@ -354,8 +354,8 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     );
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
-      let tmpGueltigeStimmabgaben = [];
-      let pListe = [];
+      const tmpGueltigeStimmabgaben = [];
+      const pListe = [];
 
       wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege.forEach((erg) => {
         const gueltigeStimmabgabe = {
@@ -409,9 +409,9 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     stapelBC,
     forTemplate
   ) {
-    let pListe = [];
+    const pListe = [];
     wahlvorschlaege.forEach((wv) => {
-      let colSums = [];
+      const colSums = [];
       const bcKandidaten = stapelBC.ergebnisse
         .filter((k) => k.wahlvorschlagID === wv.identifikator)
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1));
@@ -419,7 +419,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))
         .forEach((kand) => {
-          let bckand = bcKandidaten.find(
+          const bckand = bcKandidaten.find(
             (bck) => bck.kandidatID === kand.identifikator
           );
           kand["ergebnis"] = bckand ? bckand.ergebnis : null;

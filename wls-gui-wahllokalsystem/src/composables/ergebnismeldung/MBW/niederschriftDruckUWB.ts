@@ -1048,7 +1048,7 @@ export function useNiederschriftDruckUWB() {
                         return `<tr>
                             ${partei.maxcols
                               .map((col, idx) => {
-                                let kand =
+                                const kand =
                                   idx < zeile.length && zeile[idx]
                                     ? zeile[idx]
                                     : { laufendeNr: "", ergebnis: "" };
@@ -1411,7 +1411,7 @@ export function useNiederschriftDruckUWB() {
                 </svg><br/><h1>Anlage V1 Vorfälle und Vorkommnisse</h1><br/>` +
                   data.ereignisse.vorfaelle
                     .map((vorfall, i) => {
-                      var counter = i + 1;
+                      const counter = i + 1;
                       return (
                         `<div>Um ` +
                         vorfall.uhrzeit +
@@ -1435,7 +1435,7 @@ export function useNiederschriftDruckUWB() {
                 </svg><br/><h1>Anlage V1 Vorfälle und Vorkommnisse</h1><br/>` +
                   data.ereignisse.vorkommnisse
                     .map((vorkommnis, i) => {
-                      var counter = i + data.ereignisse.vorfaelle.length + 1;
+                      const counter = i + data.ereignisse.vorfaelle.length + 1;
                       return (
                         `<div>Um ` +
                         vorkommnis.uhrzeit +

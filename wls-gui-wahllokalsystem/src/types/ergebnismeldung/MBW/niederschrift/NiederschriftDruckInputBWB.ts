@@ -30,7 +30,7 @@ export class Parteei {
 
   pushKandidat(kandidat) {
     if (kandidat.wahlvorschlagID === this.identifikator) {
-      let colNr = parseInt(kandidat.tabellenSpalteInNiederschrift) || 0;
+      const colNr = parseInt(kandidat.tabellenSpalteInNiederschrift) || 0;
       if (this._tabledata[0].length < colNr) {
         // erweitere alle Zeilen, dass sie so viele Spalten haben
         this._extendTableWidth(colNr);
@@ -66,7 +66,7 @@ export class Parteei {
     if (!cellEmpty) {
       // alle Zellen in der Spalte colNr aller Zeilen waren belegt.
       // Eine neue Zeile wird benötigt und kreiert
-      let newRow = new Array(this._tabledata[0].length);
+      const newRow = new Array(this._tabledata[0].length);
       newRow[colNr] = kandidat;
       this._tabledata.push(newRow);
     }

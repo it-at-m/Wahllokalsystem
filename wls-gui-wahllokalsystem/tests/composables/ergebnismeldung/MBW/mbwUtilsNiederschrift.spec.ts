@@ -2,12 +2,10 @@ import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/nie
 import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
 
-import { useBeanstandeteWahlbriefeTestDataFactory } from "@tests/utils/briefwahl/BeanstandeteWahlbriefeTestDataFactory.ts";
 import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
-import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
@@ -115,31 +113,20 @@ describe("mbwUtilsNiederschrift prepareDataForNiederschriftDruck", () => {
   const { prepareBWerte } = useBWerteTestDataFactory();
   const { prepareAWerte } = useAWerteTestDataFactory();
   const { createWahlbriefdaten } = useWahlbriefdatenTestDataFactory();
-  const {
-    createStimmabgabevermerke,
-    prepareStimmabgabevermerke,
-    prepareWahldaten,
-    prepareVermerk,
-    prepareStimmzettel,
-  } = useStimmabgabevermerkeTestDataFactory();
-  const { prepareErgebnisse, prepareErgebnis, createErgebnis } =
-    useErgebnisseTestDataFactory();
+  const { prepareStimmabgabevermerke, prepareWahldaten } =
+    useStimmabgabevermerkeTestDataFactory();
+  const { prepareErgebnisse } = seErgebnisseTestDataFactory();
   const { createStatus } = useStatusTestDataFactory();
-  const {
-    createBeanstandeteWahlbriefe,
-    createRandomBeanstandeteWahlbriefeValues,
-    prepareBeanstandeteWahlbriefe,
-  } = useBeanstandeteWahlbriefeTestDataFactory();
+
   const { createWahlscheine } = useWahlscheineTestDataFactory();
-  const { createEreignis, prepareEreignis } =
-    useVorfaelleundvorkommnisseTestDataFactory();
+  useVorfaelleundvorkommnisseTestDataFactory();
   const { createWahlvorstand } = useWahlvorstandTestDataFactory();
   const { createBegruendung } = useBegruendungTestDataFactory();
   const { createUrnenwahlvorbereitung } = useWahlvorbereitungTestDataFactory();
   const { createPflegeWaehlerverzeichnis } =
     usePflegeWaehlerverzeichnisTestDataFactory();
 
-  const { toHhMm, toGermanDate } = useDateTimeFormatter();
+  const { toGermanDate } = useDateTimeFormatter();
 
   const wahlID = "wahl-id";
   const wahlbezirkID = "wahlbezirk-id";
@@ -160,7 +147,7 @@ describe("mbwUtilsNiederschrift prepareDataForNiederschriftDruck", () => {
     const eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
     const schliessungsuhrzeit = new Date("2025-05-23T16:30:00");
 
-    const userStore = useUserStore().setUser(
+    useUserStore().setUser(
       prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .wahlbezirkNummer(mockedWahlbezirkNummer)
@@ -428,7 +415,7 @@ describe("mbwUtilsNiederschrift prepareDataForNiederschriftDruck", () => {
     const eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
     const schliessungsuhrzeit = new Date("2025-05-23T16:30:00");
 
-    const userStore = useUserStore().setUser(
+    useUserStore().setUser(
       prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .wahlbezirkNummer(mockedWahlbezirkNummer)

@@ -1121,14 +1121,15 @@ export function useNiederschriftDrcuk() {
                 <table class="table uncollapsed width_100 marginBottom_2">
                     <colgroup>
                     ${partei.maxcols
-                      .map((col, idx) => {
+                      // @ts-expect-error old code, will be refactored later
+                      .map((col) => {
                         return `<col width="${col.width1}%"/><col width="${col.width2}%"/>`;
                       })
                       .join("")}
                     </colgroup>
                     <tr>
                     ${partei.maxcols
-                      .map((col, idx) => {
+                      .map(() => {
                         return `<th class="blueGrayBG textAlignCenter">Lfd. Nr.</th><th class="blueGrayBG textAlignCenter">Stimmen</th>`;
                       })
                       .join("")}
@@ -1161,14 +1162,14 @@ export function useNiederschriftDrcuk() {
                                 <table class="table uncollapsed width_100 marginBottom_2 paddingTopNewPage">
                                     <colgroup>
                                     ${partei.maxcols
-                                      .map((col, idx) => {
+                                      .map((col) => {
                                         return `<col width="${col.width1}%"/><col width="${col.width2}%"/>`;
                                       })
                                       .join("")}
                                     </colgroup>
                                     <tr>
                                     ${partei.maxcols
-                                      .map((col, idx) => {
+                                      .map(() => {
                                         return `<th class="blueGrayBG textAlignCenter">Lfd. Nr.</th><th class="blueGrayBG textAlignCenter">Stimmen</th>`;
                                       })
                                       .join("")}
@@ -1181,14 +1182,14 @@ export function useNiederschriftDrcuk() {
                       .join("")}
                     <tr class="noBorder">
                         ${partei.maxcols
-                          .map((col, idx) => {
+                          .map(() => {
                             return `<th class="noBorder"></th><th class="noBorder"></th>`;
                           })
                           .join("")}
                     </tr>
                     <tr>
                         ${partei.maxcols
-                          .map((col, idx) => {
+                          .map((col) => {
                             return `<th class="textAlignCenter">Zus.</th><th class="textAlignRight backendData">${col.colsum}</th>`;
                           })
                           .join("")}

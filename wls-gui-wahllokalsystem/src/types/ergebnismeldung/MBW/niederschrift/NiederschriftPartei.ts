@@ -5,5 +5,6 @@ export interface NiederschriftPartei {
   kurzname: string;
   direktKandMit00: { laufendeNr: number | string } | null;
   maxcols: NiederschriftParteiMaxCol[];
+  // eslint-disable-next-line
   _tabledata: any[]; // table rows for candidate data
 }

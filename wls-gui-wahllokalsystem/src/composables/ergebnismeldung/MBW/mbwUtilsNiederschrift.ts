@@ -26,7 +26,6 @@ import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebni
 import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
 import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
@@ -44,7 +43,6 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { logError } = useLogging("requestStrategies");
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
-const { addNotification } = useUserNotificationService();
 const { getErgebnisse } = useErgebnisService();
 
 export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
@@ -305,38 +303,41 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       }
     }
   }
-  // @ts-ignore
+
   function _getStimmenListeUndErgebniseGesamt() {
     let sumStapelA = 0;
     let sumStapelB = 0;
     let sumStapelBC = 0;
     let sumGesamt = 0;
+    // @ts-expect-error old code, will be refactored later, will be refactored later
     const ergebnisArray = [];
     const gueltigeStimmabgaben = _getGueltigeStimmabgabe();
-    gueltigeStimmabgaben.forEach((erg) => {
-      const listElement = {
-        ordnungszahl: erg.ordnungszahl,
-        bewerbername: erg.bewerbername,
-        parteiname: erg.wahlvorschlag,
-        stapelA: erg.stapelA,
-        stapelB: erg.stapelB,
-        stapelBC: erg.stapelBC,
-        gesamt: erg.gesamt,
-      };
-      ergebnisArray.push(listElement);
-      sumStapelA += erg.stapelA;
-      sumStapelB += erg.stapelB;
-      sumStapelBC += erg.stapelBC;
-      sumGesamt += erg.gesamt;
-    });
+    if (gueltigeStimmabgaben) {
+      gueltigeStimmabgaben.forEach((erg) => {
+        const listElement = {
+          ordnungszahl: erg.ordnungszahl,
+          bewerbername: erg.bewerbername,
+          parteiname: erg.wahlvorschlag,
+          stapelA: erg.stapelA,
+          stapelB: erg.stapelB,
+          stapelBC: erg.stapelBC,
+          gesamt: erg.gesamt,
+        };
+        ergebnisArray.push(listElement);
+        sumStapelA += erg.stapelA;
+        sumStapelB += erg.stapelB;
+        sumStapelBC += erg.stapelBC;
+        sumGesamt += erg.gesamt;
+      });
 
-    gueltigeStimmenErgebnisGesamt.value = {
-      stapelA: sumStapelA,
-      stapelB: sumStapelB,
-      stapelBC: sumStapelBC,
-      gesamt: sumGesamt,
-    };
-    gueltigeStimmenListe.value = ergebnisArray;
+      gueltigeStimmenErgebnisGesamt.value = {
+        stapelA: sumStapelA,
+        stapelB: sumStapelB,
+        stapelBC: sumStapelBC,
+        gesamt: sumGesamt,
+      };
+      gueltigeStimmenListe.value = ergebnisArray;
+    }
   }
 
   function _getGueltigeStimmabgabe() {
@@ -354,8 +355,8 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     );
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
+      // @ts-expect-error old code, will be refactored later
       const tmpGueltigeStimmabgaben = [];
-      const pListe = [];
 
       wahlvorschlaegeByWahlIDAndWahlbezirkID.wahlvorschlaege.forEach((erg) => {
         const gueltigeStimmabgabe = {
@@ -363,8 +364,10 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           wahlvorschlag: erg.kurzname,
           wahlvorschlagID: erg.identifikator,
           bewerbername:
+            // @ts-expect-error old code, will be refactored later
             erg.kandidaten[0] && erg.kandidaten[0]["name"]
-              ? erg.kandidaten[0]["name"]
+              ? // @ts-expect-error old code, will be refactored later
+                erg.kandidaten[0]["name"]
               : "",
           stapelA: 0,
           stapelB: 0,
@@ -399,7 +402,9 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           gueltigeStimmabgabe.stapelA + gueltigeStimmabgabe.stapelB;
         tmpGueltigeStimmabgaben.push(gueltigeStimmabgabe);
       });
+      // @ts-expect-error old code, will be refactored later
       tmpGueltigeStimmabgaben.sort((a, b) => a.ordnungszahl > b.ordnungszahl);
+      // @ts-expect-error old code, will be refactored later
       return tmpGueltigeStimmabgaben;
     }
   }
@@ -409,33 +414,43 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     stapelBC,
     forTemplate
   ) {
+    // @ts-expect-error old code, will be refactored later
     const pListe = [];
     wahlvorschlaege.forEach((wv) => {
+      // @ts-expect-error old code, will be refactored later
       const colSums = [];
       const bcKandidaten = stapelBC.ergebnisse
         .filter((k) => k.wahlvorschlagID === wv.identifikator)
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1));
       let partei = new Parteei(wv.identifikator, wv.kurzname, wv.ordnungszahl);
+      // @ts-expect-error old code, will be refactored later
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))
         .forEach((kand) => {
           const bckand = bcKandidaten.find(
             (bck) => bck.kandidatID === kand.identifikator
           );
+          // @ts-expect-error old code, will be refactored later
           kand["ergebnis"] = bckand ? bckand.ergebnis : null;
+          // @ts-expect-error old code, will be refactored later
           kand["wahlvorschlagID"] = bckand
             ? bckand.wahlvorschlagID
             : wv.identifikator;
           if (forTemplate && kand.listenposition === 0) {
+            // @ts-expect-error old code, will be refactored later
             kand["laufendeNr"] =
               parseInt(partei.ordnungszahl) * 100 +
+              // @ts-expect-error old code, will be refactored later
               parseInt(kand.listenposition);
+            // @ts-expect-error old code, will be refactored later
             partei["direktKandMit00"] = kand;
           } else {
             partei.pushKandidat(kand);
           }
           colSums[kand.tabellenSpalteInNiederschrift] =
+            // @ts-expect-error old code, will be refactored later
             parseInt(colSums[kand.tabellenSpalteInNiederschrift] || 0) +
+            // @ts-expect-error old code, will be refactored later
             (parseInt(kand.ergebnis) || 0);
         });
       if (forTemplate) {
@@ -448,7 +463,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
 
   function _bearbeiteForTemplate(partei, colSums) {
     let maxCols = 0;
-
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let row = 0; row < partei._tabledata.length; row++) {
       maxCols =
         maxCols > partei._tabledata[row].length
@@ -513,6 +528,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           begruendungsString += wort + " ";
           if (
             begruendungsString.length &&
+            // @ts-expect-error old code, will be refactored later
             parseInt(begruendungsString.length / 80) !== zeileNr
           ) {
             begruendungsString += "<br/>";

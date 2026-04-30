@@ -78,10 +78,7 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
-import {
-  useMbwUtils,
-  useMbwUtils,
-} from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -93,11 +90,7 @@ import { useStatusStore } from "@/stores/statusStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
-import {
-  MeldungsArtEnum,
-  MeldungsArtEnum,
-} from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const route = useRoute();
@@ -128,10 +121,6 @@ const ereignisse = ref<WahlbezirkEreignisse | null>(null);
 const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
   useMbwUtils(wahlID, currentUserWahlbezirkID);
 
-const { sendAusdruckNiederschrift } = useMbwUtils(
-  wahlID,
-  currentUserWahlbezirkID
-);
 const { gatherData } = useNiederschriftDruckUWB();
 const { prepareDataForNiederschriftDruck } = useMbtUtilsNiederschrift(
   wahlID,

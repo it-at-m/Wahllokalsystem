@@ -17,7 +17,7 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahlschliessungCard from "@/components/wahlhandlung/BaseWahlschliessungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -214,7 +214,7 @@ describe("BaseWahlschliessungCard.vue", () => {
         "sendSchliessungsuhrzeit"
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockResolvedValue(

@@ -20,7 +20,7 @@
             data-test="checkboxAlleVersiegelt"
           />
           <v-card-actions>
-            <base-button-save
+            <base-wls-button-save
               :disabled="isSaveButtonDisabled"
               :loading="
                 briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
@@ -39,7 +39,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";

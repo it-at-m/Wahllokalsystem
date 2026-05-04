@@ -431,7 +431,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       // @ts-expect-error old code, will be refactored later
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))
-        // @ts-expect-error old code, will be refactored later
         .forEach((kand) => {
           const bckand = bcKandidaten.find(
             // @ts-expect-error old code, will be refactored later
@@ -464,7 +463,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         // @ts-expect-error old code, will be refactored later
         partei = _bearbeiteForTemplate(partei, colSums);
       }
-      //@ts-expect-error old code, will be refactored later
       pListe.push(partei);
     });
     // @ts-expect-error old code, will be refactored later
@@ -481,7 +479,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           ? maxCols
           : partei._tabledata[row].length;
     }
-    //@ts-expect-error old code, will be refactored later
+
     partei["maxcols"] = [];
 
     let width1 = 0;

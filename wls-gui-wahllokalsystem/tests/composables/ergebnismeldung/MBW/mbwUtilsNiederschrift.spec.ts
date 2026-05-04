@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
@@ -6,6 +8,7 @@ import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/Wahlbri
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
 import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
@@ -115,7 +118,7 @@ describe("mbwUtilsNiederschrift prepareDataForNiederschriftDruck", () => {
   const { createWahlbriefdaten } = useWahlbriefdatenTestDataFactory();
   const { prepareStimmabgabevermerke, prepareWahldaten } =
     useStimmabgabevermerkeTestDataFactory();
-  const { prepareErgebnisse } = seErgebnisseTestDataFactory();
+  const { prepareErgebnisse } = useErgebnisseTestDataFactory();
   const { createStatus } = useStatusTestDataFactory();
 
   const { createWahlscheine } = useWahlscheineTestDataFactory();

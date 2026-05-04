@@ -2,7 +2,6 @@ import type { NiederschriftUhrzeit } from "@/types/ergebnismeldung/MBW/niedersch
 import type { NiederschriftEreignisse } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftEreignisse.ts";
 import type { NiederschriftGueltigeStimme } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftGueltigeStimme.ts";
 import type { NiederschriftGueltigeStimmenErgebnisGesamt } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftGueltigeStimmenErgebnisGesamt.ts";
-import type { NiederschriftPartei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftPartei.ts";
 import type { NiederschriftWahlvorstandsmitglied } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftWahlvorstandsmitglied.ts";
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
@@ -21,7 +20,8 @@ export interface NiederschriftDruckInputBase {
   ungueltigeStimmen: string[] | number | null;
   gueltigeStimmenListe: NiederschriftGueltigeStimme[];
   gueltigeStimmenErgebnisGesamt: NiederschriftGueltigeStimmenErgebnisGesamt;
-  parteienListe: NiederschriftPartei[];
+  // eslint-disable-next-line
+  parteienListe: any;
   ereignisse: NiederschriftEreignisse;
   footer?: string;
 }

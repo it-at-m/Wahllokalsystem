@@ -336,6 +336,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         stapelBC: sumStapelBC,
         gesamt: sumGesamt,
       };
+      // // @ts-expect-error old code, will be refactored later
       gueltigeStimmenListe.value = ergebnisArray;
     }
   }
@@ -411,7 +412,9 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
 
   function _createParteeienListe(
     wahlvorschlaege: Wahlvorschlag[],
+    // // @ts-expect-error old code, will be refactored later
     stapelBC,
+    // // @ts-expect-error old code, will be refactored later
     forTemplate
   ) {
     // @ts-expect-error old code, will be refactored later
@@ -420,14 +423,18 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       // @ts-expect-error old code, will be refactored later
       const colSums = [];
       const bcKandidaten = stapelBC.ergebnisse
+        // // @ts-expect-error old code, will be refactored later
         .filter((k) => k.wahlvorschlagID === wv.identifikator)
+        // // @ts-expect-error old code, will be refactored later
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1));
       let partei = new Parteei(wv.identifikator, wv.kurzname, wv.ordnungszahl);
       // @ts-expect-error old code, will be refactored later
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))
+        // // @ts-expect-error old code, will be refactored later
         .forEach((kand) => {
           const bckand = bcKandidaten.find(
+            // // @ts-expect-error old code, will be refactored later
             (bck) => bck.kandidatID === kand.identifikator
           );
           // @ts-expect-error old code, will be refactored later
@@ -447,6 +454,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           } else {
             partei.pushKandidat(kand);
           }
+          // // @ts-expect-error old code, will be refactored later
           colSums[kand.tabellenSpalteInNiederschrift] =
             // @ts-expect-error old code, will be refactored later
             parseInt(colSums[kand.tabellenSpalteInNiederschrift] || 0) +
@@ -454,13 +462,16 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
             (parseInt(kand.ergebnis) || 0);
         });
       if (forTemplate) {
+        // // @ts-expect-error old code, will be refactored later
         partei = _bearbeiteForTemplate(partei, colSums);
       }
       pListe.push(partei);
     });
+    // // @ts-expect-error old code, will be refactored later
     return pListe;
   }
 
+  // // @ts-expect-error old code, will be refactored later
   function _bearbeiteForTemplate(partei, colSums) {
     let maxCols = 0;
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
@@ -564,26 +575,29 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   }
 
   async function _getWaehlerverzeichnisData() {
-    try {
-      const waehlerverzeichnisNummer =
-        waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
-          wahlID
-        );
-      if (waehlerverzeichnisNummer) {
-        const waehlerverzeichnis = await getWaehlerverzeichnis(
+    const waehlerverzeichnisNummer =
+      waehlerverzeichnisActions.getWaehlerverzeichnisNummerOrUndefinedById(
+        wahlID
+      );
+    if (waehlerverzeichnisNummer) {
+      let waehlerverzeichnis;
+      try {
+        waehlerverzeichnis = await getWaehlerverzeichnis(
           wahlbezirkID,
           waehlerverzeichnisNummer
         );
-        return {
-          nachtraeglicheBerichtigung:
-            waehlerverzeichnis.nachtraeglicheBerichtigung,
-          verzeichnisLagVor: waehlerverzeichnis.waehlerverzeichnisUnchanged,
-          berichtigungVorBeginnDerAbstimmung:
-            !waehlerverzeichnis.waehlerverzeichnisUnchanged,
-        };
+      } catch {
+        throw new Error(`Fehler beim Laden des Waehlerverzeichnis`);
       }
-    } catch {
-      throw new Error(`Fehler beim Laden des Waehlerverzeichnis`);
+      return {
+        nachtraeglicheBerichtigung:
+          waehlerverzeichnis.nachtraeglicheBerichtigung,
+        verzeichnisLagVor: waehlerverzeichnis.waehlerverzeichnisUnchanged,
+        berichtigungVorBeginnDerAbstimmung:
+          !waehlerverzeichnis.waehlerverzeichnisUnchanged,
+      };
+    } else {
+      throw new Error("Waehlerverzeichnisnummer ist nicht vorhanden");
     }
   }
 

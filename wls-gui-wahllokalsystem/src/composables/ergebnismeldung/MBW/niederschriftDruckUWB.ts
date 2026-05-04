@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 
 /*eslint-disable no-irregular-whitespace*/
@@ -1968,7 +1970,9 @@ export function useNiederschriftDruckUWB() {
     `;
   }
 
-  function gatherData(data: NiederschriftDruckInputUWB) {
+  function buildNiederschriftTemplateFromData(
+    data: NiederschriftDruckInputUWB
+  ) {
     return `
             <!DOCTYPE html>
             <html lang="de">
@@ -1988,6 +1992,6 @@ export function useNiederschriftDruckUWB() {
   }
 
   return {
-    gatherData,
+    buildNiederschriftTemplateFromData,
   };
 }

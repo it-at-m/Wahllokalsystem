@@ -370,17 +370,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  async function sendAusdruckNiederschrift(
-    meldungsart: MeldungsartEnum,
-    ausdruck: string
-  ) {
-    try {
-      await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck);
-    } catch {
-      throw new Error("Fehler beim Speichern des Ausdrucks");
-    }
-  }
-
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
     try {
       return await getErgebnisse(wahlbezirkID, wahlID, stapelArt, false);
@@ -479,6 +468,5 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     _createFooter,
     updateStatusAfterSchnellmeldungDrucken,
     sendNiederschrift,
-    sendAusdruckNiederschrift,
   };
 }

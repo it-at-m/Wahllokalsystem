@@ -66,7 +66,7 @@
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onActivated, ref } from "vue";
+import { onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
@@ -80,31 +80,28 @@ import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MB
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
+import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useStatusStore } from "@/stores/statusStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
-const { sendNiederschrift } = useErgebnismeldungStore();
-const { isNiederschriftAndStatusSaving } = storeToRefs(
-  useErgebnismeldungStore()
-);
+
 const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
-const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
@@ -120,8 +117,14 @@ const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
 const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
   useMbwUtils(wahlID, currentUserWahlbezirkID);
+const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
 
-const { gatherData } = useNiederschriftDruckUWB();
+const {
+  buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataUWB,
+} = useNiederschriftDruckUWB();
+const {
+  buildNiederschriftTemplateFromData: buildNiederschriftTemplateFromDataBWB,
+} = useNiederschriftDruckBWB();
 const { prepareDataForNiederschriftDruck } = useMbtUtilsNiederschrift(
   wahlID,
   currentUserWahlbezirkID
@@ -131,11 +134,11 @@ if (!wahl) {
     name: ROUTE_NOTFOUND,
   });
 }
-
+/*
 const workflowState = computed(() =>
   getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
 );
-
+*/
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
 });
@@ -203,7 +206,13 @@ async function collectDataForTemplateBuild() {
       MeldungsArtEnum.Niederschrift,
       wahl
     );
-    return gatherData(templateData);
+    if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
+      // @ts-expect-error correct data is determined by the if check
+      return buildNiederschriftTemplateFromDataUWB(templateData);
+    } else {
+      // @ts-expect-error correct data is determined by the if check
+      return buildNiederschriftTemplateFromDataBWB(templateData);
+    }
   }
   return " ";
 }

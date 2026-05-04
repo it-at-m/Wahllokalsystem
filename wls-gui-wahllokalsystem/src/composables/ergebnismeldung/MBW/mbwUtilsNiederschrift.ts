@@ -336,7 +336,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         stapelBC: sumStapelBC,
         gesamt: sumGesamt,
       };
-      // // @ts-expect-error old code, will be refactored later
+      // @ts-expect-error old code, will be refactored later
       gueltigeStimmenListe.value = ergebnisArray;
     }
   }
@@ -412,9 +412,9 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
 
   function _createParteeienListe(
     wahlvorschlaege: Wahlvorschlag[],
-    // // @ts-expect-error old code, will be refactored later
+    // @ts-expect-error old code, will be refactored later
     stapelBC,
-    // // @ts-expect-error old code, will be refactored later
+    // @ts-expect-error old code, will be refactored later
     forTemplate
   ) {
     // @ts-expect-error old code, will be refactored later
@@ -423,18 +423,18 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       // @ts-expect-error old code, will be refactored later
       const colSums = [];
       const bcKandidaten = stapelBC.ergebnisse
-        // // @ts-expect-error old code, will be refactored later
+        // @ts-expect-error old code, will be refactored later
         .filter((k) => k.wahlvorschlagID === wv.identifikator)
-        // // @ts-expect-error old code, will be refactored later
+        // @ts-expect-error old code, will be refactored later
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1));
       let partei = new Parteei(wv.identifikator, wv.kurzname, wv.ordnungszahl);
       // @ts-expect-error old code, will be refactored later
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))
-        // // @ts-expect-error old code, will be refactored later
+        // @ts-expect-error old code, will be refactored later
         .forEach((kand) => {
           const bckand = bcKandidaten.find(
-            // // @ts-expect-error old code, will be refactored later
+            // @ts-expect-error old code, will be refactored later
             (bck) => bck.kandidatID === kand.identifikator
           );
           // @ts-expect-error old code, will be refactored later
@@ -447,14 +447,13 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
             // @ts-expect-error old code, will be refactored later
             kand["laufendeNr"] =
               parseInt(partei.ordnungszahl) * 100 +
-              // @ts-expect-error old code, will be refactored later
+              //@ts-expect-error old code, will be refactored later
               parseInt(kand.listenposition);
             // @ts-expect-error old code, will be refactored later
             partei["direktKandMit00"] = kand;
           } else {
             partei.pushKandidat(kand);
           }
-          // // @ts-expect-error old code, will be refactored later
           colSums[kand.tabellenSpalteInNiederschrift] =
             // @ts-expect-error old code, will be refactored later
             parseInt(colSums[kand.tabellenSpalteInNiederschrift] || 0) +
@@ -462,16 +461,17 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
             (parseInt(kand.ergebnis) || 0);
         });
       if (forTemplate) {
-        // // @ts-expect-error old code, will be refactored later
+        // @ts-expect-error old code, will be refactored later
         partei = _bearbeiteForTemplate(partei, colSums);
       }
+      //@ts-expect-error old code, will be refactored later
       pListe.push(partei);
     });
-    // // @ts-expect-error old code, will be refactored later
+    // @ts-expect-error old code, will be refactored later
     return pListe;
   }
 
-  // // @ts-expect-error old code, will be refactored later
+  //@ts-expect-error old code, will be refactored later
   function _bearbeiteForTemplate(partei, colSums) {
     let maxCols = 0;
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
@@ -481,6 +481,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           ? maxCols
           : partei._tabledata[row].length;
     }
+    //@ts-expect-error old code, will be refactored later
     partei["maxcols"] = [];
 
     let width1 = 0;

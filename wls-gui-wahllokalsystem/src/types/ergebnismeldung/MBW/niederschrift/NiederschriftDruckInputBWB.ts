@@ -29,7 +29,7 @@ export class Parteei {
     this.zweitstimmenGesamt = 0;
   }
 
-  // // @ts-expect-error old code, will be refactored later
+  //@ts-expect-error old code, will be refactored later
   pushKandidat(kandidat) {
     if (kandidat.wahlvorschlagID === this.identifikator) {
       const colNr = parseInt(kandidat.tabellenSpalteInNiederschrift) || 0;
@@ -48,7 +48,7 @@ export class Parteei {
     } else return false;
   }
 
-  // // @ts-expect-error old code, will be refactored later
+  //@ts-expect-error old code, will be refactored later
   _extendTableWidth(numberOfColumns) {
     this._tabledata.forEach((zeile) => {
       // ist eigentlich width - die Breite der Tabelle
@@ -56,15 +56,15 @@ export class Parteei {
     });
   }
 
-  // // @ts-expect-error old code, will be refactored later
+  //@ts-expect-error old code, will be refactored later
   _fillFirstEmptyCellOrCreateRow(colNr, kandidat) {
     let cellEmpty = false;
     let rowNr = 0;
     while (rowNr < this._tabledata.length && !cellEmpty) {
-      // // @ts-expect-error old code, will be refactored later
+      //@ts-expect-error old code, will be refactored later
       if (!this._tabledata[rowNr][colNr]) {
         cellEmpty = true;
-        // // @ts-expect-error old code, will be refactored later
+        // @ts-expect-error old code, will be refactored later
         this._tabledata[rowNr][colNr] = kandidat;
       }
       rowNr++;
@@ -74,7 +74,7 @@ export class Parteei {
       // Eine neue Zeile wird benötigt und kreiert
       const newRow = new Array(this._tabledata[0].length);
       newRow[colNr] = kandidat;
-      // // @ts-expect-error old code, will be refactored later
+      // @ts-expect-error old code, will be refactored later
       this._tabledata.push(newRow);
     }
   }

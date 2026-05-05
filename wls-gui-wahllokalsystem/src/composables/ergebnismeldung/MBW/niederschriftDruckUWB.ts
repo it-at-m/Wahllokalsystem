@@ -1983,7 +1983,7 @@ export function useNiederschriftDruckUWB() {
             ${_dataForChapterThree(data)}
             ${_dataForChapterFour(data)}
             ${_dataForChapterFour(data)}  
-            ${_dataForChapterFive(data)}
+            ${_dataForChapterFour(data)}
             </body>
             <div class="footer">${data.footer}</div>
             </html>

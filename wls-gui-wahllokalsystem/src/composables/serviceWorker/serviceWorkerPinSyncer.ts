@@ -20,11 +20,19 @@ export function useServiceWorkerPinSyncer() {
     }
   );
 
-  navigator.serviceWorker.addEventListener("message", (event) =>
-    _handleServiceWorkerInstalledMessage(event.data)
-  );
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("message", (event) =>
+      _handleServiceWorkerInstalledMessage(event.data)
+    );
 
-  navigator.serviceWorker.addEventListener("controllerchange", () => syncPin());
+    navigator.serviceWorker.addEventListener("controllerchange", () =>
+      syncPin()
+    );
+  } else {
+    console.debug(
+      "ServiceWorkerPinSyncer konnte EventListener nicht registrieren"
+    );
+  }
 
   async function syncPin() {
     const cryptoKey = await importKey(user.value.pin);

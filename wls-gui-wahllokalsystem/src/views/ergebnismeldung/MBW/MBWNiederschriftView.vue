@@ -163,7 +163,7 @@ function onKorrigierenClicked() {
 async function onDruckenClicked() {
   isDruckenLoading.value = true;
   try {
-    const pdfText = await collectDataForTemplateBuild();
+    const pdfText = await buildNiederschriftTemplate();
     const printWindow = window.open(
       "",
       "",
@@ -194,7 +194,7 @@ async function onDruckenClicked() {
   }
 }
 
-async function collectDataForTemplateBuild() {
+async function buildNiederschriftTemplate() {
   const statusForWahlAndWahlbezirk = status.value.find(
     (status) =>
       status.bezirkUndWahlID.wahlID == wahlID &&

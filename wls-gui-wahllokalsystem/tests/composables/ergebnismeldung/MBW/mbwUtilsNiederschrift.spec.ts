@@ -1,15 +1,8 @@
-;
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import type {
-  NiederschriftDruckInputBWB
-} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
-import type {
-  NiederschriftDruckInputUWB
-} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
+import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
 import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
-
 
 import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
@@ -18,23 +11,16 @@ import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bW
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
-import {
-  useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
-import {
-  useVorfaelleundvorkommnisseTestDataFactory
-} from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
-import {
-  usePflegeWaehlerverzeichnisTestDataFactory
-} from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
@@ -47,47 +33,6 @@ import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
-
-
-;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const mockDefinitions = vi.hoisted(() => ({
   getAWerte: vi.fn(),
@@ -184,7 +129,7 @@ describe("prepareDataForNiederschriftDruck", () => {
   const { createPflegeWaehlerverzeichnis } =
     usePflegeWaehlerverzeichnisTestDataFactory();
 
-  const { toGermanDate } = useDateTimeFormatter();
+  const { toGermanDate, toHhMm } = useDateTimeFormatter();
 
   const wahlID = "wahl-id";
   const wahlbezirkID = "wahlbezirk-id";
@@ -382,6 +327,10 @@ describe("prepareDataForNiederschriftDruck", () => {
       inputWahl
     );
 
+    const schliessungsuhrzeitInHhMm = toHhMm(schliessungsuhrzeit).split(":");
+
+    const eroeffnungsuhrzeitInHhMm = toHhMm(eroeffnungsuhrzeit).split(":");
+
     const expectedResult: NiederschriftDruckInputUWB = {
       aktuelleWahl: inputWahl,
       wahltagFormatiert: expectedWahltagFormatiert,
@@ -402,12 +351,12 @@ describe("prepareDataForNiederschriftDruck", () => {
         },
       ],
       eroeffnungsuhrzeit: {
-        stunde: eroeffnungsuhrzeit?.getHours().toString() ?? "",
-        minute: eroeffnungsuhrzeit?.getMinutes().toString() ?? "",
+        stunde: eroeffnungsuhrzeitInHhMm[0],
+        minute: eroeffnungsuhrzeitInHhMm[1],
       },
       schliessungsuhrzeit: {
-        stunde: schliessungsuhrzeit?.getHours().toString() ?? "",
-        minute: schliessungsuhrzeit?.getMinutes().toString() ?? "",
+        stunde: schliessungsuhrzeitInHhMm[0],
+        minute: schliessungsuhrzeitInHhMm[1],
       },
       anzahlStimmzettel: inputWahl.stimmzettelumschlaege.anzahlWaehler,
       anzahlWahlscheine: mockedAnzahlStimmzettelKlein,
@@ -472,7 +421,8 @@ describe("prepareDataForNiederschriftDruck", () => {
     const mockedWaehlerverzeichnisNummer = 3;
     const eroeffnungsuhrzeit = new Date("2025-05-23T06:30:00");
     const schliessungsuhrzeit = new Date("2025-05-23T16:30:00");
-
+    useWahlenStore().stimmzettelumschlaegeState.urneneroeffnungsUhrzeitSent =
+      schliessungsuhrzeit;
     useUserStore().setUser(
       prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
@@ -642,6 +592,10 @@ describe("prepareDataForNiederschriftDruck", () => {
       inputWahl
     );
 
+    const schliessungsuhrzeitInHhMm = toHhMm(schliessungsuhrzeit).split(":");
+
+    const eroeffnungsuhrzeitInHhMm = toHhMm(eroeffnungsuhrzeit).split(":");
+
     const expectedResult: NiederschriftDruckInputBWB = {
       aktuelleWahl: inputWahl,
       wahltagFormatiert: expectedWahltagFormatiert,
@@ -662,12 +616,12 @@ describe("prepareDataForNiederschriftDruck", () => {
         },
       ],
       eroeffnungsuhrzeit: {
-        stunde: eroeffnungsuhrzeit?.getHours().toString() ?? "",
-        minute: eroeffnungsuhrzeit?.getMinutes().toString() ?? "",
+        stunde: eroeffnungsuhrzeitInHhMm[0],
+        minute: eroeffnungsuhrzeitInHhMm[1],
       },
       schliessungsuhrzeit: {
-        stunde: schliessungsuhrzeit?.getHours().toString() ?? "",
-        minute: schliessungsuhrzeit?.getMinutes().toString() ?? "",
+        stunde: schliessungsuhrzeitInHhMm[0],
+        minute: schliessungsuhrzeitInHhMm[1],
       },
       anzahlStimmzettel: inputWahl.stimmzettelumschlaege.anzahlWaehler,
       anzahlWahlscheine: mockedWahlscheine.stimmabgabevermerke,

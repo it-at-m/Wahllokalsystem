@@ -37,7 +37,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { Parteei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import { Partei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -68,6 +68,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const { currentUserWahlbezirkNummer, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
   const { wahlbezirkEreignisse } = storeToRefs(useEreignisStore());
+  const { stimmzettelumschlaegeState } = storeToRefs(useWahlenStore());
 
   const wahlvorschlaegeByWahlIDAndWahlbezirkID =
     getWahlvorschlaegeByWahlIDAndWahlbezirkID(wahlID, wahlbezirkID);
@@ -149,28 +150,29 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   }
 
   function _getEroeffnungsuhrzeit() {
+    const eroeffnungsuhrzeitInHhMm = toHhMm(
+      eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit
+    ).split(":");
     return {
-      stunde:
-        eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit
-          ?.getHours()
-          .toString() ?? "",
-      minute:
-        eroeffnungsuhrzeitState.value.eroeffnungsuhrzeit
-          ?.getMinutes()
-          .toString() ?? "",
+      stunde: eroeffnungsuhrzeitInHhMm[0] || "",
+      minute: eroeffnungsuhrzeitInHhMm[1] || "",
     };
   }
 
   function _getSchliessungsuhrzeit() {
+    let schliessungsuhrzeitInHhMm = [];
+    if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
+      schliessungsuhrzeitInHhMm = toHhMm(
+        schliessungsuhrzeitState.value.schliessungsuhrzeit
+      ).split(":");
+    } else {
+      schliessungsuhrzeitInHhMm = toHhMm(
+        stimmzettelumschlaegeState.value.urneneroeffnungsUhrzeitSent
+      ).split(":");
+    }
     return {
-      stunde:
-        schliessungsuhrzeitState.value.schliessungsuhrzeit
-          ?.getHours()
-          .toString() ?? "",
-      minute:
-        schliessungsuhrzeitState.value.schliessungsuhrzeit
-          ?.getMinutes()
-          .toString() ?? "",
+      stunde: schliessungsuhrzeitInHhMm[0] || "",
+      minute: schliessungsuhrzeitInHhMm[1] || "",
     };
   }
 
@@ -427,7 +429,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         .filter((k) => k.wahlvorschlagID === wv.identifikator)
         // @ts-expect-error old code, will be refactored later
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1));
-      let partei = new Parteei(wv.identifikator, wv.kurzname, wv.ordnungszahl);
+      let partei = new Partei(wv.identifikator, wv.kurzname, wv.ordnungszahl);
       // @ts-expect-error old code, will be refactored later
       wv.kandidaten
         .sort((a, b) => (a.listenposition > b.listenposition ? 1 : -1))

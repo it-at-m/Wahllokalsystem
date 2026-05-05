@@ -13,7 +13,7 @@ export interface NiederschriftDruckInputBWB extends NiederschriftDruckInputBase 
   beanstandeteWahlbriefe: NiederschriftBeanstandeteWahlbriefe;
 }
 
-export class Parteei {
+export class Partei {
   _tabledata: [[]];
   identifikator;
   kurzname;

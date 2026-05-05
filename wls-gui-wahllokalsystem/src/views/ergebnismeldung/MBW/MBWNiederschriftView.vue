@@ -134,11 +134,11 @@ if (!wahl) {
     name: ROUTE_NOTFOUND,
   });
 }
-/*
+
 const workflowState = computed(() =>
   getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
 );
-*/
+
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
 });
@@ -182,6 +182,9 @@ async function onDruckenClicked() {
     );
     if (statusForWahlAndWahlbezirk) {
       statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
+    }
+    if (workflowState.value) {
+      workflowState.value.isNiederschriftDone = true;
     }
     await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
   } catch {

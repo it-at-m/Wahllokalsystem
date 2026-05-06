@@ -91,11 +91,12 @@ onMounted(async () => {
     await syncPin();
     await wahlenActions.initWahlen();
     await initTasks();
-    startBroadcastMessageInterval();
 
     showTestdruckDialog.value = true;
   } catch (error) {
     console.debug(error);
+  } finally {
+    startBroadcastMessageInterval();
   }
 });
 

@@ -4,15 +4,15 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
 
-import TheMBWGueltigeStimmenAnzeigenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenTable.vue";
+import TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmenAnzeigenSchnellmeldungTable.vue";
 
 const { prepareErgebnis } = useErgebnisseTestDataFactory();
 const { prepareWahlvorschlag } = useWahlvorschlaegeTestDataFactory();
 
 const meta = {
-  component: TheMBWGueltigeStimmenAnzeigenTable,
+  component: TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable,
   args: {},
-} satisfies Meta<typeof TheMBWGueltigeStimmenAnzeigenTable>;
+} satisfies Meta<typeof TheMbwGueltigeStimmenAnzeigenSchnellmeldungTable>;
 
 export default meta;
 

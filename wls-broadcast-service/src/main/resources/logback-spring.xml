@@ -20,7 +20,7 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem"
+        <logger name="de.muenchen.oss.wahllokalsystem.broadcastservice"
                 level="debug"
                 additivity="false">
             <appender-ref ref="STDOUT" />
@@ -79,12 +79,15 @@
                             }
                         </pattern>
                     </pattern>
+                    <stackTrace>
+                        <fieldName>stacktrace</fieldName>
+                    </stackTrace>
                 </providers>
             </encoder>
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.oss.wahllokalsystem"
+        <logger name="de.muenchen.oss.wahllokalsystem.broadcastservice"
                 level="info"
                 additivity="false">
             <appender-ref ref="JSON_STDOUT" />

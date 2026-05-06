@@ -33,7 +33,12 @@
           >
             <strong>Verbindungsstatus</strong>
             <v-spacer />
-            <offline-syncer />
+            <offline-syncer-dialog
+              :is-dialog-visible="isOfflineSyncDialogVisible"
+              @sync-error="isOfflineSyncDialogVisible = false"
+              @sync-success="isOfflineSyncDialogVisible = false"
+            />
+            <offline-syncer-button @click="isOfflineSyncDialogVisible = true" />
           </v-row>
         </v-list-item>
         <v-divider
@@ -48,10 +53,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
+import OfflineSyncerButton from "@/components/wlsComponents/OfflineSyncerButton.vue";
+import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useInterval } from "@/composables/scheduler/interval.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
@@ -67,6 +73,8 @@ useInterval(
 
 const onlineOfflineStore = useOnlineOfflineStore();
 const { isCheckingStatus, isOnline } = storeToRefs(onlineOfflineStore);
+
+const isOfflineSyncDialogVisible = ref(false);
 
 const activatorButtonColor = computed(() =>
   isOnline.value ? "white" : "error"

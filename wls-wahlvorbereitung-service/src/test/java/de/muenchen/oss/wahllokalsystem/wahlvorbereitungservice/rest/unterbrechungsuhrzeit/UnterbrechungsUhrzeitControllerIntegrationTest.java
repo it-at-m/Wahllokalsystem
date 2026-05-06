@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.rest.unterbrechungsuhrzeit;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,7 +16,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.service.unterbrec
 import de.muenchen.oss.wahllokalsystem.wahlvorbereitungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -30,16 +30,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SpringBootTest(
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE, Profiles.NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
   @Autowired MockMvc mockMvc;
@@ -61,24 +62,19 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
   @Nested
   class GetUnterbrechungsUhrzeit {
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT
-        })
     void should_returnData_when_dataIsPresentInRepo() throws Exception {
       val wahlbezirkIDToFind = "123";
       val unterbrechungsUhrzeitToFind = new UnterbrechungsUhrzeit();
       unterbrechungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDToFind);
       unterbrechungsUhrzeitToFind.setUnterbrechungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT);
       unterbrechungsUhrzeitRepository.save(unterbrechungsUhrzeitToFind);
       val expectedResponseBody =
           unterbrechungsUhrzeitDTOMapper.toDTO(
               unterbrechungsUhrzeitModelMapper.toModel(unterbrechungsUhrzeitToFind));
 
-      val request = get("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkIDToFind);
+      val request = buildGetRequest(wahlbezirkIDToFind, wahlbezirkIDToFind);
 
       val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
       val responseBodyAsDTO =
@@ -89,12 +85,6 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT
-        })
     void should_returnNoContent_when_noDataFound() throws Exception {
       val wahlbezirkIDEmpty = "123";
 
@@ -103,29 +93,45 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
       unterbrechungsUhrzeitToFind.setWahlbezirkID(wahlbezirkIDNotEmpty);
       unterbrechungsUhrzeitToFind.setUnterbrechungsUhrzeit(
           LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT);
       unterbrechungsUhrzeitRepository.save(unterbrechungsUhrzeitToFind);
 
-      val request = get("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkIDEmpty);
+      val request = buildGetRequest(wahlbezirkIDEmpty, wahlbezirkIDEmpty);
 
       val response = mockMvc.perform(request).andExpect(status().isNoContent()).andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).isEmpty();
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = "123";
+
+      val request = buildGetRequest(wahlbezirkID, wahlbezirkID + "sth");
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder buildGetRequest(
+        final String wahlbezirkID, final String claimWahlbezirkID) {
+      return get("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 
   @Nested
   class PostUnterbrechungsUhrzeit {
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT
-        })
     void should_setNewData_when_callingPost() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto =
           new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-      val request = buildPostRequest(wahlbezirkID, writeDto);
+      val request = buildPostRequest(wahlbezirkID, wahlbezirkID, writeDto);
 
       mockMvc.perform(request).andExpect(status().isCreated());
 
@@ -140,15 +146,10 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT
-        })
     void should_replaceData_when_dataIsPresent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto1 = new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
-      val request1 = buildPostRequest(wahlbezirkID, writeDto1);
+      val request1 = buildPostRequest(wahlbezirkID, wahlbezirkID, writeDto1);
 
       mockMvc.perform(request1).andExpect(status().isCreated());
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_UNTERBRECHUNGSUHRZEIT);
@@ -163,7 +164,7 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
 
       val writeDto2 =
           new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
-      val request2 = buildPostRequest(wahlbezirkID, writeDto2);
+      val request2 = buildPostRequest(wahlbezirkID, wahlbezirkID, writeDto2);
 
       mockMvc.perform(request2).andExpect(status().isCreated());
 
@@ -179,15 +180,10 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT
-        })
     void should_returnFachlicheWlsException_when_requestIsInvalid() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val writeDto = new UnterbrechungsUhrzeitWriteDTO(null);
-      val request = buildPostRequest(wahlbezirkID, writeDto);
+      val request = buildPostRequest(wahlbezirkID, wahlbezirkID, writeDto);
 
       val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
       val exceptionBodyFromResponse =
@@ -210,17 +206,12 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT,
-          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT
-        })
     void should_returnTechnischeWlsException_when_notSaveableCauseOfTooLongData() throws Exception {
       val wahlbezirkID = StringUtils.leftPad(" ", 255) + "wahlbezirkID";
       val writeDto =
           new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
 
-      val request = buildPostRequest(wahlbezirkID, writeDto);
+      val request = buildPostRequest(wahlbezirkID, wahlbezirkID, writeDto);
 
       val response =
           mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
@@ -243,10 +234,28 @@ public class UnterbrechungsUhrzeitControllerIntegrationTest {
           .isEqualTo(expectedExceptionDTO);
     }
 
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = "123";
+      val writeDto =
+          new UnterbrechungsUhrzeitWriteDTO(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+      val request = buildPostRequest(wahlbezirkID, wahlbezirkID + "sth", writeDto);
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
     private RequestBuilder buildPostRequest(
-        final String wahlbezirkID, final UnterbrechungsUhrzeitWriteDTO requestBody)
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final UnterbrechungsUhrzeitWriteDTO requestBody)
         throws Exception {
       return post("/businessActions/unterbrechungsUhrzeit/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_UNTERBRECHUNGSUHRZEIT),
+                      new SimpleGrantedAuthority(
+                          Authorities.REPOSITORY_WRITE_UNTERBRECHUNGSUHRZEIT))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
           .with(csrf())
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(requestBody));

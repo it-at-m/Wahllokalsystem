@@ -3,6 +3,7 @@
     <option name="ACTIVE_PROFILES" value="local,standalone,db-oracle" />
     <module name="wls-ergebnismeldung-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication" />
+    <option name="VM_PARAMETERS" value="-Djava.rmi.server.hostname=localhost" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

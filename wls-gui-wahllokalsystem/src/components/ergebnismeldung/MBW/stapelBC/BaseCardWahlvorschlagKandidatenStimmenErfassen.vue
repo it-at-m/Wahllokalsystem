@@ -10,8 +10,8 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <base-button-save
-        :disabled="!isFormValid"
+      <base-wls-button-save
+        :disabled="isWahlFinished || !isFormValid"
         :loading="isSaving"
         @click="onSaveButtonClicked"
       />
@@ -25,7 +25,7 @@ import type { PropType } from "vue";
 
 import { ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTableWahlvorschlagKandidatenStimmenErfassen from "@/components/ergebnismeldung/MBW/stapelBC/BaseTableWahlvorschlagKandidatenStimmenErfassen.vue";
 
 const wahlvorschlagModel = defineModel("modelValue", {
@@ -35,6 +35,10 @@ const wahlvorschlagModel = defineModel("modelValue", {
 
 defineProps({
   isSaving: {
+    type: Boolean,
+    required: true,
+  },
+  isWahlFinished: {
     type: Boolean,
     required: true,
   },

@@ -1,2 +1,7 @@
 server:
   port: 8208
+
+management:
+  endpoints:
+    access:
+      default: read_only # Required for local debugging via JMX+RMI, additionally might have to set -Djava.rmi.server.hostname=localhost as JVM arguments

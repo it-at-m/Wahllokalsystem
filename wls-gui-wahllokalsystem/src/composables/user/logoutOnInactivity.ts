@@ -6,6 +6,8 @@ import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTime
 import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 
+const TIMEOUT_TITLE = "Inaktivität";
+
 export function useLogoutOnInactivity() {
   const { logDebug } = useLogging("LogoutOnInactivity");
 
@@ -22,25 +24,20 @@ export function useLogoutOnInactivity() {
     useInfomanagementStore()
   );
 
-  const dateToCheckIfUserIsInactive = ref(_getDateForNextCheck());
-
-  const { setupTimer } = useDateOfActionTimeout(
-    "Inaktivität",
-    dateToCheckIfUserIsInactive,
-    async () => await _checkIfUserIsActiveAndAct()
-  );
-  setupTimer();
-
   let dateOfLastActivityByUser = new Date();
+  const dateNextCheckIfUserIsInactive = ref(_getDateForNextCheck());
+
+  useDateOfActionTimeout(
+    TIMEOUT_TITLE,
+    dateNextCheckIfUserIsInactive,
+    async () => await _checkIfUserIsActiveAndAct()
+  ).setupTimer();
 
   async function _checkIfUserIsActiveAndAct() {
     logDebug("Check ifUserIsActiveAndAct");
-    if (
-      new Date().getTime() - delayBeforeInactiveLogoutInMilliseconds.value >
-      dateOfLastActivityByUser.getTime()
-    ) {
+    if (_isUserInactive()) {
       logDebug("user was inactive");
-      await _logout();
+      await logout();
     } else {
       logDebug("user was active");
       _resetInactivityCheck();
@@ -54,8 +51,11 @@ export function useLogoutOnInactivity() {
     );
   }
 
-  async function _logout() {
-    await logout();
+  function _isUserInactive(): boolean {
+    return (
+      new Date().getTime() - delayBeforeInactiveLogoutInMilliseconds.value >
+      dateOfLastActivityByUser.getTime()
+    );
   }
 
   function _registerUserActivity() {
@@ -63,6 +63,6 @@ export function useLogoutOnInactivity() {
   }
 
   function _resetInactivityCheck() {
-    dateToCheckIfUserIsInactive.value = _getDateForNextCheck();
+    dateNextCheckIfUserIsInactive.value = _getDateForNextCheck();
   }
 }

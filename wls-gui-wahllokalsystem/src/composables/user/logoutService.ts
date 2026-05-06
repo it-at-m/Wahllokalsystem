@@ -42,7 +42,7 @@ export function useLogoutService() {
 
   async function logout(
     wahlbezirkID: string,
-    navigationTargetAfterSuccessfulLogout: RouteLocationRaw
+    routingTargetAfterSuccessfulLogout: RouteLocationRaw
   ) {
     try {
       const logoutUrl = (
@@ -81,7 +81,7 @@ export function useLogoutService() {
       stopAll();
       isUserLoggedIn.value = false;
 
-      await router.push(navigationTargetAfterSuccessfulLogout);
+      await router.push(routingTargetAfterSuccessfulLogout);
     } catch (error) {
       logError(`fehler bei logout`, error);
       addNotification(

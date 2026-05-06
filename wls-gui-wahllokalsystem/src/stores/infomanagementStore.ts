@@ -171,9 +171,9 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   return {
     konfigurationsparameter,
+    delayBeforeInactiveLogoutInMilliseconds,
     dateTimeToCheckAnwesenheit,
     dateTimeToCheckWahlschluss,
-    delayBeforeInactiveLogoutInMilliseconds,
     initKonfigurationsparameter,
     /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
     fruehesteEroeffnungsuhrzeit,

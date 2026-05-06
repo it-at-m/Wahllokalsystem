@@ -90,8 +90,8 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    startBroadcastMessageInterval();
     await initTasks();
+    startBroadcastMessageInterval();
 
     showTestdruckDialog.value = true;
   } catch (error) {

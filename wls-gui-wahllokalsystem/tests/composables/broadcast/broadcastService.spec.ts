@@ -97,6 +97,22 @@ describe("BroadcastService.ts", () => {
         UserNotificationCategoryEnum.ERROR,
       ]);
     });
+
+    it("shouldnotTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      mockDefinitions.getMessage.mockRejectedValue(
+        new Error("api called failed")
+      );
+
+      const result = await getMessage(wahlbezirkID, false);
+
+      expect(result).toBeNull();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
+    });
   });
 
   describe("deleteMessage", () => {

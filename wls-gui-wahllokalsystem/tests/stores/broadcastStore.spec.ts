@@ -50,6 +50,28 @@ describe("broadcastStore.ts", () => {
         mockedBroadcastMessage
       );
     });
+
+    it("should_setStateWithoutNotification_when_messageWasReceivedAndParameterIsSet", async () => {
+      const userStore = useUserStore();
+      userStore.setUser(prepareUser().wahlbezirkID("wahlbezirkID").build());
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+
+      const mockedBroadcastMessage = createBroadcastMessage();
+
+      mockDefinitions.getMessage.mockResolvedValue(
+        Promise.resolve(mockedBroadcastMessage)
+      );
+
+      await unitUnderTest.loadLatestMessage(false);
+
+      expect(unitUnderTest.currentBroadcastNachricht).toStrictEqual(
+        mockedBroadcastMessage
+      );
+      expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
+        [wahlbezirkID, false],
+      ]);
+    });
   });
 
   describe("markMessageAsReadAndLoadNextMessage", () => {
@@ -73,7 +95,7 @@ describe("broadcastStore.ts", () => {
         [broadcastMessageToDelete.id],
       ]);
       expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
-        [wahlbezirkID],
+        [wahlbezirkID, true],
       ]);
     });
 
@@ -101,7 +123,7 @@ describe("broadcastStore.ts", () => {
       await unitUnderTest.markMessageAsReadAndLoadNextMessage();
 
       expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
-        [wahlbezirkID],
+        [wahlbezirkID, true],
       ]);
     });
   });

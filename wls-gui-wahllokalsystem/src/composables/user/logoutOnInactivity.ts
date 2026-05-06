@@ -53,7 +53,7 @@ export function useLogoutOnInactivity() {
 
   function _isUserInactive(): boolean {
     return (
-      new Date().getTime() - delayBeforeInactiveLogoutInMilliseconds.value >
+      new Date().getTime() - delayBeforeInactiveLogoutInMilliseconds.value >=
       dateOfLastActivityByUser.getTime()
     );
   }

@@ -49,7 +49,8 @@ export function useLogoutOnInactivity() {
 
   function _getDateForNextCheck() {
     return new Date(
-      new Date().getTime() + delayBeforeInactiveLogoutInMilliseconds.value
+      dateOfLastActivityByUser.getTime() +
+        delayBeforeInactiveLogoutInMilliseconds.value
     );
   }
 

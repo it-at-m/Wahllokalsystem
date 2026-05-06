@@ -109,7 +109,7 @@ vi.mock("@/stores/ergebnismeldungStore.ts", () => ({
   }),
 }));
 
-describe("prepareDataForNiederschriftDruck", () => {
+describe("mbwUtilsNiederschrift.ts", () => {
   const { prepareWahl } = useWahlTestDataFactory();
   const { prepareUser } = useUserTestDataFactory();
   const { prepareWahlvorschlag } = useWahlvorschlaegeTestDataFactory();

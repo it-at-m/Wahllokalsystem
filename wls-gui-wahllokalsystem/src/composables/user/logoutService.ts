@@ -6,14 +6,17 @@ import {
 } from "@/api/wls-clients/generated-auth-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { AUTH_SERVICE_API_URL, ROUTE_LOGOUT } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { axiosConfigWrapper } = useCommonApiUtils();
 
 const { logDebug, logError } = useLogging("logoutService");
+const { addNotification } = useUserNotificationService();
 
 export function useLogoutService() {
   const { isUserLoggedIn } = storeToRefs(useUserStore());
@@ -59,8 +62,10 @@ export function useLogoutService() {
 
       await router.push(ROUTE_LOGOUT);
     } catch (error) {
-      logError(`fehler bei logout`, error);
-      throw error;
+      addNotification(
+        "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+        UserNotificationCategoryEnum.ERROR
+      );
     }
   }
 

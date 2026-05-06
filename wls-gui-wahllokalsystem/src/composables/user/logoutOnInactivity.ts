@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
+import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
@@ -40,7 +41,7 @@ export function useLogoutOnInactivity() {
     logDebug("Check ifUserIsActiveAndAct");
     if (_isUserInactive()) {
       logDebug("user was inactive");
-      await logout(currentUserWahlbezirkID.value);
+      await logout(currentUserWahlbezirkID.value, createLogoutRoute(true));
     } else {
       logDebug("user was active");
       _resetInactivityCheck();

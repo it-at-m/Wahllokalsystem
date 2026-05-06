@@ -1,3 +1,5 @@
+import type { RouteLocationRaw } from "vue-router";
+
 import { storeToRefs } from "pinia";
 
 import {
@@ -11,7 +13,6 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import {
   AUTH_SERVICE_API_URL,
   MONITORING_SERVICE_API_URL,
-  ROUTE_LOGOUT,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
@@ -39,7 +40,10 @@ export function useLogoutService() {
     })
   );
 
-  async function logout(wahlbezirkID: string) {
+  async function logout(
+    wahlbezirkID: string,
+    navigationTargetAfterSuccessfulLogout: RouteLocationRaw
+  ) {
     try {
       const logoutUrl = (
         await authServerControllerApi.getLogoutUrl(
@@ -77,7 +81,7 @@ export function useLogoutService() {
       stopAll();
       isUserLoggedIn.value = false;
 
-      await router.push(ROUTE_LOGOUT);
+      await router.push(navigationTargetAfterSuccessfulLogout);
     } catch (error) {
       logError(`fehler bei logout`, error);
       addNotification(

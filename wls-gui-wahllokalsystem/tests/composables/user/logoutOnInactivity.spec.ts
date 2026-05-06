@@ -14,6 +14,7 @@ import {
 } from "vitest";
 
 import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
+import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
@@ -33,6 +34,7 @@ const { generateRandomString } = useCommonTestDataFactory();
 const mockedNow = new Date();
 const INACTIVE_TIMEOUT_MS = 1000;
 const WAHLBEZIRKID = generateRandomString(10);
+const expectedPostLogoutRoute = createLogoutRoute(true);
 
 describe("logoutOnInactivity.ts", () => {
   let testPinia: ReturnType<typeof createTestingPinia>;
@@ -69,7 +71,10 @@ describe("logoutOnInactivity.ts", () => {
       vi.advanceTimersByTime(INACTIVE_TIMEOUT_MS);
       await flushPromises();
 
-      expect(mockDefinitions.logout).toHaveBeenCalledWith(WAHLBEZIRKID);
+      expect(mockDefinitions.logout).toHaveBeenCalledWith(
+        WAHLBEZIRKID,
+        expectedPostLogoutRoute
+      );
     });
 
     it("should_notCallLogout_when_userWasActive", async () => {
@@ -114,7 +119,10 @@ describe("logoutOnInactivity.ts", () => {
 
         vi.advanceTimersByTime(INACTIVE_TIMEOUT_MS - timerWhenUserDidSth);
         await flushPromises();
-        expect(mockDefinitions.logout).toHaveBeenCalledWith(WAHLBEZIRKID);
+        expect(mockDefinitions.logout).toHaveBeenCalledWith(
+          WAHLBEZIRKID,
+          expectedPostLogoutRoute
+        );
       }
     );
   });

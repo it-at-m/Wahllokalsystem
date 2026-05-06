@@ -99,6 +99,7 @@ import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOffl
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
+import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
@@ -136,7 +137,7 @@ function onLogoutClicked() {
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
-  await logout(currentUserWahlbezirkID.value);
+  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
 }
 
 function onSyncError() {

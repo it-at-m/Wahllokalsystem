@@ -335,3 +335,10 @@ Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlni
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+
+#### Weitere nicht Use-Case-spezifische Anforderungen
+
+##### Abmeldung bei Timeout
+
+Vollzieht der Benutzer über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
+dafür kann [konfiguriert werden](../services/backend-services/infomanagement-service/#konfigurationen).

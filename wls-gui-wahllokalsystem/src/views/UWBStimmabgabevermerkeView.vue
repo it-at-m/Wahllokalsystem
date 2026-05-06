@@ -7,7 +7,7 @@
         <the-u-w-b-stimmabgabevermerke-darstellung-summe-card />
       </v-form>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="!stimmabgabevermerkeModel"
           :loading="isStimmabgabevermerkeSaving"
           :save-text="SAVE_CONTINUE"
@@ -60,7 +60,7 @@ import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/Differ
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import TheUWBStimmabgabevermerkeDarstellungSummeCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeDarstellungSummeCard.vue";
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard.vue";

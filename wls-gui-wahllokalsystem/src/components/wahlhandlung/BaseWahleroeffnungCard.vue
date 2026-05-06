@@ -19,7 +19,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
           :save-text="SAVE_CONTINUE"
@@ -69,7 +69,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

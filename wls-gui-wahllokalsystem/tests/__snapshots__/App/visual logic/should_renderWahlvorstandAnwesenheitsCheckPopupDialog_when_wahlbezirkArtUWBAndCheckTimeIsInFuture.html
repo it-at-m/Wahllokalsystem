@@ -6,6 +6,37 @@
         <transition-stub name="fade-transition" mode="out-in" appear="false" persisted="false" css="true">
           <!-- Keep alive is fundamental for our app, to work correctly - see doc for frontend architecture -->
           <div class="v-container v-locale--is-ltr" style="max-width: 800px;">
+            <div class="v-card v-theme--light v-card--density-default v-card--variant-elevated border-lg border-warning">
+              <!---->
+              <div class="v-card__loader">
+                <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+                  <!---->
+                  <div class="v-progress-linear__background bg-primary"></div>
+                  <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
+                  <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                    <div class="v-progress-linear__indeterminate">
+                      <div class="v-progress-linear__indeterminate long bg-primary"></div>
+                      <div class="v-progress-linear__indeterminate short bg-primary"></div>
+                    </div>
+                  </transition-stub>
+                  <!---->
+                </div>
+              </div>
+              <!---->
+              <!---->
+              <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2 bg-warning font-weight-bold" style="font-size: 1rem;">Service-Worker deaktiviert</div>
+              <div class="v-card-text">
+                <div class="d-flex align-center"><i class="v-icon notranslate v-theme--light v-icon--size-x-large text-warning mr-5" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                      <path d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"></path>
+                    </svg></i>
+                  <div> Sie können aktuell nicht Offline arbeiten. Bitte kontaktieren Sie das Wahlamt. </div>
+                </div>
+                <!--v-if-->
+              </div>
+              <!--v-if-->
+              <!---->
+              <!----><span class="v-card__underlay"></span>
+            </div>
             <div class="v-container v-locale--is-ltr">
               <h1>Offline-Daten wurden heruntergeladen.</h1>
               <p class="my-4"> Herunterladen der Daten abgeschlossen (0 / 0) </p>

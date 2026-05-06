@@ -83,7 +83,7 @@
         </base-feedback-card>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="isSaveButtonDisabled"
           :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
           :save-text="SAVE_CONTINUE"
@@ -98,7 +98,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";

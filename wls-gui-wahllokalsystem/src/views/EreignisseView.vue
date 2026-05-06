@@ -17,7 +17,7 @@
         @click="onAddEreignisClicked()"
         >Ereignis hinzufügen</base-text-button
       >
-      <base-button-save
+      <base-wls-button-save
         :active="false"
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
@@ -35,8 +35,8 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";

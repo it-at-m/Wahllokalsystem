@@ -29,14 +29,14 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@vueuse/core": "14.2.1",
+    "@vueuse/core": "14.3.0",
     "jsbarcode": "3.12.3",
     "localforage": "1.10.0",
     "pinia": "3.0.4",
     "@fontsource/roboto": "5.2.10",
     "vue": "3.5.30",
     "vue-router": "4.6.4",
-    "vue3-toastify": "0.2.8",
+    "vue3-toastify": "0.2.9",
     "vuetify": "3.11.9"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "@vitejs/plugin-vue": "5.2.4",
     "@vue/eslint-config-prettier": "10.2.0",
     "@vue/eslint-config-typescript": "14.6.0",
-    "@vue/test-utils": "2.4.6",
+    "@vue/test-utils": "2.4.10",
     "@vue/tsconfig": "0.8.1",
     "axios": "1.15.2",
     "eslint": "9.39.4",

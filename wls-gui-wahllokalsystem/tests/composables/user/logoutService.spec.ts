@@ -25,6 +25,7 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
   isUserLoggedIn: undefined as Ref<boolean> | undefined,
   routerPush: vi.fn(),
+  addNotification: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-auth-api", async (importOriginal) => {
@@ -51,6 +52,12 @@ vi.mock(
     };
   }
 );
+
+vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
+  useUserNotificationService: () => ({
+    addNotification: mockDefinitions.addNotification,
+  }),
+}));
 
 vi.mock("@/stores/userStore.ts", () => ({
   useUserStore: () => ({
@@ -119,16 +126,19 @@ describe("logoutService.ts", () => {
       expect(router.push).toHaveBeenCalledWith(ROUTE_LOGOUT);
     });
 
-    it("should_throwError_when_gettingLogoutUrlFailed", async () => {
+    it("should_addErrorNotification_when_gettingLogoutUrlFailed", async () => {
       const mockedGetLogoutUrlError = new Error("mocked get logout url failed");
       mockDefinitions.getLogoutUrl.mockRejectedValue(mockedGetLogoutUrlError);
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow(
-        mockedGetLogoutUrlError
-      );
+      await unitUnderTest.logout(WAHLBEZIRK_ID);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
-    it("should_throwError_when_logoutOnAuthServiceFailed", async () => {
+    it("should_addErrorNotification_when_logoutOnAuthServiceFailed", async () => {
       const mockedLogoutUrlResponse = createResolvedUrlDTO();
       mockDefinitions.getLogoutUrl.mockResolvedValue(
         createAxiosResponse({
@@ -148,10 +158,15 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
-    it("should_throwError_when_logoutOnGatewayFailed", async () => {
+    it("should_addErrorNotification_when_logoutOnGatewayFailed", async () => {
       const mockedLogoutUrlResponse = createResolvedUrlDTO();
       mockDefinitions.getLogoutUrl.mockResolvedValue(
         createAxiosResponse({
@@ -171,7 +186,12 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
     it("should_notPostLetzteAbmeldung_when_getLogoutUrlFailed", async () => {
@@ -179,7 +199,7 @@ describe("logoutService.ts", () => {
         Promise.reject(new Error("no logout url"))
       );
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID);
       expect(mockDefinitions.postLetzteAbmeldung).not.toHaveBeenCalled();
     });
   });

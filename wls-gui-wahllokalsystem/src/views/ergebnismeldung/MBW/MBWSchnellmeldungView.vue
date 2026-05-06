@@ -53,8 +53,9 @@
 
 <script setup lang="ts">
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
-import { computed, ref } from "vue";
+import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
@@ -99,7 +100,8 @@ const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
-const isSendenActive = ref<boolean>(true);
+
+const status = ref<Status | null>(null);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
@@ -114,6 +116,16 @@ if (!wahl) {
 const workflowState = computed(() =>
   getElectionWorkflowState(wahlID, wahlbezirkID)
 );
+
+const isSendenActive = computed(
+  () =>
+    !workflowState.value?.isSchnellmeldungDone &&
+    !status.value?.schnellmeldung.gedruckt
+);
+
+onActivated(async () => {
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
+});
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;
@@ -156,7 +168,6 @@ async function onDruckenClicked() {
           buildSchnellmeldungTemplateFromData(data);
         printWindow.print();
         printWindow.close();
-        isSendenActive.value = false;
 
         await updateStatusAfterSchnellmeldungDrucken();
 

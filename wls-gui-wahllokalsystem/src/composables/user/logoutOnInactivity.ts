@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { onUnmounted, ref } from "vue";
+import { ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
 import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
@@ -8,20 +8,19 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const TIMEOUT_TITLE = "Inaktivität";
-const INACTIVITY_BREAKING_EVENTS = [
-  "load",
-  "mousemove",
-  "mousedown",
-  "touchstart",
-  "click",
-  "keypress",
-  "scroll",
-];
 
 export function useLogoutOnInactivity() {
   const { logDebug } = useLogging("LogoutOnInactivity");
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
+
+  window.addEventListener("load", _registerUserActivity);
+  window.addEventListener("mousemove", _registerUserActivity);
+  window.addEventListener("mousedown", _registerUserActivity);
+  window.addEventListener("touchstart", _registerUserActivity);
+  window.addEventListener("click", _registerUserActivity);
+  window.addEventListener("keypress", _registerUserActivity);
+  window.addEventListener("scroll", _registerUserActivity);
 
   const { logout } = useLogoutService();
   const { delayBeforeInactiveLogoutInMilliseconds } = storeToRefs(
@@ -30,21 +29,12 @@ export function useLogoutOnInactivity() {
 
   let dateOfLastActivityByUser = new Date();
   const dateNextCheckIfUserIsInactive = ref(_getDateForNextCheck());
-  INACTIVITY_BREAKING_EVENTS.forEach((event) => {
-    window.addEventListener(event, _registerUserActivity);
-  });
 
   useDateOfActionTimeout(
     TIMEOUT_TITLE,
     dateNextCheckIfUserIsInactive,
     async () => await _checkIfUserIsActiveAndAct()
   ).setupTimer();
-
-  onUnmounted(() => {
-    INACTIVITY_BREAKING_EVENTS.forEach((event) => {
-      window.removeEventListener(event, _registerUserActivity);
-    });
-  });
 
   async function _checkIfUserIsActiveAndAct() {
     logDebug("Check ifUserIsActiveAndAct");

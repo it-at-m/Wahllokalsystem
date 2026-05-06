@@ -340,5 +340,5 @@ Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet 
 
 ##### Abmeldung bei Timeout
 
-Vollzieht der Benutzer über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
+Vollzieht der/die Benutzer\*In über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
 dafür kann [konfiguriert werden](../services/backend-services/infomanagement-service/#konfigurationen).

@@ -23,7 +23,8 @@ vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
 const { createKonfigurationsparameterList, prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 
 describe("infomanagementStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useInfomanagementStore>;
@@ -69,6 +70,64 @@ describe("infomanagementStore.ts", () => {
         unitUnderTest.initKonfigurationsparameter()
       ).rejects.toThrowError();
       expect(unitUnderTest.konfigurationsparameter).toStrictEqual(null);
+    });
+  });
+
+  describe("delayBeforeInactiveLogoutInMilliseconds", () => {
+    const expectedDefaultValue = 7200000;
+    const configKey = "WLK_TIME_OUT";
+
+    it("should_returnConfigValueAsNumber_when_theStringIsAValidNumber", async () => {
+      const configValue = generateRandomNumber(4);
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`${configValue}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(configValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsMissing", async () => {
+      unitUnderTest.konfigurationsparameter = [];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsEmptyString", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter().schluessel(configKey).wert("").build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsNotAValidNumber", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`${generateRandomString(4)}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
     });
   });
 

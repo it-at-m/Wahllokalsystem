@@ -184,6 +184,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       expect(mockDefinitions.resetAllAnwesenheiten).not.toHaveBeenCalled();
     });
 
+    //Schlägt in der Pipeline fehl - #2698
     it.skip("should_resetAllAnwesenheiten_when_saveIsCompletedInBWB", async () => {
       const userStore = useUserStore();
       userStore.setUser(

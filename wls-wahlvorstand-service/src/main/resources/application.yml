@@ -1,5 +1,8 @@
 spring:
-  application.name: @project.artifactId@
+  application:
+    name: "@project.artifactId@"
+    group: "@project.groupId@"
+    version: "@project.version@"
   banner.location: banner.txt
   profiles:
     group:
@@ -45,12 +48,13 @@ server:
 management:
   server.port: ${server.port}
   endpoints:
-    enabled-by-default: false
     web:
       exposure:
         include: health, info, prometheus, livenessstate, readinessstate
       path-mapping:
         prometheus: metrics
+    access:
+      default: none
   endpoint:
     health.enabled: true
     info.enabled: true

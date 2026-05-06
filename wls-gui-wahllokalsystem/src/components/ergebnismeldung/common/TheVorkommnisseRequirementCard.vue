@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
-import { ROUTE_EREIGNISSE } from "@/constants.ts";
+import { CONTINUE_QUERY_PARAM, ROUTE_EREIGNISSE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
@@ -34,6 +34,9 @@ defineProps<{
 }>();
 
 function onNavigationClicked() {
-  router.push({ name: ROUTE_EREIGNISSE });
+  router.push({
+    name: ROUTE_EREIGNISSE,
+    query: { [CONTINUE_QUERY_PARAM]: "1" },
+  });
 }
 </script>

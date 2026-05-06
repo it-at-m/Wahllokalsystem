@@ -6,17 +6,22 @@ on:
       pom-dir:
         required: true
         type: string
+      javaVersion:
+        required: true
+        type: string
 
 jobs:
   checkout-and-verify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
-          java-version: '17'
+          java-version: '${{ inputs.javaVersion }}'
           distribution: 'temurin'
           cache: 'maven'
           cache-dependency-path: '${{ inputs.pom-dir }}/pom.xml'

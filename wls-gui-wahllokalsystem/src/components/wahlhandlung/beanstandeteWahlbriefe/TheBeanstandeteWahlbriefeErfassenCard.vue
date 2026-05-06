@@ -15,10 +15,10 @@
       >
         Neuen Beschluss erfassen
       </base-text-button>
-      <base-button-save
+      <base-wls-button-save
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
-        save-text="Speichern und Weiter"
+        :save-text="SAVE_CONTINUE"
         @click="onSaveClicked"
       />
     </v-card-actions>
@@ -28,10 +28,11 @@
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 

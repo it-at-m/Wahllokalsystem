@@ -31,6 +31,7 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
       global: {
         plugins: [
           createTestingPinia({
+            stubActions: false,
             createSpy: vi.fn,
           }),
           vuetify,
@@ -110,9 +111,13 @@ describe("TheEreignisseNoEventsCheckboxes.vue", () => {
       });
 
       it("should_renderKeineVorkommnisseEnabled_when_noVorkommnisseAreGivenInStoreAndSchliessunguhrzeitIsSetForUWB", async (context) => {
+        const schliessungsuhrzeit = new Date();
         useEreignisStore().wahlbezirkEreignisse.ereigniseintraege = [];
         useWahlbezirkStore().schliessungsuhrzeitState.schliessungsuhrzeitSent =
-          new Date();
+          schliessungsuhrzeit;
+        await useEreignisStore().onSchliessungsuhrzeitSentChanged(
+          schliessungsuhrzeit
+        );
 
         await nextTick();
 

@@ -2,19 +2,38 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
 import {
+  COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import {
+  CONTINUE_QUERY_PARAM,
+  ROUTE_EREIGNISSE,
+  ROUTES_HOME,
+  SAVE_CONTINUE,
+} from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import EreignisseView from "@/views/EreignisseView.vue";
+import HomeView from "@/views/HomeView.vue";
+
+const mockDefinitions = vi.hoisted(() => ({
+  getNextRoute: vi.fn(),
+}));
+
+vi.mock("@/composables/navigation/navigationUtils.ts", () => ({
+  useNavigationUtils: () => ({
+    getNextRoute: mockDefinitions.getNextRoute,
+  }),
+}));
 
 describe("TheEreignisseView", () => {
   let wrapper: VueWrapper<InstanceType<typeof EreignisseView>>;
@@ -26,6 +45,25 @@ describe("TheEreignisseView", () => {
   }));
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
+  const routes = [
+    {
+      path: "/",
+      name: ROUTES_HOME,
+      component: HomeView,
+      meta: {},
+    },
+    {
+      path: "/ereignisse",
+      name: ROUTE_EREIGNISSE,
+      component: EreignisseView,
+    },
+  ];
+
+  const router = createRouter({
+    history: createWebHistory(),
+    routes,
+  });
+
   beforeEach(() => {
     wrapper = mount(EreignisseView, {
       global: {
@@ -34,6 +72,7 @@ describe("TheEreignisseView", () => {
             createSpy: vi.fn,
           }),
           vuetify,
+          router,
         ],
       },
     });
@@ -54,7 +93,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
@@ -79,7 +118,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
     });
 
@@ -100,7 +139,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
@@ -121,7 +160,7 @@ describe("TheEreignisseView", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
 
@@ -132,10 +171,37 @@ describe("TheEreignisseView", () => {
       await nextTick();
       await flushPromises();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await expect(saveButton.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
+    });
+  });
+
+  describe(COMPONENT_EVENT_TESTS, () => {
+    it("should_navigateToNextRoute_when_parameterIsSet", async () => {
+      await router.push("/ereignisse?" + CONTINUE_QUERY_PARAM + "=1");
+      await nextTick();
+
+      const ereignisStore = useEreignisStore();
+
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.isEreignisFlagsAndEreigniseintraegeInconsistent = false;
+      // @ts-expect-error: cannot set readonly
+      ereignisStore.hasEintraege = false;
+
+      await flushPromises();
+
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
+      expect(saveButton.text()).toStrictEqual(SAVE_CONTINUE);
+
+      mockDefinitions.getNextRoute.mockReturnValue({
+        name: ROUTES_HOME,
+      });
+
+      await saveButton.trigger("click");
+
+      expect(mockDefinitions.getNextRoute).toHaveBeenCalled();
     });
   });
 });

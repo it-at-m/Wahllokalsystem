@@ -7,7 +7,7 @@
           <v-card-text>
             <base-number-input
               :model-value="ergebnisseStapelBLeer"
-              :rules="[required, minNumber(0), maxNumber(9999)]"
+              :rules="[required]"
               min-width="20rem"
               @update:model-value="
                 onModelValueStapelBChanged(StapelArtEnum.ObwBLeer, $event)
@@ -19,7 +19,7 @@
         <v-card-text>
           <base-number-input
             :model-value="ergebnisseStapelBUngekennzeichnet"
-            :rules="[required, minNumber(0), maxNumber(9999)]"
+            :rules="[required]"
             min-width="20rem"
             @update:model-value="
               onModelValueStapelBChanged(
@@ -32,7 +32,7 @@
         <v-card-title v-if="!isUWB">Summe: {{ sumStapelB }}</v-card-title>
       </v-form>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="isErgebnisseSaving"
           :disabled="!stapelBInputsForm"
           @click="onSaveAnzahlStimmzettelClicked"
@@ -48,7 +48,7 @@ import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useOBWStapelBUtils } from "@/composables/ergebnismeldung/OBW/obwStapelBUtils.ts";
@@ -56,7 +56,7 @@ import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { required } = useRules();
 
 const props = defineProps<{
   wahlId: string;

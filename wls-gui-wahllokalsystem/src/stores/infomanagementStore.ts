@@ -84,7 +84,8 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     const configValueParsedAsInteger = Number.parseInt(
       configValueForInactiveDelay
     );
-    return Number.isInteger(configValueParsedAsInteger)
+    return Number.isInteger(configValueParsedAsInteger) &&
+      configValueParsedAsInteger > 0
       ? configValueParsedAsInteger
       : DEFAULT_DELAY_BEFORE_INAKTIV_LOGOUT_IN_MILLISECONDS;
   });

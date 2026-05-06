@@ -93,6 +93,37 @@ describe("infomanagementStore.ts", () => {
       ).toStrictEqual(configValue);
     });
 
+    it("should_returnDefaultValue_when_valueIsZero", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`0`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_valueIsBelowZero", async () => {
+      const configValue = generateRandomNumber(4);
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`-${configValue}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
     it("should_returnDefaultValue_when_configValueIsMissing", async () => {
       unitUnderTest.konfigurationsparameter = [];
 
@@ -119,7 +150,7 @@ describe("infomanagementStore.ts", () => {
       unitUnderTest.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel(configKey)
-          .wert(`${generateRandomString(4)}`)
+          .wert(`String${generateRandomString(4)}`)
           .build(),
       ];
 

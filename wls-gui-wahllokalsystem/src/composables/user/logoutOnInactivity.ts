@@ -5,11 +5,14 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useDateOfActionTimeout } from "@/composables/scheduler/dateOfActionTimeout.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const TIMEOUT_TITLE = "Inaktivität";
 
 export function useLogoutOnInactivity() {
   const { logDebug } = useLogging("LogoutOnInactivity");
+
+  const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
   window.addEventListener("load", _registerUserActivity);
   window.addEventListener("mousemove", _registerUserActivity);
@@ -37,7 +40,7 @@ export function useLogoutOnInactivity() {
     logDebug("Check ifUserIsActiveAndAct");
     if (_isUserInactive()) {
       logDebug("user was inactive");
-      await logout();
+      await logout(currentUserWahlbezirkID.value);
     } else {
       logDebug("user was active");
       _resetInactivityCheck();

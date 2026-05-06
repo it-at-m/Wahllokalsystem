@@ -1,4 +1,6 @@
 import { createTestingPinia } from "@pinia/testing";
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { flushPromises } from "@vue/test-utils";
 import { setActivePinia } from "pinia";
 import {
@@ -13,6 +15,7 @@ import {
 
 import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   logout: vi.fn(),
@@ -24,12 +27,15 @@ vi.mock("@/composables/user/logoutService.ts", () => ({
   }),
 }));
 
+const { prepareUser } = useUserTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
+
 const mockedNow = new Date();
 const INACTIVE_TIMEOUT_MS = 1000;
+const WAHLBEZIRKID = generateRandomString(10);
 
 describe("logoutOnInactivity.ts", () => {
   let testPinia: ReturnType<typeof createTestingPinia>;
-  let unitUnderTest: ReturnType<typeof useLogoutOnInactivity>;
 
   beforeEach(() => {
     testPinia = createTestingPinia({
@@ -40,6 +46,7 @@ describe("logoutOnInactivity.ts", () => {
     vi.useFakeTimers({
       now: mockedNow,
     });
+    useUserStore().setUser(prepareUser().wahlbezirkID(WAHLBEZIRKID).build());
   });
 
   afterEach(() => {
@@ -62,7 +69,7 @@ describe("logoutOnInactivity.ts", () => {
       vi.advanceTimersByTime(INACTIVE_TIMEOUT_MS);
       await flushPromises();
 
-      expect(mockDefinitions.logout).toHaveBeenCalledOnce();
+      expect(mockDefinitions.logout).toHaveBeenCalledWith(WAHLBEZIRKID);
     });
 
     it("should_notCallLogout_when_userWasActive", async () => {
@@ -107,7 +114,7 @@ describe("logoutOnInactivity.ts", () => {
 
         vi.advanceTimersByTime(INACTIVE_TIMEOUT_MS - timerWhenUserDidSth);
         await flushPromises();
-        expect(mockDefinitions.logout).toHaveBeenCalledOnce();
+        expect(mockDefinitions.logout).toHaveBeenCalledWith(WAHLBEZIRKID);
       }
     );
   });

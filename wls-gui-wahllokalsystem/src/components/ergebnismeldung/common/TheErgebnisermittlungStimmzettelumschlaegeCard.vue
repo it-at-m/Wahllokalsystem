@@ -5,7 +5,7 @@
       <v-card-text class="pb-0 pt-2 mr-4">
         <v-form v-model="anzahlStimmzettelValidForm">
           <base-time-input
-            v-if="useTime"
+            v-if="isBWB"
             v-model="wahl.stimmzettelumschlaege.urneneroeffnungsUhrzeit"
             :rules="[
               timeNotInFuture,
@@ -23,7 +23,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="stimmzettelumschlaegeState.isStimmzettelumschlaegeSaving"
           :disabled="isMBWAuszaehlungDone || isSaveButtonDisabled"
           :save-text="SAVE_CONTINUE"
@@ -71,7 +71,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
@@ -86,6 +86,7 @@ import {
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -98,7 +99,6 @@ const props = defineProps<{
   wahlId: string;
   wahlbezirkId: string;
   title: string;
-  useTime?: boolean;
 }>();
 
 const { wahlenActions } = useWahlenStore();
@@ -117,6 +117,7 @@ const {
 const { getNextRoute } = useNavigationUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
+const { isBWB } = storeToRefs(useUserStore());
 
 const wahl = computed(() => wahlenActions.getWahlOrUndefinedById(props.wahlId));
 
@@ -147,7 +148,9 @@ async function continueInWorkflow() {
     props.wahlbezirkId,
     MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
-  resetAllAnwesenheiten();
+  if (isBWB.value) {
+    resetAllAnwesenheiten();
+  }
   await router.push(getNextRoute());
 }
 </script>

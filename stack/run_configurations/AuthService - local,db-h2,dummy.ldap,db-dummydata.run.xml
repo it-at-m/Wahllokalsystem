@@ -11,6 +11,7 @@
     <module name="wls-auth-service" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="de.muenchen.oss.wahllokalsystem.authservice.MicroServiceApplication" />
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
+    <option name="VM_PARAMETERS" value="-Djava.rmi.server.hostname=localhost" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

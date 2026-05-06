@@ -213,6 +213,48 @@ describe("workflowStore.ts", () => {
     });
   });
 
+  describe("areAllElectionsFinished", () => {
+    it("should_returnFalse_when_noWahlenExist", () => {
+      useWorkflowStore().electionWorkflowsStates = [];
+
+      expect(useWorkflowStore().areAllElectionsFinished).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_atLeastOneUnfinishedWahlExists", () => {
+      const workflow1 = createWorkflow(
+        generateRandomString(10),
+        generateRandomString(10)
+      );
+      workflow1.isNiederschriftDone = false;
+      const workflow2 = createWorkflow(
+        generateRandomString(10),
+        generateRandomString(10)
+      );
+      workflow2.isNiederschriftDone = true;
+
+      useWorkflowStore().electionWorkflowsStates = [workflow1, workflow2];
+
+      expect(useWorkflowStore().areAllElectionsFinished).toStrictEqual(false);
+    });
+
+    it("should_returnTrue_when_allWahlenAreFinished", () => {
+      const workflow1 = createWorkflow(
+        generateRandomString(10),
+        generateRandomString(10)
+      );
+      workflow1.isNiederschriftDone = true;
+      const workflow2 = createWorkflow(
+        generateRandomString(10),
+        generateRandomString(10)
+      );
+      workflow2.isNiederschriftDone = true;
+
+      useWorkflowStore().electionWorkflowsStates = [workflow1, workflow2];
+
+      expect(useWorkflowStore().areAllElectionsFinished).toStrictEqual(true);
+    });
+  });
+
   describe("isStepDone", () => {
     it("should_returnFalse_when_workflowStateIsEmpty", () => {
       useWorkflowStore().electionWorkflowsStates = [];

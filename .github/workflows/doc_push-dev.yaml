@@ -11,6 +11,9 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
     defaults:
       run:
         working-directory: ./docs

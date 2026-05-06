@@ -12,7 +12,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="isErgebnisSaving"
           :disabled="isWahlFinished || !isFormValid"
           :save-text="SAVE_CONTINUE"
@@ -28,7 +28,7 @@ import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 
 import { ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";

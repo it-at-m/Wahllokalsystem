@@ -8,7 +8,7 @@ import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahleroeffnungCard from "@/components/wahlhandlung/BaseWahleroeffnungCard.vue";
 import router from "@/plugins/router.ts";
@@ -184,7 +184,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         "sendEroeffnungsuhrzeit"
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postEroeffnungsuhrzeit.mockResolvedValue(
@@ -214,7 +214,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       // @ts-expect-error: cannot set readonly
       infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       expect(wrapper.vm.isZuSpaet).toBe(true);
@@ -240,7 +240,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       // @ts-expect-error: cannot set readonly
       infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       const cancelButton = wrapper.findComponent(
@@ -283,7 +283,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         0
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       await wrapper

@@ -20,7 +20,7 @@
       />
     </v-card-text>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         :loading="isSaving"
         :disabled="!isWahlvorstandAusreichendAnwesend"
         :save-text="SAVE_CONTINUE"
@@ -39,7 +39,7 @@
 import { storeToRefs } from "pinia";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheNachbesetzungDruckenButton from "@/components/wahlvorstand/TheNachbesetzungDruckenButton.vue";
 import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitRequirementCard.vue";
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";

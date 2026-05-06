@@ -97,7 +97,7 @@
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         data-test="button-save"
         :disabled="isSaveButtonDisabled"
         :loading="wahlbriefDatenState.wahlbriefDatenIsSaving"
@@ -112,7 +112,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

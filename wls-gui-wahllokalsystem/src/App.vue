@@ -95,11 +95,10 @@ onMounted(async () => {
     await initTasks();
 
     showTestdruckDialog.value = true;
+    useLogoutOnInactivity();
   } catch (error) {
     console.debug(error);
   }
-
-  useLogoutOnInactivity();
 });
 
 onUnmounted(() => {

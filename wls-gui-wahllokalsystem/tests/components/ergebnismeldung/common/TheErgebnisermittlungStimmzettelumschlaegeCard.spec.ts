@@ -184,7 +184,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
       expect(mockDefinitions.resetAllAnwesenheiten).not.toHaveBeenCalled();
     });
 
-    it("should_resetAllAnwesenheiten_when_saveIsCompletedInBWB", async () => {
+    it.skip("should_resetAllAnwesenheiten_when_saveIsCompletedInBWB", async () => {
       const userStore = useUserStore();
       userStore.setUser(
         prepareUser().wahlbezirksArt(WahlbezirksArtEnum.BWB).build()

@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 export const storeID = "status";
 
@@ -28,6 +29,16 @@ export const useStatusStore = defineStore(storeID, () => {
         wahlbezirkID,
         sendNotification
       );
+
+      const { getElectionWorkflowState } = useWorkflowStore();
+      const workflowState = getElectionWorkflowState(wahlID, wahlbezirkID);
+      if (workflowState) {
+        workflowState.isNiederschriftDone =
+          statusForWahl.niederschrift.gedruckt;
+        workflowState.isSchnellmeldungDone =
+          statusForWahl.schnellmeldung.gedruckt;
+      }
+
       status.value.push(statusForWahl);
     } catch {
       throw Error(`Fehler beim Laden des Status für WahlID: ${wahlID}`);

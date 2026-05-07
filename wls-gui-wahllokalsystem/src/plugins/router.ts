@@ -6,6 +6,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_FINISHED,
   ROUTE_LOGOUT,
   ROUTE_NOTFOUND,
   ROUTE_STAPEL_A,
@@ -29,6 +30,7 @@ import OBWStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
 import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
+import FinishedView from "@/views/FinishedView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LogoutSuccessView from "@/views/LogoutSuccessView.vue";
 import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
@@ -180,6 +182,11 @@ const routes = [
     component: StapelCView,
   },
   ...mbwRouteDefinitions,
+  {
+    path: "/finished",
+    name: ROUTE_FINISHED,
+    component: FinishedView,
+  },
   {
     path: "/logout",
     name: ROUTE_LOGOUT,

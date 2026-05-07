@@ -74,7 +74,7 @@
       </base-feedback-card>
     </v-card-text>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         :disabled="
           !pflegeWaehlerverzeichnisState.pflegeWaehlerverzeichnis
             .mitteilungUeberUngueltigeWahlscheineErhalten
@@ -92,7 +92,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";

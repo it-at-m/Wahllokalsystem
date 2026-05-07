@@ -63,6 +63,19 @@ export function useNavigationUtils() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
+    // check all elections in their order
+    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+      (wahlMetaData) =>
+        !workflowStore.isElectionFinished(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        )
+    );
+
+    if (!metaDataOfFirstUnfinishedElection) {
+      return routeWithName(ROUTE_FINISHED);
+    }
+
     // check if a non election specific step is next
     if (!workflowStore.isWahlvorstandErfasst) {
       return routeWithName(ROUTE_WAHLVORSTAND);
@@ -102,19 +115,6 @@ export function useNavigationUtils() {
     }
     if (userStore.isUWB && !workflowStore.isStimmabgabevermerkeErfasst) {
       return routeWithName(ROUTE_STIMMABGABEVERMERKE);
-    }
-
-    // check all elections in their order
-    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
-      (wahlMetaData) =>
-        !workflowStore.isElectionFinished(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID
-        )
-    );
-
-    if (!metaDataOfFirstUnfinishedElection) {
-      return routeWithName(ROUTE_FINISHED);
     }
 
     const nextStepOfElection = _getNextStepOfElection(

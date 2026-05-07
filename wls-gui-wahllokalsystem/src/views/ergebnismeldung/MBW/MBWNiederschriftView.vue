@@ -206,7 +206,7 @@ async function onDruckenClicked() {
   } catch {
     addNotification(
       "Fehler beim Drucken der Niederschrift.",
-      UserNotificationCategoryEnum.WARNING
+      UserNotificationCategoryEnum.ERROR
     );
   } finally {
     isDruckenLoading.value = false;

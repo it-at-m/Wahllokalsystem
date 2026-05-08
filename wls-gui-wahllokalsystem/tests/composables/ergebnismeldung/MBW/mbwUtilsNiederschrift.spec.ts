@@ -1,89 +1,38 @@
-;
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import type {NiederschriftDruckInputBWB} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
-import type {NiederschriftDruckInputUWB} from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
-import type {Wahlvorstand} from "@/types/wahlvorstand/Wahlvorstand.ts";
+import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
+import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputUWB.ts";
+import type { Wahlvorstand } from "@/types/wahlvorstand/Wahlvorstand.ts";
 
+import { useWahlbriefdatenTestDataFactory } from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
+import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
+import { useBegruendungTestDataFactory } from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
+import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
+import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
+import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
+import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
+import { useWahlvorbereitungTestDataFactory } from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
+import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { useWahlvorstandTestDataFactory } from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
+import { createPinia, setActivePinia } from "pinia";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {useWahlbriefdatenTestDataFactory} from "@tests/utils/briefwahl/WahlbriefdatenTestDataFactory.ts";
-import {useAWerteTestDataFactory} from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
-import {useBegruendungTestDataFactory} from "@tests/utils/ergebnismeldung/common/begruendungTestDataFactory.ts";
-import {useBWerteTestDataFactory} from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
-import {useErgebnisseTestDataFactory} from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
-import {useStatusTestDataFactory} from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
-import {useWahlscheineTestDataFactory} from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
-import {
-    useStimmabgabevermerkeTestDataFactory
-} from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
-import {useUserTestDataFactory} from "@tests/utils/user/UserTestDataFactory.ts";
-import {
-    useVorfaelleundvorkommnisseTestDataFactory
-} from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
-import {useWahlTestDataFactory} from "@tests/utils/wahl/WahlTestDataFactory.ts";
-import {
-    usePflegeWaehlerverzeichnisTestDataFactory
-} from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
-import {useWahlvorbereitungTestDataFactory} from "@tests/utils/wahlhandlung/WahlvorbereitungTestDataFactory.ts";
-import {useWahlvorschlaegeTestDataFactory} from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
-import {useWahlvorstandTestDataFactory} from "@tests/utils/wahlvorstand/WahlvorstandTestDataFactory.ts";
-import {createPinia, setActivePinia} from "pinia";
-import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
-
-
-import {useDateTimeFormatter} from "@/composables/common/dateTimeFormatter.ts";
-import {useMbtUtilsNiederschrift} from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
-import {useUserStore} from "@/stores/userStore.ts";
-import {useWahlbezirkStore} from "@/stores/wahlbezirkStore.ts";
-import {useWahlenStore} from "@/stores/wahlenStore.ts";
-import {useWahlvorschlaegeStore} from "@/stores/wahlvorschlaegeStore.ts";
-import {ZurueckweisungsgrundEnum} from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
-import {MeldungsArtEnum} from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import {StapelArtEnum} from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import {StimmzettelStimmzettelartEnum} from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
-import {WahlbezirksArtEnum} from "@/types/wahlbezirksArtEnum.ts";
-
-
-;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
+import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
+import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
+import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
+import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getAWerte: vi.fn(),
@@ -613,13 +562,15 @@ describe("mbwUtilsNiederschrift.ts", () => {
       ])
       .build();
 
-    mockDefinitions.getErgebnisse.mockImplementation((wahlID, wahlbezirkID, stapel) => {
-      if (stapel === StapelArtEnum.MbwA) return ergebnisseA;
-      if (stapel === StapelArtEnum.MbwB) return ergebnisseB;
-      if (stapel === StapelArtEnum.MbwBC) return ergebnisseBC;
-      if (stapel === StapelArtEnum.MbwDUngueltig) return ergebnisseD;
-      return undefined;
-    });
+    mockDefinitions.getErgebnisse.mockImplementation(
+      (wahlID, wahlbezirkID, stapel) => {
+        if (stapel === StapelArtEnum.MbwA) return ergebnisseA;
+        if (stapel === StapelArtEnum.MbwB) return ergebnisseB;
+        if (stapel === StapelArtEnum.MbwBC) return ergebnisseBC;
+        if (stapel === StapelArtEnum.MbwDUngueltig) return ergebnisseD;
+        return undefined;
+      }
+    );
 
     const mockedFooter = "footer";
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);

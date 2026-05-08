@@ -209,17 +209,10 @@ public class BroadcastControllerIntegrationTest {
     void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
         throws Exception {
       log.debug("#GetMessageIntegrationTestGetParamEmpty");
-      String wahlbezirkID = "";
+      String wahlbezirkID = "wahlbezirkID";
 
       mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID + "sth"))
-          .andExpect(status().isInternalServerError())
-          .andExpect(
-              result -> {
-                String actualStringResponse = result.getResponse().getContentAsString();
-                String expectedStringResponse =
-                    "{\"category\":\"T\",\"code\":\"999\",\"service\":\"WLS-BROADCAST\",\"message\":\"Ursache: class org.springframework.web.servlet.resource.NoResourceFoundException, Nachricht: No static resource businessActions/getMessage.\"}";
-                Assertions.assertThat(actualStringResponse).isEqualTo(expectedStringResponse);
-              });
+          .andExpect(status().isForbidden());
     }
 
     @Test

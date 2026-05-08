@@ -52,7 +52,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const { getWaehlerverzeichnis } = useWaehlerverzeichnisService();
   const { getWahlvorstand } = useWahlvorstandService();
   const { getWahlscheine } = useWahlscheineService();
-  const { getErgebnisse } = useErgebnisService();
 
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();

@@ -24,6 +24,8 @@ const { prepareUser } = useUserTestDataFactory();
 describe("broadcastStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useBroadcastStore>;
 
+  const WAHLBEZIRK_ID = "wahlbezirkID";
+
   beforeEach(() => {
     setActivePinia(createPinia());
     unitUnderTest = useBroadcastStore();
@@ -36,7 +38,7 @@ describe("broadcastStore.ts", () => {
   describe("loadLatestMessage", () => {
     it("should_setState_when_messageWasReceived", async () => {
       const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID("wahlbezirkID").build());
+      userStore.setUser(prepareUser().wahlbezirkID(WAHLBEZIRK_ID).build());
 
       const mockedBroadcastMessage = createBroadcastMessage();
 
@@ -49,36 +51,40 @@ describe("broadcastStore.ts", () => {
       expect(unitUnderTest.currentBroadcastNachricht).toStrictEqual(
         mockedBroadcastMessage
       );
-    });
-
-    it("should_setStateWithoutNotification_when_messageWasReceivedAndParameterIsSet", async () => {
-      const userStore = useUserStore();
-      userStore.setUser(prepareUser().wahlbezirkID("wahlbezirkID").build());
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
-
-      const mockedBroadcastMessage = createBroadcastMessage();
-
-      mockDefinitions.getMessage.mockResolvedValue(
-        Promise.resolve(mockedBroadcastMessage)
-      );
-
-      await unitUnderTest.loadLatestMessage(false);
-
-      expect(unitUnderTest.currentBroadcastNachricht).toStrictEqual(
-        mockedBroadcastMessage
-      );
       expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
-        [wahlbezirkID, false],
+        [WAHLBEZIRK_ID, true],
       ]);
     });
+
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      "should_setStateWithoutNotification_when_messageWasReceivedAndNotificationParameterIsUsed",
+      async (argument) => {
+        const userStore = useUserStore();
+        userStore.setUser(prepareUser().wahlbezirkID(WAHLBEZIRK_ID).build());
+        userStore.setUser(prepareUser().wahlbezirkID(WAHLBEZIRK_ID).build());
+
+        const mockedBroadcastMessage = createBroadcastMessage();
+
+        mockDefinitions.getMessage.mockResolvedValue(
+          Promise.resolve(mockedBroadcastMessage)
+        );
+
+        await unitUnderTest.loadLatestMessage(argument.sendNotification);
+
+        expect(unitUnderTest.currentBroadcastNachricht).toStrictEqual(
+          mockedBroadcastMessage
+        );
+        expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
+          [WAHLBEZIRK_ID, argument.sendNotification],
+        ]);
+      }
+    );
   });
 
   describe("markMessageAsReadAndLoadNextMessage", () => {
     it("should_deleteAndLoadNextMessage_when_broadcastMessageIdAndWahlbezirkIdIsGiven", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(prepareUser().wahlbezirkID(WAHLBEZIRK_ID).build());
 
       const broadcastMessageToDelete = createBroadcastMessage();
       unitUnderTest.currentBroadcastNachricht = broadcastMessageToDelete;
@@ -95,7 +101,7 @@ describe("broadcastStore.ts", () => {
         [broadcastMessageToDelete.id],
       ]);
       expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
-        [wahlbezirkID, true],
+        [WAHLBEZIRK_ID, true],
       ]);
     });
 
@@ -109,8 +115,7 @@ describe("broadcastStore.ts", () => {
 
     it("should_loadNextMessage_when_noBroadcastMessageIsInState", async () => {
       const userStore = useUserStore();
-      const wahlbezirkID = "wahlbezirkID";
-      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      userStore.setUser(prepareUser().wahlbezirkID(WAHLBEZIRK_ID).build());
 
       unitUnderTest.currentBroadcastNachricht = null;
 
@@ -123,7 +128,7 @@ describe("broadcastStore.ts", () => {
       await unitUnderTest.markMessageAsReadAndLoadNextMessage();
 
       expect(mockDefinitions.getMessage.mock.calls).toStrictEqual([
-        [wahlbezirkID, true],
+        [WAHLBEZIRK_ID, true],
       ]);
     });
   });

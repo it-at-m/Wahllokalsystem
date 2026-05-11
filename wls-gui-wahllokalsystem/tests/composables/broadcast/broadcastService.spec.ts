@@ -98,7 +98,7 @@ describe("BroadcastService.ts", () => {
       ]);
     });
 
-    it("shouldnotTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+    it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
       const wahlbezirkID = "wahlbezirkID";
 
       mockDefinitions.getMessage.mockRejectedValue(

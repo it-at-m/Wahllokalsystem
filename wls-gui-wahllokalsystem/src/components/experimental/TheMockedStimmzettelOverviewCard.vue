@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="ma-1">
     <v-card-title>Übersicht erfasster Stimmzettel</v-card-title>
     <v-card-text>
       <v-data-table
@@ -24,6 +24,13 @@
         </template>
       </v-data-table>
     </v-card-text>
+    <v-card-actions>
+      <base-text-button active>Erfassung fortsetzen</base-text-button>
+      <base-wls-button-save
+        :active="false"
+        :save-text="'Weiter zur Schnellmeldung'"
+      />
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -32,6 +39,9 @@ import type { Ref } from "vue";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort";
 
 import { ref } from "vue";
+
+import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 
 const headers = [
   {

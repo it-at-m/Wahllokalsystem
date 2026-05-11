@@ -13,6 +13,7 @@
               <v-tab value="4">Reduzierte Erfassung</v-tab>
               <v-tab value="2">Zusammenfassung</v-tab>
               <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
+              <v-tab value="5">Mocked Stimmzettelübersicht</v-tab>
             </v-tabs>
           </v-card-text>
         </v-card>
@@ -85,6 +86,9 @@
           </div>
           <div v-else>Keine gespeicherten Stimmzettel</div>
         </v-tabs-window-item>
+        <v-tabs-window-item value="5">
+          <the-mocked-stimmzettel-overview-card />
+        </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>
   </v-card>
@@ -103,6 +107,7 @@ import { ref } from "vue";
 
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
+import TheMockedStimmzettelOverviewCard from "@/components/experimental/TheMockedStimmzettelOverviewCard.vue";
 import TheSimpleStimmzettelErfassung from "@/components/experimental/TheSimpleStimmzettelErfassung.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { useLogging } from "@/composables/common/logging.ts";

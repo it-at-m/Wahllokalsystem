@@ -1,11 +1,34 @@
 <template>
   <v-form>
-    <v-text-field
-      v-model="commandString"
-      :error-messages="errorMessages"
-      placeholder="str + enter zum speichern"
-      @keydown.enter.prevent="onSubmit"
-    />
+    <div class="d-flex align-center">
+      <v-text-field
+        v-model="commandString"
+        :error-messages="errorMessages"
+        placeholder="str + enter zum speichern"
+        @keydown.enter.prevent="onSubmit"
+      />
+      <div class="ms-2">
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-icon
+              v-bind="props"
+              size="large"
+              icon="$information"
+            />
+          </template>
+          <v-card>
+            <v-card-title>Hinweise</v-card-title>
+            <v-card-text>
+              <div>Hier stehen Hinweise zur Bedienung</div>
+              <div>
+                &lt;Kandidatennummer&gt;+&lt;Stimmen&gt; - Hinzufügen von
+                Stimmen zu einen Kandidaten - 103+3
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-menu>
+      </div>
+    </div>
   </v-form>
 </template>
 

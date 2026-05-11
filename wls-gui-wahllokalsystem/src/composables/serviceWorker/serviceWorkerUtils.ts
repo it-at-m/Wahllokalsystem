@@ -5,13 +5,13 @@ export function useServiceWorkerUtils() {
   const { logDebug } = useLogging("useServiceWorkerUtils");
 
   function isServiceWorkerActive() {
-    return !!navigator.serviceWorker.controller;
+    return !!navigator.serviceWorker?.controller;
   }
 
   function sendMessage(message: ServiceWorkerMessage) {
-    if (navigator.serviceWorker.controller) {
+    if (navigator.serviceWorker?.controller) {
       logDebug(`sending message of type ${message.type}`);
-      navigator.serviceWorker.controller.postMessage(message);
+      navigator.serviceWorker?.controller.postMessage(message);
     }
   }
 

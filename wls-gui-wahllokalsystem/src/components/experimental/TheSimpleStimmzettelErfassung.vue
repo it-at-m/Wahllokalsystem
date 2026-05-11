@@ -1,54 +1,112 @@
 <template>
   <div>
     <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
-    <template v-if="wahlvorschlaegeWithDecisions.length > 0">
-      <v-card
-        v-for="(wahlvorschlag, index) in wahlvorschlaegeWithDecisions"
-        :key="index"
-      >
-        <v-card-title>
-          <div class="d-flex align-center">
-            <v-checkbox
-              disabled
-              :model-value="wahlvorschlag.isSelected"
-              hide-details
-            />
-            Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
-          </div>
-        </v-card-title>
-        <v-card-text>
-          <div
-            v-for="(kandidat, index) in getKandidatenWithVotes(wahlvorschlag)"
-            :key="index"
-          >
-            <div class="d-flex align-center ga-2">
-              <div>{{ kandidat.listenposition }}</div>
-              <div>{{ kandidat.name }}</div>
-              <base-kandidate-votes :kandidat="kandidat" />
+    <v-row class="d-flex flex-row align-items-center w-100">
+      <v-col cols="3">
+        <v-card class="ms-1 mb-1">
+          <v-card-title>Eingabehistorie</v-card-title>
+          <v-card-text>
+            <div class="d-flex align-center ga-1 font-weight-bold">
+              <v-icon icon="$stimmzettelCommandAddVote" />
+              <div>
+                <div>105 +1</div>
+                <div>Max Müller</div>
+              </div>
             </div>
-          </div>
-          <v-divider
-            thickness="2"
-            class="my-2"
-          />
-          <div
-            v-for="(kandidat, index) in getKandidatenDiscarded(wahlvorschlag)"
-            :key="index"
-          >
-            <div class="d-flex align-center ga-2">
-              <base-button-kandidat-discard
-                :disabled="true"
-                :model-value="kandidat.isDiscarded"
-              />
-              <div>{{ kandidat.listenposition }}</div>
-              <div>{{ kandidat.name }}</div>
-              <base-kandidate-votes :kandidat="kandidat" />
+            <div class="my-4"><v-divider thickness="4" /></div>
+            <div class="d-flex align-center ga-1">
+              <v-icon icon="$stimmzettelCommandAcceptList" />
+              <div>
+                <div>Wahlvorschlag Nr. 2</div>
+              </div>
             </div>
-          </div>
-        </v-card-text>
-      </v-card>
-    </template>
-    <div v-else>Es wurden noch keine Stimmen vergeben.</div>
+            <div class="my-2"><v-divider thickness="1" /></div>
+            <div class="d-flex align-center ga-1">
+              <v-icon icon="$stimmzettelCommandDiscardKandidat" />
+              <div>
+                <div>202</div>
+                <div>Hassan Al-Rashid</div>
+              </div>
+            </div>
+            <div class="my-2"><v-divider thickness="1" /></div>
+            <div class="d-flex align-center ga-1 mt-3">
+              <v-icon icon="$stimmzettelCommandRemoveVote" />
+              <div>
+                <div>105 +7</div>
+                <div>Max Müller</div>
+              </div>
+            </div>
+            <div class="my-2"><v-divider thickness="1" /></div>
+            <div class="d-flex align-center ga-1 mt-3">
+              <v-icon icon="$stimmzettelCommandAddVote" />
+              <div>
+                <div>105 +7</div>
+                <div>Max Müller</div>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col>
+        <div>
+          <template v-if="wahlvorschlaegeWithDecisions.length > 0">
+            <v-card
+              v-for="(wahlvorschlag, index) in wahlvorschlaegeWithDecisions"
+              :key="index"
+            >
+              <v-card-title>
+                <div class="d-flex align-center ga-2">
+                  <v-icon
+                    v-if="wahlvorschlag.isSelected"
+                    icon="$stimmzettelCommandAcceptList"
+                  />
+                  <div
+                    v-else
+                    style="min-width: 30px"
+                  />
+                  Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
+                </div>
+              </v-card-title>
+              <v-card-text>
+                <div
+                  v-for="(kandidat, index) in getKandidatenWithVotes(
+                    wahlvorschlag
+                  )"
+                  :key="index"
+                >
+                  <div class="d-flex align-center ga-2">
+                    <div>{{ kandidat.listenposition }}</div>
+                    <div>{{ kandidat.name }}</div>
+                    <base-kandidate-votes :kandidat="kandidat" />
+                  </div>
+                </div>
+                <v-divider
+                  thickness="2"
+                  class="my-2"
+                />
+                <div
+                  v-for="(kandidat, index) in getKandidatenDiscarded(
+                    wahlvorschlag
+                  )"
+                  :key="index"
+                >
+                  <div class="d-flex align-center ga-2">
+                    <base-button-kandidat-discard
+                      :disabled="true"
+                      :model-value="kandidat.isDiscarded"
+                    />
+                    <div>{{ kandidat.listenposition }}</div>
+                    <div>{{ kandidat.name }}</div>
+                    <base-kandidate-votes :kandidat="kandidat" />
+                  </div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </template>
+          <div v-else>Es wurden noch keine Stimmen vergeben.</div>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

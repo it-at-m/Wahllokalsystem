@@ -70,7 +70,6 @@ import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
-import { ROUTE_WAHLVORSTAND } from "@/constants.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
@@ -100,7 +99,7 @@ const isLoading = computed(() => {
 
 watch([hasAllTasksRunSuccessfully, isTestseiteGedruckt], () => {
   if (hasAllTasksRunSuccessfully.value && isTestseiteGedruckt.value) {
-    router.push(ROUTE_WAHLVORSTAND);
+    router.push(getNextRoute());
   }
 });
 

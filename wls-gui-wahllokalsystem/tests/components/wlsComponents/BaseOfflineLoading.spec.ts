@@ -212,7 +212,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       await nextTick();
 
-      expect(pushMock).toHaveBeenCalledWith(ROUTE_WAHLVORSTAND);
+      expect(pushMock).toHaveBeenCalledWith({ name: ROUTE_WAHLVORSTAND });
     });
 
     it("should_callOnRefreshClicked_when_refreshButtonIsClicked", async () => {

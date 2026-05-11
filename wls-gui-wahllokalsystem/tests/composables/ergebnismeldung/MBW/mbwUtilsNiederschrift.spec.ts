@@ -43,7 +43,6 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorstand: vi.fn(),
   getWahlscheine: vi.fn(),
   getBWerteForWahlbezirkAndWahl: vi.fn(),
-  getErgebnisseByWahlIdAndStapelartOrUndefined: vi.fn(),
   getWahlvorschlaegeByWahlIDAndWahlbezirkID: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   createDefaultPflegeWaehlerverzeichnis: vi.fn(),
@@ -283,8 +282,8 @@ describe("mbwUtilsNiederschrift.ts", () => {
       ])
       .build();
 
-    mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-      (id, stapel) => {
+    mockDefinitions.getErgebnisse.mockImplementation(
+      (wahlID, wahlbezirkID, stapel) => {
         if (stapel === StapelArtEnum.MbwA) return ergebnisseA;
         if (stapel === StapelArtEnum.MbwB) return ergebnisseB;
         if (stapel === StapelArtEnum.MbwBC) return ergebnisseBC;
@@ -292,8 +291,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
         return undefined;
       }
     );
-
-    mockDefinitions.getErgebnisse.mockReturnValue(ergebnisseD);
 
     const mockedFooter = "footer";
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);
@@ -565,8 +562,8 @@ describe("mbwUtilsNiederschrift.ts", () => {
       ])
       .build();
 
-    mockDefinitions.getErgebnisseByWahlIdAndStapelartOrUndefined.mockImplementation(
-      (id, stapel) => {
+    mockDefinitions.getErgebnisse.mockImplementation(
+      (wahlID, wahlbezirkID, stapel) => {
         if (stapel === StapelArtEnum.MbwA) return ergebnisseA;
         if (stapel === StapelArtEnum.MbwB) return ergebnisseB;
         if (stapel === StapelArtEnum.MbwBC) return ergebnisseBC;
@@ -574,8 +571,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
         return undefined;
       }
     );
-
-    mockDefinitions.getErgebnisse.mockReturnValue(ergebnisseD);
 
     const mockedFooter = "footer";
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);

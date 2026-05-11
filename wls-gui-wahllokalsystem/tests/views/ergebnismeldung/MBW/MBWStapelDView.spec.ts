@@ -14,6 +14,13 @@ import WahlvorstandAnwesenheitView from "@/views/WahlvorstandAnwesenheitView.vue
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
+  getNextRoute: vi.fn(),
+}));
+
+vi.mock("@/composables/navigation/navigationUtils.ts", () => ({
+  useNavigationUtils: () => ({
+    getNextRoute: mockDefinitions.getNextRoute,
+  }),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -74,6 +81,8 @@ describe("MBWStapelDView", () => {
     });
 
     it("should_saveErgebnis_when_saveEventIsEmmited", () => {
+      mockDefinitions.getNextRoute.mockResolvedValue("");
+
       const baseCardSnippedErgebnis = wrapper.findComponent(
         BaseCardSnippedErgebnis
       );

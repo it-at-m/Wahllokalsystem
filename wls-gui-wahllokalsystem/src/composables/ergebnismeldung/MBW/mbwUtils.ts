@@ -463,8 +463,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
     prepareDataForSchnellmeldungDruck,
+    sendAusdruckNiederschrift,
+    _createBarcode,
+    _createFooter,
     updateStatusAfterSchnellmeldungDrucken,
     sendNiederschrift,
-    sendAusdruckNiederschrift,
   };
 }

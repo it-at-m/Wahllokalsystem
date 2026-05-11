@@ -17,6 +17,7 @@ import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,8 +52,10 @@ public class BroadcastService {
     messageRepo.saveAll(messagesToSave);
   }
 
-  @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
-  public MessageDTO getOldestMessage(String wahlbezirkID) {
+  @PreAuthorize(
+      "hasAuthority('Broadcast_BUSINESSACTION_GetMessage')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public MessageDTO getOldestMessage(@P("wahlbezirkID") String wahlbezirkID) {
     log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
     if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {

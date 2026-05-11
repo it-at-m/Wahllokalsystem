@@ -156,13 +156,14 @@ public class BroadcastControllerIntegrationTest {
     void should_returnBroadcastMessage_when_givenWahlbezirkId() throws Exception {
       log.debug("#GetMessageIntegrationTest");
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_MESSAGE);
+      val wahlbezirkID = "123";
       messageRepository.save(
           TestdataFactory.CreateMessageEntity.withCustomParams(
-              "123", "Das ist ein Test", LocalDateTime.now()));
+              wahlbezirkID, "Das ist ein Test", LocalDateTime.now()));
       SecurityContextHolder.clearContext();
 
       MockHttpServletResponse result =
-          mvc.perform(createGetRequest("123")).andReturn().getResponse();
+          mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID)).andReturn().getResponse();
       String content = result.getContentAsString();
       Message message = objectMapper.readValue(content, Message.class);
       Assertions.assertThat(message.getNachricht()).isEqualTo("Das ist ein Test");
@@ -171,7 +172,8 @@ public class BroadcastControllerIntegrationTest {
     @Test
     void should_throwFachlicheWlsException_when_wahlbezirkIdIsBlank() throws Exception {
       log.debug("#GetMessageIntegrationTestGetParamBlank");
-      mvc.perform(createGetRequest("   "))
+      val wahlbezirkID = "   ";
+      mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID))
           .andExpect(status().isBadRequest())
           .andExpect(
               result -> {
@@ -192,7 +194,7 @@ public class BroadcastControllerIntegrationTest {
       log.debug("#GetMessageIntegrationTestGetParamEmpty");
       String wahlbezirkID = "";
 
-      mvc.perform(createGetRequest(wahlbezirkID))
+      mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID))
           .andExpect(status().isInternalServerError())
           .andExpect(
               result -> {
@@ -204,9 +206,20 @@ public class BroadcastControllerIntegrationTest {
     }
 
     @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      log.debug("#GetMessageIntegrationTestGetParamEmpty");
+      String wahlbezirkID = "wahlbezirkID";
+
+      mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
+
+    @Test
     void should_throwFachlicheWlsException_when_noMessageFound() throws Exception {
       log.debug("#GetMessageNoContentIntegrationTest");
-      mvc.perform(createGetRequest("123"))
+      val wahlbezirkID = "123";
+      mvc.perform(createGetRequest(wahlbezirkID, wahlbezirkID))
           .andExpect(status().isNoContent())
           .andExpect(
               result -> {
@@ -218,13 +231,15 @@ public class BroadcastControllerIntegrationTest {
               });
     }
 
-    private MockHttpServletRequestBuilder createGetRequest(final String wahlbezirkId) {
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlbezirkId, final String claimWahlbezirkID) {
       return get(GETMESSAGE_URL + wahlbezirkId)
           .with(
               jwt()
                   .authorities(
                       new SimpleGrantedAuthority(Authorities.SERVICE_GET_MESSAGE),
-                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_MESSAGE)))
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_MESSAGE))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
           .contentType(MediaType.APPLICATION_JSON_UTF8)
           .accept(MediaType.APPLICATION_JSON);
     }

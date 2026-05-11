@@ -1,9 +1,26 @@
 <template>
-  <div>
-    <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
+  <div class="ms-1">
     <v-row class="d-flex flex-row align-items-center w-100">
-      <v-col cols="3">
-        <v-card class="ms-1 mb-1">
+      <v-col
+        cols="4"
+        class="d-flex flex-column ga-2"
+      >
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <ul>
+                <li><em>+&lt;Ordnungszahl&gt;</em> ... Stimmen setzen</li>
+                <li>
+                  <em>+&lt;Ordnungszahl&gt; + x</em> ... x Stimmen ergänzen
+                </li>
+                <li><em>-&lt;Ordnungszahl&gt;</em> ... Kandidat streichen</li>
+                <li><em>w&lt;Listennummer&gt;</em> ... Liszenkreuz setzen</li>
+              </ul>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+        <v-card class="mb-1">
           <v-card-title>Eingabehistorie</v-card-title>
           <v-card-text>
             <div class="d-flex align-center ga-1 font-weight-bold">
@@ -48,6 +65,7 @@
         </v-card>
       </v-col>
       <v-col>
+        <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
         <div>
           <template v-if="wahlvorschlaegeWithDecisions.length > 0">
             <v-card
@@ -116,6 +134,7 @@ import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelW
 import type { PropType } from "vue";
 
 import { computed } from "vue";
+import { VListItem } from "vuetify/components";
 
 import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";

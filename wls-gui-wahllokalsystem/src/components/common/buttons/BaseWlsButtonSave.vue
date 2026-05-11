@@ -1,7 +1,7 @@
 <template>
   <base-text-button
     prepend-icon="$save"
-    :disabled="disabled"
+    :disabled="areAllElectionsFinished || disabled"
     data-test="buttonSave"
     :active="active"
   >
@@ -10,7 +10,10 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 defineProps({
   /**
@@ -35,4 +38,6 @@ defineProps({
     default: true,
   },
 });
+
+const { areAllElectionsFinished } = storeToRefs(useWorkflowStore());
 </script>

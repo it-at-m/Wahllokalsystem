@@ -109,6 +109,11 @@ logging:
     root: INFO
     de.muenchen.oss.wahllokalsystem: DEBUG
 
+management:
+  endpoints:
+    access:
+      default: read_only # Required for local debugging via JMX+RMI, additionally might have to set -Djava.rmi.server.hostname=localhost as JVM arguments
+
 ALLOWED_ORIGINS_PUBLIC: "*"
 ALLOWED_ORIGINS_CLIENTS: "*"
 CONFIG_MAP5XXTO400: false

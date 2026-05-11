@@ -222,6 +222,9 @@ Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt we
 mit den Ereignissen führt.
 Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
 Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
+Nach dem Speichern der Schließungsuhrzeit erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}
@@ -229,6 +232,9 @@ Im Briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine
 abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht. Die früheste Zeit, die
 übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
 Standardwert von 18 Uhr.
+Nach dem Speichern der Uhrzeit zur Öffnung der Wahlurne erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 📃 **UseCase: `Überprüfung der ungültigen Wahlscheine`**
@@ -331,11 +337,26 @@ Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
+Während des Versendens und Druckens der Schnellmeldung wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `schnellmeldung.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `schnellmeldung.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Schnellmeldung
+erfolgt ist, wird `schnellmeldung.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`schnellmeldung.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
 Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+
+Während des Versendens und Druckens der Niederschrift wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `niederschrift.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `niederschrift.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Niederschrift
+erfolgt ist, wird `niederschrift.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`niederschrift.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
 Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
 dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.

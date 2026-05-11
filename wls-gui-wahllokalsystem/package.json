@@ -29,14 +29,14 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@vueuse/core": "14.2.1",
+    "@vueuse/core": "14.3.0",
     "jsbarcode": "3.12.3",
     "localforage": "1.10.0",
     "pinia": "3.0.4",
     "@fontsource/roboto": "5.2.10",
     "vue": "3.5.30",
     "vue-router": "4.6.4",
-    "vue3-toastify": "0.2.8",
+    "vue3-toastify": "0.2.9",
     "vuetify": "3.11.9"
   },
   "devDependencies": {
@@ -44,33 +44,33 @@
     "@mdi/js": "7.4.47",
     "@muenchen/prettier-codeformat": "1.0.2",
     "@pinia/testing": "1.0.3",
-    "@storybook/addon-essentials": "8.6.17",
-    "@storybook/addon-interactions": "8.6.17",
-    "@storybook/addon-onboarding": "8.6.17",
-    "@storybook/blocks": "8.6.17",
-    "@storybook/test": "8.6.17",
-    "@storybook/vue3": "8.6.17",
-    "@storybook/vue3-vite": "8.6.17",
+    "@storybook/addon-essentials": "8.6.18",
+    "@storybook/addon-interactions": "8.6.18",
+    "@storybook/addon-onboarding": "8.6.18",
+    "@storybook/blocks": "8.6.18",
+    "@storybook/test": "8.6.18",
+    "@storybook/vue3": "8.6.18",
+    "@storybook/vue3-vite": "8.6.18",
     "@tsconfig/node-lts": "22.0.4",
     "@types/node": "22.14.1",
     "@vitejs/plugin-vue": "5.2.4",
     "@vue/eslint-config-prettier": "10.2.0",
     "@vue/eslint-config-typescript": "14.6.0",
-    "@vue/test-utils": "2.4.6",
+    "@vue/test-utils": "2.4.10",
     "@vue/tsconfig": "0.8.1",
-    "axios": "1.13.6",
+    "axios": "1.15.2",
     "eslint": "9.39.4",
     "eslint-plugin-storybook": "0.12.0",
     "eslint-plugin-vue": "9.33.0",
     "jsdom": "26.1.0",
     "msw": "2.12.14",
-    "msw-storybook-addon": "2.0.6",
+    "msw-storybook-addon": "2.0.7",
     "prettier": "3.7.4",
     "sass": "1.97.3",
-    "storybook": "8.6.17",
+    "storybook": "8.6.18",
     "typescript": "5.9.3",
     "unplugin-fonts": "1.4.0",
-    "vite": "6.4.1",
+    "vite": "6.4.2",
     "vite-plugin-pwa": "1.2.0",
     "vite-plugin-vuetify": "2.1.3",
     "vitest": "3.2.4",
@@ -91,7 +91,7 @@
   },
   "overrides": {
     "@storybook/vue3": {
-      "vue-component-type-helpers": "3.2.6"
+      "vue-component-type-helpers": "3.2.7"
     }
   }
 }

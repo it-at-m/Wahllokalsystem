@@ -7,10 +7,10 @@
         <the-u-w-b-stimmabgabevermerke-darstellung-summe-card />
       </v-form>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="!stimmabgabevermerkeModel"
           :loading="isStimmabgabevermerkeSaving"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveClicked"
         /> </v-card-actions
     ></v-card>
@@ -20,7 +20,7 @@
       :visible="dialog.isVisible"
       :dialogtitle="`Abweichung zwischen der Anzahl der ${getStimmzettelTermForWahl(wahlenActions.getWahlOrUndefinedById(dialog.differenceBegruendung.wahlId))} und der Anzahl der ${getWahlscheineOrStimmabgabevermerkeTerm()}`"
       :is-save-disabled="!dialog.differenceBegruendung.isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       @cancel="dialog.isVisible = false"
       @confirm="onConfirmClicked(dialog)"
     >
@@ -60,7 +60,7 @@ import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/Differ
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import TheUWBStimmabgabevermerkeDarstellungSummeCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeDarstellungSummeCard.vue";
 import TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard from "@/components/stimmabgabevermerke/TheUWBStimmabgabevermerkeEingenommeneWahlscheineCard.vue";
@@ -72,6 +72,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";

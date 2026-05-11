@@ -8,7 +8,10 @@ on:
 
 jobs:
   verify-pull-request:
+    permissions:
+      contents: read
     uses:
-      ./.github/workflows/callable-run-mvn-verify_java21.yml
+      ./.github/workflows/callable-run-mvn-verify.yml
     with:
       pom-dir: 'wls-api-gateway'
+      javaVersion: '21'

@@ -33,7 +33,8 @@ describe("TheWlsOnlineOfflineMenu.vue", () => {
           }),
         ],
         stubs: {
-          OfflineSyncer: true,
+          OfflineSyncerDialog: true,
+          OfflineSyncerButton: true,
         },
       },
     });

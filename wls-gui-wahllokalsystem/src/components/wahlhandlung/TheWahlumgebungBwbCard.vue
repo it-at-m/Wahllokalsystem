@@ -20,12 +20,12 @@
             data-test="checkboxAlleVersiegelt"
           />
           <v-card-actions>
-            <base-button-save
+            <base-wls-button-save
               :disabled="isSaveButtonDisabled"
               :loading="
                 briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
               "
-              save-text="Speichern und Weiter"
+              :save-text="SAVE_CONTINUE"
               @click="onSaveWahlumgebungBWBClicked"
             />
           </v-card-actions>
@@ -39,9 +39,10 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";

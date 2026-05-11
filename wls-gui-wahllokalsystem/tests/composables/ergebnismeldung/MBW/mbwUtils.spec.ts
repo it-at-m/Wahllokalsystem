@@ -31,6 +31,7 @@ const mockDefinitions = vi.hoisted(() => ({
   postErgebnisse: vi.fn(),
   getErgebnisse: vi.fn(),
   postSchnellmeldung: vi.fn(),
+  postNiederschrift: vi.fn(),
   getWahlOrUndefinedById: vi.fn(),
   getWahlvorschlaege: vi.fn(),
   mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse: vi.fn(),
@@ -40,6 +41,9 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettelumschlaege: vi.fn(),
   getAWerte: vi.fn(),
   generateUuidv4: vi.fn(),
+  getStatus: vi.fn(),
+  postStatus: vi.fn(),
+  postAusdruck: vi.fn(),
 }));
 
 vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
@@ -47,6 +51,7 @@ vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
     postErgebnisse: mockDefinitions.postErgebnisse,
     getErgebnisse: mockDefinitions.getErgebnisse,
     postSchnellmeldung: mockDefinitions.postSchnellmeldung,
+    postNiederschrift: mockDefinitions.postNiederschrift,
     getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
   }),
 }));
@@ -62,6 +67,17 @@ vi.mock(
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
   useWahlvorschlaegeService: () => ({
     getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+  }),
+}));
+vi.mock("@/composables/ergebnismeldung/common/statusService.ts", () => ({
+  useStatusService: () => ({
+    getStatus: mockDefinitions.getStatus,
+    postStatus: mockDefinitions.postStatus,
+  }),
+}));
+vi.mock("@/composables/ergebnismeldung/common/ausdruckService.ts", () => ({
+  useAusdruckService: () => ({
+    postAusdruck: mockDefinitions.postAusdruck,
   }),
 }));
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts", () => ({
@@ -123,7 +139,8 @@ const { prepareMbwErgebnisseAndWahlvorschlag } =
 const { prepareSchnellmeldungDruckInput } =
   useErgebnismeldungDruckInputTestDataFactory();
 const { convertToSixDigitArray } = useNumberFormatter();
-const { toGermanDate, toHhMm } = useDateTimeFormatter();
+const { toGermanDate, toHhMm, toYyyyMmDdWithTimeWithoutTimezoneOffset } =
+  useDateTimeFormatter();
 
 const mockedNow = new Date();
 
@@ -140,6 +157,7 @@ describe("mbwUtils", () => {
     vi.useFakeTimers({
       now: mockedNow,
     });
+    vi.setSystemTime(mockedNow);
   });
 
   afterEach(() => {
@@ -296,7 +314,7 @@ describe("mbwUtils", () => {
         new Error("service call failed")
       );
 
-      await expect(
+      expect(
         unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
       ).rejects.toThrow();
     });
@@ -430,7 +448,7 @@ describe("mbwUtils", () => {
         new Error("service call failed")
       );
 
-      await expect(
+      expect(
         async () =>
           await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
       ).rejects.toThrow();
@@ -513,6 +531,30 @@ describe("mbwUtils", () => {
 
       await unitUnderTest.sendSchnellmeldung();
 
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+          schnellmeldung: {
+            gedruckt: false,
+            sendeuhrzeit: toYyyyMmDdWithTimeWithoutTimezoneOffset(mockedNow),
+            uebermittelt: true,
+            validierungsstatus: "VALIDE",
+          },
+        },
+        false
+      );
+
       expect(
         spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
       ).toStrictEqual([[true], [false]]);
@@ -574,11 +616,33 @@ describe("mbwUtils", () => {
         "set"
       );
 
-      expect(unitUnderTest.isSendingSchnellmeldung.value).toStrictEqual(false);
+      await unitUnderTest.sendSchnellmeldung();
 
-      await expect(unitUnderTest.sendSchnellmeldung()).rejects.toThrowError(
-        mockedServiceError
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+          schnellmeldung: {
+            gedruckt: false,
+            sendeuhrzeit: toYyyyMmDdWithTimeWithoutTimezoneOffset(mockedNow),
+            uebermittelt: false,
+            validierungsstatus: "VALIDE",
+          },
+        },
+        false
       );
+
+      expect(unitUnderTest.isSendingSchnellmeldung.value).toStrictEqual(false);
 
       expect(
         spyOnValueSetterOfIsSendingSchnellmeldung.mock.calls
@@ -593,6 +657,235 @@ describe("mbwUtils", () => {
       ]);
 
       spyOnValueSetterOfIsSendingSchnellmeldung.mockRestore();
+    });
+  });
+
+  describe("sendNiederschrift", () => {
+    it("should_callPostNiederschrift_when_wahlForWahlIdIsGiven", async () => {
+      mockDefinitions.postNiederschrift.mockResolvedValueOnce(null);
+      mockDefinitions.getStatus.mockResolvedValue(null);
+
+      const mockedWahl = createWahl();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingNiederschrift = spyOn(
+        unitUnderTest.isSendingNiederschrift,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSendingNiederschrift.value).toStrictEqual(false);
+
+      await unitUnderTest.sendNiederschrift();
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: false,
+            sendeuhrzeit: toYyyyMmDdWithTimeWithoutTimezoneOffset(mockedNow),
+            uebermittelt: true,
+            validierungsstatus: "VALIDE",
+          },
+          schnellmeldung: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+        },
+        false
+      );
+
+      expect(spyOnValueSetterOfIsSendingNiederschrift.mock.calls).toStrictEqual(
+        [[true], [false]]
+      );
+      expect(mockDefinitions.postNiederschrift.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          mockedWahl.waehlerverzeichnisNummer,
+          userWahlbezirkID,
+        ],
+      ]);
+
+      spyOnValueSetterOfIsSendingNiederschrift.mockRestore();
+    });
+
+    it("should_notCallPostNiederschrift_when_wahlForWahlIdIsNotGiven", async () => {
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(undefined);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingNiederschrift = spyOn(
+        unitUnderTest.isSendingNiederschrift,
+        "value",
+        "set"
+      );
+
+      expect(unitUnderTest.isSendingNiederschrift.value).toStrictEqual(false);
+
+      await unitUnderTest.sendNiederschrift();
+
+      expect(spyOnValueSetterOfIsSendingNiederschrift.mock.calls).toStrictEqual(
+        [[true], [false]]
+      );
+      expect(mockDefinitions.postNiederschrift.mock.calls.length).toStrictEqual(
+        0
+      );
+
+      spyOnValueSetterOfIsSendingNiederschrift.mockRestore();
+    });
+
+    it("should_updateIsSendingNiederschrift_when_apiCallFailed", async () => {
+      const mockedServiceError = new Error("mocked service call failed");
+      mockDefinitions.postNiederschrift.mockRejectedValue(mockedServiceError);
+
+      const mockedWahl = createWahl();
+      mockDefinitions.getWahlOrUndefinedById.mockReturnValue(mockedWahl);
+
+      const userWahlbezirkID = generateRandomString(10);
+      useUserStore().setUser(
+        prepareUser().wahlbezirkID(userWahlbezirkID).build()
+      );
+
+      const spyOnValueSetterOfIsSendingNiederschrift = spyOn(
+        unitUnderTest.isSendingNiederschrift,
+        "value",
+        "set"
+      );
+
+      await unitUnderTest.sendNiederschrift();
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: false,
+            sendeuhrzeit: toYyyyMmDdWithTimeWithoutTimezoneOffset(mockedNow),
+            uebermittelt: false,
+            validierungsstatus: "VALIDE",
+          },
+          schnellmeldung: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+        },
+        false
+      );
+
+      expect(unitUnderTest.isSendingNiederschrift.value).toStrictEqual(false);
+
+      expect(spyOnValueSetterOfIsSendingNiederschrift.mock.calls).toStrictEqual(
+        [[true], [false]]
+      );
+      expect(mockDefinitions.postNiederschrift.mock.calls).toStrictEqual([
+        [
+          wahlID,
+          wahlbezirkID,
+          mockedWahl.waehlerverzeichnisNummer,
+          userWahlbezirkID,
+        ],
+      ]);
+
+      spyOnValueSetterOfIsSendingNiederschrift.mockRestore();
+    });
+  });
+
+  describe("updateStatusAfterSchnellmeldungDrucken", () => {
+    it("should_updateStatusWithGedrucktTrue_when_schnellmeldungDruckenIsCalled", async () => {
+      await unitUnderTest.updateStatusAfterSchnellmeldungDrucken();
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+          schnellmeldung: {
+            gedruckt: true,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+        },
+        false
+      );
+    });
+  });
+
+  describe("sendAusdruckNiederschrift", () => {
+    it("should_updateStatusWithGedrucktTrue_when_postAusdruckSucceed", async () => {
+      mockDefinitions.postAusdruck.mockResolvedValue(null);
+
+      await unitUnderTest.sendAusdruckNiederschrift(
+        MeldungsArtEnum.Niederschrift,
+        "ausdruck"
+      );
+
+      expect(mockDefinitions.postStatus).toHaveBeenCalledWith(
+        wahlID,
+        wahlbezirkID,
+        {
+          bezirkUndWahlID: {
+            wahlID: wahlID,
+            wahlbezirkID: wahlbezirkID,
+          },
+          niederschrift: {
+            gedruckt: true,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+          schnellmeldung: {
+            gedruckt: false,
+            sendeuhrzeit: undefined,
+            uebermittelt: undefined,
+            validierungsstatus: "NICHT_VALIDIERT",
+          },
+        },
+        false
+      );
+    });
+
+    it("should_notUpdateStatus_when_postAusdruckFailed", async () => {
+      const mockedServiceError = new Error("mocked service call failed");
+      mockDefinitions.postAusdruck.mockRejectedValue(mockedServiceError);
+
+      await unitUnderTest.sendAusdruckNiederschrift(
+        MeldungsArtEnum.Niederschrift,
+        "ausdruck"
+      );
+
+      expect(mockDefinitions.postStatus).not.toHaveBeenCalled();
     });
   });
 

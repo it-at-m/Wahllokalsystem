@@ -17,7 +17,7 @@ import {
 } from "vitest";
 import { nextTick } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahlschliessungCard from "@/components/wahlhandlung/BaseWahlschliessungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
@@ -28,12 +28,19 @@ import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts
 
 const mockDefinitions = vi.hoisted(() => ({
   postUrnenwahlSchliessungsuhrzeit: vi.fn(),
+  resetAllAnwesenheiten: vi.fn(),
 }));
 
 vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
   useWahlvorbereitungService: () => ({
     postUrnenwahlSchliessungsuhrzeit:
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+  }),
+}));
+
+vi.mock("@/stores/wahlvorstandStore.ts", () => ({
+  useWahlvorstandStore: () => ({
+    resetAllAnwesenheiten: mockDefinitions.resetAllAnwesenheiten,
   }),
 }));
 
@@ -188,7 +195,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       ).toStrictEqual(enteredTime.getTime());
     });
 
-    it("should_callSendSchliessungsuhrzeit_when_saveButtonIsClicked", async () => {
+    it("should_callSendSchliessungsuhrzeitAndResetAnwesenheiten_when_saveButtonIsClicked", async () => {
       const infomanagementStore = useInfomanagementStore();
       // @ts-expect-error: cannot set readonly
       infomanagementStore.fruehesteSchliessungsuhrzeit = "17:00:00";
@@ -207,7 +214,7 @@ describe("BaseWahlschliessungCard.vue", () => {
         "sendSchliessungsuhrzeit"
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postUrnenwahlSchliessungsuhrzeit.mockResolvedValue(
@@ -215,6 +222,7 @@ describe("BaseWahlschliessungCard.vue", () => {
       );
 
       expect(sendUhrzeitSpy).toHaveBeenCalled();
+      expect(mockDefinitions.resetAllAnwesenheiten).toHaveBeenCalled();
     });
   });
 });

@@ -1,14 +1,24 @@
 <template>
   <v-card>
-    <v-card-title>Stimmzettelerfassung</v-card-title>
+    <v-card-title>
+      <v-menu>
+        <template #activator="{ props }">
+          <span v-bind="props">Stimmzettelerfassung</span>
+        </template>
+        <v-card>
+          <v-card-title>Ansicht auswählen</v-card-title>
+          <v-card-text>
+            <v-tabs v-model="tab">
+              <v-tab value="1">Erfassung</v-tab>
+              <v-tab value="4">Reduzierte Erfassung</v-tab>
+              <v-tab value="2">Zusammenfassung</v-tab>
+              <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
+            </v-tabs>
+          </v-card-text>
+        </v-card>
+      </v-menu>
+    </v-card-title>
     <v-card-text>
-      <v-tabs v-model="tab">
-        <v-tab value="1">Erfassung</v-tab>
-        <v-tab value="4">Reduzierte Erfassung</v-tab>
-        <v-tab value="2">Zusammenfassung</v-tab>
-        <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
-      </v-tabs>
-
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="1">
           <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />

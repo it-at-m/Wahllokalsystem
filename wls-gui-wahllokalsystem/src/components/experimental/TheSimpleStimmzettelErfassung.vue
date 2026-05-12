@@ -9,13 +9,28 @@
           <v-expansion-panel>
             <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
             <v-expansion-panel-text>
+              <div>Befehle bestehen aus &lt;Object&gt; und &lt;action&gt;</div>
+              <strong>Objects</strong>
               <ul>
-                <li><em>+&lt;Ordnungszahl&gt;</em> ... Stimmen setzen</li>
+                <li><em>&lt;Ordnungszahl&gt;</em> ... Kandidat</li>
+                <li><em>&lt;OZ1&gt;,,&lt;OZ2&gt;</em> ... Kandidatenbereich</li>
                 <li>
-                  <em>+&lt;Ordnungszahl&gt; + x</em> ... x Stimmen ergänzen
+                  <em>&lt;OZx&gt;,&lt;OZy&gt;,&lt;OZn&gt;</em> ... Liste an
+                  Kandidaten
                 </li>
-                <li><em>-&lt;Ordnungszahl&gt;</em> ... Kandidat streichen</li>
-                <li><em>w&lt;Listennummer&gt;</em> ... Liszenkreuz setzen</li>
+                <li><em>&lt;Listennummer&gt;</em> ... Wahlvorschlag</li>
+              </ul>
+              <strong>Actions</strong>
+              <ul>
+                <li><em>+</em> ... 1 Stimmen setzen</li>
+                <li><em>+x</em> ... x Stimmen setzen</li>
+                <li><em>--</em> ... Streichen/Entfernen</li>
+              </ul>
+              <strong>sonstige Befehle</strong>
+              <ul>
+                <li><em>000</em> ... leeren Stimmzettel erfassen</li>
+                <li><em>***</em> ... für Beschluss vormerken</li>
+                <li><em>,,,</em> ... Stimmzettel abschließen</li>
               </ul>
             </v-expansion-panel-text>
           </v-expansion-panel>

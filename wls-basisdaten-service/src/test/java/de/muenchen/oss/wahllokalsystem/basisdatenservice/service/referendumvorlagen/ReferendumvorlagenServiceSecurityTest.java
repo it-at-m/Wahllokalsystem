@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Referendu
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlageDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.ReferendumvorlagenDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -23,12 +24,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
@@ -42,6 +45,8 @@ public class ReferendumvorlagenServiceSecurityTest {
   @Autowired ReferendumvorlageRepository referendumvorlageRepository;
 
   @Autowired ObjectMapper objectMapper;
+
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
   @AfterEach
   void teardown() {
@@ -57,6 +62,9 @@ public class ReferendumvorlagenServiceSecurityTest {
 
     @Test
     void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN);
 
       val wahlID = "wahlID";
@@ -83,6 +91,9 @@ public class ReferendumvorlagenServiceSecurityTest {
 
     @Test
     void should_denyAccess_when_authoritiesAreMissing() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(
           Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN,
           Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGEN,
@@ -105,6 +116,9 @@ public class ReferendumvorlagenServiceSecurityTest {
     @MethodSource("getMissingRepositoryAuthoritiesVariations")
     void should_denyAccess_when_oneRepositoryAuthorityIsMissing(
         final ArgumentsAccessor argumentsAccessor) throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
       val wahlID = "wahlID";
@@ -127,6 +141,20 @@ public class ReferendumvorlagenServiceSecurityTest {
       // we have to check is data is stores because access denied exceptions are caught too
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_REFERENDUMVORLAGEN);
       Assertions.assertThat(referendumvorlagenRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN);
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(
+              () ->
+                  referendumvorlagenService.getReferendumvorlagen(
+                      new ReferendumvorlagenReferenceModel("wahlID", "wahlbezirkID")))
+          .withMessageStartingWith("Access Denied");
     }
 
     private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {

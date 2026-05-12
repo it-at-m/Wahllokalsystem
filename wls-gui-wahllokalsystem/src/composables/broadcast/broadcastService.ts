@@ -23,7 +23,8 @@ export function useBroadcastService() {
   );
 
   async function getMessage(
-    wahlbezirkID: string
+    wahlbezirkID: string,
+    sendNotification = true
   ): Promise<BroadcastMessage | null> {
     try {
       const response = await broadcastCA.getMessage(
@@ -34,10 +35,12 @@ export function useBroadcastService() {
       const responseData = getNullOn204OrElseResponseData(response);
       return responseData ? dtoToModel(responseData) : null;
     } catch {
-      addNotification(
-        "Abrufen der Broadcastnachricht ist fehlgeschlagen",
-        UserNotificationCategoryEnum.ERROR
-      );
+      if (sendNotification) {
+        addNotification(
+          "Abrufen der Broadcastnachricht ist fehlgeschlagen",
+          UserNotificationCategoryEnum.ERROR
+        );
+      }
       return null;
     }
   }

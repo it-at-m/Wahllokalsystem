@@ -1,6 +1,7 @@
 export const ROUTES_HOME = "home";
 export const ROUTE_NOTFOUND = "404";
 export const ROUTE_LOGOUT = "logout";
+export const ROUTE_FINISHED = "finished";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_STIMMABGABE = "stimmabgabe";
@@ -17,6 +18,7 @@ export const ROUTE_STAPEL_B = "stapelB";
 export const ROUTE_STAPEL_C = "stapelC";
 
 export const CONTINUE_QUERY_PARAM = "continue";
+export const LOGOUT_BY_INACTIVITY_QUERY_PARAMETER = "inactive";
 
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;

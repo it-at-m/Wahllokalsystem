@@ -63,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { storeToRefs } from "pinia";
@@ -78,44 +79,49 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
+import { useLogging } from "@/composables/common/logging.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
-import { useStatusStore } from "@/stores/statusStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
-
+const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
-const { status } = storeToRefs(useStatusStore());
 const { getEreignisse } = useEreignisService();
-const { getElectionWorkflowState } = useWorkflowStore();
+const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
+const { getNextRoute } = useNavigationUtils();
+
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
-const isSendenActive = ref<boolean>(true);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
-
+const { logError } = useLogging("mbwUtils");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const ereignisse = ref<WahlbezirkEreignisse | null>(null);
+const status = ref<Status | null>(null);
+
 const { isSendingNiederschrift, sendNiederschrift, sendAusdruckNiederschrift } =
   useMbwUtils(wahlID, currentUserWahlbezirkID);
 const { currentUserWahlbezirksArt } = storeToRefs(useUserStore());
@@ -140,8 +146,18 @@ const workflowState = computed(() =>
   getElectionWorkflowState(wahlID, currentUserWahlbezirkID)
 );
 
+const isSendenActive = computed(
+  () =>
+    !workflowState.value?.isNiederschriftDone &&
+    !status.value?.niederschrift.gedruckt
+);
+
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(
+    wahlID,
+    currentUserWahlbezirkID
+  );
 });
 
 function onSendenClicked() {
@@ -176,22 +192,23 @@ async function onDruckenClicked() {
       printWindow.print();
       printWindow.close();
     }
-    const statusForWahlAndWahlbezirk = status.value.find(
-      (status) =>
-        status.bezirkUndWahlID.wahlID == wahlID &&
-        status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
+
+    setStepDone(
+      wahlID,
+      currentUserWahlbezirkID,
+      MbwRoutesEnum.MBW_NIEDERSCHRIFT
     );
-    if (statusForWahlAndWahlbezirk) {
-      statusForWahlAndWahlbezirk.niederschrift.gedruckt = true;
-    }
     if (workflowState.value) {
       workflowState.value.isNiederschriftDone = true;
     }
+    await router.push(getNextRoute());
+
     await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
-  } catch {
+  } catch (e) {
+    logError("mbwUtilsNiederschrift wirft einen Fehler", e);
     addNotification(
       "Fehler beim Drucken der Niederschrift.",
-      UserNotificationCategoryEnum.WARNING
+      UserNotificationCategoryEnum.ERROR
     );
   } finally {
     isDruckenLoading.value = false;
@@ -199,14 +216,9 @@ async function onDruckenClicked() {
 }
 
 async function buildNiederschriftTemplate() {
-  const statusForWahlAndWahlbezirk = status.value.find(
-    (status) =>
-      status.bezirkUndWahlID.wahlID == wahlID &&
-      status.bezirkUndWahlID.wahlbezirkID == currentUserWahlbezirkID
-  );
-  if (statusForWahlAndWahlbezirk && wahl) {
+  if (status.value && wahl) {
     const templateData = await prepareDataForNiederschriftDruck(
-      statusForWahlAndWahlbezirk,
+      status.value,
       MeldungsArtEnum.Niederschrift,
       wahl
     );

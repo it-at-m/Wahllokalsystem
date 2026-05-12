@@ -16,9 +16,10 @@ export const useBroadcastStore = defineStore(broadcastStoreId, () => {
 
   const currentBroadcastNachricht = ref<BroadcastMessage | null>(null);
 
-  async function loadLatestMessage() {
+  async function loadLatestMessage(sendNotification = true) {
     currentBroadcastNachricht.value = await getMessage(
-      currentUserWahlbezirkID.value
+      currentUserWahlbezirkID.value,
+      sendNotification
     );
   }
 

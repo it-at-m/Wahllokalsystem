@@ -24,35 +24,33 @@
           </v-row>
         </v-tabs-window-item>
         <v-tabs-window-item value="details">
-          <v-container>
-            <v-data-table
-              :items="items"
-              :headers="headers"
-              fixed-header
-              :sort-by="sortBy"
-            >
-              <template #item.actions>
-                <div class="d-flex justify-end">
-                  <v-btn
-                    icon="$edit"
-                    size="small"
-                  />
-                </div>
-              </template>
-              <template #item.isValid="{ item }">
-                <v-icon
-                  :icon="valideStateToIcon(item.isValid)"
-                  :color="valideStateToColor(item.isValid)"
+          <v-data-table
+            :items="items"
+            :headers="headers"
+            fixed-header
+            :sort-by="sortBy"
+          >
+            <template #item.actions>
+              <div class="d-flex justify-end">
+                <v-btn
+                  icon="$edit"
+                  size="small"
                 />
-              </template>
-              <template #item.isBeschlussGefasst="{ item }">
-                <v-icon
-                  :icon="getIcon(item.isBeschlussGefasst)"
-                  :color="getColor(item.isBeschlussGefasst)"
-                />
-              </template>
-            </v-data-table>
-          </v-container>
+              </div>
+            </template>
+            <template #item.isValid="{ item }">
+              <v-icon
+                :icon="valideStateToIcon(item.isValid)"
+                :color="valideStateToColor(item.isValid)"
+              />
+            </template>
+            <template #item.isBeschlussGefasst="{ item }">
+              <v-icon
+                :icon="getIcon(item.isBeschlussGefasst)"
+                :color="getColor(item.isBeschlussGefasst)"
+              />
+            </template>
+          </v-data-table>
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>

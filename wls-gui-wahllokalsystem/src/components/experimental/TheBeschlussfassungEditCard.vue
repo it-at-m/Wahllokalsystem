@@ -77,18 +77,27 @@
                   <v-card class="me-1 mb-1">
                     <v-card-title>Zusammenfassung Stimmzettel</v-card-title>
                     <v-card-text>
-                      <v-row>
-                        <v-col>Kandidatenstimmen insgesamt</v-col>
-                        <v-col>45</v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>Kandidatenstimmen ungültig</v-col>
-                        <v-col>12</v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>Listenkreuze insgesamt</v-col>
-                        <v-col>3</v-col>
-                      </v-row>
+                      <div
+                        class="d-flex justify-space-between align-center ga-1"
+                      >
+                        <div>Kandidatenstimmen insgesamt</div>
+                        <div class="dots flex-grow-1"></div>
+                        <div>45</div>
+                      </div>
+                      <div
+                        class="d-flex justify-space-between align-center ga-1"
+                      >
+                        <div>Kandidatenstimmen ungültig</div>
+                        <div class="dots flex-grow-1"></div>
+                        <div>12</div>
+                      </div>
+                      <div
+                        class="d-flex justify-space-between align-center ga-1"
+                      >
+                        <div>Listenkreuze insgesamt</div>
+                        <div class="dots flex-grow-1"></div>
+                        <div>3</div>
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -168,3 +177,11 @@ function onStimmzettelSnapshotCreated(
   saveStimmzettel(stimmzettelSnapshots.value);
 }
 </script>
+
+<style scoped>
+.dots {
+  text-align: center;
+  background: linear-gradient(to right, transparent, black, transparent);
+  height: 1px; /* Höhe der Punkte-Linie */
+}
+</style>

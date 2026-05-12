@@ -60,6 +60,15 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           : false,
       },
       {
+        title: `Stimmzettel erfassen`,
+        targetRoute: createMbwRoute(
+          MbwRoutesEnum.MBW_STIMMZETTEL,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: false,
+      },
+      {
         title: `Schnellmeldung`,
         targetRoute: createMbwRoute(
           MbwRoutesEnum.MBW_SCHNELLMELDUNG,
@@ -71,15 +80,6 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           : false,
       },
       {
-        title: `Stimmzettel erfassen`,
-        targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STIMMZETTEL,
-          wahlID,
-          wahlbezirkID
-        ),
-        disabled: false,
-      },
-      {
         title: `Kandidatinnen- und Kandidatenstimmen`,
         targetRoute: createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_BC,
@@ -89,6 +89,15 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
         disabled: mbwWorkflow.value
           ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_SCHNELLMELDUNG]
           : false,
+      },
+      {
+        title: "Beschlussfassung",
+        targetRoute: createMbwRoute(
+          MbwRoutesEnum.MBW_STIMMZETTEL_BESCHLUESSE,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: false,
       },
       {
         title: `Niederschrift`,

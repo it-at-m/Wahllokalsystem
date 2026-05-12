@@ -11,6 +11,7 @@ import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldung
 import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
+import MBWStimmzettelBeschlussfassungView from "@/views/ergebnismeldung/MBW/MBWStimmzettelBeschlussfassungView.vue";
 import MBWStimmzettelView from "@/views/ergebnismeldung/MBW/MBWStimmzettelView.vue";
 
 const {
@@ -106,6 +107,12 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
       isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_BC),
     ],
+  },
+  [MbwRoutesEnum.MBW_STIMMZETTEL_BESCHLUESSE]: {
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
+      "/beschluesse",
+    component: MBWStimmzettelBeschlussfassungView,
   },
 };
 

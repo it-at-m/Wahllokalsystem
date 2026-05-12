@@ -7,5 +7,6 @@ export const MbwRoutesEnum = {
   MBW_STIMMZETTEL: "MBW_STIMMZETTEL",
   MBW_STAPEL_BC: "MBW_STAPEL_BC",
   MBW_NIEDERSCHRIFT: "MBW_NIEDERSCHRIFT",
+  MBW_STIMMZETTEL_BESCHLUESSE: "MBW_STIMMZETTEL_BESCHLUESSE",
 } as const;
 export type MbwRoutesEnum = (typeof MbwRoutesEnum)[keyof typeof MbwRoutesEnum];

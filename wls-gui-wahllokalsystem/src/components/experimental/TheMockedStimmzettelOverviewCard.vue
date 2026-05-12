@@ -38,10 +38,12 @@
 import type { Ref } from "vue";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort";
 
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
 const headers = [
   {
@@ -80,29 +82,15 @@ const headers = [
   },
 ];
 
-const defaultItems = createItems();
-const items = defaultItems;
+const { stimmzettelSummaryItems } = storeToRefs(useExperimentalFeaturesStore());
+
+const items = stimmzettelSummaryItems;
 const sortBy: Ref<SortItem[]> = ref([
   {
     key: "index",
     order: "desc",
   },
 ]);
-
-function createItems(count = 20) {
-  const result = [];
-  for (let i = 1; i <= count; i++) {
-    result.push({
-      index: i,
-      countUserVotes: Math.floor(Math.random() * 80),
-      countUserVotesInvalid: Math.floor(Math.random() * 10),
-      countListenkreuze: Math.floor(Math.random() * 2),
-      countUserDiscards: Math.floor(Math.random() * 4),
-      isValid: Math.floor(Math.random() * 3),
-    });
-  }
-  return result;
-}
 
 function valideStateToIcon(state: number) {
   if (state === 0) {

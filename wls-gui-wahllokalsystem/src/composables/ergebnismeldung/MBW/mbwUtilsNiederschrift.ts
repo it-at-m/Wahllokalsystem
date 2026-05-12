@@ -30,7 +30,6 @@ import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehler
 import { useWahlvorbereitungService } from "@/composables/wahlhandlung/wahlvorbereitungService.ts";
 import { useWahlvorstandService } from "@/composables/wahlvorstand/wahlvorstandService.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -54,8 +53,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const { getWahlvorstand } = useWahlvorstandService();
   const { getWahlscheine } = useWahlscheineService();
 
-  const { getErgebnisseByWahlIdAndStapelartOrUndefined } =
-    useErgebnismeldungStore();
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
 
@@ -99,8 +96,8 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     const begruendung = await _getBegruendungStimmzettelumschlaege(wahl);
     const bWerte = await getBWerteForWahlbezirkAndWahl();
     const ungueltigeStimmen = await _getUngueltigeStimmen();
-    _getStimmenListeUndErgebniseGesamt();
-    const parteienListe = _getParteienListe();
+    await _getStimmenListeUndErgebniseGesamt();
+    const parteienListe = await _getParteienListe();
     const ereignisse = _getEreignisse();
     const footer = _createFooter(status, meldungsart);
     const niederschriftDruckInputBaseData: NiederschriftDruckInputBase = {
@@ -306,14 +303,14 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  function _getStimmenListeUndErgebniseGesamt() {
+  async function _getStimmenListeUndErgebniseGesamt() {
     let sumStapelA = 0;
     let sumStapelB = 0;
     let sumStapelBC = 0;
     let sumGesamt = 0;
     // @ts-expect-error old code, will be refactored later, will be refactored later
     const ergebnisArray = [];
-    const gueltigeStimmabgaben = _getGueltigeStimmabgabe();
+    const gueltigeStimmabgaben = await _getGueltigeStimmabgabe();
     if (gueltigeStimmabgaben) {
       gueltigeStimmabgaben.forEach((erg) => {
         const listElement = {
@@ -343,18 +340,24 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  function _getGueltigeStimmabgabe() {
-    const stapelA = getErgebnisseByWahlIdAndStapelartOrUndefined(
+  async function _getGueltigeStimmabgabe() {
+    const stapelA = await getErgebnisse(
+      wahlbezirkID,
       wahlID,
-      StapelArtEnum.MbwA
+      StapelArtEnum.MbwA,
+      false
     );
-    const stapelB = getErgebnisseByWahlIdAndStapelartOrUndefined(
+    const stapelB = await getErgebnisse(
+      wahlbezirkID,
       wahlID,
-      StapelArtEnum.MbwB
+      StapelArtEnum.MbwB,
+      false
     );
-    const stapelBC = getErgebnisseByWahlIdAndStapelartOrUndefined(
+    const stapelBC = await getErgebnisse(
+      wahlbezirkID,
       wahlID,
-      StapelArtEnum.MbwBC
+      StapelArtEnum.MbwBC,
+      false
     );
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {
@@ -612,11 +615,13 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
     }
   }
 
-  function _getParteienListe() {
+  async function _getParteienListe() {
     let parteienListeForTemplate;
-    const stapelBC = getErgebnisseByWahlIdAndStapelartOrUndefined(
+    const stapelBC = await getErgebnisse(
+      wahlbezirkID,
       wahlID,
-      StapelArtEnum.MbwBC
+      StapelArtEnum.MbwBC,
+      false
     );
 
     if (wahlvorschlaegeByWahlIDAndWahlbezirkID) {

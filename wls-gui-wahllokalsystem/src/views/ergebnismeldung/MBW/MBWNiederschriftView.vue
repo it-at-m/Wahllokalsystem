@@ -79,6 +79,7 @@ import TheMBWWahlberechtigteAnzeigenCard from "@/components/ergebnismeldung/MBW/
 import TheMBWGueltigeKandidatenstimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelBC/TheMBWGueltigeKandidatenstimmenAnzeigenCard.vue";
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
+import { useLogging } from "@/composables/common/logging.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
@@ -114,7 +115,7 @@ const isDruckenLoading = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
-
+const { logError } = useLogging("mbwUtils");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -203,10 +204,11 @@ async function onDruckenClicked() {
     await router.push(getNextRoute());
 
     await sendAusdruckNiederschrift(MeldungsArtEnum.Niederschrift, pdfText);
-  } catch {
+  } catch (e) {
+    logError("mbwUtilsNiederschrift wirft einen Fehler", e);
     addNotification(
       "Fehler beim Drucken der Niederschrift.",
-      UserNotificationCategoryEnum.WARNING
+      UserNotificationCategoryEnum.ERROR
     );
   } finally {
     isDruckenLoading.value = false;

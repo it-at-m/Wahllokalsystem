@@ -2,22 +2,26 @@
   <v-card>
     <v-card-title>Beschlüsse fassen</v-card-title>
     <v-card-text>
-      <v-tabs v-model="tabBeschlussfassung">
+      <v-tabs
+        v-model="tabBeschlussfassung"
+        bg-color="grey-lighten-3"
+        slider-color="primary"
+        color="primary"
+        class="rounded-t border-b"
+      >
         <v-tab value="overview">Übersicht</v-tab>
         <v-tab value="details">Details</v-tab>
       </v-tabs>
       <v-tabs-window v-model="tabBeschlussfassung">
         <v-tabs-window-item value="overview">
-          <v-container>
-            <v-row>
-              <v-col cols="3">Beschlüsse notwendig</v-col>
-              <v-col cols="1">15</v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="3">Beschlüsse gefasst</v-col>
-              <v-col cols="1">2</v-col>
-            </v-row>
-          </v-container>
+          <v-row>
+            <v-col cols="3">Beschlüsse notwendig</v-col>
+            <v-col cols="1">15</v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">Beschlüsse gefasst</v-col>
+            <v-col cols="1">2</v-col>
+          </v-row>
         </v-tabs-window-item>
         <v-tabs-window-item value="details">
           <v-container>

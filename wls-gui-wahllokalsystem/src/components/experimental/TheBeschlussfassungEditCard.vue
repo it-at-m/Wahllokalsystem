@@ -24,16 +24,16 @@
             <v-card-title>Beschluss dokumentieren</v-card-title>
             <!-- In Übersicht -->
             <v-card-text>
-              <!-- Todo automatisch aus Daten -->
-              <v-checkbox
-                label="Zu viele Listenkreuze"
-                hide-details
-              />
-              <v-checkbox
-                label="Mehr als 3 Stimmen bei einem Kandidaten"
-                hide-details
-              />
+              <ul class="ms-3">
+                <li v-if="beschlussStimmzettelFailureZuVieleStimmen">
+                  Mehr als 3 Stimmen bei einem Kandidaten
+                </li>
+                <li v-if="beschlussStimmzettelFailureListenkreuzen">
+                  Zu viele Listenkreuze
+                </li>
+              </ul>
               <v-textarea
+                class="mt-2"
                 label="Beschluss verfassen"
                 auto-grow
                 rows="1"
@@ -142,6 +142,8 @@ const {
   beschlussGueltigkeit1IsSelectable,
   beschlussGueltigkeit2IsSelectable,
   beschlussGueltigkeit3IsSelectable,
+  beschlussStimmzettelFailureZuVieleStimmen,
+  beschlussStimmzettelFailureListenkreuzen,
 } = storeToRefs(useExperimentalFeaturesStore());
 
 const selectedTab = ref("overview");

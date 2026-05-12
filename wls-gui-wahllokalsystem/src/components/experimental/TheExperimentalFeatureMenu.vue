@@ -74,6 +74,20 @@
               hide-details
             />
           </v-list-item>
+          <v-list-item title="Fehler in Stimmzettel">
+            <v-checkbox
+              v-model="beschlussStimmzettelFailureListenkreuzen"
+              label="Zu viele Listenkreuze"
+              density="compact"
+              hide-details
+            />
+            <v-checkbox
+              v-model="beschlussStimmzettelFailureZuVieleStimmen"
+              density="compact"
+              label="zu viele Stimmen bei Kandidaten"
+              hide-details
+            />
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -91,6 +105,8 @@ const {
   beschlussGueltigkeit1IsSelectable,
   beschlussGueltigkeit2IsSelectable,
   beschlussGueltigkeit3IsSelectable,
+  beschlussStimmzettelFailureListenkreuzen,
+  beschlussStimmzettelFailureZuVieleStimmen,
   hasStimmzettelSummaryItems,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,

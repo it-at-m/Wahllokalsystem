@@ -11,6 +11,7 @@ import de.muenchen.oss.wahllokalsystem.monitoringservice.domain.waehleranzahl.Wa
 import de.muenchen.oss.wahllokalsystem.monitoringservice.rest.waehleranzahl.WaehleranzahlDTOMapper;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
@@ -48,6 +50,8 @@ public class WaehleranzahlServiceSecurityTest {
 
   @MockitoBean WaehleranzahlValidator waehleranzahlValidator;
 
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+
   @BeforeEach
   void setup() {
     clearContext();
@@ -64,6 +68,9 @@ public class WaehleranzahlServiceSecurityTest {
 
     @Test
     void should_grantAccessAndThrowNoException_when_authoritiesAreValid() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
       waehleranzahlRepository.save(new Waehleranzahl(bezirkUndWahlID, 99, LocalDateTime.now()));
@@ -78,6 +85,9 @@ public class WaehleranzahlServiceSecurityTest {
     @MethodSource("getMissingAuthoritiesVariations")
     void should_failWithAccessDeniedException_when_anyAuthorityIsMissing(
         final ArgumentsAccessor argumentsAccessor) {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
       BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
       Assertions.assertThatThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID))
@@ -88,6 +98,18 @@ public class WaehleranzahlServiceSecurityTest {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
           Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
     }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAEHLERANZAHL);
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID))
+          .withMessageStartingWith("Access Denied");
+    }
   }
 
   @Nested
@@ -95,6 +117,9 @@ public class WaehleranzahlServiceSecurityTest {
 
     @Test
     void should_grantAccessAndThrowNoException_when_authoritiesAreValid() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
       String wahlID = "wahlID01";
       String wahlbezirkID = "wahlbezirkID01";
@@ -116,6 +141,9 @@ public class WaehleranzahlServiceSecurityTest {
 
     @Test
     void should_failWithAccessDeniedException_when_serviceAuthorityIsMissing() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAEHLERANZAHL);
 
       String wahlID = "wahlID01";
@@ -139,6 +167,9 @@ public class WaehleranzahlServiceSecurityTest {
 
     @Test
     void should_failWithTechnischeWlsException_when_repoAuthorityIsMissing() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERANZAHL);
 
       String wahlID = "wahlID01";
@@ -158,6 +189,19 @@ public class WaehleranzahlServiceSecurityTest {
       Assertions.assertThatThrownBy(
               () -> waehleranzahlService.postWahlbeteiligung(waehleranzahlToSave))
           .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      val waehleranzahl = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahl))
+          .withMessageStartingWith("Access Denied");
     }
   }
 }

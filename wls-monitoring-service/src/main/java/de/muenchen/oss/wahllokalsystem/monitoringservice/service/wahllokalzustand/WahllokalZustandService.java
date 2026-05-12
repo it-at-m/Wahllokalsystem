@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +19,10 @@ public class WahllokalZustandService {
   private final WahllokalZustandValidator wahllokalZustandValidator;
   private final WahllokalZustandClient wahllokalZustandClient;
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostLastSeen')")
-  public void postLastSeen(final String wahlbezirkID) {
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostLastSeen')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public void postLastSeen(@P("wahlbezirkID") final String wahlbezirkID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(
         wahlbezirkID,
         exceptionFactory.createFachlicheWlsException(
@@ -27,8 +30,10 @@ public class WahllokalZustandService {
     wahllokalZustandClient.postLastSeen(wahlbezirkID, LocalDateTime.now());
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostLetzteAbmeldung')")
-  public void postLetzteAbmeldung(final String wahlbezirkID) {
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostLetzteAbmeldung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public void postLetzteAbmeldung(@P("wahlbezirkID") final String wahlbezirkID) {
     wahllokalZustandValidator.validWahlbezirkIDOrThrow(
         wahlbezirkID,
         exceptionFactory.createFachlicheWlsException(
@@ -36,9 +41,12 @@ public class WahllokalZustandService {
     wahllokalZustandClient.postLetzteAbmeldung(wahlbezirkID, LocalDateTime.now());
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungSendungsuhrzeit')")
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungSendungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public void postSchnellmeldungSendungsuhrzeit(
-      final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungSendungsuhrzeit) {
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID,
+      final LocalDateTime schnellmeldungSendungsuhrzeit) {
     wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(
         bezirkUndWahlID,
         exceptionFactory.createFachlicheWlsException(
@@ -47,9 +55,12 @@ public class WahllokalZustandService {
         bezirkUndWahlID, schnellmeldungSendungsuhrzeit);
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungDruckuhrzeit')")
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostSchnellmeldungDruckuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public void postSchnellmeldungDruckuhrzeit(
-      final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime schnellmeldungsDruckuhrzeit) {
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID,
+      final LocalDateTime schnellmeldungsDruckuhrzeit) {
     wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(
         bezirkUndWahlID,
         exceptionFactory.createFachlicheWlsException(
@@ -58,9 +69,12 @@ public class WahllokalZustandService {
         bezirkUndWahlID, schnellmeldungsDruckuhrzeit);
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftSendungsuhrzeit')")
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftSendungsuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public void postNiederschriftSendungsuhrzeit(
-      final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime niederschriftSendungsuhrzeit) {
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID,
+      final LocalDateTime niederschriftSendungsuhrzeit) {
     wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(
         bezirkUndWahlID,
         exceptionFactory.createFachlicheWlsException(
@@ -69,9 +83,12 @@ public class WahllokalZustandService {
         bezirkUndWahlID, niederschriftSendungsuhrzeit);
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftDruckuhrzeit')")
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostNiederschriftDruckuhrzeit')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   public void postNiederschriftDruckuhrzeit(
-      final BezirkUndWahlID bezirkUndWahlID, final LocalDateTime niederschriftDruckuhrzeit) {
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID,
+      final LocalDateTime niederschriftDruckuhrzeit) {
     wahllokalZustandValidator.validWahlIdUndWahlbezirkIDOrThrow(
         bezirkUndWahlID,
         exceptionFactory.createFachlicheWlsException(

@@ -1,11 +1,12 @@
 <template>
   <v-card>
     <v-card-title>
-      <div class="d-flex justify-space-between">
+      <div class="d-flex justify-space-between align-center">
         <div>Beschluss fassen für Stimmzettel 42</div>
         <div>
           <v-progress-linear
             style="min-width: 250px"
+            height="27"
             color="primary"
             :min="0"
             :max="beschlussFortschrittMax"

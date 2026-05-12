@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Stimmzettelerfassung </v-card-title>
+    <v-card-title v-if="showTitle">Stimmzettelerfassung </v-card-title>
     <v-card-text>
       <v-tabs-window v-model="subViewStimmzettelerfassung">
         <v-tabs-window-item value="1">
@@ -116,6 +116,11 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  showTitle: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
 });
 

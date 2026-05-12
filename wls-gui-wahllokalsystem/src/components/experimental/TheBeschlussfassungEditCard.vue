@@ -47,6 +47,7 @@
                 :wahlvorschlaege="wahlvorschlaege"
                 :stimmzettel-snapshots="stimmzettelSnapshots"
                 :is-saving-stimmzettel="isSavingStimmzettel"
+                :show-title="false"
                 @snapshot-created="onStimmzettelSnapshotCreated"
               />
             </v-tabs-window-item>

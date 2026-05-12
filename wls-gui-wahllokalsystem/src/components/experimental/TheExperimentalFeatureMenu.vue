@@ -1,5 +1,5 @@
 <template>
-  <v-menu :persistent="true">
+  <v-menu :close-on-content-click="false">
     <template #activator="{ props: menuActivator }">
       <v-btn
         v-bind="menuActivator"

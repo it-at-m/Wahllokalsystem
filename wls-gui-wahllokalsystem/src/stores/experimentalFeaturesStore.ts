@@ -23,6 +23,8 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   const stimmzettelSummaryItems: Ref<StimmzettelSummary[]> = ref([]);
   const hasStimmzettelSummaryItems = ref(false);
 
+  const subViewBeschlussfassung = ref("overview");
+
   watch(hasStimmzettelSummaryItems, (newValue) => {
     if (newValue) {
       stimmzettelSummaryItems.value = _createStimmzettelSummaryItems(150);
@@ -50,6 +52,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   return {
     stimmzettelSummaryItems,
     hasStimmzettelSummaryItems,
+    subViewBeschlussfassung,
   };
 });
 

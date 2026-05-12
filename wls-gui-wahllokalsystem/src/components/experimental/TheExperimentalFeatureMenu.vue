@@ -1,5 +1,5 @@
 <template>
-  <v-menu>
+  <v-menu :persistent="true">
     <template #activator="{ props: menuActivator }">
       <v-btn
         v-bind="menuActivator"
@@ -23,6 +23,21 @@
             </template>
             Daten bei Zusammenfassung vorhanden
           </v-list-item>
+          <v-list-item>
+            <v-radio-group
+              v-model="subViewBeschlussfassung"
+              label="SubView Beschlussfassung"
+            >
+              <v-radio
+                label="Übersicht"
+                value="overview"
+              />
+              <v-radio
+                label="Erfassung"
+                value="erfassung"
+              />
+            </v-radio-group>
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -34,7 +49,9 @@ import { storeToRefs } from "pinia";
 
 import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
-const { hasStimmzettelSummaryItems } = storeToRefs(
+const { hasStimmzettelSummaryItems, subViewBeschlussfassung } = storeToRefs(
   useExperimentalFeaturesStore()
 );
+
+const subViewsBeschlussfassung = ["overview", "erfassung"];
 </script>

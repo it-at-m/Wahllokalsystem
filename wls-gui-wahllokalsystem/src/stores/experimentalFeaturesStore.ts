@@ -16,6 +16,7 @@ interface StimmzettelSummary {
   countListenkreuze: number;
   countUserDiscards: number;
   isValid: number;
+  isBeschlussGefasst: boolean;
 }
 
 export const useExperimentalFeaturesStore = defineStore(storeID, () => {
@@ -40,6 +41,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
         countListenkreuze: Math.floor(Math.random() * 2),
         countUserDiscards: Math.floor(Math.random() * 4),
         isValid: Math.floor(Math.random() * 3),
+        isBeschlussGefasst: Math.floor(Math.random() * 2) % 2 === 0,
       });
     }
     return result;

@@ -1,8 +1,9 @@
 <template>
-  <v-card>
-    <v-card-title>Beschlüsse fassen</v-card-title>
-    <v-card-title> </v-card-title>
-  </v-card>
+  <div>
+    <the-beschlussfassung-overview />
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TheBeschlussfassungOverview from "@/components/experimental/TheBeschlussfassungOverview.vue";
+</script>

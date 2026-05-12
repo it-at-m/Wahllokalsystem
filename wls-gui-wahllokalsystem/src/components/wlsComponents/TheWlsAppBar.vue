@@ -99,11 +99,10 @@ import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOffl
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
@@ -121,7 +120,6 @@ const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();
-const { addNotification } = useUserNotificationService();
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
@@ -139,14 +137,7 @@ function onLogoutClicked() {
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
-  try {
-    await logout(currentUserWahlbezirkID.value);
-  } catch {
-    addNotification(
-      "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
-      UserNotificationCategoryEnum.ERROR
-    );
-  }
+  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
 }
 
 function onSyncError() {

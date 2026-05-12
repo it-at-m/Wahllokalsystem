@@ -17,7 +17,7 @@ export function useBroadcastCronjobService() {
 
     broadcastMessageActiveInterval = registerInterval({
       title: "Broadcast Message Interval",
-      action: loadLatestMessage,
+      action: () => loadLatestMessage(false),
       delay: broadcastMessagePollingInterval,
       runActionAfterRegister: true,
     });

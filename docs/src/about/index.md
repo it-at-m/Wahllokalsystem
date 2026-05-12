@@ -360,3 +360,10 @@ Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, so
 
 Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
 dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.
+
+#### Weitere nicht Use-Case-spezifische Anforderungen
+
+##### Abmeldung bei Timeout
+
+Vollzieht der/die Benutzer\*In über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
+dafür kann [konfiguriert werden](../services/backend-services/infomanagement-service/#konfigurationen).

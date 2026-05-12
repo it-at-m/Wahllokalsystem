@@ -16,7 +16,6 @@ import { ref } from "vue";
 
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
-import { ROUTE_LOGOUT } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -25,6 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
   isUserLoggedIn: undefined as Ref<boolean> | undefined,
   routerPush: vi.fn(),
+  addNotification: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-auth-api", async (importOriginal) => {
@@ -52,6 +52,12 @@ vi.mock(
   }
 );
 
+vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
+  useUserNotificationService: () => ({
+    addNotification: mockDefinitions.addNotification,
+  }),
+}));
+
 vi.mock("@/stores/userStore.ts", () => ({
   useUserStore: () => ({
     isUserLoggedIn: mockDefinitions.isUserLoggedIn,
@@ -69,6 +75,7 @@ describe("logoutService.ts", () => {
   let unitUnderTest: ReturnType<typeof useLogoutService>;
 
   const WAHLBEZIRK_ID = "wahlbezirkID";
+  const NAVIGATION_TARGET = "ROUTE";
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -101,7 +108,7 @@ describe("logoutService.ts", () => {
         return Promise.resolve({ ok: true });
       });
 
-      await unitUnderTest.logout(WAHLBEZIRK_ID);
+      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
 
       expect(mockDefinitions.postLetzteAbmeldung).toHaveBeenCalledWith(
         WAHLBEZIRK_ID,
@@ -116,19 +123,22 @@ describe("logoutService.ts", () => {
       );
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
       expect(mockDefinitions.isUserLoggedIn!.value).toBe(false);
-      expect(router.push).toHaveBeenCalledWith(ROUTE_LOGOUT);
+      expect(router.push).toHaveBeenCalledWith(NAVIGATION_TARGET);
     });
 
-    it("should_throwError_when_gettingLogoutUrlFailed", async () => {
+    it("should_addErrorNotification_when_gettingLogoutUrlFailed", async () => {
       const mockedGetLogoutUrlError = new Error("mocked get logout url failed");
       mockDefinitions.getLogoutUrl.mockRejectedValue(mockedGetLogoutUrlError);
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow(
-        mockedGetLogoutUrlError
-      );
+      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
-    it("should_throwError_when_logoutOnAuthServiceFailed", async () => {
+    it("should_addErrorNotification_when_logoutOnAuthServiceFailed", async () => {
       const mockedLogoutUrlResponse = createResolvedUrlDTO();
       mockDefinitions.getLogoutUrl.mockResolvedValue(
         createAxiosResponse({
@@ -148,10 +158,15 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
-    it("should_throwError_when_logoutOnGatewayFailed", async () => {
+    it("should_addErrorNotification_when_logoutOnGatewayFailed", async () => {
       const mockedLogoutUrlResponse = createResolvedUrlDTO();
       mockDefinitions.getLogoutUrl.mockResolvedValue(
         createAxiosResponse({
@@ -171,7 +186,12 @@ describe("logoutService.ts", () => {
         }
       });
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
     });
 
     it("should_notPostLetzteAbmeldung_when_getLogoutUrlFailed", async () => {
@@ -179,7 +199,7 @@ describe("logoutService.ts", () => {
         Promise.reject(new Error("no logout url"))
       );
 
-      await expect(unitUnderTest.logout(WAHLBEZIRK_ID)).rejects.toThrow();
+      await unitUnderTest.logout(WAHLBEZIRK_ID, NAVIGATION_TARGET);
       expect(mockDefinitions.postLetzteAbmeldung).not.toHaveBeenCalled();
     });
   });

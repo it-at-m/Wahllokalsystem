@@ -1,12 +1,30 @@
 <template>
   <v-card>
-    <v-card-title>Beschluss fassen für Stimmzettel 42</v-card-title>
+    <v-card-title>
+      <div class="d-flex justify-space-between">
+        <div>Beschluss fassen für Stimmzettel 42</div>
+        <div>
+          <v-progress-linear
+            style="min-width: 250px"
+            color="primary"
+            :min="0"
+            :max="beschlussFortschrittMax"
+            :model-value="beschlussFortschrittCurrent - 1"
+            :buffer-value="beschlussFortschrittCurrent"
+            >Beschluss {{ beschlussFortschrittCurrent }} von
+            {{ beschlussFortschrittMax }}</v-progress-linear
+          >
+        </div>
+      </div></v-card-title
+    >
     <v-card-text>
       <v-row>
         <v-col cols="4">
           <v-card>
             <v-card-title>Beschluss dokumentieren</v-card-title>
+            <!-- In Übersicht -->
             <v-card-text>
+              <!-- Todo automatisch aus Daten -->
               <v-checkbox
                 label="Zu viele Listenkreuze"
                 hide-details
@@ -20,6 +38,23 @@
                 auto-grow
                 rows="1"
               />
+              <v-radio-group label="Gültigkeit">
+                <v-radio
+                  label="gültig"
+                  :disabled="!beschlussGueltigkeit1IsSelectable"
+                  value="1"
+                />
+                <v-radio
+                  label="teilweise gültig"
+                  :disabled="!beschlussGueltigkeit2IsSelectable"
+                  value="2"
+                />
+                <v-radio
+                  label="ungültig"
+                  :disabled="!beschlussGueltigkeit3IsSelectable"
+                  value="3"
+                />
+              </v-radio-group>
             </v-card-text>
           </v-card>
         </v-col>
@@ -80,6 +115,7 @@ import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapsh
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { Ref } from "vue";
 
+import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -87,6 +123,7 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheStimmzettelScoresCard from "@/components/experimental/TheStimmzettelScoresCard.vue";
 import { useMBWStimmzettelViewUtils } from "@/composables/experimental/MBWStimmzettelViewUtils.ts";
+import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
 const route = useRoute();
 const wahlID = route.params.wahlId as string;
@@ -98,6 +135,14 @@ const {
   loadWahlvorschlaege,
   saveStimmzettel,
 } = useMBWStimmzettelViewUtils(wahlID, wahlbezirkID);
+
+const {
+  beschlussFortschrittCurrent,
+  beschlussFortschrittMax,
+  beschlussGueltigkeit1IsSelectable,
+  beschlussGueltigkeit2IsSelectable,
+  beschlussGueltigkeit3IsSelectable,
+} = storeToRefs(useExperimentalFeaturesStore());
 
 const selectedTab = ref("overview");
 

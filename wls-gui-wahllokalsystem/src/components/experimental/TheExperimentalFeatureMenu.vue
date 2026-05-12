@@ -44,6 +44,36 @@
               :items="itemsSubviewStimmzettelerfassung"
             ></v-autocomplete>
           </v-list-item>
+          <v-list-item title="Beschlussfortschritt">
+            <v-number-input
+              v-model="beschlussFortschrittMax"
+              label="Max"
+            ></v-number-input>
+            <v-number-input
+              v-model="beschlussFortschrittCurrent"
+              label="Current"
+            ></v-number-input>
+          </v-list-item>
+          <v-list-item title="Beschlussgültigkeit verfügbar">
+            <v-checkbox
+              v-model="beschlussGueltigkeit1IsSelectable"
+              density="compact"
+              label="gültig"
+              hide-details
+            />
+            <v-checkbox
+              v-model="beschlussGueltigkeit2IsSelectable"
+              density="compact"
+              label="tw gültig"
+              hide-details
+            />
+            <v-checkbox
+              v-model="beschlussGueltigkeit3IsSelectable"
+              density="compact"
+              label="ungültig"
+              hide-details
+            />
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -56,6 +86,11 @@ import { storeToRefs } from "pinia";
 import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
 const {
+  beschlussFortschrittCurrent,
+  beschlussFortschrittMax,
+  beschlussGueltigkeit1IsSelectable,
+  beschlussGueltigkeit2IsSelectable,
+  beschlussGueltigkeit3IsSelectable,
   hasStimmzettelSummaryItems,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,

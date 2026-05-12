@@ -93,8 +93,6 @@ const wahlID = route.params.wahlId as string;
 const wahlbezirkID = route.params.wahlbezirkId as string;
 
 const {
-  isLoadingStimmzettel,
-  isLoadingWahlvorschlaege,
   isSavingStimmzettel,
   loadStimmzettel,
   loadWahlvorschlaege,

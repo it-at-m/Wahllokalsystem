@@ -1,26 +1,8 @@
 <template>
   <v-card>
-    <v-card-title>
-      <v-menu>
-        <template #activator="{ props }">
-          <span v-bind="props">Stimmzettelerfassung</span>
-        </template>
-        <v-card>
-          <v-card-title>Ansicht auswählen</v-card-title>
-          <v-card-text>
-            <v-tabs v-model="tab">
-              <v-tab value="1">Erfassung</v-tab>
-              <v-tab value="4">Reduzierte Erfassung</v-tab>
-              <v-tab value="2">Zusammenfassung</v-tab>
-              <v-tab value="3">Gespeicherte Stimmzettel</v-tab>
-              <v-tab value="5">Mocked Stimmzettelübersicht</v-tab>
-            </v-tabs>
-          </v-card-text>
-        </v-card>
-      </v-menu>
-    </v-card-title>
+    <v-card-title>Stimmzettelerfassung </v-card-title>
     <v-card-text>
-      <v-tabs-window v-model="tab">
+      <v-tabs-window v-model="subViewStimmzettelerfassung">
         <v-tabs-window-item value="1">
           <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
           <div class="d-flex ga-1 mb-3">
@@ -103,6 +85,7 @@ import type { WahlvorschlagEvent } from "@/types/experimental/WahlvorschlagEvent
 import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts";
 import type { PropType } from "vue";
 
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
@@ -112,6 +95,7 @@ import TheSimpleStimmzettelErfassung from "@/components/experimental/TheSimpleSt
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
+import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnum.ts";
 import { StimmzettelEventTypeEnum } from "@/types/experimental/StimmzettelEventTypeEnum.ts";
 import { WahlvorschlagEventTypeEnum } from "@/types/experimental/WahlvorschlagEventTypeEnum.ts";
@@ -139,9 +123,10 @@ const emit = defineEmits<{
   snapshotCreated: [stimmzettelSnapshot: StimmzettelSnapshot];
 }>();
 
-const tab = ref("1");
-
 const logger = useLogging("TheStimmzettelScoresCard");
+const { subViewStimmzettelerfassung } = storeToRefs(
+  useExperimentalFeaturesStore()
+);
 
 const stimmzettelManager = getStimmzettelManger(
   {

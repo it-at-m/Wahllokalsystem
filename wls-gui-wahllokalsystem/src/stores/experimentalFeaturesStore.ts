@@ -24,6 +24,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   const hasStimmzettelSummaryItems = ref(false);
 
   const subViewBeschlussfassung = ref("overview");
+  const subViewStimmzettelerfassung = ref("1");
 
   watch(hasStimmzettelSummaryItems, (newValue) => {
     if (newValue) {
@@ -53,6 +54,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
     stimmzettelSummaryItems,
     hasStimmzettelSummaryItems,
     subViewBeschlussfassung,
+    subViewStimmzettelerfassung,
   };
 });
 

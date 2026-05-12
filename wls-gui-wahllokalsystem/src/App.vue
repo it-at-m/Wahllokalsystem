@@ -44,6 +44,7 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
+import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
@@ -93,6 +94,7 @@ onMounted(async () => {
     await initTasks();
 
     showTestdruckDialog.value = true;
+    useLogoutOnInactivity();
   } catch (error) {
     console.debug(error);
   } finally {

@@ -127,7 +127,6 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
       stimmabgabevermerkeStore.stimmabgabevermerke.forEach(
         (stimmabgabevermerkeEntries) => {
           expect(
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
             stimmabgabevermerkeEntries.wahldaten[0].eingenommeneWahlscheine.get(
               EingenommenerWahlscheinStimmzettelartEnum.Klein
             )

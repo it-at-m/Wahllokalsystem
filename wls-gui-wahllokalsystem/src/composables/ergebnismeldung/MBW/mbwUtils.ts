@@ -179,7 +179,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
             waehlerverzeichnisNummer
           );
           if (loadedStimmabgabevermerke) {
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
             bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
               .flatMap((vermerk) => vermerk.stimmzettel)
               .reduce(
@@ -187,7 +186,6 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
                 0
               );
             bWerte.b2 = Array.from(
-              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
               loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
             ).reduce((sum, value) => sum + value, 0);
 

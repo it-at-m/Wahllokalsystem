@@ -64,7 +64,6 @@ export function useMultipleDifferenceDialogUtils() {
   async function _checkForDifferenceInStimmabgabevermerke() {
     const { stimmabgabevermerke } = useStimmabgabevermerkeStore();
     for (const vermerk of stimmabgabevermerke) {
-      // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
       const wahlId = vermerk.wahldaten[0].wahlID;
       await _checkForDifferenceDialogForWahl(wahlId);
     }

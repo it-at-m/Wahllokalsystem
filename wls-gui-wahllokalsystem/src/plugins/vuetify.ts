@@ -22,6 +22,7 @@ import {
   mdiDiameterVariant,
   mdiEmail,
   mdiFileDocumentOutline,
+  mdiFlask,
   mdiHelpCircleOutline,
   mdiHome,
   mdiInformationOutline,
@@ -98,6 +99,7 @@ export default createVuetify({
       stimmzettelCommandRemoveVote: mdiAccountMinusOutline,
       stimmzettelCommandDiscardKandidat: mdiAccountOffOutline,
       stimmzettelCommandAcceptList: mdiPlaylistCheck,
+      experimentalFeature: mdiFlask,
     },
     sets: {
       mdi,

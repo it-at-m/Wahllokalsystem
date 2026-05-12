@@ -39,6 +39,7 @@
           />
           <wls-clock class="navbar-text mx-2 mt-1" />
           <the-wls-online-offline-menu />
+          <the-experimental-feature-menu />
           <the-info-help-icon />
           <v-btn
             icon="$logout"
@@ -92,6 +93,7 @@ import { computed, nextTick, ref, watch } from "vue";
 import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
+import TheExperimentalFeatureMenu from "@/components/experimental/TheExperimentalFeatureMenu.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheRootNavigationList from "@/components/navigation/TheRootNavigationList.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";

@@ -118,13 +118,14 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() {
+      String wahlbezirkID = "wahlbezirkID";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "validWahlbezirkID")
+          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + wahlbezirkID)
               .with(csrf())
               .with(
                   jwt()
                       .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
-                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
     }
 

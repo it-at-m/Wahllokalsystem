@@ -198,8 +198,9 @@ public class WaehleranzahlServiceSecurityTest {
           .thenReturn(false);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SET_WAEHLERANZAHL);
       BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      val waehleranzahl = new WaehleranzahlModel(bezirkUndWahlID, 99L, LocalDateTime.now());
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-          .isThrownBy(() -> waehleranzahlService.getWahlbeteiligung(bezirkUndWahlID))
+          .isThrownBy(() -> waehleranzahlService.postWahlbeteiligung(waehleranzahl))
           .withMessageStartingWith("Access Denied");
     }
   }

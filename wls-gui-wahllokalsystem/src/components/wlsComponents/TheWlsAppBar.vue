@@ -151,6 +151,12 @@ watch(isUserLoggedIn, async () => {
     toggleDrawer(false);
   }
 });
+
+watch(hasAllTasksRun, () => {
+  if (hasAllTasksRun.value) {
+    toggleDrawer(true);
+  }
+});
 </script>
 
 <style>

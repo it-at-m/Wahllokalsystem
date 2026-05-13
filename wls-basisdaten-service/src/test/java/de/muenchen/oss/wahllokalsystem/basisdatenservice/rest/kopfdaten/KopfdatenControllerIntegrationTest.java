@@ -1,13 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.kopfdaten;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.clients.KonfigurierterWahltagClientMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.KopfdatenRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.kopfdaten.Stimmzettelgebietsart;
@@ -15,10 +14,12 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.Basisdate
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenModelMapper;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.MockDataFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
@@ -33,8 +34,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class KopfdatenControllerIntegrationTest {
 
   @Value("${service.info.oid}")
@@ -59,17 +62,15 @@ public class KopfdatenControllerIntegrationTest {
 
   @Autowired KopfdatenRepository kopfdatenRepository;
 
-  @Autowired KonfigurierterWahltagClientMapper konfigurierterWahltagClientMapper;
-
   @AfterEach
   void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_KOPFDATEN);
     kopfdatenRepository.deleteAll();
   }
 
   @BeforeEach
   void setup() {
     WireMock.resetAllRequests();
-    kopfdatenRepository.deleteAll();
   }
 
   @Nested
@@ -108,10 +109,10 @@ public class KopfdatenControllerIntegrationTest {
                       .withStatus(HttpStatus.OK.value())
                       .withBody(objectMapper.writeValueAsBytes(eaiBasisdaten))));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/" + wahlID + "/" + wahlbezirkID);
-
-      val responseFromController = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseFromController =
+          api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               responseFromController.getResponse().getContentAsString(),
@@ -164,8 +165,6 @@ public class KopfdatenControllerIntegrationTest {
 
       val wahlID1 = "wahlID1";
       val wahlbezirkID1 = "wahlbezirkID1_1";
-      val request1 =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/" + wahlID1 + "/" + wahlbezirkID1);
 
       val expectedKopfdaten1 =
           MockDataFactory.createKopfdatenEntityFor(
@@ -177,7 +176,9 @@ public class KopfdatenControllerIntegrationTest {
               "Bundestagswahl",
               "1201");
 
-      api.perform(request1).andExpect(status().isOk());
+      api.perform(createGetRequest(wahlID1, wahlbezirkID1, wahlbezirkID1))
+          .andExpect(status().isOk());
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_KOPFDATEN);
       List<Kopfdaten> dataFromRepo =
           (List<Kopfdaten>)
               kopfdatenRepository.findAllById(
@@ -192,10 +193,12 @@ public class KopfdatenControllerIntegrationTest {
     @Test
     @Transactional
     void should_loadExistingDataFromRepo_when_noRemoteDataIsPresent() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
       val kopfdatenEntity1 =
           MockDataFactory.createKopfdatenEntityFor(
-              "wahlID1",
-              "wahlbezirkID1_1",
+              wahlID,
+              wahlbezirkID,
               Stimmzettelgebietsart.SG,
               "Munich-Repo1",
               "120",
@@ -210,12 +213,13 @@ public class KopfdatenControllerIntegrationTest {
               "121",
               "Bundestagswahl",
               "1202");
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KOPFDATEN);
       kopfdatenRepository.saveAll(List.of(kopfdatenEntity1, kopfdatenEntity2));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
-
-      val responseFromController_1 = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseFromController_1 =
+          api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO_1 =
           objectMapper.readValue(
               responseFromController_1.getResponse().getContentAsString(),
@@ -251,10 +255,11 @@ public class KopfdatenControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.NOT_FOUND.value())));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
-
-      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isInternalServerError())
+              .andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -295,10 +300,11 @@ public class KopfdatenControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.NOT_FOUND.value())));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
-
-      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isInternalServerError())
+              .andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -337,10 +343,11 @@ public class KopfdatenControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.NOT_FOUND.value())));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
-
-      val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isBadRequest())
+              .andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -380,10 +387,11 @@ public class KopfdatenControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.NO_CONTENT.value())));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/kopfdaten/wahlID1/wahlbezirkID1_1");
-
-      val response = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isBadRequest())
+              .andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -395,6 +403,25 @@ public class KopfdatenControllerIntegrationTest {
               serviceID,
               ExceptionConstants.GETKOPFDATEN_NO_BASISDATEN.message());
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+      return MockMvcRequestBuilders.get("/businessActions/kopfdaten/" + wahlID + "/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_KOPFDATEN),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_KOPFDATEN),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_KOPFDATEN))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 }

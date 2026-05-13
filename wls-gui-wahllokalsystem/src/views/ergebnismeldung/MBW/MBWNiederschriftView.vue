@@ -188,7 +188,8 @@ async function onDruckenClicked() {
     );
 
     if (printWindow) {
-      printWindow.document.body.innerHTML = pdfText;
+      printWindow.document.writeln(pdfText);
+      printWindow.document.close();
       printWindow.print();
       printWindow.close();
     }

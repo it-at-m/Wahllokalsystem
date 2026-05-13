@@ -2,8 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.begruendung;
 
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,16 +27,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, "dummy.nobezirkid.check"})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class BegruendungControllerIntegrationTest {
 
   @Autowired MockMvc api;
@@ -58,7 +58,6 @@ public class BegruendungControllerIntegrationTest {
   class GetBegruendung {
 
     @Test
-    @WithMockUser(authorities = {Authorities.SERVICE_SET_BEGRUENDUNG})
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlID1 = "wahlID1";
@@ -82,6 +81,10 @@ public class BegruendungControllerIntegrationTest {
                       + "/"
                       + stapelart1)
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_SET_BEGRUENDUNG))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
@@ -100,12 +103,6 @@ public class BegruendungControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_BEGRUENDUNG,
-          Authorities.REPOSITORY_READ_BEGRUENDUNG,
-          Authorities.REPOSITORY_WRITE_BEGRUENDUNG
-        })
     void should_returnData_when_dataIsPresentInRepository() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
@@ -124,6 +121,7 @@ public class BegruendungControllerIntegrationTest {
       begruendung1.setGrund2("grund2");
       begruendung1.setUnstimmigkeiten(true);
       begruendung1.setNachzaehlung(true);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_BEGRUENDUNG);
       begruendungRepository.save(begruendung1);
 
       val begruendung2 = new Begruendung();
@@ -143,13 +141,37 @@ public class BegruendungControllerIntegrationTest {
       val expectedResponse =
           new BegruendungDTO(expectedIDOfResponse, "grund1", "grund2", true, true);
 
-      val request =
-          get("/businessActions/begruendung/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1);
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(createGetRequest(wahlID1, wahlbezirkID1, wahlbezirkID1, stapelart1))
+              .andExpect(status().isOk())
+              .andReturn();
 
       val responseBody =
           objectMapper.readValue(response.getResponse().getContentAsString(), BegruendungDTO.class);
       Assertions.assertThat(responseBody).usingRecursiveComparison().isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      api.perform(
+              createGetRequest("wahlID", wahlbezirkID, wahlbezirkID + "sth", Stapelart.LTW_BZW_A))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final Stapelart stapelart) {
+      return MockMvcRequestBuilders.get(
+              "/businessActions/begruendung/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_BEGRUENDUNG),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_BEGRUENDUNG))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 
@@ -157,18 +179,11 @@ public class BegruendungControllerIntegrationTest {
   class PostBegruendung {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_SET_BEGRUENDUNG,
-          Authorities.REPOSITORY_WRITE_BEGRUENDUNG
-        })
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "0";
+      val stapelart = Stapelart.LTW_BZW_A;
       val requestBody = BegruendungDTO.builder().build();
-      val request =
-          post("/businessActions/begruendung/wahlbezirkID/0/LTW_BZW_A")
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
       val expectedWlsExceptionDTO =
           new WlsExceptionDTO(
@@ -177,7 +192,10 @@ public class BegruendungControllerIntegrationTest {
               "WLS-ERGEBNISMELDUNG",
               ExceptionConstants.POST_BEGRUENDUNG_PARAMETER_UNVOLLSTAENDIG.message());
 
-      val result = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val result =
+          api.perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, stapelart, requestBody))
+              .andExpect(status().isBadRequest())
+              .andReturn();
       val resultBodyAsWlsExceptionDTO =
           objectMapper.readValue(result.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
@@ -189,12 +207,6 @@ public class BegruendungControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_SET_BEGRUENDUNG,
-          Authorities.REPOSITORY_READ_BEGRUENDUNG,
-          Authorities.REPOSITORY_WRITE_BEGRUENDUNG
-        })
     void should_persistData_when_noDataIsPresentInRepository() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
@@ -206,11 +218,6 @@ public class BegruendungControllerIntegrationTest {
       val grund2 = "grund2";
 
       val requestBody = new BegruendungDTO(bezirkUndWahlIDStapelartDTO, grund1, grund2, true, true);
-      val request =
-          post("/businessActions/begruendung/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
       val expectedRepoResponse = new Begruendung();
       expectedRepoResponse.setBezirkUndWahlIDStapelart(
@@ -220,7 +227,8 @@ public class BegruendungControllerIntegrationTest {
       expectedRepoResponse.setUnstimmigkeiten(true);
       expectedRepoResponse.setNachzaehlung(true);
 
-      api.perform(request).andExpect(status().isOk());
+      api.perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, stapelart, requestBody))
+          .andExpect(status().isOk());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_BEGRUENDUNG);
       val repoResponse =
@@ -231,6 +239,43 @@ public class BegruendungControllerIntegrationTest {
       Assertions.assertThat(repoResponse)
           .usingRecursiveComparison()
           .isEqualTo(expectedRepoResponse);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val stapelart = Stapelart.LTW_BZW_A;
+      val stapelartDTO = StapelartDTO.LTW_BZW_A;
+      val bezirkUndWahlIDStapelartDTO =
+          new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, stapelartDTO);
+      val grund1 = "grund1";
+      val grund2 = "grund2";
+
+      val requestBody = new BegruendungDTO(bezirkUndWahlIDStapelartDTO, grund1, grund2, true, true);
+      api.perform(
+              createPostRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", stapelart, requestBody))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createPostRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final Stapelart stapelart,
+        final BegruendungDTO requestBody)
+        throws Exception {
+      return MockMvcRequestBuilders.post(
+              "/businessActions/begruendung/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_SET_BEGRUENDUNG),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_BEGRUENDUNG))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
     }
   }
 }

@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatD
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlaegeDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahlvorschlagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Set;
@@ -22,12 +23,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
@@ -40,6 +43,8 @@ public class WahlvorschlaegeServiceSecurityTest {
 
   @Autowired ObjectMapper objectMapper;
 
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+
   @Nested
   class GetWahlvorschlaege {
 
@@ -51,6 +56,9 @@ public class WahlvorschlaegeServiceSecurityTest {
 
     @Test
     void should_grantAccess_when_authoritiesArePresent() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
 
       val wahlID = "wahlID";
@@ -76,6 +84,9 @@ public class WahlvorschlaegeServiceSecurityTest {
     @MethodSource("getMissingAuthoritiesVariations")
     void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor)
         throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
       val wahlID = "wahlID";
@@ -96,6 +107,18 @@ public class WahlvorschlaegeServiceSecurityTest {
                   wahlvorschlaegeService.getWahlvorschlaege(
                       new BezirkUndWahlID(wahlID, wahlbezirkID)))
           .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
+      BezirkUndWahlID bezirkUndWahlID = new BezirkUndWahlID("wahlID01", "wahlbezirkID01");
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> wahlvorschlaegeService.getWahlvorschlaege(bezirkUndWahlID))
+          .withMessageStartingWith("Access Denied");
     }
 
     private static Stream<Arguments> getMissingAuthoritiesVariations() {

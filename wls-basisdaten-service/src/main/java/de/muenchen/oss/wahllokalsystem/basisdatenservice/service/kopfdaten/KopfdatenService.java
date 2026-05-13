@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +23,11 @@ public class KopfdatenService {
   private final KopfdatenModelMapper kopfdatenModelMapper;
   private final KopfdatenMapper kopfDataInitializer;
 
-  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')")
+  @PreAuthorize(
+      "hasAuthority('Basisdaten_BUSINESSACTION_GetKopfdaten')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   @Transactional
-  public KopfdatenModel getKopfdaten(BezirkUndWahlID bezirkUndWahlID) {
+  public KopfdatenModel getKopfdaten(@P("bezirkUndWahl") BezirkUndWahlID bezirkUndWahlID) {
     final KopfdatenModel kopfdatenModel;
 
     kopfdatenValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);

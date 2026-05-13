@@ -83,7 +83,6 @@ describe("differenceDialogUtils.ts", () => {
 
       stimmabgabevermerkeStore.stimmabgabevermerke = [testStimmabgabevermerke];
 
-      // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
       const vermerkeSum = testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
         (sum, vermerk) => {
           const kleinStimmzettel = vermerk.stimmzettel.find(
@@ -206,7 +205,6 @@ describe("differenceDialogUtils.ts", () => {
         ];
 
         const vermerkeSum =
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
           testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
             (sum, vermerk) => {
               const kleinStimmzettel = vermerk.stimmzettel.find(

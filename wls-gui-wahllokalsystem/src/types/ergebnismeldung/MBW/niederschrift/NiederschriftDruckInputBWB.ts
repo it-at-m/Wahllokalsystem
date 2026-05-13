@@ -61,7 +61,6 @@ export class Partei {
     let cellEmpty = false;
     let rowNr = 0;
     while (rowNr < this._tabledata.length && !cellEmpty) {
-      //@ts-expect-error old code, will be refactored later
       if (!this._tabledata[rowNr][colNr]) {
         cellEmpty = true;
         // @ts-expect-error old code, will be refactored later

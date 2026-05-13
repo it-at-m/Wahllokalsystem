@@ -4,13 +4,12 @@
       <thead>
         <tr>
           <th class="sav-first-column border-b-0" />
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
             class="pl-0 font-weight-bold dynamic-column"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             {{
               wahlenActions.getWahlNameOrBlankStringById(
                 stimmabgabevermerk.wahldaten[0].wahlID
@@ -23,13 +22,12 @@
         <tr>
           <!-- placeholder column for spacing -->
           <td />
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
             :key="stimmabgabevermerk.wahldaten[0].wahlID"
             class="pl-0"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             <base-number-input
               max-width="15rem"
               :rules="[required]"

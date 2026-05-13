@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,9 +22,11 @@ public class ReferendumvorlagenService {
 
   private final ReferendumvorlagenRepository referendumvorlagenRepository;
 
-  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')")
+  @PreAuthorize(
+      "hasAuthority('Basisdaten_BUSINESSACTION_GetReferendumvorlagen')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)")
   public ReferendumvorlagenModel getReferendumvorlagen(
-      final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
+      @P("param") final ReferendumvorlagenReferenceModel referendumvorlagenReferenceModel) {
     log.info("#getReferendumvorlagen");
 
     referendumvorlagenValidator.validReferumvorlageReferenceModelOrThrow(

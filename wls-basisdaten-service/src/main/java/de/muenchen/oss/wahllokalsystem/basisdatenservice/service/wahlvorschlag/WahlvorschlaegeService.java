@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +24,12 @@ public class WahlvorschlaegeService {
   private final WahlvorschlaegeValidator wahlvorschlaegeValidator;
   private final WahlvorschlaegeClient wahlvorschlaegeClient;
 
-  @PreAuthorize("hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')")
+  @PreAuthorize(
+      "hasAuthority('Basisdaten_BUSINESSACTION_GetWahlvorschlaege')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
   @Transactional
-  public WahlvorschlaegeModel getWahlvorschlaege(final BezirkUndWahlID bezirkUndWahlID) {
+  public WahlvorschlaegeModel getWahlvorschlaege(
+      @P("bezirkUndWahl") final BezirkUndWahlID bezirkUndWahlID) {
     log.debug("#getWahlvorschlaege bezirkUndWahlID > {}", bezirkUndWahlID);
 
     wahlvorschlaegeValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);

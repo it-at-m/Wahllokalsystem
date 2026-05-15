@@ -28,7 +28,7 @@ export function useOBWStapelAUtils(
     getWahlvorschlaegeByWahlIDAndWahlbezirkID,
   } = useWahlvorschlaegeStore();
 
-  const { logWarn } = useLogging("obwUtilsStapelAUtils");
+  const { logWarn } = useLogging("obwStapelAUtils.ts");
 
   const ergebnisseAndWahlvorschlaege = computed<ErgebnisAndWahlvorschlag[]>(
     () => {

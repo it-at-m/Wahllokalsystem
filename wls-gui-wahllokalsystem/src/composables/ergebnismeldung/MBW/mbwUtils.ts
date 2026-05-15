@@ -335,12 +335,12 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
           .catch(() => {
             status.niederschrift.uebermittelt = false;
           })
-          .finally(() => {
+          .finally(async () => {
             status.niederschrift.validierungsstatus =
               MeldungValidierungsstatusEnum.Valide;
             status.niederschrift.sendeuhrzeit =
               toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-            postStatus(wahlID, wahlbezirkID, status, false);
+            await postStatus(wahlID, wahlbezirkID, status, false);
           });
       }
     } finally {

@@ -78,6 +78,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
@@ -93,6 +94,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
 
       const successExpansionPanel = wrapper.findComponent(
@@ -120,6 +122,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
@@ -135,6 +138,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
 
       const failedExpansionPanel = wrapper.findComponent(
@@ -162,6 +166,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 5;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
@@ -237,6 +242,7 @@ describe("BaseOfflineLoading.vue", () => {
       const taskManagerStore = useInitTaskManagerStore();
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 0;
+      // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = false;
 
       await nextTick();

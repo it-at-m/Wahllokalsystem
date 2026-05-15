@@ -247,10 +247,8 @@ describe("BaseOfflineLoading.vue", () => {
 
       await nextTick();
 
-      const refreshButton = wrapper.find('[data-test="weiter-button"]');
-      expect(refreshButton.element.hasAttribute("disabled")).toStrictEqual(
-        true
-      );
+      const weiterButton = wrapper.find('[data-test="weiter-button"]');
+      expect(weiterButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
   });
 });

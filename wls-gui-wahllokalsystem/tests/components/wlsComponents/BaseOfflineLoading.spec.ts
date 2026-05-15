@@ -78,6 +78,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -92,6 +93,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      taskManagerStore.hasTasksToRun = true;
 
       const successExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-success"]'
@@ -118,6 +120,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -132,6 +135,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      taskManagerStore.hasTasksToRun = true;
 
       const failedExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-failed"]'
@@ -158,6 +162,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 5;
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -226,6 +231,20 @@ describe("BaseOfflineLoading.vue", () => {
       await refreshButton.trigger("click");
 
       expect(taskManagerStore.rerunFailedTasks).toHaveBeenCalled();
+    });
+
+    it("should_disableWeiterButton_when_hasNoTasksToRun", async () => {
+      const taskManagerStore = useInitTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.numberOfTasksToRun = 0;
+      taskManagerStore.hasTasksToRun = false;
+
+      await nextTick();
+
+      const refreshButton = wrapper.find('[data-test="weiter-button"]');
+      expect(refreshButton.element.hasAttribute("disabled")).toStrictEqual(
+        true
+      );
     });
   });
 });

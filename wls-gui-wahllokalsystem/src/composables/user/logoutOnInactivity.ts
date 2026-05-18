@@ -11,7 +11,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 const TIMEOUT_TITLE = "Inaktivität";
 
 export function useLogoutOnInactivity() {
-  const { logDebug } = useLogging("LogoutOnInactivity");
+  const { logDebug } = useLogging("logoutOnInactivity");
 
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 

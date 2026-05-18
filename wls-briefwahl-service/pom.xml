@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-briefwahl-service</artifactId>
-    <version>0.3.12-SNAPSHOT</version>
+    <version>0.3.13-SNAPSHOT</version>
     <name>wls_briefwahl_service</name>
 
 

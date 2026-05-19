@@ -78,7 +78,7 @@ export function useHelpIconCallbacks() {
   return {
     openWahlraumfinder,
     openWaehlerverzeichnis,
-    callbackWaehlerverzeichnisAvailable: waehlerverzeichnisAvailable,
+    waehlerverzeichnisAvailable,
     startFernzugriff,
     printTestdruck,
   };

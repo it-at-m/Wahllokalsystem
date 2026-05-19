@@ -47,7 +47,7 @@ const { downloadHandbuch } = useHandbuchService();
 const {
   openWahlraumfinder,
   openWaehlerverzeichnis,
-  callbackWaehlerverzeichnisAvailable,
+  waehlerverzeichnisAvailable,
   startFernzugriff,
   printTestdruck,
 } = useHelpIconCallbacks();
@@ -88,7 +88,7 @@ const infoHelpData = computed(() => {
   return allItems.filter((item) => {
     //Filter bei Wählerverzeichnis nach Vorhandensein der URL
     if (item.title === "Wählerverzeichnis") {
-      return callbackWaehlerverzeichnisAvailable();
+      return waehlerverzeichnisAvailable();
     }
     //Rest wird immer angezeigt
     return true;

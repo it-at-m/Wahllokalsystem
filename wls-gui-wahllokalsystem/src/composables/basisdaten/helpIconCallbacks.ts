@@ -25,6 +25,30 @@ export function useHelpIconCallbacks() {
     }
   }
 
+  function openWaehlerverzeichnis() {
+    if (konfigurationsparameter.value) {
+      const waehlerverzeichnisParam = konfigurationsparameter.value.find(
+        (param) => param.schluessel === "WAEHLERVERZEICHNIS_URL"
+      );
+      if (waehlerverzeichnisParam) {
+        const win = window.open(waehlerverzeichnisParam.wert, "_blank");
+        if (win) {
+          win.focus();
+        }
+      }
+    }
+  }
+
+  function waehlerverzeichnisAvailable(): boolean {
+    if (konfigurationsparameter.value) {
+      const waehlerverzeichnisParam = konfigurationsparameter.value.find(
+        (param) => param.schluessel === "WAEHLERVERZEICHNIS_URL"
+      );
+      return !!waehlerverzeichnisParam && !!waehlerverzeichnisParam.wert;
+    }
+    return false;
+  }
+
   function startFernzugriff() {
     const win = window.open(TEAMVIEWER_URL, "_blank");
     if (win) {
@@ -51,5 +75,11 @@ export function useHelpIconCallbacks() {
     }
   }
 
-  return { openWahlraumfinder, startFernzugriff, printTestdruck };
+  return {
+    openWahlraumfinder,
+    openWaehlerverzeichnis,
+    callbackWaehlerverzeichnisAvailable: waehlerverzeichnisAvailable,
+    startFernzugriff,
+    printTestdruck,
+  };
 }

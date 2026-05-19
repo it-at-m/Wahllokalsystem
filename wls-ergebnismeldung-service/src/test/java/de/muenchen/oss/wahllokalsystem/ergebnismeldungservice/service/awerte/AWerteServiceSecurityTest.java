@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.WahlberechtigteDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.LoggerExtension;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.List;
 import lombok.val;
@@ -17,12 +18,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
@@ -34,6 +37,8 @@ class AWerteServiceSecurityTest {
   @Autowired AWerteRepository aWerteRepository;
 
   @Autowired ObjectMapper objectMapper;
+
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
   @RegisterExtension public LoggerExtension loggerExtension = new LoggerExtension();
 
@@ -49,6 +54,9 @@ class AWerteServiceSecurityTest {
     @Test
     void should_grantAccessAndThrowNoException_when_allAuthoritiesUserGetAWerteIsValid()
         throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_USER_GET_AWERTE);
 
       val wahlbezirkID = "wahlbezirkID";
@@ -74,6 +82,9 @@ class AWerteServiceSecurityTest {
     @Test
     void should_grantAccessAndThrowNoException_when_allAuthoritiesAdminGetAWerteIsValid()
         throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_ADMIN_GET_AWERTE);
 
       val wahlbezirkID = "wahlbezirkID";
@@ -99,6 +110,9 @@ class AWerteServiceSecurityTest {
     @Test
     void should_logErrorAndThrowNoException_when_repositorySaveAWerteAuthorityIsMissing()
         throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.SERVICE_GET_AWERTE);
 
       val wahlbezirkID = "wahlbezirkID";
@@ -124,6 +138,9 @@ class AWerteServiceSecurityTest {
 
     @Test
     void should_failWithAccessDeniedException_when_anyAuthorityIsMissing() throws Exception {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith();
       val wahlbezirkID = "wahlbezirkID";
       val eaiWahlberechtigte = createListOfWahlberechtigteDTO();
@@ -138,6 +155,20 @@ class AWerteServiceSecurityTest {
 
       Assertions.assertThatThrownBy(() -> aWerteService.getAWerte(wahlbezirkID))
           .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_USER_GET_AWERTE);
+
+      val wahlbezirkID = "wahlbezirkID";
+
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> aWerteService.getAWerte(wahlbezirkID))
+          .withMessageStartingWith("Access Denied");
     }
 
     private List<WahlberechtigteDTO> createListOfWahlberechtigteDTO() {

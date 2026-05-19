@@ -32,7 +32,7 @@ const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
-const { logError } = useLogging("requestStrategies");
+const { logError } = useLogging("mbwStapelDView");
 const { getNextRoute } = useNavigationUtils();
 
 const wahlID = route.params.wahlId as string;

@@ -46,7 +46,7 @@
         data-test="weiter-button"
         class="ma-4"
         prepend-icon="$continue"
-        :disabled="isLoading"
+        :disabled="isLoading || !hasTasksToRun"
         active
         @click="onContinueClicked"
         >Weiter</base-text-button
@@ -86,6 +86,7 @@ const {
   successfullyTasks,
   failedTasks,
   hasAllTasksRunSuccessfully,
+  hasTasksToRun,
 } = storeToRefs(useInitTaskManagerStore());
 const { rerunFailedTasks } = useInitTaskManagerStore();
 const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());

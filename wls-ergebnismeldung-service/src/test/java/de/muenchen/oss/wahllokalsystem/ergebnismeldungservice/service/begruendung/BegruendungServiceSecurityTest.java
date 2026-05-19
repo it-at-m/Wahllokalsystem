@@ -69,6 +69,23 @@ class BegruendungServiceSecurityTest {
           .isThrownBy(() -> unitUnderTest.getBegruendung(begruendungReference));
     }
 
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BEGRUENDUNG);
+      val wahlbezirkID = "wahlbezirkID";
+      val begruendungReference =
+          begruendungDTOMapper.toReferenceModel(wahlbezirkID, "wahlID", StapelartDTO.LTW_BZW_A);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getBegruendung(begruendungReference))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
     @ParameterizedTest(name = "{index} - {1} missing")
     @MethodSource("getMissingAuthoritiesVariations")
     void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(

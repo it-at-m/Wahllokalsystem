@@ -1,9 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine;
 
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,9 +13,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.WahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -28,14 +29,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, NO_BEZIRKS_ID_CHECK})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlscheineControllerIntegrationTest {
 
   @Autowired WahlscheineRepository wahlscheineRepository;
@@ -50,6 +53,7 @@ public class WahlscheineControllerIntegrationTest {
 
   @AfterEach
   void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_WAHLSCHEINE);
     wahlscheineRepository.deleteAll();
   }
 
@@ -61,13 +65,18 @@ public class WahlscheineControllerIntegrationTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val stimmabgabevermerke = 33;
-      val request = MockMvcRequestBuilders.get(buildWahlscheineURI(wahlID, wahlbezirkID));
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLSCHEINE);
       val entityToFind =
           new Wahlscheine(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
       wahlscheineRepository.save(entityToFind);
 
-      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val response =
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse();
       val responseBodyAsDTO =
           objectMapper.readValue(response.getContentAsString(), WahlscheineDTO.class);
 
@@ -80,10 +89,13 @@ public class WahlscheineControllerIntegrationTest {
     void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val request = MockMvcRequestBuilders.get(buildWahlscheineURI(wahlID, wahlbezirkID));
 
       val response =
-          mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isNoContent())
+              .andReturn()
+              .getResponse();
 
       Assertions.assertThat(response.getContentAsString()).isEmpty();
     }
@@ -92,10 +104,13 @@ public class WahlscheineControllerIntegrationTest {
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
       val wahlID = "    ";
       val wahlbezirkID = "wahlbezirkID";
-      val request = MockMvcRequestBuilders.get(buildWahlscheineURI(wahlID, wahlbezirkID));
 
       val response =
-          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isBadRequest())
+              .andReturn()
+              .getResponse();
       val receivedWlsException =
           objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
@@ -106,6 +121,28 @@ public class WahlscheineControllerIntegrationTest {
               "WLS-ERGEBNISMELDUNG",
               ExceptionConstants.GET_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+
+      mockMvc
+          .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+      return MockMvcRequestBuilders.get(
+              "/businessActions/wahlscheine/" + wahlID + "/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLSCHEINE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLSCHEINE))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 
@@ -120,18 +157,17 @@ public class WahlscheineControllerIntegrationTest {
       val requestBody =
           new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
-      val request =
-          MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
       WireMock.stubFor(
           WireMock.post(UrlPattern.ANY)
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+          .andExpect(status().isOk())
+          .andReturn()
+          .getResponse();
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLSCHEINE);
       val entityFromRepo = wahlscheineRepository.findById(requestBody.bezirkUndWahlID()).get();
       val expectedEntity =
           wahlscheineModelMapper.toEntity(wahlscheineDTOMapper.toModel(requestBody));
@@ -146,12 +182,7 @@ public class WahlscheineControllerIntegrationTest {
       val requestBody =
           new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
-      val request =
-          MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLSCHEINE);
       val entityToReplace = new Wahlscheine(requestBody.bezirkUndWahlID(), 77L);
       Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
       wahlscheineRepository.save(entityToReplace);
@@ -160,8 +191,13 @@ public class WahlscheineControllerIntegrationTest {
           WireMock.post(UrlPattern.ANY)
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+          .andExpect(status().isOk())
+          .andReturn()
+          .getResponse();
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLSCHEINE);
       val entityFromRepo = wahlscheineRepository.findById(requestBody.bezirkUndWahlID()).get();
       val expectedEntity =
           wahlscheineModelMapper.toEntity(wahlscheineDTOMapper.toModel(requestBody));
@@ -176,14 +212,12 @@ public class WahlscheineControllerIntegrationTest {
       val requestBody =
           new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
 
-      val request =
-          MockMvcRequestBuilders.post(buildWahlscheineURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
       val response =
-          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+          mockMvc
+              .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+              .andExpect(status().isBadRequest())
+              .andReturn()
+              .getResponse();
       val receivedWlsException =
           objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
@@ -195,9 +229,40 @@ public class WahlscheineControllerIntegrationTest {
               ExceptionConstants.POST_WAHLSCHEINE_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
     }
-  }
 
-  private String buildWahlscheineURI(final String wahlID, final String wahlbezirkID) {
-    return "/businessActions/wahlscheine/" + wahlID + "/" + wahlbezirkID;
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val stimmabgabevermerke = 33L;
+      val requestBody =
+          new WahlscheineDTO(new BezirkUndWahlID(wahlID, wahlbezirkID), stimmabgabevermerke);
+
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", requestBody))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createPostRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final WahlscheineDTO requestBody)
+        throws Exception {
+      return MockMvcRequestBuilders.post(
+              "/businessActions/wahlscheine/" + wahlID + "/" + wahlbezirkID)
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_SET_WAHLSCHEINE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLSCHEINE))
+                  .jwt(
+                      jwt ->
+                          jwt.claim("wahlbezirkID", claimWahlbezirkID)
+                              .claim("wahlbezirksArt", "BWB")))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
+    }
   }
 }

@@ -54,11 +54,16 @@ public class StimmabgabevermerkeServiceSecurityTest {
     void should_getAccess_when_allRequiredAuthoritiesArePresent() {
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
 
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
       Assertions.assertThatNoException()
           .isThrownBy(
               () ->
                   stimmabgabevermerkeService.getStimmabgabevermerke(
-                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)));
+                      new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L)));
     }
 
     @ParameterizedTest(name = "{index} = {1} missing")
@@ -67,10 +72,32 @@ public class StimmabgabevermerkeServiceSecurityTest {
         final ArgumentsAccessor arguments) {
       SecurityUtils.runWith(arguments.get(0, String[].class));
 
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
       Assertions.assertThatThrownBy(
               () ->
                   stimmabgabevermerkeService.getStimmabgabevermerke(
-                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)))
+                      new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDCheckReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
+
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(
+              () ->
+                  stimmabgabevermerkeService.getStimmabgabevermerke(
+                      new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, 0L)))
           .isInstanceOf(AccessDeniedException.class);
     }
 

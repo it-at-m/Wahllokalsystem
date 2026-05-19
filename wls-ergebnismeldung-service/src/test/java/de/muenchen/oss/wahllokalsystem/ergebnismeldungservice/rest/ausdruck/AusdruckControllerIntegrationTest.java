@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ausdruck;
 
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
-import static de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK;
 import static org.mockito.Mockito.mockStatic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +13,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Au
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.Meldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ausdruck.WahlUndBezirkIDUndMeldungsart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators;
 import java.time.Clock;
 import java.time.Instant;
@@ -30,13 +31,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, NO_BEZIRKS_ID_CHECK, SPRING_NO_SECURITY_PROFILE})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class AusdruckControllerIntegrationTest {
 
   @Autowired AusdruckRepository ausdruckRepository;
@@ -65,9 +68,6 @@ public class AusdruckControllerIntegrationTest {
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
 
-      val request =
-          MockMvcRequestBuilders.get(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart));
-
       val entityToFind =
           new Ausdruck(
               new WahlUndBezirkIDUndMeldungsart(wahlbezirkID, wahlID, meldungsart),
@@ -75,7 +75,12 @@ public class AusdruckControllerIntegrationTest {
               erstelltAm);
       ausdruckRepository.save(entityToFind);
 
-      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val response =
+          mockMvc
+              .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse();
       val responseBodyAsByteArray = response.getContentAsString();
 
       Assertions.assertThat(response.getHeader("Content-Type"))
@@ -89,17 +94,32 @@ public class AusdruckControllerIntegrationTest {
       val wahlbezirkID = "wahlbezirkID";
       val meldungsart = Meldungsart.V1;
 
-      val request =
-          MockMvcRequestBuilders.get(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart));
-
-      mockMvc.perform(request).andExpect(status().isNotFound());
+      mockMvc
+          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+          .andExpect(status().isNotFound());
     }
 
     @Test
     void should_returnBadRequest_when_requestIsInvalid() throws Exception {
-      val request = MockMvcRequestBuilders.get(buildGetPostAusdruckURI(" ", " ", Meldungsart.V1));
+      val wahlID = " ";
+      val wahlbezirkID = " ";
+      val meldungsart = Meldungsart.V1;
 
-      mockMvc.perform(request).andExpect(status().isBadRequest());
+      mockMvc
+          .perform(createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart))
+          .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val meldungsart = Meldungsart.V1;
+
+      mockMvc
+          .perform(
+              createGetAusdruckRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", meldungsart))
+          .andExpect(status().isForbidden());
     }
   }
 
@@ -133,12 +153,10 @@ public class AusdruckControllerIntegrationTest {
       val entityToFind = new Ausdruck(idToFind, content, erstelltAm);
 
       val requestBody = new AusdruckWriteDTO(content);
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
-      mockMvc.perform(request).andExpect(status().isOk());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .andExpect(status().isOk());
 
       val persistedEntity = ausdruckRepository.findById(idToFind);
 
@@ -164,12 +182,10 @@ public class AusdruckControllerIntegrationTest {
       val contentToOverwrite = "Überschriebener Testausdruck";
       val expectedOverwrittenEntity = new Ausdruck(idToFind, contentToOverwrite, erstelltAm);
       val requestBody = new AusdruckWriteDTO(contentToOverwrite);
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
-      mockMvc.perform(request).andExpect(status().isOk());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .andExpect(status().isOk());
 
       val persistedEntity = ausdruckRepository.findById(idToFind);
 
@@ -185,10 +201,10 @@ public class AusdruckControllerIntegrationTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val meldungsart = Meldungsart.V1;
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart));
 
-      mockMvc.perform(request).andExpect(status().isBadRequest());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, null))
+          .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
     }
@@ -201,12 +217,10 @@ public class AusdruckControllerIntegrationTest {
       val content = "Testausdruck";
 
       val requestBody = new AusdruckWriteDTO(content);
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
-      mockMvc.perform(request).andExpect(status().isBadRequest());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
     }
@@ -217,14 +231,11 @@ public class AusdruckControllerIntegrationTest {
       val wahlbezirkID = " ";
       val meldungsart = Meldungsart.V1;
       val content = "Testausdruck";
-
       val requestBody = new AusdruckWriteDTO(content);
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, meldungsart))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
-      mockMvc.perform(request).andExpect(status().isBadRequest());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, meldungsart, requestBody))
+          .andExpect(status().isBadRequest());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
     }
@@ -237,14 +248,27 @@ public class AusdruckControllerIntegrationTest {
       val content = "Testausdruck";
 
       val requestBody = new AusdruckWriteDTO(content);
-      val request =
-          MockMvcRequestBuilders.post(buildGetPostAusdruckURI(wahlID, wahlbezirkID, null))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
 
-      mockMvc.perform(request).andExpect(status().isInternalServerError());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, null, requestBody))
+          .andExpect(status().isInternalServerError());
 
       Assertions.assertThat(ausdruckRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      val meldungsart = Meldungsart.V1;
+      val content = "Testausdruck";
+      val requestBody = new AusdruckWriteDTO(content);
+
+      mockMvc
+          .perform(
+              createPostRequest(
+                  wahlID, wahlbezirkID, wahlbezirkID + "sth", meldungsart, requestBody))
+          .andExpect(status().isForbidden());
     }
   }
 
@@ -257,8 +281,6 @@ public class AusdruckControllerIntegrationTest {
       val wahlbezirkID = "wahlbezirkID";
       val content = "Testausdruck";
       val erstelltAm = Instant.now();
-
-      val request = MockMvcRequestBuilders.get(buildGetAllAusdruckeURI(wahlID, wahlbezirkID));
 
       val entityToFind1 =
           new Ausdruck(
@@ -273,7 +295,11 @@ public class AusdruckControllerIntegrationTest {
       ausdruckRepository.save(entityToFind1);
       ausdruckRepository.save(entityToFind2);
 
-      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          mockMvc
+              .perform(createGetAllAusdruckeRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), AusdruckReadDTO[].class);
@@ -296,23 +322,77 @@ public class AusdruckControllerIntegrationTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
 
-      val request = MockMvcRequestBuilders.get(buildGetAllAusdruckeURI(wahlID, wahlbezirkID));
-
-      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          mockMvc
+              .perform(createGetAllAusdruckeRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), AusdruckReadDTO[].class);
 
       Assertions.assertThat(responseBodyAsDTO.length).isEqualTo(0);
     }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlID = "wahlID";
+      val wahlbezirkID = "wahlbezirkID";
+      mockMvc
+          .perform(createGetAllAusdruckeRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
   }
 
-  private String buildGetPostAusdruckURI(
-      final String wahlID, final String wahlbezirkID, final Meldungsart meldungsart) {
-    return "/businessActions/ausdruck/" + wahlID + "/" + wahlbezirkID + "/" + meldungsart + "/html";
+  private MockHttpServletRequestBuilder createPostRequest(
+      final String wahlID,
+      final String wahlbezirkID,
+      final String claimWahlbezirkID,
+      final Meldungsart meldungsart,
+      final AusdruckWriteDTO requestBody)
+      throws Exception {
+    return MockMvcRequestBuilders.post(
+            "/businessActions/ausdruck/"
+                + wahlID
+                + "/"
+                + wahlbezirkID
+                + "/"
+                + meldungsart
+                + "/html")
+        .with(csrf())
+        .with(
+            jwt()
+                .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_AUSDRUCK))
+                .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(requestBody));
   }
 
-  private String buildGetAllAusdruckeURI(final String wahlID, final String wahlbezirkID) {
-    return "/businessActions/ausdruck/" + wahlID + "/" + wahlbezirkID;
+  private MockHttpServletRequestBuilder createGetAusdruckRequest(
+      final String wahlID,
+      final String wahlbezirkID,
+      final String claimWahlbezirkID,
+      final Meldungsart meldungsart) {
+    return MockMvcRequestBuilders.get(
+            "/businessActions/ausdruck/"
+                + wahlID
+                + "/"
+                + wahlbezirkID
+                + "/"
+                + meldungsart
+                + "/html")
+        .with(
+            jwt()
+                .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_AUSDRUCK))
+                .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
+  }
+
+  private MockHttpServletRequestBuilder createGetAllAusdruckeRequest(
+      final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+    return MockMvcRequestBuilders.get("/businessActions/ausdruck/" + wahlID + "/" + wahlbezirkID)
+        .with(
+            jwt()
+                .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_GET_AUSDRUCK))
+                .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
   }
 }

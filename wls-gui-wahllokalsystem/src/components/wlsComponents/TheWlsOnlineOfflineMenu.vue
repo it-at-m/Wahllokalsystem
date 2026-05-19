@@ -19,7 +19,7 @@
         <v-list-item>
           <base-text-button
             :loading="isCheckingStatus"
-            color="primary"
+            active
             style="width: 100%"
             @click.stop="onCheckStatusClicked"
           >
@@ -38,7 +38,6 @@
               @sync-error="isOfflineSyncDialogVisible = false"
               @sync-success="isOfflineSyncDialogVisible = false"
             />
-            <offline-syncer-button @click="isOfflineSyncDialogVisible = true" />
           </v-row>
         </v-list-item>
         <v-divider
@@ -46,6 +45,14 @@
           color="black"
         />
         <v-list-item> {{ onlineOfflineExplanation }}</v-list-item>
+        <v-list-item>
+          <base-text-button
+            active
+            @click="isOfflineSyncDialogVisible = true"
+          >
+            Daten Synchronisieren
+          </base-text-button>
+        </v-list-item>
       </v-list>
     </v-card>
   </v-menu>
@@ -56,7 +63,6 @@ import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import OfflineSyncerButton from "@/components/wlsComponents/OfflineSyncerButton.vue";
 import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import { useInterval } from "@/composables/scheduler/interval.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";

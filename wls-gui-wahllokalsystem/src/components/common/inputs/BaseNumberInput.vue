@@ -9,6 +9,7 @@
     ]"
     control-variant="hidden"
     @keydown.capture="onKeyDownCapture"
+    @keydown.enter.prevent
   />
 </template>
 

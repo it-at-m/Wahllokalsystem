@@ -54,7 +54,12 @@ class StatusServiceSecurityTest {
     void should_getAccess_when_allRequiredAuthoritiesArePresent() {
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STATUS);
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
 
       Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getStatus(id));
     }
@@ -65,7 +70,29 @@ class StatusServiceSecurityTest {
         final ArgumentsAccessor arguments) {
       SecurityUtils.runWith(arguments.get(0, String[].class));
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getStatus(id))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STATUS);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getStatus(id))

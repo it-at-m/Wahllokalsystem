@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-expansion-panels class="mt-4">
+    <p
+      v-if="!showTasks"
+      class="my-3"
+    >
+      {{ titel }} ({{ current }} / {{ total }})
+    </p>
+    <v-expansion-panels v-else>
       <v-expansion-panel elevation="0">
         <v-expansion-panel-title class="pl-0">
           {{ titel }} ({{ current }} / {{ total }})
@@ -21,12 +27,18 @@
 <script setup lang="ts">
 import type { Task } from "@/types/tasks/Task.ts";
 
-defineProps<{
+const {
+  titel,
+  current,
+  total,
+  showTasks = true,
+} = defineProps<{
   titel: string;
   isLoading: boolean;
   current: number;
   total: number;
   tasks: Task[];
   color?: string;
+  showTasks?: boolean;
 }>();
 </script>

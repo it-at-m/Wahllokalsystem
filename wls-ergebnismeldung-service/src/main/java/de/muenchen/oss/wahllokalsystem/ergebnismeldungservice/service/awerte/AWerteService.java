@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,8 +26,9 @@ public class AWerteService extends AbstractAWerteService {
   }
 
   @PreAuthorize(
-      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten')")
-  public List<AWerteModel> getAWerte(String wahlbezirkID) {
+      "(hasAuthority('Ergebnismeldung_BUSINESSACTION_GetAWerte') OR hasAuthority('Admin_BUSINESSACTION_LoadWahltermindaten'))"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public List<AWerteModel> getAWerte(@P("wahlbezirkID") String wahlbezirkID) {
     return super.getAWerte(wahlbezirkID);
   }
 

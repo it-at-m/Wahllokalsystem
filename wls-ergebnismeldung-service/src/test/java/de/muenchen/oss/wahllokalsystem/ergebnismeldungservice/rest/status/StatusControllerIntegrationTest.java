@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status;
 
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,10 +15,12 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Stat
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusModelMapper;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.TimePrecisionComparators;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -31,19 +33,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(
-    profiles = {
-      SPRING_TEST_PROFILE,
-      SPRING_NO_SECURITY_PROFILE,
-      de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK
-    })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class StatusControllerIntegrationTest {
 
   @Autowired StatusRepository statusRepository;
@@ -58,6 +57,7 @@ public class StatusControllerIntegrationTest {
 
   @BeforeEach
   void setup() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_STATUS);
     statusRepository.deleteAll();
   }
 
@@ -68,15 +68,20 @@ public class StatusControllerIntegrationTest {
     void should_returnData_when_dataIsPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STATUS);
       val schnellMeldung = createMeldung();
       val niederschrift = createMeldung();
       val entityToFind =
           new Status(new BezirkUndWahlID(wahlID, wahlbezirkID), schnellMeldung, niederschrift);
       statusRepository.save(entityToFind);
 
-      val response = mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      val response =
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse();
       val responseBodyAsDTO =
           objectMapper.readValue(response.getContentAsString(), StatusDTO.class);
 
@@ -93,10 +98,13 @@ public class StatusControllerIntegrationTest {
     void should_returnNoContent_when_dataIsNotPresentInRepository() throws Exception {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
-      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
 
       val response =
-          mockMvc.perform(request).andExpect(status().isNoContent()).andReturn().getResponse();
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isNoContent())
+              .andReturn()
+              .getResponse();
 
       Assertions.assertThat(response.getContentAsString()).isEmpty();
     }
@@ -105,10 +113,13 @@ public class StatusControllerIntegrationTest {
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
       val wahlID = "    ";
       val wahlbezirkID = "wahlbezirkID";
-      val request = MockMvcRequestBuilders.get(buildStatusURI(wahlID, wahlbezirkID));
 
       val response =
-          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+          mockMvc
+              .perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isBadRequest())
+              .andReturn()
+              .getResponse();
       val receivedWlsException =
           objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
@@ -119,6 +130,25 @@ public class StatusControllerIntegrationTest {
               "WLS-ERGEBNISMELDUNG",
               ExceptionConstants.GET_STATUS_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      mockMvc
+          .perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+      return MockMvcRequestBuilders.get("/businessActions/status/" + wahlID + "/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_STATUS),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 
@@ -133,18 +163,17 @@ public class StatusControllerIntegrationTest {
           new StatusDTO(
               new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-      val request =
-          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
       WireMock.stubFor(
           WireMock.post(UrlPattern.ANY)
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+          .andExpect(status().isOk())
+          .andReturn()
+          .getResponse();
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_STATUS);
       val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
       val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
       Assertions.assertThat(entityFromRepo)
@@ -162,12 +191,7 @@ public class StatusControllerIntegrationTest {
           new StatusDTO(
               new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-      val request =
-          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STATUS);
       val schnellmeldung = createMeldung();
       schnellmeldung.setGedruckt(!requestBody.schnellmeldung().gedruckt());
       val niederschrift = createMeldung();
@@ -181,8 +205,13 @@ public class StatusControllerIntegrationTest {
           WireMock.post(UrlPattern.ANY)
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-      mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+          .andExpect(status().isOk())
+          .andReturn()
+          .getResponse();
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_STATUS);
       val entityFromRepo = statusRepository.findById(requestBody.bezirkUndWahlID()).get();
       val expectedEntity = statusModelMapper.toEntity(statusDTOMapper.toModel(requestBody));
       Assertions.assertThat(entityFromRepo)
@@ -200,14 +229,12 @@ public class StatusControllerIntegrationTest {
           new StatusDTO(
               new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-      val request =
-          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
       val response =
-          mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn().getResponse();
+          mockMvc
+              .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+              .andExpect(status().isBadRequest())
+              .andReturn()
+              .getResponse();
       val receivedWlsException =
           objectMapper.readValue(response.getContentAsString(), WlsExceptionDTO.class);
 
@@ -228,12 +255,6 @@ public class StatusControllerIntegrationTest {
           new StatusDTO(
               new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
 
-      val request =
-          MockMvcRequestBuilders.post(buildStatusURI(wahlID, wahlbezirkID))
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody));
-
       WireMock.stubFor(
           WireMock.post("/businessActions/niederschriftDruckuhrzeit")
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
@@ -247,7 +268,40 @@ public class StatusControllerIntegrationTest {
           WireMock.post("/businessActions/schnellmeldungSendungsuhrzeit")
               .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value())));
 
-      mockMvc.perform(request).andExpect(status().isOk());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      val requestBody =
+          new StatusDTO(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), createMeldungDTO(), createMeldungDTO());
+      mockMvc
+          .perform(createPostRequest(wahlID, wahlbezirkID, wahlbezirkID + "sth", requestBody))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createPostRequest(
+        final String wahlID,
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final StatusDTO requestBody)
+        throws Exception {
+      return MockMvcRequestBuilders.post("/businessActions/status/" + wahlID + "/" + wahlbezirkID)
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_SET_STATUS),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STATUS),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STATUS))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
     }
 
     private MeldungDTO createMeldungDTO() {
@@ -264,9 +318,5 @@ public class StatusControllerIntegrationTest {
     meldung.setGedruckt(true);
 
     return meldung;
-  }
-
-  private String buildStatusURI(final String wahlID, final String wahlbezirkID) {
-    return "/businessActions/status/" + wahlID + "/" + wahlbezirkID;
   }
 }

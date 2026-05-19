@@ -4,6 +4,7 @@
  */
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.NaturalIdRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -15,7 +16,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
       "org.springframework.data.jpa.convert.threeten",
       "de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"
     })
-@EnableJpaRepositories(basePackages = {"de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"})
+@EnableJpaRepositories(
+    basePackages = {"de.muenchen.oss.wahllokalsystem.ergebnismeldungservice"},
+    repositoryBaseClass = NaturalIdRepositoryImpl.class)
 @SpringBootApplication(
     scanBasePackages = {
       "org.springframework.data.jpa.convert.threeten",

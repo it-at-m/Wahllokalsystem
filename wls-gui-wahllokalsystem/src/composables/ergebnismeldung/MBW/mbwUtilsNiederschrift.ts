@@ -40,7 +40,7 @@ import { Partei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftD
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-const { logError } = useLogging("requestStrategies");
+const { logError } = useLogging("mbwUtilsNiederschrift");
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { getErgebnisse } = useErgebnisService();
 

@@ -115,7 +115,7 @@ const isDruckenLoading = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
-const { logError } = useLogging("mbwUtils");
+const { logError } = useLogging("mbwNiederschriftView");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);

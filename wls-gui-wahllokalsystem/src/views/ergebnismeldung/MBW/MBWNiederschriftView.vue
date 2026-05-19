@@ -5,7 +5,9 @@
       subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
       :is-sending="isSendingNiederschrift"
       :is-korrigieren-active="isKorrigierenValid"
-      :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
+      :is-drucken-active="
+        hasDoneVorkommnisse(ereignisse) && isNiederschriftUebermittelt
+      "
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
@@ -115,7 +117,7 @@ const isDruckenLoading = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
-const { logError } = useLogging("mbwUtils");
+const { logError } = useLogging("mbwNiederschriftView");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -152,6 +154,10 @@ const isSendenActive = computed(
     !status.value?.niederschrift.gedruckt
 );
 
+const isNiederschriftUebermittelt = computed(
+  () => status.value?.niederschrift.uebermittelt
+);
+
 onActivated(async () => {
   ereignisse.value = await getEreignisse(currentUserWahlbezirkID);
   status.value = await loadStatusByWahlIdAndWahlbezirkId(
@@ -167,6 +173,10 @@ function onSendenClicked() {
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
   await sendNiederschrift();
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(
+    wahlID,
+    currentUserWahlbezirkID
+  );
 }
 
 function onSyncError() {

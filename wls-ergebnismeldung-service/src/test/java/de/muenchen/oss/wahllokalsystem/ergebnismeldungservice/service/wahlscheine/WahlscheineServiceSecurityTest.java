@@ -51,7 +51,12 @@ class WahlscheineServiceSecurityTest {
     void should_getAccess_when_allRequiredAuthoritiesArePresent() {
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLSCHEINE);
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
 
       Assertions.assertThatNoException().isThrownBy(() -> unitUnderTest.getWahlscheine(id));
     }
@@ -62,7 +67,29 @@ class WahlscheineServiceSecurityTest {
         final ArgumentsAccessor arguments) {
       SecurityUtils.runWith(arguments.get(0, String[].class));
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getWahlscheine(id))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLSCHEINE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getWahlscheine(id))

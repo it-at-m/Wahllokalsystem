@@ -21,7 +21,7 @@ const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
-const { logDebug } = useLogging(`store-${storeID}`);
+const { logDebug } = useLogging("ereignisStore");
 
 interface EreignisCreateTemplate {
   beschreibung?: string;

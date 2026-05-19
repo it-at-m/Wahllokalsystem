@@ -25,8 +25,10 @@ public class StatusService {
   private final ExceptionFactory exceptionFactory;
   private final List<AbstractStatusMonitoringSender> monitoringSender;
 
-  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStatus')")
-  public Optional<StatusModel> getStatus(final BezirkUndWahlID id) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStatus')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public Optional<StatusModel> getStatus(@P("param") final BezirkUndWahlID id) {
     log.info("#getStatus");
 
     statusValidator.validBezirkUndWahlIdOrThrow(

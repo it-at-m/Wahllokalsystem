@@ -22,8 +22,10 @@ public class WahlscheineService {
   private final WahlscheineValidator wahlscheineValidator;
   private final ExceptionFactory exceptionFactory;
 
-  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetWahlscheine')")
-  public Optional<WahlscheineModel> getWahlscheine(final BezirkUndWahlID id) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetWahlscheine')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public Optional<WahlscheineModel> getWahlscheine(@P("param") final BezirkUndWahlID id) {
     log.info("#getWahlscheine");
 
     wahlscheineValidator.validBezirkUndWahlIdOrThrow(

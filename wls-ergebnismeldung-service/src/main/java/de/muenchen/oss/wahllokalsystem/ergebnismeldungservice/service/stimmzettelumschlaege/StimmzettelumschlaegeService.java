@@ -26,8 +26,11 @@ public class StimmzettelumschlaegeService {
   private final ExceptionFactory exceptionFactory;
   private final AuthenticationService authenticationService;
 
-  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege')")
-  public Optional<StimmzettelumschlaegeModel> getStimmzettelumschlaege(final BezirkUndWahlID id) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmzettelumschlaege')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public Optional<StimmzettelumschlaegeModel> getStimmzettelumschlaege(
+      @P("param") final BezirkUndWahlID id) {
     log.info("#getStimmzettelumschlaege");
 
     stimmzettelumschlaegeValidator.validBezirkUndWahlIdOrThrow(

@@ -32,8 +32,8 @@
       </div>
       <v-divider :thickness="2" />
       <div>
-        Sollten Sie Probleme beim Drucken haben, informieren Sie bitte die
-        Wahl-Hotline.
+        Sollten Sie Probleme beim Drucken haben,
+        {{ toLowerCaseFirstLetter(CONTACT_SUPPORT) }}
       </div>
     </div>
   </base-dialog>
@@ -45,8 +45,11 @@ import { ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
+import { useStringUtils } from "@/composables/common/stringUtils.ts";
+import { CONTACT_SUPPORT } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
+const { toLowerCaseFirstLetter } = useStringUtils();
 const { printTestdruck } = useHelpIconCallbacks();
 const { isTestseiteGedruckt } = storeToRefs(useWorkflowStore());
 

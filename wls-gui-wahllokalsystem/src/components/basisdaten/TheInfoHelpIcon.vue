@@ -46,7 +46,7 @@ const { openWahlraumfinder, startFernzugriff, printTestdruck } =
   useHelpIconCallbacks();
 
 const infoHelpData = [
-  { icon: "$phone", title: "Wahlhotline", text: WAHLHOTLINE },
+  { icon: "$phone", title: "Wahl-Hotline", text: WAHLHOTLINE },
   {
     icon: "$fileDocument",
     title: "Schulungsunterlagen und weitere Infos",

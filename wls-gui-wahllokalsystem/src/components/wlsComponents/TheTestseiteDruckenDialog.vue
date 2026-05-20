@@ -32,8 +32,8 @@
       </div>
       <v-divider :thickness="2" />
       <div>
-        Sollten Sie Probleme beim Drucken haben, informieren Sie bitte das
-        Wahlamt.
+        Sollten Sie Probleme beim Drucken haben, informieren Sie bitte die
+        Wahl-Hotline.
       </div>
     </div>
   </base-dialog>

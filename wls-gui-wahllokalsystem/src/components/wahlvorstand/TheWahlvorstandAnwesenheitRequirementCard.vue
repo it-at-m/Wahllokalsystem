@@ -20,8 +20,9 @@
     </ul>
     <template #additionalFeedback>
       Bitte wenden Sie sich bei fehlenden Mitgliedern oder getauschten Rollen an
-      die Bezirksinspektion. Dort werden die Rollen im System richtig
-      hinterlegt. Bis dahin bleiben Sie bitte auf dieser Seite.
+      die {{ isUWB ? "Bezirksinspektion" : "Tischbetreuung" }}. Dort werden die
+      Rollen im System richtig hinterlegt. Bis dahin bleiben Sie bitte auf
+      dieser Seite.
     </template>
   </base-feedback-card>
 </template>
@@ -34,9 +35,11 @@ import {
   MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG,
   MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG,
 } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
+const { isUWB } = storeToRefs(useUserStore());
 const {
   isSchriftfuehrerAnwesend,
   isWahlvorsteherAnwesend,

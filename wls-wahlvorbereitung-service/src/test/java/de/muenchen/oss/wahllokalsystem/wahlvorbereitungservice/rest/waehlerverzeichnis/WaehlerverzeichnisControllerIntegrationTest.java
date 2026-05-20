@@ -162,6 +162,19 @@ public class WaehlerverzeichnisControllerIntegrationTest {
                   mockedValidationException.getMessage()));
     }
 
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val waehlerverzeichnisNummer = 89L;
+      val requestBody = new WaehlerverzeichnisWriteDTO(true, false, true, false);
+
+      val request =
+          buildPostRequest(
+              wahlbezirkID, wahlbezirkID + "sth", waehlerverzeichnisNummer, requestBody);
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
+
     private MockHttpServletRequestBuilder buildPostRequest(
         final String wahlbezirkID,
         final String claimWahlbezirkID,

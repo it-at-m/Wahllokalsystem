@@ -47,7 +47,9 @@ public class WahlvorstandService {
     return wahlvorstandRepository.findById(wahlbezirkID).map(wahlvorstandModelMapper::toModel);
   }
 
-  @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
+  @PreAuthorize(
+      "hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
   public Optional<WahlvorstandModel> updateWahlvorstand(
       @P("wahlbezirkID") final String wahlbezirkID) {
     log.info("#updateWahlvorstand");
@@ -59,7 +61,9 @@ public class WahlvorstandService {
   }
 
   @Transactional
-  @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')")
+  @PreAuthorize(
+      "hasAuthority('Wahlvorstand_BUSINESSACTION_PostWahlvorstand')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.wahlbezirkID(), authentication)")
   public void postWahlvorstand(@P("param") WahlvorstandModel wahlvorstandModel) {
     log.info("#postWahlvorstand");
     wahlvorstandValidator.validWahlvorstandOrThrow(wahlvorstandModel);
@@ -82,8 +86,11 @@ public class WahlvorstandService {
     }
   }
 
-  @PreAuthorize("hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')")
-  public Optional<WahlvorstandModel> getFallbackWahlvorstand(String wahlbezirkID) {
+  @PreAuthorize(
+      "hasAuthority('Wahlvorstand_BUSINESSACTION_UpdateWahlvorstand')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public Optional<WahlvorstandModel> getFallbackWahlvorstand(
+      @P("wahlbezirkID") String wahlbezirkID) {
     val fallbackWahlvorstand =
         WahlvorstandModel.builder()
             .wahlbezirkID(wahlbezirkID)

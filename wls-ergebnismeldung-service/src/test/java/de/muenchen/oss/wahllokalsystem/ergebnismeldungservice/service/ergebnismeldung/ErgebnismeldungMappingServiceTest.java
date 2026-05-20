@@ -10,8 +10,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO;
@@ -26,7 +27,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Sta
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +50,7 @@ class ErgebnismeldungMappingServiceTest {
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
   @Mock StimmzettelumschlaegeRepository stimmzettelumschlaegeRepo;
-  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
+  @Mock WahldatenRepository stimmabgabevermerkeRepo;
   @Mock AWerteRepository aWerteRepo;
 
   @Mock AuthenticationService authenticationService;
@@ -107,8 +107,9 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID))
             .thenReturn(mockedErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlverzeichnisNummer)))
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
             .thenReturn(stapelart -> !stapelart.equals(mockedValidStapelModel));
@@ -177,9 +178,10 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.of(mockedStimmzettelumschlaege));
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlverzeichnisNummer)))
-            .thenReturn(Optional.of(new Stimmabgabevermerke()));
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlverzeichnisNummer)))
+            .thenReturn(Optional.of(new Wahldaten()));
         Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
             .thenReturn(stapelart -> true);
 
@@ -322,16 +324,10 @@ class ErgebnismeldungMappingServiceTest {
     }
   }
 
-  private Stimmabgabevermerke createStimmabgabevermerke(
+  private Wahldaten createStimmabgabevermerke(
       final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
-    val stimmabgabevermerke = new Stimmabgabevermerke();
 
-    val wahldaten =
-        Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
-
-    stimmabgabevermerke.setWahldaten(Set.of(wahldaten));
-
-    return stimmabgabevermerke;
+    return Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
   }
 
   private Ergebnisse createErgebnisse(

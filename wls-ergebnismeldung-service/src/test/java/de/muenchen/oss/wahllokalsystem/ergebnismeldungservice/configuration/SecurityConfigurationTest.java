@@ -17,19 +17,17 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.Er
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -58,7 +56,7 @@ class SecurityConfigurationTest {
 
   @MockitoBean AusdruckService ausdruckService;
 
-  @MockitoBean StimmabgabevermerkeService stimmabgabevermerkeService;
+  @MockitoBean WahldatenService stimmabgabevermerkeService;
 
   @MockitoBean ErgebnisseService ergebnisseService;
 
@@ -287,7 +285,8 @@ class SecurityConfigurationTest {
     @WithAnonymousUser
     @Test
     void should_returnUnauthorized_when_callingGetAnonymous() throws Exception {
-      val request = MockMvcRequestBuilders.get("/businessActions/stimmabgabevermerke/wbzID/1");
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/stimmabgabevermerke/wbzID/wahlid/1");
 
       api.perform(request).andExpect(status().isUnauthorized());
     }
@@ -295,33 +294,29 @@ class SecurityConfigurationTest {
     @WithMockUser
     @Test
     void should_returnNoContent_when_callingGetAuthenticated() throws Exception {
-      val request = MockMvcRequestBuilders.get("/businessActions/stimmabgabevermerke/wbzID/1");
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/stimmabgabevermerke/wbzID/wahlid/1");
 
       api.perform(request).andExpect(status().isNoContent());
 
-      Mockito.verify(stimmabgabevermerkeService).getStimmabgabevermerke(any());
+      Mockito.verify(stimmabgabevermerkeService).getWahldaten("wbzID", "wahlid", 1L);
     }
 
     @WithAnonymousUser
     @Test
     void should_returnUnauthorized_when_callingSetAnonymous() throws Exception {
       val request =
-          MockMvcRequestBuilders.post("/businessActions/stimmabgabevermerke/wbzID/1")
+          MockMvcRequestBuilders.post("/businessActions/stimmabgabevermerke/wbzID/wahlid/1")
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(
                   objectMapper.writeValueAsBytes(
-                      new StimmabgabevermerkeDTO(
+                      new WahldatenDTO(
                           "wahlbezirkID",
+                          "wahlID",
                           0L,
-                          1,
-                          Set.of(
-                              new WahldatenDTO(
-                                  "wahlbezirkID",
-                                  "wahlID",
-                                  0L,
-                                  Collections.emptySet(),
-                                  Collections.emptySet())))));
+                          Collections.emptySet(),
+                          Collections.emptySet())));
 
       api.perform(request).andExpect(status().isUnauthorized());
     }
@@ -330,26 +325,21 @@ class SecurityConfigurationTest {
     @Test
     void should_returnOk_when_callingSetAuthenticated() throws Exception {
       val request =
-          MockMvcRequestBuilders.post("/businessActions/stimmabgabevermerke/wbzID/1")
+          MockMvcRequestBuilders.post("/businessActions/stimmabgabevermerke/wbzID/wahlid/1")
               .with(csrf())
               .contentType(MediaType.APPLICATION_JSON)
               .content(
                   objectMapper.writeValueAsBytes(
-                      new StimmabgabevermerkeDTO(
+                      new WahldatenDTO(
                           "wahlbezirkID",
+                          "wahlID",
                           0L,
-                          1,
-                          Set.of(
-                              new WahldatenDTO(
-                                  "wahlbezirkID",
-                                  "wahlID",
-                                  0L,
-                                  Collections.emptySet(),
-                                  Collections.emptySet())))));
+                          Collections.emptySet(),
+                          Collections.emptySet())));
 
       api.perform(request).andExpect(status().isOk());
 
-      Mockito.verify(stimmabgabevermerkeService).postStimmabgabevermerke(any(), any());
+      Mockito.verify(stimmabgabevermerkeService).setWahldaten(any());
     }
   }
 

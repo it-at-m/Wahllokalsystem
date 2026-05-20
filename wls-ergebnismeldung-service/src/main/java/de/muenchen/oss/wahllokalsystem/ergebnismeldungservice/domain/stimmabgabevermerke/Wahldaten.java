@@ -46,7 +46,11 @@ public class Wahldaten {
   @Embedded @NaturalId @NotNull @ToString.Include
   private BezirkUndWahlIDUndWaehlerverzeichnisnummer bezirkUndWahlIDUndWaehlerverzeichnisnummer;
 
-  @OneToMany(mappedBy = "wahldaten", orphanRemoval = true, cascade = CascadeType.ALL)
+  @OneToMany(
+      mappedBy = "wahldaten",
+      orphanRemoval = true,
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER)
   @NotNull private Set<Vermerk> vermerke = new LinkedHashSet<>();
 
   @ElementCollection(fetch = FetchType.EAGER)

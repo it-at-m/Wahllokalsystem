@@ -23,7 +23,7 @@ public class WahldatenController extends AbstractController {
   private final StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
   @GetMapping(
-      "/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/wvz/{waehlerverzeichnisNummer}/stimmabgabevermerke")
+      "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}")
   public ResponseEntity<WahldatenDTO> getWahldaten(
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,
@@ -35,8 +35,8 @@ public class WahldatenController extends AbstractController {
   }
 
   @PostMapping(
-      "/wahl/{wahlID}/wahlbezirk/{wahlbezirkID}/wvz/{waehlerverzeichnisNummer}/stimmabgabevermerke")
-  @ResponseStatus(HttpStatus.CREATED)
+      "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}")
+  @ResponseStatus(HttpStatus.OK)
   public void setWahldaten(
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,

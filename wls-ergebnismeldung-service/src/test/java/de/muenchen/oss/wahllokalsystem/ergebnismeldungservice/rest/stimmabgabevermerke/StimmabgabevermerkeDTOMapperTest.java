@@ -1,13 +1,11 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.EingenommenerWahlscheinModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Set;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -27,7 +25,7 @@ public class StimmabgabevermerkeDTOMapperTest {
 
     @Test
     void should_returnNull_when_givenNull() {
-      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeDTO(null)).isNull();
+      Assertions.assertThat(unitUnderTest.toWahldatenModel(null, null, 0L, null)).isNull();
     }
 
     @Test
@@ -38,25 +36,12 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val modelToMap =
-          new StimmabgabevermerkeModel(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-              anzahlBlaetter,
-              Set.of(
-                  Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
-                  Testdaten.Wahldaten.createModel(
-                      wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
+          Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
-      val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
+      val result = unitUnderTest.toWahldatenDTO(modelToMap);
 
       val expectedResult =
-          new StimmabgabevermerkeDTO(
-              wahlbezirkID,
-              waehlerverzeichnisNummer,
-              anzahlBlaetter,
-              Set.of(
-                  Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
-                  Testdaten.Wahldaten.createDTO(
-                      wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
+          Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -70,44 +55,29 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val modelToMap =
-          new StimmabgabevermerkeModel(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-              anzahlBlaetter,
-              Set.of(
-                  new WahldatenModel(
-                      wahlbezirkID,
-                      wahlID,
-                      waehlerverzeichnisNummer,
-                      Set.of(new VermerkModel(2, Set.of(new StimmzettelModel(20, stimmzettelart)))),
-                      Set.of(new EingenommenerWahlscheinModel(91, stimmzettelart)))));
+          new WahldatenModel(
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Set.of(new VermerkModel(2, Set.of(new StimmzettelModel(20, stimmzettelart)))),
+              Set.of(new EingenommenerWahlscheinModel(91, stimmzettelart)));
 
-      val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
+      val result = unitUnderTest.toWahldatenDTO(modelToMap);
 
       Assertions.assertThat(
-              result.wahldaten().stream()
+              result.vermerke().stream()
                   .allMatch(
-                      (wahldatenModel) ->
-                          wahldatenModel.vermerke().stream()
+                      (vermerk) ->
+                          vermerk.stimmzettel().stream()
                               .allMatch(
-                                  (vermerk) ->
-                                      vermerk.stimmzettel().stream()
-                                          .allMatch(
-                                              (sz) ->
-                                                  sz.stimmzettelart()
-                                                      .name()
-                                                      .equals(stimmzettelart.name())))))
+                                  (sz) ->
+                                      sz.stimmzettelart().name().equals(stimmzettelart.name()))))
           .isTrue();
       Assertions.assertThat(
-              result.wahldaten().stream()
+              result.eingenommeneWahlscheine().stream()
                   .allMatch(
-                      (wahldatenModel) ->
-                          wahldatenModel.eingenommeneWahlscheine().stream()
-                              .allMatch(
-                                  (wahlschein) ->
-                                      wahlschein
-                                          .stimmzettelart()
-                                          .name()
-                                          .equals(stimmzettelart.name()))))
+                      (wahlschein) ->
+                          wahlschein.stimmzettelart().name().equals(stimmzettelart.name())))
           .isTrue();
     }
   }
@@ -117,7 +87,7 @@ public class StimmabgabevermerkeDTOMapperTest {
 
     @Test
     void should_returnNull_when_givenNull() {
-      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeModel(null)).isNull();
+      Assertions.assertThat(unitUnderTest.toWahldatenModel(null, null, 0L, null)).isNull();
     }
 
     @Test
@@ -125,28 +95,15 @@ public class StimmabgabevermerkeDTOMapperTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
-      val dtoToMap =
-          new StimmabgabevermerkeDTO(
-              wahlbezirkID,
-              waehlerverzeichnisNummer,
-              anzahlBlaetter,
-              Set.of(
-                  Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
-                  Testdaten.Wahldaten.createDTO(
-                      wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
+      val dtoToMap = Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
-      val result = unitUnderTest.toStimmabgabevermerkeModel(dtoToMap);
+      val result =
+          unitUnderTest.toWahldatenModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
 
       val expectedResult =
-          new StimmabgabevermerkeModel(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-              anzahlBlaetter,
-              Set.of(
-                  Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer),
-                  Testdaten.Wahldaten.createModel(
-                      wahlbezirkID, wahlID, waehlerverzeichnisNummer + 1)));
+          Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -160,45 +117,30 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val dtoToMap =
-          new StimmabgabevermerkeDTO(
+          new WahldatenDTO(
               wahlbezirkID,
+              wahlID,
               waehlerverzeichnisNummer,
-              anzahlBlaetter,
-              Set.of(
-                  new WahldatenDTO(
-                      wahlbezirkID,
-                      wahlID,
-                      waehlerverzeichnisNummer,
-                      Set.of(new VermerkDTO(2, Set.of(new StimmzettelDTO(20, stimmzettelart)))),
-                      Set.of(new EingenommenerWahlscheinDTO(91, stimmzettelart)))));
+              Set.of(new VermerkDTO(2, Set.of(new StimmzettelDTO(20, stimmzettelart)))),
+              Set.of(new EingenommenerWahlscheinDTO(91, stimmzettelart)));
 
-      val result = unitUnderTest.toStimmabgabevermerkeModel(dtoToMap);
+      val result =
+          unitUnderTest.toWahldatenModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
 
       Assertions.assertThat(
-              result.wahldaten().stream()
+              result.vermerke().stream()
                   .allMatch(
-                      (wahldatenDTO) ->
-                          wahldatenDTO.vermerke().stream()
+                      (vermerk) ->
+                          vermerk.stimmzettel().stream()
                               .allMatch(
-                                  (vermerk) ->
-                                      vermerk.stimmzettel().stream()
-                                          .allMatch(
-                                              (sz) ->
-                                                  sz.stimmzettelart()
-                                                      .name()
-                                                      .equals(stimmzettelart.name())))))
+                                  (sz) ->
+                                      sz.stimmzettelart().name().equals(stimmzettelart.name()))))
           .isTrue();
       Assertions.assertThat(
-              result.wahldaten().stream()
+              result.eingenommeneWahlscheine().stream()
                   .allMatch(
-                      (wahldatenDTO) ->
-                          wahldatenDTO.eingenommeneWahlscheine().stream()
-                              .allMatch(
-                                  (wahlschein) ->
-                                      wahlschein
-                                          .stimmzettelart()
-                                          .name()
-                                          .equals(stimmzettelart.name()))))
+                      (wahlschein) ->
+                          wahlschein.stimmzettelart().name().equals(stimmzettelart.name())))
           .isTrue();
     }
   }

@@ -28,9 +28,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Stat
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.StatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
@@ -40,7 +39,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.Clock;
@@ -84,7 +82,7 @@ class ErgebnismeldungControllerIntegrationTest {
 
   @Autowired ErgebnisseRepository ergebnisseRepository;
 
-  @Autowired StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Autowired WahldatenRepository stimmabgabevermerkeRepository;
 
   @Autowired AWerteRepository aWerteRepository;
 
@@ -489,11 +487,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 Set.of(vermerk),
                 Set.of(eigennommeneWahlscheine));
         vermerk.setWahldaten(wahldaten);
-        stimmabgabevermerkeRepository.save(
-            new Stimmabgabevermerke(
-                new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                1,
-                Set.of(wahldaten)));
+        stimmabgabevermerkeRepository.save(wahldaten);
 
         // Insert AWerte
         aWerteRepository.save(new AWerte(new BezirkUndWahlID(wahlID, wahlbezirkID), 1L, null));

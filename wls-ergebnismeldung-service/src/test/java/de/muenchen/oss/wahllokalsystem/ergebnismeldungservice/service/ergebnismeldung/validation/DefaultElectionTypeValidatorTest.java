@@ -9,8 +9,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Bezi
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.Wahlscheine;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.WahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -19,7 +20,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Wah
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ class DefaultElectionTypeValidatorTest {
 
   @Mock ErgebnisseRepository ergebnisseRepo;
 
-  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
+  @Mock WahldatenRepository stimmabgabevermerkeRepo;
 
   @Mock WahlscheineRepository wahlscheineRepo;
 
@@ -163,15 +163,15 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedStimmabgabevermerke = new Wahldaten();
         val mockedAWerte = new AWerte();
 
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.of(mockedAWerte));
@@ -229,9 +229,9 @@ class DefaultElectionTypeValidatorTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.empty());
         Mockito.when(
                 exceptionFactory.createFachlicheWlsException(
@@ -260,16 +260,16 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedStimmabgabevermerke = new Wahldaten();
         val mockedWlsException =
             FachlicheWlsException.withCode("000").buildWithMessage("Required A-Werte are missing");
 
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.empty());
@@ -300,16 +300,16 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
+        val mockedStimmabgabevermerke = new Wahldaten();
         val mockedAWerte = new AWerte();
         final Optional<AWerte> mockedNotFound = Optional.empty();
 
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                stimmabgabevermerkeRepo.findByNaturalId(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(mockedNotFound, Optional.of(mockedAWerte));

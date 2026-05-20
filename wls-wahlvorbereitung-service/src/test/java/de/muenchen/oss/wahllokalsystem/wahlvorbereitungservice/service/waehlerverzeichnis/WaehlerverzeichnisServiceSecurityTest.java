@@ -169,7 +169,7 @@ public class WaehlerverzeichnisServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
-      SecurityUtils.runWith(Authorities.SERVICE_GET_WAEHLERVERZEICHNIS);
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
 
       val modelToSet =
           new WaehlerverzeichnisModel(

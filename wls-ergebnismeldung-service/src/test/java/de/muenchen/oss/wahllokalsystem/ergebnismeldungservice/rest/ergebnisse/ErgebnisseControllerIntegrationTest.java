@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse;
 
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -52,12 +52,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(
-    profiles = {
-      SPRING_TEST_PROFILE,
-      SPRING_NO_SECURITY_PROFILE,
-      de.muenchen.oss.wahllokalsystem.wls.common.security.Profiles.NO_BEZIRKS_ID_CHECK
-    })
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class ErgebnisseControllerIntegrationTest {
 
   @Autowired MockMvc api;
@@ -82,12 +77,6 @@ public class ErgebnisseControllerIntegrationTest {
   class GetErgebnisse {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_ERGEBNISSE,
-          Authorities.REPOSITORY_READ_ERGEBNISSE,
-          Authorities.REPOSITORY_WRITE_ERGEBNISSE
-        })
     void should_returnData_when_dataIsPresentInRepository() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
@@ -116,6 +105,7 @@ public class ErgebnisseControllerIntegrationTest {
       val newErgebnisList3 = new ArrayList<Ergebnis>();
       newErgebnisList3.add(ergebnis3);
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_ERGEBNISSE);
       val ergebnisse1 = new Ergebnisse();
       ergebnisse1.setBezirkUndWahlIDStapelart(
           new BezirkUndWahlIDStapelart(wahlbezirkID1, wahlID1, stapelart1));
@@ -139,7 +129,13 @@ public class ErgebnisseControllerIntegrationTest {
       val expectedResponse = new ErgebnisseDTO(expectedIDOfResponse, newErgebnisDTOList1);
 
       val request =
-          get("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1);
+          get("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)));
       val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
       val responseBody =
@@ -148,7 +144,6 @@ public class ErgebnisseControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(authorities = {Authorities.SERVICE_SET_ERGEBNISSE})
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlID1 = "wahlID1";
@@ -163,6 +158,12 @@ public class ErgebnisseControllerIntegrationTest {
           MockMvcRequestBuilders.post(
                   "/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1 + "/" + stapelart1)
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_SET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
@@ -179,18 +180,29 @@ public class ErgebnisseControllerIntegrationTest {
               ExceptionConstants.POST_ERGEBNISSE_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(receivedWlsException).isEqualTo(expectedWlsExceptionDTO);
     }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID1";
+      val wahlID = "wahlID1";
+      val stapelart = Stapelart.LTW_BZW_A;
+
+      val request =
+          get("/businessActions/ergebnisse/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+      api.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
   class GetAllErgebnisse {
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_GET_ERGEBNISSE,
-          Authorities.REPOSITORY_READ_ERGEBNISSE,
-          Authorities.REPOSITORY_WRITE_ERGEBNISSE
-        })
     void should_returnData_when_dataIsPresentInRepository() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
@@ -219,6 +231,7 @@ public class ErgebnisseControllerIntegrationTest {
       val newErgebnisList3 = new ArrayList<Ergebnis>();
       newErgebnisList3.add(ergebnis3);
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_ERGEBNISSE);
       val ergebnisse1 = new Ergebnisse();
       ergebnisse1.setBezirkUndWahlIDStapelart(
           new BezirkUndWahlIDStapelart(wahlbezirkID1, wahlID1, stapelart1));
@@ -241,7 +254,14 @@ public class ErgebnisseControllerIntegrationTest {
           new BezirkUndWahlIDStapelartDTO(wahlbezirkID1, wahlID1, stapelartDTO);
       val expectedResponse = new ErgebnisseDTO(expectedIDOfResponse, newErgebnisDTOList1);
 
-      val request = get("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1);
+      val request =
+          get("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)));
       val response = api.perform(request).andExpect(status().isOk()).andReturn();
 
       val responseBody =
@@ -251,7 +271,6 @@ public class ErgebnisseControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(authorities = {Authorities.SERVICE_SET_ERGEBNISSE})
     void should_returnNoContent_when_listIsEmpty() throws Exception {
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlID1 = "wahlID1";
@@ -265,10 +284,32 @@ public class ErgebnisseControllerIntegrationTest {
       val request =
           MockMvcRequestBuilders.get("/businessActions/ergebnisse/" + wahlbezirkID1 + "/" + wahlID1)
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID1)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
       mockMvc.perform(request).andExpect(status().isNoContent());
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID1";
+      val wahlID = "wahlID1";
+
+      val request =
+          get("/businessActions/ergebnisse/" + wahlbezirkID + "/" + wahlID)
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+      api.perform(request).andExpect(status().isForbidden());
     }
   }
 
@@ -276,13 +317,18 @@ public class ErgebnisseControllerIntegrationTest {
   class PostErgebnisse {
 
     @Test
-    @WithMockUser(
-        authorities = {Authorities.SERVICE_SET_ERGEBNISSE, Authorities.REPOSITORY_WRITE_ERGEBNISSE})
     void should_returnBadRequestWlsException_when_validationFailed() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
       val requestBody = ErgebnisseDTO.builder().build();
       val request =
-          post("/businessActions/ergebnisse/wahlbezirkID/0/LTW_BZW_A")
+          post("/businessActions/ergebnisse/" + wahlbezirkID + "/0/LTW_BZW_A")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_SET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
@@ -305,12 +351,6 @@ public class ErgebnisseControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_SET_ERGEBNISSE,
-          Authorities.REPOSITORY_READ_ERGEBNISSE,
-          Authorities.REPOSITORY_WRITE_ERGEBNISSE
-        })
     void should_persistData_when_noDataIsPresentInRepository() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
@@ -330,6 +370,12 @@ public class ErgebnisseControllerIntegrationTest {
       val request =
           post("/businessActions/ergebnisse/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_SET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
@@ -353,12 +399,6 @@ public class ErgebnisseControllerIntegrationTest {
 
     @ParameterizedTest()
     @MethodSource("getReplacingData")
-    @WithMockUser(
-        authorities = {
-          Authorities.SERVICE_SET_ERGEBNISSE,
-          Authorities.REPOSITORY_READ_ERGEBNISSE,
-          Authorities.REPOSITORY_WRITE_ERGEBNISSE
-        })
     void should_replaceOldData_when_dataIsPresentInRepository(final ArgumentsAccessor arguments)
         throws Exception {
       val wahlID = "wahlID";
@@ -371,12 +411,18 @@ public class ErgebnisseControllerIntegrationTest {
       val request =
           MockMvcRequestBuilders.post(
                   "/businessActions/ergebnisse/"
-                      + wahlID
-                      + "/"
                       + wahlbezirkID
+                      + "/"
+                      + wahlID
                       + "/"
                       + Stapelart.LTW_BZW_A)
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_SET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(requestBody));
 
@@ -384,6 +430,7 @@ public class ErgebnisseControllerIntegrationTest {
       val newErgebnisList2 = new ArrayList<Ergebnis>();
       newErgebnisList2.add(ergebnis2);
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_ERGEBNISSE);
       val entityToReplace = new Ergebnisse(bezirkUndWahlIDStapelart, newErgebnisList2);
       Assertions.assertThat(entityToReplace).usingRecursiveComparison().isNotEqualTo(requestBody);
       ergebnisseRepository.save(entityToReplace);
@@ -394,9 +441,33 @@ public class ErgebnisseControllerIntegrationTest {
 
       mockMvc.perform(request).andExpect(status().isOk()).andReturn().getResponse();
 
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_ERGEBNISSE);
       val entityFromRepo = ergebnisseRepository.findById(bezirkUndWahlIDStapelart).get();
       val expectedEntity = ergebnisseModelMapper.toEntity(ergebnisseDTOMapper.toModel(requestBody));
       Assertions.assertThat(entityFromRepo).usingRecursiveComparison().isEqualTo(expectedEntity);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID1";
+      val wahlID = "wahlID1";
+      val stapelart = Stapelart.BTW_A;
+      val bezirkUndWahlIDStapelartDTO =
+          new BezirkUndWahlIDStapelartDTO(wahlbezirkID, wahlID, StapelartDTO.BTW_A);
+      val requestBody = new ErgebnisseDTO(bezirkUndWahlIDStapelartDTO, new ArrayList<>());
+
+      val request =
+          post("/businessActions/ergebnisse/" + wahlbezirkID + "/" + wahlID + "/" + stapelart)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.SERVICE_SET_ERGEBNISSE),
+                          new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(requestBody));
+      api.perform(request).andExpect(status().isForbidden());
     }
 
     public static Stream<Arguments> getReplacingData() {

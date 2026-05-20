@@ -1,4 +1,3 @@
-// @ts-expect-error: "TS2307 cannot find module" is a false positive here
 import "vuetify/styles";
 
 import { mdiRefresh } from "@mdi/js";

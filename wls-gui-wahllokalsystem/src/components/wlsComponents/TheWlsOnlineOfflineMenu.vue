@@ -53,7 +53,7 @@
       </v-card>
     </v-menu>
     <the-manual-offline-data-sync-dialog
-      :is-dialog-visible="isOfflineSyncDialogVisible"
+      v-model="isOfflineSyncDialogVisible"
       @cancel="isOfflineSyncDialogVisible = false"
     />
   </div>

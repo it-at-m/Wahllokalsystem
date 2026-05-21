@@ -83,17 +83,18 @@ const {
 } = storeToRefs(useDataSyncStore());
 const { toHhMm } = useDateTimeFormatter();
 
-const { isDialogVisible } = defineProps<{
-  isDialogVisible: boolean;
-}>();
+const isDialogVisible = defineModel("modelValue", {
+  type: Boolean,
+  required: true,
+});
 
 const dirtyTasks = ref(numberOfTasksToRun.value);
 const syncStatus = ref("success");
 
 watch(
-  () => isDialogVisible,
+  () => isDialogVisible.value,
   async () => {
-    if (isDialogVisible) {
+    if (isDialogVisible.value) {
       await initiateOfflineDataSync();
     }
   }
@@ -123,7 +124,7 @@ async function onConfirmClicked() {
   if (dirtyTasks.value > 0) {
     await initiateOfflineDataSync();
   } else {
-    // todo isDialogVisible.value = false;
+    isDialogVisible.value = false;
   }
 }
 </script>

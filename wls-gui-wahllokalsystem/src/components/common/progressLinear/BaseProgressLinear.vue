@@ -1,7 +1,7 @@
 <template>
   <div>
     <p
-      v-if="!showTasks"
+      v-if="!tasks"
       class="my-3"
     >
       {{ titel }} ({{ current }} / {{ total }})
@@ -27,18 +27,12 @@
 <script setup lang="ts">
 import type { Task } from "@/types/tasks/Task.ts";
 
-const {
-  titel,
-  current,
-  total,
-  showTasks = true,
-} = defineProps<{
+defineProps<{
   titel: string;
   isLoading: boolean;
   current: number;
   total: number;
-  tasks: Task[];
+  tasks?: Task[];
   color?: string;
-  showTasks?: boolean;
 }>();
 </script>

@@ -45,8 +45,6 @@
         :is-loading="isOfflineDataSyncing"
         :current="numberOfTasksFinished"
         :total="numberOfTasksToRun"
-        :tasks="[]"
-        :show-tasks="false"
       />
       <v-row
         v-if="!isOfflineDataSyncing"

@@ -15,6 +15,7 @@ const { compareByTimestamp } = useIndexDBUtils();
 export function useDataSyncer() {
   const taskManager = useTaskManager();
   const isOfflineDataSyncing = ref(false);
+  const lastSyncUpdateTime = ref<null | Date>(null);
 
   async function getSyncTasks() {
     const itemsToSync = await indexDBSingleton.getDirtyItems();
@@ -37,6 +38,7 @@ export function useDataSyncer() {
     taskManager.setTasks(await getSyncTasks());
     await taskManager.runAllTasks();
     isOfflineDataSyncing.value = false;
+    lastSyncUpdateTime.value = new Date();
   }
 
   function _compareSyncItemByTimeStamp(
@@ -62,6 +64,7 @@ export function useDataSyncer() {
     ...taskManager,
     getSyncTasks,
     synchronizeOfflineData,
+    lastSyncUpdateTime,
     isOfflineDataSyncing,
   };
 }

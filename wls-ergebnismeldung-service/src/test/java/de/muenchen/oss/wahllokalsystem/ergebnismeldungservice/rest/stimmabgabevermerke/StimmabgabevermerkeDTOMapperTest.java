@@ -25,8 +25,7 @@ public class StimmabgabevermerkeDTOMapperTest {
 
     @Test
     void should_returnNull_when_givenNull() {
-      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeModel(null, null, 0L, null))
-          .isNull();
+      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeDTO(null)).isNull();
     }
 
     @Test

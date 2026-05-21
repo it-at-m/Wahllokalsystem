@@ -48,12 +48,17 @@ class StimmabgabevermerkeServiceTest {
       val mockedRepoResponse =
           new Stimmabgabevermerke(
               UUID.randomUUID(),
-              new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, 1L),
+              new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                  wahlbezirkID, wahlID, waehlerverzeichnisNummer),
               Collections.emptySet(),
               Collections.emptySet());
       val mockedRepoResponseAsModel =
           new StimmabgabevermerkeModel(
-              wahlbezirkID, wahlID, 0L, Collections.emptySet(), Collections.emptySet());
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Collections.emptySet(),
+              Collections.emptySet());
 
       Mockito.when(stimmabgabevermerkeRepository.findByNaturalId(id))
           .thenReturn(Optional.of(mockedRepoResponse));

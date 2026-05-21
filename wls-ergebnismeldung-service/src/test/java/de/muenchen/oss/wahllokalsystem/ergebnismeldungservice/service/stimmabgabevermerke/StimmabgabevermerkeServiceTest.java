@@ -31,7 +31,8 @@ class StimmabgabevermerkeServiceTest {
 
   @Mock ExceptionFactory exceptionFactory;
 
-  @InjectMocks WahldatenService unitUnderTest;
+  @InjectMocks
+  StimmabgabevermerkeService unitUnderTest;
 
   @Nested
   class GetStimmabgabevermerke {
@@ -52,7 +53,7 @@ class StimmabgabevermerkeServiceTest {
               Collections.emptySet(),
               Collections.emptySet());
       val mockedRepoResponseAsModel =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID, wahlID, 0L, Collections.emptySet(), Collections.emptySet());
 
       Mockito.when(stimmabgabevermerkeRepository.findByNaturalId(id))
@@ -117,7 +118,7 @@ class StimmabgabevermerkeServiceTest {
           new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
               wahlbezirkID, wahlID, waehlerverzeichnisNummer);
       val stimmabgabevermerke =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,
@@ -146,7 +147,7 @@ class StimmabgabevermerkeServiceTest {
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
       val stimmabgabevermerke =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,
@@ -168,7 +169,7 @@ class StimmabgabevermerkeServiceTest {
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
       val stimmabgabevermerke =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,

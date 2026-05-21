@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WahldatenController extends AbstractController {
 
-  private final WahldatenService wahldatenService;
+  private final StimmabgabevermerkeService stimmabgabevermerkeService;
   private final StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
   @GetMapping(
@@ -29,7 +29,7 @@ public class WahldatenController extends AbstractController {
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer) {
     return okWithBodyOrNoContent(
-        wahldatenService
+        stimmabgabevermerkeService
             .getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer)
             .map(stimmabgabevermerkeDTOMapper::toWahldatenDTO));
   }
@@ -45,6 +45,6 @@ public class WahldatenController extends AbstractController {
     val wahldatenModel =
         stimmabgabevermerkeDTOMapper.toWahldatenModel(
             wahlID, wahlbezirkID, waehlerverzeichnisNummer, wahldatenDTO);
-    wahldatenService.setWahldaten(wahldatenModel);
+    stimmabgabevermerkeService.setWahldaten(wahldatenModel);
   }
 }

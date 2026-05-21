@@ -26,7 +26,7 @@ public class StimmabgabevermerkeValidator {
     }
   }
 
-  public void validStimmabgabevermerkeOrThrow(final WahldatenModel stimmabgabevermerke) {
+  public void validStimmabgabevermerkeOrThrow(final StimmabgabevermerkeModel stimmabgabevermerke) {
     if (stimmabgabevermerke == null) {
       throw exceptionFactory.createFachlicheWlsException(
           ExceptionConstants.POST_STATUS_PARAMETER_UNVOLLSTAENDIG);

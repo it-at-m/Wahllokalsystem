@@ -89,7 +89,7 @@ class StimmabgabevermerkeValidatorTest {
     @Test
     void should_notThrowAnyException_when_parameterIsValid() {
       val stimmabgabevermerke =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               "wahlbezirkID", "wahlID", 0L, Collections.emptySet(), Collections.emptySet());
 
       underTest.validStimmabgabevermerkeOrThrow(stimmabgabevermerke);

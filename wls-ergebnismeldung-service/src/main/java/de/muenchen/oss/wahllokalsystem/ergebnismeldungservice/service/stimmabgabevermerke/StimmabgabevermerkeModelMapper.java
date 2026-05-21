@@ -16,7 +16,7 @@ public interface StimmabgabevermerkeModelMapper {
   @Mapping(
       target = "waehlerverzeichnisNummer",
       source = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.waehlerverzeichnisNummer")
-  WahldatenModel toModel(Wahldaten entity);
+  StimmabgabevermerkeModel toModel(Wahldaten entity);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlID", source = "wahlID")
@@ -26,7 +26,7 @@ public interface StimmabgabevermerkeModelMapper {
   @Mapping(
       target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.waehlerverzeichnisNummer",
       source = "waehlerverzeichnisNummer")
-  Wahldaten toEntity(WahldatenModel wahldatenModel);
+  Wahldaten toEntity(StimmabgabevermerkeModel stimmabgabevermerkeModel);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "wahldaten", ignore = true)

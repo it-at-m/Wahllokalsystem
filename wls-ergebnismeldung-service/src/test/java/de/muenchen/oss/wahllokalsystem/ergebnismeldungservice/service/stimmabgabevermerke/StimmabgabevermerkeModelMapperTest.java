@@ -69,7 +69,7 @@ class StimmabgabevermerkeModelMapperTest {
 
       @Test
       void should_returnNull_when_nullIsGiven() {
-        Assertions.assertThat(unitUnderTest.toEntity((WahldatenModel) null)).isNull();
+        Assertions.assertThat(unitUnderTest.toEntity((StimmabgabevermerkeModel) null)).isNull();
       }
 
       @Test

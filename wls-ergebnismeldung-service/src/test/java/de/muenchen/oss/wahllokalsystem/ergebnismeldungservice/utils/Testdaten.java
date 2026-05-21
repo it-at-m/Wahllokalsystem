@@ -12,7 +12,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgab
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class Testdaten {
 
   public static class Wahldaten {
 
-    public static WahldatenModel createModel(
+    public static StimmabgabevermerkeModel createModel(
         @NotNull String wahlbezirkID,
         @NotNull String wahlID,
         @NotNull Long waehlerverzeichnisnummer) {
@@ -35,7 +35,7 @@ public class Testdaten {
               EigenommenerWahlschein.createModel(waehlerverzeichnisnummer * 10 + 1),
               EigenommenerWahlschein.createModel(waehlerverzeichnisnummer * 10 + 2));
 
-      return new WahldatenModel(
+      return new StimmabgabevermerkeModel(
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
 

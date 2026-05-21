@@ -2,8 +2,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabev
 
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.val;
@@ -20,7 +20,8 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 public class StimmabgabevermerkeControllerTest {
 
-  @Mock WahldatenService stimmabgabevermerkeService;
+  @Mock
+  StimmabgabevermerkeService stimmabgabevermerkeService;
 
   @Mock StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
@@ -36,7 +37,7 @@ public class StimmabgabevermerkeControllerTest {
       val waehlerverzeichnisNummer = 1L;
 
       val mockedServiceResponse =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,
@@ -98,7 +99,7 @@ public class StimmabgabevermerkeControllerTest {
               Collections.emptySet());
 
       val mockedStimmabgabevermerkeModel =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,

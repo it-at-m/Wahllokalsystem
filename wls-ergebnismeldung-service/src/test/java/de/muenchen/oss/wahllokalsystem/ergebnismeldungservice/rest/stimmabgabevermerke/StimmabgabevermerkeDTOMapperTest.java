@@ -4,7 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgab
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import java.util.Set;
 import lombok.val;
@@ -55,7 +55,7 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val modelToMap =
-          new WahldatenModel(
+          new StimmabgabevermerkeModel(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,

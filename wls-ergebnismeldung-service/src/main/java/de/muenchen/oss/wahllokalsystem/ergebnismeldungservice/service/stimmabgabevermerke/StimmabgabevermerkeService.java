@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class WahldatenService {
+public class StimmabgabevermerkeService {
 
   private final WahldatenRepository wahldatenRepository;
   private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
@@ -25,7 +25,7 @@ public class WahldatenService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-  public Optional<WahldatenModel> getWahldaten(
+  public Optional<StimmabgabevermerkeModel> getWahldaten(
       @P("wahlbezirkID") final String wahlbezirkID, final String wahlID, final long wvzNummer) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
         new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer),
@@ -40,7 +40,7 @@ public class WahldatenService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)")
-  public void setWahldaten(@P("param") WahldatenModel wahldaten) {
+  public void setWahldaten(@P("param") StimmabgabevermerkeModel wahldaten) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
         new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
             wahldaten.wahlbezirkID(), wahldaten.wahlID(), wahldaten.waehlerverzeichnisNummer()),

@@ -23,7 +23,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendun
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,7 +56,8 @@ class SecurityConfigurationTest {
 
   @MockitoBean AusdruckService ausdruckService;
 
-  @MockitoBean WahldatenService stimmabgabevermerkeService;
+  @MockitoBean
+  StimmabgabevermerkeService stimmabgabevermerkeService;
 
   @MockitoBean ErgebnisseService ergebnisseService;
 

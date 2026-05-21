@@ -10,7 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
 public interface StimmabgabevermerkeRepository
-    extends NaturalIdRepository<Stimmabgabevermerke, UUID, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
+    extends NaturalIdRepository<
+        Stimmabgabevermerke, UUID, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
 
   String CACHE = "STIMMABGABEVERMERKE_CACHE";
 

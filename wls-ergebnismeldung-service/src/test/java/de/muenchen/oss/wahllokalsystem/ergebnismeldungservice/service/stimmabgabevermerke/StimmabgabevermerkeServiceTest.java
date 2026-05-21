@@ -25,15 +25,13 @@ class StimmabgabevermerkeServiceTest {
 
   @Mock StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
 
-  @Mock
-  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @Mock StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
 
   @Mock ExceptionFactory exceptionFactory;
 
-  @InjectMocks
-  StimmabgabevermerkeService unitUnderTest;
+  @InjectMocks StimmabgabevermerkeService unitUnderTest;
 
   @Nested
   class GetStimmabgabevermerke {

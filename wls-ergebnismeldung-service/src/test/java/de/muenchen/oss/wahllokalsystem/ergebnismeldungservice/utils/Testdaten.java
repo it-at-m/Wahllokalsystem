@@ -10,10 +10,10 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabeve
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmzettelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.VermerkDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.EingenommenerWahlscheinModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,11 +40,10 @@ public class Testdaten {
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
 
-    public static Stimmabgabevermerke
-        createEntity(
-            @NotNull String wahlbezirkID,
-            @NotNull String wahlID,
-            @NotNull Long waehlerverzeichnisnummer) {
+    public static Stimmabgabevermerke createEntity(
+        @NotNull String wahlbezirkID,
+        @NotNull String wahlID,
+        @NotNull Long waehlerverzeichnisnummer) {
       val vermerke =
           Set.of(
               Vermerk.createEntity(waehlerverzeichnisnummer * 10 + 1),

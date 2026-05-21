@@ -42,8 +42,7 @@ class DefaultElectionTypeValidatorTest {
 
   @Mock ErgebnisseRepository ergebnisseRepo;
 
-  @Mock
-  StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
+  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
 
   @Mock WahlscheineRepository wahlscheineRepo;
 

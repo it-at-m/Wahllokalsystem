@@ -37,11 +37,9 @@ public class StimmabgabevermerkeServiceSecurityTest {
 
   @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
 
-  @Autowired
-  StimmabgabevermerkeService stimmabgabevermerkeService;
+  @Autowired StimmabgabevermerkeService stimmabgabevermerkeService;
 
-  @Autowired
-  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Autowired StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @AfterEach
   void teardown() {
@@ -191,7 +189,8 @@ public class StimmabgabevermerkeServiceSecurityTest {
               Authorities.SERVICE_SET_STIMMABGABEVERMERKE));
     }
 
-    private StimmabgabevermerkeModel createSavableModel(final BezirkIDUndWaehlerverzeichnisNummer id) {
+    private StimmabgabevermerkeModel createSavableModel(
+        final BezirkIDUndWaehlerverzeichnisNummer id) {
       val eingenommeneWahlscheine =
           Set.of(new EingenommenerWahlscheinModel(0L, StimmzettelartModel.BEIDE));
 

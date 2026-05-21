@@ -39,7 +39,7 @@ public class Vermerk {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(name = "wahldatenID")
+  @JoinColumn(name = "stimmabgabevermerkeID")
   @NotNull @EqualsAndHashCode.Exclude
   private Stimmabgabevermerke stimmabgabevermerke;
 

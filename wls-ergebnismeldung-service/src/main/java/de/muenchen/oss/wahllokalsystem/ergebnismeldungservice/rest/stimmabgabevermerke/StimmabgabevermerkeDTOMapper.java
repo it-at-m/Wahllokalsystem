@@ -13,5 +13,8 @@ public interface StimmabgabevermerkeDTOMapper {
   @Mapping(source = "wahlbezirkID", target = "wahlbezirkID")
   @Mapping(source = "waehlerverzeichnisNummer", target = "waehlerverzeichnisNummer")
   StimmabgabevermerkeModel toWahldatenModel(
-      String wahlID, String wahlbezirkID, long waehlerverzeichnisNummer, StimmabgabevermerkeDTO dto);
+      String wahlID,
+      String wahlbezirkID,
+      long waehlerverzeichnisNummer,
+      StimmabgabevermerkeDTO dto);
 }

@@ -56,8 +56,7 @@ class SecurityConfigurationTest {
 
   @MockitoBean AusdruckService ausdruckService;
 
-  @MockitoBean
-  StimmabgabevermerkeService stimmabgabevermerkeService;
+  @MockitoBean StimmabgabevermerkeService stimmabgabevermerkeService;
 
   @MockitoBean ErgebnisseService ergebnisseService;
 

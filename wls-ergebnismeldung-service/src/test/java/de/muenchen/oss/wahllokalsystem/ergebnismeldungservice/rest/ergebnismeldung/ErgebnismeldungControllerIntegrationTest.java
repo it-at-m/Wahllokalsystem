@@ -82,8 +82,7 @@ class ErgebnismeldungControllerIntegrationTest {
 
   @Autowired ErgebnisseRepository ergebnisseRepository;
 
-  @Autowired
-  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  @Autowired StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @Autowired AWerteRepository aWerteRepository;
 

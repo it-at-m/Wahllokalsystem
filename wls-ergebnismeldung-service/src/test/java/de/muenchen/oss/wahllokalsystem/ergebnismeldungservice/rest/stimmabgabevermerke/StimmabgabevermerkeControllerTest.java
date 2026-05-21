@@ -20,13 +20,11 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(MockitoExtension.class)
 public class StimmabgabevermerkeControllerTest {
 
-  @Mock
-  StimmabgabevermerkeService stimmabgabevermerkeService;
+  @Mock StimmabgabevermerkeService stimmabgabevermerkeService;
 
   @Mock StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
-  @InjectMocks
-  StimmabgabevermerkeController unitUnderTest;
+  @InjectMocks StimmabgabevermerkeController unitUnderTest;
 
   @Nested
   class GetStimmabgabevermerke {

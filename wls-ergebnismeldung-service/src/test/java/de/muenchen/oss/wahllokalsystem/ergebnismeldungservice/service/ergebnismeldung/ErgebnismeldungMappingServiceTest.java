@@ -50,8 +50,7 @@ class ErgebnismeldungMappingServiceTest {
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
   @Mock StimmzettelumschlaegeRepository stimmzettelumschlaegeRepo;
-  @Mock
-  StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
+  @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
   @Mock AWerteRepository aWerteRepo;
 
   @Mock AuthenticationService authenticationService;

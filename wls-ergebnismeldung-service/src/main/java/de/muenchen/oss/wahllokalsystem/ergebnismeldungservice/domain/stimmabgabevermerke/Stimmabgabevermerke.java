@@ -28,8 +28,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
-@Entity(name = "Wahldaten")
-@Table(name = "Wahldaten")
+@Entity
+@Table
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)

@@ -114,6 +114,11 @@ public class WaehlerverzeichnisServiceSecurityTest {
               false,
               true);
 
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(modelToSet.waehlerverzeichnisReference().getWahlbezirkID()), any()))
+          .thenReturn(true);
+
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet));
     }
@@ -129,6 +134,11 @@ public class WaehlerverzeichnisServiceSecurityTest {
               true,
               false,
               true);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(modelToSet.waehlerverzeichnisReference().getWahlbezirkID()), any()))
+          .thenReturn(true);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet))
@@ -147,9 +157,35 @@ public class WaehlerverzeichnisServiceSecurityTest {
               false,
               true);
 
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(modelToSet.waehlerverzeichnisReference().getWahlbezirkID()), any()))
+          .thenReturn(true);
+
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet))
           .isInstanceOf(TechnischeWlsException.class);
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.SERVICE_POST_WAEHLERVERZEICHNIS);
+
+      val modelToSet =
+          new WaehlerverzeichnisModel(
+              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 233L),
+              true,
+              true,
+              false,
+              true);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  eq(modelToSet.waehlerverzeichnisReference().getWahlbezirkID()), any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.setWaehlerverzeichnis(modelToSet))
+          .isInstanceOf(AccessDeniedException.class);
     }
   }
 }

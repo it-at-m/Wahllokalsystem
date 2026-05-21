@@ -1,7 +1,7 @@
 <template>
   <div>
     <p
-      v-if="!tasks"
+      v-if="!tasks?.length"
       class="my-3"
     >
       {{ titel }} ({{ current }} / {{ total }})

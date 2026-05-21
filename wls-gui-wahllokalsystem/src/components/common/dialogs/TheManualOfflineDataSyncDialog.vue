@@ -89,7 +89,6 @@ const isDialogVisible = defineModel("modelValue", {
 });
 
 const dirtyTasks = ref(numberOfTasksToRun.value);
-const syncStatus = ref("success");
 
 watch(
   () => isDialogVisible.value,
@@ -109,11 +108,6 @@ async function initiateOfflineDataSync() {
     await synchronizeOfflineData();
     const openTasks = await getSyncTasks();
     dirtyTasks.value = openTasks.length;
-    if (dirtyTasks.value > 0) {
-      syncStatus.value = "error";
-    } else {
-      syncStatus.value = "success";
-    }
   }
 }
 

@@ -61,7 +61,7 @@
     "axios": "1.16.1",
     "eslint": "9.39.4",
     "eslint-plugin-storybook": "0.12.0",
-    "eslint-plugin-vue": "9.33.0",
+    "eslint-plugin-vue": "10.9.1",
     "jsdom": "29.1.1",
     "msw": "2.14.6",
     "msw-storybook-addon": "2.0.7",

@@ -33,7 +33,6 @@ public class StimmabgabevermerkeDTOMapperTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
       val modelToMap =
           Testdaten.Stimmabgabevermerke.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -52,7 +51,6 @@ public class StimmabgabevermerkeDTOMapperTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
       val modelToMap =
           new StimmabgabevermerkeModel(
@@ -117,7 +115,6 @@ public class StimmabgabevermerkeDTOMapperTest {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
       val dtoToMap =
           new StimmabgabevermerkeDTO(

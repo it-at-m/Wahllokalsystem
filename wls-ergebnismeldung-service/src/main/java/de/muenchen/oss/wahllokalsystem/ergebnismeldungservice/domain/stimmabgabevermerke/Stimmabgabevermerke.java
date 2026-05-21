@@ -12,7 +12,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.LinkedHashSet;
@@ -29,7 +28,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)

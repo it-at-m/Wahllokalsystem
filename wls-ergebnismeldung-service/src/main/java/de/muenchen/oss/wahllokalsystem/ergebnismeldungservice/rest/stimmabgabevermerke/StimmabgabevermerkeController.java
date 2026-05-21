@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-public class WahldatenController extends AbstractController {
+public class StimmabgabevermerkeController extends AbstractController {
 
   private final StimmabgabevermerkeService stimmabgabevermerkeService;
   private final StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
   @GetMapping(
       "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}")
-  public ResponseEntity<WahldatenDTO> getWahldaten(
+  public ResponseEntity<StimmabgabevermerkeDTO> getWahldaten(
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer) {
@@ -41,10 +41,10 @@ public class WahldatenController extends AbstractController {
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer,
-      @RequestBody WahldatenDTO wahldatenDTO) {
+      @RequestBody StimmabgabevermerkeDTO stimmabgabevermerkeDTO) {
     val wahldatenModel =
         stimmabgabevermerkeDTOMapper.toWahldatenModel(
-            wahlID, wahlbezirkID, waehlerverzeichnisNummer, wahldatenDTO);
+            wahlID, wahlbezirkID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO);
     stimmabgabevermerkeService.setWahldaten(wahldatenModel);
   }
 }

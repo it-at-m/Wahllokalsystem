@@ -117,7 +117,7 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val dtoToMap =
-          new WahldatenDTO(
+          new StimmabgabevermerkeDTO(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,

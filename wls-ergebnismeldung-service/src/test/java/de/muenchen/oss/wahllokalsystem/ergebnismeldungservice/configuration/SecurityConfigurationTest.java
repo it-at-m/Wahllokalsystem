@@ -17,7 +17,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.ergebnisse.Er
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.MeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
@@ -312,7 +312,7 @@ class SecurityConfigurationTest {
               .contentType(MediaType.APPLICATION_JSON)
               .content(
                   objectMapper.writeValueAsBytes(
-                      new WahldatenDTO(
+                      new StimmabgabevermerkeDTO(
                           "wahlbezirkID",
                           "wahlID",
                           0L,
@@ -331,7 +331,7 @@ class SecurityConfigurationTest {
               .contentType(MediaType.APPLICATION_JSON)
               .content(
                   objectMapper.writeValueAsBytes(
-                      new WahldatenDTO(
+                      new StimmabgabevermerkeDTO(
                           "wahlbezirkID",
                           "wahlID",
                           0L,

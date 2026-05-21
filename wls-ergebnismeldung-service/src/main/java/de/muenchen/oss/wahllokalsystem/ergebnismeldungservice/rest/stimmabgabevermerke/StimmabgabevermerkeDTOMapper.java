@@ -7,11 +7,11 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface StimmabgabevermerkeDTOMapper {
 
-  WahldatenDTO toWahldatenDTO(StimmabgabevermerkeModel stimmabgabevermerkeModel);
+  StimmabgabevermerkeDTO toWahldatenDTO(StimmabgabevermerkeModel stimmabgabevermerkeModel);
 
   @Mapping(source = "wahlID", target = "wahlID")
   @Mapping(source = "wahlbezirkID", target = "wahlbezirkID")
   @Mapping(source = "waehlerverzeichnisNummer", target = "waehlerverzeichnisNummer")
   StimmabgabevermerkeModel toWahldatenModel(
-      String wahlID, String wahlbezirkID, long waehlerverzeichnisNummer, WahldatenDTO dto);
+      String wahlID, String wahlbezirkID, long waehlerverzeichnisNummer, StimmabgabevermerkeDTO dto);
 }

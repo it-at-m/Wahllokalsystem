@@ -25,7 +25,8 @@ public class StimmabgabevermerkeControllerTest {
 
   @Mock StimmabgabevermerkeDTOMapper stimmabgabevermerkeDTOMapper;
 
-  @InjectMocks WahldatenController unitUnderTest;
+  @InjectMocks
+  StimmabgabevermerkeController unitUnderTest;
 
   @Nested
   class GetStimmabgabevermerke {
@@ -44,7 +45,7 @@ public class StimmabgabevermerkeControllerTest {
               Collections.emptySet(),
               Collections.emptySet());
       val mockedServiceResponseAsDTO =
-          new WahldatenDTO(
+          new StimmabgabevermerkeDTO(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,
@@ -91,7 +92,7 @@ public class StimmabgabevermerkeControllerTest {
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
       val stimmabgabevermerkeDTO =
-          new WahldatenDTO(
+          new StimmabgabevermerkeDTO(
               wahlbezirkID,
               wahlID,
               waehlerverzeichnisNummer,

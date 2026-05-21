@@ -78,7 +78,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
               .andReturn()
               .getResponse();
       val responseBodyAsDTO =
-          objectMapper.readValue(response.getContentAsString(), WahldatenDTO.class);
+          objectMapper.readValue(response.getContentAsString(), StimmabgabevermerkeDTO.class);
 
       val expectedResult =
           stimmabgabevermerkeDTOMapper.toWahldatenDTO(
@@ -247,7 +247,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
         final String wahlID,
         final String wahlbezirkID,
         final String claimWahlbezirkID,
-        final WahldatenDTO requestBody)
+        final StimmabgabevermerkeDTO requestBody)
         throws Exception {
       return MockMvcRequestBuilders.post(
               "/businessActions/stimmabgabevermerke/"

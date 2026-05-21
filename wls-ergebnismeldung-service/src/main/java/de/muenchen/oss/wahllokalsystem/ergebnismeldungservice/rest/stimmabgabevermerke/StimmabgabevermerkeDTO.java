@@ -3,7 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabev
 import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
-public record WahldatenDTO(
+public record StimmabgabevermerkeDTO(
     @NotNull String wahlbezirkID,
     @NotNull String wahlID,
     @NotNull long waehlerverzeichnisNummer,

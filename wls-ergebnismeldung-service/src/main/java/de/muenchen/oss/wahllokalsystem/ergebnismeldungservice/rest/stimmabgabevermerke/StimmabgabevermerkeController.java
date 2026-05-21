@@ -24,27 +24,27 @@ public class StimmabgabevermerkeController extends AbstractController {
 
   @GetMapping(
       "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}")
-  public ResponseEntity<StimmabgabevermerkeDTO> getWahldaten(
+  public ResponseEntity<StimmabgabevermerkeDTO> getStimmabgabevermerke(
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer) {
     return okWithBodyOrNoContent(
         stimmabgabevermerkeService
-            .getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer)
-            .map(stimmabgabevermerkeDTOMapper::toWahldatenDTO));
+            .getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer)
+            .map(stimmabgabevermerkeDTOMapper::toStimmabgabevermerkeDTO));
   }
 
   @PostMapping(
       "/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}")
   @ResponseStatus(HttpStatus.OK)
-  public void setWahldaten(
+  public void postStimmabgabevermerke(
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @PathVariable("wahlID") final String wahlID,
       @PathVariable("waehlerverzeichnisNummer") final Long waehlerverzeichnisNummer,
       @RequestBody StimmabgabevermerkeDTO stimmabgabevermerkeDTO) {
     val wahldatenModel =
-        stimmabgabevermerkeDTOMapper.toWahldatenModel(
+        stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeModel(
             wahlID, wahlbezirkID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO);
-    stimmabgabevermerkeService.setWahldaten(wahldatenModel);
+    stimmabgabevermerkeService.postStimmabgabevermerke(wahldatenModel);
   }
 }

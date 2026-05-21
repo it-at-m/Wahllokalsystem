@@ -299,7 +299,7 @@ class SecurityConfigurationTest {
 
       api.perform(request).andExpect(status().isNoContent());
 
-      Mockito.verify(stimmabgabevermerkeService).getWahldaten("wbzID", "wahlid", 1L);
+      Mockito.verify(stimmabgabevermerkeService).getStimmabgabevermerke("wbzID", "wahlid", 1L);
     }
 
     @WithAnonymousUser
@@ -339,7 +339,7 @@ class SecurityConfigurationTest {
 
       api.perform(request).andExpect(status().isOk());
 
-      Mockito.verify(stimmabgabevermerkeService).setWahldaten(any());
+      Mockito.verify(stimmabgabevermerkeService).postStimmabgabevermerke(any());
     }
   }
 

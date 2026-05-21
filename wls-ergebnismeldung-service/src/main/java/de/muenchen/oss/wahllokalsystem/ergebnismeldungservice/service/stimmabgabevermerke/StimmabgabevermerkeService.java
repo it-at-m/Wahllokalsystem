@@ -25,7 +25,7 @@ public class StimmabgabevermerkeService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
-  public Optional<StimmabgabevermerkeModel> getWahldaten(
+  public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(
       @P("wahlbezirkID") final String wahlbezirkID, final String wahlID, final long wvzNummer) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
         new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer),
@@ -40,7 +40,7 @@ public class StimmabgabevermerkeService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)")
-  public void setWahldaten(@P("param") StimmabgabevermerkeModel wahldaten) {
+  public void postStimmabgabevermerke(@P("param") StimmabgabevermerkeModel wahldaten) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
         new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
             wahldaten.wahlbezirkID(), wahldaten.wahlID(), wahldaten.waehlerverzeichnisNummer()),

@@ -60,7 +60,8 @@ class StimmabgabevermerkeServiceTest {
       Mockito.when(stimmabgabevermerkeModelMapper.toModel(mockedRepoResponse))
           .thenReturn(mockedRepoResponseAsModel);
 
-      val result = unitUnderTest.getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val result =
+          unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Assertions.assertThat(result).isEqualTo(Optional.of(mockedRepoResponseAsModel));
     }
@@ -76,7 +77,8 @@ class StimmabgabevermerkeServiceTest {
 
       Mockito.when(stimmabgabevermerkeRepository.findByNaturalId(id)).thenReturn(Optional.empty());
 
-      val result = unitUnderTest.getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val result =
+          unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Assertions.assertThat(result).isEmpty();
     }
@@ -97,7 +99,7 @@ class StimmabgabevermerkeServiceTest {
                   ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedFachlicheWlsExceptionForIdValidation);
 
-      unitUnderTest.getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Mockito.verify(stimmabgabevermerkeValidator)
           .validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
@@ -131,7 +133,7 @@ class StimmabgabevermerkeServiceTest {
                   ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedFachlicheWlsExceptionForIdValidation);
 
-      unitUnderTest.setWahldaten(stimmabgabevermerke);
+      unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke);
 
       Mockito.verify(stimmabgabevermerkeValidator)
           .validStimmabgabevermerkeOrThrow(stimmabgabevermerke);
@@ -157,7 +159,7 @@ class StimmabgabevermerkeServiceTest {
       Mockito.when(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerke))
           .thenReturn(mockedMappedModelAsEntity);
 
-      unitUnderTest.setWahldaten(stimmabgabevermerke);
+      unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke);
 
       Mockito.verify(stimmabgabevermerkeRepository).save(mockedMappedModelAsEntity);
     }
@@ -188,7 +190,8 @@ class StimmabgabevermerkeServiceTest {
                   ExceptionConstants.STIMMABGABEVERMERKE_UNSAVEABLE))
           .thenReturn(mockedThrowWlsException);
 
-      Assertions.assertThatThrownBy(() -> unitUnderTest.setWahldaten(stimmabgabevermerke))
+      Assertions.assertThatThrownBy(
+              () -> unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke))
           .isSameAs(mockedThrowWlsException);
     }
   }

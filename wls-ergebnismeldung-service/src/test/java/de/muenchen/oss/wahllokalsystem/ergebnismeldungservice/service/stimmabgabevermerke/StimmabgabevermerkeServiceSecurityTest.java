@@ -60,7 +60,8 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> stimmabgabevermerkeService.getWahldaten(wahlbezirkID, "wahlID", 0L));
+          .isThrownBy(
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L));
     }
 
     @ParameterizedTest(name = "{index} = {1} missing")
@@ -75,7 +76,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.getWahldaten(wahlbezirkID, "wahlID", 0L))
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -90,7 +91,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(false);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.getWahldaten(wahlbezirkID, "wahlID", 0L))
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -114,7 +115,8 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> stimmabgabevermerkeService.setWahldaten(createSavableModel(id)));
+          .isThrownBy(
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)));
     }
 
     @Test
@@ -129,7 +131,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(false);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.setWahldaten(createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -149,7 +151,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.setWahldaten(createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -169,7 +171,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.setWahldaten(createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(TechnischeWlsException.class);
     }
 

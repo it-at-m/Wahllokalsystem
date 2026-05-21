@@ -81,7 +81,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
           objectMapper.readValue(response.getContentAsString(), StimmabgabevermerkeDTO.class);
 
       val expectedResult =
-          stimmabgabevermerkeDTOMapper.toWahldatenDTO(
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
               stimmabgabevermerkeModelMapper.toModel(entityToFind));
 
       Assertions.assertThat(responseBodyAsDTO)
@@ -150,7 +150,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
-          stimmabgabevermerkeDTOMapper.toWahldatenDTO(
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
               stimmabgabevermerkeModelMapper.toModel(expectedEntity));
 
       mockMvc
@@ -188,7 +188,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
-          stimmabgabevermerkeDTOMapper.toWahldatenDTO(
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
               stimmabgabevermerkeModelMapper.toModel(expectedEntity));
 
       mockMvc
@@ -229,7 +229,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
-          stimmabgabevermerkeDTOMapper.toWahldatenDTO(
+          stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
               stimmabgabevermerkeModelMapper.toModel(expectedEntity));
       mockMvc
           .perform(

@@ -25,7 +25,8 @@ public class StimmabgabevermerkeDTOMapperTest {
 
     @Test
     void should_returnNull_when_givenNull() {
-      Assertions.assertThat(unitUnderTest.toWahldatenModel(null, null, 0L, null)).isNull();
+      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeModel(null, null, 0L, null))
+          .isNull();
     }
 
     @Test
@@ -38,7 +39,7 @@ public class StimmabgabevermerkeDTOMapperTest {
       val modelToMap =
           Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
-      val result = unitUnderTest.toWahldatenDTO(modelToMap);
+      val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
 
       val expectedResult =
           Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -62,7 +63,7 @@ public class StimmabgabevermerkeDTOMapperTest {
               Set.of(new VermerkModel(2, Set.of(new StimmzettelModel(20, stimmzettelart)))),
               Set.of(new EingenommenerWahlscheinModel(91, stimmzettelart)));
 
-      val result = unitUnderTest.toWahldatenDTO(modelToMap);
+      val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
 
       Assertions.assertThat(
               result.vermerke().stream()
@@ -87,7 +88,8 @@ public class StimmabgabevermerkeDTOMapperTest {
 
     @Test
     void should_returnNull_when_givenNull() {
-      Assertions.assertThat(unitUnderTest.toWahldatenModel(null, null, 0L, null)).isNull();
+      Assertions.assertThat(unitUnderTest.toStimmabgabevermerkeModel(null, null, 0L, null))
+          .isNull();
     }
 
     @Test
@@ -99,7 +101,8 @@ public class StimmabgabevermerkeDTOMapperTest {
       val dtoToMap = Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val result =
-          unitUnderTest.toWahldatenModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
+          unitUnderTest.toStimmabgabevermerkeModel(
+              wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
 
       val expectedResult =
           Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
@@ -125,7 +128,8 @@ public class StimmabgabevermerkeDTOMapperTest {
               Set.of(new EingenommenerWahlscheinDTO(91, stimmzettelart)));
 
       val result =
-          unitUnderTest.toWahldatenModel(wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
+          unitUnderTest.toStimmabgabevermerkeModel(
+              wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
 
       Assertions.assertThat(
               result.vermerke().stream()

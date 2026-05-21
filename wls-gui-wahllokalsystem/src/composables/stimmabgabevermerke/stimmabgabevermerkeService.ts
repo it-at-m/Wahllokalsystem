@@ -28,6 +28,7 @@ export function useStimmabgabevermerkeService() {
 
   async function getStimmabgabevermerke(
     wahlbezirkID: string,
+    wahlID: string,
     waehlerverzeichnisNummer: number,
     sendNotification = true
   ) {
@@ -35,6 +36,7 @@ export function useStimmabgabevermerkeService() {
       const response =
         await stimmabgabevermerkeControllerApi.getStimmabgabevermerke(
           wahlbezirkID,
+          wahlID,
           waehlerverzeichnisNummer
         );
       const responseData = getNullOn204OrElseResponseData(response);
@@ -57,17 +59,18 @@ export function useStimmabgabevermerkeService() {
 
   async function postStimmabgabevermerke(
     wahlbezirkID: string,
+    wahlID: string,
     waehlerverzeichnisNummer: number,
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
     const { wahlenActions } = useWahlenStore();
     const wahlname =
-      wahlenActions.getWahlNameOrBlankStringById(
-        stimmabgabevermerke.wahldaten?.[0].wahlID
-      ) || "";
+      wahlenActions.getWahlNameOrBlankStringById(stimmabgabevermerke.wahlID) ||
+      "";
     try {
       await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer,
         toDto(stimmabgabevermerke)
       );

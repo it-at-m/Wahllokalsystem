@@ -646,12 +646,11 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         if (waehlerverzeichnisNummer) {
           const loadedStimmabgabevermerke = await getStimmabgabevermerke(
             wahlbezirkID,
+            wahlID,
             waehlerverzeichnisNummer
           );
           if (loadedStimmabgabevermerke) {
-            const wahldatenForWahl = loadedStimmabgabevermerke.wahldaten.find(
-              (wahldaten) => wahldaten.wahlID === wahlID
-            );
+            const wahldatenForWahl = loadedStimmabgabevermerke;
             if (wahldatenForWahl?.eingenommeneWahlscheine) {
               const kleineWahlscheine =
                 wahldatenForWahl.eingenommeneWahlscheine.get(

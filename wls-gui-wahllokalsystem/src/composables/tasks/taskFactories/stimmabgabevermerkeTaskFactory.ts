@@ -20,6 +20,7 @@ export function useStimmabgabevermerkeTaskFactory(): TaskFactory {
       callback: () =>
         loadStimmabgabevermerke(
           extendedWahlMetaData.wahlbezirkID,
+          extendedWahlMetaData.wahlID,
           extendedWahlMetaData.waehlerverzeichnisNummer,
           false
         ),

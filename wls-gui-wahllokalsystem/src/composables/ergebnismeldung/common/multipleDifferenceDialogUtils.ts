@@ -64,7 +64,7 @@ export function useMultipleDifferenceDialogUtils() {
   async function _checkForDifferenceInStimmabgabevermerke() {
     const { stimmabgabevermerke } = useStimmabgabevermerkeStore();
     for (const vermerk of stimmabgabevermerke) {
-      const wahlId = vermerk.wahldaten[0].wahlID;
+      const wahlId = vermerk.wahlID;
       await _checkForDifferenceDialogForWahl(wahlId);
     }
     await _openDialogsOrSave(saveStimmabgabevermerke);

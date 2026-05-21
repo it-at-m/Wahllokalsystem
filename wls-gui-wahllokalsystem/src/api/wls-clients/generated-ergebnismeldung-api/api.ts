@@ -2301,13 +2301,13 @@ export const StimmabgabevermerkeControllerApiAxiosParamCreator = function (confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWahldaten: async (wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getStimmabgabevermerke: async (wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'wahlbezirkID' is not null or undefined
-            assertParamExists('getWahldaten', 'wahlbezirkID', wahlbezirkID)
+            assertParamExists('getStimmabgabevermerke', 'wahlbezirkID', wahlbezirkID)
             // verify required parameter 'wahlID' is not null or undefined
-            assertParamExists('getWahldaten', 'wahlID', wahlID)
+            assertParamExists('getStimmabgabevermerke', 'wahlID', wahlID)
             // verify required parameter 'waehlerverzeichnisNummer' is not null or undefined
-            assertParamExists('getWahldaten', 'waehlerverzeichnisNummer', waehlerverzeichnisNummer)
+            assertParamExists('getStimmabgabevermerke', 'waehlerverzeichnisNummer', waehlerverzeichnisNummer)
             const localVarPath = `/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}`
                 .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)))
                 .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
@@ -2347,15 +2347,15 @@ export const StimmabgabevermerkeControllerApiAxiosParamCreator = function (confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setWahldaten: async (wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postStimmabgabevermerke: async (wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'wahlbezirkID' is not null or undefined
-            assertParamExists('setWahldaten', 'wahlbezirkID', wahlbezirkID)
+            assertParamExists('postStimmabgabevermerke', 'wahlbezirkID', wahlbezirkID)
             // verify required parameter 'wahlID' is not null or undefined
-            assertParamExists('setWahldaten', 'wahlID', wahlID)
+            assertParamExists('postStimmabgabevermerke', 'wahlID', wahlID)
             // verify required parameter 'waehlerverzeichnisNummer' is not null or undefined
-            assertParamExists('setWahldaten', 'waehlerverzeichnisNummer', waehlerverzeichnisNummer)
+            assertParamExists('postStimmabgabevermerke', 'waehlerverzeichnisNummer', waehlerverzeichnisNummer)
             // verify required parameter 'stimmabgabevermerkeDTO' is not null or undefined
-            assertParamExists('setWahldaten', 'stimmabgabevermerkeDTO', stimmabgabevermerkeDTO)
+            assertParamExists('postStimmabgabevermerke', 'stimmabgabevermerkeDTO', stimmabgabevermerkeDTO)
             const localVarPath = `/businessActions/stimmabgabevermerke/{wahlbezirkID}/{wahlID}/{waehlerverzeichnisNummer}`
                 .replace(`{${"wahlbezirkID"}}`, encodeURIComponent(String(wahlbezirkID)))
                 .replace(`{${"wahlID"}}`, encodeURIComponent(String(wahlID)))
@@ -2407,10 +2407,10 @@ export const StimmabgabevermerkeControllerApiFp = function(configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StimmabgabevermerkeDTO>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options);
+        async getStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StimmabgabevermerkeDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StimmabgabevermerkeControllerApi.getWahldaten']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['StimmabgabevermerkeControllerApi.getStimmabgabevermerke']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2422,10 +2422,10 @@ export const StimmabgabevermerkeControllerApiFp = function(configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async setWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.setWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options);
+        async postStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['StimmabgabevermerkeControllerApi.setWahldaten']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['StimmabgabevermerkeControllerApi.postStimmabgabevermerke']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2446,8 +2446,8 @@ export const StimmabgabevermerkeControllerApiFactory = function (configuration?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig): AxiosPromise<StimmabgabevermerkeDTO> {
-            return localVarFp.getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options).then((request) => request(axios, basePath));
+        getStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig): AxiosPromise<StimmabgabevermerkeDTO> {
+            return localVarFp.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2458,8 +2458,8 @@ export const StimmabgabevermerkeControllerApiFactory = function (configuration?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.setWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options).then((request) => request(axios, basePath));
+        postStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2480,8 +2480,8 @@ export class StimmabgabevermerkeControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StimmabgabevermerkeControllerApi
      */
-    public getWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig) {
-        return StimmabgabevermerkeControllerApiFp(this.configuration).getWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options).then((request) => request(this.axios, this.basePath));
+    public getStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, options?: RawAxiosRequestConfig) {
+        return StimmabgabevermerkeControllerApiFp(this.configuration).getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2494,8 +2494,8 @@ export class StimmabgabevermerkeControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StimmabgabevermerkeControllerApi
      */
-    public setWahldaten(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig) {
-        return StimmabgabevermerkeControllerApiFp(this.configuration).setWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options).then((request) => request(this.axios, this.basePath));
+    public postStimmabgabevermerke(wahlbezirkID: string, wahlID: string, waehlerverzeichnisNummer: number, stimmabgabevermerkeDTO: StimmabgabevermerkeDTO, options?: RawAxiosRequestConfig) {
+        return StimmabgabevermerkeControllerApiFp(this.configuration).postStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer, stimmabgabevermerkeDTO, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

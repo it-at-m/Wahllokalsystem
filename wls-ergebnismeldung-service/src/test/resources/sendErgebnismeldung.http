@@ -115,46 +115,39 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### POST stimmabgabevermerke | user wls_all_uwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
   "waehlerverzeichnisNummer": 1,
-  "anzahlBlaetter": 2,
-  "stimmabgabevermerke": [
+  "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
+  "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
+  "eingenommeneWahlscheine": [
     {
-      "waehlerverzeichnisNummer": 1,
-      "wahlbezirkID": "9899cae4-df9a-4ffc-a940-f20cf2280171",
-      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-      "eingenommeneWahlscheine": [
+      "anzahl": 2,
+      "stimmzettelart": "KLEIN"
+    },
+    {
+      "anzahl": 4,
+      "stimmzettelart": "BEIDE"
+    },
+    {
+      "anzahl": 12,
+      "stimmzettelart": "GROSS"
+    }
+  ],
+  "vermerke": [
+    {
+      "blattnummer": 2,
+      "stimmzettel": [
         {
-          "anzahl": 2,
-          "stimmzettelart": "KLEIN"
-        },
-        {
-          "anzahl": 4,
-          "stimmzettelart": "BEIDE"
-        },
-        {
-          "anzahl": 12,
+          "anzahl": 1,
           "stimmzettelart": "GROSS"
-        }
-      ],
-      "vermerke": [
+        },
         {
-          "blattnummer": 2,
-          "stimmzettel": [
-            {
-              "anzahl": 1,
-              "stimmzettelart": "GROSS"
-            },
-            {
-              "anzahl": 1,
-              "stimmzettelart": "KLEIN"
-            }
-          ]
+          "anzahl": 1,
+          "stimmzettelart": "KLEIN"
         }
       ]
     }
@@ -234,46 +227,39 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 }
 
 ### POST stimmabgabevermerke | user wls_all_bwb
-POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/1
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
 
 {
-  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
   "waehlerverzeichnisNummer": 1,
-  "anzahlBlaetter": 2,
-  "stimmabgabevermerke": [
+  "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
+  "wahlID": "",
+  "eingenommeneWahlscheine": [
     {
-      "waehlerverzeichnisNummer": 1,
-      "wahlbezirkID": "9081145c-dc16-4a9b-8255-5c49ddb98c14",
-      "wahlID": "28039463-3d3d-4ce5-acc1-0bef931a4409",
-      "eingenommeneWahlscheine": [
+      "anzahl": 2,
+      "stimmzettelart": "KLEIN"
+    },
+    {
+      "anzahl": 4,
+      "stimmzettelart": "BEIDE"
+    },
+    {
+      "anzahl": 12,
+      "stimmzettelart": "GROSS"
+    }
+  ],
+  "vermerke": [
+    {
+      "blattnummer": 2,
+      "stimmzettel": [
         {
-          "anzahl": 2,
-          "stimmzettelart": "KLEIN"
-        },
-        {
-          "anzahl": 4,
-          "stimmzettelart": "BEIDE"
-        },
-        {
-          "anzahl": 12,
+          "anzahl": 1,
           "stimmzettelart": "GROSS"
-        }
-      ],
-      "vermerke": [
+        },
         {
-          "blattnummer": 2,
-          "stimmzettel": [
-            {
-              "anzahl": 1,
-              "stimmzettelart": "GROSS"
-            },
-            {
-              "anzahl": 1,
-              "stimmzettelart": "KLEIN"
-            }
-          ]
+          "anzahl": 1,
+          "stimmzettelart": "KLEIN"
         }
       ]
     }

@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.EingenommenerWahlscheinDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
@@ -39,8 +40,7 @@ public class Testdaten {
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
 
-    public static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
-            .Wahldaten
+    public static Stimmabgabevermerke
         createEntity(
             @NotNull String wahlbezirkID,
             @NotNull String wahlID,
@@ -55,8 +55,7 @@ public class Testdaten {
               EigenommenerWahlschein.createEntity(waehlerverzeichnisnummer * 10 + 2));
 
       val wahldaten =
-          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
-              .Wahldaten(
+          new Stimmabgabevermerke(
               null,
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahlbezirkID, wahlID, waehlerverzeichnisnummer),

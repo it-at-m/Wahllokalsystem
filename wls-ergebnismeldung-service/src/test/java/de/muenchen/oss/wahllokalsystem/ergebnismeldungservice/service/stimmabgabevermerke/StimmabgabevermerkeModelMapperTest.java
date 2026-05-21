@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import java.util.Collections;
 import java.util.Set;
@@ -45,7 +45,7 @@ class StimmabgabevermerkeModelMapperTest {
     void should_useStimmzettelartWithSameName_when_stimmzettelartModelIsGiven(
         final Stimmzettelart stimmzettelart) {
       val entityToMap =
-          new Wahldaten(
+          new Stimmabgabevermerke(
               null,
               null,
               Set.of(

@@ -12,8 +12,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
@@ -40,7 +40,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class StimmabgabevermerkeControllerIntegrationTest {
 
-  @Autowired WahldatenRepository stimmabgabevermerkeRepository;
+  @Autowired
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @Autowired StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
 
@@ -269,9 +270,9 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     }
   }
 
-  private Wahldaten createWahldaten(
+  private Stimmabgabevermerke createWahldaten(
       final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
-    val emptyWahldaten = new Wahldaten();
+    val emptyWahldaten = new Stimmabgabevermerke();
     val stimmzettel1 = new Stimmzettel();
     stimmzettel1.setAnzahl(20);
     stimmzettel1.setStimmzettelart(Stimmzettelart.KLEIN);

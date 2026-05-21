@@ -1,8 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -25,7 +25,8 @@ class StimmabgabevermerkeServiceTest {
 
   @Mock StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
 
-  @Mock WahldatenRepository stimmabgabevermerkeRepository;
+  @Mock
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @Mock StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
 
@@ -47,7 +48,7 @@ class StimmabgabevermerkeServiceTest {
               wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val mockedRepoResponse =
-          new Wahldaten(
+          new Stimmabgabevermerke(
               UUID.randomUUID(),
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, 1L),
               Collections.emptySet(),
@@ -154,7 +155,7 @@ class StimmabgabevermerkeServiceTest {
               Collections.emptySet(),
               Collections.emptySet());
 
-      val mockedMappedModelAsEntity = new Wahldaten();
+      val mockedMappedModelAsEntity = new Stimmabgabevermerke();
       Mockito.when(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerke))
           .thenReturn(mockedMappedModelAsEntity);
 
@@ -176,7 +177,7 @@ class StimmabgabevermerkeServiceTest {
               Collections.emptySet(),
               Collections.emptySet());
 
-      val mockedMappedModelAsEntity = new Wahldaten();
+      val mockedMappedModelAsEntity = new Stimmabgabevermerke();
       val mockedRepositoryException = new RuntimeException("saving failed");
       val mockedThrowWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 

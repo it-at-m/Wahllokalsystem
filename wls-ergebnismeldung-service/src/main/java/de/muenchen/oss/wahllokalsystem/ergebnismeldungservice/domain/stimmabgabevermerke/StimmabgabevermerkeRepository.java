@@ -9,17 +9,17 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
-public interface WahldatenRepository
-    extends NaturalIdRepository<Wahldaten, UUID, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
+public interface StimmabgabevermerkeRepository
+    extends NaturalIdRepository<Stimmabgabevermerke, UUID, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
 
   String CACHE = "STIMMABGABEVERMERKE_CACHE";
 
   @Override
-  Optional<Wahldaten> findById(UUID id);
+  Optional<Stimmabgabevermerke> findById(UUID id);
 
   @Override
   @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
-  <S extends Wahldaten> Iterable<S> saveAll(Iterable<S> entities);
+  <S extends Stimmabgabevermerke> Iterable<S> saveAll(Iterable<S> entities);
 
   @Override
   @CacheEvict(value = CACHE, key = "#bezirkIDUndWaehlerverzeichnisNummer")
@@ -29,12 +29,12 @@ public interface WahldatenRepository
   @Override
   @CacheEvict(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
   @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
-  void delete(Wahldaten entity);
+  void delete(Stimmabgabevermerke entity);
 
   @Override
   @CacheEvict(value = CACHE, allEntries = true)
   @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
-  void deleteAll(Iterable<? extends Wahldaten> entities);
+  void deleteAll(Iterable<? extends Stimmabgabevermerke> entities);
 
   @Override
   @CacheEvict(value = CACHE, allEntries = true)
@@ -43,5 +43,5 @@ public interface WahldatenRepository
 
   @CachePut(value = CACHE, key = "#p0.id")
   @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
-  @NonNull <S extends Wahldaten> S save(@NonNull final S wahldaten);
+  @NonNull <S extends Stimmabgabevermerke> S save(@NonNull final S wahldaten);
 }

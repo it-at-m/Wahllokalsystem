@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
@@ -40,7 +40,8 @@ public class StimmabgabevermerkeServiceSecurityTest {
   @Autowired
   StimmabgabevermerkeService stimmabgabevermerkeService;
 
-  @Autowired WahldatenRepository stimmabgabevermerkeRepository;
+  @Autowired
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @AfterEach
   void teardown() {

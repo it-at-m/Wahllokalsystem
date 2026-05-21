@@ -10,8 +10,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.Wahlscheine;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.WahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
@@ -42,7 +42,8 @@ class DefaultElectionTypeValidatorTest {
 
   @Mock ErgebnisseRepository ergebnisseRepo;
 
-  @Mock WahldatenRepository stimmabgabevermerkeRepo;
+  @Mock
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
 
   @Mock WahlscheineRepository wahlscheineRepo;
 
@@ -163,7 +164,7 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Wahldaten();
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
         val mockedAWerte = new AWerte();
 
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
@@ -260,7 +261,7 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Wahldaten();
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
         val mockedWlsException =
             FachlicheWlsException.withCode("000").buildWithMessage("Required A-Werte are missing");
 
@@ -300,7 +301,7 @@ class DefaultElectionTypeValidatorTest {
             List.of(
                 createErgebnisWithStapelArt(Stapelart.BTW_A),
                 createErgebnisWithStapelArt(Stapelart.BTW_B_I_GUELTIG));
-        val mockedStimmabgabevermerke = new Wahldaten();
+        val mockedStimmabgabevermerke = new Stimmabgabevermerke();
         val mockedAWerte = new AWerte();
         final Optional<AWerte> mockedNotFound = Optional.empty();
 

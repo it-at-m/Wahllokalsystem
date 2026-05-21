@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.LinkedHashSet;
@@ -27,14 +28,15 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
-@Entity
+@Entity(name = "Wahldaten")
+@Table(name = "Wahldaten")
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wahldaten {
+public class Stimmabgabevermerke {
 
   @Id
   @GeneratedValue(generator = "uuid")
@@ -47,7 +49,7 @@ public class Wahldaten {
   private BezirkUndWahlIDUndWaehlerverzeichnisnummer bezirkUndWahlIDUndWaehlerverzeichnisnummer;
 
   @OneToMany(
-      mappedBy = "wahldaten",
+      mappedBy = "stimmabgabevermerke",
       orphanRemoval = true,
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER)
@@ -62,6 +64,6 @@ public class Wahldaten {
 
   public void addVermerk(Vermerk vermerk) {
     vermerke.add(vermerk);
-    vermerk.setWahldaten(this);
+    vermerk.setStimmabgabevermerke(this);
   }
 }

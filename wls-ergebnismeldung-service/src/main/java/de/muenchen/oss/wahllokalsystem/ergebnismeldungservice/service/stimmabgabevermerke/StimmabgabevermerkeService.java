@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmabgabevermerkeService {
 
-  private final WahldatenRepository wahldatenRepository;
+  private final StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
   private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
   private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
   private final ExceptionFactory exceptionFactory;
@@ -32,7 +32,7 @@ public class StimmabgabevermerkeService {
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
     val wahldaten =
-        wahldatenRepository.findByNaturalId(
+        stimmabgabevermerkeRepository.findByNaturalId(
             new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer));
     return wahldaten.map(stimmabgabevermerkeModelMapper::toModel);
   }
@@ -50,7 +50,7 @@ public class StimmabgabevermerkeService {
 
     try {
       val existingEntity =
-          wahldatenRepository.findByNaturalId(
+          stimmabgabevermerkeRepository.findByNaturalId(
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahldaten.wahlbezirkID(),
                   wahldaten.wahlID(),
@@ -58,9 +58,9 @@ public class StimmabgabevermerkeService {
       val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
       if (existingEntity.isPresent()) {
         entityToSave.setId(existingEntity.get().getId());
-        wahldatenRepository.save(entityToSave);
+        stimmabgabevermerkeRepository.save(entityToSave);
       } else {
-        wahldatenRepository.save(entityToSave);
+        stimmabgabevermerkeRepository.save(entityToSave);
       }
     } catch (final Exception e) {
       log.error("#postStimmabgabevermerke unsaveable:", e);

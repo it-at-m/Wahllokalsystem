@@ -6,8 +6,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.WahlscheineRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteService;
@@ -33,7 +33,7 @@ public class DefaultElectionTypeValidator {
 
   private final AWerteRepository aWerteRepo;
   private final ErgebnisseRepository ergebnisseRepo;
-  private final WahldatenRepository stimmabgabevermerkeRepo;
+  private final StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
   private final WahlscheineRepository wahlscheineRepo;
   private final AWerteService aWerte_BusinessActionService;
 
@@ -102,7 +102,7 @@ public class DefaultElectionTypeValidator {
       final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer)
       throws WlsException {
 
-    Optional<Wahldaten> stimmabgabevermerke =
+    Optional<Stimmabgabevermerke> stimmabgabevermerke =
         stimmabgabevermerkeRepo.findByNaturalId(
             new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                 wahlbezirkID, wahlID, waehlerverzeichnisNummer));

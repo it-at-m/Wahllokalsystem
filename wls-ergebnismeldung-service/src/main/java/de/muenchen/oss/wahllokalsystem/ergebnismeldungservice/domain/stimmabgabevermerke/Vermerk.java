@@ -41,7 +41,7 @@ public class Vermerk {
   @ManyToOne
   @JoinColumn(name = "wahldatenID")
   @NotNull @EqualsAndHashCode.Exclude
-  private Wahldaten wahldaten;
+  private Stimmabgabevermerke stimmabgabevermerke;
 
   @NotNull @ToString.Include private long blattnummer;
 

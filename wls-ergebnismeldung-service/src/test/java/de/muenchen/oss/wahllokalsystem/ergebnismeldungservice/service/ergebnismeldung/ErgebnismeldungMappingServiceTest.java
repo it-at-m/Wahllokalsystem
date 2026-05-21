@@ -11,8 +11,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.StimmzettelumschlaegeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.AWerteDTO;
@@ -50,7 +50,8 @@ class ErgebnismeldungMappingServiceTest {
   @Mock WahlartPredicateHolder wahlartPredicateHolder;
 
   @Mock StimmzettelumschlaegeRepository stimmzettelumschlaegeRepo;
-  @Mock WahldatenRepository stimmabgabevermerkeRepo;
+  @Mock
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
   @Mock AWerteRepository aWerteRepo;
 
   @Mock AuthenticationService authenticationService;
@@ -181,7 +182,7 @@ class ErgebnismeldungMappingServiceTest {
                 stimmabgabevermerkeRepo.findByNaturalId(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlverzeichnisNummer)))
-            .thenReturn(Optional.of(new Wahldaten()));
+            .thenReturn(Optional.of(new Stimmabgabevermerke()));
         Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
             .thenReturn(stapelart -> true);
 
@@ -324,7 +325,7 @@ class ErgebnismeldungMappingServiceTest {
     }
   }
 
-  private Wahldaten createStimmabgabevermerke(
+  private Stimmabgabevermerke createStimmabgabevermerke(
       final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
 
     return Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);

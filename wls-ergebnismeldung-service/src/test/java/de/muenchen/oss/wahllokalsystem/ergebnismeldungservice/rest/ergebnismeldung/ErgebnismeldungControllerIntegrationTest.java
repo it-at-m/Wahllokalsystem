@@ -28,8 +28,8 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Stat
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.StatusRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.WahldatenRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
@@ -82,7 +82,8 @@ class ErgebnismeldungControllerIntegrationTest {
 
   @Autowired ErgebnisseRepository ergebnisseRepository;
 
-  @Autowired WahldatenRepository stimmabgabevermerkeRepository;
+  @Autowired
+  StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
 
   @Autowired AWerteRepository aWerteRepository;
 
@@ -480,13 +481,13 @@ class ErgebnismeldungControllerIntegrationTest {
         val vermerk = Testdaten.Vermerk.createEntity(1);
         val eigennommeneWahlscheine = Testdaten.EigenommenerWahlschein.createEntity(1);
         val wahldaten =
-            new Wahldaten(
+            new Stimmabgabevermerke(
                 null,
                 new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                     wahlbezirkID, wahlID, waehlerverzeichnisNummer),
                 Set.of(vermerk),
                 Set.of(eigennommeneWahlscheine));
-        vermerk.setWahldaten(wahldaten);
+        vermerk.setStimmabgabevermerke(wahldaten);
         stimmabgabevermerkeRepository.save(wahldaten);
 
         // Insert AWerte

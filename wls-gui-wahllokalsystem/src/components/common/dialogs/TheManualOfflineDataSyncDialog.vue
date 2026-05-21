@@ -15,12 +15,11 @@
         class="mr-2"
         size="x-small"
       />
-      Letzte Aktualisierung:
+      Letzte Synchronisierung:
       {{
         toHhMm(lastSyncUpdateTime) ||
         "Es wurde noch keine Synchronisierung durchgeführt."
       }}
-
       <v-divider
         thickness="2"
         class="my-5"

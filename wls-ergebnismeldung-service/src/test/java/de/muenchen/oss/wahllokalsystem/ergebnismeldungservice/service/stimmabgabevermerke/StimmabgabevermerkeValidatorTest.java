@@ -61,7 +61,7 @@ class StimmabgabevermerkeValidatorTest {
     }
 
     @ParameterizedTest(name = "wahlbezirkID {1}")
-    @MethodSource("argumentsToCheckBlankWahlbezirkID")
+    @MethodSource("argumentsToCheckBlankValue")
     void should_throwGivenException_when_wahlbezirkIDIsBlank(final ArgumentsAccessor arguments) {
       val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
@@ -75,7 +75,22 @@ class StimmabgabevermerkeValidatorTest {
           .isSameAs(givenWlsException);
     }
 
-    public static Stream<Arguments> argumentsToCheckBlankWahlbezirkID() {
+    @ParameterizedTest(name = "wahlID {1}")
+    @MethodSource("argumentsToCheckBlankValue")
+    void should_throwGivenException_when_wahlIDIsBlank(final ArgumentsAccessor arguments) {
+      val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              "wahlbezirkID", arguments.get(0, String.class), 1L);
+
+      Assertions.assertThatThrownBy(
+              () ->
+                  underTest.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, givenWlsException))
+          .isSameAs(givenWlsException);
+    }
+
+    public static Stream<Arguments> argumentsToCheckBlankValue() {
       return Stream.of(
           Arguments.of(null, "is null"),
           Arguments.of("", "is empty string"),

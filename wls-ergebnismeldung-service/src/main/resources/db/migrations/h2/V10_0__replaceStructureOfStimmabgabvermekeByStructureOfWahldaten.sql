@@ -8,3 +8,110 @@ DROP TABLE Stimmabgabevermerke;
 ALTER TABLE Wahldaten RENAME TO Stimmabgabevermerke;
 
 ALTER TABLE Vermerk RENAME COLUMN wahldatenID to stimmabgabevermerkeID;
+
+ALTER TABLE Stimmabgabevermerke ALTER COLUMN wahlbezirkID SET NOT NULL;
+ALTER TABLE Stimmabgabevermerke ALTER COLUMN wahlID SET NOT NULL;
+ALTER TABLE Stimmabgabevermerke ALTER COLUMN waehlerverzeichnisNummer SET NOT NULL;
+
+ALTER TABLE Vermerk
+DROP CONSTRAINT fk_Wahldaten;
+
+ALTER TABLE EingenommeneWahlscheine
+DROP CONSTRAINT fk_Wahldaten_ew;
+
+ALTER TABLE EingenommeneWahlscheine
+    ADD fk_wahlbezirkID VARCHAR(1024);
+
+ALTER TABLE EingenommeneWahlscheine
+    ADD fk_wahlID VARCHAR(1024);
+
+ALTER TABLE EingenommeneWahlscheine
+    ADD fk_waehlerverzeichnisNummer BIGINT;
+
+UPDATE EingenommeneWahlscheine ew
+SET fk_wahlbezirkID = (
+    SELECT sav.wahlbezirkID
+    FROM Stimmabgabevermerke sav
+    WHERE sav.id = ew.wahldatenID
+),
+    fk_wahlID = (
+        SELECT sav.wahlID
+        FROM Stimmabgabevermerke sav
+        WHERE sav.id = ew.wahldatenID
+    ),
+    fk_waehlerverzeichnisNummer = (
+        SELECT sav.waehlerverzeichnisNummer
+        FROM Stimmabgabevermerke sav
+        WHERE sav.id = ew.wahldatenID
+    );
+
+ALTER TABLE EingenommeneWahlscheine
+ALTER COLUMN fk_wahlbezirkID VARCHAR(1024) NOT NULL;
+
+ALTER TABLE EingenommeneWahlscheine
+ALTER COLUMN fk_wahlID VARCHAR(1024) NOT NULL;
+
+ALTER TABLE EingenommeneWahlscheine
+ALTER COLUMN fk_waehlerverzeichnisNummer BIGINT NOT NULL;
+
+ALTER TABLE Vermerk
+    ADD fk_wahlbezirkID VARCHAR(1024);
+
+ALTER TABLE Vermerk
+    ADD fk_wahlID VARCHAR(1024);
+
+ALTER TABLE Vermerk
+    ADD fk_waehlerverzeichnisNummer BIGINT;
+
+UPDATE Vermerk v
+SET fk_wahlbezirkID = (
+    SELECT sav.wahlbezirkID
+    FROM Stimmabgabevermerke sav
+    WHERE sav.id = v.stimmabgabevermerkeID
+),
+    fk_wahlID = (
+        SELECT sav.wahlID
+        FROM Stimmabgabevermerke sav
+        WHERE sav.id = v.stimmabgabevermerkeID
+    ),
+    fk_waehlerverzeichnisNummer = (
+        SELECT sav.waehlerverzeichnisNummer
+        FROM Stimmabgabevermerke sav
+        WHERE sav.id = v.stimmabgabevermerkeID
+    );
+
+ALTER TABLE Vermerk
+ALTER COLUMN fk_wahlbezirkID VARCHAR(1024) NOT NULL;
+
+ALTER TABLE Vermerk
+ALTER COLUMN fk_wahlID VARCHAR(1024) NOT NULL;
+
+ALTER TABLE Vermerk
+ALTER COLUMN fk_waehlerverzeichnisNummer BIGINT NOT NULL;
+
+ALTER TABLE Stimmabgabevermerke
+DROP CONSTRAINT NATURAL_ID;
+
+ALTER TABLE Stimmabgabevermerke
+    DROP COLUMN id;
+
+ALTER TABLE Stimmabgabevermerke
+    ADD PRIMARY KEY (wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+
+ALTER TABLE Vermerk
+    ADD CONSTRAINT fk_Stimmabgabevermerke_Vermerk
+        FOREIGN KEY (fk_wahlbezirkID, fk_wahlID, fk_waehlerverzeichnisNummer)
+            REFERENCES Stimmabgabevermerke (wahlbezirkID, wahlID, waehlerverzeichnisNummer)
+            ON DELETE CASCADE;
+
+ALTER TABLE EingenommeneWahlscheine
+    ADD CONSTRAINT fk_Stimmabgabevermerke_EingenommeneWahlscheine
+        FOREIGN KEY (fk_wahlbezirkID, fk_wahlID, fk_waehlerverzeichnisNummer)
+            REFERENCES Stimmabgabevermerke (wahlbezirkID, wahlID, waehlerverzeichnisNummer)
+            ON DELETE CASCADE;
+
+ALTER TABLE Vermerk
+DROP COLUMN stimmabgabevermerkeID;
+
+ALTER TABLE EingenommeneWahlscheine
+DROP COLUMN wahldatenID;

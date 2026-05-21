@@ -160,7 +160,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
           .andExpect(status().isOk());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE);
-      val persistedEntity = stimmabgabevermerkeRepository.findByNaturalId(id).get();
+      val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
 
       Assertions.assertThat(persistedEntity)
           .usingRecursiveComparison()
@@ -199,7 +199,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
           .andExpect(status().isOk());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE);
-      val persistedEntity = stimmabgabevermerkeRepository.findByNaturalId(id).get();
+      val persistedEntity = stimmabgabevermerkeRepository.findById(id).get();
 
       Assertions.assertThat(persistedEntity)
           .usingRecursiveComparison()

@@ -103,7 +103,7 @@ public class DefaultElectionTypeValidator {
       throws WlsException {
 
     Optional<Stimmabgabevermerke> stimmabgabevermerke =
-        stimmabgabevermerkeRepo.findByNaturalId(
+        stimmabgabevermerkeRepo.findById(
             new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                 wahlbezirkID, wahlID, waehlerverzeichnisNummer));
 

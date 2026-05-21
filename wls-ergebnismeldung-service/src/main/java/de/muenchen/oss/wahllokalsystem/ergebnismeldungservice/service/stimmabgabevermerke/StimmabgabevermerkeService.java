@@ -32,7 +32,7 @@ public class StimmabgabevermerkeService {
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
     val wahldaten =
-        stimmabgabevermerkeRepository.findByNaturalId(
+        stimmabgabevermerkeRepository.findById(
             new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer));
     return wahldaten.map(stimmabgabevermerkeModelMapper::toModel);
   }
@@ -50,16 +50,6 @@ public class StimmabgabevermerkeService {
 
     try {
       val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
-
-      val existingEntity =
-          stimmabgabevermerkeRepository.findByNaturalId(
-              new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
-                  wahldaten.wahlbezirkID(),
-                  wahldaten.wahlID(),
-                  wahldaten.waehlerverzeichnisNummer()));
-      existingEntity.ifPresent(
-          stimmabgabevermerke -> entityToSave.setId(stimmabgabevermerke.getId()));
-
       stimmabgabevermerkeRepository.save(entityToSave);
     } catch (final Exception e) {
       log.error("#postStimmabgabevermerke unsaveable:", e);

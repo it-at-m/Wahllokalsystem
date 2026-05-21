@@ -18,7 +18,6 @@ public interface StimmabgabevermerkeModelMapper {
       source = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.waehlerverzeichnisNummer")
   StimmabgabevermerkeModel toModel(Stimmabgabevermerke entity);
 
-  @Mapping(target = "id", ignore = true)
   @Mapping(target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlID", source = "wahlID")
   @Mapping(
       target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlbezirkID",

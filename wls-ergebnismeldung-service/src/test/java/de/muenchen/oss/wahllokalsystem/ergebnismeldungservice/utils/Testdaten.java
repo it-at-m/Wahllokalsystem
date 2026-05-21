@@ -57,7 +57,6 @@ public class Testdaten {
       val wahldaten =
           new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
               .Stimmabgabevermerke(
-              null,
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahlbezirkID, wahlID, waehlerverzeichnisnummer),
               new HashSet<>(),

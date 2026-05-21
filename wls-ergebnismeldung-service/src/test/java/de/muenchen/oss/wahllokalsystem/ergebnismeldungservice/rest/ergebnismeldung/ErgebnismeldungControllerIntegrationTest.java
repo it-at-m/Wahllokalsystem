@@ -481,7 +481,6 @@ class ErgebnismeldungControllerIntegrationTest {
         val eigennommeneWahlscheine = Testdaten.EigenommenerWahlschein.createEntity(1);
         val wahldaten =
             new Stimmabgabevermerke(
-                null,
                 new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                     wahlbezirkID, wahlID, waehlerverzeichnisNummer),
                 Set.of(vermerk),

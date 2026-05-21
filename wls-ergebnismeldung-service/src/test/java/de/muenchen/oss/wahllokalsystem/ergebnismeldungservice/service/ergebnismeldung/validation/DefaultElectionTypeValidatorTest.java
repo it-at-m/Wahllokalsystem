@@ -169,7 +169,7 @@ class DefaultElectionTypeValidatorTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
@@ -229,7 +229,7 @@ class DefaultElectionTypeValidatorTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.empty());
@@ -267,7 +267,7 @@ class DefaultElectionTypeValidatorTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
@@ -307,7 +307,7 @@ class DefaultElectionTypeValidatorTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(eq(wahlbezirkID), eq(wahlID)))
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));

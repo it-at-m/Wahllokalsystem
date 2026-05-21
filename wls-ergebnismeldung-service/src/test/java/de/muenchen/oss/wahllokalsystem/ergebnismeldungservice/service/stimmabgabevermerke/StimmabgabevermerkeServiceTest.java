@@ -9,7 +9,6 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsExcepti
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -47,7 +46,6 @@ class StimmabgabevermerkeServiceTest {
 
       val mockedRepoResponse =
           new Stimmabgabevermerke(
-              UUID.randomUUID(),
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahlbezirkID, wahlID, waehlerverzeichnisNummer),
               Collections.emptySet(),
@@ -60,7 +58,7 @@ class StimmabgabevermerkeServiceTest {
               Collections.emptySet(),
               Collections.emptySet());
 
-      Mockito.when(stimmabgabevermerkeRepository.findByNaturalId(id))
+      Mockito.when(stimmabgabevermerkeRepository.findById(id))
           .thenReturn(Optional.of(mockedRepoResponse));
       Mockito.when(stimmabgabevermerkeModelMapper.toModel(mockedRepoResponse))
           .thenReturn(mockedRepoResponseAsModel);
@@ -80,7 +78,7 @@ class StimmabgabevermerkeServiceTest {
           new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
               wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
-      Mockito.when(stimmabgabevermerkeRepository.findByNaturalId(id)).thenReturn(Optional.empty());
+      Mockito.when(stimmabgabevermerkeRepository.findById(id)).thenReturn(Optional.empty());
 
       val result =
           unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);

@@ -107,7 +107,7 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID))
             .thenReturn(mockedErgebnisse);
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
@@ -178,7 +178,7 @@ class ErgebnismeldungMappingServiceTest {
         Mockito.when(stimmzettelumschlaegeRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.of(mockedStimmzettelumschlaege));
         Mockito.when(
-                stimmabgabevermerkeRepo.findByNaturalId(
+                stimmabgabevermerkeRepo.findById(
                     new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                         wahlbezirkID, wahlID, waehlverzeichnisNummer)))
             .thenReturn(Optional.of(new Stimmabgabevermerke()));

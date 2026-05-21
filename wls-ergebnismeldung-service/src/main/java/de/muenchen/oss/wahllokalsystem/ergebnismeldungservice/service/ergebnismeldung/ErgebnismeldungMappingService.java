@@ -150,7 +150,7 @@ public class ErgebnismeldungMappingService {
     val bWerte = new BWerteDTO();
     val wahldatenSet =
         stimmabgabevermerkeRepo
-            .findByNaturalId(
+            .findById(
                 new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                     waehlerverzeichnisNummer.getWahlbezirkID(),
                     wahlID,

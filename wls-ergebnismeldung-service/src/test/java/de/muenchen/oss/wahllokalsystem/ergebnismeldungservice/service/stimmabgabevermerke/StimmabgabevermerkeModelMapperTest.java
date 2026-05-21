@@ -47,7 +47,6 @@ class StimmabgabevermerkeModelMapperTest {
       val entityToMap =
           new Stimmabgabevermerke(
               null,
-              null,
               Set.of(
                   new Vermerk(
                       UUID.randomUUID(), null, 0L, Set.of(new Stimmzettel(0L, stimmzettelart)))),

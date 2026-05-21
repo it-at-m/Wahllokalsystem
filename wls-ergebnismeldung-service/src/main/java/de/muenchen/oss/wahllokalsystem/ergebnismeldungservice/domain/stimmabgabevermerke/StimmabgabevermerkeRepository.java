@@ -1,34 +1,39 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.NaturalIdRepository;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @PreAuthorize("hasAuthority('Ergebnismeldung_READ_Stimmabgabevermerke')")
 public interface StimmabgabevermerkeRepository
-    extends NaturalIdRepository<
-        Stimmabgabevermerke, UUID, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
+    extends CrudRepository<Stimmabgabevermerke, BezirkUndWahlIDUndWaehlerverzeichnisnummer> {
 
   String CACHE = "STIMMABGABEVERMERKE_CACHE";
 
   @Override
-  Optional<Stimmabgabevermerke> findById(UUID id);
+  @Cacheable(value = CACHE, key = "#p0")
+  Optional<Stimmabgabevermerke> findById(BezirkUndWahlIDUndWaehlerverzeichnisnummer id);
+
+  @Override
+  @CachePut(value = CACHE, key = "#p0.bezirkUndWahlIDUndWaehlerverzeichnisnummer")
+  @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
+  @NonNull <S extends Stimmabgabevermerke> S save(@NonNull S stimmabgabevermerke);
 
   @Override
   @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
   <S extends Stimmabgabevermerke> Iterable<S> saveAll(Iterable<S> entities);
 
   @Override
-  @CacheEvict(value = CACHE, key = "#bezirkIDUndWaehlerverzeichnisNummer")
+  @CacheEvict(value = CACHE, key = "#p0")
   @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
-  void deleteById(UUID id);
+  void deleteById(BezirkUndWahlIDUndWaehlerverzeichnisnummer id);
 
   @Override
-  @CacheEvict(value = CACHE, key = "#p0.bezirkIDUndWaehlerverzeichnisNummer")
+  @CacheEvict(value = CACHE, key = "#p0.bezirkUndWahlIDUndWaehlerverzeichnisnummer")
   @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
   void delete(Stimmabgabevermerke entity);
 
@@ -41,8 +46,4 @@ public interface StimmabgabevermerkeRepository
   @CacheEvict(value = CACHE, allEntries = true)
   @PreAuthorize("hasAuthority('Ergebnismeldung_DELETE_Stimmabgabevermerke')")
   void deleteAll();
-
-  @CachePut(value = CACHE, key = "#p0.id")
-  @PreAuthorize("hasAuthority('Ergebnismeldung_WRITE_Stimmabgabevermerke')")
-  @NonNull <S extends Stimmabgabevermerke> S save(@NonNull final S wahldaten);
 }

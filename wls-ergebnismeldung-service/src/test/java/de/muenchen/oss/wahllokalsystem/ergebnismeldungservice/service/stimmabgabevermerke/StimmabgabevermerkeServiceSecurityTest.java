@@ -179,8 +179,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
           ArrayUtils.removeElements(
               Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE,
-              Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE,
-              Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE));
+              Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE));
     }
 
     private static Stream<Arguments>

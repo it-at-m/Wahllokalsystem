@@ -2,7 +2,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.EingenommenerWahlscheinDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
@@ -21,7 +20,7 @@ import lombok.val;
 
 public class Testdaten {
 
-  public static class Wahldaten {
+  public static class Stimmabgabevermerke {
 
     public static StimmabgabevermerkeModel createModel(
         @NotNull String wahlbezirkID,
@@ -40,10 +39,12 @@ public class Testdaten {
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
 
-    public static Stimmabgabevermerke createEntity(
-        @NotNull String wahlbezirkID,
-        @NotNull String wahlID,
-        @NotNull Long waehlerverzeichnisnummer) {
+    public static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
+            .Stimmabgabevermerke
+        createEntity(
+            @NotNull String wahlbezirkID,
+            @NotNull String wahlID,
+            @NotNull Long waehlerverzeichnisnummer) {
       val vermerke =
           Set.of(
               Vermerk.createEntity(waehlerverzeichnisnummer * 10 + 1),
@@ -54,7 +55,8 @@ public class Testdaten {
               EigenommenerWahlschein.createEntity(waehlerverzeichnisnummer * 10 + 2));
 
       val wahldaten =
-          new Stimmabgabevermerke(
+          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
+              .Stimmabgabevermerke(
               null,
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahlbezirkID, wahlID, waehlerverzeichnisnummer),

@@ -177,7 +177,8 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       val wahlID = "wahlID";
 
       val entityToReplace =
-          Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+          Testdaten.Stimmabgabevermerke.createEntity(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE);
       stimmabgabevermerkeRepository.save(entityToReplace);

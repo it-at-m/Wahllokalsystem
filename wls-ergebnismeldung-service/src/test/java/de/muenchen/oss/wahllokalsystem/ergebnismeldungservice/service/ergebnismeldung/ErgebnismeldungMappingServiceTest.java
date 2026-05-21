@@ -327,7 +327,8 @@ class ErgebnismeldungMappingServiceTest {
   private Stimmabgabevermerke createStimmabgabevermerke(
       final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
 
-    return Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+    return Testdaten.Stimmabgabevermerke.createEntity(
+        wahlbezirkID, wahlID, waehlerverzeichnisNummer);
   }
 
   private Ergebnisse createErgebnisse(

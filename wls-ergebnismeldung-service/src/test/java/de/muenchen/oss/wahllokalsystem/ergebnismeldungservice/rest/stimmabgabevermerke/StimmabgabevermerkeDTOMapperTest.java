@@ -37,12 +37,12 @@ public class StimmabgabevermerkeDTOMapperTest {
       val anzahlBlaetter = 4711L;
 
       val modelToMap =
-          Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+          Testdaten.Stimmabgabevermerke.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val result = unitUnderTest.toStimmabgabevermerkeDTO(modelToMap);
 
       val expectedResult =
-          Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+          Testdaten.Stimmabgabevermerke.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
 
@@ -98,14 +98,15 @@ public class StimmabgabevermerkeDTOMapperTest {
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
 
-      val dtoToMap = Testdaten.Wahldaten.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val dtoToMap =
+          Testdaten.Stimmabgabevermerke.createDTO(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val result =
           unitUnderTest.toStimmabgabevermerkeModel(
               wahlID, wahlbezirkID, waehlerverzeichnisNummer, dtoToMap);
 
       val expectedResult =
-          Testdaten.Wahldaten.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+          Testdaten.Stimmabgabevermerke.createModel(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }

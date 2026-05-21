@@ -31,11 +31,11 @@ class StimmabgabevermerkeModelMapperTest {
 
     @Test
     void should_returnModel_when_entityIsGiven() {
-      val entityToMap = Testdaten.Wahldaten.createEntity("wbz1", "wahl1", 1L);
+      val entityToMap = Testdaten.Stimmabgabevermerke.createEntity("wbz1", "wahl1", 1L);
 
       val result = unitUnderTest.toModel(entityToMap);
 
-      val expectedResult = Testdaten.Wahldaten.createModel("wbz1", "wahl1", 1L);
+      val expectedResult = Testdaten.Stimmabgabevermerke.createModel("wbz1", "wahl1", 1L);
 
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
@@ -74,11 +74,11 @@ class StimmabgabevermerkeModelMapperTest {
 
       @Test
       void should_returnModel_when_entityIsGiven() {
-        val given = Testdaten.Wahldaten.createModel("wbz1", "wahl1", 1L);
+        val given = Testdaten.Stimmabgabevermerke.createModel("wbz1", "wahl1", 1L);
 
         val result = unitUnderTest.toEntity(given);
 
-        val expectedResult = Testdaten.Wahldaten.createEntity("wbz1", "wahl1", 1L);
+        val expectedResult = Testdaten.Stimmabgabevermerke.createEntity("wbz1", "wahl1", 1L);
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }

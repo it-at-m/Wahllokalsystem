@@ -2,9 +2,9 @@
   <base-dialog
     :visible="isDialogVisible"
     dialogtitle="Offline-Synchronisierung"
-    :confirmtext="dirtyTasks > 0 ? 'Synchronisieren' : 'Schliessen'"
+    :confirmtext="hasDirtyTasks ? 'Synchronisieren' : 'Schließen'"
     :is-confirm-loading="isOfflineDataSyncing"
-    :canceltext="dirtyTasks > 0 ? 'Schließen' : ''"
+    :canceltext="hasDirtyTasks ? 'Schließen' : ''"
     icon="$offlineSync"
     @cancel="onCancelClicked"
     @confirm="onConfirmClicked"
@@ -26,7 +26,7 @@
         class="my-5"
       />
     </div>
-    <div v-if="dirtyTasks == 0">
+    <div v-if="!hasDirtyTasks">
       <v-icon
         icon="$valid"
         color="success"
@@ -67,7 +67,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
@@ -89,6 +89,7 @@ const isDialogVisible = defineModel("modelValue", {
 });
 
 const dirtyTasks = ref(numberOfTasksToRun.value);
+const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
 
 watch(
   () => isDialogVisible.value,
@@ -115,7 +116,7 @@ function onCancelClicked(): void {
   emit("cancel");
 }
 async function onConfirmClicked() {
-  if (dirtyTasks.value > 0) {
+  if (hasDirtyTasks.value) {
     await initiateOfflineDataSync();
   } else {
     isDialogVisible.value = false;

@@ -49,19 +49,18 @@ public class StimmabgabevermerkeService {
     stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(wahldaten);
 
     try {
+      val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
+
       val existingEntity =
           stimmabgabevermerkeRepository.findByNaturalId(
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahldaten.wahlbezirkID(),
                   wahldaten.wahlID(),
                   wahldaten.waehlerverzeichnisNummer()));
-      val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
-      if (existingEntity.isPresent()) {
-        entityToSave.setId(existingEntity.get().getId());
-        stimmabgabevermerkeRepository.save(entityToSave);
-      } else {
-        stimmabgabevermerkeRepository.save(entityToSave);
-      }
+      existingEntity.ifPresent(
+          stimmabgabevermerke -> entityToSave.setId(stimmabgabevermerke.getId()));
+
+      stimmabgabevermerkeRepository.save(entityToSave);
     } catch (final Exception e) {
       log.error("#postStimmabgabevermerke unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(

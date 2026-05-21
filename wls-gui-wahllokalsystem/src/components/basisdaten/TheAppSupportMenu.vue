@@ -3,6 +3,8 @@
     <template #activator="{ props: menuActivator }">
       <v-btn
         v-bind="menuActivator"
+        aria-label="Hilfe und Support öffnen"
+        title="Hilfe und Support"
         icon="$help"
         variant="text"
         density="comfortable"
@@ -47,10 +49,12 @@ const { downloadHandbuch } = useHandbuchService();
 const {
   openWahlraumfinder,
   openWaehlerverzeichnis,
-  waehlerverzeichnisAvailable,
+  isWaehlerverzeichnisUrlAvailable,
   startFernzugriff,
   printTestdruck,
 } = useHelpIconCallbacks();
+
+const WAEHLERVERZEICHNIS_TITLE = "Wählerverzeichnis";
 
 const infoHelpData = computed(() => {
   const allItems = [
@@ -68,7 +72,7 @@ const infoHelpData = computed(() => {
     },
     {
       icon: "$notebookEditOutline",
-      title: "Wählerverzeichnis",
+      title: WAEHLERVERZEICHNIS_TITLE,
       callback: openWaehlerverzeichnis,
     },
     {
@@ -87,8 +91,8 @@ const infoHelpData = computed(() => {
 
   return allItems.filter((item) => {
     //Filter bei Wählerverzeichnis nach Vorhandensein der URL
-    if (item.title === "Wählerverzeichnis") {
-      return waehlerverzeichnisAvailable();
+    if (item.title === WAEHLERVERZEICHNIS_TITLE) {
+      return isWaehlerverzeichnisUrlAvailable();
     }
     //Rest wird immer angezeigt
     return true;

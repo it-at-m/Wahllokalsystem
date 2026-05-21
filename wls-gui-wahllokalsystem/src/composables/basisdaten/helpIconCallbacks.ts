@@ -9,7 +9,9 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
   const { addNotification } = useUserNotificationService();
-  const { konfigurationsparameter } = storeToRefs(useInfomanagementStore());
+  const { konfigurationsparameter, waehlerverzeichnisUrl } = storeToRefs(
+    useInfomanagementStore()
+  );
 
   function openWahlraumfinder() {
     if (konfigurationsparameter.value) {
@@ -26,27 +28,16 @@ export function useHelpIconCallbacks() {
   }
 
   function openWaehlerverzeichnis() {
-    if (konfigurationsparameter.value) {
-      const waehlerverzeichnisParam = konfigurationsparameter.value.find(
-        (param) => param.schluessel === "WAEHLERVERZEICHNIS_URL"
-      );
-      if (waehlerverzeichnisParam) {
-        const win = window.open(waehlerverzeichnisParam.wert, "_blank");
-        if (win) {
-          win.focus();
-        }
+    if (waehlerverzeichnisUrl.value) {
+      const win = window.open(waehlerverzeichnisUrl.value, "_blank");
+      if (win) {
+        win.focus();
       }
     }
   }
 
-  function waehlerverzeichnisAvailable(): boolean {
-    if (konfigurationsparameter.value) {
-      const waehlerverzeichnisParam = konfigurationsparameter.value.find(
-        (param) => param.schluessel === "WAEHLERVERZEICHNIS_URL"
-      );
-      return !!waehlerverzeichnisParam && !!waehlerverzeichnisParam.wert;
-    }
-    return false;
+  function isWaehlerverzeichnisUrlAvailable(): boolean {
+    return !!waehlerverzeichnisUrl.value;
   }
 
   function startFernzugriff() {
@@ -78,7 +69,7 @@ export function useHelpIconCallbacks() {
   return {
     openWahlraumfinder,
     openWaehlerverzeichnis,
-    waehlerverzeichnisAvailable,
+    isWaehlerverzeichnisUrlAvailable,
     startFernzugriff,
     printTestdruck,
   };

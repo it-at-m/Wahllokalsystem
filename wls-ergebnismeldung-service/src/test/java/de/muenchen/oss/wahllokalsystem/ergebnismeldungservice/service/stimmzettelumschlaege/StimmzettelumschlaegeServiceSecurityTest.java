@@ -54,7 +54,12 @@ class StimmzettelumschlaegeServiceSecurityTest {
     void should_getAccess_when_allRequiredAuthoritiesArePresent() {
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
 
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id));
@@ -66,7 +71,29 @@ class StimmzettelumschlaegeServiceSecurityTest {
         final ArgumentsAccessor arguments) {
       SecurityUtils.runWith(arguments.get(0, String[].class));
 
-      val id = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(true);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDEvaluatorReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val id = new BezirkUndWahlID("wahlID", wahlbezirkID);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), notNull()))
+          .thenReturn(false);
 
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.getStimmzettelumschlaege(id))

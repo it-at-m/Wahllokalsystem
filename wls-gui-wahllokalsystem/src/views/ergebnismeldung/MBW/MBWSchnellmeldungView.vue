@@ -5,7 +5,7 @@
       subtitle="Kontrolle, Übermittlung und Druck der Schnellmeldung"
       :is-sending="isSendingSchnellmeldung"
       :is-korrigieren-active="isKorrigierenValid"
-      :is-drucken-active="isDruckenValid"
+      :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
@@ -98,7 +98,6 @@ const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
-const isDruckenValid = ref<null | boolean>(true);
 const isDruckenLoading = ref<boolean>(false);
 
 const status = ref<Status | null>(null);
@@ -123,6 +122,10 @@ const isSendenActive = computed(
     !status.value?.schnellmeldung.gedruckt
 );
 
+const isDruckenActive = computed(
+  () => status.value?.schnellmeldung.uebermittelt
+);
+
 onActivated(async () => {
   status.value = await loadStatusByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
 });
@@ -134,6 +137,7 @@ function onSendenClicked() {
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
   await sendSchnellmeldung();
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
 }
 
 function onSyncError() {

@@ -1,7 +1,7 @@
 <div class="v-application v-theme--light v-layout v-layout--full-height v-locale--is-ltr">
   <div class="v-application__wrap">
     <div>
-      <header class="v-toolbar v-toolbar--collapse-start v-toolbar--density-default bg-primary v-theme--light v-locale--is-ltr v-app-bar" style="top: 0px; z-index: 1006; transform: translateY(0px); position: fixed; transition: none; left: 0px; width: calc(100% - 0px);">
+      <header class="v-toolbar v-toolbar--collapse-start v-toolbar--density-default bg-primary v-theme--light v-locale--is-ltr v-app-bar" style="top: 0px; z-index: 1006; transform: translateY(0px); position: fixed; transition: none !important; left: 0px; width: calc(100% - 0px);">
         <!---->
         <div class="v-toolbar__content" style="height: 64px;">
           <!---->
@@ -44,12 +44,12 @@
           <!---->
         </transition-stub>
       </header>
-      <nav class="v-navigation-drawer v-navigation-drawer--left v-theme--light v-navigation-drawer--mobile" style="left: 0px; z-index: 1004; transform: translateX(-320px); position: fixed; transition: none; height: calc(100% - 64px); top: 64px; bottom: 0px; width: 320px;" inert="true">
+      <nav class="v-navigation-drawer v-navigation-drawer--left v-theme--light v-navigation-drawer--mobile" style="left: 0px; z-index: 1004; transform: translateX(-320px); position: fixed; transition: none !important; height: calc(100% - 64px); top: 64px; bottom: 0px; width: 320px;" inert="true">
         <!---->
         <!---->
         <div class="v-navigation-drawer__content">
           <div class="v-list v-theme--light bg-transparent v-list--density-default v-list--one-line pt-0" tabindex="0" role="list">
-            <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
+            <div class="v-list-item v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
               <!----><span class="v-list-item__underlay"></span>
               <!---->
               <div class="v-list-item__content" data-no-activator="">
@@ -62,7 +62,7 @@
                 </div>
               </div>
               <!---->
-            </div><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+            </div><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
               <!---->
               <div class="v-list-item__content" data-no-activator="">
                 <div class="v-list-item-title">Home</div>
@@ -70,7 +70,7 @@
                 <!---->
               </div>
               <!---->
-            </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+            </a><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
               <!---->
               <div class="v-list-item__content" data-no-activator="">
                 <div class="v-list-item-title">Wahlvorstand</div>
@@ -81,7 +81,7 @@
             </a>
             <!--v-if-->
             <div class="v-list-group v-list-group--prepend">
-              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option" id="v-list-group--id-Wahlhandlung"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+              <div id="v-list-group--id-Wahlhandlung" class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
                 <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small text-warning" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                       <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path>
                     </svg></i>
@@ -162,7 +162,7 @@
                     <!---->
                   </a></div>
               </transition-stub>
-            </div><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+            </div><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
               <!---->
               <div class="v-list-item__content" data-no-activator="">
                 <div class="v-list-item-title">Ereignisse</div>
@@ -172,7 +172,7 @@
               <!---->
             </a>
             <div>
-              <div class="v-list-item v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
+              <div class="v-list-item v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
                 <!----><span class="v-list-item__underlay"></span>
                 <!---->
                 <div class="v-list-item__content" data-no-activator="">

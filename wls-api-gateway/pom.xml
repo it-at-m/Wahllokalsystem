@@ -11,7 +11,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-api-gateway</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
+    <version>0.1.7-SNAPSHOT</version>
 
     <name>wls_api_gateway</name>
     <description>api gateway for wahllokalsystem</description>
@@ -52,7 +52,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Logging -->
-        <logstash.encoder>8.1</logstash.encoder>
+        <logstash.encoder>9.0</logstash.encoder>
 
         <!-- Release -->
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>

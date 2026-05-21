@@ -2,50 +2,46 @@
   <base-dialog
     :visible="isDialogVisible"
     dialogtitle="Offline-Synchronisierung"
-    confirmtext="Synchronisieren"
-    :is-confirm-active="dirtyTasks > 0"
-    canceltext="Schließen"
+    :confirmtext="dirtyTasks > 0 ? 'Synchronisieren' : 'Schliessen'"
+    :is-confirm-loading="isOfflineDataSyncing"
+    :canceltext="dirtyTasks > 0 ? 'Schließen' : ''"
     icon="$offlineSync"
     @cancel="onCancelClicked"
     @confirm="onConfirmClicked"
   >
-    <div v-if="dirtyTasks == 0">Alle Daten sind Aktuell.</div>
+    <div>
+      <v-icon
+        icon="$send"
+        class="mr-2"
+        size="x-small"
+      />
+      Letzte Aktualisierung:
+      {{
+        toHhMm(lastSyncUpdateTime) ||
+        "Es wurde noch keine Synchronisierung durchgeführt."
+      }}
+
+      <v-divider
+        thickness="2"
+        class="my-5"
+      />
+    </div>
+    <div v-if="dirtyTasks == 0">
+      <v-icon
+        icon="$valid"
+        color="success"
+        class="mr-2"
+        size="x-small"
+      />
+      Alle Daten sind Aktuell.
+    </div>
     <div v-else>
-      <div>
-        <v-row
-          class="ml-0"
-          align="center"
-        >
-          <v-icon
-            icon="$send"
-            class="mr-2"
-            size="x-small"
-          />
-          Letzte Aktualisierung: {{ toHhMm(lastSyncUpdateTime) }}
-          <v-spacer />
-          <div>
-            Status:
-            <v-icon
-              :icon="syncStatus == 'error' ? '$invalid' : '$valid'"
-              :color="syncStatus == 'error' ? 'error' : 'success'"
-              class="mr-2"
-              size="x-small"
-            />
-          </div>
-        </v-row>
-        <v-divider
-          thickness="2"
-          class="my-5"
-        />
-        <v-row class="ml-0 mb-5">
-          Nicht Synchronisierte Datensätze: {{ dirtyTasks }}
-        </v-row>
-      </div>
       <base-progress-linear
+        class="my-5"
         :titel="
           isOfflineDataSyncing
             ? 'Fortschritt'
-            : 'Letzte Synchronisierung abgeschlossen'
+            : 'Synchronisierung abgeschlossen'
         "
         :is-loading="isOfflineDataSyncing"
         :current="numberOfTasksFinished"
@@ -53,6 +49,19 @@
         :tasks="[]"
         :show-tasks="false"
       />
+      <v-row
+        v-if="!isOfflineDataSyncing"
+        align="center"
+        class="my-1 ml-0"
+      >
+        <v-icon
+          icon="$invalid"
+          color="error"
+          class="mr-2"
+          size="x-small"
+        />
+        Fehlgeschlagene Datensätze: {{ dirtyTasks }}
+      </v-row>
     </div>
   </base-dialog>
 </template>
@@ -92,8 +101,6 @@ watch(
 
 const emit = defineEmits<{
   cancel: [];
-  syncSuccess: [];
-  syncError: [];
 }>();
 
 async function initiateOfflineDataSync() {
@@ -103,10 +110,8 @@ async function initiateOfflineDataSync() {
     dirtyTasks.value = openTasks.length;
     if (dirtyTasks.value > 0) {
       syncStatus.value = "error";
-      // emit("syncError"); TODO
     } else {
       syncStatus.value = "success";
-      // emit("syncSuccess"); TODO
     }
   }
 }
@@ -115,6 +120,10 @@ function onCancelClicked(): void {
   emit("cancel");
 }
 async function onConfirmClicked() {
-  await initiateOfflineDataSync();
+  if (dirtyTasks.value > 0) {
+    await initiateOfflineDataSync();
+  } else {
+    // todo isDialogVisible.value = false;
+  }
 }
 </script>

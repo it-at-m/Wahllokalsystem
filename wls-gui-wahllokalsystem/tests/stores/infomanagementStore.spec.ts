@@ -662,7 +662,7 @@ describe("infomanagementStore.ts", () => {
       expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
     });
 
-    it("should_returnNull_when_waehlerverzeichnisKonfigKeyNull", async () => {
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyUndefined", async () => {
       infomanagementStore.konfigurationsparameter = [
         prepareKonfigurationsparameter()
           .schluessel("WAEHLERVERZEICHNIS_URL")

@@ -124,6 +124,31 @@ class SecurityConfigurationTest {
   }
 
   @Nested
+  class ExportWahllokalBenutzer {
+    @WithAnonymousUser
+    @Test
+    void should_returnUnauthorized_when_callingAnonymous() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/exportWahllokalBenutzer/" + wahltagID);
+
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser
+    @Test
+    void should_returnOk_when_callingAuthenticated() throws Exception {
+      val wahltagID = "wahltagID";
+      val request =
+          MockMvcRequestBuilders.get("/businessActions/exportWahllokalBenutzer/" + wahltagID);
+
+      api.perform(request).andExpect(status().isOk());
+
+      Mockito.verify(wahllokalBenutzerService).exportWahllokalBenutzer(wahltagID);
+    }
+  }
+
+  @Nested
   class GenerateWahllokalbenutzer {
 
     @WithAnonymousUser

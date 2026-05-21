@@ -6,7 +6,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST stimmabgabevermerke - 1 Wahldaten | user wls_all_uwb
+### POST stimmabgabevermerke | user wls_all_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -50,7 +50,7 @@ Content-Type: application/json
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST stimmabgabevermerke - 1 Wahldaten | user wls_all_bwb
+### POST stimmabgabevermerke | user wls_all_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

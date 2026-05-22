@@ -7,7 +7,7 @@ import {
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useUserMapper } from "@/composables/user/userMapper.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
-import { AUTH_SERVICE_API_URL } from "@/constants.ts";
+import { AUTH_SERVICE_API_URL, CONTACT_SUPPORT } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { validateDtoAndMapToModel } = useUserMapper();
@@ -29,7 +29,7 @@ export function useUserService() {
       return validateDtoAndMapToModel(response.data);
     } catch (e) {
       addNotification(
-        "Fehler beim Laden des Users. Bitte kontaktieren Sie das Wahlamt.",
+        "Fehler beim Laden des Users. " + CONTACT_SUPPORT,
         UserNotificationCategoryEnum.ERROR
       );
       throw e;

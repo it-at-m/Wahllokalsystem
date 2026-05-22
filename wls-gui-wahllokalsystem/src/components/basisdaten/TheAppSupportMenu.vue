@@ -58,7 +58,7 @@ const WAEHLERVERZEICHNIS_TITLE = "Wählerverzeichnis";
 
 const infoHelpData = computed(() => {
   const allItems = [
-    { icon: "$phone", title: "Wahlhotline", text: WAHLHOTLINE },
+    { icon: "$phone", title: "Wahl-Hotline", text: WAHLHOTLINE },
     {
       icon: "$fileDocument",
       title: "Schulungsunterlagen",

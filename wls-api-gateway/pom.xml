@@ -52,7 +52,7 @@
         <jacoco.version>0.8.14</jacoco.version>
 
         <!-- Logging -->
-        <logstash.encoder>8.1</logstash.encoder>
+        <logstash.encoder>9.0</logstash.encoder>
 
         <!-- Release -->
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>

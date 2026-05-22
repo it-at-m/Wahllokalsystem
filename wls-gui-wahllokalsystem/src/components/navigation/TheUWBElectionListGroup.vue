@@ -4,35 +4,53 @@
       <base-workflow-list-item
         v-bind="props"
         title="Wahlhandlung"
-        :disabled="disabled"
-        :subtitle="disabledMessage"
-        :is-workflow-step-finished="isWahlhandlungErfasst"
+        :disabled="disabled && !areAllElectionsFinished"
+        :subtitle="areAllElectionsFinished ? '' : disabledMessage"
+        :is-workflow-step-finished="
+          isWahlhandlungErfasst || areAllElectionsFinished
+        "
         list-group-activator
       />
     </template>
     <base-workflow-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
-      :disabled="disabled || !isWahlvorstandErfasst"
-      :is-workflow-step-finished="isWahlumgebungErfasst"
+      :disabled="
+        (disabled || !isWahlvorstandErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahlumgebungErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Wählerverzeichnis"
       :to="routeWithName(ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS)"
-      :disabled="disabled || !isWahlumgebungErfasst"
-      :is-workflow-step-finished="isWaehlerverzeichnisErfasst"
+      :disabled="
+        (disabled || !isWahlumgebungErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWaehlerverzeichnisErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
-      :disabled="disabled || !isWaehlerverzeichnisErfasst"
-      :is-workflow-step-finished="isWahleroeffnungErfasst"
+      :disabled="
+        (disabled || !isWaehlerverzeichnisErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahleroeffnungErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Stimmabgabe"
       :to="routeWithName(ROUTE_STIMMABGABE)"
-      :disabled="disabled || !isWahleroeffnungErfasst"
-      :is-workflow-step-finished="isStimmabgabeErfasst"
+      :disabled="
+        (disabled || !isWahleroeffnungErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isStimmabgabeErfasst || areAllElectionsFinished
+      "
     />
   </v-list-group>
 </template>
@@ -69,5 +87,6 @@ const {
   isWahleroeffnungErfasst,
   isStimmabgabeErfasst,
   isWahlhandlungErfasst,
+  areAllElectionsFinished,
 } = storeToRefs(useWorkflowStore());
 </script>

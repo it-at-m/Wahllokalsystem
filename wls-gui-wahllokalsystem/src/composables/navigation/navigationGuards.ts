@@ -14,7 +14,8 @@ export function useNavigationGuards() {
       _isStepDone(to, requiredStep);
 
   const permitNavigationWhenWahlvorstandIsErfasst: NavigationGuard = () =>
-    useWorkflowStore().isWahlvorstandErfasst;
+    useWorkflowStore().isWahlvorstandErfasst ||
+    useWorkflowStore().areAllElectionsFinished;
 
   const permitNavigationWhenWahleroeffnungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahleroeffnungErfasst;

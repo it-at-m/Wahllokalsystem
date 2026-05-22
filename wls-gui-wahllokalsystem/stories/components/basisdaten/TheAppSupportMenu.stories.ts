@@ -4,7 +4,7 @@ import { http, HttpResponse } from "msw";
 
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import BaseInfoHelpListItemContent from "@/components/basisdaten/BaseInfoHelpListItemContent.vue";
-import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
+import TheAppSupportMenu from "@/components/basisdaten/TheAppSupportMenu.vue";
 import pinia from "@/plugins/pinia.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -21,7 +21,7 @@ const beispielHandbuchBlob = new Blob([byteNumbers], {
 });
 
 const meta = {
-  component: TheInfoHelpIcon,
+  component: TheAppSupportMenu,
   subcomponents: { BaseInfoHelpListItem, BaseInfoHelpListItemContent },
   decorators: [
     () => ({
@@ -46,7 +46,7 @@ const meta = {
     },
   },
   args: {},
-} satisfies Meta<typeof TheInfoHelpIcon>;
+} satisfies Meta<typeof TheAppSupportMenu>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;

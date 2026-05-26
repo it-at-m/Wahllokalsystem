@@ -21,6 +21,7 @@ import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactorie
 import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorbereitungTaskFactory } from "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts";
+import { useWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeAndErgebnisseTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -62,6 +63,8 @@ export function useTaskListService() {
   const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
   const { createTasks: createBeanstandeteWahlbriefeTask } =
     useBeanstandeteWahlbriefeTaskFactory();
+  const { createTasks: createMBWTasks } =
+    useWahlvorschlaegeAndErgebnisseTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -87,6 +90,7 @@ export function useTaskListService() {
       ...createWahlvorbereitungTasks(taskFactoryData),
       ...createWahlbriefeTasks(taskFactoryData),
       ...createBeanstandeteWahlbriefeTask(taskFactoryData),
+      ...createMBWTasks(taskFactoryData),
     ];
   }
 

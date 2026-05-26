@@ -442,7 +442,7 @@ services:
 
   wls-refarch-gateway-wls-reverse-proxy:
     container_name: wls-refarch-gateway-wls-reverse-proxy
-    image: nginx:alpine@sha256:2f07d83bf561b506400dc183b1b2003803e39efbd22451f848adaba14d28c7c7
+    image: nginx:alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
     ports:
       - "58083:443"
     volumes:
@@ -452,7 +452,7 @@ services:
 
   wls-auth-service-reverse-proxy:
     container_name: wls-auth-service-reverse-proxy
-    image: nginx:alpine@sha256:2f07d83bf561b506400dc183b1b2003803e39efbd22451f848adaba14d28c7c7
+    image: nginx:alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
     ports:
       - "58100:443"
     volumes:

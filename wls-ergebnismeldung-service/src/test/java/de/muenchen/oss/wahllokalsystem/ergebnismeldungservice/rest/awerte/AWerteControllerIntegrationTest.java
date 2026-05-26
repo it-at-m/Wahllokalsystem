@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.awerte;
 
-import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,15 +30,16 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(
-    profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE, Profiles.DUMMY_CLIENTS})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 public class AWerteControllerIntegrationTest {
 
   @Configuration
@@ -79,8 +80,10 @@ public class AWerteControllerIntegrationTest {
       // same values as DummyClientImpl
       val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
 
-      val request = MockMvcRequestBuilders.get("/businessActions/awerte/" + wahlbezirkID);
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(createGetRequest(wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
 
       val responseBodyAsDTO =
           objectMapper.readValue(
@@ -101,9 +104,11 @@ public class AWerteControllerIntegrationTest {
       // same values as DummyClientImpl
       val eaiWahlberechtigte = createClientListOfAWahlberechtigteDTO(wahlbezirkID);
 
-      val request = MockMvcRequestBuilders.get("/businessActions/awerte/" + wahlbezirkID);
-      api.perform(request).andExpect(status().isOk()).andReturn();
+      api.perform(createGetRequest(wahlbezirkID, wahlbezirkID))
+          .andExpect(status().isOk())
+          .andReturn();
 
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_USER_GET_AWERTE);
       val aWerteFromRepo = awerteRepository.findByBezirkUndWahlID_WahlbezirkID(wahlbezirkID);
       val expectedEntities =
           aWerteModelMapper.fromListOfAWerteModelToListOfAWerteEntity(
@@ -111,6 +116,25 @@ public class AWerteControllerIntegrationTest {
                   eaiWahlberechtigte));
 
       Assertions.assertThat(aWerteFromRepo).usingRecursiveComparison().isEqualTo(expectedEntities);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      api.perform(createGetRequest(wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder createGetRequest(
+        final String wahlbezirkID, final String claimWahlbezirkID) {
+      return MockMvcRequestBuilders.get("/businessActions/awerte/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_AWERTE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_AWERTE))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
     }
   }
 
@@ -123,6 +147,10 @@ public class AWerteControllerIntegrationTest {
 
       val request =
           MockMvcRequestBuilders.post("/businessActions/awerte/init")
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(Authorities.ADMIN_LOADWAHLTERMINDATEN)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(wahlbezirkIDs));
 

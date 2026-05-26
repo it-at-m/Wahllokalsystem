@@ -39,7 +39,7 @@
           />
           <wls-clock class="navbar-text mx-2 mt-1" />
           <the-wls-online-offline-menu />
-          <the-info-help-icon />
+          <the-app-support-menu />
           <v-btn
             icon="$logout"
             variant="text"
@@ -89,7 +89,7 @@ import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { computed, nextTick, ref, watch } from "vue";
 
-import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
+import TheAppSupportMenu from "@/components/basisdaten/TheAppSupportMenu.vue";
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";

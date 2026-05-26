@@ -22,9 +22,11 @@ public class StimmabgabevermerkeService {
   private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
   private final ExceptionFactory exceptionFactory;
 
-  @PreAuthorize("hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')")
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
   public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(
-      final BezirkIDUndWaehlerverzeichnisNummer id) {
+      @P("param") final BezirkIDUndWaehlerverzeichnisNummer id) {
     log.info("#getStimmabgabevermerke");
 
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(

@@ -85,6 +85,25 @@ class ErgebnisseServiceSecurityTest {
           .isInstanceOf(AccessDeniedException.class);
     }
 
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIdDoesNotMatch() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);
+
+      val wahlbezirkID = "wahlbezirkID";
+      val ergebnisseReference =
+          ergebnisseDTOMapper.toReferenceModel(wahlbezirkID, "wahlID", StapelartDTO.LTW_BZW_A);
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      Assertions.assertThatException()
+          .isThrownBy(() -> unitUnderTest.getErgebnisse(ergebnisseReference))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
     private static Stream<Arguments> getMissingAuthoritiesVariations() {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
           Authorities.ALL_AUTHORITIES_GET_ERGEBNISSE);

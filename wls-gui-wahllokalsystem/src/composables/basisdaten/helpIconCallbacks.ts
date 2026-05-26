@@ -9,7 +9,9 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
   const { addNotification } = useUserNotificationService();
-  const { konfigurationsparameter } = storeToRefs(useInfomanagementStore());
+  const { konfigurationsparameter, waehlerverzeichnisUrl } = storeToRefs(
+    useInfomanagementStore()
+  );
 
   function openWahlraumfinder() {
     if (konfigurationsparameter.value) {
@@ -23,6 +25,19 @@ export function useHelpIconCallbacks() {
         }
       }
     }
+  }
+
+  function openWaehlerverzeichnis() {
+    if (waehlerverzeichnisUrl.value) {
+      const win = window.open(waehlerverzeichnisUrl.value, "_blank");
+      if (win) {
+        win.focus();
+      }
+    }
+  }
+
+  function isWaehlerverzeichnisUrlAvailable(): boolean {
+    return !!waehlerverzeichnisUrl.value;
   }
 
   function startFernzugriff() {
@@ -51,5 +66,11 @@ export function useHelpIconCallbacks() {
     }
   }
 
-  return { openWahlraumfinder, startFernzugriff, printTestdruck };
+  return {
+    openWahlraumfinder,
+    openWaehlerverzeichnis,
+    isWaehlerverzeichnisUrlAvailable,
+    startFernzugriff,
+    printTestdruck,
+  };
 }

@@ -359,7 +359,8 @@ Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, so
 `niederschrift.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
 
 Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
-dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.
+dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen. Die erfassten Daten können
+weiterhin eingesehen werden. Es kann auch erneut eine Niederschrift gedruckt werden.
 
 #### Weitere nicht Use-Case-spezifische Anforderungen
 

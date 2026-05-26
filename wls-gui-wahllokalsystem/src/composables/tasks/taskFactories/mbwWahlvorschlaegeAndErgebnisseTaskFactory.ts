@@ -7,11 +7,14 @@ import type { Wahlvorschlag } from "@/types/wahlvorschlaege/Wahlvorschlag.ts";
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import {
+  getStapelForWahlart,
+  StapelArtEnum,
+} from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-export function useWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
+export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
   const wahlvorschlaegeStore = useWahlvorschlaegeStore();
   const ergebnismeldungsStore = useErgebnismeldungStore();
 
@@ -28,7 +31,7 @@ export function useWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
   function _createMBWTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {
     return {
       callback: async () => {
-        const allStapelForWahlart = _getStapelForWahlart(
+        const allStapelForWahlart = getStapelForWahlart(
           taskFactoryMetaData.wahlArt
         );
 
@@ -77,12 +80,6 @@ export function useWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
       },
       name: `Wahlvorschläge und Ergebnisse - ${taskFactoryMetaData.wahlName}`,
     };
-  }
-
-  function _getStapelForWahlart(wahlart: WahlWahlartEnum): StapelArtEnum[] {
-    return Object.values(StapelArtEnum).filter((value) =>
-      value.includes(wahlart)
-    );
   }
 
   return {

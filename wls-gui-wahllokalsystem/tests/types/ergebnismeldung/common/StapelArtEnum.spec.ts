@@ -76,7 +76,7 @@ describe("StapelArtEnum.ts", () => {
       },
     ];
 
-    it.each([testCaseArguments])(
+    it.each(testCaseArguments)(
       "should_returnCorrectListOfStapel_when'$wahlart'IsGiven",
       (testCaseArgument) => {
         const result = getStapelForWahlart(testCaseArgument.wahlart);

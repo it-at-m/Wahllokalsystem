@@ -11,6 +11,7 @@ import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactor
 import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
+import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts";
 import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
@@ -21,7 +22,6 @@ import { useWaehlverzeichnisTaskFactory } from "@/composables/tasks/taskFactorie
 import { useWahlbriefeTaskFactory } from "@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts";
 import { useWahlscheineTaskFactory } from "@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts";
 import { useWahlvorbereitungTaskFactory } from "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts";
-import { useWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeAndErgebnisseTaskFactory.ts";
 import { useWahlvorschlaegeTaskFactory } from "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts";
 import { useWahlvorstandTaskFactory } from "@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -64,7 +64,7 @@ export function useTaskListService() {
   const { createTasks: createBeanstandeteWahlbriefeTask } =
     useBeanstandeteWahlbriefeTaskFactory();
   const { createTasks: createMBWTasks } =
-    useWahlvorschlaegeAndErgebnisseTaskFactory();
+    useMBWWahlvorschlaegeAndErgebnisseTaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();

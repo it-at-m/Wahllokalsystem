@@ -35,7 +35,7 @@ describe("navigationGuards.ts", () => {
 
   const {
     isStepDoneInElectionState,
-    permitNavigationWhenWahlvorstandIsErfasst,
+    permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
     permitNavigationWhenWahleroeffnungIsErfasst,
     permitNavigationWhenWahlumgebungIsErfasst,
     permitNavigationWhenWahlbriefeErfassenIsErfasst,
@@ -164,24 +164,26 @@ describe("navigationGuards.ts", () => {
     });
   });
 
-  describe("permitNavigationWhenWahlvorstandIsErfasst", () => {
+  describe("permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished", () => {
     it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
       useWorkflowStore().isWahlvorstandErfasst = false;
-      const result = permitNavigationWhenWahlvorstandIsErfasst(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
+      const result =
+        permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
+          DUMMY_TO,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
       expect(result).toStrictEqual(false);
     });
 
     it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
       useWorkflowStore().isWahlvorstandErfasst = true;
-      const result = permitNavigationWhenWahlvorstandIsErfasst(
-        DUMMY_TO,
-        DUMMY_FROM,
-        DUMMY_NEXT_GUARD
-      );
+      const result =
+        permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
+          DUMMY_TO,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
       expect(result).toStrictEqual(true);
     });
   });

@@ -13,9 +13,10 @@ export function useNavigationGuards() {
     (requiredStep) => (to) =>
       _isStepDone(to, requiredStep);
 
-  const permitNavigationWhenWahlvorstandIsErfasst: NavigationGuard = () =>
-    useWorkflowStore().isWahlvorstandErfasst ||
-    useWorkflowStore().areAllElectionsFinished;
+  const permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished: NavigationGuard =
+    () =>
+      useWorkflowStore().isWahlvorstandErfasst ||
+      useWorkflowStore().areAllElectionsFinished;
 
   const permitNavigationWhenWahleroeffnungIsErfasst: NavigationGuard = () =>
     useWorkflowStore().isWahleroeffnungErfasst;
@@ -98,7 +99,7 @@ export function useNavigationGuards() {
 
   return {
     isStepDoneInElectionState,
-    permitNavigationWhenWahlvorstandIsErfasst,
+    permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
     permitNavigationWhenWahleroeffnungIsErfasst,
     permitNavigationWhenWahlumgebungIsErfasst,
     permitNavigationWhenWahlbriefeErfassenIsErfasst,

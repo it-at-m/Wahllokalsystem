@@ -635,5 +635,48 @@ describe("infomanagementStore.ts", () => {
         DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
       );
     });
+
+    it("should_returnValue_when_waehlerverzeichnisKonfigKeyHasValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert("test")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual("test");
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyHasEmptyValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyHasUndefinedValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert(undefined)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyNotAvailable", () => {
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
   });
 });

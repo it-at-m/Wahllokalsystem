@@ -2,6 +2,7 @@ package de.muenchen.oss.wahllokalsystem.wahlvorstandservice.rest.wahlvorstand;
 
 import static de.muenchen.oss.wahllokalsystem.wahlvorstandservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +18,6 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.utils.TestDataFactory
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
-import de.muenchen.oss.wahllokalsystem.wls.common.testing.WithMockUserAsJwt;
 import java.time.LocalDate;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -30,8 +30,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,14 +65,6 @@ public class WahlvorstandControllerIntegrationTest {
   class GetWahlvorstand {
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_GET_WAHLVORSTAND,
-          Authorities.SERVICE_UPDATE_WAHLVORSTAND,
-          Authorities.REPOSITORY_READ_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND
-        },
-        claimProperties = {"wahlbezirkID=wahlbezirkID"})
     @Transactional
     void should_returnFallbackWahlvorstand_when_noDataFound() throws Exception {
       val infomanagementKonfigurierterWahltag =
@@ -95,28 +89,27 @@ public class WahlvorstandControllerIntegrationTest {
                       .withStatus(HttpStatus.OK.value())
                       .withBody(objectMapper.writeValueAsBytes(basisdatenWahlen))));
 
-      val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/wahlbezirkID");
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(buildGetRequest(wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       Assertions.assertThat(response.getResponse().getContentAsString()).contains("FALLBACK");
     }
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_GET_WAHLVORSTAND,
-          Authorities.SERVICE_UPDATE_WAHLVORSTAND,
-          Authorities.REPOSITORY_READ_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND
-        },
-        claimProperties = {"wahlbezirkID=wahlbezirkID"})
     void should_returnWahlvorstand_when_dataFound() throws Exception {
       val wahlvorstand = TestDataFactory.CreateWahlvorstandEntity.withData();
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLVORSTAND);
       wahlvorstandRepository.save(wahlvorstand);
       val mockedWahlvorstandModel =
           TestDataFactory.CreateWahlvorstandModel.fromEntity(wahlvorstand);
 
-      val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/wahlbezirkID");
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(buildGetRequest(wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WahlvorstandDTO.class);
@@ -126,14 +119,6 @@ public class WahlvorstandControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_GET_WAHLVORSTAND,
-          Authorities.SERVICE_UPDATE_WAHLVORSTAND,
-          Authorities.REPOSITORY_READ_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND
-        },
-        claimProperties = {"wahlbezirkID=wahlbezirkID"})
     void should_updateWahlvorstand_when_forceUpdateParamIsTrue() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val infomanagementKonfigurierterWahltag =
@@ -165,10 +150,10 @@ public class WahlvorstandControllerIntegrationTest {
                       .withStatus(HttpStatus.OK.value())
                       .withBody(objectMapper.writeValueAsBytes(eaiWahlvorstandDto))));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/wahlvorstand/" + wahlbezirkID)
-              .header("forceUpdate", true);
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(buildUpdateRequest(wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WahlvorstandDTO.class);
@@ -184,14 +169,6 @@ public class WahlvorstandControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_GET_WAHLVORSTAND,
-          Authorities.SERVICE_UPDATE_WAHLVORSTAND,
-          Authorities.REPOSITORY_READ_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND
-        },
-        claimProperties = {"wahlbezirkID=wahlbezirkID"})
     void should_returnFallbackWahlvorstand_when_forceUpdateParamIsTrueAndEaiCallFailed()
         throws Exception {
       val wahlbezirkID = "wahlbezirkID";
@@ -232,20 +209,22 @@ public class WahlvorstandControllerIntegrationTest {
                                   "WLS-EAI-SERVICE",
                                   "error on loading wahlvorstand")))));
 
-      val request =
-          MockMvcRequestBuilders.get("/businessActions/wahlvorstand/" + wahlbezirkID)
-              .header("forceUpdate", true);
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(buildUpdateRequest(wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
 
       Assertions.assertThat(response.getResponse().getContentAsString()).contains("FALLBACK");
     }
 
     @Test
-    @WithMockUserAsJwt(claimProperties = "wahlbezirkID=myWahlbezirkID")
-    void should_return403WithWlsException_when_accessingWahlbezirkOfOtherUser() throws Exception {
-      val request = MockMvcRequestBuilders.get("/businessActions/wahlvorstand/otherWahlbezirkID");
-
-      val response = api.perform(request).andExpect(status().isForbidden()).andReturn();
+    void should_return403WithWlsException_when_accessingWahlbezirkOfOtherUserForGetWahlvorstand()
+        throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val response =
+          api.perform(buildGetRequest(wahlbezirkID, wahlbezirkID + "sth"))
+              .andExpect(status().isForbidden())
+              .andReturn();
       val responseBodyAsWlsException =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -253,18 +232,38 @@ public class WahlvorstandControllerIntegrationTest {
       Assertions.assertThat(responseBodyAsWlsException.category())
           .isEqualTo(WlsExceptionCategory.S);
     }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkIdForUpdateWahlvorstand() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val request = buildUpdateRequest(wahlbezirkID, wahlbezirkID + "sth");
+
+      api.perform(request).andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder buildGetRequest(
+        final String wahlbezirkID, final String claimWahlbezirkID) throws Exception {
+      return MockMvcRequestBuilders.get("/businessActions/wahlvorstand/" + wahlbezirkID)
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLVORSTAND),
+                      new SimpleGrantedAuthority(Authorities.SERVICE_UPDATE_WAHLVORSTAND),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLVORSTAND),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLVORSTAND))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
+    }
+
+    private MockHttpServletRequestBuilder buildUpdateRequest(
+        final String wahlbezirkID, final String claimWahlbezirkID) throws Exception {
+      return buildGetRequest(wahlbezirkID, claimWahlbezirkID).header("forceUpdate", true);
+    }
   }
 
   @Nested
   class PostWahlvorstand {
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_POST_WAHLVORSTAND,
-          Authorities.REPOSITORY_DELETE_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND
-        })
     void should_saveWahlvorstand_when_newDataSuccessfullySaved() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
@@ -277,12 +276,9 @@ public class WahlvorstandControllerIntegrationTest {
                           .withHeader("Content-Type", "application/json")
                           .withStatus(HttpStatus.OK.value())));
 
-      val request =
-          MockMvcRequestBuilders.post("/businessActions/wahlvorstand/" + wahlbezirkID)
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(mockedWahlvorstandDTO));
-      api.perform(request).andExpect(status().isOk()).andReturn();
+      api.perform(buildPostRequest(wahlbezirkID, wahlbezirkID, mockedWahlvorstandDTO))
+          .andExpect(status().isOk())
+          .andReturn();
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLVORSTAND);
       val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
@@ -328,18 +324,13 @@ public class WahlvorstandControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUserAsJwt(
-        authorities = {
-          Authorities.SERVICE_POST_WAHLVORSTAND,
-          Authorities.REPOSITORY_DELETE_WAHLVORSTAND,
-          Authorities.REPOSITORY_WRITE_WAHLVORSTAND,
-          Authorities.REPOSITORY_READ_WAHLVORSTAND
-        })
     void should_overrideOldWahlvorstand_when_newDataSuccessfullySaved() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
 
       val wahlvorstandToOverride = TestDataFactory.CreateWahlvorstandEntity.withData();
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLVORSTAND);
       wahlvorstandRepository.save(wahlvorstandToOverride);
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLVORSTAND);
       val wahlvorstandBeforeOverridden = wahlvorstandRepository.findById(wahlbezirkID).get();
 
       val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
@@ -350,12 +341,9 @@ public class WahlvorstandControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.OK.value())));
 
-      val request =
-          MockMvcRequestBuilders.post("/businessActions/wahlvorstand/" + wahlbezirkID)
-              .with(csrf())
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(mockedWahlvorstandDTO));
-      api.perform(request).andExpect(status().isOk()).andReturn();
+      api.perform(buildPostRequest(wahlbezirkID, wahlbezirkID, mockedWahlvorstandDTO))
+          .andExpect(status().isOk())
+          .andReturn();
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLVORSTAND);
       val wahlvorstandFromRepo = wahlvorstandRepository.findById(wahlbezirkID).get();
@@ -368,6 +356,33 @@ public class WahlvorstandControllerIntegrationTest {
           .isEqualTo(expectedWahlvorstand);
       Assertions.assertThat(wahlvorstandBeforeOverridden.getWahlvorstandsmitglieder())
           .isNotEqualTo(wahlvorstandFromRepo.getWahlvorstandsmitglieder());
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedWahlvorstandDTO = TestDataFactory.CreateWahlvorstandWriteDto.withData();
+
+      val request = buildPostRequest(wahlbezirkID, wahlbezirkID + "sth", mockedWahlvorstandDTO);
+
+      api.perform(request).andExpect(status().isForbidden());
+    }
+
+    private MockHttpServletRequestBuilder buildPostRequest(
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final WahlvorstandWriteDTO requestBody)
+        throws Exception {
+      return MockMvcRequestBuilders.post("/businessActions/wahlvorstand/" + wahlbezirkID)
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_POST_WAHLVORSTAND),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLVORSTAND))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
     }
   }
 }

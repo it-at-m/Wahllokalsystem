@@ -13,6 +13,8 @@ import de.muenchen.oss.wahllokalsystem.wahlvorstandservice.service.wahlvorstand.
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -28,18 +30,19 @@ public class DummyClientImpl
     return new WahlvorstandModel(
         wahlbezirkID,
         LocalDateTime.now(),
-        List.of(
-            new WahlvorstandsmitgliedModel(
-                "id1", "müller", "max", FunktionModel.B, "Beisitzer*in", true),
-            new WahlvorstandsmitgliedModel(
-                "id2", "meier", "max", FunktionModel.W, "Wahlvorsteher*in", true),
-            new WahlvorstandsmitgliedModel(
-                "id3",
-                "mustermann",
-                "max",
-                FunktionModel.SWB,
-                "Stellvertretung Wahlvorsteher*in",
-                true)));
+        new ArrayList<>(
+            Arrays.asList(
+                new WahlvorstandsmitgliedModel(
+                    "id1", "müller", "max", FunktionModel.B, "Beisitzer*in", true),
+                new WahlvorstandsmitgliedModel(
+                    "id2", "meier", "max", FunktionModel.W, "Wahlvorsteher*in", true),
+                new WahlvorstandsmitgliedModel(
+                    "id3",
+                    "mustermann",
+                    "max",
+                    FunktionModel.SWB,
+                    "Stellvertretung Wahlvorsteher*in",
+                    true))));
   }
 
   @Override

@@ -1,6 +1,6 @@
 import type { WahlvorschlaegeDTO } from "@/api/wls-clients/generated-basisdaten-api";
 import type { ErgebnisseDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { delay, http, HttpResponse } from "msw";
 

@@ -21,7 +21,7 @@
       :max="total"
       :model-value="current"
       :color="color"
-      :indeterminate="indeterminate ? current == 0 : false"
+      :indeterminate="isIndeterminateForFirstTask ? current == 0 : false"
     />
   </div>
 </template>
@@ -35,6 +35,6 @@ defineProps<{
   total: number;
   tasks?: Task[];
   color?: string;
-  indeterminate?: boolean;
+  isIndeterminateForFirstTask?: boolean;
 }>();
 </script>

@@ -1,6 +1,6 @@
 # Beschreibung:
 
-*Beschreben Sie hier die wesentlichen Aufgaben, die damit erledigt wurden und geben sie Hinweise zum Review.*
+*Beschreiben Sie hier die wesentlichen Aufgaben, die damit erledigt wurden und geben sie Hinweise zum Review.*
 
 ## Definition of Done (DoD):
 <!-- Je nach Service bitte nicht relevanten Teil entfernen-->

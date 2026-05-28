@@ -6,8 +6,7 @@
       type="warning"
     >
       <div>
-        Sie können aktuell nicht Offline arbeiten. Bitte kontaktieren Sie das
-        Wahlamt.
+        Sie können aktuell nicht Offline arbeiten. {{ CONTACT_SUPPORT }}
       </div>
     </base-feedback-card>
     <base-offline-loading />
@@ -19,6 +18,7 @@ import { storeToRefs } from "pinia";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseOfflineLoading from "@/components/wlsComponents/BaseOfflineLoading.vue";
+import { CONTACT_SUPPORT } from "@/constants.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());

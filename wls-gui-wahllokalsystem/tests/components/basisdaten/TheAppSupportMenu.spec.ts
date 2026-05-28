@@ -8,14 +8,14 @@ import {
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
+import TheAppSupportMenu from "@/components/basisdaten/TheAppSupportMenu.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
-describe("TheInfoHelpIcon.vue", () => {
-  let wrapper: VueWrapper<InstanceType<typeof TheInfoHelpIcon>>;
+describe("TheAppSupportMenu.vue", () => {
+  let wrapper: VueWrapper<InstanceType<typeof TheAppSupportMenu>>;
 
   beforeEach(() => {
-    wrapper = mount(TheInfoHelpIcon, {
+    wrapper = mount(TheAppSupportMenu, {
       global: {
         plugins: [
           createTestingPinia({

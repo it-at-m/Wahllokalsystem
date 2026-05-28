@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useKonfigurationsparameterTestDataFactory } from "@tests/utils/infomanagement/KonfigurationsparameterTestDataFactory.ts";
 import { delay, http, HttpResponse } from "msw";

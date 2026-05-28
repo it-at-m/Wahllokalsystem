@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";

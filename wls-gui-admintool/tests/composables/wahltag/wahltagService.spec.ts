@@ -3,8 +3,8 @@ import type {
   WahltagDTO,
 } from "@/api/wls-clients/generated-admin-api";
 
-import { spyOn } from "@storybook/test";
 import { useWahltagTestDataFactory } from "@tests/types/wahltag/WahltagTestDataFactory.ts";
+import { spyOn } from "storybook/test";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 

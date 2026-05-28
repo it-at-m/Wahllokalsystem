@@ -1,9 +1,9 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory";
+import { spyOn } from "storybook/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 

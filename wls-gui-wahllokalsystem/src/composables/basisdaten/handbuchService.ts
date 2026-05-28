@@ -43,7 +43,7 @@ export function useHandbuchService() {
         addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       }
       logDebug(errorMessage, e);
-      throw new Error("GetHandbuch Failed");
+      throw new Error("GetHandbuch Failed", { cause: e });
     }
   }
 

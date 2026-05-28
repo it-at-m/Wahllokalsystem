@@ -15,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Set;
 import java.util.stream.Stream;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -123,7 +124,9 @@ public class WahlvorschlaegeServiceSecurityTest {
 
     private static Stream<Arguments> getMissingAuthoritiesVariations() {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_DELETE_WAHLVORSCHLAEGE);
+          ArrayUtils.removeElements(
+              Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE,
+              Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE));
     }
 
     private WahlvorschlaegeDTO createClientWahlvorschlaegeDTO() {

@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Collections;
 import java.util.stream.Stream;
 import lombok.val;
@@ -32,7 +32,7 @@ class StimmabgabevermerkeValidatorTest {
 
     @Test
     void should_notThrowException_when_parameterIsValid() {
-      val id = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 1L);
+      val id = new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wahlbezirkID", "wahlID", 1L);
       val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
       underTest.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, givenWlsException);
@@ -51,7 +51,7 @@ class StimmabgabevermerkeValidatorTest {
 
     @Test
     void should_throwGivenException_when_waehlerverzeichnisnummerIsNull() {
-      val id = new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", null);
+      val id = new BezirkUndWahlIDUndWaehlerverzeichnisnummer("wahlbezirkID", "wahlID", null);
       val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
       Assertions.assertThatThrownBy(
@@ -61,11 +61,13 @@ class StimmabgabevermerkeValidatorTest {
     }
 
     @ParameterizedTest(name = "wahlbezirkID {1}")
-    @MethodSource("argumentsToCheckBlankWahlbezirkID")
+    @MethodSource("argumentsToCheckBlankValue")
     void should_throwGivenException_when_wahlbezirkIDIsBlank(final ArgumentsAccessor arguments) {
       val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
 
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(arguments.get(0, String.class), 1L);
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              arguments.get(0, String.class), "wahlID", 1L);
 
       Assertions.assertThatThrownBy(
               () ->
@@ -73,7 +75,22 @@ class StimmabgabevermerkeValidatorTest {
           .isSameAs(givenWlsException);
     }
 
-    public static Stream<Arguments> argumentsToCheckBlankWahlbezirkID() {
+    @ParameterizedTest(name = "wahlID {1}")
+    @MethodSource("argumentsToCheckBlankValue")
+    void should_throwGivenException_when_wahlIDIsBlank(final ArgumentsAccessor arguments) {
+      val givenWlsException = FachlicheWlsException.withCode("").buildWithMessage("");
+
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              "wahlbezirkID", arguments.get(0, String.class), 1L);
+
+      Assertions.assertThatThrownBy(
+              () ->
+                  underTest.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(id, givenWlsException))
+          .isSameAs(givenWlsException);
+    }
+
+    public static Stream<Arguments> argumentsToCheckBlankValue() {
       return Stream.of(
           Arguments.of(null, "is null"),
           Arguments.of("", "is empty string"),
@@ -88,9 +105,7 @@ class StimmabgabevermerkeValidatorTest {
     void should_notThrowAnyException_when_parameterIsValid() {
       val stimmabgabevermerke =
           new StimmabgabevermerkeModel(
-              new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L),
-              0L,
-              Collections.emptySet());
+              "wahlbezirkID", "wahlID", 0L, Collections.emptySet(), Collections.emptySet());
 
       underTest.validStimmabgabevermerkeOrThrow(stimmabgabevermerke);
     }

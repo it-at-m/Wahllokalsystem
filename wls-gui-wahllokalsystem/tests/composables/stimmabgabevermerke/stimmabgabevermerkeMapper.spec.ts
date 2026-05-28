@@ -2,7 +2,6 @@ import type { StimmabgabevermerkeDTO } from "@/api/wls-clients/generated-ergebni
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Stimmzettel } from "@/types/stimmabgabevermerke/Stimmzettel.ts";
 import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { describe, expect, it } from "vitest";
@@ -19,7 +18,6 @@ const { toModel, toDto } = useStimmabgabevermerkeMapper();
 
 const {
   prepareStimmabgabevermerkeDTO,
-  prepareWahldatenDTO,
   prepareStimmzettelDTO,
   prepareVermerkDTO,
 } = useStimmabgabevermerkeTestDataFactory();
@@ -40,43 +38,32 @@ describe("stimmabgabevermerkeMapper.ts", () => {
         anzahl: 4,
       };
 
-      const wahldatenDTO = prepareWahldatenDTO()
+      const dto = prepareStimmabgabevermerkeDTO()
         .vermerke([vermerkDTO])
         .eingenommeneWahlscheine([eingenommenerWahlscheinDTO])
         .build();
 
-      const dto = prepareStimmabgabevermerkeDTO()
-        .wahldaten([wahldatenDTO])
-        .build();
-
       const model: Stimmabgabevermerke = {
-        anzahlBlaetter: dto.anzahlBlaetter,
+        wahlID: dto.wahlID,
         waehlerverzeichnisNummer: dto.waehlerverzeichnisNummer,
-        wahlbezirkID: dto.wahlbezirkID,
-        wahldaten: [
+        vermerke: [
           {
-            wahlID: wahldatenDTO.wahlID,
-            waehlerverzeichnisNummer: wahldatenDTO.waehlerverzeichnisNummer,
-            vermerke: [
+            blattnummer: vermerkDTO.blattnummer,
+            stimmzettel: [
               {
-                blattnummer: vermerkDTO.blattnummer,
-                stimmzettel: [
-                  {
-                    anzahl: stimmzettelDTO.anzahl,
-                    stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-                  },
-                ],
+                anzahl: stimmzettelDTO.anzahl,
+                stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
               },
             ],
-            wahlbezirkID: wahldatenDTO.wahlbezirkID,
-            eingenommeneWahlscheine: new Map([
-              [
-                EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                eingenommenerWahlscheinDTO.anzahl,
-              ],
-            ]),
           },
         ],
+        wahlbezirkID: dto.wahlbezirkID,
+        eingenommeneWahlscheine: new Map([
+          [
+            EingenommenerWahlscheinStimmzettelartEnum.Klein,
+            eingenommenerWahlscheinDTO.anzahl,
+          ],
+        ]),
       };
 
       const result = toModel(dto);
@@ -97,7 +84,7 @@ describe("stimmabgabevermerkeMapper.ts", () => {
         stimmzettel: [stimmzettel],
       };
 
-      const wahldaten: Wahldaten = {
+      const model: Stimmabgabevermerke = {
         wahlID: "wahl123",
         waehlerverzeichnisNummer: 12345,
         vermerke: [vermerk],
@@ -107,40 +94,25 @@ describe("stimmabgabevermerkeMapper.ts", () => {
         ]),
       };
 
-      const model: Stimmabgabevermerke = {
-        anzahlBlaetter: 2,
-        waehlerverzeichnisNummer: 12345,
-        wahlbezirkID: "bezirk123",
-        wahldaten: [wahldaten],
-      };
-
       const expectedDTO: StimmabgabevermerkeDTO = {
-        anzahlBlaetter: model.anzahlBlaetter,
+        wahlID: model.wahlID,
         waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
-        wahlbezirkID: model.wahlbezirkID,
-        wahldaten: [
+        vermerke: [
           {
-            wahlID: wahldaten.wahlID,
-            waehlerverzeichnisNummer: wahldaten.waehlerverzeichnisNummer,
-            vermerke: [
+            blattnummer: vermerk.blattnummer,
+            stimmzettel: [
               {
-                blattnummer: vermerk.blattnummer,
-                stimmzettel: [
-                  {
-                    anzahl: 0,
-                    stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
-                  },
-                ],
+                anzahl: 0,
+                stimmzettelart: StimmzettelDTOStimmzettelartEnum.Klein,
               },
             ],
-            wahlbezirkID: wahldaten.wahlbezirkID,
-            eingenommeneWahlscheine: [
-              {
-                stimmzettelart:
-                  EingenommenerWahlscheinDTOStimmzettelartEnum.Klein,
-                anzahl: 4,
-              },
-            ],
+          },
+        ],
+        wahlbezirkID: model.wahlbezirkID,
+        eingenommeneWahlscheine: [
+          {
+            stimmzettelart: EingenommenerWahlscheinDTOStimmzettelartEnum.Klein,
+            anzahl: 4,
           },
         ],
       };

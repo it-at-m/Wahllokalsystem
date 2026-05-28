@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Bezi
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.Wahlscheine;
@@ -19,7 +20,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Wah
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
 import java.util.Optional;
@@ -170,8 +170,8 @@ class DefaultElectionTypeValidatorTest {
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.of(mockedAWerte));
@@ -230,8 +230,8 @@ class DefaultElectionTypeValidatorTest {
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.empty());
         Mockito.when(
                 exceptionFactory.createFachlicheWlsException(
@@ -268,8 +268,8 @@ class DefaultElectionTypeValidatorTest {
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(Optional.empty());
@@ -308,8 +308,8 @@ class DefaultElectionTypeValidatorTest {
             .thenReturn(mockedRepoErgebnisse);
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(
-                        wahlbezirkID, waehlerverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlerverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
             .thenReturn(mockedNotFound, Optional.of(mockedAWerte));

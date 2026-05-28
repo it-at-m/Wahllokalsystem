@@ -18,8 +18,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const { prepareWahlscheine } = useWahlscheineTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
-const { prepareWahldaten, prepareStimmabgabevermerke } =
-  useStimmabgabevermerkeTestDataFactory();
+const { prepareStimmabgabevermerke } = useStimmabgabevermerkeTestDataFactory();
 const { prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
@@ -308,14 +307,10 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       .build();
     stimmabgabevermerkeStore.stimmabgabevermerke = [
       prepareStimmabgabevermerke()
-        .wahldaten([
-          prepareWahldaten()
-            .wahlID(WAHL_ID)
-            .eingenommeneWahlscheine(
-              new Map([[StimmzettelStimmzettelartEnum.Klein, 3]])
-            )
-            .build(),
-        ])
+        .wahlID(WAHL_ID)
+        .eingenommeneWahlscheine(
+          new Map([[StimmzettelStimmzettelartEnum.Klein, 3]])
+        )
         .build(),
     ];
   }

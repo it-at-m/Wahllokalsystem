@@ -39,14 +39,14 @@ public class WahltageServiceSecurityTest {
 
   @Autowired ObjectMapper objectMapper;
 
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
+    wahltagRepository.deleteAll();
+  }
+
   @Nested
   class GetWahltage {
-
-    @AfterEach
-    void teardown() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_WAHLTAGE);
-      wahltagRepository.deleteAll();
-    }
 
     @Test
     void should_grantAccess_when_authoritiesArePresent() throws Exception {
@@ -134,14 +134,18 @@ public class WahltageServiceSecurityTest {
     @MethodSource("getMissingAuthoritiesVariations")
     void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
         final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG);
-      val savedWahltag =
-          wahltagRepository.save(new Wahltag("wahltagID", LocalDate.now(), "Beschreibung", "0"));
+      try {
+        SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG);
+        val savedWahltag =
+            wahltagRepository.save(new Wahltag("wahltagID", LocalDate.now(), "Beschreibung", "0"));
 
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
-      Assertions.assertThatException()
-          .isThrownBy(() -> wahltageService.getWahltagByID(savedWahltag.getWahltagID()))
-          .isInstanceOf(AccessDeniedException.class);
+        SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+        Assertions.assertThatException()
+            .isThrownBy(() -> wahltageService.getWahltagByID(savedWahltag.getWahltagID()))
+            .isInstanceOf(AccessDeniedException.class);
+      } finally {
+        teardown();
+      }
     }
 
     public static Stream<Arguments> getMissingAuthoritiesVariations() {

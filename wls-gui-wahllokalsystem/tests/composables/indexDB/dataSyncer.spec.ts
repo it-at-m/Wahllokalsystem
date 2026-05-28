@@ -165,7 +165,9 @@ describe("dataSyncer.ts", () => {
         "set"
       );
       mockDefinitions.getDirtyItems.mockResolvedValue([]);
-      mockDefinitions.runAllTasks.mockRejectedValueOnce(new Error("error"));
+      mockDefinitions.runAllTasks.mockRejectedValueOnce(
+        new Error("mocked error while running tasks")
+      );
 
       await unitUnderTest.synchronizeOfflineData();
 

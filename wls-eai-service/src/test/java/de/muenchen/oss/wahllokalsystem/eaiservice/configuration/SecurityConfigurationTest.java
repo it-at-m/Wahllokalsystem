@@ -307,19 +307,19 @@ class SecurityConfigurationTest {
 
     private static final String WAHLVORSCHLAEGELISTE_URL =
         "/vorschlaege/wahl/wahlID/liste?forDate=2026-01-01";
-    private static final String WAHLVORSCHLAGE_URL = "/vorschlaege/wahl/wahlID/wahlbezirkD";
+    private static final String WAHLVORSCHLAEGE_URL = "/vorschlaege/wahl/wahlID/wahlbezirkID";
     private static final String REFERENDUMVORLAGEN_URL =
-        "/vorschlaege/referendum/wahlID/wahlbezirkD";
+        "/vorschlaege/referendum/wahlID/wahlbezirkID";
 
     @ParameterizedTest(name = "{arguments}")
-    @ValueSource(strings = {WAHLVORSCHLAEGELISTE_URL, WAHLVORSCHLAGE_URL, REFERENDUMVORLAGEN_URL})
+    @ValueSource(strings = {WAHLVORSCHLAEGELISTE_URL, WAHLVORSCHLAEGE_URL, REFERENDUMVORLAGEN_URL})
     @WithAnonymousUser
     void should_denyAccess_when_accessingUnauthorizeViaGet(final String url) throws Exception {
       api.perform(get(url)).andExpect(status().isUnauthorized());
     }
 
     @ParameterizedTest(name = "{arguments}")
-    @ValueSource(strings = {WAHLVORSCHLAEGELISTE_URL, WAHLVORSCHLAGE_URL, REFERENDUMVORLAGEN_URL})
+    @ValueSource(strings = {WAHLVORSCHLAEGELISTE_URL, WAHLVORSCHLAEGE_URL, REFERENDUMVORLAGEN_URL})
     @WithMockUser
     void should_permitAccess_when_accessingAuthorizedWahltageViaGet(final String url)
         throws Exception {

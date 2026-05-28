@@ -2,11 +2,11 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET wahlscheine ba wahlID and wahlbezirkID | user wls_all_uwb
+### GET wahlscheine ba wahlID and wahlbezirkID | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wahlscheine - wahlbezirkID | user wls_all_uwb
+### POST wahlscheine - wahlbezirkID | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -19,11 +19,11 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "stimmabgabevermerke": 33
 }
 
-### GET wahlscheine ba wahlID and wahlbezirkID | user wls_all_bwb
+### GET wahlscheine ba wahlID and wahlbezirkID | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST wahlscheine - wahlbezirkID | user wls_all_bwb | wahl 28039463-3d3d-4ce5-acc1-0bef931a4409
+### POST wahlscheine - wahlbezirkID | user wls_komw_bwb | wahl 28039463-3d3d-4ce5-acc1-0bef931a4409
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -36,7 +36,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "stimmabgabevermerke": 33
 }
 
-### POST wahlscheine - wahlbezirkID | user wls_all_bwb | wahl d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1
+### POST wahlscheine - wahlbezirkID | user wls_komw_bwb | wahl d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/wahlscheine/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/9081145c-dc16-4a9b-8255-5c49ddb98c15
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}

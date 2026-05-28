@@ -85,9 +85,6 @@ info:
     java.version: "@java.version@"
     spring-cloud.version: "@spring-cloud-dependencies.version@"
 
-config:
-  map5xxto400: true
-
 service:
   info:
     oid: WLS-API-GATEWAY

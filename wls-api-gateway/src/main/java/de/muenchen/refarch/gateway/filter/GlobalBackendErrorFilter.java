@@ -46,12 +46,6 @@ public class GlobalBackendErrorFilter implements GlobalFilter, Ordered {
 
     private final ServiceIDFormatter serviceIDFormatter;
 
-    /**
-     * Variable entscheidet, ob alle 5xx Fehler auf 400 gemappt werden sollen.
-     **/
-    @Value("${config.map5xxto400: true}")
-    private boolean map5xxTo400;
-
     @Value("${service.generic500Exception.code:000}")
     private String generic500ExceptionCode;
     @Value("${service.generic500Exception.message:Internal Server Error}")

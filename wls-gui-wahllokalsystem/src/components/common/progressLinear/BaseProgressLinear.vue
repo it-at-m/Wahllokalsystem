@@ -21,6 +21,7 @@
       :max="total"
       :model-value="current"
       :color="color"
+      :indeterminate="indeterminate ? current == 0 : false"
     />
   </div>
 </template>
@@ -34,5 +35,6 @@ defineProps<{
   total: number;
   tasks?: Task[];
   color?: string;
+  indeterminate?: boolean;
 }>();
 </script>

@@ -60,7 +60,7 @@ Content-Type: application/json
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_komw_uwb
+### Initialisiere Begruendung (needs profile 'dummy.clients', stores Begruendung entity in local DB retrieved from DummyClient ) | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/begruendung/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/LTW_BZW_A
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

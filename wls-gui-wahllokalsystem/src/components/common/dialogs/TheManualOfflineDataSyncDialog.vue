@@ -97,10 +97,6 @@ watch(
   }
 );
 
-const emit = defineEmits<{
-  cancel: [];
-}>();
-
 async function initiateOfflineDataSync() {
   if (!isOfflineDataSyncing.value) {
     await synchronizeOfflineData();
@@ -110,7 +106,7 @@ async function initiateOfflineDataSync() {
 }
 
 function onCancelClicked(): void {
-  emit("cancel");
+  isDialogVisible.value = false;
 }
 async function onConfirmClicked() {
   if (hasDirtyTasks.value) {

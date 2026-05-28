@@ -53,7 +53,11 @@ public class BeanstandeteWahlbriefeServiceSecurityTest {
                   Mockito.eq(wahlbezirkID), Mockito.any()))
           .thenReturn(true);
 
-      beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(beanstandeteWahlbriefeReference);
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  beanstandeteWahlbriefeService.getBeanstandeteWahlbriefe(
+                      beanstandeteWahlbriefeReference));
     }
 
     @Test
@@ -120,7 +124,11 @@ public class BeanstandeteWahlbriefeServiceSecurityTest {
                   Mockito.eq(wahlbezirkID), Mockito.any()))
           .thenReturn(true);
 
-      beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(beanstandeteWahlbriefeModel);
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  beanstandeteWahlbriefeService.setBeanstandeteWahlbriefe(
+                      beanstandeteWahlbriefeModel));
     }
 
     @Test

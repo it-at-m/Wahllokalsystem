@@ -107,16 +107,16 @@ const {
   label = "",
   rules = [],
 } = defineProps<{
-  readonly: boolean;
-  hideDetails: boolean;
-  dense: boolean;
-  filled: boolean;
-  outlined: boolean;
-  clearable: boolean;
-  persistentHint: boolean;
-  hint: string;
-  label: string;
-  rules: ValidationRules;
+  readonly?: boolean;
+  hideDetails?: boolean;
+  dense?: boolean;
+  filled?: boolean;
+  outlined?: boolean;
+  clearable?: boolean;
+  persistentHint?: boolean;
+  hint?: string;
+  label?: string;
+  rules?: ValidationRules;
 }>();
 
 const day = ref<string | null>(null);

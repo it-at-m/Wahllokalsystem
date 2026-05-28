@@ -2,7 +2,6 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
@@ -14,6 +13,7 @@ import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabev
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { spyOn } from "storybook/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";

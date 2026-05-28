@@ -84,7 +84,7 @@ export function useStimmabgabevermerkeService() {
         "Fehler beim Speichern der Stimmabgabevermerke für " + wahlname;
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
-      throw new Error("Post Stimmabgabevermerke Failed");
+      throw new Error("Post Stimmabgabevermerke Failed", { cause: e });
     }
   }
 

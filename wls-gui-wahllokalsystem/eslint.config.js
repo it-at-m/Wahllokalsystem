@@ -1,16 +1,18 @@
-import js from "@eslint/js";
+import jsEslintConfig from "@eslint/js";
 import vuePrettierEslintConfigSkipFormatting from "@vue/eslint-config-prettier/skip-formatting";
-import vueTsEslintConfig from "@vue/eslint-config-typescript";
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from "@vue/eslint-config-typescript";
 import { ESLint } from "eslint";
 import vueEslintConfig from "eslint-plugin-vue";
 
-export default [
-  ...ESLint.defaultConfig,
-  js.configs.recommended,
-  ...vueEslintConfig.configs["flat/recommended"],
-  ...vueTsEslintConfig({
-    extends: ["strict", "stylistic"],
-  }),
+export default defineConfigWithVueTs(
+  ESLint.defaultConfig,
+  jsEslintConfig.configs.recommended,
+  vueEslintConfig.configs["flat/recommended-error"],
+  vueTsConfigs.strict,
+  vueTsConfigs.stylistic,
   vuePrettierEslintConfigSkipFormatting,
   {
     ignores: [
@@ -66,5 +68,5 @@ export default [
     rules: {
       "no-restricted-exports": "off", // deactivate rule for the above named directories
     },
-  },
-];
+  }
+);

@@ -7,18 +7,11 @@ export function useStimmabgabevermerkeUtils() {
     waehlerverzeichnisNummer: number
   ): Stimmabgabevermerke {
     return {
-      waehlerverzeichnisNummer: waehlerverzeichnisNummer,
-      wahlbezirkID: wahlbezirkID,
-      wahldaten: [
-        {
-          wahlbezirkID,
-          waehlerverzeichnisNummer,
-          vermerke: [],
-          wahlID,
-          eingenommeneWahlscheine: new Map(),
-        },
-      ],
-      anzahlBlaetter: 0,
+      wahlbezirkID,
+      waehlerverzeichnisNummer,
+      vermerke: [],
+      wahlID,
+      eingenommeneWahlscheine: new Map(),
     };
   }
 

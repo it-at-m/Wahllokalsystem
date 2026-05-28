@@ -31,7 +31,7 @@ describe("wahlvorschlaegeTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskListForAllWahlenExceptVeAndBeb_when_called", () => {
+    it("should_returnTaskListForAllWahlenExceptMbwVeAndBeb_when_called", () => {
       const extendedWahlMetaDataOBW = prepareExtendedWahlMetaData()
         .wahlArt(WahlWahlartEnum.Obw)
         .build();
@@ -44,12 +44,16 @@ describe("wahlvorschlaegeTaskFactory.ts", () => {
       const extendedWahlMetaDataBEB = prepareExtendedWahlMetaData()
         .wahlArt(WahlWahlartEnum.Beb)
         .build();
+      const extendedWahlMetaDataMBW = prepareExtendedWahlMetaData()
+        .wahlArt(WahlWahlartEnum.Mbw)
+        .build();
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
         .extendedWahlMetaData([
           extendedWahlMetaDataOBW,
           extendedWahlMetaDataEUW,
           extendedWahlMetaDataVE,
           extendedWahlMetaDataBEB,
+          extendedWahlMetaDataMBW,
         ])
         .build();
 

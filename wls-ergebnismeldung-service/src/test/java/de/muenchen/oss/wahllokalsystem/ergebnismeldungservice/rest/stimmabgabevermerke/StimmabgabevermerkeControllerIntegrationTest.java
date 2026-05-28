@@ -14,14 +14,11 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.assertj.core.api.Assertions;
@@ -67,21 +64,16 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
-      val entityToFind = new Stimmabgabevermerke();
-      val wahldaten = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
-      entityToFind.setBezirkIDUndWaehlerverzeichnisNummer(
-          new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer));
-      entityToFind.setAnzahlBlaetter(anzahlBlaetter);
-      entityToFind.getWahldaten().add(wahldaten);
+      val entityToFind = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE);
       stimmabgabevermerkeRepository.save(entityToFind);
 
       val response =
           mockMvc
-              .perform(createGetRequest(waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID))
+              .perform(
+                  createGetRequest(waehlerverzeichnisNummer, wahlID, wahlbezirkID, wahlbezirkID))
               .andExpect(status().isOk())
               .andReturn()
               .getResponse();
@@ -101,30 +93,37 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Test
     void should_returnBadRequest_when_requestIsInvalid() throws Exception {
       val wahlbezirkID = "  ";
+      val wahlID = " ";
       val waehlerverzeichnisNummer = 1L;
 
       mockMvc
-          .perform(createGetRequest(waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID))
+          .perform(createGetRequest(waehlerverzeichnisNummer, wahlID, wahlbezirkID, wahlbezirkID))
           .andExpect(status().isBadRequest());
     }
 
     @Test
     void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
 
       mockMvc
-          .perform(createGetRequest(waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID + "sth"))
+          .perform(
+              createGetRequest(
+                  waehlerverzeichnisNummer, wahlID, wahlbezirkID, wahlbezirkID + "sth"))
           .andExpect(status().isForbidden());
     }
 
     private MockHttpServletRequestBuilder createGetRequest(
         final Long waehlerverzeichnisNummer,
+        final String wahlID,
         final String wahlbezirkID,
         final String claimWahlbezirkID) {
       return MockMvcRequestBuilders.get(
               "/businessActions/stimmabgabevermerke/"
                   + wahlbezirkID
+                  + "/"
+                  + wahlID
                   + "/"
                   + waehlerverzeichnisNummer)
           .with(
@@ -142,17 +141,13 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Test
     void should_persistData_when_dataIsSent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val expectedEntity =
-          new Stimmabgabevermerke(
-              id,
-              anzahlBlaetter,
-              Set.of(
-                  createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
-                  createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
           stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
@@ -160,7 +155,8 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
       mockMvc
           .perform(
-              createPostRequest(waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID, requestBody))
+              createPostRequest(
+                  waehlerverzeichnisNummer, wahlID, wahlbezirkID, wahlbezirkID, requestBody))
           .andExpect(status().isOk());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE);
@@ -178,28 +174,19 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     void should_replaceExistingData_when_dataIsSent() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
       val wahlID = "wahlID";
 
       val entityToReplace =
-          new Stimmabgabevermerke(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-              anzahlBlaetter + 1,
-              Set.of(
-                  Testdaten.Wahldaten.createEntity(
-                      wahlbezirkID, wahlID, waehlerverzeichnisNummer)));
+          Testdaten.Stimmabgabevermerke.createEntity(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE);
       stimmabgabevermerkeRepository.save(entityToReplace);
 
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val expectedEntity =
-          new Stimmabgabevermerke(
-              id,
-              anzahlBlaetter,
-              Set.of(
-                  createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
-                  createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
           stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
@@ -207,7 +194,8 @@ public class StimmabgabevermerkeControllerIntegrationTest {
 
       mockMvc
           .perform(
-              createPostRequest(waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID, requestBody))
+              createPostRequest(
+                  waehlerverzeichnisNummer, wahlID, wahlbezirkID, wahlbezirkID, requestBody))
           .andExpect(status().isOk());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE);
@@ -226,7 +214,7 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Test
     void should_returnBadRequest_when_requestIsInvalid() throws Exception {
       mockMvc
-          .perform(createPostRequest(0L, " ", "wahlbezirkID", null))
+          .perform(createPostRequest(0L, "wahlID", " ", "wahlbezirkID", null))
           .andExpect(status().isBadRequest());
 
       SecurityUtils.runWith(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE);
@@ -236,17 +224,10 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     @Test
     void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val anzahlBlaetter = 4711L;
 
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val expectedEntity =
-          new Stimmabgabevermerke(
-              id,
-              anzahlBlaetter,
-              Set.of(
-                  createWahldaten(wahlbezirkID, "wahlID1", waehlerverzeichnisNummer),
-                  createWahldaten(wahlbezirkID, "wahlID2", waehlerverzeichnisNummer)));
+      val expectedEntity = createWahldaten(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val requestBody =
           stimmabgabevermerkeDTOMapper.toStimmabgabevermerkeDTO(
@@ -254,12 +235,17 @@ public class StimmabgabevermerkeControllerIntegrationTest {
       mockMvc
           .perform(
               createPostRequest(
-                  waehlerverzeichnisNummer, wahlbezirkID, wahlbezirkID + "sth", requestBody))
+                  waehlerverzeichnisNummer,
+                  wahlID,
+                  wahlbezirkID,
+                  wahlbezirkID + "sth",
+                  requestBody))
           .andExpect(status().isForbidden());
     }
 
     private MockHttpServletRequestBuilder createPostRequest(
         final Long waehlerverzeichnisNummer,
+        final String wahlID,
         final String wahlbezirkID,
         final String claimWahlbezirkID,
         final StimmabgabevermerkeDTO requestBody)
@@ -268,12 +254,15 @@ public class StimmabgabevermerkeControllerIntegrationTest {
               "/businessActions/stimmabgabevermerke/"
                   + wahlbezirkID
                   + "/"
+                  + wahlID
+                  + "/"
                   + waehlerverzeichnisNummer)
           .with(csrf())
           .with(
               jwt()
                   .authorities(
                       new SimpleGrantedAuthority(Authorities.SERVICE_SET_STIMMABGABEVERMERKE),
+                      new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_STIMMABGABEVERMERKE),
                       new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE))
                   .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
           .contentType(MediaType.APPLICATION_JSON)
@@ -281,9 +270,9 @@ public class StimmabgabevermerkeControllerIntegrationTest {
     }
   }
 
-  private Wahldaten createWahldaten(
+  private Stimmabgabevermerke createWahldaten(
       final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer) {
-    val emptyWahldaten = new Wahldaten();
+    val emptyWahldaten = new Stimmabgabevermerke();
     val stimmzettel1 = new Stimmzettel();
     stimmzettel1.setAnzahl(20);
     stimmzettel1.setStimmzettelart(Stimmzettelart.KLEIN);

@@ -212,7 +212,8 @@ export const useErgebnismeldungStore = defineStore(storeID, () => {
       }
     } catch (e) {
       throw new Error(
-        `Fehler beim Laden der Begründung für ${wahl.name}. ` + e
+        `Fehler beim Laden der Begründung für ${wahl.name}. ` + e,
+        { cause: e }
       );
     }
   }

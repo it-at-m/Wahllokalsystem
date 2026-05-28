@@ -54,7 +54,7 @@ export function useMonitoringService() {
       );
     } catch (e) {
       logDebug("postWahlbeteiligung failed", e);
-      throw new Error("postWahlbeteiligung failed");
+      throw new Error("postWahlbeteiligung failed", { cause: e });
     }
   }
 

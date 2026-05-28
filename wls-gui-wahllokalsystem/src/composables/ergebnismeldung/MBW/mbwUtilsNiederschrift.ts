@@ -157,7 +157,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   }
 
   function _getSchliessungsuhrzeit() {
-    let schliessungsuhrzeitInHhMm = [];
+    let schliessungsuhrzeitInHhMm;
     if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
       schliessungsuhrzeitInHhMm = toHhMm(
         schliessungsuhrzeitState.value.schliessungsuhrzeit

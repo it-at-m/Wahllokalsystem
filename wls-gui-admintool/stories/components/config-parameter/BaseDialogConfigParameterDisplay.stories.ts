@@ -1,7 +1,7 @@
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 import { ref } from "vue";
 import { VBtn } from "vuetify/components";
 

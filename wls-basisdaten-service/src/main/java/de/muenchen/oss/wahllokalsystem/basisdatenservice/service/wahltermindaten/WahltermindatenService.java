@@ -141,10 +141,7 @@ public class WahltermindatenService {
     val searchedWahl =
         wahlen.stream()
             .filter(wahl -> wahlbezirk.getWahlnummer().equals(wahl.nummer()))
-            .findFirst()
-            .orElse(null);
-    if (null != searchedWahl) {
-      wahlbezirk.setWahlID(searchedWahl.wahlID());
-    }
+            .findFirst();
+    searchedWahl.ifPresent(wahlModel -> wahlbezirk.setWahlID(wahlModel.wahlID()));
   }
 }

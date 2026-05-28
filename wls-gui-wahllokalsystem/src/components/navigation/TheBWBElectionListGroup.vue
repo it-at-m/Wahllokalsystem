@@ -81,6 +81,7 @@ defineProps({
 
 const { routeWithName } = useNavigationUtils();
 const {
+  areAllElectionsFinished,
   isWahlumgebungErfasst,
   isWahleroeffnungErfasst,
   isWahlbriefeErfassenErfasst,
@@ -88,5 +89,4 @@ const {
   isWahlvorstandErfasst,
   isWahlbriefzulassungErfasst,
 } = storeToRefs(useWorkflowStore());
-const { areAllElectionsFinished } = useWorkflowStore();
 </script>

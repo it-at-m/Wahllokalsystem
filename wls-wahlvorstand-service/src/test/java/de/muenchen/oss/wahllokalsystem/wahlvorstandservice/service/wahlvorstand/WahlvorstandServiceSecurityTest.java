@@ -95,6 +95,112 @@ public class WahlvorstandServiceSecurityTest {
   }
 
   @Nested
+  class GetFallbackWahlvorstand {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.getFallbackWahlvorstand(wahlbezirkID));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getFallbackWahlvorstand(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.getFallbackWahlvorstand(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+    }
+  }
+
+  @Nested
+  class UpdateWahlvorstand {
+
+    @Test
+    void should_notThrowException_when_givenAllAuthorities() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> unitUnderTest.updateWahlvorstand(wahlbezirkID));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      val wahlbezirkID = "wahlbezirkID";
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.updateWahlvorstand(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyAuthorityMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+
+      val wahlbezirkID = "wahlbezirkID";
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.updateWahlvorstand(wahlbezirkID))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_UPDATE_WAHLVORSTAND);
+    }
+  }
+
+  @Nested
   class PostWahlvorstand {
 
     @Test
@@ -110,6 +216,21 @@ public class WahlvorstandServiceSecurityTest {
 
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandModel));
+    }
+
+    @Test
+    void should_throwAccessDeniedException_when_bezirkIDPermissionEvaluatorReturnsFalse() {
+      val wahlbezirkID = "wahlbezirkID";
+      val mockedWahlvorstandModel = TestDataFactory.CreateWahlvorstandModel.withData();
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_POST_WAHLVORSTAND);
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.postWahlvorstand(mockedWahlvorstandModel))
+          .isInstanceOf(AccessDeniedException.class);
     }
 
     @ParameterizedTest(name = "{index} - {1} missing")

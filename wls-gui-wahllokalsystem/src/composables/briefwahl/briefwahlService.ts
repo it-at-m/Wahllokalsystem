@@ -66,7 +66,7 @@ export function useBriefwahlService() {
         addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
       }
       logDebug(errorMessage, e);
-      throw new Error("Get beanstandete Wahlbriefe Failed");
+      throw new Error("Get beanstandete Wahlbriefe Failed", { cause: e });
     }
   }
 
@@ -108,7 +108,7 @@ export function useBriefwahlService() {
         "Die beanstandeten Wahlbriefe konnten nicht gespeichert werden.";
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
-      throw new Error("Post beanstandete Wahlbriefe Failed");
+      throw new Error("Post beanstandete Wahlbriefe Failed", { cause: e });
     }
   }
 

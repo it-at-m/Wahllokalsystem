@@ -63,7 +63,7 @@ export function useTaskListService() {
   const { createTasks: createWahlbriefeTasks } = useWahlbriefeTaskFactory();
   const { createTasks: createBeanstandeteWahlbriefeTask } =
     useBeanstandeteWahlbriefeTaskFactory();
-  const { createTasks: createMBWTasks } =
+  const { createTasks: createMbwWahlvorschlaegeAndErgebnisseTasks } =
     useMBWWahlvorschlaegeAndErgebnisseTaskFactory();
 
   function initTasklist() {
@@ -90,7 +90,7 @@ export function useTaskListService() {
       ...createWahlvorbereitungTasks(taskFactoryData),
       ...createWahlbriefeTasks(taskFactoryData),
       ...createBeanstandeteWahlbriefeTask(taskFactoryData),
-      ...createMBWTasks(taskFactoryData),
+      ...createMbwWahlvorschlaegeAndErgebnisseTasks(taskFactoryData),
     ];
   }
 

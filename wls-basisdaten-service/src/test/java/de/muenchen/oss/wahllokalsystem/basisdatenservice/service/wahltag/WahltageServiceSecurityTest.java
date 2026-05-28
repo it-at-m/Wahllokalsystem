@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.Wahltag;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahltag.WahltagRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.WahltagDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.utils.Authorities;
@@ -112,6 +113,40 @@ public class WahltageServiceSecurityTest {
       wahltag3.setTag(LocalDate.now().plusMonths(1));
 
       return Set.of(wahltag3, wahltag2, wahltag1);
+    }
+  }
+
+  @Nested
+  class GetWahltagByID {
+
+    @Test
+    void should_grantAccess_when_allRequiredAuthoritiesAreGiven() {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG);
+      val savedWahltag =
+          wahltagRepository.save(new Wahltag("wahltagID", LocalDate.now(), "Beschreibung", "0"));
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLTAGBYID);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahltageService.getWahltagByID(savedWahltag.getWahltagID()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_throwAccessDeniedException_when_anyRequiredAuthorityIsMissing(
+        final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_WAHLTAG);
+      val savedWahltag =
+          wahltagRepository.save(new Wahltag("wahltagID", LocalDate.now(), "Beschreibung", "0"));
+
+      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+      Assertions.assertThatException()
+          .isThrownBy(() -> wahltageService.getWahltagByID(savedWahltag.getWahltagID()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    public static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAHLTAGBYID);
     }
   }
 }

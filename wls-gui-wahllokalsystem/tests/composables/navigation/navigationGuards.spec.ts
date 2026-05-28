@@ -165,8 +165,10 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished", () => {
-    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalse", () => {
+    it("should_returnFalse_when_statusIsWahlvorstandErfasstIsFalseAndAllElectionsFinishedIsFalse", () => {
       useWorkflowStore().isWahlvorstandErfasst = false;
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().areAllElectionsFinished = false;
       const result =
         permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
           DUMMY_TO,
@@ -176,8 +178,36 @@ describe("navigationGuards.ts", () => {
       expect(result).toStrictEqual(false);
     });
 
-    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrue", () => {
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsFalseAndAllElectionsFinishedIsTrue", () => {
+      useWorkflowStore().isWahlvorstandErfasst = false;
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().areAllElectionsFinished = true;
+      const result =
+        permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
+          DUMMY_TO,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrueAndAllElectionsFinishedIsTrue", () => {
       useWorkflowStore().isWahlvorstandErfasst = true;
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().areAllElectionsFinished = true;
+      const result =
+        permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
+          DUMMY_TO,
+          DUMMY_FROM,
+          DUMMY_NEXT_GUARD
+        );
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnTrue_when_statusIsWahlvorstandErfasstIsTrueAndAllElectionsFinishedIsFalse", () => {
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      // @ts-expect-error: cannot set readonly
+      useWorkflowStore().areAllElectionsFinished = false;
       const result =
         permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished(
           DUMMY_TO,

@@ -32,7 +32,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksBeanstandeteWahlbriefe: vi.fn(),
   createTasksWahlvorschlaege: vi.fn(),
   createTasksErgebnisse: vi.fn(),
-  createMbwTasks: vi.fn(),
+  createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
 }));
 
 vi.mock(
@@ -211,7 +211,7 @@ vi.mock(
     useMBWWahlvorschlaegeAndErgebnisseTaskFactory: vi
       .fn()
       .mockImplementation(() => ({
-        createTasks: mockDefinitions.createMbwTasks,
+        createTasks: mockDefinitions.createMbwWahlvorschlaegeAndErgebnisseTasks,
       })),
   })
 );
@@ -484,12 +484,14 @@ describe("taskListService.ts", () => {
           callback: () => Promise.resolve(),
         },
       ]);
-      mockDefinitions.createMbwTasks.mockReturnValue([
-        {
-          name: "MBW Tasks",
-          callback: () => Promise.resolve(),
-        },
-      ]);
+      mockDefinitions.createMbwWahlvorschlaegeAndErgebnisseTasks.mockReturnValue(
+        [
+          {
+            name: "MBW Tasks",
+            callback: () => Promise.resolve(),
+          },
+        ]
+      );
     }
 
     function _expectAllTaskFactoriesHaveBeenCalled() {

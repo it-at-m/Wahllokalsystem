@@ -1,12 +1,12 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.val;
@@ -38,18 +38,33 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_returnOptionalWithData_when_dataIsFoundInRepository() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
-      val mockedRepoResponse = new Stimmabgabevermerke(id, 0, Collections.emptySet());
-      val mockedRepoResponseAsModel = new StimmabgabevermerkeModel(id, 0L, Collections.emptySet());
+      val mockedRepoResponse =
+          new Stimmabgabevermerke(
+              new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                  wahlbezirkID, wahlID, waehlerverzeichnisNummer),
+              Collections.emptySet(),
+              Collections.emptySet());
+      val mockedRepoResponseAsModel =
+          new StimmabgabevermerkeModel(
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Collections.emptySet(),
+              Collections.emptySet());
 
       Mockito.when(stimmabgabevermerkeRepository.findById(id))
           .thenReturn(Optional.of(mockedRepoResponse));
       Mockito.when(stimmabgabevermerkeModelMapper.toModel(mockedRepoResponse))
           .thenReturn(mockedRepoResponseAsModel);
 
-      val result = unitUnderTest.getStimmabgabevermerke(id);
+      val result =
+          unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Assertions.assertThat(result).isEqualTo(Optional.of(mockedRepoResponseAsModel));
     }
@@ -57,12 +72,16 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_returnEmptyOptional_when_noDataIsFoundInRepository() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Mockito.when(stimmabgabevermerkeRepository.findById(id)).thenReturn(Optional.empty());
 
-      val result = unitUnderTest.getStimmabgabevermerke(id);
+      val result =
+          unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Assertions.assertThat(result).isEmpty();
     }
@@ -70,8 +89,11 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_callValidatorWithId_when_methodIsCalled() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       val mockedFachlicheWlsExceptionForIdValidation =
           FachlicheWlsException.withCode("000").buildWithMessage("");
@@ -80,7 +102,7 @@ class StimmabgabevermerkeServiceTest {
                   ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedFachlicheWlsExceptionForIdValidation);
 
-      unitUnderTest.getStimmabgabevermerke(id);
+      unitUnderTest.getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
 
       Mockito.verify(stimmabgabevermerkeValidator)
           .validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
@@ -94,9 +116,18 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_callValidators_when_calledWithParameters() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val stimmabgabevermerke = new StimmabgabevermerkeModel(id, 0L, Collections.emptySet());
+      val id =
+          new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+              wahlbezirkID, wahlID, waehlerverzeichnisNummer);
+      val stimmabgabevermerke =
+          new StimmabgabevermerkeModel(
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Collections.emptySet(),
+              Collections.emptySet());
 
       val mockedFachlicheWlsExceptionForIdValidation =
           FachlicheWlsException.withCode("000").buildWithMessage("");
@@ -105,7 +136,7 @@ class StimmabgabevermerkeServiceTest {
                   ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedFachlicheWlsExceptionForIdValidation);
 
-      unitUnderTest.postStimmabgabevermerke(id, stimmabgabevermerke);
+      unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke);
 
       Mockito.verify(stimmabgabevermerkeValidator)
           .validStimmabgabevermerkeOrThrow(stimmabgabevermerke);
@@ -117,15 +148,21 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_saveMappedDataInRepository_when_stimmabgabevermerkeAreGiven() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val stimmabgabevermerke = new StimmabgabevermerkeModel(id, 0L, Collections.emptySet());
+      val stimmabgabevermerke =
+          new StimmabgabevermerkeModel(
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Collections.emptySet(),
+              Collections.emptySet());
 
-      val mockedMappedModelAsEntity = new Stimmabgabevermerke(id, 0L, Collections.emptySet());
+      val mockedMappedModelAsEntity = new Stimmabgabevermerke();
       Mockito.when(stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerke))
           .thenReturn(mockedMappedModelAsEntity);
 
-      unitUnderTest.postStimmabgabevermerke(id, stimmabgabevermerke);
+      unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke);
 
       Mockito.verify(stimmabgabevermerkeRepository).save(mockedMappedModelAsEntity);
     }
@@ -133,11 +170,17 @@ class StimmabgabevermerkeServiceTest {
     @Test
     void should_throwTechnischeWlsException_when_repositoryThrowsException() {
       val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 1L;
-      val id = new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
-      val stimmabgabevermerke = new StimmabgabevermerkeModel(id, 0L, Collections.emptySet());
+      val stimmabgabevermerke =
+          new StimmabgabevermerkeModel(
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              Collections.emptySet(),
+              Collections.emptySet());
 
-      val mockedMappedModelAsEntity = new Stimmabgabevermerke(id, 0L, Collections.emptySet());
+      val mockedMappedModelAsEntity = new Stimmabgabevermerke();
       val mockedRepositoryException = new RuntimeException("saving failed");
       val mockedThrowWlsException = TechnischeWlsException.withCode("").buildWithMessage("");
 
@@ -151,7 +194,7 @@ class StimmabgabevermerkeServiceTest {
           .thenReturn(mockedThrowWlsException);
 
       Assertions.assertThatThrownBy(
-              () -> unitUnderTest.postStimmabgabevermerke(id, stimmabgabevermerke))
+              () -> unitUnderTest.postStimmabgabevermerke(stimmabgabevermerke))
           .isSameAs(mockedThrowWlsException);
     }
   }

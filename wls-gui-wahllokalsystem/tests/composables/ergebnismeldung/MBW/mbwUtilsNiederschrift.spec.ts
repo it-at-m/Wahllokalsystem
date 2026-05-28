@@ -115,7 +115,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const { prepareBWerte } = useBWerteTestDataFactory();
   const { prepareAWerte } = useAWerteTestDataFactory();
   const { createWahlbriefdaten } = useWahlbriefdatenTestDataFactory();
-  const { prepareStimmabgabevermerke, prepareWahldaten } =
+  const { prepareStimmabgabevermerke } =
     useStimmabgabevermerkeTestDataFactory();
   const { prepareErgebnisse } = useErgebnisseTestDataFactory();
   const { createStatus } = useStatusTestDataFactory();
@@ -176,7 +176,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       schliessungsuhrzeit;
 
     const mockedAnzahlStimmzettelKlein = 10;
-    const mockedWahldaten = prepareWahldaten()
+    const mockedStimmabgabevermerke = prepareStimmabgabevermerke()
       .wahlID(wahlID)
       .waehlerverzeichnisNummer(mockedWaehlerverzeichnisNummer)
       .eingenommeneWahlscheine(
@@ -184,9 +184,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
           [StimmzettelStimmzettelartEnum.Klein, mockedAnzahlStimmzettelKlein],
         ])
       )
-      .build();
-    const mockedStimmabgabevermerke = prepareStimmabgabevermerke()
-      .wahldaten([mockedWahldaten])
       .build();
     mockDefinitions.getStimmabgabevermerke.mockReturnValue(
       mockedStimmabgabevermerke
@@ -456,7 +453,8 @@ describe("mbwUtilsNiederschrift.ts", () => {
     wahlbezirkStore.wahlbriefDatenState.wahlbriefDaten = mockedWahlbriefdaten;
 
     const mockedAnzahlStimmzettelKlein = 10;
-    const mockedWahldaten = prepareWahldaten()
+
+    const mockedStimmabgabevermerke = prepareStimmabgabevermerke()
       .wahlID(wahlID)
       .waehlerverzeichnisNummer(mockedWaehlerverzeichnisNummer)
       .eingenommeneWahlscheine(
@@ -464,9 +462,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
           [StimmzettelStimmzettelartEnum.Klein, mockedAnzahlStimmzettelKlein],
         ])
       )
-      .build();
-    const mockedStimmabgabevermerke = prepareStimmabgabevermerke()
-      .wahldaten([mockedWahldaten])
       .build();
     mockDefinitions.getStimmabgabevermerke.mockReturnValue(
       mockedStimmabgabevermerke

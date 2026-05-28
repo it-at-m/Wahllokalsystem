@@ -7,12 +7,12 @@
 
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="pl-0 font-weight-bold dynamic-column"
           >
             {{
               wahlenActions.getWahlNameOrBlankStringById(
-                stimmabgabevermerk.wahldaten[0].wahlID
+                stimmabgabevermerk.wahlID
               )
             }}
           </th>
@@ -25,7 +25,7 @@
 
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="pl-0"
           >
             <base-number-input
@@ -34,13 +34,13 @@
               :model-value="
                 getMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                  stimmabgabevermerk.wahldaten[0]
+                  stimmabgabevermerk
                 )
               "
               @update:model-value="
                 setMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                  stimmabgabevermerk.wahldaten[0],
+                  stimmabgabevermerk,
                   $event
                 )
               "
@@ -52,7 +52,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 
 import { storeToRefs } from "pinia";
 
@@ -68,20 +68,20 @@ const { wahlenActions } = useWahlenStore();
 
 function getMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
-  wahldaten: Wahldaten
+  stimmabgabevermerke: Stimmabgabevermerke
 ) {
-  return wahldaten.eingenommeneWahlscheine.get(key);
+  return stimmabgabevermerke.eingenommeneWahlscheine.get(key);
 }
 
 function setMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
-  wahldaten: Wahldaten,
+  stimmabgabevermerke: Stimmabgabevermerke,
   value: number | null | undefined
 ) {
   if (value !== null && value !== undefined) {
-    wahldaten.eingenommeneWahlscheine.set(key, value);
+    stimmabgabevermerke.eingenommeneWahlscheine.set(key, value);
   } else {
-    wahldaten.eingenommeneWahlscheine.delete(key);
+    stimmabgabevermerke.eingenommeneWahlscheine.delete(key);
   }
 }
 </script>

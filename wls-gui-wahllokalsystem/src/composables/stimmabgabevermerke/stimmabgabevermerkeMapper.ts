@@ -3,12 +3,10 @@ import type {
   StimmabgabevermerkeDTO,
   StimmzettelDTO,
   VermerkDTO,
-  WahldatenDTO,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 import type { Stimmzettel } from "@/types/stimmabgabevermerke/Stimmzettel.ts";
 import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
 
 import {
   EingenommenerWahlscheinDTOStimmzettelartEnum,
@@ -20,54 +18,26 @@ import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/Stimm
 export function useStimmabgabevermerkeMapper() {
   function toModel(dto: StimmabgabevermerkeDTO): Stimmabgabevermerke {
     return {
-      anzahlBlaetter: dto.anzahlBlaetter,
+      eingenommeneWahlscheine: _toEingenommeneWahlscheineModel(
+        dto.eingenommeneWahlscheine
+      ),
+      vermerke: _toVermerkModel(dto.vermerke),
       waehlerverzeichnisNummer: dto.waehlerverzeichnisNummer,
+      wahlID: dto.wahlID,
       wahlbezirkID: dto.wahlbezirkID,
-      wahldaten: _toWahldatenModel(dto.wahldaten),
     };
   }
 
   function toDto(model: Stimmabgabevermerke): StimmabgabevermerkeDTO {
     return {
-      anzahlBlaetter: model.anzahlBlaetter,
-      waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
       wahlbezirkID: model.wahlbezirkID,
-      wahldaten: _toWahldatenDTO(model.wahldaten),
+      eingenommeneWahlscheine: _toEingenommeneWahlscheinDTO(
+        model.eingenommeneWahlscheine
+      ),
+      vermerke: _toVermerkDTO(model.vermerke),
+      waehlerverzeichnisNummer: model.waehlerverzeichnisNummer,
+      wahlID: model.wahlID,
     };
-  }
-
-  function _toWahldatenModel(dto: WahldatenDTO[]): Wahldaten[] {
-    const arrayOfWahldaten: Wahldaten[] = [];
-    dto.forEach((wahldatenDto) => {
-      arrayOfWahldaten.push({
-        eingenommeneWahlscheine: _toEingenommeneWahlscheineModel(
-          wahldatenDto.eingenommeneWahlscheine
-        ),
-        vermerke: _toVermerkModel(wahldatenDto.vermerke),
-        waehlerverzeichnisNummer: wahldatenDto.waehlerverzeichnisNummer,
-        wahlID: wahldatenDto.wahlID,
-        wahlbezirkID: wahldatenDto.wahlbezirkID,
-      });
-    });
-
-    return arrayOfWahldaten;
-  }
-
-  function _toWahldatenDTO(model: Wahldaten[]): WahldatenDTO[] {
-    const arrayOfWahldatenDTO: WahldatenDTO[] = [];
-
-    model.forEach((wahldaten) => {
-      arrayOfWahldatenDTO.push({
-        wahlbezirkID: wahldaten.wahlbezirkID,
-        eingenommeneWahlscheine: _toEingenommeneWahlscheinDTO(
-          wahldaten.eingenommeneWahlscheine
-        ),
-        vermerke: _toVermerkDTO(wahldaten.vermerke),
-        waehlerverzeichnisNummer: wahldaten.waehlerverzeichnisNummer,
-        wahlID: wahldaten.wahlID,
-      });
-    });
-    return arrayOfWahldatenDTO;
   }
 
   function _toEingenommeneWahlscheineModel(dto: EingenommenerWahlscheinDTO[]) {

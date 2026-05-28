@@ -1,3 +1,5 @@
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+
 export const StapelArtEnum = {
   ObwA: "OBW_A",
   ObwBLeer: "OBW_B_LEER",
@@ -18,3 +20,9 @@ export const StapelArtEnum = {
 } as const;
 
 export type StapelArtEnum = (typeof StapelArtEnum)[keyof typeof StapelArtEnum];
+
+export function getStapelForWahlart(wahlart: WahlWahlartEnum): StapelArtEnum[] {
+  return Object.values(StapelArtEnum).filter((value) =>
+    value.includes(wahlart)
+  );
+}

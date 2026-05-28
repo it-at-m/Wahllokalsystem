@@ -54,7 +54,7 @@ class WahlenServiceSecurityTest {
 
     private static Stream<Arguments> getMissingAuthoritiesVariations() {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_UPDATEWAHLEN);
+          Authorities.ALL_AUTHORITIES_GETWAHLEN);
     }
   }
 

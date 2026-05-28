@@ -1,7 +1,7 @@
 import type { Task } from "@/types/tasks/Task.ts";
 
-import { spyOn } from "@storybook/test";
 import { useIndexDBValueTestDataFactory } from "@tests/utils/indexDB/IndexDBValueTestDataFactory.ts";
+import { spyOn } from "storybook/test";
 import {
   afterAll,
   afterEach,

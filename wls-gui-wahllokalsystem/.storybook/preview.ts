@@ -1,6 +1,6 @@
-import type { Preview } from "@storybook/vue3";
+import type { Preview } from "@storybook/vue3-vite";
 
-import { setup } from "@storybook/vue3";
+import { setup } from "@storybook/vue3-vite";
 import { initialize, mswLoader } from "msw-storybook-addon";
 
 import { registerPlugins } from "../src/plugins";

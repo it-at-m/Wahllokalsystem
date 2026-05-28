@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 
 import BaseTableRowManager from "@/components/common/tables/BaseTableRowManager.vue";
 import { useRules } from "@/composables/common/rules.ts";

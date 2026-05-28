@@ -55,7 +55,7 @@ export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
 
         await Promise.all(loadingPromises);
 
-        //Prüfen ob StapelMBW_BC vollständig ist
+        //Prüfen ob StapelMBW_BC vollständig ist, um den Navigationsworkflow korrekt setzen zu können
         const ergebnisseForStapelBC =
           ergebnismeldungsStore.getErgebnisseByWahlIdAndStapelartOrUndefined(
             taskFactoryMetaData.wahlID,

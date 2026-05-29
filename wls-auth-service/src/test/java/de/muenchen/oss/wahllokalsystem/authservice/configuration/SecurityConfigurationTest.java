@@ -89,6 +89,14 @@ class SecurityConfigurationTest {
     }
 
     @Test
+    @WithMockUser
+    void should_denyAccess_when_accessingUnlockUserAuthorizedButWithoutRequiredAuthority()
+        throws Exception {
+      api.perform(post("/user/username/unlock").with(csrf()))
+          .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     @WithMockUser(authorities = "ROLE_ADMIN_ADMIN")
     void should_permitAccess_when_accessingUnlockUserAuthorized() throws Exception {
       api.perform(post("/user/username/unlock").with(csrf())).andExpect(status().isOk());
@@ -118,6 +126,14 @@ class SecurityConfigurationTest {
     }
 
     @Test
+    @WithMockUser
+    void should_denyAccess_when_accessingInvalidateSessionAuthorizedButWithoutRequiredAuthority()
+        throws Exception {
+      api.perform(post("/oauthsessions/sessionID/invalidate").with(csrf()))
+          .andExpect(status().isInternalServerError());
+    }
+
+    @Test
     @WithMockUser(authorities = "ROLE_ADMIN_ADMIN")
     void should_permitAccess_when_accessingInvalidateSessionAuthorized() throws Exception {
       api.perform(post("/oauthsessions/sessionID/invalidate").with(csrf()))
@@ -128,6 +144,13 @@ class SecurityConfigurationTest {
     @WithAnonymousUser
     void should_denyAccess_when_accessingOauthSessionsUnauthorized() throws Exception {
       api.perform(get("/oauthsessions/")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_denyAccess_when_accessingOauthSessionsAuthorizedButWithoutRequiredAuthority()
+        throws Exception {
+      api.perform(get("/oauthsessions/")).andExpect(status().isInternalServerError());
     }
 
     @Test

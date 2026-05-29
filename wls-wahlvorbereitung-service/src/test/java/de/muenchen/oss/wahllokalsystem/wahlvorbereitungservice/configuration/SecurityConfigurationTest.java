@@ -38,6 +38,31 @@ public class SecurityConfigurationTest {
   @Autowired MockMvc mockMvc;
 
   @Test
+  void should_returnUnauthorized_when_accessingRoot() throws Exception {
+    mockMvc.perform(get("/")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnUnauthorized_when_accessingActuator() throws Exception {
+    mockMvc.perform(get("/actuator")).andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void should_returnOk_when_accessingActuatorHealth() throws Exception {
+    mockMvc.perform(get("/actuator/health")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnOk_when_accessingActuatorInfo() throws Exception {
+    mockMvc.perform(get("/actuator/info")).andExpect(status().isOk());
+  }
+
+  @Test
+  void should_returnOk_when_accessingActuatorMetrics() throws Exception {
+    mockMvc.perform(get("/actuator/metrics")).andExpect(status().isOk());
+  }
+
+  @Test
   void should_returnOk_when_accessingApiDocs() throws Exception {
     mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk());
   }

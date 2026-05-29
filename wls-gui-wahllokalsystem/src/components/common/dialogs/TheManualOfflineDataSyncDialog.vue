@@ -89,6 +89,12 @@ const isDialogVisible = defineModel("modelValue", {
 const dirtyTasks = ref(numberOfTasksToRun.value);
 const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
 
+// needed, to get initial dirtyTasks correct
+watch(
+  () => numberOfTasksToRun.value,
+  () => (dirtyTasks.value = numberOfTasksToRun.value),
+  { once: true }
+);
 watch(
   () => isDialogVisible.value,
   async () => {

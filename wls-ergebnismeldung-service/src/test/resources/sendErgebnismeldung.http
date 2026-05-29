@@ -1,4 +1,4 @@
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_all_uwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_A | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_A
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -27,7 +27,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET | user wls_all_uwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_B_UNGEKENNZEICHNET | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_B_UNGEKENNZEICHNET
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -56,7 +56,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG | user wls_all_uwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_GUELTIG | wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_GUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -85,7 +85,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG | user wls_all_uwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel EUW_C_UNGUELTIG | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/EUW_C_UNGUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -114,7 +114,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### POST stimmabgabevermerke | user wls_all_uwb
+### POST stimmabgabevermerke | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -154,7 +154,7 @@ Content-Type: application/json
   ]
 }
 
-### Send Ergebnismeldung | user wls_all_uwb
+### Send Ergebnismeldung | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171/1/V1/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -182,7 +182,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_B | user wls_all_bwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_B | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_B
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -204,7 +204,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_D_UNGUELTIG | user wls_all_bwb
+### Initialisiere Ergebnisse - Ergebnisse Stapel SRW_BAW_D_UNGUELTIG | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ergebnisse/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/SRW_BAW_D_UNGUELTIG
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -226,7 +226,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   ]
 }
 
-### POST stimmabgabevermerke | user wls_all_bwb
+### POST stimmabgabevermerke | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -266,7 +266,7 @@ Content-Type: application/json
   ]
 }
 
-### Send Ergebnismeldung | user wls_all_bwb
+### Send Ergebnismeldung | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/sendErgebnismeldung/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/1/V1/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

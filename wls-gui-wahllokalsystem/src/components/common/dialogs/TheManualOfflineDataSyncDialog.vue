@@ -32,7 +32,7 @@
         class="mr-2"
         size="x-small"
       />
-      Alle Daten sind Aktuell.
+      Alle Daten sind aktuell.
     </div>
     <div v-else>
       <base-progress-linear

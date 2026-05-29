@@ -169,7 +169,9 @@ describe("dataSyncer.ts", () => {
         new Error("mocked error while running tasks")
       );
 
-      await unitUnderTest.synchronizeOfflineData();
+      await expect(
+        unitUnderTest.synchronizeOfflineData()
+      ).resolves.toBeUndefined();
 
       expect(isOfflineDataSyncingSpy.mock.calls).toStrictEqual([
         [true],

@@ -1,16 +1,29 @@
 package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
 
 import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
+import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisService;
+import java.time.LocalDateTime;
+import lombok.val;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(
@@ -22,6 +35,10 @@ import org.springframework.test.web.servlet.MockMvc;
 class SecurityConfigurationTest {
 
   @Autowired MockMvc api;
+
+  @Autowired ObjectMapper objectMapper;
+
+  @MockitoBean EreignisService ereignisService;
 
   @Test
   void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
@@ -56,5 +73,59 @@ class SecurityConfigurationTest {
   @Test
   void should_returnStatusOk_when_accessingUnsecuredResourceSwaggerUi() throws Exception {
     api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class Ereignis {
+
+    private static final String URL = "/businessActions/ereignisse/wahlbezirkID";
+
+    @Nested
+    class GetEreignis {
+
+      @Test
+      @WithAnonymousUser
+      void should_denyAccess_when_accessingAnonymous() throws Exception {
+        api.perform(get(URL)).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_permAccess_when_accessingAuthenticated() throws Exception {
+        api.perform(get(URL)).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class PostErgeignis {
+
+      @Test
+      @WithAnonymousUser
+      void should_denyAccess_when_accessingAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new EreignisDTO("beschreibung", LocalDateTime.now(), EreignisartDTO.VORFALL));
+        api.perform(
+                post(URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBodyAsString))
+            .andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_permAccess_when_accessingAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new EreignisDTO("beschreibung", LocalDateTime.now(), EreignisartDTO.VORFALL));
+        api.perform(
+                post(URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBodyAsString))
+            .andExpect(status().isOk());
+      }
+    }
   }
 }

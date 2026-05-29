@@ -141,4 +141,11 @@ public class Authorities {
       ArrayUtils.addAll(
           ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
           ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
+
+  public static final String[] ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_BWB =
+      ArrayUtils.addAll(
+          ArrayUtils.addAll(
+              new String[] {SERVICE_UPDATE_SENDUNGSZEITEN},
+              ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE),
+          ALL_AUTHORITIES_GET_STATUS);
 }

@@ -86,38 +86,38 @@ const isDialogVisible = defineModel("modelValue", {
   required: true,
 });
 
-const dirtyTasks = ref(numberOfTasksToRun.value);
+const dirtyTasks = ref(0);
 const hasDirtyTasks = computed(() => dirtyTasks.value > 0);
 
-// needed, to get initial dirtyTasks correct
-watch(
-  () => numberOfTasksToRun.value,
-  () => (dirtyTasks.value = numberOfTasksToRun.value),
-  { once: true }
-);
 watch(
   () => isDialogVisible.value,
   async () => {
-    if (isDialogVisible.value) {
-      await initiateOfflineDataSync();
-    }
+    if (!isDialogVisible.value) return;
+
+    await updateDirtyTasks();
+    await synchronizeData();
   }
 );
 
-async function initiateOfflineDataSync() {
-  if (!isOfflineDataSyncing.value) {
-    await synchronizeOfflineData();
-    const openTasks = await getSyncTasks();
-    dirtyTasks.value = openTasks.length;
-  }
+async function updateDirtyTasks() {
+  const openTasks = await getSyncTasks();
+  dirtyTasks.value = openTasks.length;
+}
+
+async function synchronizeData() {
+  if (isOfflineDataSyncing.value) return;
+
+  await synchronizeOfflineData();
+  await updateDirtyTasks();
 }
 
 function onCancelClicked(): void {
   isDialogVisible.value = false;
 }
+
 async function onConfirmClicked() {
   if (hasDirtyTasks.value) {
-    await initiateOfflineDataSync();
+    await synchronizeData();
   } else {
     isDialogVisible.value = false;
   }

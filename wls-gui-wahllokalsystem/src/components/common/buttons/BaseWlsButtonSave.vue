@@ -1,7 +1,9 @@
 <template>
   <base-text-button
     prepend-icon="$save"
-    :disabled="areAllElectionsFinished || disabled"
+    :disabled="
+      disabled || (!enabledAfterElectionsFinished && areAllElectionsFinished)
+    "
     data-test="buttonSave"
     :active="active"
   >
@@ -36,6 +38,13 @@ defineProps({
   active: {
     type: Boolean,
     default: true,
+  },
+  /**
+   * Is the Button after Elections interactable
+   */
+  enabledAfterElectionsFinished: {
+    type: Boolean,
+    default: false,
   },
 });
 

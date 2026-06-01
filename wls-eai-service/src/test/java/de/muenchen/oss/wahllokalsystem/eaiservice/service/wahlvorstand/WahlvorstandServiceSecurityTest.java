@@ -10,15 +10,10 @@ import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,7 +30,7 @@ public class WahlvorstandServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLVORSTAND);
 
       Assertions.assertThatException()
           .isThrownBy(
@@ -43,20 +38,13 @@ public class WahlvorstandServiceSecurityTest {
           .isInstanceOf(NotFoundException.class);
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       Assertions.assertThatThrownBy(
               () -> wahlvorstandService.getWahlvorstandForWahlbezirk(UUID.randomUUID().toString()))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
     }
   }
 
@@ -65,7 +53,7 @@ public class WahlvorstandServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
+      SecurityUtils.runWith(Authorities.SERVICE_SAVE_ANWESENHEIT);
 
       val aktualisierung =
           new WahlvorstandsaktualisierungDTO(
@@ -79,11 +67,9 @@ public class WahlvorstandServiceSecurityTest {
           .isInstanceOf(NotFoundException.class);
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       val aktualisierung =
           new WahlvorstandsaktualisierungDTO(
@@ -94,11 +80,6 @@ public class WahlvorstandServiceSecurityTest {
 
       Assertions.assertThatThrownBy(() -> wahlvorstandService.setAnwesenheit(aktualisierung))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORIRITES_SETANWESENHEIT);
     }
   }
 }

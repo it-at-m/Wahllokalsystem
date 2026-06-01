@@ -4,18 +4,22 @@
     <base-workflow-list-item
       v-if="isBWB"
       title="Wahlscheine"
-      :disabled="isWahlscheineDisabled"
-      :subtitle="subtitleWahlscheine"
+      :disabled="isWahlscheineDisabled && !areAllElectionsFinished"
+      :subtitle="areAllElectionsFinished ? '' : subtitleWahlscheine"
       :to="routeWithName(ROUTE_WAHLSCHEINE)"
-      :is-workflow-step-finished="isAnzahlWahlscheineErfasst"
+      :is-workflow-step-finished="
+        isAnzahlWahlscheineErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       v-if="isUWB"
       title="Stimmabgabevermerke"
-      :disabled="isStimmabgabevermerkeDisabled"
-      :subtitle="subtitleStimmabgabevermerke"
+      :disabled="isStimmabgabevermerkeDisabled && !areAllElectionsFinished"
+      :subtitle="areAllElectionsFinished ? '' : subtitleStimmabgabevermerke"
       :to="routeWithName(ROUTE_STIMMABGABEVERMERKE)"
-      :is-workflow-step-finished="isStimmabgabevermerkeErfasst"
+      :is-workflow-step-finished="
+        isStimmabgabevermerkeErfasst || areAllElectionsFinished
+      "
     />
     <the-scores-list-group-selector
       v-for="wahl in wahlenState.wahlen"
@@ -56,6 +60,7 @@ const {
   isWahlhandlungErfasst,
   isStimmabgabevermerkeErfasst,
   isAnzahlWahlscheineErfasst,
+  areAllElectionsFinished,
 } = storeToRefs(useWorkflowStore());
 
 const isStimmabgabevermerkeDisabled = computed(

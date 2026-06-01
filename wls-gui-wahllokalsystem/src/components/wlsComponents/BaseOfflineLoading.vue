@@ -2,23 +2,16 @@
   <v-container>
     <h1 v-if="isLoading">Offline-Daten werden heruntergeladen...</h1>
     <h1 v-else>Offline-Daten wurden heruntergeladen.</h1>
-    <p
-      v-if="currentlyRunningTask"
-      class="my-4"
-    >
-      {{ currentlyRunningTask.name }}
-    </p>
-    <p
-      v-else
-      class="my-4"
-    >
-      Herunterladen der Daten abgeschlossen ({{ numberOfTasksFinished }} /
-      {{ numberOfTasksToRun }})
-    </p>
-    <v-progress-linear
-      :striped="isLoading"
-      :max="numberOfTasksToRun"
-      :model-value="numberOfTasksFinished"
+    <base-progress-linear
+      :titel="
+        currentlyRunningTask
+          ? currentlyRunningTask.name
+          : 'Herunterladen der Daten abgeschlossen'
+      "
+      :is-loading="isLoading"
+      :total="numberOfTasksToRun"
+      :current="numberOfTasksFinished"
+      is-indeterminate-for-first-task
     />
     <base-progress-linear
       titel="Erfolgreich heruntergeladen"

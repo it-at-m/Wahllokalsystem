@@ -9,19 +9,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltag.WahltageService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahltermindaten.WahltermindatenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag.WahlvorschlaegeService;
+import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,6 +45,8 @@ class SecurityConfigurationTest {
 
   @Autowired MockMvc api;
 
+  @Autowired ObjectMapper objectMapper;
+
   @MockitoBean WahlvorschlaegeService wahlvorschlaegeService;
 
   @MockitoBean WahltageService wahltageService;
@@ -49,6 +58,12 @@ class SecurityConfigurationTest {
   @MockitoBean ReferendumvorlagenService referendumvorlagenService;
 
   @MockitoBean WahltermindatenService wahltermindatenService;
+
+  @MockitoBean WahlenService wahlenService;
+
+  @MockitoBean WahlbezirkeService wahlbezirkeService;
+
+  @MockitoBean KopfdatenService kopfdatenService;
 
   @Test
   void should_returnUnauthorized_when_accessingRoot() throws Exception {
@@ -83,6 +98,40 @@ class SecurityConfigurationTest {
   @Test
   void should_returnOk_when_accessingSwaggerUi() throws Exception {
     api.perform(get("/swagger-ui/index.html")).andExpect(status().isOk());
+  }
+
+  @Nested
+  class Kopfdaten {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/kopfdaten/wahlID/wahbezirkID"))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/kopfdaten/wahlID/wahbezirkID")).andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class Wahlbezirke {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/wahlbezirke/wahltagID"))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/wahlbezirke/wahltagID")).andExpect(status().isOk());
+    }
   }
 
   @Nested
@@ -137,7 +186,10 @@ class SecurityConfigurationTest {
     @Test
     @WithAnonymousUser
     void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-      api.perform(post("/businessActions/handbuch/wahlID/UWB").with(csrf()))
+      api.perform(
+              multipart("/businessActions/handbuch/wahlID/UWB")
+                  .file("manual", "content".getBytes())
+                  .with(csrf()))
           .andExpect(status().isUnauthorized());
     }
 
@@ -171,7 +223,10 @@ class SecurityConfigurationTest {
     @Test
     @WithAnonymousUser
     void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
-      api.perform(post("/businessActions/ungueltigews/wahlID/UWB").with(csrf()))
+      api.perform(
+              multipart("/businessActions/ungueltigews/wahlID/UWB")
+                  .file("manual", "content".getBytes())
+                  .with(csrf()))
           .andExpect(status().isUnauthorized());
     }
 
@@ -205,18 +260,71 @@ class SecurityConfigurationTest {
   }
 
   @Nested
-  class Wahltermindaten {
+  class Wahlen {
 
     @Test
     @WithAnonymousUser
     void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/wahlen/wahltagID")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/wahlen/wahltagID")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      val requestBody = new WahlDTO[0];
+      api.perform(
+              post("/businessActions/wahlen/wahltagID")
+                  .with(csrf())
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(requestBody)))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedPost() throws Exception {
+      val requestBody = new WahlDTO[0];
+      api.perform(
+              post("/businessActions/wahlen/wahltagID")
+                  .with(csrf())
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(requestBody)))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingResetWahlenUnauthorizedViaPost() throws Exception {
+      api.perform(post("/businessActions/resetWahlen").with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingResetWahlenAuthorizedPost() throws Exception {
+      api.perform(post("/businessActions/resetWahlen").with(csrf())).andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class Wahltermindaten {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPut() throws Exception {
       api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf()))
           .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser
-    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+    void should_permitAccess_when_accessingAuthorizedViaPut() throws Exception {
       api.perform(put("/businessActions/wahltermindaten/wahlID").with(csrf()))
           .andExpect(status().isOk());
     }

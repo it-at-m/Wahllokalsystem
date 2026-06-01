@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkModel;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlen.WahlModel;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.List;
@@ -33,30 +34,28 @@ public class KopfdatenMapper {
         basisdaten.basisstrukturdaten().stream()
             .filter(b -> b.wahlID().equals(wahlID) && b.wahlbezirkID().equals(wahlbezirkID))
             .findAny()
-            .orElse(null);
-
-    if (basisstrukturdaten == null)
-      throw exceptionFactory.createFachlicheWlsException(
-          ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN);
+            .orElseThrow(
+                () ->
+                    exceptionFactory.createFachlicheWlsException(
+                        ExceptionConstants.INITIALIZE_KOPFDATEN_NO_BASISSTRUKTURDATEN));
 
     WahlModel wahl =
-        basisdaten.wahlen().stream().filter(w -> w.wahlID().equals(wahlID)).findAny().orElse(null);
+        basisdaten.wahlen().stream()
+            .filter(w -> w.wahlID().equals(wahlID))
+            .findAny()
+            .orElseThrow(this::createMissingDataForKopfdatenException);
 
     WahlbezirkModel wahlbezirk =
         basisdaten.wahlbezirke().stream()
             .filter(w -> w.wahlbezirkID().equals(wahlbezirkID) && w.wahlID().equals(wahlID))
             .findAny()
-            .orElse(null);
+            .orElseThrow(this::createMissingDataForKopfdatenException);
 
     StimmzettelgebietModel stimmzettelgebiet =
         basisdaten.stimmzettelgebiete().stream()
             .filter(s -> s.identifikator().equals(basisstrukturdaten.stimmzettelgebietID()))
             .findAny()
-            .orElse(null);
-
-    if (wahl == null || wahlbezirk == null || stimmzettelgebiet == null)
-      throw exceptionFactory.createFachlicheWlsException(
-          ExceptionConstants.INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET);
+            .orElseThrow(this::createMissingDataForKopfdatenException);
 
     return createKopfdaten(wahl, wahlbezirk, stimmzettelgebiet);
   }
@@ -74,5 +73,10 @@ public class KopfdatenMapper {
         stimmzettelgebiet.name(),
         wahl.name(),
         wahlbezirk.nummer());
+  }
+
+  private FachlicheWlsException createMissingDataForKopfdatenException() {
+    return exceptionFactory.createFachlicheWlsException(
+        ExceptionConstants.INITIALIZE_KOPFDATEN_NO_WAHL_WAHLBEZIRK_STIMMZETTELGEBIET);
   }
 }

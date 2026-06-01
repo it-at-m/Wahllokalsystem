@@ -16,7 +16,7 @@ import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
 
 const {
   isStepDoneInElectionState,
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
@@ -26,7 +26,7 @@ const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
 const auszaehlungPrerequisiteGuards = [
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,

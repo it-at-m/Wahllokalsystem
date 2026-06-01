@@ -4,9 +4,9 @@
       <base-workflow-list-item
         v-bind="props"
         title="Wahl des Migrationsbeirats"
-        :disabled="disabled"
-        :subtitle="disabledMessage"
-        :is-workflow-step-finished="isWahlFinished"
+        :disabled="disabled && !areAllElectionsFinished"
+        :subtitle="areAllElectionsFinished ? '' : disabledMessage"
+        :is-workflow-step-finished="isWahlFinished || areAllElectionsFinished"
         list-group-activator
       />
     </template>
@@ -15,15 +15,21 @@
       :key="index"
       :title="route.title"
       :to="route.targetRoute"
-      :disabled="disabled || route.disabled"
+      :disabled="(disabled || route.disabled) && !areAllElectionsFinished"
       :is-workflow-step-finished="
-        getWorkflowStateForRoute(wahlId, wahlbezirkId, route.targetRoute.name)
+        getWorkflowStateForRoute(
+          wahlId,
+          wahlbezirkId,
+          route.targetRoute.name
+        ) || areAllElectionsFinished
       "
     />
   </v-list-group>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -39,4 +45,5 @@ const { wahlbezirkId, wahlId, disabled } = defineProps<{
 }>();
 
 const { navigation } = useMbwNavigationService(wahlId, wahlbezirkId);
+const { areAllElectionsFinished } = storeToRefs(useWorkflowStore());
 </script>

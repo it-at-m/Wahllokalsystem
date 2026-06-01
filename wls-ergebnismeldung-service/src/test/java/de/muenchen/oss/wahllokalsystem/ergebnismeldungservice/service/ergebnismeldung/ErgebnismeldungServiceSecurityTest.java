@@ -95,6 +95,8 @@ class ErgebnismeldungServiceSecurityTest {
     @Nested
     class ForBwbUser {
 
+      private static final WahlbezirkArtModel WAHLBEZIRKART = WahlbezirkArtModel.BWB;
+
       @Test
       void should_notThrowException_when_allRequiredAuthoritiesAreGiven() {
         val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
@@ -113,7 +115,7 @@ class ErgebnismeldungServiceSecurityTest {
         Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(any(), any()))
             .thenReturn(true);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
-            .thenReturn(WahlbezirkArtModel.BWB);
+            .thenReturn(WAHLBEZIRKART);
 
         SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_BWB);
         Assertions.assertThatNoException()
@@ -141,7 +143,7 @@ class ErgebnismeldungServiceSecurityTest {
           Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(any(), any()))
               .thenReturn(true);
           Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
-              .thenReturn(WahlbezirkArtModel.BWB);
+              .thenReturn(WAHLBEZIRKART);
 
           SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
           Assertions.assertThatException()
@@ -164,6 +166,8 @@ class ErgebnismeldungServiceSecurityTest {
     @Nested
     class ForUwbUser {
 
+      private static final WahlbezirkArtModel WAHLBEZIRKART = WahlbezirkArtModel.UWB;
+
       @Test
       void should_notThrowException_when_allRequiredAuthoritiesAreGiven() {
         val bezirkUndWahlID = new BezirkUndWahlID("wahlID", "wahlbezirkID");
@@ -182,7 +186,7 @@ class ErgebnismeldungServiceSecurityTest {
         Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(any(), any()))
             .thenReturn(true);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
-            .thenReturn(WahlbezirkArtModel.UWB);
+            .thenReturn(WAHLBEZIRKART);
 
         SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_UWB);
         Assertions.assertThatNoException()
@@ -210,7 +214,7 @@ class ErgebnismeldungServiceSecurityTest {
           Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(any(), any()))
               .thenReturn(true);
           Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
-              .thenReturn(WahlbezirkArtModel.BWB);
+              .thenReturn(WAHLBEZIRKART);
 
           SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
           Assertions.assertThatException()

@@ -680,7 +680,7 @@ class SecurityConfigurationTest {
   class AWerte {
 
     @Nested
-    class GetStimmzettelumschlaege {
+    class GetAWerte {
 
       private static final String URL = "/businessActions/awerte/wahlbezirkID";
 

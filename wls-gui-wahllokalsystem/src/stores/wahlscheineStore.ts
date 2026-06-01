@@ -18,9 +18,17 @@ export const useWahlscheineStore = defineStore(storeID, () => {
 
   const { logDebug } = useLogging("wahlscheineStore");
 
-  async function loadWahlscheine(wahlID: string, wahlbezirkID: string) {
+  async function loadWahlscheine(
+    wahlID: string,
+    wahlbezirkID: string,
+    sendNotification = true
+  ) {
     try {
-      const wahlscheineForWahl = await getWahlscheine(wahlID, wahlbezirkID);
+      const wahlscheineForWahl = await getWahlscheine(
+        wahlID,
+        wahlbezirkID,
+        sendNotification
+      );
       if (wahlscheineForWahl) {
         wahlscheine.value.push(wahlscheineForWahl);
       } else {

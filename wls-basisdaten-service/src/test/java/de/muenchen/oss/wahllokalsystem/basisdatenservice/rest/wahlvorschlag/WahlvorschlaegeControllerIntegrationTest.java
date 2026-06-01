@@ -23,6 +23,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Set;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -160,7 +161,11 @@ public class WahlvorschlaegeControllerIntegrationTest {
           modelMapper.toEntity(
               wahlvorschlaegeClientMapper.toModel(
                   createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID)));
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE);
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE,
+              Authorities.REPOSITORY_WRITE_WAHLVORSCHLAG,
+              Authorities.REPOSITORY_WRITE_KANDIDAT));
       val savedEntity = wahlvorschlaegeRepository.save(entityToFind);
       entityToFind
           .getWahlvorschlaege()

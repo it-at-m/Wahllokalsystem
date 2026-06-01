@@ -1,8 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlvorschlag;
 
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.KandidatRepository;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlaegeRepository;
-import de.muenchen.oss.wahllokalsystem.basisdatenservice.domain.wahlvorschlag.WahlvorschlagRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class WahlvorschlaegeService {
 
   private final WahlvorschlaegeRepository wahlvorschlaegeRepository;
-  private final WahlvorschlagRepository wahlvorschlagRepository;
-  private final KandidatRepository kandidatRepository;
   private final WahlvorschlaegeModelMapper wahlvorschlaegeModelMapper;
   private final WahlvorschlaegeValidator wahlvorschlaegeValidator;
   private final WahlvorschlaegeClient wahlvorschlaegeClient;

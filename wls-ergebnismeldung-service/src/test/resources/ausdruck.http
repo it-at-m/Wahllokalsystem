@@ -2,7 +2,7 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST Ausdruck for Meldungsart "V1" | user wls_all_uwb
+### POST Ausdruck for Meldungsart "V1" | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171/V1/html
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -11,7 +11,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "content": "Testcontent1"
 }
 
-### POST Ausdruck for Meldungsart "V1" | user wls_all_bwb
+### POST Ausdruck for Meldungsart "V1" | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/V1/html
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -20,18 +20,18 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   "content": "Testcontent1"
 }
 
-### GET Ausdruck for Meldungsart "V1" | user wls_all_uwb
+### GET Ausdruck for Meldungsart "V1" | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171/V1/html
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET all Ausdrucke | user wls_all_uwb
+### GET all Ausdrucke | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET Ausdruck for Meldungsart "V1" | user wls_all_bwb
+### GET Ausdruck for Meldungsart "V1" | user wls_komw_bwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14/V1/html
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET all Ausdrucke | user wls_all_bwb
+### GET all Ausdrucke | user wls_komw_bwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/ausdruck/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}

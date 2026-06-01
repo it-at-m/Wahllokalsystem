@@ -28,6 +28,7 @@
         <base-text-button
           data-test="basedialog-btn-confirm"
           :active="isConfirmActive"
+          :loading="isConfirmLoading"
           @click="onConfirmClicked"
         >
           {{ confirmtext }}
@@ -50,9 +51,11 @@ withDefaults(
     confirmtext: string;
     icon: string;
     isConfirmActive?: boolean;
+    isConfirmLoading?: boolean;
   }>(),
   {
     isConfirmActive: true,
+    isConfirmLoading: false,
   }
 );
 

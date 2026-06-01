@@ -157,5 +157,28 @@ describe("dataSyncer.ts", () => {
       expect(mockDefinitions.setTasks).toHaveBeenCalledOnce();
       expect(mockDefinitions.runAllTasks).toHaveBeenCalledOnce();
     });
+
+    it("should_setIsSyncingFalse_when_anErrorOccurred", async () => {
+      const isOfflineDataSyncingSpy = spyOn(
+        unitUnderTest.isOfflineDataSyncing,
+        "value",
+        "set"
+      );
+      mockDefinitions.getDirtyItems.mockResolvedValue([]);
+      mockDefinitions.runAllTasks.mockRejectedValueOnce(
+        new Error("mocked error while running tasks")
+      );
+
+      await expect(
+        unitUnderTest.synchronizeOfflineData()
+      ).resolves.toBeUndefined();
+
+      expect(isOfflineDataSyncingSpy.mock.calls).toStrictEqual([
+        [true],
+        [false],
+      ]);
+
+      isOfflineDataSyncingSpy.mockRestore();
+    });
   });
 });

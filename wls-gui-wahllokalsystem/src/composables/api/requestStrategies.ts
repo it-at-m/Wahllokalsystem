@@ -72,7 +72,6 @@ export function useRequestStrategies() {
   ) {
     try {
       const fetchedResponse = await fetch(options.request);
-      //TODO handling 302 -> ReLogin
       if (fetchedResponse.ok) {
         await _storeResponse(fetchedResponse, dbKey);
         return fetchedResponse;
@@ -97,7 +96,6 @@ export function useRequestStrategies() {
       const response = await fetch(options.request.clone());
       logDebug(`response has status ${response.status}`);
 
-      //TODO handling 302 -> ReLogin
       if (response.ok) {
         await _storeRequest(dbKey, options.request, false);
         return response;

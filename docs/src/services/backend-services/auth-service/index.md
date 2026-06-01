@@ -168,3 +168,9 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 | rsa.public-key                                     | Verwendeter Public-Key                                                                            |                                                             |
 | rsa.private-key                                    | Verwendeter Private-Key                                                                           |                                                             |
 | spring.ldap.embedded.ldif                          | Ort der LDAP-Resource für embedded LDAP-Server (Profil: `dummy.ldap`)                             | classpath:users.ldif                                        |
+
+## Token-Settings
+
+Für einen automatischen Refresh des Token sind folgende Einstellungen wichtig. Die Lebensdauer des Access-Tokens muss kleiner als die Lebensdauer des Refresh-Tokens sein.
+So wird der Anwendung ermöglicht, automatisch neue Access-Tokens zu generieren, ohne dass der Benutzer sich erneut authentifizieren muss.
+Zusätzlich muss die Einstellung für `reuse-refresh-tokens` auf `false` gesetzt sein.

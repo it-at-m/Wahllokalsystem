@@ -2,11 +2,11 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### GET status wahlID/wahlbezirkID | user wls_all_uwb
+### GET status wahlID/wahlbezirkID | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST status with all done | user wls_all_uwb
+### POST status with all done | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -30,7 +30,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   }
 }
 
-### POST status with schnellmeldung done | user wls_all_uwb
+### POST status with schnellmeldung done | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9899cae4-df9a-4ffc-a940-f20cf2280171
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -52,11 +52,11 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   }
 }
 
-### GET status wahlID/wahlbezirkID | user wls_all_bwb
+### GET status wahlID/wahlbezirkID | user wls_komw_bwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST status with all done | user wls_all_bwb
+### POST status with all done | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}
@@ -80,7 +80,7 @@ Authorization: Bearer {{$auth.token("auth-service")}}
   }
 }
 
-### POST status with schnellmeldung done | user wls_all_bwb
+### POST status with schnellmeldung done | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/status/28039463-3d3d-4ce5-acc1-0bef931a4409/9081145c-dc16-4a9b-8255-5c49ddb98c14
 Content-Type: application/json
 Authorization: Bearer {{$auth.token("auth-service")}}

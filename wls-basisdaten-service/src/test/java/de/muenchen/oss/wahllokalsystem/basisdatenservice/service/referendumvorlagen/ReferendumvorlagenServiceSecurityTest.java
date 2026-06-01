@@ -158,12 +158,12 @@ public class ReferendumvorlagenServiceSecurityTest {
     }
 
     private static Stream<Arguments> getMissingRepositoryAuthoritiesVariations() {
-      val serviceAuthoritiesWithoutServiceAuthority =
+      val serviceAuthoritiesWithoutCaughtExceptionsOfMissingAuthorities =
           ArrayUtils.removeElements(
               Authorities.ALL_AUTHORITIES_GET_REFERENDUMVORLAGEN,
-              Authorities.SERVICE_GET_REFERENDUMVORLAGEN);
+              Authorities.REPOSITORY_WRITE_REFERENDUMVORLAGEN);
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          serviceAuthoritiesWithoutServiceAuthority);
+          serviceAuthoritiesWithoutCaughtExceptionsOfMissingAuthorities);
     }
 
     private ReferendumvorlagenDTO createClientReferendumvorlagenDTO() {

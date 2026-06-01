@@ -1,17 +1,16 @@
-package de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.configuration;
+package de.muenchen.oss.wahllokalsystem.broadcastservice.configuration;
 
-import static de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisDTO;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.rest.ereignis.EreignisartDTO;
-import de.muenchen.oss.wahllokalsystem.vorfaelleundvorkommnisseservice.service.ereignis.EreignisService;
-import java.time.LocalDateTime;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.service.BroadcastService;
+import java.util.Collections;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,7 @@ class SecurityConfigurationTest {
 
   @Autowired ObjectMapper objectMapper;
 
-  @MockitoBean EreignisService ereignisService;
+  @MockitoBean BroadcastService broadcastService;
 
   @Test
   void should_returnStatusUnauthorized_when_accessingSecuredResourceRoot() throws Exception {
@@ -76,56 +75,67 @@ class SecurityConfigurationTest {
   }
 
   @Nested
-  class Ereignis {
+  class Broadcast {
 
-    private static final String URL = "/businessActions/ereignisse/wahlbezirkID";
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedPostMessageRead() throws Exception {
+      val request = post("/businessActions/messageRead/nachrichID").with(csrf());
 
-    @Nested
-    class GetEreignis {
-
-      @Test
-      @WithAnonymousUser
-      void should_denyAccess_when_accessingAnonymous() throws Exception {
-        api.perform(get(URL)).andExpect(status().isUnauthorized());
-      }
-
-      @Test
-      @WithMockUser
-      void should_permAccess_when_accessingAuthenticated() throws Exception {
-        api.perform(get(URL)).andExpect(status().isNoContent());
-      }
+      api.perform(request).andExpect(status().isUnauthorized());
     }
 
-    @Nested
-    class PostErgeignis {
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedPostMessageRead() throws Exception {
+      val request = post("/businessActions/messageRead/nachrichID").with(csrf());
 
-      @Test
-      @WithAnonymousUser
-      void should_denyAccess_when_accessingAnonymous() throws Exception {
-        val requestBodyAsString =
-            objectMapper.writeValueAsString(
-                new EreignisDTO("beschreibung", LocalDateTime.now(), EreignisartDTO.VORFALL));
-        api.perform(
-                post(URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBodyAsString))
-            .andExpect(status().isUnauthorized());
-      }
+      api.perform(request).andExpect(status().isOk());
+    }
 
-      @Test
-      @WithMockUser
-      void should_permAccess_when_accessingAuthenticated() throws Exception {
-        val requestBodyAsString =
-            objectMapper.writeValueAsString(
-                new EreignisDTO("beschreibung", LocalDateTime.now(), EreignisartDTO.VORFALL));
-        api.perform(
-                post(URL)
-                    .with(csrf())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBodyAsString))
-            .andExpect(status().isOk());
-      }
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedPostMessage() throws Exception {
+      val requestBodyAsString =
+          objectMapper.writeValueAsString(new BroadcastMessageDTO(Collections.emptyList(), ""));
+      val request =
+          post("/businessActions/broadcast")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBodyAsString);
+      ;
+
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedPostMessage() throws Exception {
+      val requestBodyAsString =
+          objectMapper.writeValueAsString(new BroadcastMessageDTO(Collections.emptyList(), ""));
+      val request =
+          post("/businessActions/broadcast")
+              .with(csrf())
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBodyAsString);
+
+      api.perform(request).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedGetOldestMessage() throws Exception {
+      val request = get("/businessActions/getMessage/wahlbezirkID");
+
+      api.perform(request).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedGetOldestMessage() throws Exception {
+      val request = get("/businessActions/getMessage/wahlbezirkID");
+
+      api.perform(request).andExpect(status().isOk());
     }
   }
 }

@@ -344,6 +344,8 @@ erfolgt ist, wird `schnellmeldung.gedruckt` auf `true` gesetzt.
 Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
 `schnellmeldung.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
 
+Es kann auch später erneut eine Schnellmeldung gedruckt werden.
+
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
 Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die

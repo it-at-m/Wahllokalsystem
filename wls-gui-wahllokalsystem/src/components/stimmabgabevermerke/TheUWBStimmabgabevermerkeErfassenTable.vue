@@ -17,12 +17,12 @@
 
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="font-weight-bold dynamic-column border-b-0"
           >
             {{
               wahlenActions.getWahlNameOrBlankStringById(
-                stimmabgabevermerk.wahldaten[0].wahlID
+                stimmabgabevermerk.wahlID
               )
             }}
             <div>Personen mit Stimmabgabevermerk</div>
@@ -33,7 +33,7 @@
 
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="border-b-0"
           >
             Anzahl Stimmabgabevermerke
@@ -46,7 +46,7 @@
 
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
           >
             <v-text-field
               disabled
@@ -62,12 +62,11 @@
 
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
           >
             <template
-              v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
-                number - 1
-              ].stimmzettel"
+              v-for="stimmzettel in stimmabgabevermerk.vermerke[number - 1]
+                .stimmzettel"
             >
               <base-number-input
                 v-if="

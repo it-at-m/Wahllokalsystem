@@ -1,9 +1,9 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,44 +17,40 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class StimmabgabevermerkeService {
 
-  private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
   private final StimmabgabevermerkeRepository stimmabgabevermerkeRepository;
+  private final StimmabgabevermerkeModelMapper stimmabgabevermerkeModelMapper;
   private final StimmabgabevermerkeValidator stimmabgabevermerkeValidator;
   private final ExceptionFactory exceptionFactory;
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetStimmabgabevermerke')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
   public Optional<StimmabgabevermerkeModel> getStimmabgabevermerke(
-      @P("param") final BezirkIDUndWaehlerverzeichnisNummer id) {
-    log.info("#getStimmabgabevermerke");
-
+      @P("wahlbezirkID") final String wahlbezirkID, final String wahlID, final long wvzNummer) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
-        id,
+        new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer),
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.GET_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
-    val stimmabgabevermerke = stimmabgabevermerkeRepository.findById(id);
-
-    return stimmabgabevermerke.map(stimmabgabevermerkeModelMapper::toModel);
+    val wahldaten =
+        stimmabgabevermerkeRepository.findById(
+            new BezirkUndWahlIDUndWaehlerverzeichnisnummer(wahlbezirkID, wahlID, wvzNummer));
+    return wahldaten.map(stimmabgabevermerkeModelMapper::toModel);
   }
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_PostStimmabgabevermerke')"
-          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
-  public void postStimmabgabevermerke(
-      @P("param") final BezirkIDUndWaehlerverzeichnisNummer id,
-      final StimmabgabevermerkeModel stimmabgabevermerkeModel) {
-    log.info("#postStimmabgabevermerke");
-
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.wahlbezirkID(), authentication)")
+  public void postStimmabgabevermerke(@P("param") StimmabgabevermerkeModel wahldaten) {
     stimmabgabevermerkeValidator.validBezirkIDUndWaehlerverzeichnisnummerOrThrow(
-        id,
+        new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+            wahldaten.wahlbezirkID(), wahldaten.wahlID(), wahldaten.waehlerverzeichnisNummer()),
         exceptionFactory.createFachlicheWlsException(
             ExceptionConstants.POST_STIMMABGABEVERMERKE_PARAMETER_UNVOLLSTAENDIG));
-    stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(stimmabgabevermerkeModel);
+    stimmabgabevermerkeValidator.validStimmabgabevermerkeOrThrow(wahldaten);
 
     try {
-      stimmabgabevermerkeRepository.save(
-          stimmabgabevermerkeModelMapper.toEntity(stimmabgabevermerkeModel));
+      val entityToSave = stimmabgabevermerkeModelMapper.toEntity(wahldaten);
+      stimmabgabevermerkeRepository.save(entityToSave);
     } catch (final Exception e) {
       log.error("#postStimmabgabevermerke unsaveable:", e);
       throw exceptionFactory.createTechnischeWlsException(

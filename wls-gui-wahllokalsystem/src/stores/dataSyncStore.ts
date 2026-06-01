@@ -11,12 +11,14 @@ export const useDataSyncStore = defineStore(storeID, () => {
     isOfflineDataSyncing,
     numberOfTasksFinished,
     numberOfTasksToRun,
+    lastSyncUpdateTime,
   } = useDataSyncer();
 
   return {
     numberOfTasksFinished,
     numberOfTasksToRun,
     isOfflineDataSyncing,
+    lastSyncUpdateTime,
     synchronizeOfflineData,
     getSyncTasks,
   };

@@ -96,6 +96,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.numberOfTasksToRun = 1;
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
+      await nextTick();
 
       const successExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-success"]'
@@ -107,7 +108,6 @@ describe("BaseOfflineLoading.vue", () => {
       const successExpansionPanelText = successExpansionPanel.findComponent(
         '[data-test="expansion-panel-tasklist"]'
       );
-      await nextTick();
 
       expect(successExpansionPanelText.isVisible()).toBe(true);
       expect(successExpansionPanelText.text()).toContain(taskName);
@@ -140,6 +140,7 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.numberOfTasksToRun = 1;
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
+      await nextTick();
 
       const failedExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-failed"]'
@@ -151,7 +152,6 @@ describe("BaseOfflineLoading.vue", () => {
       const failedExpansionPanelText = failedExpansionPanel.findComponent(
         '[data-test="expansion-panel-tasklist"]'
       );
-      await nextTick();
 
       expect(failedExpansionPanelText.isVisible()).toBe(true);
       expect(failedExpansionPanelText.text()).toContain(taskName);

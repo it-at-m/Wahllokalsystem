@@ -24,7 +24,6 @@ import {
   mdiPlus,
   mdiPlusCircle,
   mdiPrinter,
-  mdiReload,
   mdiRemoteDesktop,
   mdiRoutes,
   mdiSend,
@@ -35,6 +34,7 @@ import {
   mdiToaster,
   mdiUpdate,
   mdiVote,
+  mdiWebSync,
 } from "@mdi/js";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
@@ -51,7 +51,6 @@ export default createVuetify({
       textBoxCheck: mdiTextBoxCheck,
       signalOffline: mdiSignalOff,
       signalOnline: mdiSignalCellular3,
-      reload: mdiReload,
       save: mdiContentSave,
       delete: mdiDelete,
       add: mdiPlus,
@@ -80,6 +79,7 @@ export default createVuetify({
       locked: mdiLockOutline,
       saveSuccess: mdiContentSaveCheck,
       disabled: mdiCircleOffOutline,
+      offlineSync: mdiWebSync,
     },
     sets: {
       mdi,

@@ -2,11 +2,11 @@
 GET {{ WLS_AUTH_SERVICE }}/user
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### Get stimmabgabevermerke wahlbezirkID1 wvznr1 | user wls_all_uwb
+### Get stimmabgabevermerke wahlbezirkID1 wvznr1 | user wls_komw_uwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST stimmabgabevermerke | user wls_all_uwb
+### POST stimmabgabevermerke | user wls_komw_uwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json
@@ -46,11 +46,11 @@ Content-Type: application/json
   ]
 }
 
-### Get stimmabgabevermerke wahlbezirkID1 wvznr1 | user wls_all_bwb
+### Get stimmabgabevermerke wahlbezirkID1 wvznr1 | user wls_komw_bwb
 GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 
-### POST stimmabgabevermerke | user wls_all_bwb
+### POST stimmabgabevermerke | user wls_komw_bwb
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9081145c-dc16-4a9b-8255-5c49ddb98c14/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

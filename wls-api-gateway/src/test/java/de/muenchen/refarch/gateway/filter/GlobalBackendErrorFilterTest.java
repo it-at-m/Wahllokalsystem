@@ -73,7 +73,7 @@ class GlobalBackendErrorFilterTest {
 
         @Test
         @WithMockUser
-        void should_returnDefaultWlsException_when_backendReturns5xxWithoutWlsException() throws Exception {
+        void should_returnDefaultWlsException_when_backendReturns5xxWithoutWlsException() {
             stubFor(get(urlEqualTo("/remote"))
                     .willReturn(aResponse()
                             .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())

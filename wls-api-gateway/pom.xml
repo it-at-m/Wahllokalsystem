@@ -39,9 +39,10 @@
 
         <!-- Core Frameworks -->
         <spring-cloud-dependencies.version>2025.0.2</spring-cloud-dependencies.version>
+        <wls.common.version>1.7.1</wls.common.version>
 
         <!-- Linting & Formatting -->
-        <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.6.0</spotless-maven-plugin.version>
         <itm-java-codeformat.version>1.0.10</itm-java-codeformat.version>
         <pmd-maven-plugin.version>3.28.0</pmd-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.9.8.3</spotbugs-maven-plugin.version>
@@ -83,6 +84,13 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+        </dependency>
+
+        <!-- wls-common -->
+        <dependency>
+            <groupId>de.muenchen.oss.wahllokalsystem.wls-common</groupId>
+            <artifactId>exception</artifactId>
+            <version>${wls.common.version}</version>
         </dependency>
 
         <!-- actuator -->

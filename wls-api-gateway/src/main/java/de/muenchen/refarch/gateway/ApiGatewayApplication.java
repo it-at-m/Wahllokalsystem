@@ -28,7 +28,12 @@ import reactor.core.publisher.Hooks;
  * <a href=
  * "https://cloud.spring.io/spring-cloud-gateway/reference/html/">https://cloud.spring.io/spring-cloud-gateway/reference/html/</a>
  */
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages = {
+                "de.muenchen.oss.wahllokalsystem.wls.common.exception",
+                "de.muenchen.refarch.gateway",
+        }
+)
 @ConfigurationPropertiesScan
 public class ApiGatewayApplication {
 

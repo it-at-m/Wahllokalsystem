@@ -171,7 +171,8 @@ Alle Konfigurationsparameter beginnen mit dem Prefix `service.config`
 
 ## Token-Settings
 
-Für einen automatischen Refresh des Token sind folgende Einstellungen wichtig. Die Lebensdauer des Access-Tokens muss kleiner als die Lebensdauer des Refresh-Tokens sein.
+Für einen automatischen Refresh des Token sind folgende Einstellungen wichtig. Diese Werte werden für den jeweiligen OAuth2-Client in `OAUTH2_REGISTERED_CLIENT.TOKEN_SETTINGS` gepflegt und nicht als `service.config.*`-Property gesetzt.
+Die Lebensdauer des Access-Tokens muss kleiner als die Lebensdauer des Refresh-Tokens sein.
 Außerdem muss die Lebensdauer des Refresh-Token länger sein als das Intervall zur Abfrage des Heartbeats. Ansonsten kann die automatische Aktualisierung im Gateway nicht erfolgen.
 So wird der Anwendung ermöglicht, automatisch neue Access-Tokens zu generieren, ohne dass der Benutzer sich erneut authentifizieren muss.
 Zusätzlich muss die Einstellung für `reuse-refresh-tokens` auf `false` gesetzt sein.

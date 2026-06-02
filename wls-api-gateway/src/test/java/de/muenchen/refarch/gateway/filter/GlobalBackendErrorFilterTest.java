@@ -31,7 +31,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWireMock
 @TestPropertySource(
         properties = {
-                "config.map5xxto400=true",
                 "service.generic500Exception.code=1234567890",
                 "service.generic500Exception.message=genericDefaultMessage",
                 "service.info.oid=serviceID"

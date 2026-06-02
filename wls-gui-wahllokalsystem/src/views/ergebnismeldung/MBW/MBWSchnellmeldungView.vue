@@ -99,6 +99,7 @@ const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
+const isSchnellmeldungSendenClicked = ref<boolean>(false);
 
 const status = ref<Status | null>(null);
 
@@ -123,7 +124,9 @@ const isSendenActive = computed(
 );
 
 const isDruckenActive = computed(
-  () => status.value?.schnellmeldung.uebermittelt
+  () =>
+    status.value?.schnellmeldung.uebermittelt ||
+    isSchnellmeldungSendenClicked.value
 );
 
 onActivated(async () => {
@@ -132,6 +135,7 @@ onActivated(async () => {
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;
+  isSchnellmeldungSendenClicked.value = true;
 }
 
 async function onSyncSuccess() {

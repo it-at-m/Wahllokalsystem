@@ -2,15 +2,12 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabga
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface StimmabgabevermerkeModelMapper {
-
-  StimmabgabevermerkeModel toModel(Stimmabgabevermerke entity);
 
   @Mapping(target = "wahlID", source = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlID")
   @Mapping(
@@ -19,11 +16,8 @@ public interface StimmabgabevermerkeModelMapper {
   @Mapping(
       target = "waehlerverzeichnisNummer",
       source = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.waehlerverzeichnisNummer")
-  WahldatenModel toModel(Wahldaten entity);
+  StimmabgabevermerkeModel toModel(Stimmabgabevermerke entity);
 
-  Stimmabgabevermerke toEntity(StimmabgabevermerkeModel model);
-
-  @Mapping(target = "id", ignore = true)
   @Mapping(target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlID", source = "wahlID")
   @Mapping(
       target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.wahlbezirkID",
@@ -31,9 +25,9 @@ public interface StimmabgabevermerkeModelMapper {
   @Mapping(
       target = "bezirkUndWahlIDUndWaehlerverzeichnisnummer.waehlerverzeichnisNummer",
       source = "waehlerverzeichnisNummer")
-  Wahldaten toEntity(WahldatenModel wahldatenModel);
+  Stimmabgabevermerke toEntity(StimmabgabevermerkeModel stimmabgabevermerkeModel);
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "wahldaten", ignore = true)
+  @Mapping(target = "stimmabgabevermerke", ignore = true)
   Vermerk toEntity(VermerkModel vermerkModel);
 }

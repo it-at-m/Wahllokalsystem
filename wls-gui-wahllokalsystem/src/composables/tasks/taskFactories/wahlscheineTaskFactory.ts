@@ -20,7 +20,8 @@ export function useWahlscheineTaskFactory(): TaskFactory {
       callback: () => {
         return loadWahlscheine(
           extendedWahlMetaData.wahlID,
-          extendedWahlMetaData.wahlbezirkID
+          extendedWahlMetaData.wahlbezirkID,
+          false
         );
       },
     };

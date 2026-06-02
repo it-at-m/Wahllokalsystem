@@ -4,9 +4,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabe
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
@@ -28,37 +26,16 @@ class StimmabgabevermerkeModelMapperTest {
 
     @Test
     void should_returnNull_when_nullIsGiven() {
-      Assertions.assertThat(unitUnderTest.toModel((Stimmabgabevermerke) null)).isNull();
+      Assertions.assertThat(unitUnderTest.toModel(null)).isNull();
     }
 
     @Test
     void should_returnModel_when_entityIsGiven() {
-      val wahlbezirkID = "wahlbezirkID";
-      val waehlerverzeichnisnummer = 0L;
-      val anzahlBlaetter = 12L;
-
-      val wahldaten =
-          Set.of(
-              Testdaten.Wahldaten.createEntity("wbz1", "wahl1", 1L),
-              Testdaten.Wahldaten.createEntity("wbz1", "wahl2", 2L));
-
-      val entityToMap =
-          new Stimmabgabevermerke(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer),
-              anzahlBlaetter,
-              wahldaten);
+      val entityToMap = Testdaten.Stimmabgabevermerke.createEntity("wbz1", "wahl1", 1L);
 
       val result = unitUnderTest.toModel(entityToMap);
 
-      val expectedWahldaten =
-          Set.of(
-              Testdaten.Wahldaten.createModel("wbz1", "wahl1", 1L),
-              Testdaten.Wahldaten.createModel("wbz1", "wahl2", 2L));
-      val expectedResult =
-          new StimmabgabevermerkeModel(
-              new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer),
-              anzahlBlaetter,
-              expectedWahldaten);
+      val expectedResult = Testdaten.Stimmabgabevermerke.createModel("wbz1", "wahl1", 1L);
 
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
@@ -69,34 +46,16 @@ class StimmabgabevermerkeModelMapperTest {
         final Stimmzettelart stimmzettelart) {
       val entityToMap =
           new Stimmabgabevermerke(
-              new BezirkIDUndWaehlerverzeichnisNummer("", 0L),
-              0L,
+              null,
               Set.of(
-                  new Wahldaten(
-                      null,
-                      null,
-                      Set.of(
-                          new Vermerk(
-                              UUID.randomUUID(),
-                              null,
-                              0L,
-                              Set.of(new Stimmzettel(0L, stimmzettelart)))),
-                      Collections.emptySet())));
+                  new Vermerk(
+                      UUID.randomUUID(), null, 0L, Set.of(new Stimmzettel(0L, stimmzettelart)))),
+              Collections.emptySet());
 
       val result = unitUnderTest.toModel(entityToMap);
 
       val mappedStimmzettelartModel =
-          result
-              .wahldaten()
-              .iterator()
-              .next()
-              .vermerke()
-              .iterator()
-              .next()
-              .stimmzettel()
-              .iterator()
-              .next()
-              .stimmzettelart();
+          result.vermerke().iterator().next().stimmzettel().iterator().next().stimmzettelart();
       Assertions.assertThat(mappedStimmzettelartModel.name()).isEqualTo(stimmzettelart.name());
     }
   }
@@ -114,31 +73,11 @@ class StimmabgabevermerkeModelMapperTest {
 
       @Test
       void should_returnModel_when_entityIsGiven() {
-        val wahlbezirkID = "wahlbezirkID";
-        val waehlerverzeichnisnummer = 0L;
-        val anzahlBlaetter = 12L;
-
-        val givenWahldaten =
-            Set.of(
-                Testdaten.Wahldaten.createModel("wbz1", "wahl1", 1L),
-                Testdaten.Wahldaten.createModel("wbz1", "wahl2", 2L));
-        val given =
-            new StimmabgabevermerkeModel(
-                new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer),
-                anzahlBlaetter,
-                givenWahldaten);
+        val given = Testdaten.Stimmabgabevermerke.createModel("wbz1", "wahl1", 1L);
 
         val result = unitUnderTest.toEntity(given);
 
-        val expectedWahldaten =
-            Set.of(
-                Testdaten.Wahldaten.createEntity("wbz1", "wahl1", 1L),
-                Testdaten.Wahldaten.createEntity("wbz1", "wahl2", 2L));
-        val expectedResult =
-            new Stimmabgabevermerke(
-                new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisnummer),
-                anzahlBlaetter,
-                expectedWahldaten);
+        val expectedResult = Testdaten.Stimmabgabevermerke.createEntity("wbz1", "wahl1", 1L);
 
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }

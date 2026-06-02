@@ -40,7 +40,6 @@ describe("ergebnisseTaskFactory.ts", () => {
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Obw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Srw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Baw).build(),
-      prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Mbw).build(),
     ])("should_returnTaskListFor%s_when_called", (extendedWahlMetaData) => {
       const taskFactoryContext: TaskFactoryContext = prepareTaskFactoryContext()
         .extendedWahlMetaData([extendedWahlMetaData])
@@ -71,7 +70,6 @@ describe("ergebnisseTaskFactory.ts", () => {
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Obw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Srw).build(),
       prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Baw).build(),
-      prepareExtendedWahlMetaData().wahlArt(WahlWahlartEnum.Mbw).build(),
     ])(
       "should_returnTasksWithExpectedCallbacks_when_calledFor%s",
       async (extendedWahlMetaData) => {
@@ -103,16 +101,11 @@ describe("ergebnisseTaskFactory.ts", () => {
       }
     );
 
-    it("should_returnEmptyTaskListForWahlenNotInObwSrwBawMbw_when_called", () => {
+    it("should_returnEmptyTaskListForWahlenNotInObwSrwBaw_when_called", () => {
       const extendedWahlMetaDataForAllWahlenExceptObwSrwBaw: ExtendedWahlMetaData[] =
         [];
       Object.values(WahlWahlartEnum).forEach((value) => {
-        if (
-          value !== "OBW" &&
-          value !== "BAW" &&
-          value !== "SRW" &&
-          value != "MBW"
-        ) {
+        if (value !== "OBW" && value !== "BAW" && value !== "SRW") {
           extendedWahlMetaDataForAllWahlenExceptObwSrwBaw.push(
             prepareExtendedWahlMetaData().wahlArt(value).build()
           );

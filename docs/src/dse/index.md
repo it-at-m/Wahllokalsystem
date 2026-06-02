@@ -2,7 +2,7 @@
 
 Das bisherige Verfahren zur Erfassung von Ergebnissen mittels Stapelbildung soll verbessert werden.
 
-Mit den Stapeln waren diverse manuelle arbeiten notwendig die Zeit benötigen und potenzielle Fehlerquellen waren. Die
+Mit den Stapeln waren diverse manuelle Arbeiten notwendig, die Zeit in Anspruch nehmen und potenzielle Fehlerquellen darstellen. Die
 Erfassung der Stimmzettel verringert die Komplexität und die manuellen Schritte durch den Wahlvorstand. Die vorliegenden
 Stimmzettel werden im System erfasst. Das System berechnet aus den erfassten Daten das Ergebnis.
 
@@ -11,12 +11,11 @@ Zur Migrationsbeiratswahl 2026 soll mit dem WLS eine erste Testversion der DSE a
 ## Prozess
 
 ```mermaid
-
 flowchart TD
     S1[Stimmabgabe ist beendet]
     D2{UWB oder BWB?}
     S2a[Stimmabgabevermerke und Wahlscheine zählen]
-    S2b[Wahlurne öffnen und Stimmettel zählen]
+    S2b[Wahlurne öffnen und Stimmzettel zählen]
     S3[Stimmzettel vorbereiten]
     S4[Stimmzettel erfassen]
     S5[Stimmzettel ablegen]
@@ -36,24 +35,23 @@ flowchart TD
 Mit dem Schritt `Stimmzettel vorbereiten` beginnt der neue Prozess. Mit dem Schritt `Schnellmeldung ans Wahlamt übermitteln`
 ist man wieder im gewohnten Prozess.
 
-Die separate Übermittlung einer Schnellmeldung und Niederschrift halt wahlrechtliche Gründe.
+Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
 
 ### Stimmzettel vorbereiten
 
-In diesem Schritt erfolgen vorbereitenden Schritte, um die Erfassung zu erleichtern. Der Stimmzettel z.B. wird vollständig
-entfaltet und es werden markieren vorgenommen, die Zeigen wo man stimmen findet.
+In diesem Schritt erfolgen vorbereitende Maßnahmen, um die Erfassung zu erleichtern. Der Stimmzettel wird z.B. vollständig
+entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen findet.
 
 ### Stimmzettel erfassen
 
-In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Stimmzettel über die der gesamte Wahlvorstand einen
-Beschluss fassen muss werden entsprechend markiert.
+In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Stimmzettel, über die der gesamte Wahlvorstand einen
+Beschluss fassen muss, werden entsprechend markiert.
 
 ### Stimmzettel ablegen
 
-Die erfassten Stimmzettel werden entsprechend der Regel der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
+Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
 ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 
 ### Beschlüsse zu Stimmzetteln fassen
 
-Der Wahlvorstand fasst die Beschlüsse die entsprechenden Stimmzettel
-
+Der Wahlvorstand fasst die Beschlüsse zu den entsprechenden Stimmzetteln.

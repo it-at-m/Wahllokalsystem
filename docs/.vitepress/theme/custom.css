@@ -11,7 +11,7 @@ html.dark .newProcessStep > rect {
   fill: var(--mermaid-new-process-steps-dark-color) !important;
 }
 html .newProcessStep > rect {
-  fill: var(--mermaid-new-process-steps-light-color) !important
+  fill: var(--mermaid-new-process-steps-light-color) !important;
 }
 
 .VPDoc.has-aside .content-container {

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card v-if="wahl">
       <v-card-title>{{ title }}</v-card-title>
       <v-card-text class="pb-0 pt-2 mr-4">
@@ -64,7 +64,7 @@
         "
       />
     </base-dialog-begruendung>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

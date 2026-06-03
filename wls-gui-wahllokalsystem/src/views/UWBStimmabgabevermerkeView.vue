@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card>
       <v-form v-model="stimmabgabevermerkeModel">
         <the-u-w-b-stimmabgabevermerke-erfassen-card />
@@ -52,7 +52,7 @@
         "
       />
     </base-dialog-begruendung>
-  </v-container>
+  </div>
 </template>
 <script setup lang="ts">
 import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/DifferenceDialogItem.ts";

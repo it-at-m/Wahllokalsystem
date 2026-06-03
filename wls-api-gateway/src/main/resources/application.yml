@@ -30,6 +30,9 @@ spring:
             - RemoveRequestHeader=cookie
             - RemoveRequestHeader=x-xsrf-token
             - TokenRelay=
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
 
 server:
   forward-headers-strategy: native
@@ -37,6 +40,7 @@ server:
     include-message: always
     whitelabel:
       enabled: false
+
 
 management:
   endpoints:
@@ -81,5 +85,9 @@ info:
     java.version: "@java.version@"
     spring-cloud.version: "@spring-cloud-dependencies.version@"
 
-config:
-  map5xxto400: true
+service:
+  info:
+    oid: WLS-API-GATEWAY
+  generic500Exception:
+    code: "000"
+    message: "unstructured foreign exception received"

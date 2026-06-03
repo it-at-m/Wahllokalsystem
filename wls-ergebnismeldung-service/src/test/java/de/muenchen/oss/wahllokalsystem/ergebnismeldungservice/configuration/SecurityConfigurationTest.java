@@ -18,12 +18,17 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.Meldun
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.StatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.status.ValidierungsstatusDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmzettelumschlaege.StimmzettelumschlaegeDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.wahlscheine.WahlscheineDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.AusdruckService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.awerte.AWerteService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.begruendung.BegruendungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.ErgebnismeldungService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.ErgebnisseService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.status.StatusService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmzettelumschlaege.StimmzettelumschlaegeService;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.wahlscheine.WahlscheineService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,6 +68,12 @@ class SecurityConfigurationTest {
   @MockitoBean BegruendungService begruendungService;
 
   @MockitoBean ErgebnismeldungService ergebnismeldungService;
+
+  @MockitoBean WahlscheineService wahlscheineService;
+
+  @MockitoBean StimmzettelumschlaegeService stimmzettelumschlaegeService;
+
+  @MockitoBean AWerteService aWerteService;
 
   @Autowired ObjectMapper objectMapper;
 
@@ -540,6 +551,188 @@ class SecurityConfigurationTest {
               .with(csrf());
 
       api.perform(request).andExpect(status().isUnauthorized());
+    }
+  }
+
+  @Nested
+  class Wahlscheine {
+
+    private static final String URL = "/businessActions/wahlscheine/wahlID/wahlbezirkID";
+
+    @Nested
+    class GetWahlscheine {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class PostWahlscheine {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new WahlscheineDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 0L));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new WahlscheineDTO(new BezirkUndWahlID("wahlID", "wahlbezirkID"), 0L));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+  }
+
+  @Nested
+  class Stimmzettelumschlaege {
+
+    private static final String URL = "/businessActions/stimmzettelumschlaege/wahlID/wahlbezirkID";
+
+    @Nested
+    class GetStimmzettelumschlaege {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnNoContent_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isNoContent());
+      }
+    }
+
+    @Nested
+    class PostStimmzettelumschlaege {
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelumschlaegeDTO(
+                    new BezirkUndWahlID("wahlID", "wahlbezirkID"), LocalDateTime.now(), 0L, 0L));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(
+                new StimmzettelumschlaegeDTO(
+                    new BezirkUndWahlID("wahlID", "wahlbezirkID"), LocalDateTime.now(), 0L, 0L));
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+  }
+
+  @Nested
+  class AWerte {
+
+    @Nested
+    class GetAWerte {
+
+      private static final String URL = "/businessActions/awerte/wahlbezirkID";
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val request = MockMvcRequestBuilders.get(URL);
+
+        api.perform(request).andExpect(status().isOk());
+      }
+    }
+
+    @Nested
+    class PostInit {
+
+      private static final String URL = "/businessActions/awerte/init";
+
+      @WithAnonymousUser
+      @Test
+      void should_returnUnauthorized_when_userIsAnonymous() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(new String[] {"wahlbezirkID1", "wahlbezirkID2"});
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isUnauthorized());
+      }
+
+      @WithMockUser
+      @Test
+      void should_returnOk_when_userIsAuthenticated() throws Exception {
+        val requestBodyAsString =
+            objectMapper.writeValueAsString(new String[] {"wahlbezirkID1", "wahlbezirkID2"});
+        val request =
+            MockMvcRequestBuilders.post(URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyAsString);
+
+        api.perform(request).andExpect(status().isOk());
+      }
     }
   }
 }

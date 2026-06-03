@@ -36,16 +36,16 @@
       @sync-error="onSyncError"
     />
     <base-dialog
-      :visible="isSyncErrorDialogVisible"
-      dialogtitle="Fehler bei der Synchronisation"
+      :visible="isUebermitteltErrorDialogVisible"
+      dialogtitle="Fehler beim Senden der Schnellmeldung"
       confirmtext="Hinweis schließen"
       icon="$information"
-      @confirm="isSyncErrorDialogVisible = false"
+      @confirm="isUebermitteltErrorDialogVisible = false"
     >
       <div class="mb-4">
-        Bei der Synchronisation der Offline-Daten ist ein Fehler aufgetreten. Um
-        zu verhindern, dass beim Senden der Schnellmeldung unvollständige Daten
-        verschickt werden, wurde der Vorgang abgebrochen.
+        Die Schnellmeldung kann derzeit nicht gesendet werden. Bitte geben Sie
+        daher die Ergebnisse telefonisch an die Wahl-Hotline durch. Danach
+        können Sie die Auszählung ohne Einschränkung fortsetzen.
       </div>
     </base-dialog>
   </div>
@@ -99,11 +99,12 @@ const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
+const isSchnellmeldungSendenClicked = ref<boolean>(false);
 
 const status = ref<Status | null>(null);
 
 const isOfflineSyncDialogVisible = ref(false);
-const isSyncErrorDialogVisible = ref(false);
+const isUebermitteltErrorDialogVisible = ref(false);
 
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 if (!wahl) {
@@ -123,7 +124,9 @@ const isSendenActive = computed(
 );
 
 const isDruckenActive = computed(
-  () => status.value?.schnellmeldung.uebermittelt
+  () =>
+    status.value?.schnellmeldung.uebermittelt ||
+    isSchnellmeldungSendenClicked.value
 );
 
 onActivated(async () => {
@@ -132,17 +135,21 @@ onActivated(async () => {
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;
+  isSchnellmeldungSendenClicked.value = true;
 }
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
   await sendSchnellmeldung();
   status.value = await loadStatusByWahlIdAndWahlbezirkId(wahlID, wahlbezirkID);
+  if (!status.value.schnellmeldung.uebermittelt) {
+    isUebermitteltErrorDialogVisible.value = true;
+  }
 }
 
 function onSyncError() {
   isOfflineSyncDialogVisible.value = false;
-  isSyncErrorDialogVisible.value = true;
+  isUebermitteltErrorDialogVisible.value = true;
 }
 
 function onKorrigierenClicked() {

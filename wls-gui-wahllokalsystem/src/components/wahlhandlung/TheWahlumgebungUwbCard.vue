@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card>
       <v-card-title>Zahl der Wahlurnen</v-card-title>
       <v-card-text class="pb-0 pt-2">
@@ -91,7 +91,7 @@
         />
       </v-card-actions>
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

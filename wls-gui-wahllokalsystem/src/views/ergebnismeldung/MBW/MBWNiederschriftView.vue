@@ -5,9 +5,7 @@
       subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
       :is-sending="isSendingNiederschrift"
       :is-korrigieren-active="isKorrigierenValid"
-      :is-drucken-active="
-        hasDoneVorkommnisse(ereignisse) && isNiederschriftUebermittelt
-      "
+      :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
@@ -114,6 +112,7 @@ const { getNextRoute } = useNavigationUtils();
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
+const isNiederschriftSendenClicked = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
@@ -154,8 +153,11 @@ const isSendenActive = computed(
     !status.value?.niederschrift.gedruckt
 );
 
-const isNiederschriftUebermittelt = computed(
-  () => status.value?.niederschrift.uebermittelt
+const isDruckenActive = computed(
+  () =>
+    hasDoneVorkommnisse(ereignisse.value) &&
+    (status.value?.niederschrift.uebermittelt ||
+      isNiederschriftSendenClicked.value)
 );
 
 onActivated(async () => {
@@ -168,6 +170,7 @@ onActivated(async () => {
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;
+  isNiederschriftSendenClicked.value = true;
 }
 
 async function onSyncSuccess() {

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card>
       <v-form v-model="stapelBInputsForm">
         <div v-if="!isUWB">
@@ -39,7 +39,7 @@
         />
       </v-card-actions>
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">

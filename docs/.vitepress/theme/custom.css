@@ -3,6 +3,15 @@ We have large images that require more space. #1266 #1277*/
 :root {
   --vp-code-copy-copied-text-content: "In Zwischenablage kopiert!";
   --vp-layout-max-width: 100%;
+  --mermaid-new-process-steps-light-color: #edebeb;
+  --mermaid-new-process-steps-dark-color: #000000;
+}
+
+html.dark .newProcessStep > rect {
+  fill: var(--mermaid-new-process-steps-dark-color) !important;
+}
+html .newProcessStep > rect {
+  fill: var(--mermaid-new-process-steps-light-color) !important
 }
 
 .VPDoc.has-aside .content-container {

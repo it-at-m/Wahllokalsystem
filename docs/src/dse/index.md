@@ -11,7 +11,7 @@ Zur Migrationsbeiratswahl 2026 soll mit dem WLS eine erste Testversion der DSE a
 ## Prozess
 
 ```mermaid
-flowchart TD
+flowchart TD    
     S1[Stimmabgabe ist beendet]
     D2{UWB oder BWB?}
     S2a[Stimmabgabevermerke und Wahlscheine zählen]
@@ -30,6 +30,8 @@ flowchart TD
     S2a --> S3
     S2b --> S3
     S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+
+    class S3,S4,S5,S6 newProcessStep;
 ```
 
 Mit dem Schritt `Stimmzettel vorbereiten` beginnt der neue Prozess. Mit dem Schritt `Schnellmeldung ans Wahlamt übermitteln`

@@ -20,7 +20,7 @@ export function useDataSyncer() {
   const lastSyncUpdateTime = ref<null | Date>(null);
 
   async function getSyncTasks() {
-    const itemsToSync = await indexDBSingleton.getDirtyItems();
+    const itemsToSync = await indexDBSingleton.getDirtyItems().catch(() => []);
     itemsToSync.sort(_compareSyncItemByTimeStamp);
     return itemsToSync.map((item) => ({
       name: item.key,

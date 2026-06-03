@@ -82,6 +82,16 @@ describe("dataSyncer.ts", () => {
       expect(result).toStrictEqual([]);
     });
 
+    it("should_returnEmptyArray_when_getDirtyItemsFails", async () => {
+      mockDefinitions.getDirtyItems.mockRejectedValue(
+        new Error("mocked get dirty items failed")
+      );
+
+      const result = await unitUnderTest.getSyncTasks();
+
+      expect(result).toStrictEqual([]);
+    });
+
     it("should_createAxiosPost_when_itemIsGiven", async () => {
       const key = "key";
       const data = "data";

@@ -9,4 +9,8 @@ hero:
   actions:
     - text: Getting started
       link: /technik/get_started
+    - text: Fachlicher Überblick
+      link: /about
+    - text: 🚧 Digital Stimmzettel Erfassung 🚧
+      link: /dse
 ---

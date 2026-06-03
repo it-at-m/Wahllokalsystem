@@ -5,7 +5,7 @@
       subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
       :is-sending="isSendingNiederschrift"
       :is-korrigieren-active="isKorrigierenValid"
-      :is-drucken-active="hasDoneVorkommnisse(ereignisse) && isDruckenActive"
+      :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
@@ -155,8 +155,9 @@ const isSendenActive = computed(
 
 const isDruckenActive = computed(
   () =>
-    status.value?.niederschrift.uebermittelt ||
-    isNiederschriftSendenClicked.value
+    hasDoneVorkommnisse(ereignisse.value) &&
+    (status.value?.niederschrift.uebermittelt ||
+      isNiederschriftSendenClicked.value)
 );
 
 onActivated(async () => {

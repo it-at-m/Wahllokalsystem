@@ -25,6 +25,7 @@
         :save-text="`${title} drucken und weiter`"
         prepend-icon="$printer"
         :disabled="!isDruckenActive"
+        :enabled-after-elections-finished="true"
         :loading="isDruckenLoading"
         @click="$emit('print')"
       />

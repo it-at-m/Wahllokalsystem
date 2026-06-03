@@ -93,11 +93,13 @@ describe("wahlscheineTaskFactory.ts", () => {
       expect(mockDefinitions.loadWahlscheine).toHaveBeenCalledTimes(2);
       expect(mockDefinitions.loadWahlscheine).toHaveBeenCalledWith(
         extendedWahlMetaDataOne.wahlID,
-        extendedWahlMetaDataOne.wahlbezirkID
+        extendedWahlMetaDataOne.wahlbezirkID,
+        false
       );
       expect(mockDefinitions.loadWahlscheine).toHaveBeenCalledWith(
         extendedWahlMetaDataTwo.wahlID,
-        extendedWahlMetaDataTwo.wahlbezirkID
+        extendedWahlMetaDataTwo.wahlbezirkID,
+        false
       );
     });
 

@@ -6,14 +6,9 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.exception.NoSearchResultFoundException;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.LocalDate;
-import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,7 +25,7 @@ public class WahlvorschlagServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGE);
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLVORSCHLAEGE);
 
       Assertions.assertThatException()
           .isThrownBy(
@@ -40,22 +35,15 @@ public class WahlvorschlagServiceSecurityTest {
           .isInstanceOf(NoSearchResultFoundException.class);
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       Assertions.assertThatThrownBy(
               () ->
                   wahlvorschlagService.getWahlvorschlaegeForWahlAndWahlbezirk(
                       "wahlID", "wahlbezirkID"))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_GETWAHLVORSTANDFORWAHLBEZIRK);
     }
   }
 
@@ -64,7 +52,7 @@ public class WahlvorschlagServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_WAHLVORSCHLAEGELISTE);
 
       Assertions.assertThatException()
           .isThrownBy(
@@ -74,22 +62,15 @@ public class WahlvorschlagServiceSecurityTest {
           .isInstanceOf(NoSearchResultFoundException.class);
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       Assertions.assertThatThrownBy(
               () ->
                   wahlvorschlagService.getWahlvorschlaegeListeForWahltagAndWahlID(
                       LocalDate.of(2024, 10, 10), "wahlID"))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_GETWAHLVORSCHLAEGELISTE);
     }
   }
 
@@ -98,7 +79,7 @@ public class WahlvorschlagServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
+      SecurityUtils.runWith(Authorities.SERVICE_LOAD_REFERENDUMVORLAGEN);
 
       Assertions.assertThatException()
           .isThrownBy(
@@ -108,22 +89,15 @@ public class WahlvorschlagServiceSecurityTest {
           .isInstanceOf(NoSearchResultFoundException.class);
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       Assertions.assertThatThrownBy(
               () ->
                   wahlvorschlagService.getReferendumvorlagenForWahlAndWahlbezirk(
                       "wahlID", "wahlbezirkID"))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_GETREFERENDUMVORLAGEN);
     }
   }
 }

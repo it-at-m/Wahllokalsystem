@@ -11,6 +11,6 @@ hero:
       link: /technik/get_started
     - text: Fachlicher Überblick
       link: /about
-    - text: 🚧 Digital Stimmzettel Erfassung 🚧
+    - text: 🚧 Digitale Stimmzettel-Erfassung 🚧
       link: /dse
 ---

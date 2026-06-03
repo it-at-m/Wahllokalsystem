@@ -1,8 +1,15 @@
 package de.muenchen.refarch.gateway.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import java.nio.charset.StandardCharsets;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -29,16 +36,22 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @Slf4j
-public class GlobalBackend5xxTo400Mapper implements GlobalFilter, Ordered {
+@RequiredArgsConstructor
+public class GlobalBackendErrorFilter implements GlobalFilter, Ordered {
 
     public static final int ORDER_GLOBAL_FILTER = -3;
-    private static final String GENERIC_ERROR_400 = "{ \"status\":400, \"error\":\"Bad Request\" }";
-    private static final String GENERIC_ERROR_500 = "{ \"status\":500, \"error\":\"Internal Server Error\" }";
-    /**
-     * Variable entscheidet, ob alle 5xx Fehler auf 400 gemappt werden sollen.
-     **/
-    @Value("${config.map5xxto400: true}")
-    private boolean map5xxTo400;
+    private static final String GENERIC_WLS_EXCEPTION_FALLBACK_CONTENT = "{\"category\": \"T\", \"code\": \"000\", \"service\": \"WLS-API-GATEWAY\", \"message\": \"Internal Server Error\"}";
+
+    private final ObjectMapper objectMapper;
+
+    private final ServiceIDFormatter serviceIDFormatter;
+
+    @Value("${service.generic500Exception.code:000}")
+    private String generic500ExceptionCode;
+    @Value("${service.generic500Exception.message:Internal Server Error}")
+    private String generic500ExceptionMessage;
+
+    private String genericError500Content;
 
     @Override
     public int getOrder() {
@@ -67,25 +80,20 @@ public class GlobalBackend5xxTo400Mapper implements GlobalFilter, Ordered {
                                 final byte[] content = new byte[joinedBuffers.readableByteCount()];
                                 joinedBuffers.read(content);
                                 final String responseBody = new String(content, StandardCharsets.UTF_8);
+
                                 log.error("Error: 5xx vom Backend:  requestId: {}, method: {}, url: {}, \nresponse body :{}, statusCode: {}", request.getId(),
                                         request.getMethod(), request.getURI(), responseBody, responseHttpStatus);
 
-                                // Response manipulieren
-                                final DataBuffer newDataBuffer;
-                                if (map5xxTo400) {
-                                    getDelegate().setStatusCode(HttpStatus.BAD_REQUEST);
-                                    newDataBuffer = dataBufferFactory.wrap(
-                                            GENERIC_ERROR_400.getBytes(StandardCharsets.UTF_8));
+                                if (isWlsException(responseBody)) {
+                                    //return old body;
+                                    return dataBufferFactory.wrap(responseBody.getBytes(StandardCharsets.UTF_8));
                                 } else {
-                                    getDelegate().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-                                    newDataBuffer = dataBufferFactory.wrap(
-                                            GENERIC_ERROR_500.getBytes(StandardCharsets.UTF_8));
+                                    final DataBuffer newDataBuffer = dataBufferFactory.wrap(
+                                            getGenericError500Content().getBytes(StandardCharsets.UTF_8));
+                                    getDelegate().getHeaders().setContentLength(newDataBuffer.readableByteCount());
+                                    getDelegate().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                                    return newDataBuffer;
                                 }
-
-                                getDelegate().getHeaders().setContentLength(newDataBuffer.readableByteCount());
-                                getDelegate().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-
-                                return newDataBuffer;
                             }));
                 }
                 return super.writeWith(body);
@@ -94,5 +102,28 @@ public class GlobalBackend5xxTo400Mapper implements GlobalFilter, Ordered {
 
         // replace response with decorator
         return chain.filter(exchange.mutate().response(decoratedResponse).build());
+    }
+
+    private boolean isWlsException(final String responseBody) {
+        try {
+            objectMapper.readValue(responseBody, WlsExceptionDTO.class);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private String getGenericError500Content() {
+        if (genericError500Content == null) {
+            val genericWlsException = new WlsExceptionDTO(WlsExceptionCategory.T, generic500ExceptionCode, serviceIDFormatter.getId(),
+                    generic500ExceptionMessage);
+            try {
+                genericError500Content = objectMapper.writeValueAsString(genericWlsException);
+            } catch (JsonProcessingException e) {
+                genericError500Content = GENERIC_WLS_EXCEPTION_FALLBACK_CONTENT;
+            }
+        }
+
+        return genericError500Content;
     }
 }

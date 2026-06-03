@@ -226,11 +226,7 @@ class ErgebnismeldungServiceSecurityTest {
 
       private static Stream<Arguments> getMissingAuthoritiesVariations() {
         return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-            ArrayUtils.removeElements(
-                Authorities.ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_UWB,
-                // Except authorities that were caught during processing
-                Authorities.SERVICE_GET_STIMMZETTELUMSCHLAEGE,
-                Authorities.REPOSITORY_READ_STIMMZETTELUMSCHLAEGE));
+            ArrayUtils.removeElements(Authorities.ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_UWB));
       }
     }
   }

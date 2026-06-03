@@ -150,11 +150,7 @@ public class Authorities {
           ALL_AUTHORITIES_GET_STATUS);
 
   public static final String[] ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_UWB =
-      ArrayUtils.addAll(
-          ArrayUtils.addAll(
-              new String[] {SERVICE_UPDATE_SENDUNGSZEITEN},
-              ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE),
-          ALL_AUTHORITIES_GET_STATUS);
+      ArrayUtils.addAll(new String[] {SERVICE_UPDATE_SENDUNGSZEITEN}, ALL_AUTHORITIES_GET_STATUS);
 
   public static final String[] ALL_AUTHORITIES_SEND_ERGEBNISSE_BWB =
       new String[] {

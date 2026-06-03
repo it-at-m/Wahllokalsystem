@@ -21,6 +21,7 @@ import {
   PostErgebnisseStapelartEnum,
   SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
@@ -121,6 +122,7 @@ const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
 const { createWahl } = useWahlTestDataFactory();
 const { createBegruendungDTO, prepareBegruendung } =
   useBegruendungTestDataFactory();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("ergebnisService.ts", () => {
   const {
@@ -419,6 +421,8 @@ describe("ergebnisService.ts", () => {
             waehlerverzeichnisNummer,
             SendErgebnisseMeldungsartEnum.V3,
             hauptwahlbezirkID,
+            undefined,
+            axiosConfigWrapper().requestAsOnlineOnly(),
           ],
         ]);
 
@@ -433,40 +437,24 @@ describe("ergebnisService.ts", () => {
       }
     );
 
-    it.each([
-      [true, true],
-      [false, false],
-    ])(
-      "should_throwError_when_apiCallFailed",
-      async (sendNotificationParameter, sendNotificationCallIsExpected) => {
-        const wahlID = generateRandomString(10);
-        const wahlbezirkID = generateRandomString(10);
-        const hauptwahlbezirkID = generateRandomString(10);
-        const waehlerverzeichnisNummer = generateRandomNumber(2);
+    it("should_throwError_when_apiCallFailed", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
 
-        const mockedApiError = new Error("mocked api call failed");
-        mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
+      const mockedApiError = new Error("mocked api call failed");
+      mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
 
-        await expect(
-          postSchnellmeldung(
-            wahlID,
-            wahlbezirkID,
-            hauptwahlbezirkID,
-            waehlerverzeichnisNummer,
-            sendNotificationParameter
-          )
-        ).rejects.toThrowError(mockedApiError);
-
-        if (sendNotificationCallIsExpected) {
-          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
-          expect(mockDefinitions.addNotification.mock.calls).toEqual([
-            [expect.any(String), UserNotificationCategoryEnum.ERROR],
-          ]);
-        } else {
-          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
-        }
-      }
-    );
+      await expect(
+        postSchnellmeldung(
+          wahlID,
+          wahlbezirkID,
+          hauptwahlbezirkID,
+          waehlerverzeichnisNummer
+        )
+      ).rejects.toThrowError(mockedApiError);
+    });
   });
 
   describe("postStimmzettelumschlaege", () => {
@@ -871,6 +859,8 @@ describe("ergebnisService.ts", () => {
           waehlerverzeichnisNummer,
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
+          undefined,
+          axiosConfigWrapper().requestAsOnlineOnly(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
@@ -900,6 +890,8 @@ describe("ergebnisService.ts", () => {
           waehlerverzeichnisNummer,
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
+          undefined,
+          axiosConfigWrapper().requestAsOnlineOnly(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);

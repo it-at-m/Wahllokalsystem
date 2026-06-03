@@ -332,7 +332,9 @@ export function useErgebnisService() {
         wahlbezirkID,
         waehlerverzeichnisNummer,
         SendErgebnisseMeldungsartEnum.V1,
-        hauptwahlbezirkID
+        hauptwahlbezirkID,
+        undefined,
+        axiosConfigWrapper().requestAsOnlineOnly()
       );
       if (sendNotification) {
         addNotification(

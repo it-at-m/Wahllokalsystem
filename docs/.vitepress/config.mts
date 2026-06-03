@@ -32,6 +32,7 @@ export default withMermaid({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "About", link: "/about/" },
+      { text: "DSE", link: "/dse/" },
       { text: "Services", link: "/services/" },
       { text: "Technik", link: `${PATH_TECHNIK}get_started` },
     ],

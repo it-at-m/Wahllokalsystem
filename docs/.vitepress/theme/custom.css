@@ -9,9 +9,11 @@ We have large images that require more space. #1266 #1277*/
 
 html.dark .newProcessStep > rect {
   fill: var(--mermaid-new-process-steps-dark-color) !important;
+  stroke-width: 3 !important;
 }
 html .newProcessStep > rect {
   fill: var(--mermaid-new-process-steps-light-color) !important;
+  stroke-width: 3 !important;
 }
 
 .VPDoc.has-aside .content-container {

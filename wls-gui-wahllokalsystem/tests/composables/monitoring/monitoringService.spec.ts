@@ -17,13 +17,17 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-monitoring-api", () => ({
-  WaehleranzahlControllerApi: vi.fn().mockImplementation(() => ({
-    postWahlbeteiligung: mockDefinitions.postWahlbeteiligung,
-    getWahlbeteiligung: mockDefinitions.getWahlbeteiligung,
-  })),
-  WahllokalZustandControllerApi: vi.fn().mockImplementation(() => ({
-    postLastSeen: mockDefinitions.postLastSeen,
-  })),
+  WaehleranzahlControllerApi: vi.fn().mockImplementation(
+    class MockedWaehleranzahlControllerApi {
+      postWahlbeteiligung = mockDefinitions.postWahlbeteiligung;
+      getWahlbeteiligung = mockDefinitions.getWahlbeteiligung;
+    } as never
+  ),
+  WahllokalZustandControllerApi: vi.fn().mockImplementation(
+    class MockedWahllokalZustandControllerApi {
+      postLastSeen = mockDefinitions.postLastSeen;
+    } as never
+  ),
   Configuration: vi.fn(),
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

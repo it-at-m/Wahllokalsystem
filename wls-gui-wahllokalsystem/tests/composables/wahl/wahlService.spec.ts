@@ -12,13 +12,15 @@ const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   mapDtoToModel: vi.fn(),
   wahlDTOWahlartEnum: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  WahlenControllerApi: vi.fn().mockImplementation(() => ({
-    getWahlen: mockDefinitions.getWahlen,
-  })),
+  WahlenControllerApi: vi.fn().mockImplementation(
+    class MockedWahlenControllerApi {
+      getWahlen = mockDefinitions.getWahlen;
+    } as never
+  ),
   Configuration: mockDefinitions.configurationConstructor,
   WahlDTOWahlartEnum: mockDefinitions.wahlDTOWahlartEnum,
 }));

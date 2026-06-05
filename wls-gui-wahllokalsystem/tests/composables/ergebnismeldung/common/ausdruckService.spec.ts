@@ -29,9 +29,11 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      AusdruckControllerApi: vi.fn().mockImplementation(() => ({
-        postAusdruck: mockDefinitions.postAusdruck,
-      })),
+      AusdruckControllerApi: vi.fn().mockImplementation(
+        class MockedAusdruckControllerApi {
+          postAusdruck = mockDefinitions.postAusdruck;
+        } as never
+      ),
       Configuration: vi.fn(),
     };
   }

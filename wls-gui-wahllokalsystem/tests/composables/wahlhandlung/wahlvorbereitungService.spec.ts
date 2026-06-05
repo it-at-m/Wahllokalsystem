@@ -34,24 +34,32 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
-  UrnenwahlSchliessungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
-    getUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
-    postUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsUhrzeit,
-  })),
-  EroeffnungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
-  })),
-  UrnenwahlvorbereitungControllerApi: vi.fn().mockImplementation(() => ({
-    getUrnenwahlVorbereitung: mockDefinitions.getUrnenwahlVorbereitung,
-    postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
-  })),
-  BriefwahlvorbereitungControllerApi: vi.fn().mockImplementation(() => ({
-    getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
-    postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
-  })),
+  UrnenwahlSchliessungsUhrzeitControllerApi: vi.fn().mockImplementation(
+    class MockedUrnenwahlSchliessungsUhrzeitControllerApi {
+      getUrnenwahlSchliessungsUhrzeit =
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit;
+      postUrnenwahlSchliessungsUhrzeit =
+        mockDefinitions.postUrnenwahlSchliessungsUhrzeit;
+    } as never
+  ),
+  EroeffnungsUhrzeitControllerApi: vi.fn().mockImplementation(
+    class MockedEroeffnungsUhrzeitControllerApi {
+      postEroeffnungsuhrzeit = mockDefinitions.postEroeffnungsuhrzeit;
+      getEroeffnungsuhrzeit = mockDefinitions.getEroeffnungsuhrzeit;
+    } as never
+  ),
+  UrnenwahlvorbereitungControllerApi: vi.fn().mockImplementation(
+    class MockedUrnenwahlvorbereitungControllerApi {
+      getUrnenwahlVorbereitung = mockDefinitions.getUrnenwahlVorbereitung;
+      postUrnenwahlvorbereitung = mockDefinitions.postUrnenwahlvorbereitung;
+    } as never
+  ),
+  BriefwahlvorbereitungControllerApi: vi.fn().mockImplementation(
+    class MockedBriefwahlvorbereitungControllerApi {
+      getBriefwahlvorbereitung = mockDefinitions.getBriefwahlvorbereitung;
+      postBriefwahlvorbereitung = mockDefinitions.postBriefwahlvorbereitung;
+    } as never
+  ),
   Configuration: vi.fn(),
 }));
 

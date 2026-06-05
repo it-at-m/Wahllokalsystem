@@ -10,14 +10,16 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   getUngueltigeWahlscheine: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   mapToModel: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  UngueltigeWahlscheineControllerApi: vi.fn().mockImplementation(() => ({
-    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
-  })),
+  UngueltigeWahlscheineControllerApi: vi.fn().mockImplementation(
+    class MockedUngueltigeWahlscheineControllerApi {
+      getUngueltigeWahlscheine = mockDefinitions.getUngueltigeWahlscheine;
+    } as never
+  ),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

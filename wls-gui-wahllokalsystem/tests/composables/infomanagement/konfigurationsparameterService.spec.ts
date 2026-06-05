@@ -10,7 +10,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getKonfigurations: vi.fn(),
   toModel: vi.fn(),
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock(
@@ -22,9 +22,11 @@ vi.mock(
   })
 );
 vi.mock("@/api/wls-clients/generated-infomanagement-api", () => ({
-  KonfigurationControllerApi: vi.fn().mockImplementation(() => ({
-    getKonfigurations: mockDefinitions.getKonfigurations,
-  })),
+  KonfigurationControllerApi: vi.fn().mockImplementation(
+    class MockedKonfigurationControllerApi {
+      getKonfigurations = mockDefinitions.getKonfigurations;
+    } as never
+  ),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

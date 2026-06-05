@@ -35,7 +35,7 @@ const mockDefinitions = vi.hoisted(() => ({
   toErgebnisseDto: vi.fn(),
   toGetErgebnisseStapelartEnum: vi.fn(),
   toPostErgebnisseStapelartEnum: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   bezirkUndWahlIDStapelartDTOStapelartEnum: vi.fn(),
   getErgebnisseStapelartEnum: vi.fn(),
   postErgebnisseStapelartEnum: vi.fn(),
@@ -64,26 +64,34 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      ErgebnisseControllerApi: vi.fn().mockImplementation(() => ({
-        getErgebnisse: mockDefinitions.getErgebnisse,
-        postErgebnisse: mockDefinitions.postErgebnisse,
-      })),
-      ErgebnismeldungControllerApi: vi.fn().mockImplementation(() => ({
-        sendErgebnisse: mockDefinitions.sendErgebnisse,
-      })),
+      ErgebnisseControllerApi: vi.fn().mockImplementation(
+        class MockedErgebnisseControllerApi {
+          getErgebnisse = mockDefinitions.getErgebnisse;
+          postErgebnisse = mockDefinitions.postErgebnisse;
+        } as never
+      ),
+      ErgebnismeldungControllerApi: vi.fn().mockImplementation(
+        class MockedErgebnismeldungControllerApi {
+          sendErgebnisse = mockDefinitions.sendErgebnisse;
+        } as never
+      ),
       Configuration: mockDefinitions.configurationConstructor,
       BezirkUndWahlIDStapelartDTOStapelartEnum:
         mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
       GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
       PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
-      StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
-        postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-      })),
-      BegruendungControllerApi: vi.fn().mockImplementation(() => ({
-        getBegruendung: mockDefinitions.getBegruendung,
-        postBegruendung: mockDefinitions.postBegruendung,
-      })),
+      StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(
+        class MockedStimmzettelumschlaegeControllerApi {
+          postStimmzettelumschlaege = mockDefinitions.postStimmzettelumschlaege;
+          getStimmzettelumschlaege = mockDefinitions.getStimmzettelumschlaege;
+        } as never
+      ),
+      BegruendungControllerApi: vi.fn().mockImplementation(
+        class MockedBegruendungControllerApi {
+          getBegruendung = mockDefinitions.getBegruendung;
+          postBegruendung = mockDefinitions.postBegruendung;
+        } as never
+      ),
     };
   }
 );

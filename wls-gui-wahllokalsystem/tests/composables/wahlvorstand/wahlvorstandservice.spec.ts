@@ -22,10 +22,12 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...mod,
-      WahlvorstandControllerApi: vi.fn().mockImplementation(() => ({
-        getWahlvorstand: mockDefinitions.getWahlvorstand,
-        postWahlvorstand: mockDefinitions.postWahlvorstand,
-      })),
+      WahlvorstandControllerApi: vi.fn().mockImplementation(
+        class MockedWahlvorstandControllerApi {
+          getWahlvorstand = mockDefinitions.getWahlvorstand;
+          postWahlvorstand = mockDefinitions.postWahlvorstand;
+        } as never
+      ),
       Configuration: vi.fn(),
     };
   }

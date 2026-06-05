@@ -13,9 +13,11 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-vorfaelleundvorkommnisse-api", () => ({
-  EreignisControllerApi: vi.fn().mockImplementation(() => ({
-    postEreignisse: mockDefinitions.postEreignisse,
-  })),
+  EreignisControllerApi: vi.fn().mockImplementation(
+    class MockedEreignisControllerApi {
+      postEreignisse = mockDefinitions.postEreignisse;
+    } as never
+  ),
   Configuration: vi.fn(),
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

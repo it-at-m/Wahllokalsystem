@@ -10,14 +10,16 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   getHandbuch: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  HandbuchControllerApi: vi.fn().mockImplementation(() => ({
-    getHandbuch: mockDefinitions.getHandbuch,
-  })),
+  HandbuchControllerApi: vi.fn().mockImplementation(
+    class MockedHandbuchControllerApi {
+      getHandbuch = mockDefinitions.getHandbuch;
+    } as never
+  ),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

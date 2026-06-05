@@ -25,10 +25,12 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      WahlscheineControllerApi: vi.fn().mockImplementation(() => ({
-        getWahlscheine: mockDefinitions.getWahlscheine,
-        postWahlscheine: mockDefinitions.postWahlscheine,
-      })),
+      WahlscheineControllerApi: vi.fn().mockImplementation(
+        class MockedWahlscheineControllerApi {
+          getWahlscheine = mockDefinitions.getWahlscheine;
+          postWahlscheine = mockDefinitions.postWahlscheine;
+        } as never
+      ),
       Configuration: mockDefinitions.configurationConstructor,
     };
   }

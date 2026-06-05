@@ -7,13 +7,15 @@ import { useWahlvorschlaegeService } from "@/composables/wahlvorschlaege/wahlvor
 const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlaege: vi.fn(),
   toModel: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  WahlvorschlaegeControllerApi: vi.fn().mockImplementation(() => ({
-    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
-  })),
+  WahlvorschlaegeControllerApi: vi.fn().mockImplementation(
+    class MockedWahlvorschlaegeControllerApi {
+      getWahlvorschlaege = mockDefinitions.getWahlvorschlaege;
+    } as never
+  ),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeMapper.ts", () => ({

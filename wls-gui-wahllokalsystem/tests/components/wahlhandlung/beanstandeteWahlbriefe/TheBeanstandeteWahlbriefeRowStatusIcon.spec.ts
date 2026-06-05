@@ -6,6 +6,7 @@ import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
@@ -30,16 +31,9 @@ describe("TheBeanstandeteWahlbriefeRowStatusIcon", () => {
   let pinia: TestingPinia;
   const { prepareWahl } = useWahlTestDataFactory();
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
+  mockAndStubResizeObserver();
 
   vi.stubGlobal("visualViewport", new EventTarget()); // mocks responsive layouts
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock); // mocks dynamic components
 
   beforeAll(() => {
     createPinia();

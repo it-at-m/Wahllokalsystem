@@ -4,6 +4,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
@@ -65,14 +66,7 @@ const { prepareKonfigurationsparameter } =
 describe("App", () => {
   let wrapper: VueWrapper;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
   vi.stubGlobal("visualViewport", new EventTarget());
 
   vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");

@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -17,14 +18,7 @@ describe("BaseDialogBegruendung.vue", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
   vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });

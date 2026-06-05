@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import {
   enableAutoUnmount,
@@ -34,16 +35,7 @@ import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 describe("TheEreignisseRows.vue", () => {
   let wrapper: VueWrapper;
   vi.stubGlobal("visualViewport", new EventTarget());
-  // Mock the ResizeObserver
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  // Stub the global ResizeObserver
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   beforeAll(() => {
     createPinia();

@@ -3,6 +3,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import {
@@ -47,15 +48,7 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 describe("BaseWahlschliessungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahlschliessungCard>>;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-
-  beforeAll(() => vi.stubGlobal("ResizeObserver", ResizeObserverMock));
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     const mockedNow = new Date();

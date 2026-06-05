@@ -28,6 +28,7 @@ export function useStimmabgabevermerkeService() {
 
   async function getStimmabgabevermerke(
     wahlbezirkID: string,
+    wahlID: string,
     waehlerverzeichnisNummer: number,
     sendNotification = true
   ) {
@@ -35,6 +36,7 @@ export function useStimmabgabevermerkeService() {
       const response =
         await stimmabgabevermerkeControllerApi.getStimmabgabevermerke(
           wahlbezirkID,
+          wahlID,
           waehlerverzeichnisNummer
         );
       const responseData = getNullOn204OrElseResponseData(response);
@@ -57,18 +59,18 @@ export function useStimmabgabevermerkeService() {
 
   async function postStimmabgabevermerke(
     wahlbezirkID: string,
+    wahlID: string,
     waehlerverzeichnisNummer: number,
     stimmabgabevermerke: Stimmabgabevermerke
   ) {
     const { wahlenActions } = useWahlenStore();
     const wahlname =
-      wahlenActions.getWahlNameOrBlankStringById(
-        // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-        stimmabgabevermerke.wahldaten?.[0].wahlID
-      ) || "";
+      wahlenActions.getWahlNameOrBlankStringById(stimmabgabevermerke.wahlID) ||
+      "";
     try {
       await stimmabgabevermerkeControllerApi.postStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer,
         toDto(stimmabgabevermerke)
       );
@@ -82,7 +84,7 @@ export function useStimmabgabevermerkeService() {
         "Fehler beim Speichern der Stimmabgabevermerke für " + wahlname;
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
-      throw new Error("Post Stimmabgabevermerke Failed");
+      throw new Error("Post Stimmabgabevermerke Failed", { cause: e });
     }
   }
 

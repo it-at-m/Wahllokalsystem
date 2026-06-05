@@ -14,7 +14,8 @@ export function useWahlvorschlaegeTaskFactory(): TaskFactory {
       taskFactoryContext.extendedWahlMetaData.filter(
         (obj) =>
           obj.wahlArt !== WahlWahlartEnum.Ve &&
-          obj.wahlArt !== WahlWahlartEnum.Beb
+          obj.wahlArt !== WahlWahlartEnum.Beb &&
+          obj.wahlArt !== WahlWahlartEnum.Mbw //has own task factory
       );
 
     return allWahlenWithoutBEandVE.map(createTask);

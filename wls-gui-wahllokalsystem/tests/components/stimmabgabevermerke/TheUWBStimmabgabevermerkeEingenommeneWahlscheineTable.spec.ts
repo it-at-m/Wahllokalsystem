@@ -29,11 +29,8 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
 }));
 
 describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
-  const {
-    createStimmabgabevermerke,
-    prepareStimmabgabevermerke,
-    prepareWahldaten,
-  } = useStimmabgabevermerkeTestDataFactory();
+  const { createStimmabgabevermerke, prepareStimmabgabevermerke } =
+    useStimmabgabevermerkeTestDataFactory();
   let stimmabgabevermerkeStore: ReturnType<typeof useStimmabgabevermerkeStore>;
   let testPinia: TestingPinia;
 
@@ -50,29 +47,20 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderTableWithThreeEntries_when_stimmabgabevermerkeHasThreeWahldatenEntries", async (context) => {
-      const wahldatenOne = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .eingenommeneWahlscheine(
           new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 30]])
         )
         .build();
-      const wahldatenTwo = prepareWahldaten()
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
         .eingenommeneWahlscheine(
           new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 50]])
         )
         .build();
-      const wahldatenThree = prepareWahldaten()
+      const stimmabgabevermerkeThree = prepareStimmabgabevermerke()
         .eingenommeneWahlscheine(
           new Map([[EingenommenerWahlscheinStimmzettelartEnum.Klein, 60]])
         )
-        .build();
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenOne])
-        .build();
-      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenTwo])
-        .build();
-      const stimmabgabevermerkeThree = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenThree])
         .build();
       stimmabgabevermerkeStore = useStimmabgabevermerkeStore(testPinia);
       stimmabgabevermerkeStore.stimmabgabevermerke = [
@@ -127,8 +115,7 @@ describe("TheUwbStimmabgabevermerkeEingenommeneWahlscheineTable", () => {
       stimmabgabevermerkeStore.stimmabgabevermerke.forEach(
         (stimmabgabevermerkeEntries) => {
           expect(
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            stimmabgabevermerkeEntries.wahldaten[0].eingenommeneWahlscheine.get(
+            stimmabgabevermerkeEntries.eingenommeneWahlscheine.get(
               EingenommenerWahlscheinStimmzettelartEnum.Klein
             )
           ).toBe(newNumberInputValue);

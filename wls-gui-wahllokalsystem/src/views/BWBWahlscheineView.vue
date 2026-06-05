@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card>
       <v-card-title>Zählen der Wahlscheine</v-card-title>
       <v-card-text>
@@ -75,7 +75,7 @@
         "
       />
     </base-dialog-begruendung>
-  </v-container>
+  </div>
 </template>
 <script setup lang="ts">
 import type { DifferenceDialogItem } from "@/types/ergebnismeldung/common/DifferenceDialogItem.ts";

@@ -176,19 +176,18 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         if (waehlerverzeichnisNummer) {
           const loadedStimmabgabevermerke = await getStimmabgabevermerke(
             wahlbezirkID,
+            wahlID,
             waehlerverzeichnisNummer
           );
           if (loadedStimmabgabevermerke) {
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
+            bWerte.b1 = loadedStimmabgabevermerke.vermerke
               .flatMap((vermerk) => vermerk.stimmzettel)
               .reduce(
                 (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
                 0
               );
             bWerte.b2 = Array.from(
-              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-              loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
+              loadedStimmabgabevermerke.eingenommeneWahlscheine.values()
             ).reduce((sum, value) => sum + value, 0);
 
             bWerte.b = bWerte.b1 + bWerte.b2;
@@ -337,12 +336,12 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
           .catch(() => {
             status.niederschrift.uebermittelt = false;
           })
-          .finally(() => {
+          .finally(async () => {
             status.niederschrift.validierungsstatus =
               MeldungValidierungsstatusEnum.Valide;
             status.niederschrift.sendeuhrzeit =
               toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
-            postStatus(wahlID, wahlbezirkID, status, false);
+            await postStatus(wahlID, wahlbezirkID, status, false);
           });
       }
     } finally {

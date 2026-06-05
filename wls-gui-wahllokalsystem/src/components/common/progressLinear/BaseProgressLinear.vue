@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-expansion-panels class="mt-4">
+    <p
+      v-if="!tasks?.length"
+      class="my-3"
+    >
+      {{ titel }} ({{ current }} / {{ total }})
+    </p>
+    <v-expansion-panels v-else>
       <v-expansion-panel elevation="0">
         <v-expansion-panel-title class="pl-0">
           {{ titel }} ({{ current }} / {{ total }})
@@ -15,6 +21,7 @@
       :max="total"
       :model-value="current"
       :color="color"
+      :indeterminate="isIndeterminateForFirstTask ? current == 0 : false"
     />
   </div>
 </template>
@@ -26,7 +33,8 @@ defineProps<{
   isLoading: boolean;
   current: number;
   total: number;
-  tasks: Task[];
+  tasks?: Task[];
   color?: string;
+  isIndeterminateForFirstTask?: boolean;
 }>();
 </script>

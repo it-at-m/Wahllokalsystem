@@ -18,10 +18,12 @@ export const ROUTE_STAPEL_B = "stapelB";
 export const ROUTE_STAPEL_C = "stapelC";
 
 export const CONTINUE_QUERY_PARAM = "continue";
+export const LOGOUT_BY_INACTIVITY_QUERY_PARAMETER = "inactive";
 
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 
+export const CONTACT_SUPPORT = "Kontaktieren Sie bitte die Wahl-Hotline.";
 export const WAHLHOTLINE = "089 233 96233";
 export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
 

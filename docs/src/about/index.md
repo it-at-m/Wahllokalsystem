@@ -328,6 +328,8 @@ Stapel für die **Migrationsbeiratswahl**:
   | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidat*innenstimmen     |
   | `D_Ungueltig` | Leere und ungekennzeichnete Stimmzettel                         |                           |
 
+Eine neue Auszählungsmethodik [ohne Stapel](../dse/) wird aktuell getestet.
+
 #### Nach der Auszählung
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
@@ -344,6 +346,8 @@ erfolgt ist, wird `schnellmeldung.gedruckt` auf `true` gesetzt.
 Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
 `schnellmeldung.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
 
+Es kann auch später erneut eine Schnellmeldung gedruckt werden.
+
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
 Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die
@@ -359,4 +363,12 @@ Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, so
 `niederschrift.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
 
 Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
-dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen.
+dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen. Die erfassten Daten können
+weiterhin eingesehen werden. Es kann auch erneut eine Niederschrift gedruckt werden.
+
+#### Weitere nicht Use-Case-spezifische Anforderungen
+
+##### Abmeldung bei Timeout
+
+Vollzieht der/die Benutzer\*In über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
+dafür kann [konfiguriert werden](../services/backend-services/infomanagement-service/#konfigurationen).

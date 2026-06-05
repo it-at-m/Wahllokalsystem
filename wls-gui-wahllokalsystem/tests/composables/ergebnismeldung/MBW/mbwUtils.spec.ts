@@ -2,7 +2,6 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { MbwErgebnisseAndWahlvorschlag } from "@/types/ergebnismeldung/MBW/MbwErgebnisseAndWahlvorschlag.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useAWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/aWerteTestDataFactory.ts";
 import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bWerteTestDataFactory.ts";
@@ -14,6 +13,7 @@ import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabev
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { spyOn } from "storybook/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -125,12 +125,8 @@ const {
 } = useWahlvorschlaegeTestDataFactory();
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const {
-  prepareWahldaten,
-  prepareStimmabgabevermerke,
-  prepareVermerk,
-  prepareStimmzettel,
-} = useStimmabgabevermerkeTestDataFactory();
+const { prepareStimmabgabevermerke, prepareVermerk, prepareStimmzettel } =
+  useStimmabgabevermerkeTestDataFactory();
 const { createStatus } = useStatusTestDataFactory();
 const { prepareAWerte } = useAWerteTestDataFactory();
 const { prepareBWerte } = useBWerteTestDataFactory();
@@ -902,38 +898,32 @@ describe("mbwUtils", () => {
 
       mockDefinitions.getStimmabgabevermerke.mockReturnValue(
         prepareStimmabgabevermerke()
-          .wahlbezirkID(wahlbezirkID)
-          .waehlerverzeichnisNummer(1)
-          .wahldaten([
-            prepareWahldaten()
-              .eingenommeneWahlscheine(
-                new Map([
-                  [StimmzettelStimmzettelartEnum.Klein, 1],
-                  [StimmzettelStimmzettelartEnum.Beide, 1],
-                ])
-              )
-              .vermerke([
-                prepareVermerk()
-                  .blattnummer(1)
-                  .stimmzettel([
-                    prepareStimmzettel()
-                      .anzahl(1)
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
-                      .build(),
-                    prepareStimmzettel()
-                      .anzahl(1)
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
-                      .build(),
-                  ])
+          .eingenommeneWahlscheine(
+            new Map([
+              [StimmzettelStimmzettelartEnum.Klein, 1],
+              [StimmzettelStimmzettelartEnum.Beide, 1],
+            ])
+          )
+          .vermerke([
+            prepareVermerk()
+              .blattnummer(1)
+              .stimmzettel([
+                prepareStimmzettel()
+                  .anzahl(1)
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
                   .build(),
-                prepareVermerk()
-                  .blattnummer(2)
-                  .stimmzettel([
-                    prepareStimmzettel()
-                      .anzahl(1)
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
-                      .build(),
-                  ])
+                prepareStimmzettel()
+                  .anzahl(1)
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
+                  .build(),
+              ])
+              .build(),
+            prepareVermerk()
+              .blattnummer(2)
+              .stimmzettel([
+                prepareStimmzettel()
+                  .anzahl(1)
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
                   .build(),
               ])
               .build(),
@@ -945,6 +935,7 @@ describe("mbwUtils", () => {
 
       expect(mockDefinitions.getStimmabgabevermerke).toHaveBeenCalledWith(
         wahlbezirkID,
+        wahlID,
         1
       );
       expect(result.b1).toBe(3);
@@ -968,6 +959,7 @@ describe("mbwUtils", () => {
 
       expect(mockDefinitions.getStimmabgabevermerke).toHaveBeenCalledWith(
         wahlbezirkID,
+        wahlID,
         1
       );
       expect(result.b1).toBe(0);
@@ -1032,38 +1024,32 @@ describe("mbwUtils", () => {
       );
       mockDefinitions.getStimmabgabevermerke.mockReturnValue(
         prepareStimmabgabevermerke()
-          .wahlbezirkID(wahlbezirkID)
-          .waehlerverzeichnisNummer(wahl.waehlerverzeichnisNummer)
-          .wahldaten([
-            prepareWahldaten()
-              .eingenommeneWahlscheine(
-                new Map([
-                  [StimmzettelStimmzettelartEnum.Klein, 1], // b2
-                  [StimmzettelStimmzettelartEnum.Beide, 1], // b2
-                ])
-              )
-              .vermerke([
-                prepareVermerk()
-                  .blattnummer(1)
-                  .stimmzettel([
-                    prepareStimmzettel()
-                      .anzahl(1) // b1
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
-                      .build(),
-                    prepareStimmzettel()
-                      .anzahl(1) // b1
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
-                      .build(),
-                  ])
+          .eingenommeneWahlscheine(
+            new Map([
+              [StimmzettelStimmzettelartEnum.Klein, 1], // b2
+              [StimmzettelStimmzettelartEnum.Beide, 1], // b2
+            ])
+          )
+          .vermerke([
+            prepareVermerk()
+              .blattnummer(1)
+              .stimmzettel([
+                prepareStimmzettel()
+                  .anzahl(1) // b1
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
                   .build(),
-                prepareVermerk()
-                  .blattnummer(2)
-                  .stimmzettel([
-                    prepareStimmzettel()
-                      .anzahl(1) // b1
-                      .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
-                      .build(),
-                  ])
+                prepareStimmzettel()
+                  .anzahl(1) // b1
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Beide)
+                  .build(),
+              ])
+              .build(),
+            prepareVermerk()
+              .blattnummer(2)
+              .stimmzettel([
+                prepareStimmzettel()
+                  .anzahl(1) // b1
+                  .stimmzettelart(StimmzettelStimmzettelartEnum.Klein)
                   .build(),
               ])
               .build(),

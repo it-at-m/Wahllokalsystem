@@ -4,35 +4,53 @@
       <base-workflow-list-item
         v-bind="props"
         title="Wahlbriefzulassung"
-        :disabled="disabled"
-        :subtitle="disabledMessage"
-        :is-workflow-step-finished="isWahlbriefzulassungErfasst"
+        :disabled="disabled && !areAllElectionsFinished"
+        :subtitle="areAllElectionsFinished ? '' : disabledMessage"
+        :is-workflow-step-finished="
+          isWahlbriefzulassungErfasst || areAllElectionsFinished
+        "
         list-group-activator
       />
     </template>
     <base-workflow-list-item
       title="Beginn Stimmabgabe"
       :to="routeWithName(ROUTE_BEGINN_STIMMABGABE)"
-      :disabled="disabled || !isWahlvorstandErfasst"
-      :is-workflow-step-finished="isWahleroeffnungErfasst"
+      :disabled="
+        (disabled || !isWahlvorstandErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahleroeffnungErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Wahlumgebung"
       :to="routeWithName(ROUTE_WAHLUMGEBUNG)"
-      :disabled="disabled || !isWahleroeffnungErfasst"
-      :is-workflow-step-finished="isWahlumgebungErfasst"
+      :disabled="
+        (disabled || !isWahleroeffnungErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahlumgebungErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Wahlbriefe erfassen"
       :to="routeWithName(ROUTE_ERFASSUNG_WAHLBRIEFE)"
-      :disabled="disabled || !isWahlumgebungErfasst"
-      :is-workflow-step-finished="isWahlbriefeErfassenErfasst"
+      :disabled="
+        (disabled || !isWahlumgebungErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahlbriefeErfassenErfasst || areAllElectionsFinished
+      "
     />
     <base-workflow-list-item
       title="Wahlbriefe zulassen"
       :to="routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)"
-      :disabled="disabled || !isWahlbriefeErfassenErfasst"
-      :is-workflow-step-finished="isWahlbriefeZulassenErfasst"
+      :disabled="
+        (disabled || !isWahlbriefeErfassenErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isWahlbriefeZulassenErfasst || areAllElectionsFinished
+      "
     />
   </v-list-group>
 </template>
@@ -63,6 +81,7 @@ defineProps({
 
 const { routeWithName } = useNavigationUtils();
 const {
+  areAllElectionsFinished,
   isWahlumgebungErfasst,
   isWahleroeffnungErfasst,
   isWahlbriefeErfassenErfasst,

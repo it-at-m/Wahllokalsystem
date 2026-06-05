@@ -1,28 +1,30 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.EingenommenerWahlscheinDTO;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmabgabevermerkeDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmzettelDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.StimmzettelartDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.VermerkDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.stimmabgabevermerke.WahldatenDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.EingenommenerWahlscheinModel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmabgabevermerkeModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.WahldatenModel;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.val;
 
 public class Testdaten {
 
-  public static class Wahldaten {
+  public static class Stimmabgabevermerke {
 
-    public static WahldatenModel createModel(
+    public static StimmabgabevermerkeModel createModel(
         @NotNull String wahlbezirkID,
         @NotNull String wahlID,
         @NotNull Long waehlerverzeichnisnummer) {
@@ -35,12 +37,12 @@ public class Testdaten {
               EigenommenerWahlschein.createModel(waehlerverzeichnisnummer * 10 + 1),
               EigenommenerWahlschein.createModel(waehlerverzeichnisnummer * 10 + 2));
 
-      return new WahldatenModel(
+      return new StimmabgabevermerkeModel(
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
 
     public static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
-            .Wahldaten
+            .Stimmabgabevermerke
         createEntity(
             @NotNull String wahlbezirkID,
             @NotNull String wahlID,
@@ -56,8 +58,7 @@ public class Testdaten {
 
       val wahldaten =
           new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke
-              .Wahldaten(
-              null,
+              .Stimmabgabevermerke(
               new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                   wahlbezirkID, wahlID, waehlerverzeichnisnummer),
               new HashSet<>(),
@@ -66,7 +67,7 @@ public class Testdaten {
       return wahldaten;
     }
 
-    public static WahldatenDTO createDTO(
+    public static StimmabgabevermerkeDTO createDTO(
         @NotNull String wahlbezirkID,
         @NotNull String wahlID,
         @NotNull Long waehlerverzeichnisnummer) {
@@ -79,7 +80,7 @@ public class Testdaten {
               EigenommenerWahlschein.createDTO(waehlerverzeichnisnummer * 10 + 1),
               EigenommenerWahlschein.createDTO(waehlerverzeichnisnummer * 10 + 2));
 
-      return new WahldatenDTO(
+      return new StimmabgabevermerkeDTO(
           wahlbezirkID, wahlID, waehlerverzeichnisnummer, vermerke, eingenommeneWahlscheine);
     }
   }
@@ -147,6 +148,21 @@ public class Testdaten {
 
     public static EingenommenerWahlscheinDTO createDTO(@NotNull long anzahl) {
       return new EingenommenerWahlscheinDTO(anzahl, StimmzettelartDTO.KLEIN);
+    }
+  }
+
+  public static class Meldung {
+    public static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Meldung
+        createEntity() {
+      val meldung =
+          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Meldung();
+      meldung.setGedruckt(true);
+      meldung.setSendeuhrzeit(LocalDateTime.now());
+      meldung.setUebermittelt(true);
+      meldung.setSendeuhrzeit(LocalDateTime.now());
+      meldung.setValidierungsstatus(Validierungsstatus.VALIDE);
+
+      return meldung;
     }
   }
 }

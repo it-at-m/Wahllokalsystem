@@ -79,7 +79,7 @@ export function useWahlscheineService() {
         "Fehler beim Speichern der Wahlscheine für " + wahlname;
       logDebug(errorMessage, e);
       addNotification(errorMessage, UserNotificationCategoryEnum.ERROR);
-      throw new Error("Post Wahlscheine Failed");
+      throw new Error("Post Wahlscheine Failed", { cause: e });
     }
   }
 

@@ -1,3 +1,5 @@
+import type { RouteRecordRawWithoutName } from "@/types/navigation/RouteRecordRawWithoutName.ts";
+
 import {
   type RouteLocationAsRelativeGeneric,
   type RouteRecordRaw,
@@ -16,7 +18,7 @@ import MBWStimmzettelView from "@/views/ergebnismeldung/MBW/MBWStimmzettelView.v
 
 const {
   isStepDoneInElectionState,
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
@@ -25,10 +27,8 @@ const {
 const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
-type RouteRecordRawWithoutName = Omit<RouteRecordRaw, "name">;
-
 const auszaehlungPrerequisiteGuards = [
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,

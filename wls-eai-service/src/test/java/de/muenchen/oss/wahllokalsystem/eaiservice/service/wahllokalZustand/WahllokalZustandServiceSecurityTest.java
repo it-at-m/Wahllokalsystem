@@ -6,14 +6,9 @@ import de.muenchen.oss.wahllokalsystem.eaiservice.TestConstants;
 import de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahllokalzustand.dto.WahllokalZustandDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Collections;
-import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,7 +25,7 @@ public class WahllokalZustandServiceSecurityTest {
 
     @Test
     void should_notThrowAnyException_when_allAuthoritiesAreGiven() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_SETWAHLLOKALZUSTAND);
+      SecurityUtils.runWith(Authorities.SERVICE_SAVE_WAHLLOKALZUSTAND);
 
       Assertions.assertThatNoException()
           .isThrownBy(
@@ -43,11 +38,9 @@ public class WahllokalZustandServiceSecurityTest {
                           Collections.emptySet())));
     }
 
-    @ParameterizedTest(name = "{index} - {1} missing")
-    @MethodSource("getMissingAuthoritiesVariations")
-    void should_throwAccessDeniedException_when_anyAuthorityMissing(
-        final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+    @Test
+    void should_throwAccessDeniedException_when_anyAuthorityMissing() {
+      SecurityUtils.runWith();
 
       Assertions.assertThatThrownBy(
               () ->
@@ -58,11 +51,6 @@ public class WahllokalZustandServiceSecurityTest {
                           null,
                           Collections.emptySet())))
           .isInstanceOf(AccessDeniedException.class);
-    }
-
-    private static Stream<Arguments> getMissingAuthoritiesVariations() {
-      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          Authorities.ALL_AUTHORITIES_SETWAHLLOKALZUSTAND);
     }
   }
 }

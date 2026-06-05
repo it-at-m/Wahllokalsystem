@@ -5,7 +5,7 @@
       subtitle="Kontrolle, Übermittlung und Druck der Niederschrift"
       :is-sending="isSendingNiederschrift"
       :is-korrigieren-active="isKorrigierenValid"
-      :is-drucken-active="hasDoneVorkommnisse(ereignisse)"
+      :is-drucken-active="isDruckenActive"
       :is-drucken-loading="isDruckenLoading"
       :is-senden-active="isSendenActive"
       @save="onSendenClicked"
@@ -112,10 +112,11 @@ const { getNextRoute } = useNavigationUtils();
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();
 const isDruckenLoading = ref<boolean>(false);
+const isNiederschriftSendenClicked = ref<boolean>(false);
 
 const isOfflineSyncDialogVisible = ref(false);
 const isSyncErrorDialogVisible = ref(false);
-const { logError } = useLogging("mbwUtils");
+const { logError } = useLogging("mbwNiederschriftView");
 const currentUserWahlbezirkID = route.params.wahlbezirkId as string;
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -148,8 +149,18 @@ const workflowState = computed(() =>
 
 const isSendenActive = computed(
   () =>
-    !workflowState.value?.isNiederschriftDone &&
-    !status.value?.niederschrift.gedruckt
+    (!workflowState.value?.isNiederschriftDone &&
+      !status.value?.niederschrift.gedruckt &&
+      !!status.value?.niederschrift.uebermittelt) ||
+    !status.value?.niederschrift.uebermittelt
+);
+
+const isDruckenActive = computed(
+  () =>
+    hasDoneVorkommnisse(ereignisse.value) &&
+    (status.value?.niederschrift.uebermittelt ||
+      status.value?.niederschrift.gedruckt ||
+      isNiederschriftSendenClicked.value)
 );
 
 onActivated(async () => {
@@ -162,11 +173,16 @@ onActivated(async () => {
 
 function onSendenClicked() {
   isOfflineSyncDialogVisible.value = true;
+  isNiederschriftSendenClicked.value = true;
 }
 
 async function onSyncSuccess() {
   isOfflineSyncDialogVisible.value = false;
   await sendNiederschrift();
+  status.value = await loadStatusByWahlIdAndWahlbezirkId(
+    wahlID,
+    currentUserWahlbezirkID
+  );
 }
 
 function onSyncError() {
@@ -188,7 +204,8 @@ async function onDruckenClicked() {
     );
 
     if (printWindow) {
-      printWindow.document.body.innerHTML = pdfText;
+      printWindow.document.writeln(pdfText);
+      printWindow.document.close();
       printWindow.print();
       printWindow.close();
     }

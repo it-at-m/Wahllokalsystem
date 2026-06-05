@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.4.15-SNAPSHOT</version>
+    <version>0.5.1-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
@@ -14,8 +14,8 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.5.14</spring.boot.version>
-        <spring.cloud.version>2025.0.1</spring.cloud.version>
-        <logstash.encoder>8.1</logstash.encoder>
+        <spring.cloud.version>2025.0.2</spring.cloud.version>
+        <logstash.encoder>9.0</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
         <apache.commons.csv>1.14.1</apache.commons.csv>
         <apache.commons.io>2.22.0</apache.commons.io>
@@ -28,15 +28,15 @@
         <jacoco.version>0.8.14</jacoco.version>
         <!-- Plugins -->
         <maven-scm-plugin.version>2.2.1</maven-scm-plugin.version>
-        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
         <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
         <maven.resources.plugin.version>3.5.0</maven.resources.plugin.version>
         <!-- Version muss mit der in den spring-boot-dependencies bereitgestellten Lombok-Version übereinstimmen -->
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
         <org.projectlombok.mapstructbinding.version>0.2.0</org.projectlombok.mapstructbinding.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
-        <org.springdoc.version>2.8.15</org.springdoc.version>
-        <wls.common.version>1.7.0</wls.common.version>
+        <org.springdoc.version>2.8.17</org.springdoc.version>
+        <wls.common.version>1.7.1</wls.common.version>
         <com.tngtech.archunit.version>1.4.2</com.tngtech.archunit.version>
     </properties>
 
@@ -151,7 +151,7 @@
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>23.26.1.0.0</version>
+            <version>23.26.2.0.0</version>
         </dependency>
         <!-- Hibernate Model Gen for type safe criterias -->
         <dependency>
@@ -391,7 +391,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.18.0</version>
+                <version>7.22.0</version>
                 <configuration>
                     <generatorName>java</generatorName>
                     <library>resttemplate</library>
@@ -601,7 +601,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.26.1</version>
+                        <version>13.4.2</version>
                     </dependency>
                 </dependencies>
             </plugin>

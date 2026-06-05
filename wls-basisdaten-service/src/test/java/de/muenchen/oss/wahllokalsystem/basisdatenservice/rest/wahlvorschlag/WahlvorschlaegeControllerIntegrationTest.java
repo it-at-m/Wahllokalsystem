@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
-import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.basisdatenservice.TestConstants.SPRING_TEST_PROFILE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +23,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlI
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.util.Set;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class WahlvorschlaegeControllerIntegrationTest {
 
   @Value("${service.info.oid}")
@@ -97,11 +100,10 @@ public class WahlvorschlaegeControllerIntegrationTest {
                       .withStatus(HttpStatus.OK.value())
                       .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 
-      val request =
-          MockMvcRequestBuilders.get(
-              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
@@ -127,12 +129,9 @@ public class WahlvorschlaegeControllerIntegrationTest {
                       .withStatus(HttpStatus.OK.value())
                       .withBody(objectMapper.writeValueAsBytes(eaiWahlvorschlaege))));
 
-      val request =
-          MockMvcRequestBuilders.get(
-              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
+      api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID)).andExpect(status().isOk());
 
-      api.perform(request).andExpect(status().isOk());
-
+      SecurityUtils.runWith(Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE);
       val dataFromRepo =
           wahlvorschlaegeRepository
               .findByBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID))
@@ -162,6 +161,11 @@ public class WahlvorschlaegeControllerIntegrationTest {
           modelMapper.toEntity(
               wahlvorschlaegeClientMapper.toModel(
                   createClientWahlvorschlaegeDTO(wahlID, wahlbezirkID)));
+      SecurityUtils.runWith(
+          ArrayUtils.addAll(
+              Authorities.ALL_AUTHORITIES_GET_WAHLVORSCHLAEGE,
+              Authorities.REPOSITORY_WRITE_WAHLVORSCHLAG,
+              Authorities.REPOSITORY_WRITE_KANDIDAT));
       val savedEntity = wahlvorschlaegeRepository.save(entityToFind);
       entityToFind
           .getWahlvorschlaege()
@@ -171,11 +175,10 @@ public class WahlvorschlaegeControllerIntegrationTest {
                 kandidatRepository.saveAll(wahlvorschlag.getKandidaten());
               });
 
-      val request =
-          MockMvcRequestBuilders.get(
-              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val response =
+          api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isOk())
+              .andReturn();
       val responseBodyAsDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WahlvorschlaegeDTO.class);
@@ -198,11 +201,10 @@ public class WahlvorschlaegeControllerIntegrationTest {
                       .withHeader("Content-Type", "application/json")
                       .withStatus(HttpStatus.NOT_FOUND.value())));
 
-      val request =
-          MockMvcRequestBuilders.get(
-              "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID);
-
-      val response = api.perform(request).andExpect(status().isInternalServerError()).andReturn();
+      val response =
+          api.perform(createGetRequest(wahlID, wahlbezirkID, wahlbezirkID))
+              .andExpect(status().isInternalServerError())
+              .andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
               response.getResponse().getContentAsString(), WlsExceptionDTO.class);
@@ -214,6 +216,13 @@ public class WahlvorschlaegeControllerIntegrationTest {
               serviceID,
               ExceptionConstants.FAILED_COMMUNICATION_WITH_EAI.message());
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedWlsExceptionDTO);
+    }
+
+    @Test
+    void should_returnForbidden_when_userHasWrongBezirkId() throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      api.perform(createGetRequest("wahlID", wahlbezirkID, wahlbezirkID + "sth"))
+          .andExpect(status().isForbidden());
     }
   }
 
@@ -281,5 +290,18 @@ public class WahlvorschlaegeControllerIntegrationTest {
     clientWahlvorschlaegeDTO.setWahlvorschlaege(wahlvorschlaege);
 
     return clientWahlvorschlaegeDTO;
+  }
+
+  private MockHttpServletRequestBuilder createGetRequest(
+      final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID) {
+    return MockMvcRequestBuilders.get(
+            "/businessActions/wahlvorschlaege/" + wahlID + "/" + wahlbezirkID)
+        .with(
+            jwt()
+                .authorities(
+                    new SimpleGrantedAuthority(Authorities.SERVICE_GET_WAHLVORSCHLAEGE),
+                    new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_WAHLVORSCHLAEGE),
+                    new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_WAHLVORSCHLAEGE))
+                .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)));
   }
 }

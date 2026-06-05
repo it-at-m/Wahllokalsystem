@@ -34,9 +34,7 @@ export const useStimmabgabevermerkeStore = defineStore(
 
       let minVermerkeLength = Infinity;
       for (const stimmabgabevermerk of stimmabgabevermerke.value) {
-        const currentVermerkeLength =
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          stimmabgabevermerk.wahldaten[0].vermerke.length;
+        const currentVermerkeLength = stimmabgabevermerk.vermerke.length;
         if (currentVermerkeLength < minVermerkeLength) {
           minVermerkeLength = currentVermerkeLength;
         }
@@ -50,8 +48,7 @@ export const useStimmabgabevermerkeStore = defineStore(
 
       stimmabgabevermerke.value.forEach(
         (stimmabgabevermerk: Stimmabgabevermerke) => {
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          const totalVermerke = stimmabgabevermerk.wahldaten[0].vermerke.reduce(
+          const totalVermerke = stimmabgabevermerk.vermerke.reduce(
             (sum, vermerk) => {
               let innerSum = 0;
               vermerk.stimmzettel.forEach((stimmzettel) => {
@@ -75,12 +72,14 @@ export const useStimmabgabevermerkeStore = defineStore(
 
     async function loadStimmabgabevermerke(
       wahlbezirkID: string,
+      wahlID: string,
       waehlerverzeichnisNummer: number,
       sendNotification = true
     ) {
       try {
         const loadedStimmabgabevermerke = await getStimmabgabevermerke(
           wahlbezirkID,
+          wahlID,
           waehlerverzeichnisNummer,
           sendNotification
         );
@@ -103,6 +102,7 @@ export const useStimmabgabevermerkeStore = defineStore(
         try {
           await postStimmabgabevermerke(
             stimmabgabevermerk.wahlbezirkID,
+            stimmabgabevermerk.wahlID,
             stimmabgabevermerk.waehlerverzeichnisNummer,
             stimmabgabevermerk
           );
@@ -122,8 +122,8 @@ export const useStimmabgabevermerkeStore = defineStore(
         const result = new Map<string, number>();
         stimmabgabevermerke.value.forEach((stimmabgabevermerk) => {
           let sumForWahl = 0;
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          stimmabgabevermerk.wahldaten[0].vermerke?.forEach((vermerk) => {
+
+          stimmabgabevermerk.vermerke?.forEach((vermerk) => {
             vermerk.stimmzettel.forEach((stimmzettel) => {
               if (
                 stimmzettel.stimmzettelart ==
@@ -134,12 +134,11 @@ export const useStimmabgabevermerkeStore = defineStore(
             });
           });
           sumForWahl +=
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            stimmabgabevermerk.wahldaten[0].eingenommeneWahlscheine.get(
+            stimmabgabevermerk.eingenommeneWahlscheine.get(
               EingenommenerWahlscheinStimmzettelartEnum.Klein
             ) ?? 0;
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          result.set(stimmabgabevermerk.wahldaten[0].wahlID, sumForWahl);
+
+          result.set(stimmabgabevermerk.wahlID, sumForWahl);
         });
         return result;
       });
@@ -154,8 +153,7 @@ export const useStimmabgabevermerkeStore = defineStore(
             const removeRows =
               newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
             allVermerkeThatShouldBeRemoved.push(
-              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-              ...stimmabgabevermerk.wahldaten[0].vermerke.slice(removeRows)
+              ...stimmabgabevermerk.vermerke.slice(removeRows)
             );
           }
         }
@@ -176,8 +174,7 @@ export const useStimmabgabevermerkeStore = defineStore(
           newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
         stimmabgabevermerke.value.forEach(
           (stimmabgabevermerk: Stimmabgabevermerke) => {
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            const vermerke = stimmabgabevermerk.wahldaten[0].vermerke;
+            const vermerke = stimmabgabevermerk.vermerke;
             for (let i = removeRows; i < 0; i++) {
               const vermerk = vermerke[vermerke.length + i];
               if (
@@ -235,8 +232,7 @@ export const useStimmabgabevermerkeStore = defineStore(
               rowIndex < newRowSize - 1;
               rowIndex++
             ) {
-              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-              stimmabgabevermerk.wahldaten[0].vermerke.push({
+              stimmabgabevermerk.vermerke.push({
                 blattnummer: rowIndex + 2, //Vermerke starten mit der Blattnummer 2 und von da an weiter, da das erste Blatt die Beurkundung ist
                 stimmzettel: [
                   {
@@ -259,11 +255,8 @@ export const useStimmabgabevermerkeStore = defineStore(
           if (newRowSize > 0 && currentLowestNumberOfRowsOverAllWahldaten) {
             const removeRows =
               newRowSize - currentLowestNumberOfRowsOverAllWahldaten - 1;
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            stimmabgabevermerk.wahldaten[0].vermerke.splice(
-              removeRows,
-              removeRows * -1
-            );
+
+            stimmabgabevermerk.vermerke.splice(removeRows, removeRows * -1);
           }
         }
       );

@@ -22,18 +22,11 @@ describe("stimmabgabevermerkeUtils.ts", () => {
       );
 
       const expectedResult = {
-        waehlerverzeichnisNummer: waehlerverzeichnisNummer,
         wahlbezirkID: wahlbezirkID,
-        wahldaten: [
-          {
-            wahlbezirkID: wahlbezirkID,
-            waehlerverzeichnisNummer: waehlerverzeichnisNummer,
-            vermerke: [],
-            wahlID: wahlID,
-            eingenommeneWahlscheine: new Map(),
-          },
-        ],
-        anzahlBlaetter: 0,
+        waehlerverzeichnisNummer: waehlerverzeichnisNummer,
+        vermerke: [],
+        wahlID: wahlID,
+        eingenommeneWahlscheine: new Map(),
       };
       expect(result).toStrictEqual(expectedResult);
     });

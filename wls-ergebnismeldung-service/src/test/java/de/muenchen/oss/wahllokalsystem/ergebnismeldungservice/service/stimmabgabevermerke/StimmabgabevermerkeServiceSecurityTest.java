@@ -54,11 +54,14 @@ public class StimmabgabevermerkeServiceSecurityTest {
     void should_getAccess_when_allRequiredAuthoritiesArePresent() {
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
 
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
       Assertions.assertThatNoException()
           .isThrownBy(
-              () ->
-                  stimmabgabevermerkeService.getStimmabgabevermerke(
-                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)));
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L));
     }
 
     @ParameterizedTest(name = "{index} = {1} missing")
@@ -67,10 +70,28 @@ public class StimmabgabevermerkeServiceSecurityTest {
         final ArgumentsAccessor arguments) {
       SecurityUtils.runWith(arguments.get(0, String[].class));
 
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(true);
+
       Assertions.assertThatThrownBy(
-              () ->
-                  stimmabgabevermerkeService.getStimmabgabevermerke(
-                      new BezirkIDUndWaehlerverzeichnisNummer("wahlbezirkID", 0L)))
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void
+        should_throwAccessDeniedException_when_allRequiredAuthoritiesArePresentButBezirkIDCheckReturnsFalse() {
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_STIMMABGABEVERMERKE);
+
+      val wahlbezirkID = "wahlbezirkID";
+
+      Mockito.when(bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(eq(wahlbezirkID), any()))
+          .thenReturn(false);
+
+      Assertions.assertThatThrownBy(
+              () -> stimmabgabevermerkeService.getStimmabgabevermerke(wahlbezirkID, "wahlID", 0L))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -95,7 +116,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
 
       Assertions.assertThatNoException()
           .isThrownBy(
-              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)));
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)));
     }
 
     @Test
@@ -110,7 +131,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(false);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -130,7 +151,7 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -150,13 +171,13 @@ public class StimmabgabevermerkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> stimmabgabevermerkeService.postStimmabgabevermerke(id, createSavableModel(id)))
+              () -> stimmabgabevermerkeService.postStimmabgabevermerke(createSavableModel(id)))
           .isInstanceOf(TechnischeWlsException.class);
     }
 
     private static Stream<Arguments> getMissingAuthoritiesVariationsThatThrowAccessDenied() {
       return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
-          ArrayUtils.removeElement(
+          ArrayUtils.removeElements(
               Authorities.ALL_AUTHORITIES_SET_STIMMABGABEVERMERKE,
               Authorities.REPOSITORY_WRITE_STIMMABGABEVERMERKE));
     }
@@ -175,15 +196,11 @@ public class StimmabgabevermerkeServiceSecurityTest {
           Set.of(new EingenommenerWahlscheinModel(0L, StimmzettelartModel.BEIDE));
 
       return new StimmabgabevermerkeModel(
-          id,
-          0L,
-          Set.of(
-              new WahldatenModel(
-                  id.getWahlbezirkID(),
-                  "wahlID",
-                  id.getWaehlerverzeichnisNummer(),
-                  Collections.emptySet(),
-                  eingenommeneWahlscheine)));
+          id.getWahlbezirkID(),
+          "wahlID",
+          id.getWaehlerverzeichnisNummer(),
+          Collections.emptySet(),
+          eingenommeneWahlscheine);
     }
   }
 }

@@ -14,16 +14,15 @@
       <thead>
         <tr>
           <th class="sav-first-column border-b-0" />
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="font-weight-bold dynamic-column border-b-0"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             {{
               wahlenActions.getWahlNameOrBlankStringById(
-                stimmabgabevermerk.wahldaten[0].wahlID
+                stimmabgabevermerk.wahlID
               )
             }}
             <div>Personen mit Stimmabgabevermerk</div>
@@ -31,10 +30,10 @@
         </tr>
         <tr class="font-weight-bold">
           <th class="border-b-0">Blatt</th>
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="border-b-0"
           >
             Anzahl Stimmabgabevermerke
@@ -44,10 +43,10 @@
       <tbody>
         <tr>
           <td>Nr. 1</td>
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
           >
             <v-text-field
               disabled
@@ -60,16 +59,14 @@
           :key="number"
         >
           <td>Nr. {{ number + 1 }}</td>
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             <template
-              v-for="stimmzettel in stimmabgabevermerk.wahldaten[0].vermerke[
-                number - 1
-              ].stimmzettel"
+              v-for="stimmzettel in stimmabgabevermerk.vermerke[number - 1]
+                .stimmzettel"
             >
               <base-number-input
                 v-if="

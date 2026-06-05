@@ -1,4 +1,4 @@
-import { spyOn } from "@storybook/test";
+import { spyOn } from "storybook/test";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";

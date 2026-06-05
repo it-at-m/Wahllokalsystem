@@ -4,7 +4,10 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useErgebnismeldungStore } from "@/stores/ergebnismeldungStore.ts";
-import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import {
+  getStapelForWahlart,
+  StapelArtEnum,
+} from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -14,9 +17,10 @@ export function useErgebnisseTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const tasksForWahlen: Task[] = [];
 
-    taskFactoryContext.extendedWahlMetaData.forEach(
-      (metaData: ExtendedWahlMetaData) => {
-        const allStapelForWahlart = _getStapelForWahlart(metaData.wahlArt);
+    taskFactoryContext.extendedWahlMetaData
+      .filter((metaData) => metaData.wahlArt !== WahlWahlartEnum.Mbw) //has own task factory
+      .forEach((metaData: ExtendedWahlMetaData) => {
+        const allStapelForWahlart = getStapelForWahlart(metaData.wahlArt);
 
         allStapelForWahlart.forEach((stapelArt) => {
           const skipStapelObwLeerIfWahlbezirksArtIsUwb =
@@ -27,8 +31,7 @@ export function useErgebnisseTaskFactory(): TaskFactory {
             tasksForWahlen.push(_createTask(metaData, stapelArt));
           }
         });
-      }
-    );
+      });
 
     return tasksForWahlen;
   }
@@ -42,12 +45,6 @@ export function useErgebnisseTaskFactory(): TaskFactory {
         loadErgebnisseByStapelArt(taskFactoryMetaData.wahlID, stapelArt, false),
       name: `Stapel - ${stapelArt} für ${taskFactoryMetaData.wahlName}`,
     };
-  }
-
-  function _getStapelForWahlart(wahlart: WahlWahlartEnum): StapelArtEnum[] {
-    return Object.values(StapelArtEnum).filter((value) =>
-      value.includes(wahlart)
-    );
   }
 
   return {

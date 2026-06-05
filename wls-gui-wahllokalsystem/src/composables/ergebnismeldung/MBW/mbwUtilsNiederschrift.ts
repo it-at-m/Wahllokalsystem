@@ -40,7 +40,7 @@ import { Partei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftD
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-const { logError } = useLogging("requestStrategies");
+const { logError } = useLogging("mbwUtilsNiederschrift");
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { getErgebnisse } = useErgebnisService();
 
@@ -157,7 +157,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   }
 
   function _getSchliessungsuhrzeit() {
-    let schliessungsuhrzeitInHhMm = [];
+    let schliessungsuhrzeitInHhMm;
     if (currentUserWahlbezirksArt.value === WahlbezirksArtEnum.UWB) {
       schliessungsuhrzeitInHhMm = toHhMm(
         schliessungsuhrzeitState.value.schliessungsuhrzeit
@@ -646,12 +646,11 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         if (waehlerverzeichnisNummer) {
           const loadedStimmabgabevermerke = await getStimmabgabevermerke(
             wahlbezirkID,
+            wahlID,
             waehlerverzeichnisNummer
           );
           if (loadedStimmabgabevermerke) {
-            const wahldatenForWahl = loadedStimmabgabevermerke.wahldaten.find(
-              (wahldaten) => wahldaten.wahlID === wahlID
-            );
+            const wahldatenForWahl = loadedStimmabgabevermerke;
             if (wahldatenForWahl?.eingenommeneWahlscheine) {
               const kleineWahlscheine =
                 wahldatenForWahl.eingenommeneWahlscheine.get(

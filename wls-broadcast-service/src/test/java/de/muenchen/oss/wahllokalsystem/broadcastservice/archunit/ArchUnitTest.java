@@ -102,7 +102,8 @@ public class ArchUnitTest {
                           "BroadcastControllerIntegrationTest",
                           "BroadcastServiceSecurityTest",
                           "ArchUnitTest",
-                          "MessageValidationTest")));
+                          "MessageValidationTest",
+                          "SecurityConfigurationTest")));
 
   private static Stream<Arguments> allClassesWithoutTestsRulesToVerify() {
     return Stream.of(

@@ -2,15 +2,16 @@ package de.muenchen.oss.wahllokalsystem.monitoringservice.rest.wahllokalzustand;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
-import static de.muenchen.oss.wahllokalsystem.monitoringservice.TestConstants.SPRING_NO_SECURITY_PROFILE;
 import static de.muenchen.oss.wahllokalsystem.monitoringservice.TestConstants.SPRING_TEST_PROFILE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.MicroServiceApplication;
 import de.muenchen.oss.wahllokalsystem.monitoringservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.monitoringservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionKonstanten;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,7 +38,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureWireMock
-@ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
+@ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class WahllokalZustandControllerIntegrationTest {
 
   @Value("${service.info.oid}")
@@ -56,15 +58,27 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() {
+      val wahlbezirkID = "wahlbezirkID";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "validWahlbezirkID")
-              .with(csrf());
+          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
     }
 
     @Test
     void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-      val request = MockMvcRequestBuilders.post("/businessActions/lastSeen/" + "  ").with(csrf());
+      val wahlbezirkID = "  ";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
       val response = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
       val responseBodyAsWlsExceptionDTO =
           objectMapper.readValue(
@@ -82,6 +96,21 @@ class WahllokalZustandControllerIntegrationTest {
           .ignoringFields("message")
           .isEqualTo(expectedWlsExceptionDTO);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/lastSeen/" + wahlbezirkID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LASTSEEN))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -89,15 +118,26 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() {
+      String wahlbezirkID = "wahlbezirkID";
       val request =
-          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + "validWahlbezirkID")
-              .with(csrf());
+          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + wahlbezirkID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request));
     }
 
     @Test
     void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-      val request = MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/").with(csrf());
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")));
       val response =
           mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
       val responseBodyAsWlsExceptionDTO =
@@ -116,6 +156,21 @@ class WahllokalZustandControllerIntegrationTest {
           .ignoringFields("message")
           .isEqualTo(expectedWlsExceptionDTO);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/letzteAbmeldung/" + wahlbezirkID)
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(new SimpleGrantedAuthority(Authorities.SERVICE_POST_LAST_LOGOUT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -123,10 +178,17 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() throws Exception {
-      val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", wahlbezirkID);
       val request_valid_param =
           MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(sendungsDatenDTO_valid));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -137,6 +199,12 @@ class WahllokalZustandControllerIntegrationTest {
       val request_sendungsDatenNull =
           MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(null));
       val response_sendungsDatenNull =
@@ -157,6 +225,26 @@ class WahllokalZustandControllerIntegrationTest {
           .ignoringFields("message")
           .isEqualTo(expectedWlsExceptionDTO_sendungsDatenNull);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val sendungsDatenDTO = createSendungsdatenDTO("wahlID", wahlbezirkID);
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/schnellmeldungSendungsuhrzeit")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(sendungsDatenDTO));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -164,10 +252,17 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() throws Exception {
-      val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", wahlbezirkID);
       val request_valid_param =
           MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(druckDatenDTO_valid));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -178,6 +273,12 @@ class WahllokalZustandControllerIntegrationTest {
       val request_druckDatenNull =
           MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(null));
 
@@ -199,6 +300,26 @@ class WahllokalZustandControllerIntegrationTest {
           .ignoringFields("message")
           .isEqualTo(expectedWlsExceptionDTO_druckDatenNull);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val druckDatenDTO = createSendungsdatenDTO("wahlID", wahlbezirkID);
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/schnellmeldungDruckuhrzeit")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_SCHNELLMELDUNG_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(druckDatenDTO));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -206,10 +327,17 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() throws Exception {
-      val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val sendungsDatenDTO_valid = createSendungsdatenDTO("wahlID", wahlbezirkID);
       val request_valid_param =
           MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(sendungsDatenDTO_valid));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -217,11 +345,18 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_throwWlsException_when_requestParamsAreInvalid() throws Exception {
-      val sendungsDatenDTO_wahlID_blank = createSendungsdatenDTO("  ", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val sendungsDatenDTO_wahlID_blank = createSendungsdatenDTO("  ", wahlbezirkID);
 
       val request_wahlID_blank =
           MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(sendungsDatenDTO_wahlID_blank));
 
@@ -245,6 +380,26 @@ class WahllokalZustandControllerIntegrationTest {
           .ignoringFields("message")
           .isEqualTo(expectedWlsExceptionDTO);
     }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val sendungsDatenDTO = createSendungsdatenDTO("wahlID", wahlbezirkID);
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_SENDUNGSUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(sendungsDatenDTO));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
+    }
   }
 
   @Nested
@@ -252,10 +407,17 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_notThrowAnyException_when_requestParamValid() throws Exception {
-      val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", "wahlbezirkID");
+      val wahlbezirkID = "wahlbezirkID";
+      val druckDatenDTO_valid = createSendungsdatenDTO("wahlID", wahlbezirkID);
       val request_valid_param =
-          MockMvcRequestBuilders.post("/businessActions/niederschriftSendungsuhrzeit")
+          MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(druckDatenDTO_valid));
       Assertions.assertThatNoException().isThrownBy(() -> mockMvc.perform(request_valid_param));
@@ -267,6 +429,12 @@ class WahllokalZustandControllerIntegrationTest {
       val request_wahlbezirkID_empty =
           MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "")))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(druckDatenDTO_wahlbezirkID_empty));
 
@@ -301,6 +469,12 @@ class WahllokalZustandControllerIntegrationTest {
       val request_valid_param =
           MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", "wahlbezirkID")))
               .contentType(MediaType.APPLICATION_JSON)
               .content(
                   """
@@ -316,14 +490,21 @@ class WahllokalZustandControllerIntegrationTest {
 
     @Test
     void should_convertTimeToJsonFormat_when_restCallWithTimestamp() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
       val validDruckDatenDTO =
           DruckdatenDTO.builder()
               .druckuhrzeit(LocalDateTime.parse("2024-10-21T23:59:12.123"))
-              .bezirkUndWahlID(new BezirkUndWahlID("wahlID", "wahlbezirkID"))
+              .bezirkUndWahlID(new BezirkUndWahlID("wahlID", wahlbezirkID))
               .build();
       val request_wahlbezirkID_empty =
           MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit")
               .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID)))
               .contentType(MediaType.APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(validDruckDatenDTO));
 
@@ -338,6 +519,30 @@ class WahllokalZustandControllerIntegrationTest {
                   matchingJsonPath(
                       "$.druckzustaende[0].niederschriftDruckUhrzeit",
                       equalTo("2024-10-21T23:59:12.123"))));
+    }
+
+    @Test
+    void should_throwFachlicheWlsException_when_wahlbezirkIdDoesNotMatchUserWahlbezirkID()
+        throws Exception {
+      String wahlbezirkID = "wahlbezirkID";
+      val druckDatenDTO =
+          DruckdatenDTO.builder()
+              .druckuhrzeit(LocalDateTime.parse("2024-10-21T23:59:12.123"))
+              .bezirkUndWahlID(new BezirkUndWahlID("wahlID", wahlbezirkID))
+              .build();
+      val request =
+          MockMvcRequestBuilders.post("/businessActions/niederschriftDruckuhrzeit")
+              .with(csrf())
+              .with(
+                  jwt()
+                      .authorities(
+                          new SimpleGrantedAuthority(
+                              Authorities.SERVICE_POST_NIEDERSCHRIFT_DRUCKUHRZEIT))
+                      .jwt(jwt -> jwt.claim("wahlbezirkID", wahlbezirkID + "sth")))
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(druckDatenDTO));
+
+      mockMvc.perform(request).andExpect(status().isForbidden());
     }
   }
 

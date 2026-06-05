@@ -1,5 +1,5 @@
 import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { createPinia, setActivePinia, storeToRefs } from "pinia";
 
@@ -36,26 +36,19 @@ export const Default: Story = {
     );
 
     const stimmabgabevermerkeOne: Stimmabgabevermerke = {
-      anzahlBlaetter: 0,
-      waehlerverzeichnisNummer: 0,
       wahlbezirkID: "wahlbezikID1",
-      wahldaten: [
+      wahlID: "wahlID",
+      waehlerverzeichnisNummer: 0,
+      eingenommeneWahlscheine: new Map([
+        [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
+      ]),
+      vermerke: [
         {
-          wahlbezirkID: "wahlbezikID1",
-          wahlID: "wahlID",
-          waehlerverzeichnisNummer: 0,
-          eingenommeneWahlscheine: new Map([
-            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 50],
-          ]),
-          vermerke: [
+          blattnummer: 2,
+          stimmzettel: [
             {
-              blattnummer: 2,
-              stimmzettel: [
-                {
-                  anzahl: 20,
-                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-                },
-              ],
+              anzahl: 20,
+              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
             },
           ],
         },
@@ -63,26 +56,19 @@ export const Default: Story = {
     };
 
     const stimmabgabevermerkeTwo: Stimmabgabevermerke = {
-      anzahlBlaetter: 0,
-      waehlerverzeichnisNummer: 0,
       wahlbezirkID: "wahlbezirkID2",
-      wahldaten: [
+      wahlID: "wahlID2",
+      waehlerverzeichnisNummer: 0,
+      eingenommeneWahlscheine: new Map([
+        [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
+      ]),
+      vermerke: [
         {
-          wahlbezirkID: "wahlbezirkID2",
-          wahlID: "wahlID2",
-          waehlerverzeichnisNummer: 0,
-          eingenommeneWahlscheine: new Map([
-            [EingenommenerWahlscheinStimmzettelartEnum.Klein, 70],
-          ]),
-          vermerke: [
+          blattnummer: 2,
+          stimmzettel: [
             {
-              blattnummer: 2,
-              stimmzettel: [
-                {
-                  anzahl: 20,
-                  stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
-                },
-              ],
+              anzahl: 20,
+              stimmzettelart: StimmzettelStimmzettelartEnum.Klein,
             },
           ],
         },

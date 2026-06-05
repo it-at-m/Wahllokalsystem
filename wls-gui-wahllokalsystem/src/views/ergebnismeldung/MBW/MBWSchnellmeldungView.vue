@@ -126,6 +126,7 @@ const isSendenActive = computed(
 const isDruckenActive = computed(
   () =>
     status.value?.schnellmeldung.uebermittelt ||
+    status.value?.schnellmeldung.gedruckt ||
     isSchnellmeldungSendenClicked.value
 );
 

@@ -29,7 +29,10 @@ export function useCryptoUtils() {
     } else {
       dataBuffer = data ?? new ArrayBuffer();
     }
-    const result = await crypto.subtle.decrypt(algorithm, key, dataBuffer);
+    const result =
+      dataBuffer.byteLength === 0
+        ? new ArrayBuffer()
+        : await crypto.subtle.decrypt(algorithm, key, dataBuffer);
     return new TextDecoder("utf-8").decode(result);
   }
 

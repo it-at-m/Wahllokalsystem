@@ -65,11 +65,13 @@ const { prepareKonfigurationsparameter } =
 describe("App", () => {
   let wrapper: VueWrapper;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(
+    class MockedResizeObserverMock {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    } as never
+  );
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
   vi.stubGlobal("visualViewport", new EventTarget());
 

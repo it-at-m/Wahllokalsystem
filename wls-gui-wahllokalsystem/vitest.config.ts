@@ -8,6 +8,7 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
+      // dir: "./tests",
       environment: "jsdom",
       root: fileURLToPath(new URL("./", import.meta.url)),
       server: {

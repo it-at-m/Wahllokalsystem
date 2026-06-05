@@ -15,6 +15,7 @@ describe("commonApiUtils.ts", () => {
     isTextContext,
     isPdfContext,
     getNullOn204OrElseResponseData,
+    createResponseInternalServerErrorWithoutResponseBody,
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
     createResponseNotFoundWithoutResponseBody,
@@ -104,6 +105,15 @@ describe("commonApiUtils.ts", () => {
         expect(() => createResponseOfIndexDBValue(indexDBValue)).toThrowError();
       }
     );
+  });
+
+  describe("createResponseInternalServerErrorWithoutResponseBody", () => {
+    it("should_createResponseWithoutBodyAndWithStatusInternalServerError_when_called", async () => {
+      const result = createResponseInternalServerErrorWithoutResponseBody();
+      expect(result).toStrictEqual(
+        new Response(null, { status: HttpStatusCode.InternalServerError })
+      );
+    });
   });
 
   describe("createResponseOkWithoutResponseBody", () => {

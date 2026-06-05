@@ -149,14 +149,17 @@ const workflowState = computed(() =>
 
 const isSendenActive = computed(
   () =>
-    !workflowState.value?.isNiederschriftDone &&
-    !status.value?.niederschrift.gedruckt
+    (!workflowState.value?.isNiederschriftDone &&
+      !status.value?.niederschrift.gedruckt &&
+      !!status.value?.niederschrift.uebermittelt) ||
+    !status.value?.niederschrift.uebermittelt
 );
 
 const isDruckenActive = computed(
   () =>
     hasDoneVorkommnisse(ereignisse.value) &&
     (status.value?.niederschrift.uebermittelt ||
+      status.value?.niederschrift.gedruckt ||
       isNiederschriftSendenClicked.value)
 );
 

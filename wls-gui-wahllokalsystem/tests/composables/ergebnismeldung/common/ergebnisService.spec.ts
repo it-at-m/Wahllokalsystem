@@ -860,7 +860,7 @@ describe("ergebnisService.ts", () => {
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
           undefined,
-          axiosConfigWrapper().requestAsOnlineOnly(),
+          axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
@@ -891,7 +891,7 @@ describe("ergebnisService.ts", () => {
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
           undefined,
-          axiosConfigWrapper().requestAsOnlineOnly(),
+          axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);

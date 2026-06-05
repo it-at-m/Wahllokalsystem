@@ -8,6 +8,7 @@ import { HTTP_HEADER_CONTENT_TYPE } from "@/constants.ts";
 import { ServiceWorkerMessageTypeEnum } from "@/types/serviceWorker/ServiceWorkerMessageTypeEnum.ts";
 
 const {
+  createResponseInternalServerErrorWithoutResponseBody,
   createResponseOkWithoutResponseBody,
   createResponseNotFoundWithoutResponseBody,
   createResponseOfIndexDBValue,
@@ -62,29 +63,7 @@ export function useRequestStrategies() {
     return await _fetchAndStoreResponse(options, dbKey);
   }
 
-  function postRequestHandler(options: RouteHandlerCallbackOptions) {
-    return _onlineFirstPostRequestHandler(options);
-  }
-
-  async function _fetchAndStoreResponse(
-    options: RouteHandlerCallbackOptions,
-    dbKey: string
-  ) {
-    try {
-      const fetchedResponse = await fetch(options.request);
-      if (fetchedResponse.ok) {
-        await _storeResponse(fetchedResponse, dbKey);
-        return fetchedResponse;
-      } else {
-        return _storedResponseOrNotFound(dbKey);
-      }
-    } catch (error) {
-      logError("error while fetching", error);
-      return _storedResponseOrNotFound(dbKey);
-    }
-  }
-
-  async function _onlineFirstPostRequestHandler(
+  async function onlineFirstPostRequestHandler(
     options: RouteHandlerCallbackOptions
   ): Promise<Response> {
     log(
@@ -107,6 +86,47 @@ export function useRequestStrategies() {
       logError("Error fetching remote data:", error);
       await _storeRequest(dbKey, options.request, true);
       return createResponseNotFoundWithoutResponseBody();
+    }
+  }
+
+  async function fetchButStoreRequestAsDirtyOnNotOk(
+    options: RouteHandlerCallbackOptions
+  ): Promise<Response> {
+    log(
+      `onlineFirstPostRequestHandler - ${options.request.method} request identified - uri: ${options.url}`
+    );
+
+    const dbKey = options.request.url;
+    try {
+      const response = await fetch(options.request.clone());
+      logDebug(`response has status ${response.status}`);
+
+      if (!response.ok) {
+        await _storeRequest(dbKey, options.request, true);
+      }
+      return response;
+    } catch (error) {
+      logError("Error fetching remote data:", error);
+      await _storeRequest(dbKey, options.request, true);
+      return createResponseInternalServerErrorWithoutResponseBody();
+    }
+  }
+
+  async function _fetchAndStoreResponse(
+    options: RouteHandlerCallbackOptions,
+    dbKey: string
+  ) {
+    try {
+      const fetchedResponse = await fetch(options.request);
+      if (fetchedResponse.ok) {
+        await _storeResponse(fetchedResponse, dbKey);
+        return fetchedResponse;
+      } else {
+        return _storedResponseOrNotFound(dbKey);
+      }
+    } catch (error) {
+      logError("error while fetching", error);
+      return _storedResponseOrNotFound(dbKey);
     }
   }
 
@@ -177,6 +197,7 @@ export function useRequestStrategies() {
     unhandledFetch,
     offlineFirstGetRequestHandler,
     onlineFirstGetRequestHandler,
-    postRequestHandler,
+    onlineFirstPostRequestHandler,
+    fetchButStoreRequestAsDirtyOnNotOk,
   };
 }

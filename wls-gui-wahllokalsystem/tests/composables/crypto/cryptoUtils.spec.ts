@@ -73,6 +73,24 @@ describe("cryptoUtils.ts", () => {
       );
     });
 
+    it("should_decryptToEmptyString_when_DataIsEmpty", async () => {
+      const key = {} as CryptoKey;
+      const mockEncryptedData = new ArrayBuffer(0);
+      const mockDecryptedData = new ArrayBuffer(0);
+
+      const mockDecoder = {
+        decode: vi.fn().mockReturnValue(""),
+      };
+      global.TextDecoder = vi.fn().mockImplementation(() => mockDecoder);
+
+      vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
+
+      const result = await decrypt(mockEncryptedData, key);
+      expect(result).toBe("");
+      expect(crypto.subtle.decrypt).not.toHaveBeenCalled();
+      expect(mockDecoder.decode).toHaveBeenCalledWith(new ArrayBuffer(0));
+    });
+
     it("should_throwAnError_when_cryptoKeyIsMissing", async () => {
       const mockEncryptedData = new ArrayBuffer(16);
 

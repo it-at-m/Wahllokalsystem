@@ -1,3 +1,4 @@
+import type { GenericFluentFunctions } from "@/types/utils/BuilderHelper.ts";
 import type { AxiosRequestConfig } from "axios";
 
 import { AxiosHeaders } from "axios";
@@ -5,7 +6,15 @@ import { AxiosHeaders } from "axios";
 import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
 import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 
-export class AxiosConfigWrapper implements AxiosRequestConfig {
+export class AxiosConfigWrapper
+  implements
+    AxiosRequestConfig,
+    GenericFluentFunctions<
+      AxiosConfigWrapper,
+      typeof FetchStrategiesEnum,
+      "requestAs"
+    >
+{
   headers?: AxiosHeaders;
 
   public requestAsOnlineOnly() {

@@ -49,6 +49,32 @@ describe("AxiosConfigWrapper", () => {
     });
   });
 
+  describe("requestAsPostOnlineOnlyButDirtyOnFail", () => {
+    it("should_setFetchStrategyPostOnlyButDirtyOnFail_when_called", () => {
+      const wrapper = new AxiosConfigWrapper();
+      wrapper.requestAsPostOnlineOnlyButDirtyOnFail();
+
+      expect(
+        wrapper.headers?.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(
+        FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL
+      );
+    });
+
+    it("should_replaceOldHeader_when_called", async () => {
+      const wrapper = new AxiosConfigWrapper();
+      wrapper.headers?.set(REQUEST_HEADER_OFFLINE_STRATEGY, "sthElse");
+
+      wrapper.requestAsPostOnlineOnlyButDirtyOnFail();
+
+      expect(
+        wrapper.headers?.get(REQUEST_HEADER_OFFLINE_STRATEGY)
+      ).toStrictEqual(
+        FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL
+      );
+    });
+  });
+
   describe("requestAsOfflineFirst", () => {
     it("should_setFetchStrategyOnlineOnly_when_called", () => {
       const wrapper = new AxiosConfigWrapper();

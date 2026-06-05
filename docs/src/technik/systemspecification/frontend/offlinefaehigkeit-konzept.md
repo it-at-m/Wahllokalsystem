@@ -196,6 +196,40 @@ sequenceDiagram
 - `/monitoring/lastSeen/wahlbezirkID` (Uhrzeit der letzten Abmeldung);
 - `/monitoring/letzteAbmeldung/wahlbezirkID` (Uhrzeit der letzten Abmeldung).
 
+#### ONLINE_ONLY_BUT_DIRTY_ON_FAIL
+
+Diese Strategie wird für Operationen benötigt, die nur remote relevant sind aber im Fehlerfall erneut über den Sync ausgeführt werden können.
+
+```mermaid
+sequenceDiagram
+    participant sender as Sender
+    participant fc as Fetch-Client
+    participant sw as Service-Worker
+    participant idb as IndexedDB
+    participant be as Backend-Service
+    
+    sender->>fc: Send Request
+    fc->>fc: Set Header X-WLS-SW-STRATEGY
+    fc->>+sw: Catch this fetch
+    alt X-WLS-SW-STRATEGY == "ONLINE_ONLY_BUT_DIRTY_ON_FAIL"
+        sw->>+be : Post Item        
+        be->>-sw : ItemFound or ItemNotFound
+        alt HttpStatus2xx
+            sw->>fc : Response
+            fc->>sender: Response
+        end
+        alt ErrorOrNotOk
+          sw->>idb : Store Request as Dirty
+          sw->>fc : Response
+          fc->>sender: Response
+        end
+    end    
+```
+
+##### Beispieldaten
+
+- `/ergebnismeldung/sendErgebnismeldung/{wahlID}/{wahlbezirkID}/{waehlerverzeichnisNummer}/V1/{hauptwahlbezirkID}` (Übermitteln der Niederschrift);
+
 #### Definieren der Strategy
 
 Soll eine andere Strategie als die Standardstrategie bei einem Request zum Einsatz kommen, muss dies explizit definiert werden:

@@ -27,6 +27,10 @@ export function useCommonApiUtils() {
     return response;
   }
 
+  function createResponseInternalServerErrorWithoutResponseBody() {
+    return new Response(null, { status: HttpStatusCode.InternalServerError });
+  }
+
   function createResponseOkWithoutResponseBody() {
     return new Response(null, { status: HttpStatusCode.Ok });
   }
@@ -48,6 +52,7 @@ export function useCommonApiUtils() {
   return {
     isTextContext,
     isPdfContext,
+    createResponseInternalServerErrorWithoutResponseBody,
     createResponseOfIndexDBValue,
     createResponseOkWithoutResponseBody,
     createResponseNotFoundWithoutResponseBody,

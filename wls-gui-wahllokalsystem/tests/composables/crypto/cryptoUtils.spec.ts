@@ -60,7 +60,11 @@ describe("cryptoUtils.ts", () => {
       const mockDecoder = {
         decode: vi.fn().mockReturnValue("Hello, World!"),
       };
-      global.TextDecoder = vi.fn().mockImplementation(() => mockDecoder);
+      global.TextDecoder = vi
+        .fn()
+        .mockImplementation(function MockedTextDecoder() {
+          return mockDecoder;
+        });
 
       vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
 

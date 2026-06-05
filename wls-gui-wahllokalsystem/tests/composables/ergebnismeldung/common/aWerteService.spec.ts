@@ -58,7 +58,7 @@ describe("aWerteService.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("getAWerte", () => {

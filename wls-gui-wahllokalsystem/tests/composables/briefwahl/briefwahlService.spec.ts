@@ -26,19 +26,15 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
-  BeanstandeteWahlbriefeControllerApi: vi.fn().mockImplementation(
-    class MockedBeanstandeteWahlbriefeControllerApi {
-      getBeanstandeteWahlbriefe = mockDefinitions.getBeanstandeteWahlbriefe;
-      setBeanstandeteWahlbriefe = mockDefinitions.setBeanstandeteWahlbriefe;
-    } as never
-  ),
+  BeanstandeteWahlbriefeControllerApi: class {
+    getBeanstandeteWahlbriefe = mockDefinitions.getBeanstandeteWahlbriefe;
+    setBeanstandeteWahlbriefe = mockDefinitions.setBeanstandeteWahlbriefe;
+  },
   Configuration: mockDefinitions.configurationConstructor,
-  WahlbriefdatenControllerApi: vi.fn().mockImplementation(
-    class MockedWahlbriefdatenControllerApi {
-      getWahlbriefdaten = mockDefinitions.getWahlbriefdaten;
-      postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
-    } as never
-  ),
+  WahlbriefdatenControllerApi: class {
+    getWahlbriefdaten = mockDefinitions.getWahlbriefdaten;
+    postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
+  },
 }));
 
 vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({

@@ -15,11 +15,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  HandbuchControllerApi: vi.fn().mockImplementation(
-    class MockedHandbuchControllerApi {
-      getHandbuch = mockDefinitions.getHandbuch;
-    } as never
-  ),
+  HandbuchControllerApi: class {
+    getHandbuch = mockDefinitions.getHandbuch;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

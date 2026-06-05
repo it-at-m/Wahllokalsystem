@@ -16,11 +16,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  KopfdatenControllerApi: vi.fn().mockImplementation(
-    class MockedKopfdatenControllerApi {
-      getKopfdaten = mockDefinitions.getKopfdaten;
-    } as never
-  ),
+  KopfdatenControllerApi: class {
+    getKopfdaten = mockDefinitions.getKopfdaten;
+  },
   KopfdatenDTOStimmzettelgebietsartEnum: vi.fn(),
   Configuration: mockDefinitions.configurationConstructor,
 }));

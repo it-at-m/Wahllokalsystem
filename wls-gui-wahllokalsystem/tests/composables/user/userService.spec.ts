@@ -10,11 +10,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-auth-api", () => ({
-  UserControllerApi: vi.fn().mockImplementation(
-    class MockedUserControllerApi {
-      user = mockDefinitions.user;
-    } as never
-  ),
+  UserControllerApi: class {
+    user = mockDefinitions.user;
+  },
   Configuration: vi.fn(),
 }));
 vi.mock("@/composables/user/userMapper.ts", () => ({

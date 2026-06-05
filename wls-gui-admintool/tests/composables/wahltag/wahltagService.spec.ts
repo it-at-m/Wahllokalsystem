@@ -19,17 +19,13 @@ const mockDefinitions = vi.hoisted(() => ({
   mapGroupedWahltagDtosToWahltage: vi.fn(),
   groupWahltagDtosByWahltag: vi.fn(),
   addNotification: vi.fn(),
-  wahltagControllerApiConstructor: vi.fn().mockImplementation(
-    class MockedWahltageControllerApi {
-      getWahltage = mockDefinitions.apiGetWahltage;
-    } as never
-  ),
+  wahltagControllerApiConstructor: class {
+    getWahltage = mockDefinitions.apiGetWahltage;
+  },
   adminApiConfigurationConstructor: vi.fn(),
-  konfigurierterWahltagControllerApiConstructor: vi.fn().mockImplementation(
-    class MockedWahltageControllerApi {
-      getKonfigurierteWahltage = mockDefinitions.apiGetKonfigurierteWahltage;
-    } as never
-  ),
+  konfigurierterWahltagControllerApiConstructor: class {
+    getKonfigurierteWahltage = mockDefinitions.apiGetKonfigurierteWahltage;
+  },
 }));
 
 vi.mock("@/api/wls-clients/generated-admin-api", () => ({

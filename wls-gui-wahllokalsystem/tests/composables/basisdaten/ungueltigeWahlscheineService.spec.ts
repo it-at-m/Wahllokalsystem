@@ -15,11 +15,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  UngueltigeWahlscheineControllerApi: vi.fn().mockImplementation(
-    class MockedUngueltigeWahlscheineControllerApi {
-      getUngueltigeWahlscheine = mockDefinitions.getUngueltigeWahlscheine;
-    } as never
-  ),
+  UngueltigeWahlscheineControllerApi: class {
+    getUngueltigeWahlscheine = mockDefinitions.getUngueltigeWahlscheine;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

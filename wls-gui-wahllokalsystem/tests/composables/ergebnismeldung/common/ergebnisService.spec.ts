@@ -65,34 +65,26 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      ErgebnisseControllerApi: vi.fn().mockImplementation(
-        class MockedErgebnisseControllerApi {
-          getErgebnisse = mockDefinitions.getErgebnisse;
-          postErgebnisse = mockDefinitions.postErgebnisse;
-        } as never
-      ),
-      ErgebnismeldungControllerApi: vi.fn().mockImplementation(
-        class MockedErgebnismeldungControllerApi {
-          sendErgebnisse = mockDefinitions.sendErgebnisse;
-        } as never
-      ),
+      ErgebnisseControllerApi: class {
+        getErgebnisse = mockDefinitions.getErgebnisse;
+        postErgebnisse = mockDefinitions.postErgebnisse;
+      },
+      ErgebnismeldungControllerApi: class {
+        sendErgebnisse = mockDefinitions.sendErgebnisse;
+      },
       Configuration: mockDefinitions.configurationConstructor,
       BezirkUndWahlIDStapelartDTOStapelartEnum:
         mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
       GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
       PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
-      StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(
-        class MockedStimmzettelumschlaegeControllerApi {
-          postStimmzettelumschlaege = mockDefinitions.postStimmzettelumschlaege;
-          getStimmzettelumschlaege = mockDefinitions.getStimmzettelumschlaege;
-        } as never
-      ),
-      BegruendungControllerApi: vi.fn().mockImplementation(
-        class MockedBegruendungControllerApi {
-          getBegruendung = mockDefinitions.getBegruendung;
-          postBegruendung = mockDefinitions.postBegruendung;
-        } as never
-      ),
+      StimmzettelumschlaegeControllerApi: class {
+        postStimmzettelumschlaege = mockDefinitions.postStimmzettelumschlaege;
+        getStimmzettelumschlaege = mockDefinitions.getStimmzettelumschlaege;
+      },
+      BegruendungControllerApi: class {
+        getBegruendung = mockDefinitions.getBegruendung;
+        postBegruendung = mockDefinitions.postBegruendung;
+      },
     };
   }
 );

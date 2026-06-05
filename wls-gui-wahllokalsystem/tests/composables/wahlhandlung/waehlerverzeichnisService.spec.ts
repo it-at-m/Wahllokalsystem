@@ -18,12 +18,10 @@ const mockDefinitions = vi.hoisted(() => ({
   mapToWaehlerverzeichnisWriteDTO: vi.fn(),
 }));
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
-  WaehlerverzeichnisControllerApi: vi.fn().mockImplementation(
-    class MockedWaehlerverzeichnisControllerApi {
-      getWaehlerverzeichnis = mockDefinitions.getWaehlerverzeichnis;
-      postWaehlerverzeichnis = mockDefinitions.postWaehlerverzeichnis;
-    } as never
-  ),
+  WaehlerverzeichnisControllerApi: class {
+    getWaehlerverzeichnis = mockDefinitions.getWaehlerverzeichnis;
+    postWaehlerverzeichnis = mockDefinitions.postWaehlerverzeichnis;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

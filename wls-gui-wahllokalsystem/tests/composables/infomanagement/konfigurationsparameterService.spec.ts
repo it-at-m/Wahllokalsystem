@@ -22,11 +22,9 @@ vi.mock(
   })
 );
 vi.mock("@/api/wls-clients/generated-infomanagement-api", () => ({
-  KonfigurationControllerApi: vi.fn().mockImplementation(
-    class MockedKonfigurationControllerApi {
-      getKonfigurations = mockDefinitions.getKonfigurations;
-    } as never
-  ),
+  KonfigurationControllerApi: class {
+    getKonfigurations = mockDefinitions.getKonfigurations;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({

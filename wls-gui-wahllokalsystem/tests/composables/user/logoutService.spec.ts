@@ -31,11 +31,9 @@ vi.mock("@/api/wls-clients/generated-auth-api", async (importOriginal) => {
   const mod = await importOriginal();
   return {
     ...(mod as object),
-    AuthServerControllerApi: vi.fn().mockImplementation(
-      class MockedAuthServerControllerApi {
-        getLogoutUrl = mockDefinitions.getLogoutUrl;
-      } as never
-    ),
+    AuthServerControllerApi: class {
+      getLogoutUrl = mockDefinitions.getLogoutUrl;
+    },
     Configuration: vi.fn(),
   };
 });
@@ -46,11 +44,9 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      WahllokalZustandControllerApi: vi.fn().mockImplementation(
-        class MockedWahllokalZustandControllerApi {
-          postLetzteAbmeldung = mockDefinitions.postLetzteAbmeldung;
-        } as never
-      ),
+      WahllokalZustandControllerApi: class {
+        postLetzteAbmeldung = mockDefinitions.postLetzteAbmeldung;
+      },
       Configuration: vi.fn(),
     };
   }

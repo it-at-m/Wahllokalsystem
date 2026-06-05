@@ -14,12 +14,10 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-broadcast-api", () => ({
-  BroadcastControllerApi: vi.fn().mockImplementation(
-    class MockedBroadcastControllerApi {
-      getMessage = mockDefinitions.getMessage;
-      deleteMessage = mockDefinitions.deleteMessage;
-    } as never
-  ),
+  BroadcastControllerApi: class {
+    getMessage = mockDefinitions.getMessage;
+    deleteMessage = mockDefinitions.deleteMessage;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/broadcast/broadcastMapper.ts", () => ({

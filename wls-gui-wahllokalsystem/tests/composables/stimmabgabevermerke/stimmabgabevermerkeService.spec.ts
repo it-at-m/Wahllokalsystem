@@ -23,12 +23,10 @@ vi.mock(
       ...(mod as object),
       StimmzettelumschlaegeControllerApi: vi.fn(),
       BegruendungControllerApi: vi.fn(),
-      StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(
-        class MockedStimmabgabevermerkeControllerApi {
-          getStimmabgabevermerke = mockDefinitions.getStimmabgabevermerke;
-          postStimmabgabevermerke = mockDefinitions.postStimmabgabevermerke;
-        } as never
-      ),
+      StimmabgabevermerkeControllerApi: class {
+        getStimmabgabevermerke = mockDefinitions.getStimmabgabevermerke;
+        postStimmabgabevermerke = mockDefinitions.postStimmabgabevermerke;
+      },
       StimmzettelDTOStimmzettelartEnum: vi.fn(),
       Configuration: vi.fn(),
     };

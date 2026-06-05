@@ -24,11 +24,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  AWerteControllerApi: vi.fn().mockImplementation(
-    class MockedAWerteControllerApi {
-      getAWerte = mockDefinitions.getAWerte;
-    } as never
-  ),
+  AWerteControllerApi: class {
+    getAWerte = mockDefinitions.getAWerte;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/ergebnismeldung/common/aWerteMapper.ts", () => ({

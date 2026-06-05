@@ -11,11 +11,9 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  WahlvorschlaegeControllerApi: vi.fn().mockImplementation(
-    class MockedWahlvorschlaegeControllerApi {
-      getWahlvorschlaege = mockDefinitions.getWahlvorschlaege;
-    } as never
-  ),
+  WahlvorschlaegeControllerApi: class {
+    getWahlvorschlaege = mockDefinitions.getWahlvorschlaege;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeMapper.ts", () => ({

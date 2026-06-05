@@ -60,6 +60,20 @@ vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
     awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
   }),
 }));
+vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
+vi.mock(
+  "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
+  () => {
+    return {
+      default: {
+        name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
+        template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
+      },
+    };
+  }
+);
+vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
+vi.mock("localforage");
 
 const { prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
@@ -69,22 +83,6 @@ describe("App", () => {
 
   mockAndStubResizeObserver();
   stubVisualViewport();
-
-  vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
-  vi.mock(
-    "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
-    () => {
-      return {
-        default: {
-          name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
-          template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
-        },
-      };
-    }
-  );
-  vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
-
-  vi.mock("localforage");
 
   const router = createRouter({
     history: createWebHistory(),

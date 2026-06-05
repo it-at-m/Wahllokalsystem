@@ -212,7 +212,7 @@ sequenceDiagram
     fc->>fc: Set Header X-WLS-SW-STRATEGY
     fc->>+sw: Catch this fetch
     alt X-WLS-SW-STRATEGY == "ONLINE_ONLY_BUT_DIRTY_ON_FAIL"
-        sw->>+be : Get Item        
+        sw->>+be : Post Item        
         be->>-sw : ItemFound or ItemNotFound
         alt HttpStatus2xx
             sw->>fc : Response

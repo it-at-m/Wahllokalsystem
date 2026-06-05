@@ -4,6 +4,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -48,7 +49,7 @@ router.push = mockDefinitions.routerPush;
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
 
-  vi.stubGlobal("visualViewport", new EventTarget());
+  stubVisualViewport();
   mockAndStubResizeObserver();
 
   beforeEach(() => {

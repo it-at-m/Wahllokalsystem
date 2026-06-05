@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -17,7 +18,8 @@ import vuetify from "@/plugins/vuetify.ts";
 describe("BaseDialogBegruendung.vue", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
   mockAndStubResizeObserver();
 
   beforeEach(() => {

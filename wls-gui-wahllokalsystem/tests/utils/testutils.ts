@@ -52,3 +52,10 @@ export function mockAndStubResizeObserver() {
   };
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 }
+
+/**
+ * Mocks responsive layouts
+ */
+export function stubVisualViewport() {
+  vi.stubGlobal("visualViewport", new EventTarget());
+}

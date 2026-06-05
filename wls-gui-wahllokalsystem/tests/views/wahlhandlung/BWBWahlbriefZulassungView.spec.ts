@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
@@ -32,8 +33,7 @@ describe("BWBWahlbriefZulassungView", () => {
   const { prepareWahl } = useWahlTestDataFactory();
 
   mockAndStubResizeObserver();
-
-  vi.stubGlobal("visualViewport", new EventTarget());
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();

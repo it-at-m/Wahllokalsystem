@@ -2,6 +2,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -11,7 +12,8 @@ import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseDialog.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
 
   afterEach(() => {
     if (wrapper) wrapper.unmount();

@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import {
   enableAutoUnmount,
@@ -34,7 +35,8 @@ import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 describe("TheEreignisseRows.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
   mockAndStubResizeObserver();
 
   beforeAll(() => {

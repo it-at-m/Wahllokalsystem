@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { storeToRefs } from "pinia";
@@ -51,7 +52,8 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 
 describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
 
   beforeEach(() => {
     wrapper = mount(TheWahlvorstandAnwesenheitsCheckPopupDialog, {

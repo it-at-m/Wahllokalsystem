@@ -5,6 +5,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
@@ -67,7 +68,7 @@ describe("App", () => {
   let wrapper: VueWrapper;
 
   mockAndStubResizeObserver();
-  vi.stubGlobal("visualViewport", new EventTarget());
+  stubVisualViewport();
 
   vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
   vi.mock(

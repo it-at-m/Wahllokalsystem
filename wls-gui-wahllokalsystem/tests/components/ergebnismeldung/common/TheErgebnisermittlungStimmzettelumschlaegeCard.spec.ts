@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
   mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
@@ -56,8 +57,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   let testPinia: TestingPinia;
 
   mockAndStubResizeObserver();
-
-  vi.stubGlobal("visualViewport", new EventTarget());
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();

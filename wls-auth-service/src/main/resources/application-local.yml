@@ -1,5 +1,9 @@
+
+
 server:
   port: 8100
+  servlet:
+    context-path: /uaa
 
 service:
   config:

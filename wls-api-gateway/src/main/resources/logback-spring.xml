@@ -44,8 +44,32 @@
             <appender-ref ref="STDOUT" />
         </logger>
 
+        <logger name="org.springframework.cloud.gateway"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.springframework.web.reactive"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="reactor.netty.http.client"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="reactor.netty.http.server"
+                level="debug"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
         <!-- Logger usage -->
-        <root level="info">
+        <root level="debug">
             <appender-ref ref="STDOUT" />
         </root>
 

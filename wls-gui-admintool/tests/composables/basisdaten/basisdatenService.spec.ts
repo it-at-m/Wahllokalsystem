@@ -6,7 +6,7 @@ import { useBasisdatenService } from "@/composables/basisdaten/basisdatenService
 const mockDefinitions = vi.hoisted(() => ({
   apiGetAsyncProgress: vi.fn(),
   mapAsyncProgressDtoToBasisdatenInitProgress: vi.fn(),
-  asyncProgressControllerApiConstructor: class MockedAsyncProgressControllerApi {
+  asyncProgressControllerApiConstructor: class {
     getAsyncProgress = mockDefinitions.apiGetAsyncProgress;
   },
   configurationConstructor: vi.fn(),

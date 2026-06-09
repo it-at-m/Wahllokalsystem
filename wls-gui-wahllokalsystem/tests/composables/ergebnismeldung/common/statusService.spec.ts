@@ -25,10 +25,10 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      StatusControllerApi: vi.fn().mockImplementation(() => ({
-        getStatus: mockDefinitions.getStatus,
-        setStatus: mockDefinitions.setStatus,
-      })),
+      StatusControllerApi: class {
+        getStatus = mockDefinitions.getStatus;
+        setStatus = mockDefinitions.setStatus;
+      },
       Configuration: mockDefinitions.configurationConstructor,
     };
   }

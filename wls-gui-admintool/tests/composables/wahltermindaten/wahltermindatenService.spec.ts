@@ -7,15 +7,11 @@ const mockDefinitions = vi.hoisted(() => ({
   apiLoadWahlterminDaten: vi.fn(),
   apiDeleteWahlterminDaten: vi.fn(),
   addNotification: vi.fn(),
-  adminApiConfigurationConstructor: vi.fn().mockImplementation(() => {
-    return {};
-  }),
-  wahltermindatenControllerApiConstructor: vi.fn().mockImplementation(() => {
-    return {
-      loadWahltermindaten: mockDefinitions.apiLoadWahlterminDaten,
-      deleteWahltermindaten: mockDefinitions.apiDeleteWahlterminDaten,
-    };
-  }),
+  adminApiConfigurationConstructor: vi.fn(),
+  wahltermindatenControllerApiConstructor: class {
+    loadWahltermindaten = mockDefinitions.apiLoadWahlterminDaten;
+    deleteWahltermindaten = mockDefinitions.apiDeleteWahlterminDaten;
+  },
   vueRefBuilder: vi.fn().mockImplementation(() => ({
     value: undefined,
   })),

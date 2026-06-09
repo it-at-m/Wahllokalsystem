@@ -47,11 +47,13 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 describe("BaseWahlschliessungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahlschliessungCard>>;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(
+    class MockedResizeObserverMock {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    } as never
+  );
 
   beforeAll(() => vi.stubGlobal("ResizeObserver", ResizeObserverMock));
 

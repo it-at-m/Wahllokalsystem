@@ -4,6 +4,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
@@ -58,6 +60,20 @@ vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
     awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
   }),
 }));
+vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
+vi.mock(
+  "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
+  () => {
+    return {
+      default: {
+        name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
+        template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
+      },
+    };
+  }
+);
+vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
+vi.mock("localforage");
 
 const { prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
@@ -65,31 +81,8 @@ const { prepareKonfigurationsparameter } =
 describe("App", () => {
   let wrapper: VueWrapper;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-  vi.stubGlobal("visualViewport", new EventTarget());
-
-  vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
-  vi.mock(
-    "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
-    () => {
-      return {
-        default: {
-          name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
-          template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
-        },
-      };
-    }
-  );
-  vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
-
-  vi.mock("localforage");
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   const router = createRouter({
     history: createWebHistory(),

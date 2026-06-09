@@ -1,4 +1,4 @@
-import type { MockInstance } from "storybook/test";
+import type { MockInstance } from "vitest";
 import type { RouteHandlerCallbackOptions } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
 

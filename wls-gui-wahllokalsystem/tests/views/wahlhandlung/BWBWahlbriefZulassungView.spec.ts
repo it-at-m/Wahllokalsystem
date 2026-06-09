@@ -30,11 +30,13 @@ describe("BWBWahlbriefZulassungView", () => {
 
   const { prepareWahl } = useWahlTestDataFactory();
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(
+    class MockedResizeObserverMock {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    } as never
+  );
 
   vi.stubGlobal("visualViewport", new EventTarget());
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);

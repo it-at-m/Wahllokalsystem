@@ -34,24 +34,24 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
-  UrnenwahlSchliessungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
-    getUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
-    postUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsUhrzeit,
-  })),
-  EroeffnungsUhrzeitControllerApi: vi.fn().mockImplementation(() => ({
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
-  })),
-  UrnenwahlvorbereitungControllerApi: vi.fn().mockImplementation(() => ({
-    getUrnenwahlVorbereitung: mockDefinitions.getUrnenwahlVorbereitung,
-    postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
-  })),
-  BriefwahlvorbereitungControllerApi: vi.fn().mockImplementation(() => ({
-    getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
-    postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
-  })),
+  UrnenwahlSchliessungsUhrzeitControllerApi: class {
+    getUrnenwahlSchliessungsUhrzeit =
+      mockDefinitions.getUrnenwahlSchliessungsUhrzeit;
+    postUrnenwahlSchliessungsUhrzeit =
+      mockDefinitions.postUrnenwahlSchliessungsUhrzeit;
+  },
+  EroeffnungsUhrzeitControllerApi: class {
+    postEroeffnungsuhrzeit = mockDefinitions.postEroeffnungsuhrzeit;
+    getEroeffnungsuhrzeit = mockDefinitions.getEroeffnungsuhrzeit;
+  },
+  UrnenwahlvorbereitungControllerApi: class {
+    getUrnenwahlVorbereitung = mockDefinitions.getUrnenwahlVorbereitung;
+    postUrnenwahlvorbereitung = mockDefinitions.postUrnenwahlvorbereitung;
+  },
+  BriefwahlvorbereitungControllerApi: class {
+    getBriefwahlvorbereitung = mockDefinitions.getBriefwahlvorbereitung;
+    postBriefwahlvorbereitung = mockDefinitions.postBriefwahlvorbereitung;
+  },
   Configuration: vi.fn(),
 }));
 

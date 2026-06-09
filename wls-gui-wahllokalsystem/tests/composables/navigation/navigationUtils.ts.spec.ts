@@ -68,7 +68,7 @@ describe("navigationUtils.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("routeWithName", () => {

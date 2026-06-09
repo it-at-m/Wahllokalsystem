@@ -8,16 +8,16 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   deleteMessage: vi.fn(),
   getMessage: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-broadcast-api", () => ({
-  BroadcastControllerApi: vi.fn().mockImplementation(() => ({
-    getMessage: mockDefinitions.getMessage,
-    deleteMessage: mockDefinitions.deleteMessage,
-  })),
+  BroadcastControllerApi: class {
+    getMessage = mockDefinitions.getMessage;
+    deleteMessage = mockDefinitions.deleteMessage;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
 vi.mock("@/composables/broadcast/broadcastMapper.ts", () => ({

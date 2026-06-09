@@ -17,15 +17,15 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/api/wls-clients/generated-wahlvorstand-api"),
+  "@/api/wls-clients/generated-wahlvorstand-api",
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      ...mod,
-      WahlvorstandControllerApi: vi.fn().mockImplementation(() => ({
-        getWahlvorstand: mockDefinitions.getWahlvorstand,
-        postWahlvorstand: mockDefinitions.postWahlvorstand,
-      })),
+      ...(mod as object),
+      WahlvorstandControllerApi: class {
+        getWahlvorstand = mockDefinitions.getWahlvorstand;
+        postWahlvorstand = mockDefinitions.postWahlvorstand;
+      },
       Configuration: vi.fn(),
     };
   }

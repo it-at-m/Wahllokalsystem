@@ -1,4 +1,4 @@
-CREATE TABLE BedenklicheStimmzettel
+CREATE TABLE BedenklicheStimmzettelErfassung
 (
     wahlID       VARCHAR(1024) NOT NULL,
     wahlbezirkID VARCHAR(1024) NOT NULL,
@@ -16,5 +16,5 @@ CREATE TABLE BedenklicherStimmzettel
     validity        VARCHAR(1024),
 
     CONSTRAINT PK_BedenklicherStimmzettel PRIMARY KEY (fk_wahlID, fk_wahlbezirkID, orderIndex),
-    CONSTRAINT FK_BedenklicheStimmzettel FOREIGN KEY (fk_wahlID, fk_wahlbezirkID) REFERENCES BedenklicheStimmzettel (wahlID, wahlbezirkID)
+    CONSTRAINT FK_BedenklicheStimmzettel FOREIGN KEY (fk_wahlID, fk_wahlbezirkID) REFERENCES BedenklicheStimmzettelErfassung (wahlID, wahlbezirkID)
 );

@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelErfassung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collections;
@@ -32,7 +32,7 @@ class MBWBedenklicheStimmzettelServiceTest {
     void should_returnMappedModel_when_entitiesWereFound() {
       val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-      val mockedEntity = new BedenklicheStimmzettel();
+      val mockedEntity = new BedenklicheStimmzettelErfassung();
 
       Mockito.when(
               repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
@@ -42,7 +42,7 @@ class MBWBedenklicheStimmzettelServiceTest {
 
       val mockedMappedEntity =
           new BedenklicherStimmzettelModel(0, Collections.emptySet(), ValidityModel.INVALID);
-      Mockito.when(modelMapper.toModel(mockedEntity.getBedenklicheStimmzettels()))
+      Mockito.when(modelMapper.toModel(mockedEntity.getBedenklicheStimmzettel()))
           .thenReturn(List.of(mockedMappedEntity));
 
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
@@ -79,7 +79,7 @@ class MBWBedenklicheStimmzettelServiceTest {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
 
-      val mockedMappedModel = new BedenklicheStimmzettel();
+      val mockedMappedModel = new BedenklicheStimmzettelErfassung();
       Mockito.when(
               modelMapper.toEntity(
                   Mockito.eq(modelToSave), Mockito.eq(wahlbezirkID), Mockito.eq(wahlID)))

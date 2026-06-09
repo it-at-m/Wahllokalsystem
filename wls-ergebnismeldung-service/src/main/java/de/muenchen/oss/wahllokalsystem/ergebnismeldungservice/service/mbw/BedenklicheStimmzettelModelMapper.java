@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelErfassung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicherStimmzettel;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collection;
@@ -12,11 +12,11 @@ import org.mapstruct.Mapping;
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface BedenklicheStimmzettelModelMapper {
 
-  default BedenklicheStimmzettel toEntity(
+  default BedenklicheStimmzettelErfassung toEntity(
       Collection<BedenklicherStimmzettelModel> bedenklicherStimmzettelModel,
       String wahlbezirkID,
       String wahlID) {
-    val result = new BedenklicheStimmzettel();
+    val result = new BedenklicheStimmzettelErfassung();
     result.setCompositeId(new BezirkUndWahlID(wahlID, wahlbezirkID));
 
     bedenklicherStimmzettelModel.forEach(

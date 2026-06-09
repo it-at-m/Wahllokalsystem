@@ -28,7 +28,7 @@ public class MBWBedenklicheStimmzettelService {
             bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
     return optionalOfBedenklicheStimmzettel.map(
         bedenklicheStimmzettel ->
-            modelMapper.toModel(bedenklicheStimmzettel.getBedenklicheStimmzettels()));
+            modelMapper.toModel(bedenklicheStimmzettel.getBedenklicheStimmzettel()));
   }
 
   @PreAuthorize(

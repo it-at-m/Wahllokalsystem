@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplication;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelErfassung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicherStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BezirkIdWahlIdOrderIndex;
@@ -121,10 +121,11 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
       };
     }
 
-    private @NonNull BedenklicheStimmzettel createEntityToFind(
+    private @NonNull BedenklicheStimmzettelErfassung createEntityToFind(
         final String wahlID, final String wahlbezirkID) {
       val result =
-          new BedenklicheStimmzettel(new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
+          new BedenklicheStimmzettelErfassung(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
 
       val bedenklicherStimmzettel1 =
           new BedenklicherStimmzettel(
@@ -210,7 +211,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
       transactionTemplate.executeWithoutResult(
           (transactionStatus -> {
             val entityToReplace =
-                new BedenklicheStimmzettel(
+                new BedenklicheStimmzettelErfassung(
                     new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
             entityToReplace.addBedenklicheStimmzettels(
                 new BedenklicherStimmzettel(

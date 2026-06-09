@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelErfassung;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicherStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BezirkIdWahlIdOrderIndex;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Supplement;
@@ -78,10 +78,10 @@ class BedenklicheStimmzettelModelMapperTest {
 
         val expectedListOfBedenklicheStimmzettel = new ArrayList<BedenklicherStimmzettel>();
         val expectedResult =
-            new BedenklicheStimmzettel(
+            new BedenklicheStimmzettelErfassung(
                 new BezirkUndWahlID(wahlID, wahlbezirkID), expectedListOfBedenklicheStimmzettel);
         expectedResult
-            .getBedenklicheStimmzettels()
+            .getBedenklicheStimmzettel()
             .add(
                 new BedenklicherStimmzettel(
                     new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 12),
@@ -91,7 +91,7 @@ class BedenklicheStimmzettelModelMapperTest {
                     expectedResult,
                     Validity.PARTIAL_VALID));
         expectedResult
-            .getBedenklicheStimmzettels()
+            .getBedenklicheStimmzettel()
             .add(
                 new BedenklicherStimmzettel(
                     new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 11),
@@ -105,7 +105,8 @@ class BedenklicheStimmzettelModelMapperTest {
       void should_returnDTOWithEmptyValues_when_emptyListIsGiven() {
         val result = unitUnderTest.toEntity(Collections.emptyList(), null, null);
         val expectedResult =
-            new BedenklicheStimmzettel(new BezirkUndWahlID(null, null), Collections.emptyList());
+            new BedenklicheStimmzettelErfassung(
+                new BezirkUndWahlID(null, null), Collections.emptyList());
         Assertions.assertThat(result).isEqualTo(expectedResult);
       }
     }
@@ -125,7 +126,7 @@ class BedenklicheStimmzettelModelMapperTest {
             new BedenklicherStimmzettel(
                 new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 12),
                 Set.of(Supplement.TOO_MANY_LISTENKREUZE, Supplement.TOO_MANY_SINGLE_KANDIDAT_VOTES),
-                new BedenklicheStimmzettel(),
+                new BedenklicheStimmzettelErfassung(),
                 Validity.PARTIAL_VALID);
 
         val result = unitUnderTest.toModel(entityToMap);
@@ -161,12 +162,12 @@ class BedenklicheStimmzettelModelMapperTest {
                     Set.of(
                         Supplement.TOO_MANY_LISTENKREUZE,
                         Supplement.TOO_MANY_SINGLE_KANDIDAT_VOTES),
-                    new BedenklicheStimmzettel(),
+                    new BedenklicheStimmzettelErfassung(),
                     Validity.PARTIAL_VALID),
                 new BedenklicherStimmzettel(
                     new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 12),
                     Collections.emptySet(),
-                    new BedenklicheStimmzettel(),
+                    new BedenklicheStimmzettelErfassung(),
                     Validity.VALID));
 
         val result = unitUnderTest.toModel(entityToMap);

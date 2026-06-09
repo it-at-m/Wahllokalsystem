@@ -17,15 +17,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
-public class BedenklicheStimmzettel {
+public class BedenklicheStimmzettelErfassung {
 
   @EmbeddedId @ToString.Include private BezirkUndWahlID compositeId;
 
   @OneToMany(mappedBy = "erfassung", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<BedenklicherStimmzettel> bedenklicheStimmzettels = new ArrayList<>();
+  private List<BedenklicherStimmzettel> bedenklicheStimmzettel = new ArrayList<>();
 
   public void addBedenklicheStimmzettels(final BedenklicherStimmzettel bedenklicherStimmzettel) {
-    bedenklicheStimmzettels.add(bedenklicherStimmzettel);
+    bedenklicheStimmzettel.add(bedenklicherStimmzettel);
     bedenklicherStimmzettel.setErfassung(this);
   }
 }

@@ -43,7 +43,7 @@ public class BedenklicherStimmzettel {
     @JoinColumn(name = "fk_wahlbezirkid", referencedColumnName = "wahlbezirkid")
   })
   @EqualsAndHashCode.Exclude
-  private BedenklicheStimmzettel erfassung;
+  private BedenklicheStimmzettelErfassung erfassung;
 
   @Enumerated(EnumType.STRING)
   @ToString.Include

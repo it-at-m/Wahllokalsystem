@@ -8,5 +8,5 @@ public interface BedenklicheStimmzettelDTOMapper {
 
   BedenklicheStimmzettelDTO toDTO(BedenklicheStimmzettelModel model);
 
-  BedenklicheStimmzettelModel toWriteModel(BedenklicheStimmzettelDTO dto);
+  BedenklicheStimmzettelModel toModel(BedenklicheStimmzettelDTO dto);
 }

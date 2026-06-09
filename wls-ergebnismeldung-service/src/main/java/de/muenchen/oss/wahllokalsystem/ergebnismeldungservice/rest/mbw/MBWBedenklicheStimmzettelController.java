@@ -41,7 +41,7 @@ public class MBWBedenklicheStimmzettelController {
       @PathVariable("wahlbezirkID") final String wahlbezirkID,
       @RequestBody List<BedenklicheStimmzettelDTO> requestBody) {
     val modelToSave =
-        requestBody.stream().map(bedenklicheStimmzettelDTOMapper::toWriteModel).toList();
+        requestBody.stream().map(bedenklicheStimmzettelDTOMapper::toModel).toList();
     bedenklicheStimmzettelService.setBedenklicheStimmzettel(
         new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave);
   }

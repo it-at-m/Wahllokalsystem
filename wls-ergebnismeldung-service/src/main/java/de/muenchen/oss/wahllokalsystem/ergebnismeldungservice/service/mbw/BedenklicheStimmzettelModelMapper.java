@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicherStimmzettel;
+import java.util.Collection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,10 +11,16 @@ public interface BedenklicheStimmzettelModelMapper {
 
   @Mapping(target = "compositeId.wahlbezirkID", source = "wahlbezirkID")
   @Mapping(target = "compositeId.wahlID", source = "wahlID")
-  @Mapping(target = "compositeId.orderIndex", source = "bedenklicheStimmzettelModel.orderIndex")
+  @Mapping(target = "bedenklicheStimmzettel", source = "bedenklicherStimmzettelModel")
   BedenklicheStimmzettel toEntity(
-      BedenklicheStimmzettelModel bedenklicheStimmzettelModel, String wahlbezirkID, String wahlID);
+      Collection<BedenklicherStimmzettelModel> bedenklicherStimmzettelModel,
+      String wahlbezirkID,
+      String wahlID);
 
-  @Mapping(target = "orderIndex", source = "compositeId.orderIndex")
-  BedenklicheStimmzettelModel toModel(BedenklicheStimmzettel entity);
+  BedenklicherStimmzettel toEntity(BedenklicherStimmzettelModel bedenklicherStimmzettelModel);
+
+  Collection<BedenklicherStimmzettelModel> toModel(
+      Collection<BedenklicherStimmzettel> collectionOfModels);
+
+  BedenklicherStimmzettelModel toModel(BedenklicherStimmzettel entity);
 }

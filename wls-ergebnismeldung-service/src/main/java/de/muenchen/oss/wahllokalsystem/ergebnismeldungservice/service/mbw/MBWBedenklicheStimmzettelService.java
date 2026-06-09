@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collection;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,14 +20,15 @@ public class MBWBedenklicheStimmzettelService {
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
-  public Collection<BedenklicheStimmzettelModel> getBedenklicheStimmzettelOrderedByOrderIndexAsc(
-      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
-    return repository
-        .findByBezirkUndWahlIDOrderbyOrderIndexAsc(
-            bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID())
-        .stream()
-        .map(modelMapper::toModel)
-        .toList();
+  public Optional<Collection<BedenklicherStimmzettelModel>>
+      getBedenklicheStimmzettelOrderedByOrderIndexAsc(
+          @P("param") final BezirkUndWahlID bezirkUndWahlID) {
+    val optionalOfBedenklicheStimmzettel =
+        repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
+            bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
+    return optionalOfBedenklicheStimmzettel.map(
+        bedenklicheStimmzettel ->
+            modelMapper.toModel(bedenklicheStimmzettel.getBedenklicheStimmzettel()));
   }
 
   @PreAuthorize(
@@ -34,16 +36,12 @@ public class MBWBedenklicheStimmzettelService {
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
   public void setBedenklicheStimmzettel(
       @P("param") final BezirkUndWahlID bezirkUndWahlID,
-      Collection<BedenklicheStimmzettelModel> bedenklicheStimmzettelToSave) {
+      Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
     val entitiesToSave =
-        bedenklicheStimmzettelToSave.stream()
-            .map(
-                stimmzettel ->
-                    modelMapper.toEntity(
-                        stimmzettel,
-                        bezirkUndWahlID.getWahlbezirkID(),
-                        bezirkUndWahlID.getWahlID()))
-            .toList();
-    repository.saveAll(entitiesToSave);
+        modelMapper.toEntity(
+            bedenklicheStimmzettelToSave,
+            bezirkUndWahlID.getWahlbezirkID(),
+            bezirkUndWahlID.getWahlID());
+    repository.save(entitiesToSave);
   }
 }

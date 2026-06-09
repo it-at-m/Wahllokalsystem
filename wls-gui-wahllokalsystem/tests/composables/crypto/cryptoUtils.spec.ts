@@ -1,9 +1,15 @@
-import { describe, expect, it, vi } from "vitest";
+import type { Mock } from "vitest";
+
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 
 describe("cryptoUtils.ts", () => {
   const { encrypt, decrypt, importKey } = useCryptoUtils();
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
   describe("importKey", () => {
     it("should_importKey_when_calledWithPassword", async () => {
@@ -52,15 +58,19 @@ describe("cryptoUtils.ts", () => {
   });
 
   describe("decrypt", () => {
+    const originalTextDecoder = global.TextDecoder;
+    let mockDecoder: { decode: Mock };
+
+    afterEach(() => {
+      global.TextDecoder = originalTextDecoder;
+    });
+
     it("should_decryptData_when_KeyIsValid", async () => {
       const key = {} as CryptoKey;
       const mockEncryptedData = new ArrayBuffer(16);
       const mockDecryptedData = new ArrayBuffer(16);
 
-      const mockDecoder = {
-        decode: vi.fn().mockReturnValue("Hello, World!"),
-      };
-      global.TextDecoder = vi.fn().mockImplementation(() => mockDecoder);
+      _mockDecoderWithValue("Hello, World!");
 
       vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
 
@@ -78,10 +88,7 @@ describe("cryptoUtils.ts", () => {
       const mockEncryptedData = new ArrayBuffer(0);
       const mockDecryptedData = new ArrayBuffer(0);
 
-      const mockDecoder = {
-        decode: vi.fn().mockReturnValue(""),
-      };
-      global.TextDecoder = vi.fn().mockImplementation(() => mockDecoder);
+      _mockDecoderWithValue("");
 
       vi.spyOn(crypto.subtle, "decrypt").mockResolvedValue(mockDecryptedData);
 
@@ -98,5 +105,16 @@ describe("cryptoUtils.ts", () => {
         "Entschlüsselung kann ohne CryptoKey nicht durchgeführt werden."
       );
     });
+
+    function _mockDecoderWithValue(value: string) {
+      mockDecoder = {
+        decode: vi.fn().mockReturnValue(value),
+      };
+      global.TextDecoder = vi
+        .fn()
+        .mockImplementation(function MockedTextDecoder() {
+          return mockDecoder;
+        });
+    }
   });
 });

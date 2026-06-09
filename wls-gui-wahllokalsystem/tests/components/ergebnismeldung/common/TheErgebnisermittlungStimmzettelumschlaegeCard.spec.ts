@@ -54,11 +54,13 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(
+    class MockedResizeObserverMock {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    } as never
+  );
 
   vi.stubGlobal("visualViewport", new EventTarget());
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
@@ -73,7 +75,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   enableAutoUnmount(afterEach);

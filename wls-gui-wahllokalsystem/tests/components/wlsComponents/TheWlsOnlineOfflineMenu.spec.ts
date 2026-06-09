@@ -16,11 +16,13 @@ describe("TheWlsOnlineOfflineMenu.vue", () => {
   let wrapper: VueWrapper;
 
   vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
+  const ResizeObserverMock = vi.fn(
+    class MockedResizeObserverMock {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    } as never
+  );
   vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
   beforeEach(() => {

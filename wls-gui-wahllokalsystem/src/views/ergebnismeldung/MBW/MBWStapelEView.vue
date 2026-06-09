@@ -16,7 +16,6 @@ import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -29,7 +28,7 @@ const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
-const { getErgebnisse, postErgebnisse } = useErgebnisService();
+// const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { logError } = useLogging("mbwStapelEView");
 const { getNextRoute } = useNavigationUtils();
 

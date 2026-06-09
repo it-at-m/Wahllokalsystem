@@ -45,7 +45,7 @@ export const COMPONENT_EVENT_TESTS = "behavioral logic";
  * Mocks dynamic components
  */
 export function mockAndStubResizeObserver() {
-  const ResizeObserverMock = class MockedResizeObserverMock {
+  const ResizeObserverMock = class {
     observe = vi.fn();
     unobserve = vi.fn();
     disconnect = vi.fn();

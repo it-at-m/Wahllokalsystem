@@ -10,7 +10,5 @@ public interface BedenklicherStimmzettelDTOMapper {
   Collection<BedenklicherStimmzettelDTO> toDTO(
       Collection<BedenklicherStimmzettelModel> collectionOfModels);
 
-  BedenklicherStimmzettelDTO toDTO(BedenklicherStimmzettelModel model);
-
   BedenklicherStimmzettelModel toModel(BedenklicherStimmzettelDTO dto);
 }

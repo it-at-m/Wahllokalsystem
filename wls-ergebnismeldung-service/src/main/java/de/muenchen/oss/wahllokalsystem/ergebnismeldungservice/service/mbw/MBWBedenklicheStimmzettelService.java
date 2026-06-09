@@ -28,7 +28,7 @@ public class MBWBedenklicheStimmzettelService {
             bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
     return optionalOfBedenklicheStimmzettel.map(
         bedenklicheStimmzettel ->
-            modelMapper.toModel(bedenklicheStimmzettel.getBedenklicheStimmzettel()));
+            modelMapper.toModel(bedenklicheStimmzettel.getBedenklicheStimmzettels()));
   }
 
   @PreAuthorize(
@@ -37,11 +37,11 @@ public class MBWBedenklicheStimmzettelService {
   public void setBedenklicheStimmzettel(
       @P("param") final BezirkUndWahlID bezirkUndWahlID,
       Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
-    val entitiesToSave =
+    val entityToSave =
         modelMapper.toEntity(
             bedenklicheStimmzettelToSave,
             bezirkUndWahlID.getWahlbezirkID(),
             bezirkUndWahlID.getWahlID());
-    repository.save(entitiesToSave);
+    repository.save(entityToSave);
   }
 }

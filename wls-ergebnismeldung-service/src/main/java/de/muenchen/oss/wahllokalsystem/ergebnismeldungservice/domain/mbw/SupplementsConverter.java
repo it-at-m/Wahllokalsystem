@@ -3,9 +3,8 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,13 +21,15 @@ public class SupplementsConverter implements AttributeConverter<Set<Supplement>,
   @Override
   public Set<Supplement> convertToEntityAttribute(String dbData) {
     if (dbData == null) {
-      return Collections.emptySet();
+      return new HashSet<>();
     }
 
     val dbDataSplitted = dbData.split(SPLIT_CHAR);
-    return Arrays.stream(dbDataSplitted)
+    val result = new HashSet<Supplement>(dbDataSplitted.length);
+    Arrays.stream(dbDataSplitted)
         .filter(StringUtils::isNotBlank)
         .map(Supplement::valueOf)
-        .collect(Collectors.toSet());
+        .forEach(result::add);
+    return result;
   }
 }

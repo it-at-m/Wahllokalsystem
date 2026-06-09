@@ -15,6 +15,6 @@ CREATE TABLE BedenklicherStimmzettel
     supplements     VARCHAR(1024),
     validity        VARCHAR(1024),
 
-    CONSTRAINT UQ_NATURAL_ID UNIQUE (fk_wahlID, fk_wahlbezirkID, orderIndex),
+    CONSTRAINT PK_BedenklicherStimmzettel PRIMARY KEY (fk_wahlID, fk_wahlbezirkID, orderIndex),
     CONSTRAINT FK_BedenklicheStimmzettel FOREIGN KEY (fk_wahlID, fk_wahlbezirkID) REFERENCES BedenklicheStimmzettel (wahlID, wahlbezirkID)
 );

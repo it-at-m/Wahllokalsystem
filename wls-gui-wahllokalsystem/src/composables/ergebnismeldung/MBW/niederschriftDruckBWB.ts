@@ -4,6 +4,24 @@
 import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 
 export function useNiederschriftDruckBWB() {
+  function buildNiederschriftTemplateFromData(
+    data: NiederschriftDruckInputBWB
+  ) {
+    return `
+    <!DOCTYPE html>
+            <html lang="de">
+           ${_dataForHeader(data)}
+            ${_dataForChapterOneWahlvorstand(data)}
+            ${_dataForChapterTwo(data)}
+            ${_dataForChapterThree(data)}
+            ${_dataForChapterFour(data)}
+            ${_dataForChapterFive(data)}
+            </body>
+            <div class="footer">${data.footer}</div>
+            </html>
+    `;
+  }
+
   function _dataForHeader(data: NiederschriftDruckInputBWB) {
     return `
      <head>
@@ -57,6 +75,7 @@ export function useNiederschriftDruckBWB() {
             </div>
     `;
   }
+
   function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInputBWB) {
     return `
   <div class="fontSize_12 bold marginTop_2">Wahlhandlung</div>
@@ -161,6 +180,7 @@ export function useNiederschriftDruckBWB() {
             </div>
     `;
   }
+
   function _dataForChapterTwo(data: NiederschriftDruckInputBWB) {
     return `
      <!-- 2. -->
@@ -421,6 +441,7 @@ export function useNiederschriftDruckBWB() {
 
     `;
   }
+
   function _dataForChapterThree(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 3 -->
@@ -899,6 +920,7 @@ export function useNiederschriftDruckBWB() {
             </svg>
     `;
   }
+
   function _dataForChapterFour(data: NiederschriftDruckInputBWB) {
     return `
 <!-- 4. -->
@@ -1225,6 +1247,7 @@ export function useNiederschriftDruckBWB() {
               .join("")}
     `;
   }
+
   function _dataForChapterFive(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 5. -->
@@ -1574,6 +1597,7 @@ export function useNiederschriftDruckBWB() {
       
     `;
   }
+
   function _getStyling() {
     return `
     <style type="text/css">
@@ -2085,24 +2109,6 @@ export function useNiederschriftDruckBWB() {
                         page-break-before: always;
                     }
                 </style>
-    `;
-  }
-
-  function buildNiederschriftTemplateFromData(
-    data: NiederschriftDruckInputBWB
-  ) {
-    return `
-    <!DOCTYPE html>
-            <html lang="de">
-           ${_dataForHeader(data)}
-            ${_dataForChapterOneWahlvorstand(data)}
-            ${_dataForChapterTwo(data)}
-            ${_dataForChapterThree(data)}
-            ${_dataForChapterFour(data)}
-            ${_dataForChapterFive(data)}
-            </body>
-            <div class="footer">${data.footer}</div>
-            </html>
     `;
   }
 

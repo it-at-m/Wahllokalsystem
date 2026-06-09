@@ -4,6 +4,26 @@ import type { NiederschriftDruckInputUWB } from "@/types/ergebnismeldung/MBW/nie
 
 /*eslint-disable no-irregular-whitespace*/
 export function useNiederschriftDruckUWB() {
+  function buildNiederschriftTemplateFromData(
+    data: NiederschriftDruckInputUWB
+  ) {
+    return `
+            <!DOCTYPE html>
+            <html lang="de">
+            ${_dataForHeader(data)}
+            <body>    
+            ${_dataForChapterOneWahlvorstand(data)}
+            ${_dataForChapterTwo(data)}
+            ${_dataForChapterThree(data)}
+            ${_dataForChapterFour(data)}
+            ${_dataForChapterFive(data)}  
+            </body>
+            <div class="footer">${data.footer}</div>
+            </html>
+            
+    `;
+  }
+
   function _dataForHeader(data: NiederschriftDruckInputUWB) {
     return `
     <head>
@@ -57,6 +77,7 @@ export function useNiederschriftDruckUWB() {
             </div>
     `;
   }
+
   function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInputUWB) {
     return `
     <div class="fontSize_12 bold marginTop_2 marginBottom_2">Wahlhandlung</div>
@@ -1967,26 +1988,6 @@ export function useNiederschriftDruckUWB() {
                     }
 
                 </style>
-    `;
-  }
-
-  function buildNiederschriftTemplateFromData(
-    data: NiederschriftDruckInputUWB
-  ) {
-    return `
-            <!DOCTYPE html>
-            <html lang="de">
-            ${_dataForHeader(data)}
-            <body>    
-            ${_dataForChapterOneWahlvorstand(data)}
-            ${_dataForChapterTwo(data)}
-            ${_dataForChapterThree(data)}
-            ${_dataForChapterFour(data)}
-            ${_dataForChapterFive(data)}  
-            </body>
-            <div class="footer">${data.footer}</div>
-            </html>
-            
     `;
   }
 

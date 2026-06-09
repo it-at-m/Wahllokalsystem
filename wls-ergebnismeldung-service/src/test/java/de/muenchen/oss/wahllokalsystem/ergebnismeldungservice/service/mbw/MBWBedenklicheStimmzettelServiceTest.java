@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Bedenkl
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -32,27 +33,33 @@ class MBWBedenklicheStimmzettelServiceTest {
       val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
       val mockedEntity = new BedenklicheStimmzettel();
-      //
-      // Mockito.when(repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(Mockito.eq(bezirkUndWahlId.getWahlbezirkID()), Mockito.eq(bezirkUndWahlId.getWahlID()))).thenReturn(
-      //                    List.of(mockedEntity, mockedEntity));
+
+      Mockito.when(
+              repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
+                  Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
+                  Mockito.eq(bezirkUndWahlId.getWahlID())))
+          .thenReturn(Optional.of(mockedEntity));
 
       val mockedMappedEntity =
           new BedenklicherStimmzettelModel(0, Collections.emptySet(), ValidityModel.INVALID);
-      //            Mockito.when(modelMapper.toModel(mockedEntity)).thenReturn(mockedMappedEntity);
+      Mockito.when(modelMapper.toModel(mockedEntity.getBedenklicheStimmzettels()))
+          .thenReturn(List.of(mockedMappedEntity));
 
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
 
-      val expectedResult = List.of(mockedMappedEntity, mockedMappedEntity);
-      Assertions.assertThat(result).isEqualTo(expectedResult);
+      val expectedResult = List.of(mockedMappedEntity);
+      Assertions.assertThat(result).isEqualTo(Optional.of(expectedResult));
     }
 
     @Test
-    void should_returnEmptyCollection_when_noEntitiesWereFound() {
+    void should_returnEmptyOptional_when_noEntitiesWereFound() {
       val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-      //
-      // Mockito.when(repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(Mockito.eq(bezirkUndWahlId.getWahlbezirkID()), Mockito.eq(bezirkUndWahlId.getWahlID()))).thenReturn(
-      //                    Collections.emptyList());
+      Mockito.when(
+              repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
+                  Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
+                  Mockito.eq(bezirkUndWahlId.getWahlID())))
+          .thenReturn(Optional.empty());
 
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
 
@@ -73,15 +80,17 @@ class MBWBedenklicheStimmzettelServiceTest {
       val wahlID = "wahlID";
 
       val mockedMappedModel = new BedenklicheStimmzettel();
-      //            Mockito.when(modelMapper.toEntity(Mockito.eq(bedenklicherStimmzettel),
-      // Mockito.eq(wahlbezirkID), Mockito.eq(wahlID))).thenReturn(mockedMappedModel);
+      Mockito.when(
+              modelMapper.toEntity(
+                  Mockito.eq(modelToSave), Mockito.eq(wahlbezirkID), Mockito.eq(wahlID)))
+          .thenReturn(mockedMappedModel);
 
       Assertions.assertThatNoException()
           .isThrownBy(
               () ->
                   unitUnderTest.setBedenklicheStimmzettel(
                       new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave));
-      Mockito.verify(repository).saveAll(List.of(mockedMappedModel, mockedMappedModel));
+      Mockito.verify(repository).save(mockedMappedModel);
     }
   }
 }

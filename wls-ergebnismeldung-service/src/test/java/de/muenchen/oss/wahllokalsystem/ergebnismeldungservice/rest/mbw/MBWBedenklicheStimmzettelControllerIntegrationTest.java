@@ -10,16 +10,17 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.MicroServiceApplic
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicherStimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BezirkIdWahlIdOrderIndex;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Supplement;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Validity;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.BedenklicheStimmzettelModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.BedenklicherStimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.val;
@@ -56,14 +57,11 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
 
   @Autowired BedenklicherStimmzettelDTOMapper bedenklicherStimmzettelDTOMapper;
 
-//  @Autowired
-//  TransactionTemplate transactionTemplate;
+  @Autowired TransactionTemplate transactionTemplate;
 
   @AfterEach
   void teardown() {
-//    transactionTemplate.executeWithoutResult(status -> {
-      bedenklicheStimmzettelRepository.deleteAll();
-//    });
+    bedenklicheStimmzettelRepository.deleteAll();
   }
 
   @Nested
@@ -125,18 +123,37 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
 
     private @NonNull BedenklicheStimmzettel createEntityToFind(
         final String wahlID, final String wahlbezirkID) {
+      val result =
+          new BedenklicheStimmzettel(new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
+
       val bedenklicherStimmzettel1 =
-          new BedenklicherStimmzettel(2, Collections.emptySet(), Validity.VALID);
+          new BedenklicherStimmzettel(
+              new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 2),
+              Collections.emptySet(),
+              result,
+              Validity.VALID);
+      result.addBedenklicheStimmzettels(bedenklicherStimmzettel1);
+
       val bedenklicherStimmzettel2 =
-          new BedenklicherStimmzettel(1, Collections.emptySet(), Validity.INVALID);
+          new BedenklicherStimmzettel(
+              new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 1),
+              Collections.emptySet(),
+              result,
+              Validity.INVALID);
+      result.addBedenklicheStimmzettels(bedenklicherStimmzettel2);
+
+      Set<Supplement> supplements = new HashSet<>();
+      supplements.add(Supplement.TOO_MANY_LISTENKREUZE);
+      supplements.add(Supplement.TOO_MANY_SINGLE_KANDIDAT_VOTES);
       val bedenklicherStimmzettel3 =
           new BedenklicherStimmzettel(
-              0,
-              Set.of(Supplement.TOO_MANY_LISTENKREUZE, Supplement.TOO_MANY_SINGLE_KANDIDAT_VOTES),
+              new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 0),
+              supplements,
+              result,
               Validity.PARTIAL_VALID);
-      return new BedenklicheStimmzettel(
-          new BezirkUndWahlID(wahlID, wahlbezirkID),
-          List.of(bedenklicherStimmzettel1, bedenklicherStimmzettel2, bedenklicherStimmzettel3));
+      result.addBedenklicheStimmzettels(bedenklicherStimmzettel3);
+
+      return result;
     }
 
     private RequestBuilder createGetRequest(
@@ -162,16 +179,26 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
       val request = createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody);
       api.perform(request).andExpect(status().isCreated());
 
-      val entity = bedenklicheStimmzettelRepository.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
       final Collection<BedenklicherStimmzettelModel> requestBodyAsModel = new ArrayList<>();
-      requestBody.forEach(bedenklicherStimmzettel -> {
-        requestBodyAsModel.add(bedenklicherStimmzettelDTOMapper.toModel(bedenklicherStimmzettel));
-      });
-      val expectedEntity = bedenklicheStimmzettelModelMapper.toEntity(requestBodyAsModel, wahlbezirkID, wahlID);
-      Assertions.assertThat(entity.get())
-              .usingRecursiveComparison()
-              .ignoringCollectionOrder()
-              .isEqualTo(expectedEntity);
+      requestBody.forEach(
+          bedenklicherStimmzettel -> {
+            requestBodyAsModel.add(
+                bedenklicherStimmzettelDTOMapper.toModel(bedenklicherStimmzettel));
+          });
+
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val entity =
+                bedenklicheStimmzettelRepository.findById(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID));
+            val expectedEntity =
+                bedenklicheStimmzettelModelMapper.toEntity(
+                    requestBodyAsModel, wahlbezirkID, wahlID);
+            Assertions.assertThat(entity.get())
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expectedEntity);
+          });
     }
 
     @Test
@@ -180,49 +207,69 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
       val wahlID = "wahlID";
       val requestBody = createRequestBody();
 
-//      transactionTemplate.executeWithoutResult((transactionStatus -> {
-//        val bedenklicheStimmzettel = new ArrayList<BedenklicherStimmzettel>();
-//        bedenklicheStimmzettel.add(new BedenklicherStimmzettel(0, Collections.emptySet(), Validity.VALID));
-//        val entityToReplace = new BedenklicheStimmzettel(new BezirkUndWahlID(wahlID, wahlbezirkID), null);
-//        bedenklicheStimmzettelRepository.save(entityToReplace);
-//      }));
-
+      transactionTemplate.executeWithoutResult(
+          (transactionStatus -> {
+            val entityToReplace =
+                new BedenklicheStimmzettel(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
+            entityToReplace.addBedenklicheStimmzettels(
+                new BedenklicherStimmzettel(
+                    new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 0),
+                    Collections.emptySet(),
+                    null,
+                    Validity.VALID));
+            bedenklicheStimmzettelRepository.save(entityToReplace);
+          }));
 
       val request = createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody);
       api.perform(request).andExpect(status().isCreated());
 
-      val entity = bedenklicheStimmzettelRepository.findById(new BezirkUndWahlID(wahlID, wahlbezirkID));
-      final Collection<BedenklicherStimmzettelModel> requestBodyAsModel = requestBody.stream().map(bedenklicherStimmzettelDTOMapper::toModel).toList();
-      val expectedEntity = bedenklicheStimmzettelModelMapper.toEntity(requestBodyAsModel, wahlbezirkID, wahlID);
-      Assertions.assertThat(entity.get())
-              .usingRecursiveComparison()
-              .ignoringCollectionOrder()
-              .isEqualTo(expectedEntity);
+      final Collection<BedenklicherStimmzettelModel> requestBodyAsModel =
+          requestBody.stream().map(bedenklicherStimmzettelDTOMapper::toModel).toList();
+      val expectedEntity =
+          bedenklicheStimmzettelModelMapper.toEntity(requestBodyAsModel, wahlbezirkID, wahlID);
+
+      transactionTemplate.executeWithoutResult(
+          status -> {
+            val entity =
+                bedenklicheStimmzettelRepository.findById(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID));
+            Assertions.assertThat(entity.get())
+                .usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .isEqualTo(expectedEntity);
+          });
 
       Assertions.assertThat(bedenklicheStimmzettelRepository.count()).isEqualTo(1);
     }
 
     private Collection<BedenklicherStimmzettelDTO> createRequestBody() {
       return List.of(
-              new BedenklicherStimmzettelDTO(0, Collections.emptySet(), ValidityDTO.VALID),
-              new BedenklicherStimmzettelDTO(1, Set.of(SupplementDTO.TOO_MANY_LISTENKREUZE, SupplementDTO.TOO_MANY_SINGLE_KANDIDAT_VOTES), ValidityDTO.PARTIAL_VALID),
-              new BedenklicherStimmzettelDTO(2, Collections.emptySet(), ValidityDTO.INVALID)
-      );
+          new BedenklicherStimmzettelDTO(0, Collections.emptySet(), ValidityDTO.VALID),
+          new BedenklicherStimmzettelDTO(
+              1,
+              Set.of(
+                  SupplementDTO.TOO_MANY_LISTENKREUZE,
+                  SupplementDTO.TOO_MANY_SINGLE_KANDIDAT_VOTES),
+              ValidityDTO.PARTIAL_VALID),
+          new BedenklicherStimmzettelDTO(2, Collections.emptySet(), ValidityDTO.INVALID));
     }
 
     private RequestBuilder createPostRequest(
-            final String wahlID, final String wahlbezirkID, final String claimWahlbezirkID, final Collection<BedenklicherStimmzettelDTO> requestBody)
-    throws Exception {
+        final String wahlID,
+        final String wahlbezirkID,
+        final String claimWahlbezirkID,
+        final Collection<BedenklicherStimmzettelDTO> requestBody)
+        throws Exception {
       return MockMvcRequestBuilders.post(createUrl(wahlbezirkID, wahlID))
-              .with(csrf())
-              .with(
-                      jwt()
-                              .authorities(
-                                      new SimpleGrantedAuthority(Authorities.SERVICE_SET_BEDENKLICHE_STIMMZETTEL))
-                              .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(objectMapper.writeValueAsString(requestBody))
-              ;
+          .with(csrf())
+          .with(
+              jwt()
+                  .authorities(
+                      new SimpleGrantedAuthority(Authorities.SERVICE_SET_BEDENKLICHE_STIMMZETTEL))
+                  .jwt(jwt -> jwt.claim("wahlbezirkID", claimWahlbezirkID)))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(requestBody));
     }
   }
 

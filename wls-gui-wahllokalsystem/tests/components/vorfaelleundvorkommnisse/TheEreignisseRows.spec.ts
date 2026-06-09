@@ -6,6 +6,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
+import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import {
   enableAutoUnmount,
   flushPromises,
@@ -29,7 +30,8 @@ import BaseEreignisRow from "@/components/vorfaelleundvorkommnisse/BaseEreignisR
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
 import vuetify from "@/plugins/vuetify";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { EreignisBuilder } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+
+const { prepareEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
 
 describe("TheEreignisseRows.vue", () => {
   let wrapper: VueWrapper;
@@ -89,9 +91,7 @@ describe("TheEreignisseRows.vue", () => {
       const date = new Date("2025-07-29");
       date.setHours(12, 0);
       ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Vorfall Nr.: 1`)
+        prepareEreignis().uhrzeit(date).beschreibung(`Vorfall Nr.: 1`).build()
       );
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
@@ -111,9 +111,10 @@ describe("TheEreignisseRows.vue", () => {
         const date = new Date("2025-07-29");
         date.setHours(i, 0);
         ereigniseintraege.push(
-          EreignisBuilder.createComplete()
-            .withUhrzeit(date)
-            .withBeschreibung(`Vorfall Nr.: ${i}`)
+          prepareEreignis()
+            .uhrzeit(date)
+            .beschreibung(`Vorfall Nr.: ${i}`)
+            .build()
         );
       }
 
@@ -135,9 +136,7 @@ describe("TheEreignisseRows.vue", () => {
       const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Beschreibung`)
+        prepareEreignis().uhrzeit(date).beschreibung(`Beschreibung`).build()
       );
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
@@ -172,9 +171,7 @@ describe("TheEreignisseRows.vue", () => {
       const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Beschreibung`)
+        prepareEreignis().uhrzeit(date).beschreibung(`Beschreibung`).build()
       );
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
@@ -210,9 +207,7 @@ describe("TheEreignisseRows.vue", () => {
       const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Beschreibung`)
+        prepareEreignis().uhrzeit(date).beschreibung(`Beschreibung`).build()
       );
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;
@@ -245,9 +240,7 @@ describe("TheEreignisseRows.vue", () => {
       const date = new Date();
       date.setHours(12, 0);
       ereigniseintraege.push(
-        EreignisBuilder.createComplete()
-          .withUhrzeit(date)
-          .withBeschreibung(`Beschreibung`)
+        prepareEreignis().uhrzeit(date).beschreibung(`Beschreibung`).build()
       );
 
       ereignisStore.wahlbezirkEreignisse.ereigniseintraege = ereigniseintraege;

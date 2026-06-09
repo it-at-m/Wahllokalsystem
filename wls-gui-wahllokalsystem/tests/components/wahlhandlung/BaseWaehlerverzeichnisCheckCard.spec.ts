@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { usePflegeWaehlerverzeichnisTestDataFactory } from "@tests/utils/wahlhandlung/PflegeWaehlerverzeichnisTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
@@ -20,14 +21,7 @@ const { preparePflegeWaehlerverzeichnis } =
 describe("BaseWaehlerverzeichnisCheckCard.vue", () => {
   let wrapper: VueWrapper;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     wrapper = mount(BaseWaehlerverzeichnisCheckCard, {

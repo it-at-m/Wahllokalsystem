@@ -40,3 +40,22 @@ export function withSetup<T>(composable: () => T): [T, App] {
 
 export const COMPONENT_RENDER_TESTS = "visual logic";
 export const COMPONENT_EVENT_TESTS = "behavioral logic";
+
+/**
+ * Mocks dynamic components
+ */
+export function mockAndStubResizeObserver() {
+  const ResizeObserverMock = class {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
+  };
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+}
+
+/**
+ * Mocks responsive layouts
+ */
+export function stubVisualViewport() {
+  vi.stubGlobal("visualViewport", new EventTarget());
+}

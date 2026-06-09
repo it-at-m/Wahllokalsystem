@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -18,7 +19,8 @@ describe("TheBroadcastReadConfirmationDialog.vue", () => {
   let wrapper: VueWrapper<
     InstanceType<typeof TheBroadcastReadConfirmationDialog>
   >;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
 
   beforeEach(() => {
     wrapper = mount(TheBroadcastReadConfirmationDialog, {

@@ -5,6 +5,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import {
@@ -35,17 +37,9 @@ const { prepareEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
 
 describe("TheEreignisseRows.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
-  // Mock the ResizeObserver
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  // Stub the global ResizeObserver
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeAll(() => {
     createPinia();

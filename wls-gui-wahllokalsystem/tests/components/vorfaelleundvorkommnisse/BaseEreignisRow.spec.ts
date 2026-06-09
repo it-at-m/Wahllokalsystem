@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
@@ -18,15 +19,7 @@ const { createEreignis, prepareEreignis } =
   useVorfaelleundvorkommnisseTestDataFactory();
 
 describe("BaseEreignisRow.vue", () => {
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  // Stub the global ResizeObserver
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   let wrapper: VueWrapper;
   beforeEach(() => {

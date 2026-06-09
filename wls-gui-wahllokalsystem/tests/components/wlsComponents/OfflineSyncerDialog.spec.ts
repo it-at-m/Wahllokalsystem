@@ -1,7 +1,11 @@
 import type { VueWrapper } from "@vue/test-utils";
 import type { Ref } from "vue";
 
-import { COMPONENT_EVENT_TESTS } from "@tests/utils/testutils.ts";
+import {
+  COMPONENT_EVENT_TESTS,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
+} from "@tests/utils/testutils.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
@@ -33,15 +37,8 @@ vi.mock("@/stores/dataSyncStore.ts", () => {
 describe("OfflineSyncerDialog", () => {
   let wrapper: VueWrapper;
 
-  vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     mockDefinitions.numberOfTasksFinished = ref(0);

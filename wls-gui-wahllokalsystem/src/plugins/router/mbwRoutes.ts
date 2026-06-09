@@ -44,8 +44,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
   },
   [MbwRoutesEnum.MBW_STAPEL_E]: {
     path:
-        BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
-        "/stapelE",
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelE",
     component: MBWStapelEView,
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,

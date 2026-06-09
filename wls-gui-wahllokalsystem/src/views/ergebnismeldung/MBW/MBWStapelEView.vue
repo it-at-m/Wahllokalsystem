@@ -9,20 +9,20 @@
 </template>
 
 <script setup lang="ts">
-import type {Ergebnis} from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 
-import {computed, onMounted, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
-import {useLogging} from "@/composables/common/logging.ts";
-import {useErgebnisService} from "@/composables/ergebnismeldung/common/ergebnisService.ts";
-import {useNavigationUtils} from "@/composables/navigation/navigationUtils.ts";
-import {ROUTE_NOTFOUND} from "@/constants.ts";
-import {useUserStore} from "@/stores/userStore.ts";
-import {useWahlenStore} from "@/stores/wahlenStore.ts";
-import {useWorkflowStore} from "@/stores/workflowStore.ts";
-import {MbwRoutesEnum} from "@/types/navigation/MbwRoutesEnum.ts";
+import { useLogging } from "@/composables/common/logging.ts";
+import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
 const router = useRouter();

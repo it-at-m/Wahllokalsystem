@@ -3,6 +3,12 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.mbw;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.rest.AbstractController;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +31,24 @@ public class MBWBedenklicheStimmzettelController extends AbstractController {
   private final MBWBedenklicheStimmzettelService bedenklicheStimmzettelService;
   private final BedenklicherStimmzettelDTOMapper bedenklicheStimmzettelDTOMapper;
 
+  @Operation(description = "Lesen von bedenklichen Stimmzetteln einer MBW eines Wahlbezirks")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Es wurden bedenkliche Stimmzettel gepflegt",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array =
+                      @ArraySchema(
+                          schema = @Schema(implementation = BedenklicherStimmzettelDTO.class)))
+            }),
+        @ApiResponse(
+            responseCode = "204",
+            description = "Es wurden keidne bedenkliche Stimmzettel gepflegt",
+            content = {@Content()})
+      })
   @GetMapping("/{wahlID}/wahlbezirk/{wahlbezirkID}/bedenklicheStimmzettel")
   public ResponseEntity<Collection<BedenklicherStimmzettelDTO>>
       getBedenklicheStimmzettelByOrderIndexAsc(
@@ -38,6 +62,13 @@ public class MBWBedenklicheStimmzettelController extends AbstractController {
         optionalOfbedenklicherStimmzettel.map(bedenklicheStimmzettelDTOMapper::toDTO));
   }
 
+  @Operation(description = "Erfassen von bedenklichen Stimmzetteln einer MBW für einen Wahlbezirk")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Die bedenklichen Stimmzettel wurden erfasst")
+      })
   @PostMapping("/{wahlID}/wahlbezirk/{wahlbezirkID}/bedenklicheStimmzettel")
   @ResponseStatus(HttpStatus.CREATED)
   public void setBedenklicheStimmzettel(

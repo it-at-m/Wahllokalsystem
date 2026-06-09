@@ -9,7 +9,6 @@ import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import {
   afterAll,
   afterEach,
-  beforeAll,
   beforeEach,
   describe,
   expect,

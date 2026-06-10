@@ -26,7 +26,7 @@ import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-vi.mock("@/plugins/router.ts", () => {
+vi.mock(import("@/plugins/router.ts"), () => {
   return {};
 });
 

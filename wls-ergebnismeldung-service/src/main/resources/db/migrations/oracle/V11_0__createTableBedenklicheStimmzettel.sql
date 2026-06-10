@@ -3,7 +3,7 @@ CREATE TABLE BedenklicheStimmzettelErfassung
     wahlID       VARCHAR(1024) NOT NULL,
     wahlbezirkID VARCHAR(1024) NOT NULL,
 
-    CONSTRAINT PK_BedenklicheStimmzettel PRIMARY KEY (wahlid, wahlbezirkid)
+    CONSTRAINT BedenklicheStimmzettelErfassung PRIMARY KEY (wahlid, wahlbezirkid)
 );
 
 CREATE TABLE BedenklicherStimmzettel

@@ -26,7 +26,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/basisdaten/ungueltigeWahlscheineService"),
+  import("@/composables/basisdaten/ungueltigeWahlscheineService.ts"),
   () => ({
     useUngueltigeWahlscheineService: () => ({
       getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
@@ -34,7 +34,7 @@ vi.mock(
   })
 );
 vi.mock(
-  import("@/composables/vorfaelleundvorkommnisse/ereignisService"),
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {

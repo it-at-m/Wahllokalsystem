@@ -15,7 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/infomanagement/konfigurationsparameterService"),
+  import("@/composables/infomanagement/konfigurationsparameterService.ts"),
   () => ({
     useKonfigurationsparameterService: () => ({
       getKonfigurationsparameter: mockDefinitions.getKonfigurationsparameter,

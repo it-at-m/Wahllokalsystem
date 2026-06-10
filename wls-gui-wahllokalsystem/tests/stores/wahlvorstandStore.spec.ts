@@ -27,7 +27,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion"),
+  import("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
@@ -38,7 +38,7 @@ vi.mock(
   }
 );
 
-vi.mock(import("@/composables/wahlvorstand/wahlvorstandService"), () => ({
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandService.ts"), () => ({
   useWahlvorstandService: () => ({
     saveWahlvorstand: mockDefinitions.saveWahlvorstand,
     getWahlvorstand: mockDefinitions.getWahlvorstand,

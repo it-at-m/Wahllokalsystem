@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils;
 
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Validierungsstatus;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.EingenommenerWahlschein;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
@@ -14,6 +15,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgab
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.StimmzettelartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke.VermerkModel;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.val;
@@ -146,6 +148,21 @@ public class Testdaten {
 
     public static EingenommenerWahlscheinDTO createDTO(@NotNull long anzahl) {
       return new EingenommenerWahlscheinDTO(anzahl, StimmzettelartDTO.KLEIN);
+    }
+  }
+
+  public static class Meldung {
+    public static de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Meldung
+        createEntity() {
+      val meldung =
+          new de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Meldung();
+      meldung.setGedruckt(true);
+      meldung.setSendeuhrzeit(LocalDateTime.now());
+      meldung.setUebermittelt(true);
+      meldung.setSendeuhrzeit(LocalDateTime.now());
+      meldung.setValidierungsstatus(Validierungsstatus.VALIDE);
+
+      return meldung;
     }
   }
 }

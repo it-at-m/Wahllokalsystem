@@ -6,6 +6,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
@@ -46,12 +47,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   let wrapper: VueWrapper;
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   describe(COMPONENT_RENDER_TESTS, () => {
     beforeEach(() => {

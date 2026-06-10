@@ -52,7 +52,7 @@ describe("serviceWorkerPinSyncer.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("watch", () => {

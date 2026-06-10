@@ -32,7 +32,8 @@ const {
   toBegruendungModel,
   toBegruendungDto,
 } = useErgebnisMapper();
-const { getNullOn204OrElseResponseData } = useCommonApiUtils();
+const { axiosConfigWrapper, getNullOn204OrElseResponseData } =
+  useCommonApiUtils();
 const { addNotification } = useUserNotificationService();
 
 export function useErgebnisService() {
@@ -164,29 +165,21 @@ export function useErgebnisService() {
     waehlerverzeichnisNummer: number,
     sendNotification = true
   ) {
-    try {
-      await ergebnismeldungsControllerApi.sendErgebnisse(
-        wahlID,
-        wahlbezirkID,
-        waehlerverzeichnisNummer,
-        SendErgebnisseMeldungsartEnum.V3,
-        hauptwahlbezirkID
-      );
+    await ergebnismeldungsControllerApi.sendErgebnisse(
+      wahlID,
+      wahlbezirkID,
+      waehlerverzeichnisNummer,
+      SendErgebnisseMeldungsartEnum.V3,
+      hauptwahlbezirkID,
+      undefined,
+      axiosConfigWrapper().requestAsOnlineOnly()
+    );
 
-      if (sendNotification) {
-        addNotification(
-          "Ergebnismeldung erfolgreich versendet",
-          UserNotificationCategoryEnum.SUCCESS
-        );
-      }
-    } catch (error) {
-      if (sendNotification) {
-        addNotification(
-          "Ergebnismeldung konnte nicht versendet werden",
-          UserNotificationCategoryEnum.ERROR
-        );
-      }
-      throw error;
+    if (sendNotification) {
+      addNotification(
+        "Ergebnismeldung erfolgreich versendet",
+        UserNotificationCategoryEnum.SUCCESS
+      );
     }
   }
 
@@ -339,7 +332,9 @@ export function useErgebnisService() {
         wahlbezirkID,
         waehlerverzeichnisNummer,
         SendErgebnisseMeldungsartEnum.V1,
-        hauptwahlbezirkID
+        hauptwahlbezirkID,
+        undefined,
+        axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail()
       );
       if (sendNotification) {
         addNotification(

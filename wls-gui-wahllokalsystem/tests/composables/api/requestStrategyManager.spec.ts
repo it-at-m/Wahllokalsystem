@@ -1,4 +1,4 @@
-import type { MockInstance } from "storybook/test";
+import type { MockInstance } from "vitest";
 import type { RouteHandlerCallbackOptions } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
 
@@ -22,20 +22,28 @@ const mockDefinitions = vi.hoisted(() => ({
   onlineFirstGetRequestHandler: vi
     .fn()
     .mockName("onlineFirstGetRequestHandler"),
-  postRequestHandler: vi.fn().mockName("onlineFirstPostRequestHandler"),
+  onlineFirstPostRequestHandler: vi
+    .fn()
+    .mockName("onlineFirstPostRequestHandler"),
   offlineFirstGetRequestHandler: vi
     .fn()
     .mockName("offlineFirstGetRequestHandler"),
   unhandledFetch: vi.fn().mockName("unhandledFetch"),
+  fetchButStoreRequestAsDirtyOnNotOk: vi
+    .fn()
+    .mockName("fetchButStoreRequestAsDirtyOnNotOk"),
 }));
 
 vi.mock("@/composables/api/requestStrategies.ts", () => ({
   useRequestStrategies: vi.fn().mockImplementation(() => ({
     onlineFirstGetRequestHandler: mockDefinitions.onlineFirstGetRequestHandler,
-    postRequestHandler: mockDefinitions.postRequestHandler,
+    onlineFirstPostRequestHandler:
+      mockDefinitions.onlineFirstPostRequestHandler,
     offlineFirstGetRequestHandler:
       mockDefinitions.offlineFirstGetRequestHandler,
     unhandledFetch: mockDefinitions.unhandledFetch,
+    fetchButStoreRequestAsDirtyOnNotOk:
+      mockDefinitions.fetchButStoreRequestAsDirtyOnNotOk,
   })),
 }));
 
@@ -76,6 +84,11 @@ describe("requestStrategyManager.ts", () => {
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: undefined,
           expectedCalledMock: mockDefinitions.offlineFirstGetRequestHandler,
         },
@@ -104,19 +117,25 @@ describe("requestStrategyManager.ts", () => {
       const testcases = [
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
-          expectedCalledMock: mockDefinitions.postRequestHandler,
+          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST,
-          expectedCalledMock: mockDefinitions.postRequestHandler,
+          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock:
+            mockDefinitions.fetchButStoreRequestAsDirtyOnNotOk,
+        },
+        {
           strategy: undefined,
-          expectedCalledMock: mockDefinitions.postRequestHandler,
+          expectedCalledMock: mockDefinitions.onlineFirstPostRequestHandler,
         },
       ];
 
@@ -151,6 +170,11 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
@@ -193,6 +217,11 @@ describe("requestStrategyManager.ts", () => {
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: undefined,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
@@ -232,6 +261,11 @@ describe("requestStrategyManager.ts", () => {
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
           strategy: undefined,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
@@ -268,6 +302,11 @@ describe("requestStrategyManager.ts", () => {
         },
         {
           strategy: FetchStrategiesEnum.STRATEGY_ONLINE_ONLY,
+          expectedCalledMock: mockDefinitions.unhandledFetch,
+        },
+        {
+          strategy:
+            FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL,
           expectedCalledMock: mockDefinitions.unhandledFetch,
         },
         {

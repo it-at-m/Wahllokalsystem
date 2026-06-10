@@ -5,6 +5,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
@@ -54,14 +56,8 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-
-  vi.stubGlobal("visualViewport", new EventTarget());
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();
@@ -73,7 +69,7 @@ describe("TheErgebnisermittlungStimmzettelumschlaegeCard.vue", () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   enableAutoUnmount(afterEach);

@@ -12,7 +12,8 @@ import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 const { logDebug } = useLogging("requestStrategyManager");
 const {
   onlineFirstGetRequestHandler,
-  postRequestHandler,
+  onlineFirstPostRequestHandler,
+  fetchButStoreRequestAsDirtyOnNotOk,
   offlineFirstGetRequestHandler,
   unhandledFetch,
 } = useRequestStrategies();
@@ -26,13 +27,16 @@ export function useRequestStrategyManager() {
   > = {
     STRATEGY_OFFLINE_FIRST: new Map([
       ["GET", offlineFirstGetRequestHandler],
-      ["POST", postRequestHandler],
+      ["POST", onlineFirstPostRequestHandler],
     ]),
     STRATEGY_ONLINE_FIRST: new Map([
       ["GET", onlineFirstGetRequestHandler],
-      ["POST", postRequestHandler],
+      ["POST", onlineFirstPostRequestHandler],
     ]),
     STRATEGY_ONLINE_ONLY: new Map([]),
+    STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL: new Map([
+      ["POST", fetchButStoreRequestAsDirtyOnNotOk],
+    ]),
   };
 
   function _findStrategy(request: Request): FetchStrategiesEnum {

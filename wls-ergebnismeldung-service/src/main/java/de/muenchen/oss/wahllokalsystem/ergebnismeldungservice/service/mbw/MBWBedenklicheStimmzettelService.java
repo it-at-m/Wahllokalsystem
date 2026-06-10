@@ -16,6 +16,7 @@ public class MBWBedenklicheStimmzettelService {
 
   private final BedenklicheStimmzettelRepository repository;
   private final BedenklicheStimmzettelModelMapper modelMapper;
+  private final BedenklicheStimmzettelValidator validator;
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
@@ -23,6 +24,8 @@ public class MBWBedenklicheStimmzettelService {
   public Optional<Collection<BedenklicherStimmzettelModel>>
       getBedenklicheStimmzettelOrderedByOrderIndexAsc(
           @P("param") final BezirkUndWahlID bezirkUndWahlID) {
+    validator.validateGetBedenklicheStimmzettelParameterOrThrow(bezirkUndWahlID);
+
     val optionalOfBedenklicheStimmzettel =
         repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
             bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
@@ -37,6 +40,8 @@ public class MBWBedenklicheStimmzettelService {
   public void setBedenklicheStimmzettel(
       @P("param") final BezirkUndWahlID bezirkUndWahlID,
       final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
+    validator.validateSetBedenklicheStimmzettelParameterOrThrow(bezirkUndWahlID, bedenklicheStimmzettelToSave);
+
     val entityToSave =
         modelMapper.toEntity(
             bedenklicheStimmzettelToSave,

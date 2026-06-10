@@ -13,9 +13,13 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Bedenkl
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BezirkIdWahlIdOrderIndex;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Supplement;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.Validity;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.BedenklicheStimmzettelModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.BedenklicherStimmzettelModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ServiceIDFormatter;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +62,9 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
   @Autowired BedenklicherStimmzettelDTOMapper bedenklicherStimmzettelDTOMapper;
 
   @Autowired TransactionTemplate transactionTemplate;
+
+  @Autowired
+  ServiceIDFormatter serviceIDFormatter;
 
   @AfterEach
   void teardown() {
@@ -102,6 +109,19 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
 
       val request = createGetRequest(wahlID, wahlbezirkID, wahlbezirkID + "sthElse");
       api.perform(request).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "  ";
+
+      val request = createGetRequest(wahlID, wahlbezirkID, wahlbezirkID);
+      val performedRequest = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO = objectMapper.readValue(performedRequest.getResponse().getContentAsString(), WlsExceptionDTO.class);
+
+      val expectedException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.code(), serviceIDFormatter.getId(), ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedException);
     }
 
     private BedenklicherStimmzettelDTO[] createExpectedResponseBody() {
@@ -242,6 +262,20 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
           });
 
       Assertions.assertThat(bedenklicheStimmzettelRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid() throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = " ";
+      val requestBody = createRequestBody();
+
+      val request = createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody);
+      val performedRequest = api.perform(request).andExpect(status().isBadRequest()).andReturn();
+      val responseBodyAsWlsExceptionDTO = objectMapper.readValue(performedRequest.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
+
+      val expectedException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.code(), serviceIDFormatter.getId(), ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.message());
+      Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedException);
     }
 
     private Collection<BedenklicherStimmzettelDTO> createRequestBody() {

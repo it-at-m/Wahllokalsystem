@@ -21,7 +21,7 @@ public interface BedenklicheStimmzettelModelMapper {
 
     bedenklicherStimmzettelModel.forEach(
         bedenklicherStimmzettel -> {
-          result.addBedenklicheStimmzettels(
+          result.addBedenklicheStimmzettel(
               toEntity(bedenklicherStimmzettel, wahlbezirkID, wahlID));
         });
 

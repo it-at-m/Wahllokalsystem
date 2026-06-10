@@ -58,7 +58,7 @@ class MBWBedenklicheStimmzettelControllerTest {
     }
 
     @Test
-    void should_returnOkWithEmptyCollection_when_emptyCollectionGivenByService() {
+    void should_returnOkWithEmptyCollection_when_emptyCollectionIsGivenByService() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
 
@@ -77,7 +77,7 @@ class MBWBedenklicheStimmzettelControllerTest {
     }
 
     @Test
-    void should_returnNoContentEmptyCollection_when_emptyIsGivenByService() {
+    void should_returnNoContent_when_emptyIsGivenByService() {
       val wahlID = "wahlID";
       val wahlbezirkID = "wahlbezirkID";
 

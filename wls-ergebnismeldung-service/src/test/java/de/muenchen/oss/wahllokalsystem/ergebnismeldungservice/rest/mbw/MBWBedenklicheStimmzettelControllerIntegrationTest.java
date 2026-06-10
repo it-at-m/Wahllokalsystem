@@ -133,7 +133,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
               Collections.emptySet(),
               result,
               Validity.VALID);
-      result.addBedenklicheStimmzettels(bedenklicherStimmzettel1);
+      result.addBedenklicheStimmzettel(bedenklicherStimmzettel1);
 
       val bedenklicherStimmzettel2 =
           new BedenklicherStimmzettel(
@@ -141,7 +141,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
               Collections.emptySet(),
               result,
               Validity.INVALID);
-      result.addBedenklicheStimmzettels(bedenklicherStimmzettel2);
+      result.addBedenklicheStimmzettel(bedenklicherStimmzettel2);
 
       Set<Supplement> supplements = new HashSet<>();
       supplements.add(Supplement.TOO_MANY_LISTENKREUZE);
@@ -152,7 +152,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
               supplements,
               result,
               Validity.PARTIAL_VALID);
-      result.addBedenklicheStimmzettels(bedenklicherStimmzettel3);
+      result.addBedenklicheStimmzettel(bedenklicherStimmzettel3);
 
       return result;
     }
@@ -213,7 +213,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
             val entityToReplace =
                 new BedenklicheStimmzettelErfassung(
                     new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
-            entityToReplace.addBedenklicheStimmzettels(
+            entityToReplace.addBedenklicheStimmzettel(
                 new BedenklicherStimmzettel(
                     new BezirkIdWahlIdOrderIndex(wahlID, wahlbezirkID, 0),
                     Collections.emptySet(),

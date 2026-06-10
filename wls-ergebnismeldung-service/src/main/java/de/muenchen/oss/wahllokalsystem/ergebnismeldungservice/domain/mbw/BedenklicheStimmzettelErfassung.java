@@ -24,7 +24,7 @@ public class BedenklicheStimmzettelErfassung {
   @OneToMany(mappedBy = "erfassung", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<BedenklicherStimmzettel> bedenklicheStimmzettel = new ArrayList<>();
 
-  public void addBedenklicheStimmzettels(final BedenklicherStimmzettel bedenklicherStimmzettel) {
+  public void addBedenklicheStimmzettel(final BedenklicherStimmzettel bedenklicherStimmzettel) {
     bedenklicheStimmzettel.add(bedenklicherStimmzettel);
     bedenklicherStimmzettel.setErfassung(this);
   }

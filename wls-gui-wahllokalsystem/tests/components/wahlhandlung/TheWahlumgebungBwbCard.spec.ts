@@ -22,7 +22,7 @@ const mockDefinitions = vi.hoisted(() => ({
   routerPush: vi.fn(),
 }));
 
-vi.mock("@/composables/wahl/wahlservice", () => ({
+vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),

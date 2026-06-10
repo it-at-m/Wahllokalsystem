@@ -16,11 +16,14 @@ const mockDefinitions = vi.hoisted(() => ({
   getAWerte: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
-  useAWerteService: vi.fn().mockImplementation(() => ({
-    getAWerte: mockDefinitions.getAWerte,
-  })),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/aWerteService.ts"),
+  () => ({
+    useAWerteService: vi.fn().mockImplementation(() => ({
+      getAWerte: mockDefinitions.getAWerte,
+    })),
+  })
+);
 
 const { createExtendedWahlMetaData, prepareTaskFactoryContext } =
   useTasksTestDataFactory();

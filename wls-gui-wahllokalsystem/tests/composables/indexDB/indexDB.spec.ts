@@ -15,12 +15,19 @@ const mockDefinitions = vi.hoisted(() => ({
 
 vi.mock("localforage");
 
-vi.mock("@/composables/crypto/cryptoUtils.ts", () => ({
-  useCryptoUtils: () => ({
-    decrypt: mockDefinitions.decrypt,
-    encrypt: mockDefinitions.encrypt,
-  }),
-}));
+vi.mock(
+  import("@/composables/crypto/cryptoUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useCryptoUtils: () => ({
+        ...mod.useCryptoUtils(),
+        decrypt: mockDefinitions.decrypt,
+        encrypt: mockDefinitions.encrypt,
+      }),
+    };
+  }
+);
 
 describe("indexDB.ts", () => {
   let unitUnderTest: ReturnType<typeof useIndexDB>;

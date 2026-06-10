@@ -46,15 +46,22 @@ const mockDefinitions = vi.hoisted(() => ({
   postAusdruck: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    postErgebnisse: mockDefinitions.postErgebnisse,
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postSchnellmeldung: mockDefinitions.postSchnellmeldung,
-    postNiederschrift: mockDefinitions.postNiederschrift,
-    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        postErgebnisse: mockDefinitions.postErgebnisse,
+        getErgebnisse: mockDefinitions.getErgebnisse,
+        postSchnellmeldung: mockDefinitions.postSchnellmeldung,
+        postNiederschrift: mockDefinitions.postNiederschrift,
+        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+      }),
+    };
+  }
+);
 vi.mock(
   "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts",
   () => ({
@@ -64,28 +71,44 @@ vi.mock(
     }),
   })
 );
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
-  useWahlvorschlaegeService: () => ({
-    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/common/statusService.ts", () => ({
-  useStatusService: () => ({
-    getStatus: mockDefinitions.getStatus,
-    postStatus: mockDefinitions.postStatus,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/common/ausdruckService.ts", () => ({
-  useAusdruckService: () => ({
-    postAusdruck: mockDefinitions.postAusdruck,
-  }),
-}));
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts", () => ({
-  useWahlvorschlagUtils: () => ({
-    sortWahlvorschlaegeByOrdnungszahl:
-      mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
+  () => ({
+    useWahlvorschlaegeService: () => ({
+      getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/common/statusService.ts"),
+  () => ({
+    useStatusService: () => ({
+      getStatus: mockDefinitions.getStatus,
+      postStatus: mockDefinitions.postStatus,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ausdruckService.ts"),
+  () => ({
+    useAusdruckService: () => ({
+      postAusdruck: mockDefinitions.postAusdruck,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlagUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorschlagUtils: () => ({
+        ...mod.useWahlvorschlagUtils(),
+        sortWahlvorschlaegeByOrdnungszahl:
+          mockDefinitions.sortWahlvorschlaegeByOrdnungszahl,
+      }),
+    };
+  }
+);
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenActions: {
@@ -105,11 +128,14 @@ vi.mock(
     }),
   })
 );
-vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
-  useAWerteService: () => ({
-    getAWerte: mockDefinitions.getAWerte,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/aWerteService.ts"),
+  () => ({
+    useAWerteService: () => ({
+      getAWerte: mockDefinitions.getAWerte,
+    }),
+  })
+);
 vi.mock("jsbarcode");
 
 crypto.randomUUID = mockDefinitions.generateUuidv4;

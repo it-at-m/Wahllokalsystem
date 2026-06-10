@@ -14,12 +14,19 @@ const mockDefinitions = vi.hoisted(() => ({
   postWahlbeteiligung: vi.fn(),
 }));
 
-vi.mock("@/composables/monitoring/monitoringService", () => ({
-  useMonitoringService: () => ({
-    getWahlbeteiligung: mockDefinitions.getWahlbeteiligung,
-    postWahlbeteiligung: mockDefinitions.postWahlbeteiligung,
-  }),
-}));
+vi.mock(
+  import("@/composables/monitoring/monitoringService"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useMonitoringService: () => ({
+        ...mod.useMonitoringService(),
+        getWahlbeteiligung: mockDefinitions.getWahlbeteiligung,
+        postWahlbeteiligung: mockDefinitions.postWahlbeteiligung,
+      }),
+    };
+  }
+);
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();

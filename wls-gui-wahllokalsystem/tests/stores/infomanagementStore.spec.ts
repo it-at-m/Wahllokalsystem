@@ -14,11 +14,14 @@ const mockDefinitions = vi.hoisted(() => ({
   getKonfigurationsparameter: vi.fn(),
 }));
 
-vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
-  useKonfigurationsparameterService: () => ({
-    getKonfigurationsparameter: mockDefinitions.getKonfigurationsparameter,
-  }),
-}));
+vi.mock(
+  import("@/composables/infomanagement/konfigurationsparameterService"),
+  () => ({
+    useKonfigurationsparameterService: () => ({
+      getKonfigurationsparameter: mockDefinitions.getKonfigurationsparameter,
+    }),
+  })
+);
 
 const { createKonfigurationsparameterList, prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();

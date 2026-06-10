@@ -20,22 +20,36 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettelumschlaege: vi.fn(),
 }));
 
-vi.mock("@/composables/wahl/wahlService.ts", () => ({
+vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
-    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+        getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+      }),
+    };
+  }
+);
 
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();

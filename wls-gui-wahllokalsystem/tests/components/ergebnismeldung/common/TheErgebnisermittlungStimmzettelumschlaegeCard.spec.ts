@@ -41,11 +41,18 @@ const mockDefinitions = vi.hoisted(() => ({
   resetAllAnwesenheiten: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
+      }),
+    };
+  }
+);
 
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({

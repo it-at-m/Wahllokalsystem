@@ -20,16 +20,22 @@ vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
   },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/basisdaten/ungueltigeWahlscheineMapper.ts", () => ({
-  useUngueltigeWahlscheineMapper: () => ({
-    toModel: mockDefinitions.mapToModel,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/basisdaten/ungueltigeWahlscheineMapper.ts"),
+  () => ({
+    useUngueltigeWahlscheineMapper: () => ({
+      toModel: mockDefinitions.mapToModel,
+    }),
+  })
+);
 
 const { createUngueltigerWahlschein } = useWahlbezirkTestDataFactory();
 

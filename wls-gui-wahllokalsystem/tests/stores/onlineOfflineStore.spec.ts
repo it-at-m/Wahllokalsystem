@@ -18,13 +18,13 @@ const mockDefinitions = vi.hoisted(() => ({
   synchronizeOfflineData: vi.fn(),
 }));
 
-vi.mock("@/composables/monitoring/monitoringService.ts", () => ({
+vi.mock(import("@/composables/monitoring/monitoringService.ts"), () => ({
   useMonitoringService: vi.fn().mockImplementation(() => ({
     postLastSeen: mockDefinitions.postLastSeen,
   })),
 }));
 
-vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
+vi.mock(import("@/composables/indexDB/dataSyncer.ts"), () => ({
   useDataSyncer: vi.fn().mockImplementation(() => ({
     synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
   })),

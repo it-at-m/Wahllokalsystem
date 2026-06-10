@@ -34,17 +34,20 @@ vi.mock("@/api/wls-clients/generated-admin-api", () => ({
   KonfigurierteWahltageControllerApi:
     mockDefinitions.konfigurierterWahltagControllerApiConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/wahltag/wahltagDtoUtils.ts", () => ({
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(import("@/composables/wahltag/wahltagDtoUtils.ts"), () => ({
   useWahltagDtoUtils: () => ({
     groupWahltagDtosByWahltag: mockDefinitions.groupWahltagDtosByWahltag,
   }),
 }));
-vi.mock("@/composables/wahltag/wahltagMapper.ts", () => ({
+vi.mock(import("@/composables/wahltag/wahltagMapper.ts"), () => ({
   useWahltagMapper: () => ({
     mapGroupedWahltagDtosToWahltage:
       mockDefinitions.mapGroupedWahltagDtosToWahltage,
@@ -53,7 +56,7 @@ vi.mock("@/composables/wahltag/wahltagMapper.ts", () => ({
 vi.mock("@/types/wahltag/WahltagEvent.ts", () => ({
   compareByNummerAsc: mockDefinitions.compareByNummerAsc,
 }));
-vi.mock("@/composables/common/apiUtils.ts", () => ({
+vi.mock(import("@/composables/common/apiUtils.ts"), () => ({
   useApiUtils: () => ({
     returnUndefinedOnStatus204OrElseResponseData:
       mockDefinitions.apiUtilsReturnUndefinedOnStatus204OrElseResponseData,

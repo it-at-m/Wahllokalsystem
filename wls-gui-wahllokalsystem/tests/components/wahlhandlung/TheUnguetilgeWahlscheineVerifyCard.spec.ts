@@ -25,16 +25,26 @@ const mockDefinitions = vi.hoisted(() => ({
   saveEreignisse: vi.fn(),
 }));
 
-vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
-  useUngueltigeWahlscheineService: () => ({
-    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
-  }),
-}));
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
-  useEreignisService: () => ({
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/basisdaten/ungueltigeWahlscheineService"),
+  () => ({
+    useUngueltigeWahlscheineService: () => ({
+      getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisService: () => ({
+        ...mod.useEreignisService(),
+        saveEreignisse: mockDefinitions.saveEreignisse,
+      }),
+    };
+  }
+);
 
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();

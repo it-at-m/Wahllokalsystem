@@ -38,7 +38,7 @@ vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
   isWahlvorsteher: mockDefinitions.isWahlvorsteher,
 }));
 
-vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandService"), () => ({
   useWahlvorstandService: () => ({
     saveWahlvorstand: mockDefinitions.saveWahlvorstand,
     getWahlvorstand: mockDefinitions.getWahlvorstand,

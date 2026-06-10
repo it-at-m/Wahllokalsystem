@@ -24,7 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
 }));
 
-vi.mock("@/composables/indexDB/indexDB.ts", () => ({
+vi.mock(import("@/composables/indexDB/indexDB.ts"), () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getItemFromIDB: mockDefinitions.getItemFromIDB,
     storeItem: mockDefinitions.storeItem,

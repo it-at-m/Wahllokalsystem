@@ -15,7 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getHandbuch: vi.fn(),
 }));
 
-vi.mock("@/composables/basisdaten/handbuchService.ts", () => ({
+vi.mock(import("@/composables/basisdaten/handbuchService.ts"), () => ({
   useHandbuchService: vi.fn().mockImplementation(() => ({
     getHandbuch: mockDefinitions.getHandbuch,
   })),

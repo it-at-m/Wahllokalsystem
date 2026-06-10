@@ -30,7 +30,7 @@ vi.mock("@/plugins/router.ts", () => ({
     push: mockDefinitions.routerPush,
   },
 }));
-vi.mock("@/composables/scheduler/dateOfActionTimeout.ts", () => ({
+vi.mock(import("@/composables/scheduler/dateOfActionTimeout.ts"), () => ({
   useDateOfActionTimeout: (
     title: string,
     dateOfAction: Ref<Date | undefined>,

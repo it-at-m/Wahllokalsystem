@@ -53,47 +53,62 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("jsbarcode");
-vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
-  useAWerteService: () => ({ getAWerte: mockDefinitions.getAWerte }),
-}));
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService.ts", () => ({
-  useWahlvorbereitungService: () => ({
-    getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
-  }),
-}));
 vi.mock(
-  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
+  import("@/composables/ergebnismeldung/common/aWerteService.ts"),
+  () => ({
+    useAWerteService: () => ({ getAWerte: mockDefinitions.getAWerte }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  () => ({
+    useWahlvorbereitungService: () => ({
+      getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts"),
   () => ({
     useStimmabgabevermerkeService: () => ({
       getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
     }),
   })
 );
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getBegruendungStimmzettelumschlaege:
-      mockDefinitions.getBegruendungStimmzettelumschlaege,
-    getErgebnisse: mockDefinitions.getErgebnisse,
-  }),
-}));
-vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
-  useWaehlerverzeichnisService: () => ({
-    getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
-    createDefaultPflegeWaehlerverzeichnis:
-      mockDefinitions.createDefaultPflegeWaehlerverzeichnis,
-  }),
-}));
-vi.mock("@/composables/wahlvorstand/wahlvorstandService.ts", () => ({
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  () => ({
+    useErgebnisService: () => ({
+      getBegruendungStimmzettelumschlaege:
+        mockDefinitions.getBegruendungStimmzettelumschlaege,
+      getErgebnisse: mockDefinitions.getErgebnisse,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/waehlerverzeichnisService.ts"),
+  () => ({
+    useWaehlerverzeichnisService: () => ({
+      getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
+      createDefaultPflegeWaehlerverzeichnis:
+        mockDefinitions.createDefaultPflegeWaehlerverzeichnis,
+    }),
+  })
+);
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandService.ts"), () => ({
   useWahlvorstandService: () => ({
     getWahlvorstand: mockDefinitions.getWahlvorstand,
   }),
 }));
-vi.mock("@/composables/ergebnismeldung/common/wahlscheineService.ts", () => ({
-  useWahlscheineService: () => ({
-    getWahlscheine: mockDefinitions.getWahlscheine,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/MBW/mbwUtils.ts", () => ({
+vi.mock(
+  import("@/composables/ergebnismeldung/common/wahlscheineService.ts"),
+  () => ({
+    useWahlscheineService: () => ({
+      getWahlscheine: mockDefinitions.getWahlscheine,
+    }),
+  })
+);
+vi.mock(import("@/composables/ergebnismeldung/MBW/mbwUtils.ts"), () => ({
   useMbwUtils: () => ({
     getBWerteForWahlbezirkAndWahl:
       mockDefinitions.getBWerteForWahlbezirkAndWahl,

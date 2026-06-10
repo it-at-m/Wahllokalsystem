@@ -27,16 +27,23 @@ const mockDefinitions = vi.hoisted(() => ({
   toYyyyMmDdWithTimeWithoutTimezoneOffset: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postErgebnisse: mockDefinitions.postErgebnisse,
-    getBegruendungStimmzettelumschlaege:
-      mockDefinitions.getBegruendungStimmzettelumschlaege,
-    postBegruendung: mockDefinitions.postBegruendung,
-    postNiederschrift: mockDefinitions.postNiederschrift,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getErgebnisse: mockDefinitions.getErgebnisse,
+        postErgebnisse: mockDefinitions.postErgebnisse,
+        getBegruendungStimmzettelumschlaege:
+          mockDefinitions.getBegruendungStimmzettelumschlaege,
+        postBegruendung: mockDefinitions.postBegruendung,
+        postNiederschrift: mockDefinitions.postNiederschrift,
+      }),
+    };
+  }
+);
 
 vi.mock("@/stores/statusStore.ts", () => ({
   useStatusStore: () => ({
@@ -45,12 +52,19 @@ vi.mock("@/stores/statusStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
-  useDateTimeFormatter: () => ({
-    toYyyyMmDdWithTimeWithoutTimezoneOffset:
-      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
-  }),
-}));
+vi.mock(
+  import("@/composables/common/dateTimeFormatter.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDateTimeFormatter: () => ({
+        ...mod.useDateTimeFormatter(),
+        toYyyyMmDdWithTimeWithoutTimezoneOffset:
+          mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
+      }),
+    };
+  }
+);
 
 const { generateRandomString, generateRandomNumber, getRandomItem } =
   useCommonTestDataFactory();

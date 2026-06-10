@@ -23,16 +23,30 @@ const mockDefinitions = vi.hoisted(() => ({
   sendMessage: vi.fn(),
 }));
 
-vi.mock("@/composables/crypto/cryptoUtils.ts", () => ({
-  useCryptoUtils: () => ({
-    importKey: mockDefinitions.importKey,
-  }),
-}));
-vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
-  useServiceWorkerUtils: () => ({
-    sendMessage: mockDefinitions.sendMessage,
-  }),
-}));
+vi.mock(
+  import("@/composables/crypto/cryptoUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useCryptoUtils: () => ({
+        ...mod.useCryptoUtils(),
+        importKey: mockDefinitions.importKey,
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/composables/serviceWorker/serviceWorkerUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useServiceWorkerUtils: () => ({
+        ...mod.useServiceWorkerUtils(),
+        sendMessage: mockDefinitions.sendMessage,
+      }),
+    };
+  }
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 Object.defineProperty(global.navigator, "serviceWorker", {

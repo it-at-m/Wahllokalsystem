@@ -73,10 +73,18 @@ class MBWBedenklicheStimmzettelServiceTest {
     void should_throwExceptionOfValidator_when_validationFailed() {
       val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
-      val mockedValidationException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("mocked failure");
-      Mockito.doThrow(mockedValidationException).when(validator).validateGetBedenklicheStimmzettelParameterOrThrow(Mockito.eq(bezirkUndWahlId));
+      val mockedValidationException =
+          FachlicheWlsException.withCode("000")
+              .inService("service")
+              .buildWithMessage("mocked failure");
+      Mockito.doThrow(mockedValidationException)
+          .when(validator)
+          .validateGetBedenklicheStimmzettelParameterOrThrow(Mockito.eq(bezirkUndWahlId));
 
-      Assertions.assertThatException().isThrownBy(() -> unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId)).isEqualTo(mockedValidationException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () -> unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId))
+          .isEqualTo(mockedValidationException);
     }
   }
 
@@ -112,13 +120,24 @@ class MBWBedenklicheStimmzettelServiceTest {
       val wahlID = "wahlID";
 
       val bedenklicherStimmzettel =
-              new BedenklicherStimmzettelModel(12, Collections.emptySet(), ValidityModel.INVALID);
+          new BedenklicherStimmzettelModel(12, Collections.emptySet(), ValidityModel.INVALID);
       val modelToSave = List.of(bedenklicherStimmzettel, bedenklicherStimmzettel);
 
-      val mockedValidationException = FachlicheWlsException.withCode("000").inService("service").buildWithMessage("mocked failure");
-      Mockito.doThrow(mockedValidationException).when(validator).validateSetBedenklicheStimmzettelParameterOrThrow(Mockito.eq(new BezirkUndWahlID(wahlID, wahlbezirkID)), Mockito.eq(modelToSave));
+      val mockedValidationException =
+          FachlicheWlsException.withCode("000")
+              .inService("service")
+              .buildWithMessage("mocked failure");
+      Mockito.doThrow(mockedValidationException)
+          .when(validator)
+          .validateSetBedenklicheStimmzettelParameterOrThrow(
+              Mockito.eq(new BezirkUndWahlID(wahlID, wahlbezirkID)), Mockito.eq(modelToSave));
 
-      Assertions.assertThatException().isThrownBy(() -> unitUnderTest.setBedenklicheStimmzettel(new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave)).isEqualTo(mockedValidationException);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.setBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave))
+          .isEqualTo(mockedValidationException);
     }
   }
 }

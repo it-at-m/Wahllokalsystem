@@ -63,8 +63,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
 
   @Autowired TransactionTemplate transactionTemplate;
 
-  @Autowired
-  ServiceIDFormatter serviceIDFormatter;
+  @Autowired ServiceIDFormatter serviceIDFormatter;
 
   @AfterEach
   void teardown() {
@@ -112,15 +111,23 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
     }
 
     @Test
-    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid() throws Exception {
+    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid()
+        throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "  ";
 
       val request = createGetRequest(wahlID, wahlbezirkID, wahlbezirkID);
       val performedRequest = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-      val responseBodyAsWlsExceptionDTO = objectMapper.readValue(performedRequest.getResponse().getContentAsString(), WlsExceptionDTO.class);
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              performedRequest.getResponse().getContentAsString(), WlsExceptionDTO.class);
 
-      val expectedException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.code(), serviceIDFormatter.getId(), ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.message());
+      val expectedException =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.code(),
+              serviceIDFormatter.getId(),
+              ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedException);
     }
 
@@ -265,16 +272,24 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
     }
 
     @Test
-    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid() throws Exception {
+    void should_return400WithFachlicheWlsException_when_requestParametersAreInvalid()
+        throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = " ";
       val requestBody = createRequestBody();
 
       val request = createPostRequest(wahlID, wahlbezirkID, wahlbezirkID, requestBody);
       val performedRequest = api.perform(request).andExpect(status().isBadRequest()).andReturn();
-      val responseBodyAsWlsExceptionDTO = objectMapper.readValue(performedRequest.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
+      val responseBodyAsWlsExceptionDTO =
+          objectMapper.readValue(
+              performedRequest.getResponse().getContentAsByteArray(), WlsExceptionDTO.class);
 
-      val expectedException = new WlsExceptionDTO(WlsExceptionCategory.F, ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.code(), serviceIDFormatter.getId(), ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.message());
+      val expectedException =
+          new WlsExceptionDTO(
+              WlsExceptionCategory.F,
+              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.code(),
+              serviceIDFormatter.getId(),
+              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.message());
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedException);
     }
 

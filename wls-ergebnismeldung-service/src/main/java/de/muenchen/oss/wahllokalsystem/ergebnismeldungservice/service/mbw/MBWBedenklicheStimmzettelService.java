@@ -40,7 +40,8 @@ public class MBWBedenklicheStimmzettelService {
   public void setBedenklicheStimmzettel(
       @P("param") final BezirkUndWahlID bezirkUndWahlID,
       final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
-    validator.validateSetBedenklicheStimmzettelParameterOrThrow(bezirkUndWahlID, bedenklicheStimmzettelToSave);
+    validator.validateSetBedenklicheStimmzettelParameterOrThrow(
+        bezirkUndWahlID, bedenklicheStimmzettelToSave);
 
     val entityToSave =
         modelMapper.toEntity(

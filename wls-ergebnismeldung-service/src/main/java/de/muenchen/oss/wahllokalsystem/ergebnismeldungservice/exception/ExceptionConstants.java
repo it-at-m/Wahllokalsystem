@@ -130,9 +130,9 @@ public class ExceptionConstants {
       new ExceptionDataWrapper("635", "sendErgebnisse: A-Werte unvollstaendig");
 
   public static final ExceptionDataWrapper GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG =
-          new ExceptionDataWrapper("641", "getBedenklicheStimmzettel: Parameter unvollstaendig");
+      new ExceptionDataWrapper("641", "getBedenklicheStimmzettel: Parameter unvollstaendig");
   public static final ExceptionDataWrapper POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG =
-          new ExceptionDataWrapper("642", "postBedenklicheStimmzettel: Parameter unvollstaendig");
+      new ExceptionDataWrapper("642", "postBedenklicheStimmzettel: Parameter unvollstaendig");
 
   public static final ExceptionDataWrapper MAPPING_AOUEAI =
       new ExceptionDataWrapper(

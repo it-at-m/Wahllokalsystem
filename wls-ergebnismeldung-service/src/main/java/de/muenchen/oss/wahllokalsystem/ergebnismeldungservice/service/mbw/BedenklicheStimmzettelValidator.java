@@ -12,24 +12,33 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BedenklicheStimmzettelValidator {
 
-    private final ExceptionFactory exceptionFactory;
+  private final ExceptionFactory exceptionFactory;
 
-    public void validateGetBedenklicheStimmzettelParameterOrThrow(final BezirkUndWahlID bezirkUndWahlID) {
-        if (!isBezirkAndWahlIDValid(bezirkUndWahlID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG);
-        }
+  public void validateGetBedenklicheStimmzettelParameterOrThrow(
+      final BezirkUndWahlID bezirkUndWahlID) {
+    if (!isBezirkAndWahlIDValid(bezirkUndWahlID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.GET_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG);
     }
-    public void validateSetBedenklicheStimmzettelParameterOrThrow(final BezirkUndWahlID bezirkUndWahlID, final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
-        if (!isBezirkAndWahlIDValid(bezirkUndWahlID)) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
-        }
+  }
 
-        if (bedenklicheStimmzettelToSave == null) {
-            throw exceptionFactory.createFachlicheWlsException(ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
-        }
+  public void validateSetBedenklicheStimmzettelParameterOrThrow(
+      final BezirkUndWahlID bezirkUndWahlID,
+      final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
+    if (!isBezirkAndWahlIDValid(bezirkUndWahlID)) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
     }
 
-    private boolean isBezirkAndWahlIDValid(final BezirkUndWahlID bezirkUndWahlID) {
-        return bezirkUndWahlID != null && !StringUtils.isBlank(bezirkUndWahlID.getWahlID()) && !StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID());
+    if (bedenklicheStimmzettelToSave == null) {
+      throw exceptionFactory.createFachlicheWlsException(
+          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
     }
+  }
+
+  private boolean isBezirkAndWahlIDValid(final BezirkUndWahlID bezirkUndWahlID) {
+    return bezirkUndWahlID != null
+        && !StringUtils.isBlank(bezirkUndWahlID.getWahlID())
+        && !StringUtils.isBlank(bezirkUndWahlID.getWahlbezirkID());
+  }
 }

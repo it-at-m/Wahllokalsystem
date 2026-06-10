@@ -36,7 +36,7 @@ public class MBWBedenklicheStimmzettelService {
           + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
   public void setBedenklicheStimmzettel(
       @P("param") final BezirkUndWahlID bezirkUndWahlID,
-      Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
+      final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
     val entityToSave =
         modelMapper.toEntity(
             bedenklicheStimmzettelToSave,

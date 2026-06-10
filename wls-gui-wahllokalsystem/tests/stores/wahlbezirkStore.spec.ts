@@ -40,20 +40,23 @@ vi.mock(
     }),
   })
 );
-vi.mock(import("@/composables/wahlhandlung/wahlvorbereitungService"), () => ({
-  useWahlvorbereitungService: () => ({
-    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
-    getUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
-    postUrnenwahlSchliessungsuhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-    postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
-    postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
-    getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
-    getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  () => ({
+    useWahlvorbereitungService: () => ({
+      getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
+      getUrnenwahlSchliessungsUhrzeit:
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
+      postUrnenwahlSchliessungsuhrzeit:
+        mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+      postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+      postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
+      postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
+      getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
+      getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
+    }),
+  })
+);
 vi.mock(
   import("@/composables/wahlhandlung/waehlerverzeichnisService.ts"),
   () => ({

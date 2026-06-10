@@ -15,7 +15,7 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/monitoring/monitoringService"),
+  import("@/composables/monitoring/monitoringService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {

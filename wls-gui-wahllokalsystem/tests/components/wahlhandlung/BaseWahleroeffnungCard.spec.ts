@@ -46,7 +46,7 @@ vi.mock(
 );
 
 vi.mock(
-  import("@/composables/wahlhandlung/wahlvorbereitungService"),
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {

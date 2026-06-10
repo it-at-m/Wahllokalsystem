@@ -61,6 +61,9 @@ public class FileMapper {
       }
     }
 
+    if (nachlieferungsbezirke.isEmpty()) {
+      throw new IOException("Uploaded file is empty or contains no header");
+    }
     nachlieferungsbezirke.removeFirst(); // Header entfernen
 
     return nachlieferungsbezirke;

@@ -111,5 +111,20 @@ class FileMapperTest {
       Assertions.assertThatThrownBy(() -> unitUnderTest.readNachlieferungsbezirke(servletRequest))
           .isInstanceOf(IOException.class);
     }
+
+    @Test
+    void should_returnIoException_when_fileIsEmpty() {
+      val multiPartFile =
+          new MockMultipartFile(
+              "file", "nachlieferungsbezirke.csv", MediaType.TEXT_PLAIN_VALUE, "".getBytes());
+      val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
+      multiPartFiles.put("key", List.of(multiPartFile));
+      final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+      val servletRequest =
+          new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.readNachlieferungsbezirke(servletRequest))
+          .isInstanceOf(IOException.class);
+    }
   }
 }

@@ -3,6 +3,7 @@ package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.common;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.common.FileResponseEntityModel;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.val;
@@ -71,6 +72,43 @@ class FileMapperTest {
           new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.fromRequest(servletRequest))
+          .isInstanceOf(IOException.class);
+    }
+  }
+
+  @Nested
+  class ReadNachlieferungsbezirke {
+
+    @Test
+    void should_returnListWithNachlieferungsbezirke_when_sendingRequest() throws IOException {
+      val multiPartFile =
+          new MockMultipartFile(
+              "file",
+              "nachlieferungsbezirke.csv",
+              MediaType.TEXT_PLAIN_VALUE,
+              "WahlbezirkID\nwahlbezirkID1\nwahlbezirkID2\nwahlbezirkID3".getBytes());
+      val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
+      multiPartFiles.put("key", List.of(multiPartFile));
+      final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+      val servletRequest =
+          new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
+
+      val result = unitUnderTest.readNachlieferungsbezirke(servletRequest);
+
+      Assertions.assertThat(result.size()).isEqualTo(3);
+      Assertions.assertThat(result)
+          .isEqualTo(Arrays.asList("wahlbezirkID1", "wahlbezirkID2", "wahlbezirkID3"));
+    }
+
+    @Test
+    void should_returnIoException_when_requestHasNoFile() {
+      val multiPartFiles = new LinkedMultiValueMap<String, MultipartFile>();
+      multiPartFiles.put("key", Collections.emptyList());
+      final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+      val servletRequest =
+          new DefaultMultipartHttpServletRequest(httpServletRequest, multiPartFiles, null, null);
+
+      Assertions.assertThatThrownBy(() -> unitUnderTest.readNachlieferungsbezirke(servletRequest))
           .isInstanceOf(IOException.class);
     }
   }

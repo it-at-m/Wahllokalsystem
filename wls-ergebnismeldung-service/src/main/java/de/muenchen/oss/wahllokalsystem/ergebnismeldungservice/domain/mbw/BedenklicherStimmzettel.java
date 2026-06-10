@@ -36,7 +36,7 @@ public class BedenklicherStimmzettel {
   @ToString.Include
   private Set<Supplement> supplements;
 
-  @MapsId("id")
+  @MapsId("compositeId")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumns({
     @JoinColumn(name = "fk_wahlid", referencedColumnName = "wahlid"),

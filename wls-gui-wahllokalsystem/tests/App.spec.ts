@@ -93,7 +93,7 @@ vi.mock(
 vi.mock(
   import("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue")
 );
-vi.mock("localforage");
+vi.mock(import("localforage"));
 
 const { prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();

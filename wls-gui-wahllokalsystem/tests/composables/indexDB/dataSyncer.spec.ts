@@ -22,7 +22,7 @@ const mockDefinitions = vi.hoisted(() => ({
   runAllTasks: vi.fn(),
 }));
 
-vi.mock("axios");
+vi.mock(import("axios"));
 vi.mock(import("@/composables/indexDB/indexDB.ts"), () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getDirtyItems: mockDefinitions.getDirtyItems,

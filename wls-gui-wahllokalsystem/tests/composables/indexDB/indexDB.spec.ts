@@ -13,7 +13,7 @@ const mockDefinitions = vi.hoisted(() => ({
   encrypt: vi.fn(),
 }));
 
-vi.mock("localforage");
+vi.mock(import("localforage"));
 
 vi.mock(
   import("@/composables/crypto/cryptoUtils.ts"),

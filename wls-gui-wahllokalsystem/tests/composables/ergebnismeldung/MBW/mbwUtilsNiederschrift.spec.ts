@@ -52,7 +52,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createFooter: vi.fn(),
 }));
 
-vi.mock("jsbarcode");
+vi.mock(import("jsbarcode"));
 vi.mock(
   import("@/composables/ergebnismeldung/common/aWerteService.ts"),
   () => ({

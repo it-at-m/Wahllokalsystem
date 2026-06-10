@@ -136,7 +136,7 @@ vi.mock(
     }),
   })
 );
-vi.mock("jsbarcode");
+vi.mock(import("jsbarcode"));
 
 crypto.randomUUID = mockDefinitions.generateUuidv4;
 

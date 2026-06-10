@@ -20,11 +20,11 @@ const mockDefinitions = vi.hoisted(() => {
   };
 });
 
-vi.mock("workbox-routing", () => ({
+vi.mock(import("workbox-routing"), () => ({
   registerRoute: mockDefinitions.registerRoute,
 }));
 
-vi.mock("localforage");
+vi.mock(import("localforage"));
 
 describe("wahl-worker.ts", () => {
   const API_BASE_PATH_REGEX = new RegExp("/api/.+");

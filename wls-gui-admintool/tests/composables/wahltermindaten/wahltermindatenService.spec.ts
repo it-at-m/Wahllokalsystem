@@ -30,7 +30,7 @@ vi.mock(
     }),
   })
 );
-vi.mock("vue", () => ({
+vi.mock(import("vue"), () => ({
   ref: mockDefinitions.vueRefBuilder,
 }));
 

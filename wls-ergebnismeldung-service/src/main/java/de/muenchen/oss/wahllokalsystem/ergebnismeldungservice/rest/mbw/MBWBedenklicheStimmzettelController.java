@@ -46,7 +46,7 @@ public class MBWBedenklicheStimmzettelController extends AbstractController {
             }),
         @ApiResponse(
             responseCode = "204",
-            description = "Es wurden keidne bedenkliche Stimmzettel gepflegt",
+            description = "Es wurden keine bedenkliche Stimmzettel gepflegt",
             content = {@Content()})
       })
   @GetMapping("/{wahlID}/wahlbezirk/{wahlbezirkID}/bedenklicheStimmzettel")

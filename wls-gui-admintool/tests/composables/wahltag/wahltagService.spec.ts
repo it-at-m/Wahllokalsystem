@@ -53,7 +53,7 @@ vi.mock(import("@/composables/wahltag/wahltagMapper.ts"), () => ({
       mockDefinitions.mapGroupedWahltagDtosToWahltage,
   }),
 }));
-vi.mock("@/types/wahltag/WahltagEvent.ts", () => ({
+vi.mock(import("@/types/wahltag/WahltagEvent.ts"), () => ({
   compareByNummerAsc: mockDefinitions.compareByNummerAsc,
 }));
 vi.mock(import("@/composables/common/apiUtils.ts"), () => ({

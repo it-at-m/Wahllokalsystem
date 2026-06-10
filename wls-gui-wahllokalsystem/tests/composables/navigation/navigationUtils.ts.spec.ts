@@ -43,7 +43,7 @@ const mockDefinitions = vi.hoisted(() => ({
   mbwGetNextRouteOrNull: vi.fn(),
 }));
 
-vi.mock("@/types/navigation/NextStepImplConstants.ts", () => ({
+vi.mock(import("@/types/navigation/NextStepImplConstants.ts"), () => ({
   MBWNextStepImpl: {
     getNextRouteOrNull: mockDefinitions.mbwGetNextRouteOrNull,
   },

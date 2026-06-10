@@ -10,6 +10,7 @@ import {
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { defineComponent } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
@@ -77,19 +78,21 @@ vi.mock(
     };
   }
 );
-vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
+vi.mock(import("@/components/wlsComponents/TheWlsAppBar.vue"));
 vi.mock(
-  "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
+  import("@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue"),
   () => {
     return {
-      default: {
+      default: defineComponent({
         name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
         template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
-      },
+      }),
     };
   }
 );
-vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
+vi.mock(
+  import("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue")
+);
 vi.mock("localforage");
 
 const { prepareKonfigurationsparameter } =

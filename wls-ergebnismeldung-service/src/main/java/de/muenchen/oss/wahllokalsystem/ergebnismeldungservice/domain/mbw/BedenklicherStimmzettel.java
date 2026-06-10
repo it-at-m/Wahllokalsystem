@@ -47,5 +47,5 @@ public class BedenklicherStimmzettel {
 
   @Enumerated(EnumType.STRING)
   @ToString.Include
-  Validity validity;
+  private Validity validity;
 }

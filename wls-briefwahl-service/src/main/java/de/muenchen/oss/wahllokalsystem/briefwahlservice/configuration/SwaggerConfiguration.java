@@ -27,7 +27,6 @@ public class SwaggerConfiguration {
           + "    \"BZW_2018\": [\n"
           + "      \"NICHT_WAHLBERECHTIGT\",\n"
           + "      \"UMSCHLAG_FEHLT\",\n"
-          + "      \"LOSE_STIMMZETTEL\",\n"
           + "      \"ZUGELASSEN\",\n"
           + "      \"GEGENSTAND_IM_UMSCHLAG\",\n"
           + "      \"KEIN_ORIGINAL_SCHEIN\"\n"

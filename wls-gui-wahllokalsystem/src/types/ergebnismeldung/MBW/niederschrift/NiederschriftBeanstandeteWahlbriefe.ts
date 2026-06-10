@@ -6,7 +6,6 @@ export interface NiederschriftBeanstandeteWahlbriefe {
   nichtVerschlossen: number;
   mehrereStimmzettelumschlaege: number;
   keinAmtlicherStimmzettelumschlag: number;
-  loseStimmzettel: number;
   gegenstandImUmschlag: number;
   gefaehrdetWahlgeheimnis: number;
   gesamtMinusZugelassen: number;

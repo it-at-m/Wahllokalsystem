@@ -26,6 +26,13 @@ public class NachlieferungsbezirkeController {
   private final ExceptionFactory exceptionFactory;
 
   @GetMapping("{wahltagID}/{wahlbezirkID}")
+  @Operation(
+      description = "Abrufen, ob es sich beim Wahlbezirk um einen Nachlieferungsbezirk handelt",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Überprüfung des Wahlbezirks erfolgreich zurückgegeben.")
+      })
   public Boolean checkForNachlieferungsbezirk(
       @PathVariable("wahltagID") String wahltagID,
       @PathVariable("wahlbezirkID") String wahlbezirkID) {

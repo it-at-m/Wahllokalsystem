@@ -74,7 +74,7 @@ public class NachlieferungsbezirkeControllerTest {
     }
 
     @Test
-    void should_mapToWlsException_when_ioExceptionOccurs() throws IOException {
+    void should_mapToWlsException_when_ioExceptionOccursDuringReadingOfRequestAttachment() throws IOException {
       val wahltagID = "wahltagID";
       final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
       val servletRequest = new DefaultMultipartHttpServletRequest(httpServletRequest);

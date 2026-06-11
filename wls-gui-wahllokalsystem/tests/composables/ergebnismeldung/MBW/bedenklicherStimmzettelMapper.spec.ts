@@ -59,7 +59,7 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       "should_mapToModelSupplementValue_when_dtoSupplementValueIsGiven'$dtoValue'",
       (testcaseArguments) => {
         const dtoToMap = prepareBedenklicherStimmzettelDTO()
-          .supplements([testcaseArguments.expectedModelValue])
+          .supplements([testcaseArguments.dtoValue])
           .validity(BedenklicherStimmzettelDTOValidityEnum.PartialValid)
           .build();
 
@@ -102,7 +102,7 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       "should_mapToModelValidityValue_when_dtoValidityValueIsGiven'$dtoValue'",
       (testcaseArguments) => {
         const dtoToMap = prepareBedenklicherStimmzettelDTO()
-          .validity(testcaseArguments.expectedModelValue)
+          .validity(testcaseArguments.dtoValue)
           .build();
 
         const result = unitUnderTest.toModel(dtoToMap);

@@ -1,7 +1,7 @@
-CREATE TABLE NACHLIEFERUNGSBEZIRK
+CREATE TABLE Nachlieferungsbezirk
 (
-    wahltagID      VARCHAR(1024) not null,
+    wahltagID      VARCHAR(1024) NOT NULL,
     wahlbezirkID    VARCHAR(1024) NOT NULL,
 
-    primary key (wahltagID, wahlbezirkID)
+    PRIMARY KEY (wahltagID, wahlbezirkID)
 );

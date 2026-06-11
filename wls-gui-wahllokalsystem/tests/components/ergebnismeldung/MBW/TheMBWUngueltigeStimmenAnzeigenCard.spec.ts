@@ -20,11 +20,18 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getErgebnisse: mockDefinitions.getErgebnisse,
+      }),
+    };
+  }
+);
 
 describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();

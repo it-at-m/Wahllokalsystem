@@ -26,12 +26,19 @@ const mockDefinitions = vi.hoisted(() => ({
   toYyyyMmDdWithTimeWithoutTimezoneOffset: vi.fn(),
 }));
 
-vi.mock("@/composables/common/dateTimeFormatter.ts", () => ({
-  useDateTimeFormatter: () => ({
-    toYyyyMmDdWithTimeWithoutTimezoneOffset:
-      mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
-  }),
-}));
+vi.mock(
+  import("@/composables/common/dateTimeFormatter.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDateTimeFormatter: () => ({
+        ...mod.useDateTimeFormatter(),
+        toYyyyMmDdWithTimeWithoutTimezoneOffset:
+          mockDefinitions.toYyyyMmDdWithTimeWithoutTimezoneOffset,
+      }),
+    };
+  }
+);
 
 const {
   toErgebnisseModel,

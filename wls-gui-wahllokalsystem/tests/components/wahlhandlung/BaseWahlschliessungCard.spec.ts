@@ -31,12 +31,19 @@ const mockDefinitions = vi.hoisted(() => ({
   resetAllAnwesenheiten: vi.fn(),
 }));
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    postUrnenwahlSchliessungsuhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorbereitungService: () => ({
+        ...mod.useWahlvorbereitungService(),
+        postUrnenwahlSchliessungsuhrzeit:
+          mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+      }),
+    };
+  }
+);
 
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({

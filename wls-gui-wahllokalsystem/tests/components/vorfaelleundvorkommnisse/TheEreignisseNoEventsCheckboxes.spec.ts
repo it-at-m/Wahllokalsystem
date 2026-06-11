@@ -16,12 +16,15 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
-  useEreignisService: () => ({
-    getEreignisse: vi.fn(),
-    saveEreignisse: vi.fn(),
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  () => ({
+    useEreignisService: () => ({
+      getEreignisse: vi.fn(),
+      saveEreignisse: vi.fn(),
+    }),
+  })
+);
 
 describe("TheEreignisseNoEventsCheckboxes.vue", () => {
   const { prepareUser } = useUserTestDataFactory();

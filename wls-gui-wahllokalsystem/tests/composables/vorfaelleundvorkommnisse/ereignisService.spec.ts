@@ -18,16 +18,26 @@ vi.mock("@/api/wls-clients/generated-vorfaelleundvorkommnisse-api", () => ({
   },
   Configuration: vi.fn(),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts", () => ({
-  useEreignisMapper: () => ({
-    toDto: mockDefinitions.mapToDto,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisMapper.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisMapper: () => ({
+        ...mod.useEreignisMapper(),
+        toDto: mockDefinitions.mapToDto,
+      }),
+    };
+  }
+);
 
 const { saveEreignisse } = useEreignisService();
 

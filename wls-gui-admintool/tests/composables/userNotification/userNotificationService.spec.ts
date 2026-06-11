@@ -4,16 +4,7 @@ import { toast } from "vue3-toastify";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
-vi.mock("vue3-toastify", () => ({
-  toast: {
-    success: vi.fn(),
-    warning: vi.fn(),
-    error: vi.fn(),
-    POSITION: {
-      BOTTOM_LEFT: "bottom-left",
-    },
-  },
-}));
+vi.mock(import("vue3-toastify"));
 
 describe("useUserNotificationService.ts", () => {
   const notificationService = useUserNotificationService();

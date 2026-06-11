@@ -56,7 +56,7 @@ public class NachlieferungsbezirkeService {
   @Transactional
   public boolean checkForNachlieferungsbezirk(
       String wahltagID, @P("wahlbezirkID") String wahlbezirkID) {
-    log.info("#checkForNachlieferungsbezirk");
+    log.debug("#checkForNachlieferungsbezirk");
     wahlbezirkeValidator.validWahltagIDParamOrThrow(wahltagID);
 
     val optionalNachlieferungsbezirk =

@@ -91,7 +91,7 @@ class BedenklicheStimmzettelValidatorTest {
           FachlicheWlsException.withCode("000").buildWithMessage("mocked fachliche wls exception");
       Mockito.when(
               exceptionFactory.createFachlicheWlsException(
-                  ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG))
+                  ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG))
           .thenReturn(mockedException);
 
       Assertions.assertThatException()

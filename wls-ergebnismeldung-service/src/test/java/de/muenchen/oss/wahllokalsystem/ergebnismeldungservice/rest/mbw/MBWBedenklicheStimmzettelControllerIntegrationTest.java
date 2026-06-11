@@ -287,9 +287,9 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
       val expectedException =
           new WlsExceptionDTO(
               WlsExceptionCategory.F,
-              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.code(),
+              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.code(),
               serviceIDFormatter.getId(),
-              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG.message());
+              ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG.message());
       Assertions.assertThat(responseBodyAsWlsExceptionDTO).isEqualTo(expectedException);
     }
 

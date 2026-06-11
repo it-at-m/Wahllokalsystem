@@ -27,12 +27,12 @@ public class BedenklicheStimmzettelValidator {
       final Collection<BedenklicherStimmzettelModel> bedenklicheStimmzettelToSave) {
     if (!isBezirkAndWahlIDValid(bezirkUndWahlID)) {
       throw exceptionFactory.createFachlicheWlsException(
-          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
+          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG);
     }
 
     if (bedenklicheStimmzettelToSave == null) {
       throw exceptionFactory.createFachlicheWlsException(
-          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_UNVOLLSTAENDIG);
+          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_PARAMETER_UNVOLLSTAENDIG);
     }
   }
 

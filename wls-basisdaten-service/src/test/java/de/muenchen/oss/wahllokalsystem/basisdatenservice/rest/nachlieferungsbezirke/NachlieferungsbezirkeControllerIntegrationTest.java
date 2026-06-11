@@ -165,7 +165,7 @@ public class NachlieferungsbezirkeControllerIntegrationTest {
     }
 
     @Test
-    void should_overrideNachlieferungsbezirke_when_postRequestIsSentTwoTimes() throws Exception {
+    void should_overrideNachlieferungsbezirke_when_twoPostRequestsAreSent() throws Exception {
       val wahltagID = "wahltagID";
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";

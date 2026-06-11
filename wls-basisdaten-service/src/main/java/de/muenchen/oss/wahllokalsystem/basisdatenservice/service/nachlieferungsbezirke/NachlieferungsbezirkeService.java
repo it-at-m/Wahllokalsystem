@@ -30,7 +30,7 @@ public class NachlieferungsbezirkeService {
   @Transactional
   public void setNachlieferungsbezirke(
       final String wahltagID, final List<String> nachlieferungsbezirke) {
-    log.info("#setNachlieferungsbezirke");
+    log.debug("#setNachlieferungsbezirke");
     wahlbezirkeValidator.validWahltagIDParamOrThrow(wahltagID);
 
     val existingNachlieferungsbezirke =

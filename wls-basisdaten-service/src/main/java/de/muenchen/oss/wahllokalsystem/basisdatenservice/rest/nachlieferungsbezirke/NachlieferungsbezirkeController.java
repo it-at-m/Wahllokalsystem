@@ -41,7 +41,8 @@ public class NachlieferungsbezirkeController {
 
   @PostMapping("{wahltagID}")
   @Operation(
-      description = "Speichern der Liste an Nachlieferungsbezirken für einen bestimmten Wahltag. Eine bestehende Liste wird ersetzt.",
+      description =
+          "Speichern der Liste an Nachlieferungsbezirken für einen bestimmten Wahltag. Eine bestehende Liste wird ersetzt.",
       responses = {
         @ApiResponse(
             responseCode = "200",

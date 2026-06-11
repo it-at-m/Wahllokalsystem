@@ -53,12 +53,12 @@ export function useBedenklicheStimmzettelService() {
     } catch (error) {
       if (sendNotification) {
         addNotification(
-          "Laden von bedenklichen Wahlbriefen fehlgeschlagen",
+          "Laden von bedenklichen Stimmzetteln fehlgeschlagen",
           UserNotificationCategoryEnum.ERROR
         );
       }
       throw new Error(
-        `Laden von bedenklichen Stimmzetteln für wahlID > ${wahlID}, wahlkbezirkID > ${wahlbezirkID} fehlgeschlagen`,
+        `Laden von bedenklichen Stimmzetteln für wahlID > ${wahlID}, wahlbezirkID > ${wahlbezirkID} fehlgeschlagen`,
         { cause: error }
       );
     }
@@ -92,7 +92,7 @@ export function useBedenklicheStimmzettelService() {
         );
       }
       throw new Error(
-        `Speichern der bedenklichen Stimmzettel fehlgeschlagen für wahlID > ${wahlID}, wahlkbezirkID > ${wahlbezirkID}`,
+        `Speichern der bedenklichen Stimmzettel fehlgeschlagen für wahlID > ${wahlID}, wahlbezirkID > ${wahlbezirkID}`,
         {
           cause: error,
         }

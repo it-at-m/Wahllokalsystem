@@ -146,7 +146,7 @@ describe("bedenklicheStimmzettelService.ts", () => {
         unitUnderTest.getBedenklicheStimmzettel(wahlID, wahlbezirkID)
       ).rejects.toThrow(
         new Error(
-          `Laden von bedenklichen Stimmzetteln für wahlID > ${wahlID}, wahlkbezirkID > ${wahlbezirkID} fehlgeschlagen`
+          `Laden von bedenklichen Stimmzetteln für wahlID > ${wahlID}, wahlbezirkID > ${wahlbezirkID} fehlgeschlagen`
         )
       );
 
@@ -263,7 +263,11 @@ describe("bedenklicheStimmzettelService.ts", () => {
           wahlbezirkID,
           bedenklicheStimmzettelToSave
         )
-      ).rejects.toThrow();
+      ).rejects.toThrow(
+        new Error(
+          `Speichern der bedenklichen Stimmzettel fehlgeschlagen für wahlID > ${wahlID}, wahlbezirkID > ${wahlbezirkID}`
+        )
+      );
 
       expect(
         mockDefinitions.setBedenklicheStimmzettel.mock.calls

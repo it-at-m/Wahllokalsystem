@@ -15,7 +15,7 @@ vi.mock("@/api/wls-clients/generated-auth-api", () => ({
   },
   Configuration: vi.fn(),
 }));
-vi.mock("@/composables/user/userMapper.ts", () => ({
+vi.mock(import("@/composables/user/userMapper.ts"), () => ({
   useUserMapper: () => ({
     validateDtoAndMapToModel: mockDefinitions.validateDtoAndMapToModel,
   }),

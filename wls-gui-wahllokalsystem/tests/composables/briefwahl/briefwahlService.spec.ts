@@ -36,25 +36,34 @@ vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
     postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
   },
 }));
+vi.mock(
+  import("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBeanstandeteWahlbriefeMapper: () => ({
+        ...mod.useBeanstandeteWahlbriefeMapper(),
+        toModel: mockDefinitions.mapDtoToModel,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({
-  useBeanstandeteWahlbriefeMapper: () => ({
-    toModel: mockDefinitions.mapDtoToModel,
-  }),
-}));
-
-vi.mock("@/composables/briefwahl/briefwahlMapper.ts", () => ({
+vi.mock(import("@/composables/briefwahl/briefwahlMapper.ts"), () => ({
   useBriefwahlMapper: () => ({
     toWahlbriefdatenModel: mockDefinitions.toWahlbriefdatenModel,
     toWahlbriefdatenWriteDTO: mockDefinitions.toWahlbriefdatenWriteDTO,
   }),
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 describe("briefwahlService.ts", () => {
   const {

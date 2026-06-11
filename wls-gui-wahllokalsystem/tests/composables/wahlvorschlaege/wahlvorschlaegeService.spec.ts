@@ -16,11 +16,14 @@ vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
   },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeMapper.ts", () => ({
-  useWahlvorschlaegeMapper: () => ({
-    toModel: mockDefinitions.toModel,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeMapper.ts"),
+  () => ({
+    useWahlvorschlaegeMapper: () => ({
+      toModel: mockDefinitions.toModel,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createWahlvorschlaege, createWahlvorschlaegeDto } =

@@ -88,24 +88,32 @@ vi.mock(
     };
   }
 );
-vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
-  useErgebnisMapper: () => ({
-    toErgebnisseModel: mockDefinitions.toErgebnisseModel,
-    toErgebnisseDto: mockDefinitions.toErgebnisseDto,
-    toGetErgebnisseStapelartEnum: mockDefinitions.toGetErgebnisseStapelartEnum,
-    toPostErgebnisseStapelartEnum:
-      mockDefinitions.toPostErgebnisseStapelartEnum,
-    toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
-    toStimmzettelumschlaegeModel: mockDefinitions.toStimmzettelumschlaegeModel,
-    toBegruendungModel: mockDefinitions.toBegruendungModel,
-    toBegruendungDto: mockDefinitions.toBegruendungDto,
-  }),
-}));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisMapper.ts"),
+  () => ({
+    useErgebnisMapper: () => ({
+      toErgebnisseModel: mockDefinitions.toErgebnisseModel,
+      toErgebnisseDto: mockDefinitions.toErgebnisseDto,
+      toGetErgebnisseStapelartEnum:
+        mockDefinitions.toGetErgebnisseStapelartEnum,
+      toPostErgebnisseStapelartEnum:
+        mockDefinitions.toPostErgebnisseStapelartEnum,
+      toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
+      toStimmzettelumschlaegeModel:
+        mockDefinitions.toStimmzettelumschlaegeModel,
+      toBegruendungModel: mockDefinitions.toBegruendungModel,
+      toBegruendungDto: mockDefinitions.toBegruendungDto,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();

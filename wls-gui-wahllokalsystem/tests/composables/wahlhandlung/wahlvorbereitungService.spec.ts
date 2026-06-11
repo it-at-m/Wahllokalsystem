@@ -55,13 +55,16 @@ vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
   Configuration: vi.fn(),
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungMapper.ts", () => ({
+vi.mock(import("@/composables/wahlhandlung/wahlvorbereitungMapper.ts"), () => ({
   useWahlvorbereitungMapper: () => ({
     toUrnenwahlSchliessungsuhrzeitModel:
       mockDefinitions.toUrnenwahlSchliessungsuhrzeitModel,

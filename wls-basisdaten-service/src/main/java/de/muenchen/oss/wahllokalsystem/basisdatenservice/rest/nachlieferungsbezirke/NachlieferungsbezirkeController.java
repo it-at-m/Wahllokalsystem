@@ -33,10 +33,10 @@ public class NachlieferungsbezirkeController {
             responseCode = "200",
             description = "Überprüfung des Wahlbezirks erfolgreich zurückgegeben.")
       })
-  public Boolean checkForNachlieferungsbezirk(
+  public Boolean isNachlieferungsbezirk(
       @PathVariable("wahltagID") String wahltagID,
       @PathVariable("wahlbezirkID") String wahlbezirkID) {
-    return nachlieferungsbezirkeService.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID);
+    return nachlieferungsbezirkeService.isNachlieferungsbezirk(wahltagID, wahlbezirkID);
   }
 
   @PostMapping("{wahltagID}")

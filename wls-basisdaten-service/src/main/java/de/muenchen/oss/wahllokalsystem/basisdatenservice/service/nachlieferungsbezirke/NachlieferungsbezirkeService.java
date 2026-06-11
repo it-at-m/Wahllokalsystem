@@ -54,9 +54,8 @@ public class NachlieferungsbezirkeService {
       "hasAuthority('Basisdaten_BUSINESSACTION_GetNachlieferungsbezirke')"
           + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
   @Transactional
-  public boolean checkForNachlieferungsbezirk(
-      String wahltagID, @P("wahlbezirkID") String wahlbezirkID) {
-    log.debug("#checkForNachlieferungsbezirk");
+  public boolean isNachlieferungsbezirk(String wahltagID, @P("wahlbezirkID") String wahlbezirkID) {
+    log.debug("#isNachlieferungsbezirk");
     wahlbezirkeValidator.validWahltagIDParamOrThrow(wahltagID);
 
     val optionalNachlieferungsbezirk =

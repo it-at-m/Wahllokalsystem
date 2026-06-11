@@ -44,7 +44,7 @@ public class NachlieferungsbezirkeServiceSecurityTest {
   }
 
   @Nested
-  class CheckForNachlieferungsbezirke {
+  class IsNachlieferungsbezirk {
 
     @Test
     void should_grantAccess_when_authoritiesArePresent() {
@@ -58,7 +58,7 @@ public class NachlieferungsbezirkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatNoException()
-          .isThrownBy(() -> unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID));
+          .isThrownBy(() -> unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID));
     }
 
     @ParameterizedTest(name = "{index} - {1} missing")
@@ -74,7 +74,7 @@ public class NachlieferungsbezirkeServiceSecurityTest {
           .thenReturn(true);
 
       Assertions.assertThatThrownBy(
-              () -> unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID))
+              () -> unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID))
           .isInstanceOf(AccessDeniedException.class);
     }
 
@@ -90,7 +90,7 @@ public class NachlieferungsbezirkeServiceSecurityTest {
           .thenReturn(false);
 
       Assertions.assertThatThrownBy(
-              () -> unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID))
+              () -> unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID))
           .isInstanceOf(AccessDeniedException.class);
     }
 

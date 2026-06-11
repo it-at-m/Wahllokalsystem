@@ -56,7 +56,7 @@ public class NachlieferungsbezirkeControllerIntegrationTest {
   }
 
   @Nested
-  class CheckForNachlieferungsbezirk {
+  class IsNachlieferungsbezirk {
 
     @Test
     void should_returnTrue_when_nachlieferungsbezirkExistsForWahltag() throws Exception {
@@ -114,7 +114,7 @@ public class NachlieferungsbezirkeControllerIntegrationTest {
     }
 
     @Test
-    void should_returnForbidden_when_userHasWrongBezirkIdForCheckForNachlieferungsbezirk()
+    void should_returnForbidden_when_userHasWrongBezirkIdForIsNachlieferungsbezirk()
         throws Exception {
       val wahltagID = "wahltagID";
       val wahlbezirkID = "wahlbezirkID";

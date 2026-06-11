@@ -31,7 +31,7 @@ public class NachlieferungsbezirkeServiceTest {
   @InjectMocks NachlieferungsbezirkeService unitUnderTest;
 
   @Nested
-  class CheckForNachlieferungsbezirk {
+  class IsNachlieferungsbezirk {
 
     @Test
     void should_returnTrue_when_wahlbezirkIsNachlieferungsbezirk() {
@@ -45,7 +45,7 @@ public class NachlieferungsbezirkeServiceTest {
                   new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID)))
           .thenReturn(Optional.of(mockedNachlieferungsbezirk));
 
-      val result = unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID);
+      val result = unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(true);
 
@@ -62,7 +62,7 @@ public class NachlieferungsbezirkeServiceTest {
                   new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID)))
           .thenReturn(Optional.empty());
 
-      val result = unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID);
+      val result = unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(false);
 

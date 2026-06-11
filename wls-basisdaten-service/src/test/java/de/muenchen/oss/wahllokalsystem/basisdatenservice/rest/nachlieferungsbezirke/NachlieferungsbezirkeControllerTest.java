@@ -34,19 +34,18 @@ public class NachlieferungsbezirkeControllerTest {
   @InjectMocks NachlieferungsbezirkeController unitUnderTest;
 
   @Nested
-  class CheckForNachlieferungsbezirk {
+  class IsNachlieferungsbezirk {
 
     @Test
-    void should_callService_when_callingCheckForNachlieferungsbezirk() {
+    void should_callService_when_callingIsNachlieferungsbezirk() {
       val wahltagID = "wahltagID";
       val wahlbezirkID = "wahlbezirkID";
       val mockedServiceResponse = false;
 
-      Mockito.when(
-              nachlieferungsbezirkeService.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID))
+      Mockito.when(nachlieferungsbezirkeService.isNachlieferungsbezirk(wahltagID, wahlbezirkID))
           .thenReturn(mockedServiceResponse);
 
-      val result = unitUnderTest.checkForNachlieferungsbezirk(wahltagID, wahlbezirkID);
+      val result = unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID);
 
       Assertions.assertThat(result).isEqualTo(mockedServiceResponse);
     }

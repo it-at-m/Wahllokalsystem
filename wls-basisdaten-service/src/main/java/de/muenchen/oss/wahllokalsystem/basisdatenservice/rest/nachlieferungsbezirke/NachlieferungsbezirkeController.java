@@ -7,9 +7,9 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactor
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -50,12 +50,13 @@ public class NachlieferungsbezirkeController {
       })
   public void setNachlieferungsbezirke(
       @PathVariable("wahltagID") String wahltagID, final MultipartHttpServletRequest request) {
+    final List<String> requestContent;
     try {
-      val requestContent = fileMapper.readNachlieferungsbezirke(request);
-      nachlieferungsbezirkeService.setNachlieferungsbezirke(wahltagID, requestContent);
+      requestContent = fileMapper.readNachlieferungsbezirke(request);
     } catch (final IOException e) {
       throw exceptionFactory.createTechnischeWlsException(
-          ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH);
+          ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_READ_FILE_NICHT_ERFOLGREICH);
     }
+    nachlieferungsbezirkeService.setNachlieferungsbezirke(wahltagID, requestContent);
   }
 }

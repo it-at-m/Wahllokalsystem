@@ -30,6 +30,11 @@ public interface NachlieferungsbezirkeRepository
   <S extends Nachlieferungsbezirk> S save(S nachlieferungsbezirk);
 
   @Override
+  @CacheEvict(value = CACHE, allEntries = true)
+  @PreAuthorize("hasAuthority('Basisdaten_WRITE_Nachlieferungsbezirke')")
+  <S extends Nachlieferungsbezirk> Iterable<S> saveAll(Iterable<S> entities);
+
+  @Override
   @CacheEvict(value = CACHE, key = "#p0")
   @PreAuthorize("hasAuthority('Basisdaten_DELETE_Nachlieferungsbezirke')")
   void deleteById(WahltagIdUndWahlbezirkId wahltagIdUndWahlbezirkId);

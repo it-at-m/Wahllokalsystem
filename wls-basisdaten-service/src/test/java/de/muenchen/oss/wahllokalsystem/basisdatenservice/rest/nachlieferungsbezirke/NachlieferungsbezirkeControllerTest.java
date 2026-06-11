@@ -87,7 +87,7 @@ public class NachlieferungsbezirkeControllerTest {
           .readNachlieferungsbezirke(servletRequest);
       Mockito.when(
               exceptionFactory.createTechnischeWlsException(
-                  ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH))
+                  ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_READ_FILE_NICHT_ERFOLGREICH))
           .thenReturn(mockedWlsException);
 
       Assertions.assertThatThrownBy(

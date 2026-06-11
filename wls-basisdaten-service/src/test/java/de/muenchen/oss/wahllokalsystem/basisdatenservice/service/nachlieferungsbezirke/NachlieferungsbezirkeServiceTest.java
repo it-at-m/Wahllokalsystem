@@ -74,7 +74,7 @@ public class NachlieferungsbezirkeServiceTest {
   class SetNachlieferungsbezirke {
 
     @Test
-    void should_saveNachlieferungsbezirk_when_noDataExistsForWahltag() {
+    void should_saveNachlieferungsbezirk_when_calledWithOneNachlieferungsbezirk() {
       val wahltagID = "wahltagID";
       val wahlbezirkID = "wahlbezirkID";
 
@@ -88,11 +88,13 @@ public class NachlieferungsbezirkeServiceTest {
 
       Mockito.verify(wahlbezirkeValidator).validWahltagIDParamOrThrow(wahltagID);
       Mockito.verify(nachlieferungsbezirkeRepository)
-          .save(new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID)));
+          .saveAll(
+              List.of(
+                  new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID))));
     }
 
     @Test
-    void should_saveMultipleNachlieferungsbezirke_when_noDataExistsForWahltag() {
+    void should_saveMultipleNachlieferungsbezirke_when_calledWithMultipleNachlieferungsbezirke() {
       val wahltagID = "wahltagID";
       val wahlbezirkID1 = "wahlbezirkID1";
       val wahlbezirkID2 = "wahlbezirkID2";
@@ -110,11 +112,12 @@ public class NachlieferungsbezirkeServiceTest {
 
       Mockito.verify(wahlbezirkeValidator).validWahltagIDParamOrThrow(wahltagID);
       Mockito.verify(nachlieferungsbezirkeRepository)
-          .save(new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID1)));
-      Mockito.verify(nachlieferungsbezirkeRepository)
-          .save(new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID2)));
-      Mockito.verify(nachlieferungsbezirkeRepository)
-          .save(new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID3)));
+          .saveAll(
+              List.of(
+                  new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID1)),
+                  new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID2)),
+                  new Nachlieferungsbezirk(
+                      new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID3))));
     }
 
     @Test
@@ -136,7 +139,10 @@ public class NachlieferungsbezirkeServiceTest {
       Mockito.verify(wahlbezirkeValidator).validWahltagIDParamOrThrow(wahltagID);
       Mockito.verify(nachlieferungsbezirkeRepository).deleteAll(existingNachlieferungsbezirke);
       Mockito.verify(nachlieferungsbezirkeRepository)
-          .save(new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID2)));
+          .saveAll(
+              List.of(
+                  new Nachlieferungsbezirk(
+                      new WahltagIdUndWahlbezirkId(wahltagID, wahlbezirkID2))));
     }
 
     @Test
@@ -151,7 +157,7 @@ public class NachlieferungsbezirkeServiceTest {
 
       Mockito.doThrow(mockedRepoSaveException)
           .when(nachlieferungsbezirkeRepository)
-          .save(mockedNachlieferungsbezirk);
+          .saveAll(List.of(mockedNachlieferungsbezirk));
       Mockito.when(
               exceptionFactory.createTechnischeWlsException(
                   ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH))

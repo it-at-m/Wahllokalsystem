@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.exception.ExceptionCons
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeValidator;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -38,16 +39,18 @@ public class NachlieferungsbezirkeService {
     if (!existingNachlieferungsbezirke.isEmpty()) {
       nachlieferungsbezirkeRepository.deleteAll(existingNachlieferungsbezirke);
     }
-    nachlieferungsbezirke.forEach(
-        bezirk -> {
-          try {
-            nachlieferungsbezirkeRepository.save(
-                new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, bezirk)));
-          } catch (final Exception e) {
-            throw exceptionFactory.createTechnischeWlsException(
-                ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH);
-          }
-        });
+    List<Nachlieferungsbezirk> nachlieferungsbezirkeToSave =
+        nachlieferungsbezirke.stream()
+            .map(
+                bezirk -> new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, bezirk)))
+            .collect(Collectors.toList());
+
+    try {
+      nachlieferungsbezirkeRepository.saveAll(nachlieferungsbezirkeToSave);
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH);
+    }
   }
 
   @PreAuthorize(

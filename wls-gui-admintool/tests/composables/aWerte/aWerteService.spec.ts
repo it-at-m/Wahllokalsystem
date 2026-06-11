@@ -18,7 +18,7 @@ vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   Configuration: mockDefinitions.configurationConstructor,
 }));
 
-vi.mock("@/composables/aWerte/aWerteMapper.ts", () => ({
+vi.mock(import("@/composables/aWerte/aWerteMapper.ts"), () => ({
   useAWerteMapper: () => ({
     asyncProgressDtoToAWerteInitProgress:
       mockDefinitions.mappingAsyncProgressDtoToAWerteInitProgress,

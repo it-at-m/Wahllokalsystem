@@ -9,11 +9,18 @@ const mockDefinitions = vi.hoisted(() => ({
   isValidDate: vi.fn(),
 }));
 
-vi.mock("@/composables/common/dateTimeUtils.ts", () => ({
-  useDateTimeUtils: () => ({
-    isValidDate: mockDefinitions.isValidDate,
-  }),
-}));
+vi.mock(
+  import("@/composables/common/dateTimeUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDateTimeUtils: () => ({
+        ...mod.useDateTimeUtils(),
+        isValidDate: mockDefinitions.isValidDate,
+      }),
+    };
+  }
+);
 
 describe("wahlbeteiligungMapper.ts", () => {
   const { toModel, toDto } = useWahlbeteiligungMapper();

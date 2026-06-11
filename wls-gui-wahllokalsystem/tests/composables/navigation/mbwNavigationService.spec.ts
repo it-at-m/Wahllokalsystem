@@ -16,7 +16,7 @@ const { generateRandomString } = useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
 
-vi.mock("@/plugins/router.ts", () => {
+vi.mock(import("@/plugins/router.ts"), () => {
   return {};
 });
 

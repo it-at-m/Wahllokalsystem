@@ -31,13 +31,16 @@ vi.mock(
   }
 );
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
-vi.mock("@/composables/wahlvorstand/wahlvorstandMapper", () => ({
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandMapper"), () => ({
   useWahlvorstandMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
     toDto: mockDefinitions.mapModelToDto,

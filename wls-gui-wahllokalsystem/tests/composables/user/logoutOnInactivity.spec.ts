@@ -22,11 +22,18 @@ const mockDefinitions = vi.hoisted(() => ({
   logout: vi.fn(),
 }));
 
-vi.mock("@/composables/user/logoutService.ts", () => ({
-  useLogoutService: () => ({
-    logout: mockDefinitions.logout,
-  }),
-}));
+vi.mock(
+  import("@/composables/user/logoutService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useLogoutService: () => ({
+        ...mod.useLogoutService(),
+        logout: mockDefinitions.logout,
+      }),
+    };
+  }
+);
 
 const { prepareUser } = useUserTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();

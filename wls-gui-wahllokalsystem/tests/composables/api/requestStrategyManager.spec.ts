@@ -34,7 +34,7 @@ const mockDefinitions = vi.hoisted(() => ({
     .mockName("fetchButStoreRequestAsDirtyOnNotOk"),
 }));
 
-vi.mock("@/composables/api/requestStrategies.ts", () => ({
+vi.mock(import("@/composables/api/requestStrategies.ts"), () => ({
   useRequestStrategies: vi.fn().mockImplementation(() => ({
     onlineFirstGetRequestHandler: mockDefinitions.onlineFirstGetRequestHandler,
     onlineFirstPostRequestHandler:

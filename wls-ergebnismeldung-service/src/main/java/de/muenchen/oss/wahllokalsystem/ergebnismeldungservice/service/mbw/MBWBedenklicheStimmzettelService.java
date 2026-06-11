@@ -54,7 +54,8 @@ public class MBWBedenklicheStimmzettelService {
     try {
       repository.save(entityToSave);
     } catch (final Exception e) {
-      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED);
+      throw exceptionFactory.createTechnischeWlsException(
+          ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED);
     }
   }
 }

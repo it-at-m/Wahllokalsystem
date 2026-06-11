@@ -29,8 +29,7 @@ class MBWBedenklicheStimmzettelServiceTest {
 
   @Mock BedenklicheStimmzettelValidator validator;
 
-  @Mock
-  ExceptionFactory exceptionFactory;
+  @Mock ExceptionFactory exceptionFactory;
 
   @InjectMocks MBWBedenklicheStimmzettelService unitUnderTest;
 
@@ -149,7 +148,7 @@ class MBWBedenklicheStimmzettelServiceTest {
     @Test
     void should_throwTechnischeWlsException_when_savingFailed() {
       val bedenklicherStimmzettel =
-              new BedenklicherStimmzettelModel(12, Collections.emptySet(), ValidityModel.INVALID);
+          new BedenklicherStimmzettelModel(12, Collections.emptySet(), ValidityModel.INVALID);
       val modelToSave = List.of(bedenklicherStimmzettel, bedenklicherStimmzettel);
 
       val wahlbezirkID = "wahlbezirkID";
@@ -157,22 +156,26 @@ class MBWBedenklicheStimmzettelServiceTest {
 
       val mockedMappedModel = new BedenklicheStimmzettelErfassung();
       Mockito.when(
-                      modelMapper.toEntity(
-                              Mockito.eq(modelToSave), Mockito.eq(wahlbezirkID), Mockito.eq(wahlID)))
-              .thenReturn(mockedMappedModel);
+              modelMapper.toEntity(
+                  Mockito.eq(modelToSave), Mockito.eq(wahlbezirkID), Mockito.eq(wahlID)))
+          .thenReturn(mockedMappedModel);
 
       val mockedRepoException = new RuntimeException("mocked saving exception");
       Mockito.doThrow(mockedRepoException).when(repository).save(mockedMappedModel);
 
-      val mockedTechnischeWlsException = TechnischeWlsException.withCode("000").buildWithMessage("mocked failure");
-      Mockito.when(exceptionFactory.createTechnischeWlsException(ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED)).thenReturn(mockedTechnischeWlsException);
+      val mockedTechnischeWlsException =
+          TechnischeWlsException.withCode("000").buildWithMessage("mocked failure");
+      Mockito.when(
+              exceptionFactory.createTechnischeWlsException(
+                  ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED))
+          .thenReturn(mockedTechnischeWlsException);
 
       Assertions.assertThatException()
-              .isThrownBy(
-                      () ->
-                              unitUnderTest.setBedenklicheStimmzettel(
-                                      new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave))
-              .isSameAs(mockedTechnischeWlsException);
+          .isThrownBy(
+              () ->
+                  unitUnderTest.setBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID), modelToSave))
+          .isSameAs(mockedTechnischeWlsException);
     }
   }
 }

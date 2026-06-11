@@ -1,6 +1,8 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.mbw.BedenklicheStimmzettelRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
+import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.Collection;
 import java.util.Optional;
@@ -17,6 +19,7 @@ public class MBWBedenklicheStimmzettelService {
   private final BedenklicheStimmzettelRepository repository;
   private final BedenklicheStimmzettelModelMapper modelMapper;
   private final BedenklicheStimmzettelValidator validator;
+  private final ExceptionFactory exceptionFactory;
 
   @PreAuthorize(
       "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
@@ -48,6 +51,10 @@ public class MBWBedenklicheStimmzettelService {
             bedenklicheStimmzettelToSave,
             bezirkUndWahlID.getWahlbezirkID(),
             bezirkUndWahlID.getWahlID());
-    repository.save(entityToSave);
+    try {
+      repository.save(entityToSave);
+    } catch (final Exception e) {
+      throw exceptionFactory.createTechnischeWlsException(ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED);
+    }
   }
 }

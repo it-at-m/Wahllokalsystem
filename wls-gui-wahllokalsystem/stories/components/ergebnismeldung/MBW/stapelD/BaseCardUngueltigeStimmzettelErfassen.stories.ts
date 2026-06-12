@@ -28,15 +28,6 @@ const meta = {
       },
     },
   },
-  decorators: [
-    (story) => {
-      return {
-        component: { story },
-        template:
-          "<table style='width: 100%; border: solid 1px black'><story /></table>",
-      };
-    },
-  ],
 } satisfies Meta<typeof BaseCardUngueltigeStimmzettelErfassen>;
 
 const { generateRandomNumberInRange } = useCommonTestDataFactory();

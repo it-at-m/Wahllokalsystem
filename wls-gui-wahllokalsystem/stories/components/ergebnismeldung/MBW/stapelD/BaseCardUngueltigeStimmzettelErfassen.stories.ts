@@ -1,0 +1,48 @@
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
+
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
+import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+
+import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
+
+const meta = {
+  component: BaseCardUngueltigeStimmzettelErfassen,
+  args: {},
+  argTypes: {
+    modelValue: {
+      description: "zu pflegendes Ergebnis",
+      table: {
+        category: "props",
+        type: { summary: "Ergebnis" },
+      },
+    },
+    "onUpdate:modelValue": {
+      description: "Wird ausgelöst wenn sich der aktuelle Wert ändert",
+      name: "update:modelValue",
+      table: {
+        category: "events",
+      },
+    },
+  },
+  decorators: [
+    (story) => {
+      return {
+        component: { story },
+        template:
+          "<table style='width: 100%; border: solid 1px black'><story /></table>",
+      };
+    },
+  ],
+} satisfies Meta<typeof BaseCardUngueltigeStimmzettelErfassen>;
+
+const { generateRandomNumberInRange } = useCommonTestDataFactory();
+const { createErgebnis } = useErgebnisseTestDataFactory();
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+export const Default: Story = {
+  args: {
+    modelValue: createErgebnis(),
+    ungueltigeStimmzettelNachBeschluss: generateRandomNumberInRange(0, 100),
+  },
+};

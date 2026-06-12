@@ -1,12 +1,12 @@
 import type { BedenklicherStimmzettelDTO } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/BedenklicherStimmzettel.ts";
+import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
 import {
   BedenklicherStimmzettelDTOSupplementsEnum,
   BedenklicherStimmzettelDTOValidityEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
-import { SupplementEnum } from "@/types/ergebnismeldung/MBW/SupplementEnum.ts";
-import { ValidityEnum } from "@/types/ergebnismeldung/MBW/ValidityEnum.ts";
+import { SupplementEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/SupplementEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 
 const SUPPLEMENT_DTO_ENUM_TO_MODEL_ENUM: Record<
   BedenklicherStimmzettelDTOSupplementsEnum,

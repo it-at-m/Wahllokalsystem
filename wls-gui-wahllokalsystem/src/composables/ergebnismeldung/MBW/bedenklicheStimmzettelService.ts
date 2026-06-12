@@ -1,4 +1,4 @@
-import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/BedenklicherStimmzettel.ts";
+import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
 import {
   Configuration,

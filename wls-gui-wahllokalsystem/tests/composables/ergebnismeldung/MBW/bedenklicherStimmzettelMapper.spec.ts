@@ -10,7 +10,7 @@ import {
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
 import { useBedenklicherStimmzettelMapper } from "@/composables/ergebnismeldung/MBW/bedenklicherStimmzettelMapper.ts";
 import { SupplementEnum } from "@/types/ergebnismeldung/MBW/SupplementEnum.ts";
-import { ValidityEnum } from "@/types/ergebnismeldung/MBW/validityEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/ValidityEnum.ts";
 
 const { prepareBedenklicherStimmzettelDTO, prepareBedenklicherStimmzettel } =
   useBedenklicherStimmzettelTestDataFactory();

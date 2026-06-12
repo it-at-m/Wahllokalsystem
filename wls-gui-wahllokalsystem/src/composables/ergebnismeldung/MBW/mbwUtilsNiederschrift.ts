@@ -24,6 +24,7 @@ import { useLogging } from "@/composables/common/logging.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useWahlscheineService } from "@/composables/ergebnismeldung/common/wahlscheineService.ts";
+import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useWaehlerverzeichnisService } from "@/composables/wahlhandlung/waehlerverzeichnisService.ts";
@@ -36,6 +37,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { Partei } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
@@ -52,6 +54,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
   const { getWaehlerverzeichnis } = useWaehlerverzeichnisService();
   const { getWahlvorstand } = useWahlvorstandService();
   const { getWahlscheine } = useWahlscheineService();
+  const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
   const { getWahlvorschlaegeByWahlIDAndWahlbezirkID } =
     useWahlvorschlaegeStore();
@@ -296,7 +299,16 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           "MBW_D_UNGUELTIG",
           false
         );
-        return loadedErgebnisse?.ergebnisse.length;
+        const bedenklicheStimmzettel =
+          (await getBedenklicheStimmzettel(wahlID, wahlbezirkID)) ?? [];
+        const ungueltigeBedenklicheStimmzettel = bedenklicheStimmzettel.filter(
+          (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
+        );
+
+        return (
+          (loadedErgebnisse?.ergebnisse.length ?? 0) +
+          ungueltigeBedenklicheStimmzettel.length
+        );
       } catch (error) {
         logError("Fehler beim Laden der Ergebnisse: ", error);
       }

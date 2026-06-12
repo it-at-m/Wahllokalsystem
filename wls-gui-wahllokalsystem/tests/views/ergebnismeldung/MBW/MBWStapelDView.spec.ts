@@ -18,6 +18,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getNextRoute: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -45,6 +46,15 @@ vi.mock(
       }),
     };
   }
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
 );
 
 vi.mock("@/stores/userStore.ts", () => ({
@@ -88,8 +98,9 @@ describe("MBWStapelDView", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_callGetErgebnisse_when_componentIsMounted", () => {
+    it("should_callServices_when_componentIsMounted", () => {
       expect(mockDefinitions.getErgebnisse).toHaveBeenCalled();
+      expect(mockDefinitions.getBedenklicheStimmzettel).toHaveBeenCalled();
     });
 
     it("should_saveErgebnis_when_saveEventIsEmmited", () => {

@@ -11,6 +11,7 @@ import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bW
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
+import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
@@ -31,6 +32,7 @@ import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -50,6 +52,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   createBarcode: vi.fn(),
   createFooter: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
 
 vi.mock(import("jsbarcode"));
@@ -108,6 +111,15 @@ vi.mock(
     }),
   })
 );
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
+);
 vi.mock(import("@/composables/ergebnismeldung/MBW/mbwUtils.ts"), () => ({
   useMbwUtils: () => ({
     getBWerteForWahlbezirkAndWahl:
@@ -142,6 +154,8 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const { createUrnenwahlvorbereitung } = useWahlvorbereitungTestDataFactory();
   const { createPflegeWaehlerverzeichnis } =
     usePflegeWaehlerverzeichnisTestDataFactory();
+  const { prepareBedenklicherStimmzettel } =
+    useBedenklicherStimmzettelTestDataFactory();
 
   const { toGermanDate, toHhMm } = useDateTimeFormatter();
 
@@ -304,6 +318,21 @@ describe("mbwUtilsNiederschrift.ts", () => {
       }
     );
 
+    // stapel e
+    const mockedBedenklicheStimmzettel = [
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel()
+        .validity(ValidityEnum.PARTIAL_VALID)
+        .build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+    ];
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+      mockedBedenklicheStimmzettel
+    );
+
     const mockedFooter = "footer";
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);
 
@@ -373,7 +402,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisseD.ergebnisse.length + 3, // +3 von Stapel E,
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,
@@ -582,6 +611,21 @@ describe("mbwUtilsNiederschrift.ts", () => {
       }
     );
 
+    // stapel e
+    const mockedBedenklicheStimmzettel = [
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel()
+        .validity(ValidityEnum.PARTIAL_VALID)
+        .build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+    ];
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+      mockedBedenklicheStimmzettel
+    );
+
     const mockedFooter = "footer";
     mockDefinitions.createFooter.mockReturnValue(mockedFooter);
 
@@ -634,7 +678,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisseD.ergebnisse.length + 3, //+3 von Stapel E
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,

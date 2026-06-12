@@ -1,6 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, KeepAlive } from "vue";
@@ -9,15 +10,18 @@ import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MB
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     ungueltigeStimmen: number;
+    ungueltigeStimmzettelNachBeschluss: number;
   }
 }
 
 const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -32,9 +36,20 @@ vi.mock(
     };
   }
 );
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
+);
 
 describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   const { prepareErgebnis, prepareErgebnisse } = useErgebnisseTestDataFactory();
+  const { prepareBedenklicherStimmzettel } =
+    useBedenklicherStimmzettelTestDataFactory();
 
   let wrapper: VueWrapper<
     InstanceType<ReturnType<typeof createKeepAliveComponent>>
@@ -45,7 +60,7 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
 
   enableAutoUnmount(afterEach);
 
-  it("should_getErgebnisseStapelD_when_mountedAndRequestReturnsErgebnisse", async () => {
+  it("should_LoadData_when_mountedAndRequestReturnsErgebnisse", async () => {
     const keepAliveWrapperComponent = createKeepAliveComponent(
       wahlId,
       wahlbezirkId
@@ -55,6 +70,19 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
       prepareErgebnisse()
         .ergebnisse([prepareErgebnis().ergebnis(3).build()])
         .build()
+    );
+    const mockedBedenklicheStimmzettel = [
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel()
+        .validity(ValidityEnum.PARTIAL_VALID)
+        .build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+    ];
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+      mockedBedenklicheStimmzettel
     );
 
     wrapper = mount(keepAliveWrapperComponent, {
@@ -77,15 +105,20 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
       wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
         .ungueltigeStimmen
     ).toBe(3);
+    expect(
+      wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
+        .ungueltigeStimmzettelNachBeschluss
+    ).toBe(3);
   });
 
-  it("should_setErgebnisTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
+  it("should_setDataTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
     const keepAliveWrapperComponent = createKeepAliveComponent(
       wahlId,
       wahlbezirkId
     );
 
     mockDefinitions.getErgebnisse.mockReturnValue(null);
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(null);
 
     wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify] },
@@ -106,6 +139,10 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
     expect(
       wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
         .ungueltigeStimmen
+    ).toBe(0);
+    expect(
+      wrapper.findComponent(TheMBWUngueltigeStimmenAnzeigenCard).vm
+        .ungueltigeStimmzettelNachBeschluss
     ).toBe(0);
   });
 });

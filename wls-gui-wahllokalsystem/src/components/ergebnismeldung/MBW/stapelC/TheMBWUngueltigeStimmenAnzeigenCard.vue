@@ -68,7 +68,7 @@ onActivated(async () => {
   );
   ungueltigeStimmzettelNachBeschluss.value = bedenklicheStimmzettel
     ? bedenklicheStimmzettel.filter(
-        (stimmzettel) => stimmzettel.validity === ValidityEnum.VALID
+        (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
       ).length
     : 0;
 });

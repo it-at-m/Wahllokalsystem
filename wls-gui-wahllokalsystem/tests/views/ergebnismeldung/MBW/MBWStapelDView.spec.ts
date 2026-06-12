@@ -6,7 +6,7 @@ import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
-import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
+import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
@@ -96,7 +96,7 @@ describe("MBWStapelDView", () => {
       mockDefinitions.getNextRoute.mockResolvedValue("");
 
       const baseCardSnippedErgebnis = wrapper.findComponent(
-        BaseCardSnippedErgebnis
+        BaseCardUngueltigeStimmzettelErfassen
       );
       baseCardSnippedErgebnis.vm.$emit("save");
 

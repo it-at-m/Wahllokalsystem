@@ -1,7 +1,7 @@
 <template>
   <base-card-ungueltige-stimmzettel-erfassen
     v-model="ergebnis"
-    :ungueltige-stimmzettel-nach-beschluss="0"
+    :ungueltige-stimmzettel-nach-beschluss="ungueltigeStimmzettelNachBeschluss"
     :is-saving="isErgebnisSaving"
     :is-wahl-finished="isMBWAuszaehlungDone"
     @save="onSave"
@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
+import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -18,12 +19,14 @@ import { useRoute, useRouter } from "vue-router";
 import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const route = useRoute();
@@ -32,6 +35,7 @@ const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
+const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 const { logError } = useLogging("mbwStapelDView");
 const { getNextRoute } = useNavigationUtils();
 
@@ -48,9 +52,16 @@ const ergebnis = ref<Ergebnis>({
   ergebnis: null,
   numIndex: null,
 });
+const bedenklicheStimmzettel = ref<BedenklicherStimmzettel[]>([]);
 
 const isMBWAuszaehlungDone = computed(() =>
   isElectionFinished(wahlID, wahlbezirkID ?? "")
+);
+const ungueltigeStimmzettelNachBeschluss = computed(
+  () =>
+    bedenklicheStimmzettel.value.filter(
+      (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
+    ).length
 );
 
 if (!wahl) {
@@ -71,6 +82,8 @@ onMounted(async () => {
       if (loadedErgebnisse?.ergebnisse[0]) {
         ergebnis.value = loadedErgebnisse?.ergebnisse[0];
       }
+      bedenklicheStimmzettel.value =
+        (await getBedenklicheStimmzettel(wahlbezirkID, wahlID, false)) ?? [];
     } catch (error) {
       logError("Fehler beim Laden der Ergebnisse: ", error);
       throw error;

@@ -1,8 +1,8 @@
 <template>
-  <base-card-snipped-ergebnis
+  <base-card-ungueltige-stimmzettel
     v-model="ergebnis"
-    snipped-title="Ungültige Stimmzettel"
-    :is-ergebnis-saving="isErgebnisSaving"
+    :ungueltige-stimmzettel-nach-beschluss="0"
+    :is-saving="isErgebnisSaving"
     :is-wahl-finished="isMBWAuszaehlungDone"
     @save="onSave"
   />
@@ -15,7 +15,7 @@ import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
+import BaseCardUngueltigeStimmzettel from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettel.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";

@@ -2,12 +2,16 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { fn } from "storybook/test";
 
 import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
 
 const meta = {
   component: BaseCardUngueltigeStimmzettelErfassen,
-  args: {},
+  args: {
+    isWahlFinished: false,
+    onSave: fn(),
+  },
   argTypes: {
     modelValue: {
       description: "zu pflegendes Ergebnis",

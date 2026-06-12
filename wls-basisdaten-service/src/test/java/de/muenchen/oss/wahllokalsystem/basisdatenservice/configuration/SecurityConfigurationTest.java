@@ -14,6 +14,7 @@ import de.muenchen.oss.wahllokalsystem.basisdatenservice.MicroServiceApplication
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.handbuch.HandbuchService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.kopfdaten.KopfdatenService;
+import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.nachlieferungsbezirke.NachlieferungsbezirkeService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.referendumvorlagen.ReferendumvorlagenService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.ungueltigewahlscheine.UngueltigeWahlscheineService;
 import de.muenchen.oss.wahllokalsystem.basisdatenservice.service.wahlbezirke.WahlbezirkeService;
@@ -64,6 +65,8 @@ class SecurityConfigurationTest {
   @MockitoBean WahlbezirkeService wahlbezirkeService;
 
   @MockitoBean KopfdatenService kopfdatenService;
+
+  @MockitoBean NachlieferungsbezirkeService nachlieferungsbezirkeService;
 
   @Test
   void should_returnUnauthorized_when_accessingRoot() throws Exception {
@@ -356,6 +359,44 @@ class SecurityConfigurationTest {
     @WithMockUser
     void should_permitAccess_when_requestWithAuthorizedUser() throws Exception {
       api.perform(get("/businessActions/asyncProgress")).andExpect(status().isOk());
+    }
+  }
+
+  @Nested
+  class Nachlieferungsbezirke {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/nachlieferungsbezirke/wahltagID/wahlbezirkID"))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaGet() throws Exception {
+      api.perform(get("/businessActions/nachlieferungsbezirke/wahltagID/wahlbezirkID"))
+          .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_accessingUnauthorizedViaPost() throws Exception {
+      api.perform(
+              multipart("/businessActions/nachlieferungsbezirke/wahltagID/")
+                  .file("manual", "content".getBytes())
+                  .with(csrf()))
+          .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    void should_permitAccess_when_accessingAuthorizedViaPost() throws Exception {
+      api.perform(
+              multipart("/businessActions/nachlieferungsbezirke/wahltagID")
+                  .file("manual", "content".getBytes())
+                  .with(csrf()))
+          .andExpect(status().isOk());
     }
   }
 }

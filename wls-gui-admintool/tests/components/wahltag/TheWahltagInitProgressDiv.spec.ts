@@ -19,12 +19,12 @@ const mockDefinitions = vi.hoisted(() => ({
   getAWerteProgress: vi.fn(),
 }));
 
-vi.mock("@/composables/basisdaten/basisdatenService.ts", () => ({
+vi.mock(import("@/composables/basisdaten/basisdatenService.ts"), () => ({
   useBasisdatenService: () => ({
     getAsyncProgress: mockDefinitions.getAsyncProgress,
   }),
 }));
-vi.mock("@/composables/aWerte/aWerteService.ts", () => ({
+vi.mock(import("@/composables/aWerte/aWerteService.ts"), () => ({
   useAWerteService: () => ({
     getAWerteProgress: mockDefinitions.getAWerteProgress,
   }),

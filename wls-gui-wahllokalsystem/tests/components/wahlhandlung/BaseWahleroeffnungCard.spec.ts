@@ -32,17 +32,31 @@ const mockDefinitions = vi.hoisted(() => ({
   routerPush: vi.fn(),
 }));
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
-  useEreignisService: () => ({
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisService: () => ({
+        ...mod.useEreignisService(),
+        saveEreignisse: mockDefinitions.saveEreignisse,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorbereitungService: () => ({
+        ...mod.useWahlvorbereitungService(),
+        postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+      }),
+    };
+  }
+);
 
 router.push = mockDefinitions.routerPush;
 

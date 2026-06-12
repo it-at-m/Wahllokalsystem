@@ -20,18 +20,32 @@ const mockDefinitions = vi.hoisted(() => ({
   getNextRoute: vi.fn(),
 }));
 
-vi.mock("@/composables/navigation/navigationUtils.ts", () => ({
-  useNavigationUtils: () => ({
-    getNextRoute: mockDefinitions.getNextRoute,
-  }),
-}));
+vi.mock(
+  import("@/composables/navigation/navigationUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useNavigationUtils: () => ({
+        ...mod.useNavigationUtils(),
+        getNextRoute: mockDefinitions.getNextRoute,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postErgebnisse: mockDefinitions.postErgebnisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        postErgebnisse: mockDefinitions.postErgebnisse,
+        getErgebnisse: mockDefinitions.getErgebnisse,
+      }),
+    };
+  }
+);
 
 vi.mock("@/stores/userStore.ts", () => ({
   useUserStore: () => ({

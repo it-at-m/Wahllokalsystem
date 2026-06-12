@@ -37,6 +37,10 @@ public class Authorities {
       "Ergebnismeldung_BUSINESSACTION_ForceErgebnisse";
   public static final String SERVICE_SEND_ERGEBNISSE =
       "Ergebnismeldung_BUSINESSACTION_SendErgebnisse";
+  public static final String SERVICE_GET_BEDENKLICHE_STIMMZETTEL =
+      "Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService";
+  public static final String SERVICE_SET_BEDENKLICHE_STIMMZETTEL =
+      "Ergebnismeldung_BUSINESSACTION_SetBedenklicheStimmzettelService";
 
   public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
   public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";

@@ -1,0 +1,77 @@
+### get userinfo with auth_token
+GET {{ WLS_AUTH_SERVICE }}/user
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### GET bedenkliche Stimmzettel | user wls_mbw_uwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/mbw/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a/bedenklicheStimmzettel
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST bedenkliche Stimmzettel | user wls_mbw_uwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/mbw/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a/bedenklicheStimmzettel
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+[
+  {
+    "orderIndex": 0,
+    "supplements": [
+      "TOO_MANY_LISTENKREUZE"
+    ],
+    "validity": "PARTIAL_VALID"
+  },
+  {
+    "orderIndex": 1,
+    "supplements": [],
+    "validity": "INVALID"
+  },
+  {
+    "orderIndex": 2,
+    "supplements": [],
+    "validity": "VALID"
+  },
+  {
+    "orderIndex": 3,
+    "supplements": [
+      "TOO_MANY_LISTENKREUZE",
+      "TOO_MANY_SINGLE_KANDIDAT_VOTES"
+    ],
+    "validity": "PARTIAL_VALID"
+  }
+]
+
+### GET bedenkliche Stimmzettel | user wls_mbw_bwb
+GET {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/mbw/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b/bedenklicheStimmzettel
+Authorization: Bearer {{$auth.token("auth-service")}}
+
+### POST bedenkliche Stimmzettel | user wls_mbw_bwb
+POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/mbw/wahl/b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e/wahlbezirk/e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b/bedenklicheStimmzettel
+Authorization: Bearer {{$auth.token("auth-service")}}
+Content-Type: application/json
+
+[
+  {
+    "orderIndex": 0,
+    "supplements": [
+      "TOO_MANY_LISTENKREUZE"
+    ],
+    "validity": "PARTIAL_VALID"
+  },
+  {
+    "orderIndex": 1,
+    "supplements": [],
+    "validity": "INVALID"
+  },
+  {
+    "orderIndex": 2,
+    "supplements": [],
+    "validity": "VALID"
+  },
+  {
+    "orderIndex": 3,
+    "supplements": [
+      "TOO_MANY_LISTENKREUZE",
+      "TOO_MANY_SINGLE_KANDIDAT_VOTES"
+    ],
+    "validity": "PARTIAL_VALID"
+  }
+]

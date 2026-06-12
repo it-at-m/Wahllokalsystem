@@ -30,11 +30,18 @@ const mockDefinitions = vi.hoisted(() => ({
   getNextRoute: vi.fn(),
 }));
 
-vi.mock("@/composables/navigation/navigationUtils.ts", () => ({
-  useNavigationUtils: () => ({
-    getNextRoute: mockDefinitions.getNextRoute,
-  }),
-}));
+vi.mock(
+  import("@/composables/navigation/navigationUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useNavigationUtils: () => ({
+        ...mod.useNavigationUtils(),
+        getNextRoute: mockDefinitions.getNextRoute,
+      }),
+    };
+  }
+);
 
 describe("TheEreignisseView", () => {
   let wrapper: VueWrapper<InstanceType<typeof EreignisseView>>;

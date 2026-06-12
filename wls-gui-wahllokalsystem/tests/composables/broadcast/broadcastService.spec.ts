@@ -20,16 +20,19 @@ vi.mock("@/api/wls-clients/generated-broadcast-api", () => ({
   },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/broadcast/broadcastMapper.ts", () => ({
+vi.mock(import("@/composables/broadcast/broadcastMapper.ts"), () => ({
   useBroadcastMapper: () => ({
     dtoToModel: mockDefinitions.mapDtoToModel,
   }),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { createBroadcastMessage, createMessageDTO } =
   useBroadcastTestDataFactory();

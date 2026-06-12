@@ -36,17 +36,23 @@ vi.mock(
     };
   }
 );
-vi.mock("@/composables/ergebnismeldung/common/ausdruckMapper.ts", () => ({
-  useAusdruckMapper: () => ({
-    meldungsartEnumToDto: mockDefinitions.mapMeldungsartEnumToDto,
-    toAusdruckWriteDTO: mockDefinitions.mapToAusdruckWriteDTO,
-  }),
-}));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ausdruckMapper.ts"),
+  () => ({
+    useAusdruckMapper: () => ({
+      meldungsartEnumToDto: mockDefinitions.mapMeldungsartEnumToDto,
+      toAusdruckWriteDTO: mockDefinitions.mapToAusdruckWriteDTO,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, getRandomItem } = useCommonTestDataFactory();
 

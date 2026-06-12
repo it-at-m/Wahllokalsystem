@@ -18,7 +18,7 @@ vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
   Configuration: mockDefinitions.configurationConstructor,
 }));
 
-vi.mock("@/composables/basisdaten/basisdatenMapper.ts", () => ({
+vi.mock(import("@/composables/basisdaten/basisdatenMapper.ts"), () => ({
   useBasisdatenMapper: () => ({
     mapAsyncProgressDtoToBasisdatenInitProgress:
       mockDefinitions.mapAsyncProgressDtoToBasisdatenInitProgress,

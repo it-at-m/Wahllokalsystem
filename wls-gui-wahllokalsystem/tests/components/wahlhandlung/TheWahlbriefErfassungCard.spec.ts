@@ -32,11 +32,18 @@ const mockDefinitions = vi.hoisted(() => ({
   postWahlbriefdaten: vi.fn(),
 }));
 
-vi.mock("@/composables/briefwahl/briefwahlService", () => ({
-  useBriefwahlService: () => ({
-    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
+      }),
+    };
+  }
+);
 
 describe("TheWahlbriefErfassungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof TheWahlbriefErfassungCard>>;

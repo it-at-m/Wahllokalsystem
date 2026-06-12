@@ -9,11 +9,14 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorschlaege: vi.fn(),
 }));
 
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
-  useWahlvorschlaegeService: () => ({
-    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
+  () => ({
+    useWahlvorschlaegeService: () => ({
+      getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createWahlvorschlaege, prepareWahlvorschlaege, prepareWahlvorschlag } =

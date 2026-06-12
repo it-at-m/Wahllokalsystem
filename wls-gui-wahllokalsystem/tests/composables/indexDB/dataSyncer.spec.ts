@@ -22,8 +22,8 @@ const mockDefinitions = vi.hoisted(() => ({
   runAllTasks: vi.fn(),
 }));
 
-vi.mock("axios");
-vi.mock("@/composables/indexDB/indexDB.ts", () => ({
+vi.mock(import("axios"));
+vi.mock(import("@/composables/indexDB/indexDB.ts"), () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getDirtyItems: mockDefinitions.getDirtyItems,
   })),
@@ -31,7 +31,7 @@ vi.mock("@/composables/indexDB/indexDB.ts", () => ({
 vi.mock("@/api/axios-utils.ts", () => ({
   basicPostConfig: mockDefinitions.basicPostConfig,
 }));
-vi.mock("@/composables/tasks/taskManager.ts", () => ({
+vi.mock(import("@/composables/tasks/taskManager.ts"), () => ({
   useTaskManager: vi.fn().mockImplementation(() => ({
     setTasks: mockDefinitions.setTasks,
     runAllTasks: mockDefinitions.runAllTasks,

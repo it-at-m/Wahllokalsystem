@@ -39,11 +39,11 @@ public class NachlieferungsbezirkeService {
     if (!existingNachlieferungsbezirke.isEmpty()) {
       nachlieferungsbezirkeRepository.deleteAll(existingNachlieferungsbezirke);
     }
-    List<Nachlieferungsbezirk> nachlieferungsbezirkeToSave =
+    val nachlieferungsbezirkeToSave =
         nachlieferungsbezirke.stream()
             .map(
                 bezirk -> new Nachlieferungsbezirk(new WahltagIdUndWahlbezirkId(wahltagID, bezirk)))
-            .collect(Collectors.toList());
+            .toList();
 
     try {
       nachlieferungsbezirkeRepository.saveAll(nachlieferungsbezirkeToSave);

@@ -92,7 +92,12 @@ spring:
       client:
         provider:
           sso:
-            issuer-uri: https://auth.wls.host.docker.internal:58100/uaa
+#            issuer-uri: https://auth.wls.host.docker.internal:58100/uaa
+            jwk-set-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/jwks
+            authorization-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/authorize
+            token-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/token
+            user-info-uri: https://auth.wls.host.docker.internal:58100/uaa/userinfo
+            user-name-attribute: "sub"
         registration:
           sso:
             provider: sso
@@ -100,6 +105,7 @@ spring:
             client-secret: top-secret
             scope: openid
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
 
 logging:
   include-application-group: false # disabled because application group is only relevant when deployed

@@ -35,6 +35,11 @@ public class Authorities {
   public static final String SERVICE_DELETE_WAHLTERMINDATEN =
       "Basisdaten_BUSINESSACTION_DeleteWahltermindaten";
 
+  public static final String SERVICE_GET_NACHLIEFERUNGSBEZIRKE =
+      "Basisdaten_BUSINESSACTION_GetNachlieferungsbezirke";
+  public static final String SERVICE_POST_NACHLIEFERUNGSBEZIRKE =
+      "Basisdaten_BUSINESSACTION_PostNachlieferungsbezirke";
+
   public static final String REPOSITORY_READ_WAHLVORSCHLAEGE = "Basisdaten_READ_WLSWahlvorschlaege";
   public static final String REPOSITORY_DELETE_WAHLVORSCHLAEGE =
       "Basisdaten_DELETE_WLSWahlvorschlaege";
@@ -88,6 +93,13 @@ public class Authorities {
   public static final String REPOSITORY_READ_WAHLBEZIRK = "Basisdaten_READ_Wahlbezirk";
   public static final String REPOSITORY_WRITE_WAHLBEZIRK = "Basisdaten_WRITE_Wahlbezirk";
   public static final String REPOSITORY_DELETE_WAHLBEZIRK = "Basisdaten_DELETE_Wahlbezirk";
+
+  public static final String REPOSITORY_READ_NACHLIEFERUNGSBEZIRKE =
+      "Basisdaten_READ_Nachlieferungsbezirke";
+  public static final String REPOSITORY_WRITE_NACHLIEFERUNGSBEZIRKE =
+      "Basisdaten_WRITE_Nachlieferungsbezirke";
+  public static final String REPOSITORY_DELETE_NACHLIEFERUNGSBEZIRKE =
+      "Basisdaten_DELETE_Nachlieferungsbezirke";
 
   public static final String S2S_INFOMANAGEMENT_SERVICE_GET_KONFIGURIERTERWAHLTAG =
       "Infomanagement_BUSINESSACTION_GetKonfigurierterWahltag";
@@ -227,5 +239,16 @@ public class Authorities {
     REPOSITORY_DELETE_KOPFDATEN,
     REPOSITORY_DELETE_WAHLVORSCHLAEGE,
     REPOSITORY_DELETE_REFERENDUMVORLAGEN
+  };
+
+  public static final String[] ALL_AUTHORITIES_CHECK_NACHLIEFERUNGSBEZIRKE = {
+    SERVICE_GET_NACHLIEFERUNGSBEZIRKE, REPOSITORY_READ_NACHLIEFERUNGSBEZIRKE
+  };
+
+  public static final String[] ALL_AUTHORITIES_SET_NACHLIEFERUNGSBEZIRKE = {
+    SERVICE_POST_NACHLIEFERUNGSBEZIRKE,
+    REPOSITORY_READ_NACHLIEFERUNGSBEZIRKE,
+    REPOSITORY_WRITE_NACHLIEFERUNGSBEZIRKE,
+    REPOSITORY_DELETE_NACHLIEFERUNGSBEZIRKE
   };
 }

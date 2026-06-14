@@ -26,19 +26,19 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlvorstand: vi.fn(),
 }));
 
-vi.mock("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion", () => ({
-  WahlvorstandsmitgliedFunktionEnum: {
-    W: "W",
-    Sb: "SB",
-    Swb: "SWB",
-    Ssb: "SSB",
-    B: "B",
-  },
-  isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
-  isWahlvorsteher: mockDefinitions.isWahlvorsteher,
-}));
+vi.mock(
+  import("@/types/wahlvorstand/WahlvorstandsmitgliedFunktion.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      ...mod,
+      isSchriftfuehrer: mockDefinitions.isSchriftfuehrer,
+      isWahlvorsteher: mockDefinitions.isWahlvorsteher,
+    };
+  }
+);
 
-vi.mock("@/composables/wahlvorstand/wahlvorstandService", () => ({
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandService.ts"), () => ({
   useWahlvorstandService: () => ({
     saveWahlvorstand: mockDefinitions.saveWahlvorstand,
     getWahlvorstand: mockDefinitions.getWahlvorstand,

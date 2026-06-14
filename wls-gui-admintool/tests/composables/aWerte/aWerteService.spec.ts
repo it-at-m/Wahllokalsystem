@@ -6,10 +6,10 @@ import { useAWerteService } from "@/composables/aWerte/aWerteService.ts";
 const mockDefinitions = vi.hoisted(() => ({
   apiGetAsyncProgress: vi.fn(),
   mappingAsyncProgressDtoToAWerteInitProgress: vi.fn(),
-  asyncProgressControllerApiConstructor: vi.fn().mockImplementation(() => ({
-    getAsyncProgress: mockDefinitions.apiGetAsyncProgress,
-  })),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  asyncProgressControllerApiConstructor: class {
+    getAsyncProgress = mockDefinitions.apiGetAsyncProgress;
+  },
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
@@ -18,7 +18,7 @@ vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
   Configuration: mockDefinitions.configurationConstructor,
 }));
 
-vi.mock("@/composables/aWerte/aWerteMapper.ts", () => ({
+vi.mock(import("@/composables/aWerte/aWerteMapper.ts"), () => ({
   useAWerteMapper: () => ({
     asyncProgressDtoToAWerteInitProgress:
       mockDefinitions.mappingAsyncProgressDtoToAWerteInitProgress,

@@ -18,7 +18,7 @@ const mockDefinitions = vi.hoisted(() => ({
   setBeanstandeteWahlbriefe: vi.fn(),
   getWahlbriefdaten: vi.fn(),
   postWahlbriefdaten: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   mapDtoToModel: vi.fn(),
   toWahlbriefdatenModel: vi.fn(),
   toWahlbriefdatenWriteDTO: vi.fn(),
@@ -26,35 +26,44 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-briefwahl-api", () => ({
-  BeanstandeteWahlbriefeControllerApi: vi.fn().mockImplementation(() => ({
-    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
-    setBeanstandeteWahlbriefe: mockDefinitions.setBeanstandeteWahlbriefe,
-  })),
+  BeanstandeteWahlbriefeControllerApi: class {
+    getBeanstandeteWahlbriefe = mockDefinitions.getBeanstandeteWahlbriefe;
+    setBeanstandeteWahlbriefe = mockDefinitions.setBeanstandeteWahlbriefe;
+  },
   Configuration: mockDefinitions.configurationConstructor,
-  WahlbriefdatenControllerApi: vi.fn().mockImplementation(() => ({
-    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
-    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
-  })),
+  WahlbriefdatenControllerApi: class {
+    getWahlbriefdaten = mockDefinitions.getWahlbriefdaten;
+    postWahlbriefdaten = mockDefinitions.postWahlbriefdaten;
+  },
 }));
+vi.mock(
+  import("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBeanstandeteWahlbriefeMapper: () => ({
+        ...mod.useBeanstandeteWahlbriefeMapper(),
+        toModel: mockDefinitions.mapDtoToModel,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/briefwahl/beanstandeteWahlbriefeMapper.ts", () => ({
-  useBeanstandeteWahlbriefeMapper: () => ({
-    toModel: mockDefinitions.mapDtoToModel,
-  }),
-}));
-
-vi.mock("@/composables/briefwahl/briefwahlMapper.ts", () => ({
+vi.mock(import("@/composables/briefwahl/briefwahlMapper.ts"), () => ({
   useBriefwahlMapper: () => ({
     toWahlbriefdatenModel: mockDefinitions.toWahlbriefdatenModel,
     toWahlbriefdatenWriteDTO: mockDefinitions.toWahlbriefdatenWriteDTO,
   }),
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 describe("briefwahlService.ts", () => {
   const {

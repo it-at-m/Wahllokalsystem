@@ -12,18 +12,18 @@ const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
   addNotification: vi.fn(),
   KopfdatenDTOStimmzettelgebietsartEnum: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  KopfdatenControllerApi: vi.fn().mockImplementation(() => ({
-    getKopfdaten: mockDefinitions.getKopfdaten,
-  })),
+  KopfdatenControllerApi: class {
+    getKopfdaten = mockDefinitions.getKopfdaten;
+  },
   KopfdatenDTOStimmzettelgebietsartEnum: vi.fn(),
   Configuration: mockDefinitions.configurationConstructor,
 }));
 
-vi.mock("@/composables/kopfdaten/kopfdatenMapper.ts", () => ({
+vi.mock(import("@/composables/kopfdaten/kopfdatenMapper.ts"), () => ({
   useKopfdatenMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
   }),
@@ -31,11 +31,14 @@ vi.mock("@/composables/kopfdaten/kopfdatenMapper.ts", () => ({
     mockDefinitions.KopfdatenDTOStimmzettelgebietsartEnum,
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 

@@ -17,27 +17,30 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/api/wls-clients/generated-wahlvorstand-api"),
+  "@/api/wls-clients/generated-wahlvorstand-api",
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      ...mod,
-      WahlvorstandControllerApi: vi.fn().mockImplementation(() => ({
-        getWahlvorstand: mockDefinitions.getWahlvorstand,
-        postWahlvorstand: mockDefinitions.postWahlvorstand,
-      })),
+      ...(mod as object),
+      WahlvorstandControllerApi: class {
+        getWahlvorstand = mockDefinitions.getWahlvorstand;
+        postWahlvorstand = mockDefinitions.postWahlvorstand;
+      },
       Configuration: vi.fn(),
     };
   }
 );
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
-vi.mock("@/composables/wahlvorstand/wahlvorstandMapper", () => ({
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandMapper"), () => ({
   useWahlvorstandMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
     toDto: mockDefinitions.mapModelToDto,

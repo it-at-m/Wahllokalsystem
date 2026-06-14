@@ -40,13 +40,20 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getBegruendungStimmzettelumschlaege:
-      mockDefinitions.getBegruendungStimmzettelumschlaege,
-    postBegruendung: mockDefinitions.postBegruendung,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getBegruendungStimmzettelumschlaege:
+          mockDefinitions.getBegruendungStimmzettelumschlaege,
+        postBegruendung: mockDefinitions.postBegruendung,
+      }),
+    };
+  }
+);
 
 describe("useSingleDifferenceDialogUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useSingleDifferenceDialogUtils>;

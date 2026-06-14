@@ -1,4 +1,4 @@
-import type { MockInstance } from "storybook/test";
+import type { MockInstance } from "vitest";
 import type { RouteHandlerCallbackOptions } from "workbox-core/src/types.ts";
 import type { HTTPMethod } from "workbox-routing/utils/constants";
 
@@ -34,7 +34,7 @@ const mockDefinitions = vi.hoisted(() => ({
     .mockName("fetchButStoreRequestAsDirtyOnNotOk"),
 }));
 
-vi.mock("@/composables/api/requestStrategies.ts", () => ({
+vi.mock(import("@/composables/api/requestStrategies.ts"), () => ({
   useRequestStrategies: vi.fn().mockImplementation(() => ({
     onlineFirstGetRequestHandler: mockDefinitions.onlineFirstGetRequestHandler,
     onlineFirstPostRequestHandler:

@@ -18,17 +18,31 @@ const mockDefinitions = vi.hoisted(() => ({
   synchronizeOfflineData: vi.fn(),
 }));
 
-vi.mock("@/composables/monitoring/monitoringService.ts", () => ({
-  useMonitoringService: vi.fn().mockImplementation(() => ({
-    postLastSeen: mockDefinitions.postLastSeen,
-  })),
-}));
+vi.mock(
+  import("@/composables/monitoring/monitoringService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useMonitoringService: () => ({
+        ...mod.useMonitoringService(),
+        postLastSeen: mockDefinitions.postLastSeen,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/indexDB/dataSyncer.ts", () => ({
-  useDataSyncer: vi.fn().mockImplementation(() => ({
-    synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
-  })),
-}));
+vi.mock(
+  import("@/composables/indexDB/dataSyncer.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useDataSyncer: () => ({
+        ...mod.useDataSyncer(),
+        synchronizeOfflineData: mockDefinitions.synchronizeOfflineData,
+      }),
+    };
+  }
+);
 
 describe("onlineOfflineStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useOnlineOfflineStore>;

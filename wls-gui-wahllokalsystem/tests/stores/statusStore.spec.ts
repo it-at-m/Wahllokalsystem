@@ -13,12 +13,15 @@ const mockDefinitions = vi.hoisted(() => ({
   postStatus: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/statusService.ts", () => ({
-  useStatusService: () => ({
-    getStatus: mockDefinitions.getStatus,
-    postStatus: mockDefinitions.postStatus,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/statusService.ts"),
+  () => ({
+    useStatusService: () => ({
+      getStatus: mockDefinitions.getStatus,
+      postStatus: mockDefinitions.postStatus,
+    }),
+  })
+);
 
 describe("statusStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useStatusStore>;

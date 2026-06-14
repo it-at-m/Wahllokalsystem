@@ -11,31 +11,37 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   getWaehlerverzeichnis: vi.fn(),
   postWaehlerverzeichnis: vi.fn(),
   mapToPflegeWaehlerverzeichnis: vi.fn(),
   mapToWaehlerverzeichnisWriteDTO: vi.fn(),
 }));
 vi.mock("@/api/wls-clients/generated-wahlvorbereitung-api", () => ({
-  WaehlerverzeichnisControllerApi: vi.fn().mockImplementation(() => ({
-    getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
-    postWaehlerverzeichnis: mockDefinitions.postWaehlerverzeichnis,
-  })),
+  WaehlerverzeichnisControllerApi: class {
+    getWaehlerverzeichnis = mockDefinitions.getWaehlerverzeichnis;
+    postWaehlerverzeichnis = mockDefinitions.postWaehlerverzeichnis;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/wahlhandlung/waehlerverzeichnisMapper.ts", () => ({
-  useWaehlerverzeichnisMapper: () => ({
-    toPflegeWaehlerverzeichnis: mockDefinitions.mapToPflegeWaehlerverzeichnis,
-    toWaehlerverzeichnisWriteDTO:
-      mockDefinitions.mapToWaehlerverzeichnisWriteDTO,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/waehlerverzeichnisMapper.ts"),
+  () => ({
+    useWaehlerverzeichnisMapper: () => ({
+      toPflegeWaehlerverzeichnis: mockDefinitions.mapToPflegeWaehlerverzeichnis,
+      toWaehlerverzeichnisWriteDTO:
+        mockDefinitions.mapToWaehlerverzeichnisWriteDTO,
+    }),
+  })
+);
 
 const { createAxiosResponse } = useAxiosTestDataFactory();
 const { createPflegeWaehlerverzeichnis, createWaehlerverzeichnisWriteDTO } =

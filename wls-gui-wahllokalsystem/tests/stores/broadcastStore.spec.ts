@@ -11,7 +11,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getMessage: vi.fn(),
 }));
 
-vi.mock("@/composables/broadcast/broadcastService.ts", () => ({
+vi.mock(import("@/composables/broadcast/broadcastService.ts"), () => ({
   useBroadcastService: () => ({
     getMessage: mockDefinitions.getMessage,
     deleteMessage: mockDefinitions.deleteMessage,

@@ -7,15 +7,11 @@ const mockDefinitions = vi.hoisted(() => ({
   apiLoadWahlterminDaten: vi.fn(),
   apiDeleteWahlterminDaten: vi.fn(),
   addNotification: vi.fn(),
-  adminApiConfigurationConstructor: vi.fn().mockImplementation(() => {
-    return {};
-  }),
-  wahltermindatenControllerApiConstructor: vi.fn().mockImplementation(() => {
-    return {
-      loadWahltermindaten: mockDefinitions.apiLoadWahlterminDaten,
-      deleteWahltermindaten: mockDefinitions.apiDeleteWahlterminDaten,
-    };
-  }),
+  adminApiConfigurationConstructor: vi.fn(),
+  wahltermindatenControllerApiConstructor: class {
+    loadWahltermindaten = mockDefinitions.apiLoadWahlterminDaten;
+    deleteWahltermindaten = mockDefinitions.apiDeleteWahlterminDaten;
+  },
   vueRefBuilder: vi.fn().mockImplementation(() => ({
     value: undefined,
   })),
@@ -26,12 +22,15 @@ vi.mock("@/api/wls-clients/generated-admin-api", () => ({
   WahltermindatenControllerApi:
     mockDefinitions.wahltermindatenControllerApiConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("vue", () => ({
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(import("vue"), () => ({
   ref: mockDefinitions.vueRefBuilder,
 }));
 

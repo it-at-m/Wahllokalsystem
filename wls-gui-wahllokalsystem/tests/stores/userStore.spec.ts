@@ -19,7 +19,7 @@ const mockDefinitions = vi.hoisted(() => ({
   initElectionWorkflowState: vi.fn(),
 }));
 
-vi.mock("@/composables/user/userService", () => ({
+vi.mock(import("@/composables/user/userService"), () => ({
   useUserService: () => ({
     getUser: mockDefinitions.getUser,
   }),

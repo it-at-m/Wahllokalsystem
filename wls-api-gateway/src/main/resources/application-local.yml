@@ -93,10 +93,10 @@ spring:
         provider:
           sso:
 #            issuer-uri: https://auth.wls.host.docker.internal:58100/uaa
-            jwk-set-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/jwks
+            jwk-set-uri: http://localhost:8100/uaa/oauth2/jwks
             authorization-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/authorize
-            token-uri: https://auth.wls.host.docker.internal:58100/uaa/oauth2/token
-            user-info-uri: https://auth.wls.host.docker.internal:58100/uaa/userinfo
+            token-uri: http://localhost:8100/uaa/oauth2/token
+            user-info-uri: http://localhost:8100/uaa/userinfo
             user-name-attribute: "sub"
         registration:
           sso:

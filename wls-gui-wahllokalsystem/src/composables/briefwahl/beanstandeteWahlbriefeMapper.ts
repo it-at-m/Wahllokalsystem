@@ -37,8 +37,6 @@ export function useBeanstandeteWahlbriefeMapper() {
         return ZurueckweisungsgrundEnum.UnterschriftFehlt;
       case "Stimmzettelumschlag fehlt":
         return ZurueckweisungsgrundEnum.UmschlagFehlt;
-      case "Lose Stimmzettel":
-        return ZurueckweisungsgrundEnum.LoseStimmzettel;
       case "Wahlbrief und Stimmzettelumschlag offen":
         return ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen;
       case "Wahlscheine ungleich Stimmzettelumschläge":
@@ -70,8 +68,6 @@ export function useBeanstandeteWahlbriefeMapper() {
         return "Unterschrift auf Wahlschein fehlt";
       case ZurueckweisungsgrundEnum.UmschlagFehlt:
         return "Stimmzettelumschlag fehlt";
-      case ZurueckweisungsgrundEnum.LoseStimmzettel:
-        return "Lose Stimmzettel";
       case ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen:
         return "Wahlbrief und Stimmzettelumschlag offen";
       case ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege:
@@ -101,8 +97,6 @@ export function useBeanstandeteWahlbriefeMapper() {
         return ZurueckweisungsgrundEnum.UnterschriftFehlt;
       case "UMSCHLAG_FEHLT":
         return ZurueckweisungsgrundEnum.UmschlagFehlt;
-      case "LOSE_STIMMZETTEL":
-        return ZurueckweisungsgrundEnum.LoseStimmzettel;
       case "WAHLBRIEF_UND_UMSCHLAG_OFFEN":
         return ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen;
       case "SCHEINE_UNGLEICH_UMSCHLAEGE":

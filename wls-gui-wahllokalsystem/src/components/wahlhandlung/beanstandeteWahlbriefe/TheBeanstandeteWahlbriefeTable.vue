@@ -198,7 +198,6 @@ const gruendeWahlscheine = [
 const gruendeStimmzettel = [
   "Zugelassen",
   "Stimmzettelumschlag fehlt",
-  "Lose Stimmzettel",
   "Wahlbrief und Stimmzettelumschlag offen",
   "Wahlscheine ungleich Stimmzettelumschläge",
   "Nicht-amtlicher Stimmzettelumschlag",

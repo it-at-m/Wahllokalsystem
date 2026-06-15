@@ -717,7 +717,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
         keinGueltigerWahlschein: 2,
         keinStimmzettelumschlag: 1,
         keineUnterschrift: 0,
-        loseStimmzettel: 0,
         mehrereStimmzettelumschlaege: 0,
         nichtVerschlossen: 0,
         zugelassen: 0,

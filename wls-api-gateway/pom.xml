@@ -50,7 +50,7 @@
         <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
 
         <!-- Testing -->
-        <jacoco.version>0.8.14</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
 
         <!-- Logging -->
         <logstash.encoder>9.0</logstash.encoder>

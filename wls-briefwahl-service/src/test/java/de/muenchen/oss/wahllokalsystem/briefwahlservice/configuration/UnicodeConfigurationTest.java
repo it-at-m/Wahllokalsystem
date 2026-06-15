@@ -95,7 +95,7 @@ class UnicodeConfigurationTest {
             },
             key2 + textAttributeDecomposed,
             new Zurueckweisungsgrund[] {
-              Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.LOSE_STIMMZETTEL
+              Zurueckweisungsgrund.UNTERSCHRIFT_FEHLT, Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN
             }));
   }
 }

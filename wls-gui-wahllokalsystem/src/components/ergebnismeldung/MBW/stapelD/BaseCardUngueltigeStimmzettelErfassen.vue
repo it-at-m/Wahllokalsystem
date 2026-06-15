@@ -12,8 +12,7 @@
         <v-row>
           <v-col cols="4">
             <div class="d-flex align-center ga-1">
-              <v-icon icon="$add" />Anzahl ungültiger Stimmzettel nach
-              Beschluss:
+              <v-icon icon="$add" />Anzahl ungültiger Stimmzettel nach Beschluss
             </div>
           </v-col>
           <v-col

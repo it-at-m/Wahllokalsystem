@@ -1,3 +1,5 @@
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+
 import {
   COMPONENT_EVENT_TESTS,
   mockAndStubResizeObserver,
@@ -20,6 +22,28 @@ const mockDefinitions = vi.hoisted(() => ({
   getNextRoute: vi.fn(),
   getBedenklicheStimmzettel: vi.fn(),
 }));
+
+vi.mock(import("vue-router"), async (importOriginal) => {
+  const module = (await importOriginal()) as object;
+  return {
+    ...module,
+    useRoute: () =>
+      ({
+        path: "path",
+        name: "mocked route",
+        query: {},
+        fullPath: "",
+        matched: [],
+        params: {
+          wahlId: "wahlID",
+          wahlbezirkId: "wahlbezirkID",
+        },
+        hash: "",
+        meta: {},
+        redirectedFrom: undefined,
+      }) as RouteLocationNormalizedLoaded,
+  };
+});
 
 vi.mock(
   import("@/composables/navigation/navigationUtils.ts"),
@@ -100,7 +124,9 @@ describe("MBWStapelDView", () => {
   describe(COMPONENT_EVENT_TESTS, () => {
     it("should_callServices_when_componentIsMounted", () => {
       expect(mockDefinitions.getErgebnisse).toHaveBeenCalled();
-      expect(mockDefinitions.getBedenklicheStimmzettel).toHaveBeenCalled();
+      expect(
+        mockDefinitions.getBedenklicheStimmzettel.mock.calls
+      ).toStrictEqual([["wahlID", "mockWahlbezirkId", false]]);
     });
 
     it("should_saveErgebnis_when_saveEventIsEmmited", () => {

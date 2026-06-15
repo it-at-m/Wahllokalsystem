@@ -83,7 +83,7 @@ onMounted(async () => {
         ergebnis.value = loadedErgebnisse?.ergebnisse[0];
       }
       bedenklicheStimmzettel.value =
-        (await getBedenklicheStimmzettel(wahlbezirkID, wahlID, false)) ?? [];
+        (await getBedenklicheStimmzettel(wahlID, wahlbezirkID, false)) ?? [];
     } catch (error) {
       logError("Fehler beim Laden der Ergebnisse: ", error);
       throw error;

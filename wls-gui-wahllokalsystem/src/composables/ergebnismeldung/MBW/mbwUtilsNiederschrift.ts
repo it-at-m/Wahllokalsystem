@@ -290,7 +290,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           "MBW_D_UNGUELTIG",
           false
         );
-        return loadedErgebnisse?.ergebnisse.length;
+        return loadedErgebnisse?.ergebnisse[0].ergebnis ?? 0;
       } catch (error) {
         logError("Fehler beim Laden der Ergebnisse: ", error);
       }

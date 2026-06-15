@@ -9,13 +9,32 @@
           min-width="20rem"
         />
         <v-divider class="my-2" />
-        <div>
-          Anzahl ungültiger Stimmzettel nach Beschluss:
-          {{ ungueltigeStimmzettelNachBeschluss }}
-        </div>
-        <div class="font-weight-bold">
-          Summe ungültiger Stimmzettel: {{ summeUngueltigerStimmzettel }}
-        </div>
+        <v-row>
+          <v-col cols="4">
+            <div class="d-flex align-center ga-1">
+              <v-icon icon="$add" />Anzahl ungültiger Stimmzettel nach
+              Beschluss:
+            </div>
+          </v-col>
+          <v-col
+            cols="1"
+            class="d-flex align-center"
+            >{{ ungueltigeStimmzettelNachBeschluss }}</v-col
+          >
+        </v-row>
+        <v-row class="font-weight-bold">
+          <v-col cols="4">
+            <div class="d-flex align-center ga-1">
+              <v-icon icon="$equal" />
+              Summe ungültiger Stimmzettel
+            </div></v-col
+          >
+          <v-col
+            cols="1"
+            class="d-flex align-center"
+            >{{ summeUngueltigerStimmzettel }}</v-col
+          >
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <base-wls-button-save

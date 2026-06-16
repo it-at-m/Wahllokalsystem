@@ -30,14 +30,14 @@
                 SupplementEnum.TOO_MANY_LISTENKREUZE
               )
             "
-            value="TOO_MANY_LISTENKREUZE"
+            :value="SupplementEnum.TOO_MANY_LISTENKREUZE"
             density="compact"
             hide-details
           />
           <v-checkbox
             v-model="ereignisModel.supplements"
             :disabled="supplementSelectionDisabled"
-            value="TOO_MANY_SINGLE_KANDIDAT_VOTES"
+            :value="SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES"
             density="compact"
             hide-details
           >

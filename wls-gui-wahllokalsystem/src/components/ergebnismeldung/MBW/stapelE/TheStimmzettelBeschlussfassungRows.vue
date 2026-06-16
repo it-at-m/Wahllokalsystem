@@ -83,17 +83,13 @@ function onDeleteIcon(
   const { validity, supplements } = bedenklicherStimmzettelPayload;
   if (validity) {
     dialogOrderIndex.value = index + 1;
-    if (validity) {
-      dialogValidity.value = validityEnumToDisplayString(validity) ?? "-";
-    } else {
-      dialogValidity.value = "-";
-    }
+    dialogValidity.value = validityEnumToDisplayString(validity);
 
     if (supplements.length > 0) {
       dialogSupplements.value =
         supplements
           .map((supplement) => supplementEnumToDisplayString(supplement))
-          .join(", ") ?? "-";
+          .join(", ");
     } else {
       dialogSupplements.value = "-";
     }

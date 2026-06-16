@@ -97,15 +97,13 @@ function onAddBedenklicherStimmzettelClicked() {
 async function onSave() {
   try {
     isSaving.value = true;
-    if (wahlbezirkID && wahlID) {
-      if (wahlbezirkID) {
-        await saveBedenklicheStimmzettel(
-          wahlID,
-          wahlbezirkID,
-          bedenklicheStimmzettel.value,
-          true
-        );
-      }
+    if (wahlbezirkID) {
+      await saveBedenklicheStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        bedenklicheStimmzettel.value,
+        true
+      );
       setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E);
       await router.push(getNextRoute());
     }

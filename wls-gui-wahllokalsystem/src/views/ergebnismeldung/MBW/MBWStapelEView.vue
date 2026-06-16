@@ -10,13 +10,14 @@
       <v-tab
         value="one"
         :prepend-icon="isMBWBedenklicheStimmzettelDone ? `$valid` : `$edit`"
-        data-test="wahlbriefe-zulassen-tab"
+        data-test="bedenkliche-stimmzettel-eingabe-tab"
       >
         Bedenkliche Stimmzettel beschließen
       </v-tab>
       <v-tab
         value="two"
         prepend-icon="$summary"
+        data-test="bedenkliche-stimmzettel-zusammenfassung-tab"
       >
         Beschlussergebnis
       </v-tab>

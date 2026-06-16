@@ -22,7 +22,7 @@
       <tr>
         <td>Ungültige Stimmzettel</td>
         <td>
-          {{ anzahlTngueltigeStimmzettel }}
+          {{ anzahlUngueltigeStimmzettel }}
         </td>
       </tr>
       <tr class="bg-grey-lighten-3">
@@ -56,13 +56,15 @@ const anzahlTeilweiseGueltigeStimmzettel = computed(() => {
   ).length;
 });
 
-const anzahlTngueltigeStimmzettel = computed(() => {
+const anzahlUngueltigeStimmzettel = computed(() => {
   return props.bedenklicheStimmzettel.filter(
     (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
   ).length;
 });
 
 const anzahlGesamtStimmzettel = computed(() => {
-  return props.bedenklicheStimmzettel.length;
+  return props.bedenklicheStimmzettel.filter(
+      (stimmzettel) => !!stimmzettel.validity
+  ).length;
 });
 </script>

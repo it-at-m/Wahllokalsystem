@@ -14,9 +14,10 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 const { addNotification } = useUserNotificationService();
-const { setStepDone } = useWorkflowStore();
 
 export function useBedenklicheStimmzettelService() {
+  const { setStepDone } = useWorkflowStore();
+
   const ergebnisMeldungConfiguration = new Configuration({
     basePath: ERGEBNISMELDUNG_SERVICE_API_URL,
   });

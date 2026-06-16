@@ -58,6 +58,9 @@ export function useBedenklicherStimmzettelMapper() {
   function toDTO(
     bedenklicherStimmzettel: BedenklicherStimmzettel
   ): BedenklicherStimmzettelDTO {
+    if (!bedenklicherStimmzettel.validity) {
+      throw new Error("Validity ungültig");
+    }
     return {
       orderIndex: bedenklicherStimmzettel.orderIndex,
       supplements: _supplementsModelArrayToDtoArray(
@@ -88,8 +91,38 @@ export function useBedenklicherStimmzettelMapper() {
     );
   }
 
+  function validityEnumToDisplayString(
+    gueltigkeit: ValidityEnum | null
+  ): string {
+    switch (gueltigkeit) {
+      case ValidityEnum.INVALID:
+        return "Komplett ungültig";
+      case ValidityEnum.PARTIAL_VALID:
+        return "Teilweise gültig";
+      case ValidityEnum.VALID:
+        return "Gültig";
+      default:
+        return "";
+    }
+  }
+
+  function supplementEnumToDisplayString(
+    zusatz: SupplementEnum | null
+  ): string {
+    switch (zusatz) {
+      case SupplementEnum.TOO_MANY_LISTENKREUZE:
+        return "Zu viele Listenkreuze";
+      case SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES:
+        return "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten";
+      default:
+        return "";
+    }
+  }
+
   return {
     toModel,
     toDTO,
+    validityEnumToDisplayString,
+    supplementEnumToDisplayString,
   };
 }

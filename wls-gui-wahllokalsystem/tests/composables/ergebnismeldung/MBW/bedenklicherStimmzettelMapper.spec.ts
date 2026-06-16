@@ -227,4 +227,42 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       });
     });
   });
+
+  describe("validityEnumToDisplayString", () => {
+    it.each([
+      { enumValue: ValidityEnum.INVALID, expected: "Komplett ungültig" },
+      { enumValue: ValidityEnum.PARTIAL_VALID, expected: "Teilweise gültig" },
+      { enumValue: ValidityEnum.VALID, expected: "Gültig" },
+      { enumValue: null, expected: "" },
+    ])(
+        "should_return_'$expected'_when_enumIs_'$enumValue'",
+        ({ enumValue, expected }) => {
+          const result = unitUnderTest.validityEnumToDisplayString(enumValue);
+          expect(result).toBe(expected);
+        }
+    );
+  });
+
+  describe("supplementEnumToDisplayString", () => {
+    it.each([
+      {
+        enumValue: SupplementEnum.TOO_MANY_LISTENKREUZE,
+        expected: "Zu viele Listenkreuze",
+      },
+      {
+        enumValue: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
+        expected: "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
+      },
+      {
+        enumValue: null,
+        expected: "",
+      },
+    ])(
+        "should_return_'$expected'_when_enumIs_'$enumValue'",
+        ({ enumValue, expected }) => {
+          const result = unitUnderTest.supplementEnumToDisplayString(enumValue);
+          expect(result).toBe(expected);
+        }
+    );
+  });
 });

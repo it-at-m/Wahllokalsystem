@@ -21,13 +21,15 @@
                 {{ ungueltigeStimmzettelNachBeschluss }}
               </td>
             </tr>
+          </tbody>
+          <tfoot>
             <tr>
               <td class="font-weight-bold">Summe ungültiger Stimmzettel</td>
               <td class="font-weight-bold text-end">
                 {{ summeUngueltigerStimmzettel }}
               </td>
             </tr>
-          </tbody>
+          </tfoot>
         </v-table>
       </v-card-text>
       <v-card-actions>

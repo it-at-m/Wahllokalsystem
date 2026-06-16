@@ -89,7 +89,7 @@ function onSaveClicked() {
 
 <style scoped>
 .ungueltigeStimmzettelTable {
-  max-width: 600px;
+  max-width: 30rem;
 }
 
 .descriptionCol {

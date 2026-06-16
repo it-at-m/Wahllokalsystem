@@ -86,10 +86,9 @@ function onDeleteIcon(
     dialogValidity.value = validityEnumToDisplayString(validity);
 
     if (supplements.length > 0) {
-      dialogSupplements.value =
-        supplements
-          .map((supplement) => supplementEnumToDisplayString(supplement))
-          .join(", ");
+      dialogSupplements.value = supplements
+        .map((supplement) => supplementEnumToDisplayString(supplement))
+        .join(", ");
     } else {
       dialogSupplements.value = "-";
     }

@@ -42,7 +42,8 @@ vi.mock(
       toModel: mockDefinitions.toModel,
       toDTO: mockDefinitions.toDTO,
       validityEnumToDisplayString: mockDefinitions.validityEnumToDisplayString,
-      supplementEnumToDisplayString: mockDefinitions.supplementEnumToDisplayString,
+      supplementEnumToDisplayString:
+        mockDefinitions.supplementEnumToDisplayString,
     }),
   })
 );

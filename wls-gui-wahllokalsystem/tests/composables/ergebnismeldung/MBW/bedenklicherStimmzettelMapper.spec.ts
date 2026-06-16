@@ -235,11 +235,11 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       { enumValue: ValidityEnum.VALID, expected: "Gültig" },
       { enumValue: null, expected: "" },
     ])(
-        "should_return_'$expected'_when_enumIs_'$enumValue'",
-        ({ enumValue, expected }) => {
-          const result = unitUnderTest.validityEnumToDisplayString(enumValue);
-          expect(result).toBe(expected);
-        }
+      "should_return_'$expected'_when_enumIs_'$enumValue'",
+      ({ enumValue, expected }) => {
+        const result = unitUnderTest.validityEnumToDisplayString(enumValue);
+        expect(result).toBe(expected);
+      }
     );
   });
 
@@ -251,18 +251,19 @@ describe("bedenklicherStimmzettelMapper.ts", () => {
       },
       {
         enumValue: SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES,
-        expected: "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
+        expected:
+          "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
       },
       {
         enumValue: null,
         expected: "",
       },
     ])(
-        "should_return_'$expected'_when_enumIs_'$enumValue'",
-        ({ enumValue, expected }) => {
-          const result = unitUnderTest.supplementEnumToDisplayString(enumValue);
-          expect(result).toBe(expected);
-        }
+      "should_return_'$expected'_when_enumIs_'$enumValue'",
+      ({ enumValue, expected }) => {
+        const result = unitUnderTest.supplementEnumToDisplayString(enumValue);
+        expect(result).toBe(expected);
+      }
     );
   });
 });

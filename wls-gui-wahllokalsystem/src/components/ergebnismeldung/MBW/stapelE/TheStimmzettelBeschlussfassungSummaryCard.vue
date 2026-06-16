@@ -64,7 +64,7 @@ const anzahlUngueltigeStimmzettel = computed(() => {
 
 const anzahlGesamtStimmzettel = computed(() => {
   return props.bedenklicheStimmzettel.filter(
-      (stimmzettel) => !!stimmzettel.validity
+    (stimmzettel) => !!stimmzettel.validity
   ).length;
 });
 </script>

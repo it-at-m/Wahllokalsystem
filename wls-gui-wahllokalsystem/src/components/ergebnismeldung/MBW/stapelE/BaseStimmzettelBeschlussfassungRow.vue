@@ -22,8 +22,8 @@
         </v-col>
         <v-col cols="5">
           <v-checkbox
-            class="text-no-wrap"
             v-model="ereignisModel.supplements"
+            class="text-no-wrap"
             :disabled="supplementSelectionDisabled"
             :label="
               supplementEnumToDisplayString(
@@ -42,9 +42,11 @@
             hide-details
           >
             <template #label>
-              <span class="text-no-wrap"> {{
+              <span class="text-no-wrap">
+                {{
                   supplementEnumToDisplayString(
-                SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES)
+                    SupplementEnum.TOO_MANY_SINGLE_KANDIDAT_VOTES
+                  )
                 }}
               </span>
             </template>

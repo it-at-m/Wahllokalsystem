@@ -655,22 +655,22 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .beanstandeteWahlbriefe([
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
             null,
             null,
             ZurueckweisungsgrundEnum.ScheinUngueltig,
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
           ])
           .build(),
       ];
 
       const summen =
         unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende;
-      const summeLoseStimmzettel = summen.find(
-        (summe) => summe.grund === ZurueckweisungsgrundEnum.LoseStimmzettel
+      const summeKeinOriginalSchein = summen.find(
+        (summe) => summe.grund === ZurueckweisungsgrundEnum.KeinOriginalSchein
       );
-      expect(summeLoseStimmzettel?.summen).toStrictEqual([3]);
+      expect(summeKeinOriginalSchein?.summen).toStrictEqual([3]);
     });
   });
 

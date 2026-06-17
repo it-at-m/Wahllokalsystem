@@ -4,7 +4,6 @@ export const ZurueckweisungsgrundEnum = {
   KeinOriginalSchein: "KEIN_ORIGINAL_SCHEIN",
   UnterschriftFehlt: "UNTERSCHRIFT_FEHLT",
   UmschlagFehlt: "UMSCHLAG_FEHLT",
-  LoseStimmzettel: "LOSE_STIMMZETTEL",
   WahlbriefUndUmschlagOffen: "WAHLBRIEF_UND_UMSCHLAG_OFFEN",
   ScheineUngleichUmschlaege: "SCHEINE_UNGLEICH_UMSCHLAEGE",
   UmschlagNichtAmtlich: "UMSCHLAG_NICHT_AMTLICH",

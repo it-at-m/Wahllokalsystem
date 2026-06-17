@@ -177,9 +177,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
     describe("onMounted", () => {
       it.each([
         ZurueckweisungsgrundEnum.Zugelassen,
-        ZurueckweisungsgrundEnum.LoseStimmzettel,
         ZurueckweisungsgrundEnum.UmschlagFehlt,
-        ZurueckweisungsgrundEnum.LoseStimmzettel,
         ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen,
         ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege,
         ZurueckweisungsgrundEnum.UmschlagNichtAmtlich,
@@ -377,7 +375,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
           await nextTick();
 
           const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
-          const newZurueckweisungsgrund = "Lose Stimmzettel";
+          const newZurueckweisungsgrund = "Gegenstand im Stimmzettelumschlag";
 
           const stimmzettelInputWahl1Row0 = wrapper.findComponent<
             typeof VAutocomplete

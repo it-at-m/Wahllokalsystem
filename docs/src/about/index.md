@@ -270,7 +270,7 @@ Der Wahlvorstand kann über jeden bedenklichen Wahlbrief einen individuellen Bes
 Gültigkeit des gesamten Wahlscheins und anschließend der einzelnen Stimmzettelumschläge unterschieden. Ein Wahlschein
 kann die Werte `Zugelassen`, `Wahlschein ungültig laut Liste`, `Kein Original-Wahlschein`, oder `Unterschrift auf
 Wahlschein fehlt` haben. Für die Stimmzettelumschläge gibt es die Zurückweisungsgründe `Zugelassen`,
-`Stimmzettelumschlag fehlt`, `Lose Stimmzettel`, `Wahlbrief und Stimmzettelumschlag offen`, `Wahlscheine ungleich
+`Stimmzettelumschlag fehlt`, `Wahlbrief und Stimmzettelumschlag offen`, `Wahlscheine ungleich
 Stimmzettelumschläge`, `Nicht-amtlicher Stimmzettelumschlag`, `Stimmzettelumschlag gefährdet Wahlgeheimnis`, `Gegenstand
 im Stimmzettelumschlag` oder `Für diese Wahl nicht wahlberechtigt`.
 

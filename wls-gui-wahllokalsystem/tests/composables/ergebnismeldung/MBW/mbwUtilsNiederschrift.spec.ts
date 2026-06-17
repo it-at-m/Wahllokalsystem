@@ -277,6 +277,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       })
       .ergebnisse([])
       .build();
+    const ergebnisStapelD = 7;
     const ergebnisseD = prepareErgebnisse()
       .bezirkUndWahlIDStapelart({
         wahlID,
@@ -288,7 +289,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
           wahlvorschlagID: wahlvorschlag1.identifikator,
           kandidatID: null,
           wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
-          ergebnis: 7,
+          ergebnis: ergebnisStapelD,
           numIndex: null,
         },
       ])
@@ -373,7 +374,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisStapelD,
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,
@@ -555,6 +556,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       })
       .ergebnisse([])
       .build();
+    const ergebnisStapelD = 7;
     const ergebnisseD = prepareErgebnisse()
       .bezirkUndWahlIDStapelart({
         wahlID,
@@ -566,7 +568,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
           wahlvorschlagID: wahlvorschlag1.identifikator,
           kandidatID: null,
           wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
-          ergebnis: 7,
+          ergebnis: ergebnisStapelD,
           numIndex: null,
         },
       ])
@@ -634,7 +636,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisStapelD,
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,

@@ -38,4 +38,4 @@ einzelnen Feld würde eine komplexe Löschlogik erfordern. Zusätzlich wurde die
 unübersichtlich empfunden.
 Nach fachlicher Abstimmung wird hier deshalb auf die Löschbuttons verzichtet.  
 
-Ähnliches gilt für den Beschluss der bedenklichen Wahlzettel. 
+Ähnliches gilt für den Beschluss der bedenklichen Wahlzettel.

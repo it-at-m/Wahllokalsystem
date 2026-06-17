@@ -2,8 +2,6 @@ import type { Component } from "vue";
 
 import { defineComponent, h, KeepAlive } from "vue";
 
-import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
-
 export function createKeepAliveComponent(
   wahlId: string,
   wahlbezirkId: string,

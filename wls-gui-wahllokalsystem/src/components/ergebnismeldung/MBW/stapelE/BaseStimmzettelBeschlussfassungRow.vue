@@ -9,10 +9,11 @@
       <v-row>
         <v-col cols="4">
           <v-autocomplete
+            ref="validityAutocompleteRef"
             v-model="ereignisModel.validity"
             item-title="title"
             item-value="value"
-            label="Gueltigkeit"
+            label="Gültigkeit"
             :items="validityDropdownItems"
             auto-select-first
             :clearable="false"
@@ -70,23 +71,23 @@
       cols="1"
       class="d-flex justify-end align-self-start"
     >
-      <the-stimmzettel-beschlussfassung-row-status-icon
+      <base-stimmzettel-beschlussfassung-row-status-icon
         :index="lineNumber - 1"
         :model-value="ereignisModel"
         class="ma-6"
       />
     </v-col>
-    <v-divider class="ma-3" />
   </v-row>
 </template>
 
 <script setup lang="ts">
 import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 import type { PropType } from "vue";
+import type { VAutocomplete } from "vuetify/components/VAutocomplete";
 
-import { computed, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 
-import TheStimmzettelBeschlussfassungRowStatusIcon from "@/components/ergebnismeldung/MBW/stapelE/TheStimmzettelBeschlussfassungRowStatusIcon.vue";
+import BaseStimmzettelBeschlussfassungRowStatusIcon from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungRowStatusIcon.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useBedenklicherStimmzettelMapper } from "@/composables/ergebnismeldung/MBW/bedenklicherStimmzettelMapper.ts";
 import { SupplementEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/SupplementEnum.ts";
@@ -120,6 +121,10 @@ const supplementSelectionDisabled = computed((): boolean => {
   return ValidityEnum.PARTIAL_VALID !== ereignisModel.value.validity;
 });
 
+const validityAutocompleteRef = ref<InstanceType<typeof VAutocomplete> | null>(
+  null
+);
+
 watch(
   () => ereignisModel.value.validity,
   (newValidity, oldValidity) => {
@@ -139,4 +144,12 @@ const emit = defineEmits<{
 function onDeleteIconClicked() {
   emit("delete", ereignisModel.value);
 }
+
+onMounted(async () => {
+  await nextTick();
+
+  if (validityAutocompleteRef.value) {
+    validityAutocompleteRef.value.focus();
+  }
+});
 </script>

@@ -1,11 +1,11 @@
 <template>
-  <v-card>
+  <div>
     <v-card-text>
       <v-form
         v-model="isFormValid"
         validate-on="input"
       >
-        <the-stimmzettel-beschlussfassung-rows
+        <base-stimmzettel-beschlussfassung-rows
           v-model:bedenkliche-stimmzettel="bedenklicheStimmzettel"
         />
       </v-form>
@@ -39,19 +39,19 @@
         @click="onSave"
       />
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
-import TheStimmzettelBeschlussfassungRows from "@/components/ergebnismeldung/MBW/stapelE/TheStimmzettelBeschlussfassungRows.vue";
+import BaseStimmzettelBeschlussfassungRows from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungRows.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
@@ -93,6 +93,13 @@ function onAddBedenklicherStimmzettelClicked() {
   };
   bedenklicheStimmzettel.value.push(defaultBedenklicherStimmzettelToAdd);
 }
+const emit = defineEmits<{
+  formValid: [newValue: boolean];
+}>();
+
+watch(isFormValid, () => {
+  emit("formValid", isFormValid.value);
+});
 
 async function onSave() {
   try {

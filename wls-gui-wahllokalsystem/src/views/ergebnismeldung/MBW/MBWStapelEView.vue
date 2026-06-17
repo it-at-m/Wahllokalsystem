@@ -26,10 +26,11 @@
       <v-tabs-window-item value="one">
         <the-stimmzettel-beschlussfassung-table
           v-model:bedenkliche-stimmzettel="bedenklicheStimmzettel"
+          @form-valid="(isValid) => updateTableDataValid(isValid)"
         />
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
-        <the-stimmzettel-beschlussfassung-summary-card
+        <base-stimmzettel-beschlussfassung-summary-card
           :bedenkliche-stimmzettel="bedenklicheStimmzettel"
           class="mb-3"
         />
@@ -44,7 +45,7 @@ import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenk
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import TheStimmzettelBeschlussfassungSummaryCard from "@/components/ergebnismeldung/MBW/stapelE/TheStimmzettelBeschlussfassungSummaryCard.vue";
+import BaseStimmzettelBeschlussfassungSummaryCard from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungSummaryCard.vue";
 import TheStimmzettelBeschlussfassungTable from "@/components/ergebnismeldung/MBW/stapelE/TheStimmzettelBeschlussfassungTable.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
@@ -67,12 +68,19 @@ const { logError } = useLogging("mbwStapelEView");
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+const isTableDataValid = ref<boolean>(true);
 
 const tab = ref(null);
 
-const isMBWBedenklicheStimmzettelDone = computed(() =>
-  isStepDone(wahlID, wahlbezirkID ?? "", MbwRoutesEnum.MBW_STAPEL_E)
+const isMBWBedenklicheStimmzettelDone = computed(
+  () =>
+    isStepDone(wahlID, wahlbezirkID ?? "", MbwRoutesEnum.MBW_STAPEL_E) &&
+    isTableDataValid.value
 );
+
+function updateTableDataValid(isValid: boolean) {
+  isTableDataValid.value = isValid;
+}
 
 if (!wahl) {
   router.push({
@@ -85,7 +93,8 @@ onMounted(async () => {
     try {
       const loadedBedenklicheStimmzettel = await getBedenklicheStimmzettel(
         wahlID,
-        wahlbezirkID
+        wahlbezirkID,
+        false
       );
       if (
         loadedBedenklicheStimmzettel &&

@@ -1,17 +1,27 @@
 <template>
   <div>
-    <base-stimmzettel-beschlussfassung-row
+    <div
       v-for="(bedenklicherStimmzettel, index) in bedenklicheStimmzettel"
       :key="index"
-      :model-value="bedenklicherStimmzettel"
-      :line-number="index + 1"
-      @delete="
-        (bedenklicherStimmzettelPayload) =>
-          onDeleteIcon(index, bedenklicherStimmzettelPayload)
-      "
-    />
+    >
+      <base-stimmzettel-beschlussfassung-row
+        :key="index + 'row'"
+        :model-value="bedenklicherStimmzettel"
+        :line-number="index + 1"
+        @delete="
+          (bedenklicherStimmzettelPayload) =>
+            onDeleteIcon(index, bedenklicherStimmzettelPayload)
+        "
+      />
+      <v-divider
+        v-if="index < bedenklicheStimmzettel.length - 1"
+        :key="'divider' + index"
+        class="ma-3"
+      />
+    </div>
+
     <base-dialog
-      :visible="deleteDialog"
+      :visible="isDeleteDialogVisible"
       dialogtitle="Bedenklichen Stimmzettel löschen"
       confirmtext="Ja"
       canceltext="Nein"
@@ -24,18 +34,18 @@
         Werte erfasst haben. Wenn Sie das Löschen der Zeile fortsetzen, werden
         folgende Werte gelöscht
       </div>
-      Zu löschende Zeile: Stimmzettel Nummer {{ dialogOrderIndex }}
+      Zu löschende Zeile: Stimmzettel Nummer {{ deleteDialogTextOrderIndex }}
 
       <div>
         <v-table striped="even">
           <tbody>
             <tr>
               <td class="context-category">Gültigkeit</td>
-              <td class="text-left">{{ dialogValidity }}</td>
+              <td class="text-left">{{ deleteDialogTextValidity }}</td>
             </tr>
             <tr>
               <td class="context-category">Zusätze</td>
-              <td class="text-left">{{ dialogSupplements }}</td>
+              <td class="text-left">{{ deleteDialogTextSupplements }}</td>
             </tr>
           </tbody>
         </v-table>
@@ -61,19 +71,19 @@ const bedenklicheStimmzettel = defineModel<BedenklicherStimmzettel[]>(
 );
 const { validityEnumToDisplayString, supplementEnumToDisplayString } =
   useBedenklicherStimmzettelMapper();
-const deleteDialog = ref(false);
+const isDeleteDialogVisible = ref(false);
 const deleteIndex = ref<number | null>(null);
-const dialogOrderIndex = ref(-1);
-const dialogValidity = ref("");
-const dialogSupplements = ref("");
+const deleteDialogTextOrderIndex = ref(-1);
+const deleteDialogTextValidity = ref("");
+const deleteDialogTextSupplements = ref("");
 
 function closeDeleteDialog() {
-  deleteDialog.value = false;
+  isDeleteDialogVisible.value = false;
 }
 
 function showDeleteDialog(index: number) {
   deleteIndex.value = index;
-  deleteDialog.value = true;
+  isDeleteDialogVisible.value = true;
 }
 
 function onDeleteIcon(
@@ -82,15 +92,15 @@ function onDeleteIcon(
 ) {
   const { validity, supplements } = bedenklicherStimmzettelPayload;
   if (validity) {
-    dialogOrderIndex.value = index + 1;
-    dialogValidity.value = validityEnumToDisplayString(validity);
+    deleteDialogTextOrderIndex.value = index + 1;
+    deleteDialogTextValidity.value = validityEnumToDisplayString(validity);
 
     if (supplements.length > 0) {
-      dialogSupplements.value = supplements
+      deleteDialogTextSupplements.value = supplements
         .map((supplement) => supplementEnumToDisplayString(supplement))
         .join(", ");
     } else {
-      dialogSupplements.value = "-";
+      deleteDialogTextSupplements.value = "-";
     }
 
     showDeleteDialog(index);

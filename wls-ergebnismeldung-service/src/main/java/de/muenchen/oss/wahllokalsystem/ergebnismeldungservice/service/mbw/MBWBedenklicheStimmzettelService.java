@@ -58,4 +58,21 @@ public class MBWBedenklicheStimmzettelService {
           ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED);
     }
   }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public boolean hasBedenklicheStimmzettel(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
+    val bedenklicheStimmzettel = repository.findById(bezirkUndWahlID);
+    return bedenklicheStimmzettel.isPresent();
+  }
+
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public long getAnzahlUngueltigeBedenklicheStimmzettel(
+      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
+    return repository.countInvalidBedenklicheStimmzettelForWahlbezirkIDAndWahlID(
+        bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
+  }
 }

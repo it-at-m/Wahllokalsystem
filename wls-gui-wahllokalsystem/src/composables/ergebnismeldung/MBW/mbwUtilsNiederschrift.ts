@@ -300,7 +300,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
         );
 
         return (
-          (loadedErgebnisse?.ergebnisse.length ?? 0) +
+          (loadedErgebnisse?.ergebnisse[0]?.ergebnis ?? 0) +
           ungueltigeBedenklicheStimmzettel.length
         );
       } catch (error) {

@@ -6,7 +6,9 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Wah
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.DefaultElectionTypeValidator;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.ElectionTypeValidation;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class MbwValidationImpl implements ElectionTypeValidation {
 
   private final DefaultElectionTypeValidator validator;
+
+  private final MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
 
   @Override
   public boolean supportsWahlart(final WahlartModel wahlart) {
@@ -33,7 +37,8 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       throws WlsException {
     val necessaryStacks = buildNecessaryStack();
     return validator.checkValidation(
-        WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
+            WahlbezirkArtModel.UWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks)
+        && hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
   }
 
   @Override
@@ -45,7 +50,8 @@ public class MbwValidationImpl implements ElectionTypeValidation {
       throws WlsException {
     val necessaryStacks = buildNecessaryStack();
     return validator.checkValidation(
-        WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks);
+            WahlbezirkArtModel.BWB, wahlbezirkID, wahlID, waehlerverzeichnisNummer, necessaryStacks)
+        && hasBedenklicheStimmzettel(wahlbezirkID, wahlID);
   }
 
   private List<Stapelart> buildNecessaryStack() {
@@ -54,5 +60,10 @@ public class MbwValidationImpl implements ElectionTypeValidation {
     necessaryStacks.add(Stapelart.MBW_B);
     necessaryStacks.add(Stapelart.MBW_D_UNGUELTIG);
     return necessaryStacks;
+  }
+
+  private boolean hasBedenklicheStimmzettel(final String wahlbezirkID, final String wahlID) {
+    return mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(
+        new BezirkUndWahlID(wahlID, wahlbezirkID));
   }
 }

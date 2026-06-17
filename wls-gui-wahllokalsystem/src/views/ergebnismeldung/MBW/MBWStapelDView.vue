@@ -13,7 +13,7 @@ import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 import type { Ergebnisse } from "@/types/ergebnismeldung/common/Ergebnisse.ts";
 import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
@@ -82,10 +82,20 @@ onMounted(async () => {
       if (loadedErgebnisse?.ergebnisse[0]) {
         ergebnis.value = loadedErgebnisse?.ergebnisse[0];
       }
+    } catch (error) {
+      logError("Fehler beim Laden der Ergebnisse: ", error);
+      throw error;
+    }
+  }
+});
+
+onActivated(async () => {
+  if (wahlbezirkID) {
+    try {
       bedenklicheStimmzettel.value =
         (await getBedenklicheStimmzettel(wahlID, wahlbezirkID, false)) ?? [];
     } catch (error) {
-      logError("Fehler beim Laden der Ergebnisse: ", error);
+      logError("Fehler beim Laden der bedenklichen Stimmzettel: ", error);
       throw error;
     }
   }

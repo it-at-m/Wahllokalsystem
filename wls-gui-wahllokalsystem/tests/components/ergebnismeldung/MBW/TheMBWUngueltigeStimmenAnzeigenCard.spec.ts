@@ -1,10 +1,10 @@
 import type { VueWrapper } from "@vue/test-utils";
 
+import { createKeepAliveComponent } from "@tests/utils/components/keepAliveComponent.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, h, KeepAlive } from "vue";
 
 import TheMBWUngueltigeStimmenAnzeigenCard from "@/components/ergebnismeldung/MBW/stapelC/TheMBWUngueltigeStimmenAnzeigenCard.vue";
 import pinia from "@/plugins/pinia.ts";
@@ -63,7 +63,8 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   it("should_LoadData_when_mountedAndRequestReturnsErgebnisse", async () => {
     const keepAliveWrapperComponent = createKeepAliveComponent(
       wahlId,
-      wahlbezirkId
+      wahlbezirkId,
+      TheMBWUngueltigeStimmenAnzeigenCard
     );
 
     mockDefinitions.getErgebnisse.mockReturnValue(
@@ -114,7 +115,8 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
   it("should_setDataTo0_when_mountedAndRequestReturnsNoErgebnisse", async () => {
     const keepAliveWrapperComponent = createKeepAliveComponent(
       wahlId,
-      wahlbezirkId
+      wahlbezirkId,
+      TheMBWUngueltigeStimmenAnzeigenCard
     );
 
     mockDefinitions.getErgebnisse.mockReturnValue(null);
@@ -146,17 +148,3 @@ describe("TheMBWUngueltigeStimmenAnzeigenCard.vue", () => {
     ).toBe(0);
   });
 });
-
-function createKeepAliveComponent(wahlId: string, wahlbezirkId: string) {
-  return defineComponent({
-    render() {
-      return h(KeepAlive, null, {
-        default: () =>
-          h(TheMBWUngueltigeStimmenAnzeigenCard, {
-            wahlId,
-            wahlbezirkId,
-          }),
-      });
-    },
-  });
-}

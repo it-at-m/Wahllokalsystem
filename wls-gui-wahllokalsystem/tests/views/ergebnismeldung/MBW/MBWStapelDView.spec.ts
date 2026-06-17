@@ -1,5 +1,6 @@
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
+import { createKeepAliveComponent } from "@tests/utils/components/keepAliveComponent.ts";
 import {
   COMPONENT_EVENT_TESTS,
   mockAndStubResizeObserver,
@@ -114,7 +115,12 @@ describe("MBWStapelDView", () => {
   });
 
   beforeEach(() => {
-    wrapper = mount(MBWStapelDView, {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      "wahlID",
+      "wahlbezirkID",
+      MBWStapelDView
+    );
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify, router] },
     });
   });

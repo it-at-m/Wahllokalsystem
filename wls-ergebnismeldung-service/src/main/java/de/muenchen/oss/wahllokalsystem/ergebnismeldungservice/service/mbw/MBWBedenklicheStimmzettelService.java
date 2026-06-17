@@ -58,4 +58,14 @@ public class MBWBedenklicheStimmzettelService {
           ExceptionConstants.POST_BEDENKLICHE_STIMMZETTEL_SAVING_FAILED);
     }
   }
+
+  public boolean hasBedenklicheStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+    val bedenklicheStimmzettel = repository.findById(bezirkUndWahlID);
+    return bedenklicheStimmzettel.isPresent();
+  }
+
+  public long getAnzahlUngueltigeBedenklicheStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+    return repository.countInvalidBedenklicheStimmzettelForWahlbezirkIDAndWahlID(
+        bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
+  }
 }

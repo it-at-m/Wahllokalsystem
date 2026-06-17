@@ -59,12 +59,19 @@ public class MBWBedenklicheStimmzettelService {
     }
   }
 
-  public boolean hasBedenklicheStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public boolean hasBedenklicheStimmzettel(@P("param") final BezirkUndWahlID bezirkUndWahlID) {
     val bedenklicheStimmzettel = repository.findById(bezirkUndWahlID);
     return bedenklicheStimmzettel.isPresent();
   }
 
-  public long getAnzahlUngueltigeBedenklicheStimmzettel(final BezirkUndWahlID bezirkUndWahlID) {
+  @PreAuthorize(
+      "hasAuthority('Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param?.getWahlbezirkID(), authentication)")
+  public long getAnzahlUngueltigeBedenklicheStimmzettel(
+      @P("param") final BezirkUndWahlID bezirkUndWahlID) {
     return repository.countInvalidBedenklicheStimmzettelForWahlbezirkIDAndWahlID(
         bezirkUndWahlID.getWahlbezirkID(), bezirkUndWahlID.getWahlID());
   }

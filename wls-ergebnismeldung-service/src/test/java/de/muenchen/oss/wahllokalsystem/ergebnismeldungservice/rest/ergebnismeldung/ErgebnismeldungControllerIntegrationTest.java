@@ -358,6 +358,8 @@ class ErgebnismeldungControllerIntegrationTest {
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE),
+                            new SimpleGrantedAuthority(
+                                Authorities.SERVICE_GET_BEDENKLICHE_STIMMZETTEL),
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE))
                         .jwt(
                             jwt ->

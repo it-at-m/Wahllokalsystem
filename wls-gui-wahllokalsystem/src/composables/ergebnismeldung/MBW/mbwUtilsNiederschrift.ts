@@ -209,7 +209,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
       nichtVerschlossen: 0,
       mehrereStimmzettelumschlaege: 0,
       keinAmtlicherStimmzettelumschlag: 0,
-      loseStimmzettel: 0,
       gegenstandImUmschlag: 0,
       gefaehrdetWahlgeheimnis: 0,
       gesamtMinusZugelassen: 0,
@@ -242,11 +241,6 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           beanstandeteWahlbriefe.gesamt++;
           beanstandeteWahlbriefe.gesamtMinusZugelassen++;
           beanstandeteWahlbriefe.keinStimmzettelumschlag++;
-          break;
-        case ZurueckweisungsgrundEnum.LoseStimmzettel:
-          beanstandeteWahlbriefe.gesamt++;
-          beanstandeteWahlbriefe.gesamtMinusZugelassen++;
-          beanstandeteWahlbriefe.loseStimmzettel++;
           break;
         case ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen:
           beanstandeteWahlbriefe.gesamt++;
@@ -296,7 +290,7 @@ export function useMbtUtilsNiederschrift(wahlID: string, wahlbezirkID: string) {
           "MBW_D_UNGUELTIG",
           false
         );
-        return loadedErgebnisse?.ergebnisse.length;
+        return loadedErgebnisse?.ergebnisse[0]?.ergebnis ?? 0;
       } catch (error) {
         logError("Fehler beim Laden der Ergebnisse: ", error);
       }

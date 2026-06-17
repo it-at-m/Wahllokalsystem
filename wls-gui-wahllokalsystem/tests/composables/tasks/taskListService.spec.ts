@@ -33,6 +33,7 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksWahlvorschlaege: vi.fn(),
   createTasksErgebnisse: vi.fn(),
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
+  createTasksStapelE: vi.fn(),
 }));
 
 vi.mock(
@@ -249,6 +250,15 @@ vi.mock(
   })
 );
 
+vi.mock(
+  import("@/composables/tasks/taskFactories/stapelETaskFactory.ts"),
+  () => ({
+    useStapelETaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStapelE,
+    })),
+  })
+);
+
 describe("taskListService.ts", () => {
   let unitUnderTest: ReturnType<typeof useTaskListService>;
   const { generateRandomString, generateRandomNumber } =
@@ -310,6 +320,7 @@ describe("taskListService.ts", () => {
         "Druckstatus - " + mockedWahl.name,
         "Wahlvorbereitung",
         "MBW Tasks",
+        "Stapel E Tasks",
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -350,6 +361,7 @@ describe("taskListService.ts", () => {
         "Erfasste Wahlbriefe",
         "Zugelassene Wahlbriefe",
         "MBW Tasks",
+        "Stapel E Tasks",
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -429,6 +441,12 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksAWerte.mockReturnValue([
         {
           name: "AWerte",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStapelE.mockReturnValue([
+        {
+          name: "Stapel E Tasks",
           callback: () => Promise.resolve(),
         },
       ]);
@@ -525,6 +543,12 @@ describe("taskListService.ts", () => {
           },
         ]
       );
+      mockDefinitions.createTasksStapelE.mockReturnValue([
+        {
+          name: "Stapel E Tasks",
+          callback: () => Promise.resolve(),
+        },
+      ]);
     }
 
     function _expectAllTaskFactoriesHaveBeenCalled() {

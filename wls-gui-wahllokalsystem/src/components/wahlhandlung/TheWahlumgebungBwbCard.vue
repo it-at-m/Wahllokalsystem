@@ -19,18 +19,16 @@
             :label="checkboxLabelText"
             data-test="checkboxAlleVersiegelt"
           />
-          <v-card-actions>
-            <base-wls-button-save
-              :disabled="isSaveButtonDisabled"
-              :loading="
-                briefwahlVorbereitungState.briefWahlVorbereitungIsSaving
-              "
-              :save-text="SAVE_CONTINUE"
-              @click="onSaveWahlumgebungBWBClicked"
-            />
-          </v-card-actions>
         </v-form>
       </v-card-text>
+      <v-card-actions>
+        <base-wls-button-save
+          :disabled="isSaveButtonDisabled"
+          :loading="briefwahlVorbereitungState.briefWahlVorbereitungIsSaving"
+          :save-text="SAVE_CONTINUE"
+          @click="onSaveWahlumgebungBWBClicked"
+        />
+      </v-card-actions>
     </v-card>
   </div>
 </template>

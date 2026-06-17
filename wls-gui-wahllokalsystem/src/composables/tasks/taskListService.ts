@@ -12,6 +12,7 @@ import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbu
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
 import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts";
+import { useStapelETaskFactory } from "@/composables/tasks/taskFactories/stapelETaskFactory.ts";
 import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
 import { useStimmabgabevermerkeTaskFactory } from "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts";
 import { useStimmzettelumschlaegeTaskFactory } from "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts";
@@ -65,6 +66,7 @@ export function useTaskListService() {
     useBeanstandeteWahlbriefeTaskFactory();
   const { createTasks: createMbwWahlvorschlaegeAndErgebnisseTasks } =
     useMBWWahlvorschlaegeAndErgebnisseTaskFactory();
+  const { createTasks: createStapelETasks } = useStapelETaskFactory();
 
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
@@ -91,6 +93,7 @@ export function useTaskListService() {
       ...createWahlbriefeTasks(taskFactoryData),
       ...createBeanstandeteWahlbriefeTask(taskFactoryData),
       ...createMbwWahlvorschlaegeAndErgebnisseTasks(taskFactoryData),
+      ...createStapelETasks(taskFactoryData),
     ];
   }
 

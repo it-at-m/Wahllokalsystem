@@ -37,3 +37,5 @@ Bei der Zulassung der Wahlbriefe gibt es verschiedene Querbezüge zwischen den F
 einzelnen Feld würde eine komplexe Löschlogik erfordern. Zusätzlich wurde die Tabelle mit den vielen Löschbuttons als
 unübersichtlich empfunden.
 Nach fachlicher Abstimmung wird hier deshalb auf die Löschbuttons verzichtet.  
+
+Ähnliches gilt für den Beschluss der bedenklichen Wahlzettel. 

@@ -14,7 +14,6 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
 const { addNotification } = useUserNotificationService();
-const { setStepDone } = useWorkflowStore();
 
 export function useBedenklicheStimmzettelService() {
   const ergebnisMeldungConfiguration = new Configuration({
@@ -45,7 +44,11 @@ export function useBedenklicheStimmzettelService() {
 
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData) {
-        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E);
+        useWorkflowStore().setStepDone(
+          wahlID,
+          wahlbezirkID,
+          MbwRoutesEnum.MBW_STAPEL_E
+        );
         return responseData.map((dto) => toModel(dto));
       } else {
         return null;
@@ -77,7 +80,11 @@ export function useBedenklicheStimmzettelService() {
         wahlbezirkID,
         dtoToSend
       );
-      setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E);
+      useWorkflowStore().setStepDone(
+        wahlID,
+        wahlbezirkID,
+        MbwRoutesEnum.MBW_STAPEL_E
+      );
       if (sendNotification) {
         addNotification(
           "Speichern der bedenklichen Stimmzettel erfolgreich",

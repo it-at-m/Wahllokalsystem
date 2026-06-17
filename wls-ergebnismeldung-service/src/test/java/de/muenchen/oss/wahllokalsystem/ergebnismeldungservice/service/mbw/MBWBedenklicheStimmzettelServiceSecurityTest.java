@@ -160,4 +160,128 @@ class MBWBedenklicheStimmzettelServiceSecurityTest {
           .isInstanceOf(AccessDeniedException.class);
     }
   }
+
+  @Nested
+  class HasBedenklicheStimmzettel {
+    private static final String REQUIRED_AUTHORITY =
+        Authorities.SERVICE_GET_BEDENKLICHE_STIMMZETTEL;
+
+    @Test
+    void should_throwNoException_when_authorityIsGiven() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY);
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.hasBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)));
+    }
+
+    @Test
+    void should_throwException_when_authorityIsNotGiven() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY + "sthElse");
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.hasBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwException_when_authorityIsGivenButWahlbezirkIDDoesNotMatch() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.hasBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
+
+  @Nested
+  class GetAnzahlUngueltigeBedenklicheStimmzettel {
+    private static final String REQUIRED_AUTHORITY =
+        Authorities.SERVICE_GET_BEDENKLICHE_STIMMZETTEL;
+
+    @Test
+    void should_throwNoException_when_authorityIsGiven() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY);
+      Assertions.assertThatNoException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.getAnzahlUngueltigeBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)));
+    }
+
+    @Test
+    void should_throwException_when_authorityIsNotGiven() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(true);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY + "sthElse");
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.getAnzahlUngueltigeBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwException_when_authorityIsGivenButWahlbezirkIDDoesNotMatch() {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(
+                  Mockito.eq(wahlbezirkID), Mockito.any()))
+          .thenReturn(false);
+
+      SecurityUtils.runWith(REQUIRED_AUTHORITY);
+      Assertions.assertThatException()
+          .isThrownBy(
+              () ->
+                  unitUnderTest.getAnzahlUngueltigeBedenklicheStimmzettel(
+                      new BezirkUndWahlID(wahlID, wahlbezirkID)))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+  }
 }

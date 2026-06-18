@@ -24,6 +24,13 @@ const SUPPLEMENT_MODEL_ENUM_TO_DTO_ENUM: Record<
     BedenklicherStimmzettelDTOSupplementsEnum.SingleKandidatVotes,
 };
 
+const SUPPLEMENT_MODEL_ENUM_TO_DISPLAY_STRING: Record<SupplementEnum, string> =
+  {
+    TOO_MANY_LISTENKREUZE: "Zu viele Listenkreuze",
+    TOO_MANY_SINGLE_KANDIDAT_VOTES:
+      "Mehr als 3 Stimmen bei einer Kandidatin oder einem Kandidaten",
+  };
+
 const VALIDITY_DTO_ENUM_TO_MODEL_ENUM: Record<
   BedenklicherStimmzettelDTOValidityEnum,
   ValidityEnum
@@ -39,6 +46,12 @@ const VALIDITY_MODEL_ENUM_TO_DTO_ENUM: Record<
   VALID: BedenklicherStimmzettelDTOValidityEnum.Valid,
   PARTIAL_VALID: BedenklicherStimmzettelDTOValidityEnum.PartialValid,
   INVALID: BedenklicherStimmzettelDTOValidityEnum.Invalid,
+};
+
+const VALIDITY_MODEL_ENUM_TO_DISPLAY_STRING: Record<ValidityEnum, string> = {
+  VALID: "Gültig",
+  PARTIAL_VALID: "Teilweise gültig",
+  INVALID: "Komplett ungültig",
 };
 
 export function useBedenklicherStimmzettelMapper() {
@@ -58,6 +71,9 @@ export function useBedenklicherStimmzettelMapper() {
   function toDTO(
     bedenklicherStimmzettel: BedenklicherStimmzettel
   ): BedenklicherStimmzettelDTO {
+    if (!bedenklicherStimmzettel.validity) {
+      throw new Error("Validity ungültig");
+    }
     return {
       orderIndex: bedenklicherStimmzettel.orderIndex,
       supplements: _supplementsModelArrayToDtoArray(
@@ -88,8 +104,24 @@ export function useBedenklicherStimmzettelMapper() {
     );
   }
 
+  function validityEnumToDisplayString(
+    gueltigkeit: ValidityEnum | null
+  ): string {
+    if (!gueltigkeit) return "";
+    return VALIDITY_MODEL_ENUM_TO_DISPLAY_STRING[gueltigkeit];
+  }
+
+  function supplementEnumToDisplayString(
+    zusatz: SupplementEnum | null
+  ): string {
+    if (!zusatz) return "";
+    return SUPPLEMENT_MODEL_ENUM_TO_DISPLAY_STRING[zusatz];
+  }
+
   return {
     toModel,
     toDTO,
+    validityEnumToDisplayString,
+    supplementEnumToDisplayString,
   };
 }

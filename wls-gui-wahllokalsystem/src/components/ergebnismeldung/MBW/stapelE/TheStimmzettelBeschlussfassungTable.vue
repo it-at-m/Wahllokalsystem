@@ -12,7 +12,7 @@
       <base-feedback-card
         title="Bearbeitungshinweis"
         type="information"
-        class="mb-2"
+        class="mb-2 mt-5"
       >
         <div>
           <p class="mb-2">

@@ -8,6 +8,7 @@ import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bW
 import { useErgebnismeldungDruckInputTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnismeldungDruckInputTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
+import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { useMbwErgebnisseAndWahlvorschlagTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/mbwErgebnisseAndWahlvorschlagTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
@@ -24,6 +25,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -44,6 +46,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getStatus: vi.fn(),
   postStatus: vi.fn(),
   postAusdruck: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
 
 vi.mock(
@@ -61,6 +64,15 @@ vi.mock(
       }),
     };
   }
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
 );
 vi.mock(
   "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts",
@@ -163,6 +175,8 @@ const { prepareSchnellmeldungDruckInput } =
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm, toYyyyMmDdWithTimeWithoutTimezoneOffset } =
   useDateTimeFormatter();
+const { prepareBedenklicherStimmzettel } =
+  useBedenklicherStimmzettelTestDataFactory();
 
 const mockedNow = new Date();
 
@@ -1179,6 +1193,21 @@ describe("mbwUtils", () => {
         mockedErgebnisseStaplB
       );
 
+      // stapel e
+      const mockedBedenklicheStimmzettel = [
+        prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+        prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+        prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+        prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+        prepareBedenklicherStimmzettel()
+          .validity(ValidityEnum.PARTIAL_VALID)
+          .build(),
+        prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      ];
+      mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+        mockedBedenklicheStimmzettel
+      );
+
       // stapel d
       const ergebnisD1 = createErgebnis();
       const mockedErgebnisseStaplD = prepareErgebnisse()
@@ -1201,7 +1230,7 @@ describe("mbwUtils", () => {
         mockedErgebnisseStaplD
       );
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const expectedUngueltigeStimen = ergebnisD1.ergebnis!;
+      const expectedUngueltigeStimen = ergebnisD1.ergebnis! + 3; //3 von stapel e ungültig
 
       // combined gueltige ergebnisse
       const ergebnisseAndWahlvorschlaege: MbwErgebnisseAndWahlvorschlag[] = [

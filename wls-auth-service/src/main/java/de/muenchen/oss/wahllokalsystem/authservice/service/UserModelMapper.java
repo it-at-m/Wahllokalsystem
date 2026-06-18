@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,14 +19,19 @@ public interface UserModelMapper {
 
   UserModel toModel(User user);
 
-  default Set<String> permissionsOfAuthoritiesToAuthorities(Set<Authority> authorities) {
+  default Set<String> permissionsAndRoleOfAuthoritiesToAuthorities(Set<Authority> authorities) {
     if (authorities == null) {
       return null;
     }
 
     return authorities.stream()
-        .flatMap(authority -> authority.getPermissions().stream())
-        .map(Permission::getPermission)
+        .flatMap(
+            authority -> {
+              Stream<String> perms =
+                  authority.getPermissions().stream().map(Permission::getPermission);
+              Stream<String> role = Stream.of(authority.getAuthority());
+              return Stream.concat(role, perms);
+            })
         .collect(Collectors.toSet());
   }
 

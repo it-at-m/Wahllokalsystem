@@ -14,16 +14,19 @@
         type="information"
         class="mb-2"
       >
-        <p>
-          <strong>Gültige</strong> und
-          <strong>teilweise gültige</strong> Stimmzettel sind bei Stapel
-          <strong>a</strong>, <strong>b</strong> und <strong>c</strong> zu
-          erfassen und anschließend in die Wahlverhandlungstasche zu legen.
-          <br >
-          <strong>Ungültige</strong> Stimmzettel sind bei Stapel
-          <strong>d</strong> zu erfassen und anschließend in die
-          Wahlverhandlungstasche zu legen.
-        </p>
+        <div>
+          <p class="mb-2">
+            <strong>Gültige</strong> und
+            <strong>teilweise gültige</strong> Stimmzettel sind bei Stapel
+            <strong>a</strong>, <strong>b</strong> und <strong>c</strong> zu
+            erfassen und anschließend in die Wahlverhandlungstasche zu legen.
+          </p>
+          <p>
+            <strong>Ungültige</strong> Stimmzettel sind bei Stapel
+            <strong>d</strong> zu erfassen und anschließend in die
+            Wahlverhandlungstasche zu legen.
+          </p>
+        </div>
       </base-feedback-card>
     </v-card-text>
     <v-card-actions>

@@ -477,7 +477,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.3.13.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
@@ -489,7 +489,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.4.14.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>

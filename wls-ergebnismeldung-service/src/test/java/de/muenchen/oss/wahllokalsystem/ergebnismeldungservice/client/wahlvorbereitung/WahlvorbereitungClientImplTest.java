@@ -38,8 +38,7 @@ class WahlvorbereitungClientImplTest {
               urnenwahlSchliessungsUhrzeitControllerApi.getUrnenwahlSchliessungsUhrzeit(
                   wahlbezirkID))
           .thenReturn(
-              new UrnenwahlSchliessungsUhrzeitDTO()
-                  .urnenwahlSchliessungsUhrzeit(LocalDateTime.now()));
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(LocalDateTime.now()));
 
       val result = unitUnderTest.isWahlbezirkGeschlossen(wahlbezirkID);
 
@@ -52,7 +51,7 @@ class WahlvorbereitungClientImplTest {
             throws NoSuchFieldException {
       Assertions.assertThat(
               UrnenwahlSchliessungsUhrzeitDTO.class
-                  .getDeclaredField("urnenwahlSchliessungsUhrzeit")
+                  .getDeclaredField("schliessungsuhrzeit")
                   .getAnnotation(Nonnull.class))
           .isNotNull();
     }

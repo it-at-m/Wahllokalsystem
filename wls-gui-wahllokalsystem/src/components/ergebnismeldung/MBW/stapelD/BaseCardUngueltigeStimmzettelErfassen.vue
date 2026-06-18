@@ -6,17 +6,26 @@
         <v-table class="ungueltigeStimmzettelTable">
           <tbody>
             <tr>
-              <td class="descriptionCol">Anzahl ungültiger Stimmzettel</td>
-              <td class="valueCol">
+              <td
+                class="descriptionCol"
+                style="padding-bottom: 20px"
+              >
+                Anzahl ungültiger Stimmzettel
+              </td>
+              <td class="valueCol pr-0">
                 <base-number-input
                   v-model="modelValue.ergebnis"
                   :rules="[required]"
-                  min-width="5rem"
+                  min-width="11rem"
                 />
               </td>
             </tr>
             <tr>
-              <td>Anzahl ungültiger Stimmzettel nach Beschluss</td>
+              <td>
+                <div class="my-4">
+                  Anzahl ungültiger Stimmzettel nach Beschluss
+                </div>
+              </td>
               <td class="text-end">
                 {{ ungueltigeStimmzettelNachBeschluss }}
               </td>

@@ -19,6 +19,7 @@
           <strong>teilweise gültige</strong> Stimmzettel sind bei Stapel
           <strong>a</strong>, <strong>b</strong> und <strong>c</strong> zu
           erfassen und anschließend in die Wahlverhandlungstasche zu legen.
+          <br >
           <strong>Ungültige</strong> Stimmzettel sind bei Stapel
           <strong>d</strong> zu erfassen und anschließend in die
           Wahlverhandlungstasche zu legen.

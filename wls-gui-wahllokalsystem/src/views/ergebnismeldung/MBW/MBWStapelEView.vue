@@ -9,7 +9,7 @@
     >
       <v-tab
         value="one"
-        :prepend-icon="isMBWBedenklicheStimmzettelDone ? `$valid` : `$edit`"
+        :prepend-icon="isTableDataValid ? `$valid` : `$edit`"
         data-test="bedenkliche-stimmzettel-eingabe-tab"
       >
         Bedenkliche Stimmzettel beschließen
@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import BaseStimmzettelBeschlussfassungSummaryCard from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungSummaryCard.vue";
@@ -52,8 +52,6 @@ import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
 const bedenklicheStimmzettel = ref<BedenklicherStimmzettel[]>([]);
 
@@ -61,7 +59,6 @@ const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const { isStepDone } = useWorkflowStore();
 const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 const { logError } = useLogging("mbwStapelEView");
 
@@ -71,12 +68,6 @@ const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
 const isTableDataValid = ref<boolean>(true);
 
 const tab = ref(null);
-
-const isMBWBedenklicheStimmzettelDone = computed(
-  () =>
-    isStepDone(wahlID, wahlbezirkID ?? "", MbwRoutesEnum.MBW_STAPEL_E) &&
-    isTableDataValid.value
-);
 
 function updateTableDataValid(isValid: boolean) {
   isTableDataValid.value = isValid;

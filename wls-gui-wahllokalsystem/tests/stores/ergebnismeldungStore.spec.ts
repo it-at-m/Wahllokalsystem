@@ -316,7 +316,7 @@ describe("ergebnismeldungStore.ts", () => {
       );
 
       await expect(
-          unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
+        unitUnderTest.loadErgebnisseByStapelArt(wahlID, stapelArt)
       ).rejects.toThrow();
     });
   });
@@ -718,7 +718,9 @@ describe("ergebnismeldungStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(unitUnderTest.loadBegruendungForWahl(wahl)).rejects.toThrow();
+      await expect(
+        unitUnderTest.loadBegruendungForWahl(wahl)
+      ).rejects.toThrow();
     });
   });
 

@@ -204,7 +204,9 @@ describe("wahlvorschlaegeStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)).rejects.toThrow();
+      await expect(
+        unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
+      ).rejects.toThrow();
     });
 
     it("should_returnWahlvorschlaegeSortedByOrdnungszahl_when_loaded", async () => {

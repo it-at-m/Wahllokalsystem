@@ -337,7 +337,7 @@ describe("mbwUtils", () => {
       );
 
       await expect(
-          unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
+        unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
       ).rejects.toThrow();
     });
   });
@@ -471,7 +471,7 @@ describe("mbwUtils", () => {
       );
 
       await expect(
-          unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
+        unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
       ).rejects.toThrow();
     });
 

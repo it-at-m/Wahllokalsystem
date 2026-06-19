@@ -336,8 +336,8 @@ describe("mbwUtils", () => {
         new Error("service call failed")
       );
 
-      expect(
-        unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
+      await expect(
+          unitUnderTest.saveGueltigeErgebnisse(mockedErgebnisseWithWahlvorschlag)
       ).rejects.toThrow();
     });
   });
@@ -470,9 +470,8 @@ describe("mbwUtils", () => {
         new Error("service call failed")
       );
 
-      expect(
-        async () =>
-          await unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
+      await expect(
+          unitUnderTest.loadAndCombineErgebnisseAndWahlvorschlaege()
       ).rejects.toThrow();
     });
 

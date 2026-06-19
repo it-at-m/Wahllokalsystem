@@ -1,54 +1,77 @@
 <template>
-  <base-card-snipped-ergebnis
-    v-model="ergebnis"
-    snipped-title="Bedenkliche Stimmzettel"
-    :is-ergebnis-saving="isErgebnisSaving"
-    :is-wahl-finished="isMBWAuszaehlungDone"
-    @save="onSave"
-  />
+  <v-card>
+    <v-tabs
+      v-model="tab"
+      bg-color="grey-lighten-3"
+      slider-color="primary"
+      color="primary"
+      class="rounded-t border-b"
+    >
+      <v-tab
+        value="one"
+        :prepend-icon="isTableDataValid ? `$valid` : `$edit`"
+        data-test="bedenkliche-stimmzettel-eingabe-tab"
+      >
+        Bedenkliche Stimmzettel beschließen
+      </v-tab>
+      <v-tab
+        value="two"
+        prepend-icon="$summary"
+        data-test="bedenkliche-stimmzettel-zusammenfassung-tab"
+      >
+        Beschlussergebnis
+      </v-tab>
+    </v-tabs>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="one">
+        <the-stimmzettel-beschlussfassung-table
+          v-model:bedenkliche-stimmzettel="bedenklicheStimmzettel"
+          @form-valid="(isValid) => updateTableDataValid(isValid)"
+        />
+      </v-tabs-window-item>
+      <v-tabs-window-item value="two">
+        <base-stimmzettel-beschlussfassung-summary-card
+          :bedenkliche-stimmzettel="bedenklicheStimmzettel"
+          class="mb-3"
+        />
+      </v-tabs-window-item>
+    </v-tabs-window>
+  </v-card>
 </template>
 
 <script setup lang="ts">
-import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
+import type { BedenklicherStimmzettel } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/BedenklicherStimmzettel.ts";
 
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
+import BaseStimmzettelBeschlussfassungSummaryCard from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungSummaryCard.vue";
+import TheStimmzettelBeschlussfassungTable from "@/components/ergebnismeldung/MBW/stapelE/TheStimmzettelBeschlussfassungTable.vue";
 import { useLogging } from "@/composables/common/logging.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
-import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+
+const bedenklicheStimmzettel = ref<BedenklicherStimmzettel[]>([]);
 
 const route = useRoute();
 const router = useRouter();
 const { wahlenActions } = useWahlenStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
-const { setStepDone, isElectionFinished } = useWorkflowStore();
-// const { getErgebnisse, postErgebnisse } = useErgebnisService();
+const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 const { logError } = useLogging("mbwStapelEView");
-const { getNextRoute } = useNavigationUtils();
 
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
 const wahlbezirkID = getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID);
+const isTableDataValid = ref<boolean>(true);
 
-// const stapelArt = StapelArtEnum.MbwEUngueltig;
-const isErgebnisSaving = ref(false);
-const ergebnis = ref<Ergebnis>({
-  wahlvorschlagID: null,
-  kandidatID: null,
-  wahlvorschlagsOrdnungszahl: null,
-  ergebnis: null,
-  numIndex: null,
-});
+const tab = ref(null);
 
-const isMBWAuszaehlungDone = computed(() =>
-  isElectionFinished(wahlID, wahlbezirkID ?? "")
-);
+function updateTableDataValid(isValid: boolean) {
+  isTableDataValid.value = isValid;
+}
 
 if (!wahl) {
   router.push({
@@ -59,50 +82,21 @@ if (!wahl) {
 onMounted(async () => {
   if (wahlbezirkID) {
     try {
-      // const loadedErgebnisse = await getErgebnisse(
-      //   wahlbezirkID,
-      //   wahlID,
-      //   stapelArt,
-      //   false
-      // );
-      // if (loadedErgebnisse?.ergebnisse[0]) {
-      //   ergebnis.value = loadedErgebnisse?.ergebnisse[0];
-      // }
+      const loadedBedenklicheStimmzettel = await getBedenklicheStimmzettel(
+        wahlID,
+        wahlbezirkID,
+        false
+      );
+      if (
+        loadedBedenklicheStimmzettel &&
+        loadedBedenklicheStimmzettel.length > 0
+      ) {
+        bedenklicheStimmzettel.value = loadedBedenklicheStimmzettel;
+      }
     } catch (error) {
-      logError("Fehler beim Laden der Ergebnisse: ", error);
+      logError("Fehler beim Laden der bedenklichen Stimmzettel: ", error);
       throw error;
     }
   }
 });
-
-async function onSave() {
-  try {
-    isErgebnisSaving.value = true;
-    // const ergebnisseToSend = {
-    //   bezirkUndWahlIDStapelart: {
-    //     stapelArt,
-    //     wahlID: wahlID,
-    //     wahlbezirkID: wahlbezirkID,
-    //   },
-    //   ergebnisse: [ergebnis.value],
-    // } as Ergebnisse;
-
-    if (wahlbezirkID) {
-      // await postErgebnisse(
-      //   wahlbezirkID,
-      //   wahlID,
-      //   stapelArt,
-      //   ergebnisseToSend,
-      //   true
-      // );
-      setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E);
-      await router.push(getNextRoute());
-    }
-  } catch (error) {
-    logError("Fehler beim Speichern der Ergebnisse: ", error);
-    throw error;
-  } finally {
-    isErgebnisSaving.value = false;
-  }
-}
 </script>

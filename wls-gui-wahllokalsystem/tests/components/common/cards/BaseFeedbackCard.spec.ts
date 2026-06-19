@@ -18,7 +18,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getBackgroundColorAndBoldTextForInputFeedbackType: vi.fn(),
 }));
 
-vi.mock("@/composables/common/inputFeedbackUtils.ts", () => ({
+vi.mock(import("@/composables/common/inputFeedbackUtils.ts"), () => ({
   useInputFeedbackUtils: () => ({
     getBorderColorForInputFeedbackType:
       mockDefinitions.getBorderColorForInputFeedbackType,

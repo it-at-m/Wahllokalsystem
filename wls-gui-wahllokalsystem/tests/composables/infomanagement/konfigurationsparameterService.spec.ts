@@ -27,11 +27,14 @@ vi.mock("@/api/wls-clients/generated-infomanagement-api", () => ({
   },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { createKonfigurationDtoList, mapDtosToModel } =
   useKonfigurationsparameterTestDataFactory();

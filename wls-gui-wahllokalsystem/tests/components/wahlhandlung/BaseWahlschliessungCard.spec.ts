@@ -3,12 +3,12 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import {
   afterAll,
   afterEach,
-  beforeAll,
   beforeEach,
   describe,
   expect,
@@ -31,12 +31,19 @@ const mockDefinitions = vi.hoisted(() => ({
   resetAllAnwesenheiten: vi.fn(),
 }));
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    postUrnenwahlSchliessungsuhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorbereitungService: () => ({
+        ...mod.useWahlvorbereitungService(),
+        postUrnenwahlSchliessungsuhrzeit:
+          mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+      }),
+    };
+  }
+);
 
 vi.mock("@/stores/wahlvorstandStore.ts", () => ({
   useWahlvorstandStore: () => ({
@@ -47,15 +54,7 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 describe("BaseWahlschliessungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahlschliessungCard>>;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-
-  beforeAll(() => vi.stubGlobal("ResizeObserver", ResizeObserverMock));
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     const mockedNow = new Date();

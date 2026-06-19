@@ -11,6 +11,7 @@ import { useBWerteTestDataFactory } from "@tests/utils/ergebnismeldung/common/bW
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useStatusTestDataFactory } from "@tests/utils/ergebnismeldung/common/statusTestDataFactory.ts";
 import { useWahlscheineTestDataFactory } from "@tests/utils/ergebnismeldung/common/wahlscheineTestDataFactory.ts";
+import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnismeldung/MBW/bedenklicherStimmzettelTestDataFactory.ts";
 import { useStimmabgabevermerkeTestDataFactory } from "@tests/utils/stimmabgabevermerke/StimmabgabevermerkeTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory.ts";
@@ -31,6 +32,7 @@ import { useWahlvorschlaegeStore } from "@/stores/wahlvorschlaegeStore.ts";
 import { ZurueckweisungsgrundEnum } from "@/types/briefwahl/ZurueckweisungsgrundEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { StimmzettelStimmzettelartEnum } from "@/types/stimmabgabevermerke/StimmzettelStimmzettelartEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -50,50 +52,75 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   createBarcode: vi.fn(),
   createFooter: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
 
-vi.mock("jsbarcode");
-vi.mock("@/composables/ergebnismeldung/common/aWerteService.ts", () => ({
-  useAWerteService: () => ({ getAWerte: mockDefinitions.getAWerte }),
-}));
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService.ts", () => ({
-  useWahlvorbereitungService: () => ({
-    getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
-  }),
-}));
+vi.mock(import("jsbarcode"));
 vi.mock(
-  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
+  import("@/composables/ergebnismeldung/common/aWerteService.ts"),
+  () => ({
+    useAWerteService: () => ({ getAWerte: mockDefinitions.getAWerte }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  () => ({
+    useWahlvorbereitungService: () => ({
+      getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts"),
   () => ({
     useStimmabgabevermerkeService: () => ({
       getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
     }),
   })
 );
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getBegruendungStimmzettelumschlaege:
-      mockDefinitions.getBegruendungStimmzettelumschlaege,
-    getErgebnisse: mockDefinitions.getErgebnisse,
-  }),
-}));
-vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
-  useWaehlerverzeichnisService: () => ({
-    getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
-    createDefaultPflegeWaehlerverzeichnis:
-      mockDefinitions.createDefaultPflegeWaehlerverzeichnis,
-  }),
-}));
-vi.mock("@/composables/wahlvorstand/wahlvorstandService.ts", () => ({
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  () => ({
+    useErgebnisService: () => ({
+      getBegruendungStimmzettelumschlaege:
+        mockDefinitions.getBegruendungStimmzettelumschlaege,
+      getErgebnisse: mockDefinitions.getErgebnisse,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/waehlerverzeichnisService.ts"),
+  () => ({
+    useWaehlerverzeichnisService: () => ({
+      getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
+      createDefaultPflegeWaehlerverzeichnis:
+        mockDefinitions.createDefaultPflegeWaehlerverzeichnis,
+    }),
+  })
+);
+vi.mock(import("@/composables/wahlvorstand/wahlvorstandService.ts"), () => ({
   useWahlvorstandService: () => ({
     getWahlvorstand: mockDefinitions.getWahlvorstand,
   }),
 }));
-vi.mock("@/composables/ergebnismeldung/common/wahlscheineService.ts", () => ({
-  useWahlscheineService: () => ({
-    getWahlscheine: mockDefinitions.getWahlscheine,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/MBW/mbwUtils.ts", () => ({
+vi.mock(
+  import("@/composables/ergebnismeldung/common/wahlscheineService.ts"),
+  () => ({
+    useWahlscheineService: () => ({
+      getWahlscheine: mockDefinitions.getWahlscheine,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
+);
+vi.mock(import("@/composables/ergebnismeldung/MBW/mbwUtils.ts"), () => ({
   useMbwUtils: () => ({
     getBWerteForWahlbezirkAndWahl:
       mockDefinitions.getBWerteForWahlbezirkAndWahl,
@@ -127,6 +154,8 @@ describe("mbwUtilsNiederschrift.ts", () => {
   const { createUrnenwahlvorbereitung } = useWahlvorbereitungTestDataFactory();
   const { createPflegeWaehlerverzeichnis } =
     usePflegeWaehlerverzeichnisTestDataFactory();
+  const { prepareBedenklicherStimmzettel } =
+    useBedenklicherStimmzettelTestDataFactory();
 
   const { toGermanDate, toHhMm } = useDateTimeFormatter();
 
@@ -262,6 +291,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       })
       .ergebnisse([])
       .build();
+    const ergebnisStapelD = 7;
     const ergebnisseD = prepareErgebnisse()
       .bezirkUndWahlIDStapelart({
         wahlID,
@@ -273,7 +303,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
           wahlvorschlagID: wahlvorschlag1.identifikator,
           kandidatID: null,
           wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
-          ergebnis: 7,
+          ergebnis: ergebnisStapelD,
           numIndex: null,
         },
       ])
@@ -287,6 +317,21 @@ describe("mbwUtilsNiederschrift.ts", () => {
         if (stapel === StapelArtEnum.MbwDUngueltig) return ergebnisseD;
         return undefined;
       }
+    );
+
+    // stapel e
+    const mockedBedenklicheStimmzettel = [
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel()
+        .validity(ValidityEnum.PARTIAL_VALID)
+        .build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+    ];
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+      mockedBedenklicheStimmzettel
     );
 
     const mockedFooter = "footer";
@@ -358,7 +403,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisStapelD + 3, // +3 von Stapel E,
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,
@@ -540,6 +585,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
       })
       .ergebnisse([])
       .build();
+    const ergebnisStapelD = 7;
     const ergebnisseD = prepareErgebnisse()
       .bezirkUndWahlIDStapelart({
         wahlID,
@@ -551,7 +597,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
           wahlvorschlagID: wahlvorschlag1.identifikator,
           kandidatID: null,
           wahlvorschlagsOrdnungszahl: wahlvorschlag1.ordnungszahl,
-          ergebnis: 7,
+          ergebnis: ergebnisStapelD,
           numIndex: null,
         },
       ])
@@ -565,6 +611,21 @@ describe("mbwUtilsNiederschrift.ts", () => {
         if (stapel === StapelArtEnum.MbwDUngueltig) return ergebnisseD;
         return undefined;
       }
+    );
+
+    // stapel e
+    const mockedBedenklicheStimmzettel = [
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.VALID).build(),
+      prepareBedenklicherStimmzettel()
+        .validity(ValidityEnum.PARTIAL_VALID)
+        .build(),
+      prepareBedenklicherStimmzettel().validity(ValidityEnum.INVALID).build(),
+    ];
+    mockDefinitions.getBedenklicheStimmzettel.mockReturnValue(
+      mockedBedenklicheStimmzettel
     );
 
     const mockedFooter = "footer";
@@ -619,7 +680,7 @@ describe("mbwUtilsNiederschrift.ts", () => {
         grund: `${mockedBegruendung.grund} `,
       },
       bWerte: mockedBWerte.b,
-      ungueltigeStimmen: ergebnisseD.ergebnisse.length,
+      ungueltigeStimmen: ergebnisStapelD + 3, //+3 von Stapel E
       gueltigeStimmenListe: [
         {
           ordnungszahl: 1,
@@ -658,7 +719,6 @@ describe("mbwUtilsNiederschrift.ts", () => {
         keinGueltigerWahlschein: 2,
         keinStimmzettelumschlag: 1,
         keineUnterschrift: 0,
-        loseStimmzettel: 0,
         mehrereStimmzettelumschlaege: 0,
         nichtVerschlossen: 0,
         zugelassen: 0,

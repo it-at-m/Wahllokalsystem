@@ -7,6 +7,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -31,25 +32,25 @@ const mockDefinitions = vi.hoisted(() => ({
   postWahlbriefdaten: vi.fn(),
 }));
 
-vi.mock("@/composables/briefwahl/briefwahlService", () => ({
-  useBriefwahlService: () => ({
-    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
+      }),
+    };
+  }
+);
 
 describe("TheWahlbriefErfassungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof TheWahlbriefErfassungCard>>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   const validWahlbriefDaten = {
     wahlbriefe: 1,

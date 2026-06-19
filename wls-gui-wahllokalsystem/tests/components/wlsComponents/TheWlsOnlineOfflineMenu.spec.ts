@@ -4,6 +4,8 @@ import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -15,15 +17,8 @@ import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 describe("TheWlsOnlineOfflineMenu.vue", () => {
   let wrapper: VueWrapper;
 
-  vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(
-    class MockedResizeObserverMock {
-      observe = vi.fn();
-      unobserve = vi.fn();
-      disconnect = vi.fn();
-    } as never
-  );
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     wrapper = mount(TheWlsOnlineOfflineMenu, {

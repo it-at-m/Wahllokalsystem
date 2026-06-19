@@ -22,17 +22,20 @@ vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
   Configuration: mockDefinitions.configurationConstructor,
   WahlDTOWahlartEnum: mockDefinitions.wahlDTOWahlartEnum,
 }));
-vi.mock("@/composables/wahl/wahlMapper.ts", () => ({
+vi.mock(import("@/composables/wahl/wahlMapper.ts"), () => ({
   useWahlMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
   }),
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 

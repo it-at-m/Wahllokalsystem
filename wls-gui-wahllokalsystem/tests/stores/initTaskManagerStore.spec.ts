@@ -9,7 +9,7 @@ const mockDefinitions = vi.hoisted(() => ({
   initTasklist: vi.fn(),
 }));
 
-vi.mock("@/composables/tasks/taskListService.ts", () => ({
+vi.mock(import("@/composables/tasks/taskListService.ts"), () => ({
   useTaskListService: () => ({
     initTasklist: mockDefinitions.initTasklist,
   }),

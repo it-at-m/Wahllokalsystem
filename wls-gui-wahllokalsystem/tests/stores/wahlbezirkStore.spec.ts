@@ -32,33 +32,42 @@ const { createPflegeWaehlerverzeichnis } =
 
 const mockedDefaultWaehlerverzeichnis = createPflegeWaehlerverzeichnis();
 
-vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService.ts", () => ({
-  useUngueltigeWahlscheineService: () => ({
-    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
-  }),
-}));
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
-    getUrnenwahlSchliessungsUhrzeit:
-      mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
-    postUrnenwahlSchliessungsuhrzeit:
-      mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-    postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
-    postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
-    getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
-    getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
-  }),
-}));
-vi.mock("@/composables/wahlhandlung/waehlerverzeichnisService.ts", () => ({
-  useWaehlerverzeichnisService: () => ({
-    createDefaultPflegeWaehlerverzeichnis: () =>
-      mockedDefaultWaehlerverzeichnis,
-    getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
-    postWaehlerverzeichnis: mockDefinitions.postWaehlerverzeichnis,
-  }),
-}));
+vi.mock(
+  import("@/composables/basisdaten/ungueltigeWahlscheineService.ts"),
+  () => ({
+    useUngueltigeWahlscheineService: () => ({
+      getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  () => ({
+    useWahlvorbereitungService: () => ({
+      getEroeffnungsuhrzeit: mockDefinitions.getEroeffnungsuhrzeit,
+      getUrnenwahlSchliessungsUhrzeit:
+        mockDefinitions.getUrnenwahlSchliessungsUhrzeit,
+      postUrnenwahlSchliessungsuhrzeit:
+        mockDefinitions.postUrnenwahlSchliessungsuhrzeit,
+      postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+      postUrnenwahlvorbereitung: mockDefinitions.postUrnenwahlvorbereitung,
+      postBriefwahlvorbereitung: mockDefinitions.postBriefwahlvorbereitung,
+      getUrnenwahlvorbereitung: mockDefinitions.getUrnenwahlvorbereitung,
+      getBriefwahlvorbereitung: mockDefinitions.getBriefwahlvorbereitung,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/wahlhandlung/waehlerverzeichnisService.ts"),
+  () => ({
+    useWaehlerverzeichnisService: () => ({
+      createDefaultPflegeWaehlerverzeichnis: () =>
+        mockedDefaultWaehlerverzeichnis,
+      getWaehlerverzeichnis: mockDefinitions.getWaehlerverzeichnis,
+      postWaehlerverzeichnis: mockDefinitions.postWaehlerverzeichnis,
+    }),
+  })
+);
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenState: ref({
@@ -70,11 +79,18 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
     },
   }),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        getWahlbriefdaten: mockDefinitions.getWahlbriefdaten,
+      }),
+    };
+  }
+);
 
 const mockedNow = new Date();
 const { prepareUser } = useUserTestDataFactory();

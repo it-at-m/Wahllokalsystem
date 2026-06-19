@@ -33,10 +33,11 @@ const mockDefinitions = vi.hoisted(() => ({
   createTasksWahlvorschlaege: vi.fn(),
   createTasksErgebnisse: vi.fn(),
   createMbwWahlvorschlaegeAndErgebnisseTasks: vi.fn(),
+  createTasksStapelE: vi.fn(),
 }));
 
 vi.mock(
-  "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts"),
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
@@ -44,14 +45,17 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts", () => ({
-  useKopfdatenTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksKopfdaten,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts"),
+  () => ({
+    useKopfdatenTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksKopfdaten,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/ungueltigeWahlscheineTaskFactory.ts"),
   () => ({
     useUngueltigeWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksUngueltigeWahlscheine,
@@ -59,14 +63,17 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/waehlerTaskFactory.ts", () => ({
-  useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksWaehler,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/waehlerTaskFactory.ts"),
+  () => ({
+    useWaehlerTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWaehler,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/waehlverzeichnisTaskFactory.ts"),
   () => ({
     useWaehlverzeichnisTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createWaehlerverzeichnisTasks,
@@ -74,14 +81,17 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts", () => ({
-  useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksWahlvorstand,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/wahlvorstandTaskFactory.ts"),
+  () => ({
+    useWahlvorstandTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWahlvorstand,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts"),
   () => ({
     useEroeffnungsuhrzeitTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksEroeffnungsuhrzeit,
@@ -90,7 +100,7 @@ vi.mock(
 );
 
 vi.mock(
-  "@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/urnenwahlSchliessungsuhrzeitTaskFactory.ts"),
   () => ({
     useUrnenwahlSchliessungsuhrzeitTaskFactory: vi
       .fn()
@@ -100,14 +110,17 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts", () => ({
-  useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksWahlscheine,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/wahlscheineTaskFactory.ts"),
+  () => ({
+    useWahlscheineTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWahlscheine,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/stimmabgabevermerkeTaskFactory.ts"),
   () => ({
     useStimmabgabevermerkeTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksStimmabgabevermerke,
@@ -116,7 +129,7 @@ vi.mock(
 );
 
 vi.mock(
-  "@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/stimmzettelumschlaegeTaskFactory.ts"),
   () => ({
     useStimmzettelumschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksStimmzettelumschlaege,
@@ -124,17 +137,23 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/ereignisseTaskFactory.ts", () => ({
-  useEreignisseTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksEreignisse,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/ereignisseTaskFactory.ts"),
+  () => ({
+    useEreignisseTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksEreignisse,
+    })),
+  })
+);
 
-vi.mock("@/composables/tasks/taskFactories/begruendungTaskFactory.ts", () => ({
-  useBegruendungTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksBegruendung,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/begruendungTaskFactory.ts"),
+  () => ({
+    useBegruendungTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksBegruendung,
+    })),
+  })
+);
 
 vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
@@ -148,26 +167,35 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/tasks/taskFactories/aWerteTaskFactory.ts", () => ({
-  useAWerteTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksAWerte,
-  })),
-}));
-
-vi.mock("@/composables/tasks/taskFactories/handbuchTaskFactory.ts", () => ({
-  useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksHandbuch,
-  })),
-}));
-
-vi.mock("@/composables/tasks/taskFactories/statusTaskFactory.ts", () => ({
-  useStatusTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksStatus,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/aWerteTaskFactory.ts"),
+  () => ({
+    useAWerteTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksAWerte,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/handbuchTaskFactory.ts"),
+  () => ({
+    useHandbuchTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksHandbuch,
+    })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/statusTaskFactory.ts"),
+  () => ({
+    useStatusTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStatus,
+    })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/wahlvorbereitungTaskFactory.ts"),
   () => ({
     useWahlvorbereitungTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksWahlvorbereitung,
@@ -175,14 +203,17 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts", () => ({
-  useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksWahlbriefe,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/wahlbriefeTaskFactory.ts"),
+  () => ({
+    useWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksWahlbriefe,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/beanstandeteWahlbriefeTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/beanstandeteWahlbriefeTaskFactory.ts"),
   () => ({
     useBeanstandeteWahlbriefeTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksBeanstandeteWahlbriefe,
@@ -191,7 +222,7 @@ vi.mock(
 );
 
 vi.mock(
-  "@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/wahlvorschlaegeTaskFactory.ts"),
   () => ({
     useWahlvorschlaegeTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksWahlvorschlaege,
@@ -199,20 +230,32 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts", () => ({
-  useErgebnisseTaskFactory: vi.fn().mockImplementation(() => ({
-    createTasks: mockDefinitions.createTasksErgebnisse,
-  })),
-}));
+vi.mock(
+  import("@/composables/tasks/taskFactories/ergebnisseTaskFactory.ts"),
+  () => ({
+    useErgebnisseTaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksErgebnisse,
+    })),
+  })
+);
 
 vi.mock(
-  "@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts",
+  import("@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts"),
   () => ({
     useMBWWahlvorschlaegeAndErgebnisseTaskFactory: vi
       .fn()
       .mockImplementation(() => ({
         createTasks: mockDefinitions.createMbwWahlvorschlaegeAndErgebnisseTasks,
       })),
+  })
+);
+
+vi.mock(
+  import("@/composables/tasks/taskFactories/stapelETaskFactory.ts"),
+  () => ({
+    useStapelETaskFactory: vi.fn().mockImplementation(() => ({
+      createTasks: mockDefinitions.createTasksStapelE,
+    })),
   })
 );
 
@@ -277,6 +320,7 @@ describe("taskListService.ts", () => {
         "Druckstatus - " + mockedWahl.name,
         "Wahlvorbereitung",
         "MBW Tasks",
+        "Stapel E Tasks",
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -317,6 +361,7 @@ describe("taskListService.ts", () => {
         "Erfasste Wahlbriefe",
         "Zugelassene Wahlbriefe",
         "MBW Tasks",
+        "Stapel E Tasks",
       ];
 
       const result = unitUnderTest.initTasklist();
@@ -396,6 +441,12 @@ describe("taskListService.ts", () => {
       mockDefinitions.createTasksAWerte.mockReturnValue([
         {
           name: "AWerte",
+          callback: () => Promise.resolve(),
+        },
+      ]);
+      mockDefinitions.createTasksStapelE.mockReturnValue([
+        {
+          name: "Stapel E Tasks",
           callback: () => Promise.resolve(),
         },
       ]);
@@ -492,6 +543,12 @@ describe("taskListService.ts", () => {
           },
         ]
       );
+      mockDefinitions.createTasksStapelE.mockReturnValue([
+        {
+          name: "Stapel E Tasks",
+          callback: () => Promise.resolve(),
+        },
+      ]);
     }
 
     function _expectAllTaskFactoriesHaveBeenCalled() {

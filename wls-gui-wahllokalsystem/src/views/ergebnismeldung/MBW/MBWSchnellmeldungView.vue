@@ -44,8 +44,12 @@
     >
       <div class="mb-4">
         Die Schnellmeldung kann derzeit nicht gesendet werden. Bitte geben Sie
-        daher die Ergebnisse telefonisch an die Wahl-Hotline durch. Danach
-        können Sie die Auszählung ohne Einschränkung fortsetzen.
+        daher
+        {{
+          isBWB
+            ? "die ausgedruckte Schnellmeldung an die Tischbetreuung"
+            : "die Ergebnisse telefonisch an die Wahl-Hotline durch"
+        }}. Danach können Sie die Auszählung ohne Einschränkung fortsetzen.
       </div>
     </base-dialog>
   </div>
@@ -55,6 +59,7 @@
 import type { SchnellmeldungDruckInput } from "@/types/ergebnismeldung/common/SchnellmeldungDruckInput.ts";
 import type { Status } from "@/types/ergebnismeldung/common/Status.ts";
 
+import { storeToRefs } from "pinia";
 import { computed, onActivated, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -71,6 +76,7 @@ import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnel
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
@@ -85,6 +91,7 @@ const wahlID = route.params.wahlId as string;
 
 const { addNotification } = useUserNotificationService();
 const { wahlenActions } = useWahlenStore();
+const { isBWB } = storeToRefs(useUserStore());
 const {
   isSendingSchnellmeldung,
   sendSchnellmeldung,

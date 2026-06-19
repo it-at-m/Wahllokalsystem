@@ -382,14 +382,6 @@ export function useNiederschriftDruckBWB() {
                     </tr>
                     <tr>
                         <td style="height: 1.0cm;">
-                            <div class="textRight border padding backendData">${data.beanstandeteWahlbriefe.loseStimmzettel}</div>
-                        </td>
-                        <td>
-                            Wahlbriefe, weil ein oder mehrere Stimmzettel außerhalb des Stimmzettelumschlags lagen,
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 1.0cm;">
                             <div class="textRight border padding backendData">${data.beanstandeteWahlbriefe.gegenstandImUmschlag + data.beanstandeteWahlbriefe.gefaehrdetWahlgeheimnis}</div>
                         </td>
                         <td>

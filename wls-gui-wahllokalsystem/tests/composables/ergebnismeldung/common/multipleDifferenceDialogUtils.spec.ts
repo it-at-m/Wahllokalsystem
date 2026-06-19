@@ -46,28 +46,46 @@ vi.mock("@/stores/wahlenStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getBegruendungStimmzettelumschlaege:
-      mockDefinitions.getBegruendungStimmzettelumschlaege,
-    postBegruendung: mockDefinitions.postBegruendung,
-  }),
-}));
-
 vi.mock(
-  "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts",
-  () => ({
-    useStimmabgabevermerkeService: () => ({
-      postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
-    }),
-  })
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getBegruendungStimmzettelumschlaege:
+          mockDefinitions.getBegruendungStimmzettelumschlaege,
+        postBegruendung: mockDefinitions.postBegruendung,
+      }),
+    };
+  }
 );
 
-vi.mock("@/composables/ergebnismeldung/common/wahlscheineService.ts", () => ({
-  useWahlscheineService: () => ({
-    postWahlscheine: mockDefinitions.postWahlscheine,
-  }),
-}));
+vi.mock(
+  import("@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useStimmabgabevermerkeService: () => ({
+        ...mod.useStimmabgabevermerkeService(),
+        postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
+      }),
+    };
+  }
+);
+
+vi.mock(
+  import("@/composables/ergebnismeldung/common/wahlscheineService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlscheineService: () => ({
+        ...mod.useWahlscheineService(),
+        postWahlscheine: mockDefinitions.postWahlscheine,
+      }),
+    };
+  }
+);
 
 describe("useMultipleDifferenceDialogUtils.ts", () => {
   let unitUnderTest: ReturnType<typeof useMultipleDifferenceDialogUtils>;

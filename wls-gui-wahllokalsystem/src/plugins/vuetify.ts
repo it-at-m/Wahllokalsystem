@@ -11,6 +11,7 @@ import {
   mdiDelete,
   mdiDiameterVariant,
   mdiEmail,
+  mdiEqual,
   mdiFileDocumentOutline,
   mdiHelpCircleOutline,
   mdiHome,
@@ -80,6 +81,7 @@ export default createVuetify({
       saveSuccess: mdiContentSaveCheck,
       disabled: mdiCircleOffOutline,
       offlineSync: mdiWebSync,
+      equal: mdiEqual,
     },
     sets: {
       mdi,

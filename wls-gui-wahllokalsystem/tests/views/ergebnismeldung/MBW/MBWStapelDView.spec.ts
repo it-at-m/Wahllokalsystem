@@ -1,3 +1,6 @@
+import type { RouteLocationNormalizedLoaded } from "vue-router";
+
+import { createKeepAliveComponent } from "@tests/utils/components/keepAliveComponent.ts";
 import {
   COMPONENT_EVENT_TESTS,
   mockAndStubResizeObserver,
@@ -6,7 +9,7 @@ import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRouter, createWebHistory } from "vue-router";
 
-import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
+import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/MBW/stapelD/BaseCardUngueltigeStimmzettelErfassen.vue";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import pinia from "@/plugins/pinia.ts";
 import vuetify from "@/plugins/vuetify.ts";
@@ -18,7 +21,30 @@ const mockDefinitions = vi.hoisted(() => ({
   getErgebnisse: vi.fn(),
   postErgebnisse: vi.fn(),
   getNextRoute: vi.fn(),
+  getBedenklicheStimmzettel: vi.fn(),
 }));
+
+vi.mock(import("vue-router"), async (importOriginal) => {
+  const module = (await importOriginal()) as object;
+  return {
+    ...module,
+    useRoute: () =>
+      ({
+        path: "path",
+        name: "mocked route",
+        query: {},
+        fullPath: "",
+        matched: [],
+        params: {
+          wahlId: "wahlID",
+          wahlbezirkId: "wahlbezirkID",
+        },
+        hash: "",
+        meta: {},
+        redirectedFrom: undefined,
+      }) as RouteLocationNormalizedLoaded,
+  };
+});
 
 vi.mock(
   import("@/composables/navigation/navigationUtils.ts"),
@@ -45,6 +71,15 @@ vi.mock(
       }),
     };
   }
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts"),
+  () => ({
+    useBedenklicheStimmzettelService: () => ({
+      getBedenklicheStimmzettel: mockDefinitions.getBedenklicheStimmzettel,
+      saveBedenklicheStimmzettel: vi.fn(),
+    }),
+  })
 );
 
 vi.mock("@/stores/userStore.ts", () => ({
@@ -80,7 +115,12 @@ describe("MBWStapelDView", () => {
   });
 
   beforeEach(() => {
-    wrapper = mount(MBWStapelDView, {
+    const keepAliveWrapperComponent = createKeepAliveComponent(
+      "wahlID",
+      "wahlbezirkID",
+      MBWStapelDView
+    );
+    wrapper = mount(keepAliveWrapperComponent, {
       global: { plugins: [pinia, vuetify, router] },
     });
   });
@@ -88,15 +128,18 @@ describe("MBWStapelDView", () => {
   enableAutoUnmount(afterEach);
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_callGetErgebnisse_when_componentIsMounted", () => {
+    it("should_callServices_when_componentIsMounted", () => {
       expect(mockDefinitions.getErgebnisse).toHaveBeenCalled();
+      expect(
+        mockDefinitions.getBedenklicheStimmzettel.mock.calls
+      ).toStrictEqual([["wahlID", "mockWahlbezirkId", false]]);
     });
 
     it("should_saveErgebnis_when_saveEventIsEmmited", () => {
       mockDefinitions.getNextRoute.mockResolvedValue("");
 
       const baseCardSnippedErgebnis = wrapper.findComponent(
-        BaseCardSnippedErgebnis
+        BaseCardUngueltigeStimmzettelErfassen
       );
       baseCardSnippedErgebnis.vm.$emit("save");
 

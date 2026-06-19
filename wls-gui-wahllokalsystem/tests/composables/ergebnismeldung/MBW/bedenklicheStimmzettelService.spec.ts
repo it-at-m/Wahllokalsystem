@@ -10,6 +10,8 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   toModel: vi.fn(),
   toDTO: vi.fn(),
+  validityEnumToDisplayString: vi.fn(),
+  supplementEnumToDisplayString: vi.fn(),
   addNotification: vi.fn(),
   getBedenklicheStimmzettelByOrderIndexAsc: vi.fn(),
   setBedenklicheStimmzettel: vi.fn(),
@@ -39,6 +41,9 @@ vi.mock(
     useBedenklicherStimmzettelMapper: () => ({
       toModel: mockDefinitions.toModel,
       toDTO: mockDefinitions.toDTO,
+      validityEnumToDisplayString: mockDefinitions.validityEnumToDisplayString,
+      supplementEnumToDisplayString:
+        mockDefinitions.supplementEnumToDisplayString,
     }),
   })
 );

@@ -31,7 +31,11 @@ import { ref } from "vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
-import { SAVE_CONTINUE } from "@/constants.ts";
+import {
+  NUMBER_INPUT_DEFAULT_MAX,
+  NUMBER_INPUT_DEFAULT_MIN,
+  SAVE_CONTINUE,
+} from "@/constants.ts";
 
 const { required } = useRules();
 
@@ -45,12 +49,12 @@ defineProps({
   minValue: {
     type: Number,
     required: false,
-    default: 0,
+    default: NUMBER_INPUT_DEFAULT_MIN,
   },
   maxValue: {
     type: Number,
     required: false,
-    default: 9999,
+    default: NUMBER_INPUT_DEFAULT_MAX,
   },
   isErgebnisSaving: {
     type: Boolean,

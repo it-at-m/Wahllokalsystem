@@ -54,6 +54,8 @@ export const ERGEBNISMELDUNG_SERVICE_API_URL =
 
 export const MIN_LENGTH_FOR_BEGRUENDUNG = 3;
 export const MAX_LENGTH_FOR_TEXT_INPUT = 500;
+export const NUMBER_INPUT_DEFAULT_MIN = 0;
+export const NUMBER_INPUT_DEFAULT_MAX = 9999;
 
 export const PRIMARY_COLOR = "#546e7a";
 

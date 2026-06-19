@@ -4,5 +4,5 @@ import type { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmz
 export interface BedenklicherStimmzettel {
   orderIndex: number;
   supplements: SupplementEnum[];
-  validity: ValidityEnum;
+  validity: ValidityEnum | undefined;
 }

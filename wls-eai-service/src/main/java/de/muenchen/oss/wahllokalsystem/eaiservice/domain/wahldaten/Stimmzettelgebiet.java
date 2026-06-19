@@ -1,11 +1,14 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.domain.wahldaten;
 
 import de.muenchen.oss.wahllokalsystem.eaiservice.domain.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -34,4 +37,7 @@ public class Stimmzettelgebiet extends BaseEntity {
   @NotNull @ManyToOne
   @JoinColumn(name = "wahlID")
   private Wahl wahl;
+
+  @Column(name = "max_stimmen_pro_waehler")
+  @Min(1) @Max(999) private Integer maximalErlaubteStimmenProWaehler;
 }

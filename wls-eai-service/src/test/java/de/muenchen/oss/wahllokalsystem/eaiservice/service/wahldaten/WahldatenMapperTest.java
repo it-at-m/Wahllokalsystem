@@ -77,7 +77,7 @@ class WahldatenMapperTest {
           new Wahlbezirk(
               WahlbezirkArt.UWB,
               wahlbezirkNummer,
-              new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk),
+              new Stimmzettelgebiet(null, null, null, wahlForWahlbezirk, null),
               0,
               0,
               0);
@@ -108,14 +108,15 @@ class WahldatenMapperTest {
               szgNummer,
               szgName,
               Stimmzettelgebietsart.SK,
-              new Wahl(null, null, new Wahltag(wahltag, null, null)));
+              new Wahl(null, null, new Wahltag(wahltag, null, null)),
+              null);
       entityToMap.setId(szgID);
 
       val result = unitUnderTest.toDTO(entityToMap);
 
       val expectedResult =
           new StimmzettelgebietDTO(
-              szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK);
+              szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK, null);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }
@@ -135,7 +136,12 @@ class WahldatenMapperTest {
       wahlOfWahlbezirk.setId(wahlID);
       val entityToMap =
           new Wahlbezirk(
-              null, null, new Stimmzettelgebiet(null, null, null, wahlOfWahlbezirk), a1, a2, a3);
+              null,
+              null,
+              new Stimmzettelgebiet(null, null, null, wahlOfWahlbezirk, null),
+              a1,
+              a2,
+              a3);
       entityToMap.setId(wahlbezirkID);
 
       val result = unitUnderTest.toWahlberechtigteDTO(entityToMap);

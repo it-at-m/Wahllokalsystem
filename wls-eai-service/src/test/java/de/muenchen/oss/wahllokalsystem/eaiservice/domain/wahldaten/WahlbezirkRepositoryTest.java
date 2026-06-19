@@ -51,16 +51,16 @@ class WahlbezirkRepositoryTest {
 
       val szg1 =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl1));
+              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl1, null));
       val szg2 =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl2));
+              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl2, null));
       val szg3 =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl3));
+              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl3, null));
       val szg4 =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl4));
+              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl4, null));
 
       val wahlbezirk1ToFind =
           unitUnderTest.save(new Wahlbezirk(WahlbezirkArt.UWB, "wbz1", szg1, 0, 0, 0));
@@ -88,7 +88,7 @@ class WahlbezirkRepositoryTest {
       val wahl = wahlRepository.save(new Wahl("", Wahlart.BTW, wahltag));
       val szg =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl));
+              new Stimmzettelgebiet("", "", Stimmzettelgebietsart.SK, wahl, null));
 
       val wahlbezirkToFind =
           unitUnderTest.save(new Wahlbezirk(WahlbezirkArt.UWB, "nummer1", szg, 1, 2, 3));

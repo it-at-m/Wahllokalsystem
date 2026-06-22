@@ -289,12 +289,8 @@ export function useNiederschriftDruckBWB() {
                 </div>
             </div>
 
-            <svg class="page_break" height="25px" width="100%">
-                <rect width="1000" height="25" style="fill:#ffffff;" />
-            </svg>
-
             <!-- 2.5 -->
-            <div class="horizontal marginBottom_5 paddingTopNewPage">
+            <div class="horizontal marginBottom_5">
                 <div class="widthNumber bold">2.5</div>
                 <div class="bold">Zurückweisung von Wahlbriefen:</div>
             </div>
@@ -316,7 +312,11 @@ export function useNiederschriftDruckBWB() {
                 </div>
             </div>
 
-            <div class="horizontal marginBottom_5">
+            <svg class="page_break" height="25px" width="100%">
+                <rect width="1000" height="25" style="fill:#ffffff;" />
+            </svg>
+
+            <div class="horizontal marginBottom_5 paddingTopNewPage">
                     <div class="widthNumber">2.5.1.1</div>
                     <div>
                         Davon wurden durch Beschluss des Briefwahlvorstands <b>zurückgewiesen</b></br>

@@ -205,8 +205,7 @@ describe("wahlvorschlaegeStore.ts", () => {
       );
 
       await expect(
-        async () =>
-          await unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
+        unitUnderTest.loadWahlvorschlaege(wahlID, wahlbezirkID)
       ).rejects.toThrow();
     });
 

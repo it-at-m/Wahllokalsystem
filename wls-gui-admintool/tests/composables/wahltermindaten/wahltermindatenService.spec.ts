@@ -62,7 +62,7 @@ describe("wahltermindatenService.ts", () => {
         );
 
         await expect(
-          async () => await unitUnderTest.importWahlterminDaten(wahltagID)
+          unitUnderTest.importWahlterminDaten(wahltagID)
         ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
@@ -104,7 +104,7 @@ describe("wahltermindatenService.ts", () => {
         );
 
         await expect(
-          async () => await unitUnderTest.importWahlterminDaten(wahltagID)
+          unitUnderTest.importWahlterminDaten(wahltagID)
         ).rejects.toThrow();
 
         expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([
@@ -140,8 +140,7 @@ describe("wahltermindatenService.ts", () => {
         );
 
         await expect(
-          async () =>
-            await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
+          unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
         ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
@@ -160,8 +159,7 @@ describe("wahltermindatenService.ts", () => {
         );
 
         await expect(
-          async () =>
-            await unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
+          unitUnderTest.deleteAndImportWahlterminDaten(wahltagID)
         ).rejects.toThrow();
 
         expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([

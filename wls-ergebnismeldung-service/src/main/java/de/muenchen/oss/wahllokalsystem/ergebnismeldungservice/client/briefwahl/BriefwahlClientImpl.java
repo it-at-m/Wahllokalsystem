@@ -3,7 +3,6 @@ package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.client.briefwahl;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.configuration.Profiles;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.client.BeanstandeteWahlbriefeControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.BeanstandeteWahlbriefeDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.Zurueckweisungsgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.BriefwahlClient;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
@@ -36,7 +35,8 @@ public class BriefwahlClientImpl implements BriefwahlClient {
     } else {
       return beanstandeteWahlbriefeOfWahl.stream()
           .filter(
-              zurueckweisungsgrund -> !zurueckweisungsgrund.equals(Zurueckweisungsgrund.ZUGELASSEN))
+              zurueckweisungsgrund ->
+                  !zurueckweisungsgrund.equals(BeanstandeteWahlbriefeDTO.InnerEnum.ZUGELASSEN))
           .count();
     }
   }

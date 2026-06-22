@@ -378,9 +378,9 @@ export function useNiederschriftDruckUWB() {
                 <table class="table borderless">
                     <colgroup>
                         <col width="4%"/>
-                        <col width="68%"/>
+                        <col width="70%"/>
                         <col width="12%"/>
-                        <col width="10%"/>
+                        <col width="14%"/>
                     </colgroup>
                     <tr>
                         <td>a)</td>
@@ -677,11 +677,9 @@ export function useNiederschriftDruckUWB() {
                 </div>
             </div>
             
-            <svg class="page_break" height="25px" width="100%">
-                <rect width="1000" height="25" style="fill: #ffffff;" />
-            </svg>
+           
             <!-- 3.12 -->
-            <div class="gridContainer_2_column_miniright marginBottom_2 paddingTopNewPage">
+            <div class="gridContainer_2_column_miniright marginBottom_2">
                 <div>
                     <div class="horizontal marginBottom_2">
                         <div class="widthNumber bold">3.12</div>

@@ -36,7 +36,7 @@ export function useNiederschriftDruckUWB() {
                 <rect width="1000" height="25" style="fill: #ffffff;" />
             </svg>
             <!-- Title -->
-            <div class="width_100 textAlignCenter marginTop_1_15"><span class="bold fontSize_11">V1 MigBW</span></div>
+            <div class="width_100 textAlignCenter"><span class="bold fontSize_11">V1 MigBW</span></div>
             
             <!-- Header -->
             <div class="gridContainer_3_column_header marginTop_2 marginBottom_5">
@@ -1482,7 +1482,7 @@ export function useNiederschriftDruckUWB() {
                     /****** Print Header ******/
                     @page {
                         size: A4;
-                        margin-top: 0.0cm;
+                        margin-top: 1cm;
                         margin-left: 0;
                         margin-right: 0;
                     }
@@ -1885,10 +1885,6 @@ export function useNiederschriftDruckUWB() {
 
                     .marginTop_1 {
                         margin-top: 0.1cm;
-                    }
-
-                    .marginTop_1_15 {
-                        margin-top: 1.15cm;
                     }
 
                     .marginTop_2 {

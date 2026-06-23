@@ -23,10 +23,10 @@ vi.mock(
       ...(mod as object),
       StimmzettelumschlaegeControllerApi: vi.fn(),
       BegruendungControllerApi: vi.fn(),
-      StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
-        getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
-        postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
-      })),
+      StimmabgabevermerkeControllerApi: class {
+        getStimmabgabevermerke = mockDefinitions.getStimmabgabevermerke;
+        postStimmabgabevermerke = mockDefinitions.postStimmabgabevermerke;
+      },
       StimmzettelDTOStimmzettelartEnum: vi.fn(),
       Configuration: vi.fn(),
     };
@@ -42,11 +42,14 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();

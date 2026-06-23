@@ -4,10 +4,13 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { defineComponent } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
@@ -31,33 +34,66 @@ const mockDefinitions = vi.hoisted(() => ({
   syncPin: vi.fn(),
 }));
 
-vi.mock("@/composables/wahl/wahlService.ts", () => ({
+vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
-    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
-  }),
-}));
-vi.mock("@/composables/broadcast/broadcastCronjobService.ts", () => ({
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+        getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+      }),
+    };
+  }
+);
+vi.mock(import("@/composables/broadcast/broadcastCronjobService.ts"), () => ({
   useBroadcastCronjobService: () => ({
     startBroadcastMessageInterval: startBroadcastMessageIntervalMock,
     stopBroadcastMessageInterval: stopBroadcastMessageIntervalMock,
   }),
 }));
-vi.mock("@/composables/serviceWorker/serviceWorkerPinSyncer.ts", () => ({
-  useServiceWorkerPinSyncer: () => ({
-    syncPin: mockDefinitions.syncPin,
-  }),
-}));
-vi.mock("@/composables/serviceWorker/serviceWorkerUtils.ts", () => ({
-  useServiceWorkerUtils: () => ({
-    awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
-  }),
-}));
+vi.mock(
+  import("@/composables/serviceWorker/serviceWorkerPinSyncer.ts"),
+  () => ({
+    useServiceWorkerPinSyncer: () => ({
+      syncPin: mockDefinitions.syncPin,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/serviceWorker/serviceWorkerUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useServiceWorkerUtils: () => ({
+        ...mod.useServiceWorkerUtils(),
+        awaitServiceWorkerActive: mockDefinitions.awaitServiceWorkerActive,
+      }),
+    };
+  }
+);
+vi.mock(import("@/components/wlsComponents/TheWlsAppBar.vue"));
+vi.mock(
+  import("@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue"),
+  () => {
+    return {
+      default: defineComponent({
+        name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
+        template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue")
+);
+vi.mock(import("localforage"));
 
 const { prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
@@ -65,29 +101,8 @@ const { prepareKonfigurationsparameter } =
 describe("App", () => {
   let wrapper: VueWrapper;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
-  vi.stubGlobal("visualViewport", new EventTarget());
-
-  vi.mock("@/components/wlsComponents/TheWlsAppBar.vue");
-  vi.mock(
-    "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue",
-    () => {
-      return {
-        default: {
-          name: "TheWahlvorstandAnwesenheitsCheckPopupDialog",
-          template: "<div>TheWahlvorstandAnwesenheitsCheckPopupDialog</div>",
-        },
-      };
-    }
-  );
-  vi.mock("@/components/broadcast/TheBroadcastReadConfirmationDialog.vue");
-
-  vi.mock("localforage");
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   const router = createRouter({
     history: createWebHistory(),

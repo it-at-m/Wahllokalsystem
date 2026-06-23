@@ -10,26 +10,32 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   getUngueltigeWahlscheine: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   mapToModel: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  UngueltigeWahlscheineControllerApi: vi.fn().mockImplementation(() => ({
-    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
-  })),
+  UngueltigeWahlscheineControllerApi: class {
+    getUngueltigeWahlscheine = mockDefinitions.getUngueltigeWahlscheine;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/basisdaten/ungueltigeWahlscheineMapper.ts", () => ({
-  useUngueltigeWahlscheineMapper: () => ({
-    toModel: mockDefinitions.mapToModel,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/basisdaten/ungueltigeWahlscheineMapper.ts"),
+  () => ({
+    useUngueltigeWahlscheineMapper: () => ({
+      toModel: mockDefinitions.mapToModel,
+    }),
+  })
+);
 
 const { createUngueltigerWahlschein } = useWahlbezirkTestDataFactory();
 

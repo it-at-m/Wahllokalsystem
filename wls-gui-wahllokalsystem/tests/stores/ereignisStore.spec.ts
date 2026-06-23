@@ -20,12 +20,15 @@ const mockDefinitions = vi.hoisted(() => ({
   saveEreignisse: vi.fn(),
 }));
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
-  useEreignisService: () => ({
-    getEreignisse: mockDefinitions.getEreignisse,
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  () => ({
+    useEreignisService: () => ({
+      getEreignisse: mockDefinitions.getEreignisse,
+      saveEreignisse: mockDefinitions.saveEreignisse,
+    }),
+  })
+);
 
 const mockedNow = new Date();
 

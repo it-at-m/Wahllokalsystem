@@ -36,9 +36,9 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
         disabled: false,
       },
       {
-        title: `Ungültige Stimmzettel`,
+        title: `Bedenkliche Stimmzettel`,
         targetRoute: createMbwRoute(
-          MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG,
+          MbwRoutesEnum.MBW_STAPEL_E,
           wahlID,
           wahlbezirkID
         ),
@@ -46,6 +46,17 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
           ? !mbwWorkflow.value.stepsDone[
               MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
             ]
+          : false,
+      },
+      {
+        title: `Ungültige Stimmzettel`,
+        targetRoute: createMbwRoute(
+          MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG,
+          wahlID,
+          wahlbezirkID
+        ),
+        disabled: mbwWorkflow.value
+          ? !mbwWorkflow.value.stepsDone[MbwRoutesEnum.MBW_STAPEL_E]
           : false,
       },
       {

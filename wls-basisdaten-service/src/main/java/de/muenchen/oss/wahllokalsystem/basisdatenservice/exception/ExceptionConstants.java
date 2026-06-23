@@ -62,6 +62,15 @@ public class ExceptionConstants {
           "346",
           "postUngueltigews: Das speichern der ungueltigen Wahlscheine war nicht erfolgreich.");
 
+  public static ExceptionDataWrapper POSTNACHLIEFERUNGSBEZIRKE_SPEICHERN_NICHT_ERFOLGREICH =
+      new ExceptionDataWrapper(
+          "347",
+          "postNachlieferungsbezirke: Das speichern der Nachlieferungsbezirke war nicht erfolgreich.");
+  public static ExceptionDataWrapper POSTNACHLIEFERUNGSBEZIRKE_READ_FILE_NICHT_ERFOLGREICH =
+      new ExceptionDataWrapper(
+          "348",
+          "postNachlieferungsbezirke: Beim Auslesen der Datei mit den Nachlieferungsbezirken ist ein Fehler aufgetreten.");
+
   public static ExceptionDataWrapper GETREFERENDUMVORLAGEN_PARAMETER_UNVOLLSTAENDIG =
       new ExceptionDataWrapper("308", "getReferendumvorlagen: Suchkriterien unvollständig.");
 

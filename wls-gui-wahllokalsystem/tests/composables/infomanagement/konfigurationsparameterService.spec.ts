@@ -10,7 +10,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getKonfigurations: vi.fn(),
   toModel: vi.fn(),
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock(
@@ -22,16 +22,19 @@ vi.mock(
   })
 );
 vi.mock("@/api/wls-clients/generated-infomanagement-api", () => ({
-  KonfigurationControllerApi: vi.fn().mockImplementation(() => ({
-    getKonfigurations: mockDefinitions.getKonfigurations,
-  })),
+  KonfigurationControllerApi: class {
+    getKonfigurations = mockDefinitions.getKonfigurations;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { createKonfigurationDtoList, mapDtosToModel } =
   useKonfigurationsparameterTestDataFactory();

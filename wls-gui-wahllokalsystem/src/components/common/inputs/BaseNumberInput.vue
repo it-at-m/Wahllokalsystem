@@ -15,6 +15,10 @@
 
 <script setup lang="ts">
 import { useRules } from "@/composables/common/rules.ts";
+import {
+  NUMBER_INPUT_DEFAULT_MAX,
+  NUMBER_INPUT_DEFAULT_MIN,
+} from "@/constants.ts";
 
 const { minNumber, maxNumber } = useRules();
 
@@ -34,12 +38,12 @@ const props = defineProps({
   minValid: {
     type: Number,
     required: false,
-    default: 0,
+    default: NUMBER_INPUT_DEFAULT_MIN,
   },
   maxValid: {
     type: Number,
     required: false,
-    default: 9999,
+    default: NUMBER_INPUT_DEFAULT_MAX,
   },
 });
 

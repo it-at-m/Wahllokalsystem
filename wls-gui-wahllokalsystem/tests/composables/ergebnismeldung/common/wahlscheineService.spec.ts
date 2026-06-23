@@ -25,27 +25,33 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      WahlscheineControllerApi: vi.fn().mockImplementation(() => ({
-        getWahlscheine: mockDefinitions.getWahlscheine,
-        postWahlscheine: mockDefinitions.postWahlscheine,
-      })),
+      WahlscheineControllerApi: class {
+        getWahlscheine = mockDefinitions.getWahlscheine;
+        postWahlscheine = mockDefinitions.postWahlscheine;
+      },
       Configuration: mockDefinitions.configurationConstructor,
     };
   }
 );
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
-vi.mock("@/composables/ergebnismeldung/common/wahlscheineMapper.ts", () => ({
-  useWahlscheineMapper: () => ({
-    toModel: mockDefinitions.mapDtoToModel,
-    toDto: mockDefinitions.mapModelToDto,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/wahlscheineMapper.ts"),
+  () => ({
+    useWahlscheineMapper: () => ({
+      toModel: mockDefinitions.mapDtoToModel,
+      toDto: mockDefinitions.mapModelToDto,
+    }),
+  })
+);
 
 describe("wahlscheineService.ts", () => {
   const { getWahlscheine, postWahlscheine } = useWahlscheineService();

@@ -6,6 +6,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
@@ -30,11 +32,18 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const mockDefinitions = vi.hoisted(() => ({
   postBeanstandeteWahlbriefe: vi.fn(),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+      }),
+    };
+  }
+);
 
 describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   let wrapper: VueWrapper;
@@ -42,14 +51,8 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   const { prepareWahl } = useWahlTestDataFactory();
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-
-  vi.stubGlobal("visualViewport", new EventTarget());
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();

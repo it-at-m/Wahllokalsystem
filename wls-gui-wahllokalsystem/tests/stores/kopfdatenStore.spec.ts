@@ -17,7 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getKopfdaten: vi.fn(),
 }));
 
-vi.mock("@/composables/kopfdaten/kopfdatenService.ts", () => ({
+vi.mock(import("@/composables/kopfdaten/kopfdatenService.ts"), () => ({
   useKopfdatenService: () => ({
     getKopfdaten: mockDefinitions.getKopfdaten,
   }),
@@ -70,9 +70,7 @@ describe("kopfdatenStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(
-        async () => await unitUnderTest.initKopfdaten()
-      ).rejects.toThrow();
+      await expect(unitUnderTest.initKopfdaten()).rejects.toThrow();
     });
   });
 });

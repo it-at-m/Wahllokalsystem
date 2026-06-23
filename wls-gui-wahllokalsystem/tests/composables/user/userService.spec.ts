@@ -10,12 +10,12 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-auth-api", () => ({
-  UserControllerApi: vi.fn().mockImplementation(() => ({
-    user: mockDefinitions.user,
-  })),
+  UserControllerApi: class {
+    user = mockDefinitions.user;
+  },
   Configuration: vi.fn(),
 }));
-vi.mock("@/composables/user/userMapper.ts", () => ({
+vi.mock(import("@/composables/user/userMapper.ts"), () => ({
   useUserMapper: () => ({
     validateDtoAndMapToModel: mockDefinitions.validateDtoAndMapToModel,
   }),

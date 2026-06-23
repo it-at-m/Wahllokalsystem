@@ -25,10 +25,10 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      StatusControllerApi: vi.fn().mockImplementation(() => ({
-        getStatus: mockDefinitions.getStatus,
-        setStatus: mockDefinitions.setStatus,
-      })),
+      StatusControllerApi: class {
+        getStatus = mockDefinitions.getStatus;
+        setStatus = mockDefinitions.setStatus;
+      },
       Configuration: mockDefinitions.configurationConstructor,
     };
   }
@@ -39,13 +39,16 @@ vi.mock("@/stores/workflowStore.ts", () => ({
   }),
 }));
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
-vi.mock("@/composables/ergebnismeldung/common/statusMapper.ts", () => ({
+vi.mock(import("@/composables/ergebnismeldung/common/statusMapper.ts"), () => ({
   useStatusMapper: () => ({
     toModel: mockDefinitions.mapDtoToModel,
     toDto: mockDefinitions.mapModelToDto,

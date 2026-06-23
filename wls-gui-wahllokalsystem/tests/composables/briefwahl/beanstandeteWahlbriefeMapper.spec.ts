@@ -26,12 +26,12 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
       const gruendeDTO = [
         "ZUGELASSEN",
         "UNTERSCHRIFT_FEHLT",
-        "LOSE_STIMMZETTEL",
+        "KEIN_ORIGINAL_SCHEIN",
       ];
       const gruendeModel = [
         ZurueckweisungsgrundEnum.Zugelassen,
         ZurueckweisungsgrundEnum.UnterschriftFehlt,
-        ZurueckweisungsgrundEnum.LoseStimmzettel,
+        ZurueckweisungsgrundEnum.KeinOriginalSchein,
       ];
 
       const beanstandeteWahlbirefeDTO: BeanstandeteWahlbriefeDTO["beanstandeteWahlbriefe"] =
@@ -67,7 +67,6 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
         ZurueckweisungsgrundEnum.UnterschriftFehlt,
       ],
       ["Stimmzettelumschlag fehlt", ZurueckweisungsgrundEnum.UmschlagFehlt],
-      ["Lose Stimmzettel", ZurueckweisungsgrundEnum.LoseStimmzettel],
       [
         "Wahlbrief und Stimmzettelumschlag offen",
         ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen,
@@ -119,7 +118,6 @@ describe("beanstandeteWahlbriefeMapper.ts", () => {
         "Unterschrift auf Wahlschein fehlt",
       ],
       [ZurueckweisungsgrundEnum.UmschlagFehlt, "Stimmzettelumschlag fehlt"],
-      [ZurueckweisungsgrundEnum.LoseStimmzettel, "Lose Stimmzettel"],
       [
         ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen,
         "Wahlbrief und Stimmzettelumschlag offen",

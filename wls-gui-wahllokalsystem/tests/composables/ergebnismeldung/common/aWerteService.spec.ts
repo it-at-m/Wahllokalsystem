@@ -20,25 +20,28 @@ const mockDefinitions = vi.hoisted(() => ({
   mapToModel: vi.fn(),
   addNotification: vi.fn(),
   getAWerte: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  AWerteControllerApi: vi.fn().mockImplementation(() => ({
-    getAWerte: mockDefinitions.getAWerte,
-  })),
+  AWerteControllerApi: class {
+    getAWerte = mockDefinitions.getAWerte;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/ergebnismeldung/common/aWerteMapper.ts", () => ({
+vi.mock(import("@/composables/ergebnismeldung/common/aWerteMapper.ts"), () => ({
   useAWerteMapper: () => ({
     toModel: mockDefinitions.mapToModel,
   }),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createAxiosResponse } = useAxiosTestDataFactory();
@@ -56,7 +59,7 @@ describe("aWerteService.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("getAWerte", () => {

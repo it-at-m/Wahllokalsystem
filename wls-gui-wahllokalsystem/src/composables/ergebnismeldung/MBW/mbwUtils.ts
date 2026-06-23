@@ -19,6 +19,7 @@ import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteSer
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -29,6 +30,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -50,6 +52,7 @@ const { addNotification } = useUserNotificationService();
 const { postStatus } = useStatusService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
+const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -278,7 +281,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       StapelArtEnum.MbwDUngueltig,
       false
     );
-    const ungueltigeStimmen = ungueltige?.ergebnisse[0]?.ergebnis ?? 0;
+    const bedenklicheStimmzettel =
+      (await getBedenklicheStimmzettel(wahlID, wahlbezirkID)) ?? [];
+    const ungueltigeBedenklicheStimmzettel = bedenklicheStimmzettel.filter(
+      (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
+    );
+    const ungueltigeStimmen =
+      (ungueltige?.ergebnisse[0]?.ergebnis ?? 0) +
+      ungueltigeBedenklicheStimmzettel.length;
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 

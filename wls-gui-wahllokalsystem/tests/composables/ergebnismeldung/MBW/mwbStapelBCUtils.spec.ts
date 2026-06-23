@@ -36,18 +36,28 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postErgebnisse: mockDefinitions.postErgebnisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getErgebnisse: mockDefinitions.getErgebnisse,
+        postErgebnisse: mockDefinitions.postErgebnisse,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
-  useWahlvorschlaegeService: () => ({
-    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
+  () => ({
+    useWahlvorschlaegeService: () => ({
+      getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+    }),
+  })
+);
 
 const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();

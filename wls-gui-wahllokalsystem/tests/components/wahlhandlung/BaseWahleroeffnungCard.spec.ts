@@ -3,6 +3,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -30,30 +32,39 @@ const mockDefinitions = vi.hoisted(() => ({
   routerPush: vi.fn(),
 }));
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
-  useEreignisService: () => ({
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisService: () => ({
+        ...mod.useEreignisService(),
+        saveEreignisse: mockDefinitions.saveEreignisse,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorbereitungService: () => ({
+        ...mod.useWahlvorbereitungService(),
+        postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+      }),
+    };
+  }
+);
 
 router.push = mockDefinitions.routerPush;
 
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
 
-  vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     const mockedNow = new Date();

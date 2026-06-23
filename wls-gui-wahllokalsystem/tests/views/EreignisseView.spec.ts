@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -29,21 +30,23 @@ const mockDefinitions = vi.hoisted(() => ({
   getNextRoute: vi.fn(),
 }));
 
-vi.mock("@/composables/navigation/navigationUtils.ts", () => ({
-  useNavigationUtils: () => ({
-    getNextRoute: mockDefinitions.getNextRoute,
-  }),
-}));
+vi.mock(
+  import("@/composables/navigation/navigationUtils.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useNavigationUtils: () => ({
+        ...mod.useNavigationUtils(),
+        getNextRoute: mockDefinitions.getNextRoute,
+      }),
+    };
+  }
+);
 
 describe("TheEreignisseView", () => {
   let wrapper: VueWrapper<InstanceType<typeof EreignisseView>>;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   const routes = [
     {

@@ -23,9 +23,8 @@ Zurückweisungen kommen:
 | Wahlscheine                       | Stimmzettelumschlag                         |
 |-----------------------------------|---------------------------------------------|
 | Wahlschein ungültig laut Liste    | Stimmzettelumschlag fehlt                   |
-| Kein Original-Wahlschein          | Lose Stimmzettel                            |
-| Unterschrift auf Wahlschein fehlt | Wahlbrief und Stimmzettelumschlag offen     |
-|                                   | Wahlscheine ungleich Stimmzettelumschläge   |
+| Kein Original-Wahlschein          | Wahlbrief und Stimmzettelumschlag offen     |
+| Unterschrift auf Wahlschein fehlt | Wahlscheine ungleich Stimmzettelumschläge   |
 |                                   | Nicht-amtlicher Stimmzettelumschlag         |
 |                                   | Stimmzettelumschlag gefährdet Wahlgeheimnis |
 |                                   | Gegenstand im Stimmzettelumschlag           |

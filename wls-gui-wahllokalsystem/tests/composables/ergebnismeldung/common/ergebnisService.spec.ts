@@ -36,7 +36,7 @@ const mockDefinitions = vi.hoisted(() => ({
   toErgebnisseDto: vi.fn(),
   toGetErgebnisseStapelartEnum: vi.fn(),
   toPostErgebnisseStapelartEnum: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   bezirkUndWahlIDStapelartDTOStapelartEnum: vi.fn(),
   getErgebnisseStapelartEnum: vi.fn(),
   postErgebnisseStapelartEnum: vi.fn(),
@@ -65,47 +65,55 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      ErgebnisseControllerApi: vi.fn().mockImplementation(() => ({
-        getErgebnisse: mockDefinitions.getErgebnisse,
-        postErgebnisse: mockDefinitions.postErgebnisse,
-      })),
-      ErgebnismeldungControllerApi: vi.fn().mockImplementation(() => ({
-        sendErgebnisse: mockDefinitions.sendErgebnisse,
-      })),
+      ErgebnisseControllerApi: class {
+        getErgebnisse = mockDefinitions.getErgebnisse;
+        postErgebnisse = mockDefinitions.postErgebnisse;
+      },
+      ErgebnismeldungControllerApi: class {
+        sendErgebnisse = mockDefinitions.sendErgebnisse;
+      },
       Configuration: mockDefinitions.configurationConstructor,
       BezirkUndWahlIDStapelartDTOStapelartEnum:
         mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
       GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
       PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
-      StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
-        postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-      })),
-      BegruendungControllerApi: vi.fn().mockImplementation(() => ({
-        getBegruendung: mockDefinitions.getBegruendung,
-        postBegruendung: mockDefinitions.postBegruendung,
-      })),
+      StimmzettelumschlaegeControllerApi: class {
+        postStimmzettelumschlaege = mockDefinitions.postStimmzettelumschlaege;
+        getStimmzettelumschlaege = mockDefinitions.getStimmzettelumschlaege;
+      },
+      BegruendungControllerApi: class {
+        getBegruendung = mockDefinitions.getBegruendung;
+        postBegruendung = mockDefinitions.postBegruendung;
+      },
     };
   }
 );
-vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
-  useErgebnisMapper: () => ({
-    toErgebnisseModel: mockDefinitions.toErgebnisseModel,
-    toErgebnisseDto: mockDefinitions.toErgebnisseDto,
-    toGetErgebnisseStapelartEnum: mockDefinitions.toGetErgebnisseStapelartEnum,
-    toPostErgebnisseStapelartEnum:
-      mockDefinitions.toPostErgebnisseStapelartEnum,
-    toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
-    toStimmzettelumschlaegeModel: mockDefinitions.toStimmzettelumschlaegeModel,
-    toBegruendungModel: mockDefinitions.toBegruendungModel,
-    toBegruendungDto: mockDefinitions.toBegruendungDto,
-  }),
-}));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisMapper.ts"),
+  () => ({
+    useErgebnisMapper: () => ({
+      toErgebnisseModel: mockDefinitions.toErgebnisseModel,
+      toErgebnisseDto: mockDefinitions.toErgebnisseDto,
+      toGetErgebnisseStapelartEnum:
+        mockDefinitions.toGetErgebnisseStapelartEnum,
+      toPostErgebnisseStapelartEnum:
+        mockDefinitions.toPostErgebnisseStapelartEnum,
+      toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
+      toStimmzettelumschlaegeModel:
+        mockDefinitions.toStimmzettelumschlaegeModel,
+      toBegruendungModel: mockDefinitions.toBegruendungModel,
+      toBegruendungDto: mockDefinitions.toBegruendungDto,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();

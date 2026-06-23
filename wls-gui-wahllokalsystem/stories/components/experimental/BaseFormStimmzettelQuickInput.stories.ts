@@ -1,6 +1,6 @@
-import type { StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3";
 
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 

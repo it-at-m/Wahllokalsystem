@@ -37,8 +37,16 @@
         />
       </v-card-text>
       <v-card-actions>
-        <base-button-cancel @click="onCancelClicked" />
-        <base-button-confirm @click="onSaveClicked" />
+        <v-spacer />
+        <base-button-cancel
+          variant="text"
+          @click="onCancelClicked"
+        />
+        <base-button-confirm
+          color="primary"
+          variant="elevated"
+          @click="onSaveClicked"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -54,6 +62,7 @@ import {
   VCardTitle,
   VColorPicker,
   VDialog,
+  VSpacer,
   VTextField,
 } from "vuetify/components";
 

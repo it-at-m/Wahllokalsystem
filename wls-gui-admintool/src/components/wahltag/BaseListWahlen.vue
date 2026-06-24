@@ -30,7 +30,9 @@
             <td class="text-right">
               <v-btn
                 :loading="isSaving"
-                variant="text"
+                :prepend-icon="mdiPencil"
+                variant="outlined"
+                color="primary"
                 size="small"
                 data-test="edit-wahl"
                 @click="onEditWahlClicked(wahl)"
@@ -59,6 +61,7 @@
 <script setup lang="ts">
 import type { FarbeDTO, WahlDTO } from "@/api/wls-clients/generated-admin-api";
 
+import { mdiPencil } from "@mdi/js";
 import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { VBtn, VTable } from "vuetify/components";
 

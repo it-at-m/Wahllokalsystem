@@ -74,7 +74,7 @@ const confirmTextField = useTemplateRef("confirmTextField") as Readonly<
 >;
 
 const confirmTextFieldLabel = computed(
-  () => `Bitte geben sie "${props.requiredConfirmText}" ein`
+  () => `Bitte geben Sie "${props.requiredConfirmText}" ein`
 );
 const hasUserEnteredConfirmText = computed(
   () => props.requiredConfirmText === confirmText.value

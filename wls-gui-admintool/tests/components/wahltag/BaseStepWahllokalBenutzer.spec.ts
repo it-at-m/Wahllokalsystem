@@ -67,7 +67,7 @@ describe("BaseStepWahllokalBenutzer.vue", () => {
     wrapper = mount(BaseStepWahllokalBenutzer, {
       global: { plugins: [vuetify] },
       props: {
-        wahltagID: wahltagID,
+        wahltagId: wahltagID,
       },
     });
     isGeneratingRef.value = false;

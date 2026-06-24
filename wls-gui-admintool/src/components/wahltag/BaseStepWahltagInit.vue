@@ -9,12 +9,9 @@
         @click="onOverrideWahltagClicked"
         >Überschreiben</v-btn
       >
-      <!-- camelCase :wahltagID ist Absicht: Kebab-Case :wahltag-id würde zu
-           "wahltagId" normalisiert, das Prop "wahltagID" nicht treffen und als
-           Fallthrough-Attribut landen. Nicht zu :wahltag-id ändern. -->
       <base-step-wahllokal-benutzer
         class="mt-4"
-        :wahltagID="wahltagEvent.wahltagID"
+        :wahltag-id="wahltagEvent.wahltagID"
       />
     </div>
     <div v-if="wahlterminDatenExists === false">

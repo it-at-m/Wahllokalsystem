@@ -51,7 +51,7 @@ const {
 } = useWahllokalBenutzerService();
 
 const props = defineProps({
-  wahltagID: {
+  wahltagId: {
     type: String,
     required: true,
   },
@@ -62,11 +62,11 @@ const templateRefBenutzerDeleteConfirmationDialog = useTemplateRef<
 >("benutzerDeleteConfirmationDialog");
 
 async function onGenerateBenutzerClicked() {
-  await generateBenutzer(props.wahltagID);
+  await generateBenutzer(props.wahltagId);
 }
 
 async function onExportBenutzerClicked() {
-  await exportBenutzer(props.wahltagID);
+  await exportBenutzer(props.wahltagId);
 }
 
 function onDeleteBenutzerClicked() {
@@ -75,7 +75,7 @@ function onDeleteBenutzerClicked() {
 
 async function onDeleteDialogConfirmDelete() {
   templateRefBenutzerDeleteConfirmationDialog.value?.hideDialog();
-  await deleteBenutzer(props.wahltagID);
+  await deleteBenutzer(props.wahltagId);
 }
 
 function onDeleteDialogCancelDelete() {

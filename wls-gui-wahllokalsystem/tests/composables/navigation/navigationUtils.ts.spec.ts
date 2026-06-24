@@ -19,6 +19,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_FINISHED,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -326,6 +327,25 @@ describe("navigationUtils.ts", () => {
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(
         unitUnderTest.routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)
+      );
+    });
+
+    it("should_returnRouteToNachlieferungenBearbeiten_when_allPreviousStepsAreDoneAndNachlieferungenBearbeitenIsNotSetAndUserHasWahlbezirksArtBWBAndIsNachlieferungsbezirk", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .isNachlieferungsbezirk(true)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isNachlieferungenBearbeitenErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN)
       );
     });
 

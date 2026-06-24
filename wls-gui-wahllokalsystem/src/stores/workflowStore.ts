@@ -1,12 +1,16 @@
 import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
 import type { RouteRecordNameGeneric } from "vue-router";
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref } from "vue";
+
+import { useUserStore } from "@/stores/userStore.ts";
 
 const workflowStoreId = "workflow";
 
 export const useWorkflowStore = defineStore(workflowStoreId, () => {
+  const { isNachlieferungsbezirk } = storeToRefs(useUserStore());
+
   // bwb + uwb
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
@@ -14,6 +18,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   const isWahleroeffnungErfasst = ref(false);
   // bwb specific
   const isWahlbriefeErfassenErfasst = ref(false);
+  const isNachlieferungenBearbeitenErfasst = ref(false);
   const isWahlbriefeZulassenErfasst = ref(false);
   const isAnzahlWahlscheineErfasst = ref(false);
   const isWahlbriefzulassungErfasst = computed(
@@ -21,7 +26,9 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
       isWahleroeffnungErfasst.value &&
       isWahlumgebungErfasst.value &&
       isWahlbriefeErfassenErfasst.value &&
-      isWahlbriefeZulassenErfasst.value
+      isWahlbriefeZulassenErfasst.value &&
+      (!isNachlieferungsbezirk.value ||
+        isNachlieferungenBearbeitenErfasst.value)
   );
   // uwb specific
   const isWaehlerverzeichnisErfasst = ref(false);
@@ -116,6 +123,7 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
     isTestseiteGedruckt,
     isWahleroeffnungErfasst,
     isWahlbriefeErfassenErfasst,
+    isNachlieferungenBearbeitenErfasst,
     isWahlbriefeZulassenErfasst,
     isAnzahlWahlscheineErfasst,
     isWaehlerverzeichnisErfasst,

@@ -7,6 +7,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_FINISHED,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -93,6 +94,13 @@ export function useNavigationUtils() {
     }
     if (userStore.isBWB && !workflowStore.isWahlbriefeZulassenErfasst) {
       return routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN);
+    }
+    if (
+      userStore.isBWB &&
+      userStore.isNachlieferungsbezirk &&
+      !workflowStore.isNachlieferungenBearbeitenErfasst
+    ) {
+      return routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN);
     }
 
     // check wahlhandlung steps (UWB)

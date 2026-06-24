@@ -52,6 +52,17 @@
         isWahlbriefeZulassenErfasst || areAllElectionsFinished
       "
     />
+    <base-workflow-list-item
+      v-if="isNachlieferungsbezirk"
+      title="Nachlieferungen bearbeiten"
+      :to="routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN)"
+      :disabled="
+        (disabled || !isWahlbriefeZulassenErfasst) && !areAllElectionsFinished
+      "
+      :is-workflow-step-finished="
+        isNachlieferungenBearbeitenErfasst || areAllElectionsFinished
+      "
+    />
   </v-list-group>
 </template>
 
@@ -63,9 +74,11 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_WAHLBRIEFE_ZULASSEN,
   ROUTE_WAHLUMGEBUNG,
 } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
 defineProps({
@@ -88,5 +101,7 @@ const {
   isWahlbriefeZulassenErfasst,
   isWahlvorstandErfasst,
   isWahlbriefzulassungErfasst,
+  isNachlieferungenBearbeitenErfasst,
 } = storeToRefs(useWorkflowStore());
+const { isNachlieferungsbezirk } = storeToRefs(useUserStore());
 </script>

@@ -13,6 +13,7 @@ import { useBriefwahlMapper } from "@/composables/briefwahl/briefwahlMapper.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BRIEFWAHL_SERVICE_API_URL } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
@@ -122,6 +123,13 @@ export function useBriefwahlService() {
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData) {
         useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+        if (useUserStore().isNachlieferungsbezirk) {
+          useWorkflowStore().isNachlieferungenBearbeitenErfasst =
+            responseData.nachtraeglichUeberbrachte !== undefined &&
+            responseData.nachtraeglichUeberbrachte !== null &&
+            responseData.zeitNachtraeglichUeberbrachte !== undefined &&
+            responseData.zeitNachtraeglichUeberbrachte !== null;
+        }
         return toWahlbriefdatenModel(responseData);
       } else {
         return {

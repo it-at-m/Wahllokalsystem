@@ -39,6 +39,7 @@ import TheWahlschlussCheckPopupDialog from "@/components/wahlhandlung/TheWahlsch
 import TheWahlvorstandAnwesenheitsCheckPopupDialog from "@/components/wahlvorstand/TheWahlvorstandAnwesenheitsCheckPopupDialog.vue";
 import TheTestseiteDruckenDialog from "@/components/wlsComponents/TheTestseiteDruckenDialog.vue";
 import TheWlsAppBar from "@/components/wlsComponents/TheWlsAppBar.vue";
+import { useNachlieferungsbezirkeService } from "@/composables/basisdaten/nachlieferungsbezirkeService.ts";
 import { useBroadcastCronjobService } from "@/composables/broadcast/broadcastCronjobService.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
@@ -58,11 +59,13 @@ const { loadUser } = useUserStore();
 const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
   useInfomanagementStore()
 );
-const { isUWB } = storeToRefs(useUserStore());
+const { isUWB, isBWB, currentUserWahltagID, currentUserWahlbezirkID } =
+  storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 const { isTodayOrFuture } = useDateTimeUtils();
+const { isNachlieferungsbezirk } = useNachlieferungsbezirkeService();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
   useBroadcastCronjobService();
@@ -91,6 +94,13 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
+    console.debug("App.vue: ", isBWB.value);
+    if (isBWB.value) {
+      await isNachlieferungsbezirk(
+        currentUserWahltagID.value,
+        currentUserWahlbezirkID.value
+      );
+    }
     await initTasks();
 
     showTestdruckDialog.value = true;

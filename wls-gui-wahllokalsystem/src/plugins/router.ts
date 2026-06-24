@@ -8,6 +8,7 @@ import {
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_FINISHED,
   ROUTE_LOGOUT,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_NOTFOUND,
   ROUTE_STAPEL_A,
   ROUTE_STAPEL_B,
@@ -34,6 +35,7 @@ import ExampleError404View from "@/views/ExampleError404View.vue";
 import FinishedView from "@/views/FinishedView.vue";
 import HomeView from "@/views/HomeView.vue";
 import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
+import BWBNachlieferungenBearbeitenView from "@/views/wahlhandlung/BWBNachlieferungenBearbeitenView.vue";
 import BWBWahlbriefErfassungView from "@/views/wahlhandlung/BWBWahlbriefErfassungView.vue";
 import BwbWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
 import UWBStimmabgabeView from "@/views/wahlhandlung/UWBStimmabgabeView.vue";
@@ -132,6 +134,19 @@ const routes = [
       permitNavigationWhenWahleroeffnungIsErfasst,
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
+    ],
+  },
+  {
+    path: "/nachlieferungen",
+    name: ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
+    component: BWBNachlieferungenBearbeitenView,
+    beforeEnter: [
+      permitNavigationOnlyForWahlbezirksArtBwb,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
+      permitNavigationWhenWahleroeffnungIsErfasst,
+      permitNavigationWhenWahlumgebungIsErfasst,
+      permitNavigationWhenWahlbriefeErfassenIsErfasst,
+      permitNavigationWhenWahlbriefeZulassenIsErfasst,
     ],
   },
   {

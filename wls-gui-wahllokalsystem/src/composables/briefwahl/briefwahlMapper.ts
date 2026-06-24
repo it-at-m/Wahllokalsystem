@@ -13,7 +13,8 @@ export function useBriefwahlMapper() {
     wahlbriefdatenDTO: WahlbriefdatenDTO
   ): Wahlbriefdaten {
     const parsedDate =
-      wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte !== undefined
+      wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte !== undefined &&
+      wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte !== null
         ? new Date(wahlbriefdatenDTO.zeitNachtraeglichUeberbrachte)
         : undefined;
     return {

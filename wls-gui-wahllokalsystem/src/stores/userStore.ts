@@ -110,6 +110,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlMetaData;
   });
 
+  const isNachlieferungsbezirk = computed(() => {
+    return user.value.isNachlieferungsbezirk;
+  });
+
   function getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
     const metadata = currentUserWahlMetadata.value.find((metadata) => {
       return metadata.wahlID === wahlID;
@@ -120,6 +124,10 @@ export const useUserStore = defineStore("user", () => {
 
   function setUser(payload: User): void {
     user.value = payload;
+  }
+
+  function setNachlieferungsbezirk(isNachlieferungsbezirk: boolean) {
+    user.value.isNachlieferungsbezirk = isNachlieferungsbezirk;
   }
 
   return {
@@ -137,6 +145,8 @@ export const useUserStore = defineStore("user", () => {
     isUWB,
     isBWB,
     isUserLoggedIn,
+    isNachlieferungsbezirk,
+    setNachlieferungsbezirk,
   };
 });
 

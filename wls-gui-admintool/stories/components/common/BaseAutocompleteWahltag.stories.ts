@@ -120,6 +120,18 @@ export const PreSelect: Story = {
   },
 };
 
+/**
+ * Ein Wahltag ist als aktiv gekennzeichnet und dadurch erkennbar.
+ */
+export const ActiveWahltag: Story = {
+  args: {
+    ...Default.args,
+    items: wahltage.map((wahltag, index) =>
+      index === 2 ? { ...wahltag, aktiv: true } : wahltag
+    ),
+  },
+};
+
 export const NoData: Story = {
   args: {
     ...Default.args,

@@ -536,7 +536,7 @@ export function useNiederschriftDruckUWB() {
                     </div>
                     <div class="horizontal marginBottom_1">
                         <div class="widthNumber"></div>
-                        <div><span class="bold lilatext">(Stapel gemäß 3.4 Buchst. e) &#8594; lila</span></div>
+                        <div><span class="bold purpurtext">(Stapel gemäß 3.4 Buchst. e) &#8594; lila</span></div>
                     </div>
                     <div class="horizontal marginBottom_1">
                         <div class="widthNumber">3.6.1</div>
@@ -1366,7 +1366,7 @@ export function useNiederschriftDruckUWB() {
                 <div class="widthNumber">5.5.4</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) <b>wurden spätestens jetzt in die Wahlverhandlungstasche</b> eingelegt (Stapel gemäß 3.4 → <span class="bold lilatext">Stapel e</span>),
+                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) <b>wurden spätestens jetzt in die Wahlverhandlungstasche</b> eingelegt (Stapel gemäß 3.4 → <span class="bold purpurtext">Stapel e</span>),
                 </div>
             </div>
             <div class="horizontal marginBottom_2">
@@ -1492,6 +1492,40 @@ export function useNiederschriftDruckUWB() {
                             left: 1cm;
                             font-size: x-small;
                             z-index: 0;
+                        }
+                        
+                        /**
+                         * Background Colors
+                         * 
+                         * this inner shadow is a workaround to avoid that background colors are only being printed 
+                         * when "Hintergrund drucken" Checkbox is selected in browser (see Issue #2913)
+                         */
+                        .blueGrayBG {
+                          box-shadow: inset 0 0 0 9999px #e6e6ff !important;
+                        }
+                        
+                        .yellowBG {
+                          box-shadow: inset 0 0 0 9999px #ffff99 !important;
+                        }
+                        
+                        .whiteBG {
+                          box-shadow: inset 0 0 0 9999px #ffffff !important;
+                        }
+    
+                        .greenBG {
+                          box-shadow: inset 0 0 0 9999px #99ff66 !important;
+                        }
+    
+                        .green_3_BG {
+                          box-shadow: inset 0 0 0 9999px #29cc29 !important;
+                        }
+    
+                        .redBG {
+                          box-shadow: inset 0 0 0 9999px #ff3333 !important;
+                        }
+    
+                        .purpurBG {
+                          box-shadow: inset 0 0 0 9999px #9900ff !important;
                         }
                     }
 
@@ -1788,12 +1822,7 @@ export function useNiederschriftDruckUWB() {
                         font-size: 14pt;
                     }
 
-                    /****** BackgroundColor ******/
-                    .blueGrayBG {
-                        background-color: #e6e6ff;
-                    }
-
-                    /****** Width ******/
+                   /****** Width ******/
                     .width_100 {
                         width: 100%;
                     }
@@ -1935,31 +1964,6 @@ export function useNiederschriftDruckUWB() {
                         color: #546e7a;
                     }
 
-                    .whiteBG {
-                        background-color: #ffffff !important;
-                    }
-
-                    .yellowBG {
-                        background-color: #ffff99;
-                        
-                    }
-
-                    .greenBG {
-                        background-color: #99ff66;
-                    }
-
-                    .green_3_BG {
-                        background-color: #29cc29;
-                    }
-
-                    .redBG {
-                        background-color: #ff3333;
-                    }
-
-                    .purpurBG {
-                        background-color: #9900ff;
-                    }
-
                     .greentext {
                         color: #99ff66;
                     }
@@ -1972,8 +1976,8 @@ export function useNiederschriftDruckUWB() {
                         color: #ff0000;
                     }
 
-                    .lilatext {
-                        color: #a37acc;
+                    .purpurtext {
+                        color: #9900ff;
                     }
 
                     /****** Page Break ******/

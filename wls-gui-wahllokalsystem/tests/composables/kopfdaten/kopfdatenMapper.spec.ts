@@ -26,6 +26,7 @@ describe("kopfdatenMapper.ts", () => {
         stimmzettelgebietsname: dto.stimmzettelgebietsname,
         wahlname: dto.wahlname,
         wahlbezirknummer: dto.wahlbezirknummer,
+        maximalErlaubteStimmenProWaehler: dto.maximalErlaubteStimmenProWaehler,
       };
 
       const result = toModel(dto);

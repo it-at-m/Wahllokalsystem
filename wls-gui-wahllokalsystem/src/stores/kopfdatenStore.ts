@@ -6,6 +6,8 @@ import { ref } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const kopfdatenService = useKopfdatenService();
@@ -23,6 +25,20 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
       kopfdaten.value = await Promise.all(loadedDataAsPromises);
     } catch {
       throw Error("Fehler beim Resolven der Promises");
+    }
+    const wahlenStore = useWahlenStore();
+
+    for (const kd of kopfdaten.value) {
+      const wahl = wahlenStore.wahlenActions.getWahlOrUndefinedById(kd.wahlID);
+      if (
+        wahl &&
+        wahl.wahlart === WahlWahlartEnum.Mbw &&
+        (kd as Kopfdaten).maximalErlaubteStimmenProWaehler == null
+      ) {
+        throw Error(
+          `Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`
+        );
+      }
     }
   }
 

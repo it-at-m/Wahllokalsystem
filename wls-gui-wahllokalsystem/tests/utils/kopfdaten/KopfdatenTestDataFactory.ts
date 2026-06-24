@@ -21,6 +21,7 @@ export function useKopfdatenTestDataFactory() {
       wahlbezirkID: generateRandomString(20),
       wahlbezirknummer: generateRandomString(10),
       wahlname: generateRandomString(10),
+      maximalErlaubteStimmenProWaehler: 40,
     };
   }
 
@@ -34,6 +35,7 @@ export function useKopfdatenTestDataFactory() {
       wahlbezirkID: generateRandomString(20),
       wahlbezirknummer: generateRandomString(10),
       wahlname: generateRandomString(10),
+      maximalErlaubteStimmenProWaehler: 40,
     };
   }
 

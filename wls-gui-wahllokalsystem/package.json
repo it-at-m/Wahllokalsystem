@@ -16,7 +16,7 @@
     "lint": "prettier . --check && eslint . && vue-tsc --noEmit",
     "fix": "prettier . --write && eslint . --fix",
     "gen:auth-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.auth.0.7.0.json -g typescript-axios -o src/api/wls-clients/generated-auth-api --type-mappings=set=Array",
-    "gen:basisdaten-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.basisdaten.0.4.0.json -g typescript-axios -o src/api/wls-clients/generated-basisdaten-api --type-mappings=set=Array",
+    "gen:basisdaten-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.basisdaten.0.6.0.json -g typescript-axios -o src/api/wls-clients/generated-basisdaten-api --type-mappings=set=Array",
     "gen:briefwahl-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.briefwahl.0.2.0.json -g typescript-axios -o src/api/wls-clients/generated-briefwahl-api --type-mappings=set=Array",
     "gen:broadcast-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.3.0.json -g typescript-axios -o src/api/wls-clients/generated-broadcast-api --type-mappings=set=Array",
     "gen:ergebnismeldung-api": "openapi-generator-cli generate -i src/resources/openapis/openapi.ergebnismeldung.0.6.0.json -g typescript-axios -o src/api/wls-clients/generated-ergebnismeldung-api --type-mappings=set=Array",

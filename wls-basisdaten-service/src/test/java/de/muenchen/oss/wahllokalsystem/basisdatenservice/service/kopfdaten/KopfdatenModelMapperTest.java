@@ -23,7 +23,8 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "120",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
     val kopfdatenEntity2 =
         MockDataFactory.createKopfdatenEntityFor(
             "wahlID2",
@@ -32,7 +33,8 @@ class KopfdatenModelMapperTest {
             "Munich2",
             "121",
             "Bundestagswahl",
-            "1202");
+            "1202",
+            null);
     val entitiesToMap = List.of(kopfdatenEntity1, kopfdatenEntity2);
     val result = unitUnderTest.fromListOfEntitiesToListOfModels(entitiesToMap);
 
@@ -44,7 +46,8 @@ class KopfdatenModelMapperTest {
             "120",
             "Munich1",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
     val kopfdatenModel2 =
         MockDataFactory.createKopfdatenModelFor(
             "wahlID2",
@@ -53,7 +56,8 @@ class KopfdatenModelMapperTest {
             "121",
             "Munich2",
             "Bundestagswahl",
-            "1202");
+            "1202",
+            null);
     val expectedResult = List.of(kopfdatenModel1, kopfdatenModel2);
 
     Assertions.assertThat(result).isEqualTo(expectedResult);
@@ -69,7 +73,8 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "120",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
     val result = unitUnderTest.toModel(kopfdatenEntity1);
 
     val kopfdatenModel1 =
@@ -80,7 +85,8 @@ class KopfdatenModelMapperTest {
             "120",
             "Munich1",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
 
     Assertions.assertThat(result).isEqualTo(kopfdatenModel1);
   }
@@ -95,7 +101,8 @@ class KopfdatenModelMapperTest {
             "120",
             "Munich1",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
     val result = unitUnderTest.toEntity(kopfdatenModel1);
 
     val kopfdatenEntity1 =
@@ -106,7 +113,8 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "120",
             "Bundestagswahl",
-            "1201");
+            "1201",
+            null);
 
     Assertions.assertThat(result).isEqualTo(kopfdatenEntity1);
   }

@@ -15,20 +15,24 @@
           variant="filled"
           data-test="wahl-name"
         />
-        <v-text-field
-          v-model.number="workingCopy.waehlerverzeichnisNummer"
-          type="number"
-          label="Nummer des Wählerverzeichnis"
-          :rules="nichtNegativeZahlRules"
-          data-test="wahl-waehlerverzeichnisnummer"
-        />
-        <v-text-field
-          v-model.number="workingCopy.reihenfolge"
-          type="number"
-          label="Wahlreihenfolge"
-          :rules="nichtNegativeZahlRules"
-          data-test="wahl-reihenfolge"
-        />
+        <!-- Pfeiltasten-Eingabe wird unterbunden (ADR002): in der Capture-Phase
+        abgefangen, bevor VNumberInput den Wert verändert. -->
+        <div @keydown.capture="onNumberFieldKeydown">
+          <v-number-input
+            v-model="waehlerverzeichnisNummer"
+            control-variant="hidden"
+            label="Nummer des Wählerverzeichnisses"
+            :rules="nichtNegativeZahlRules"
+            data-test="wahl-waehlerverzeichnisnummer"
+          />
+          <v-number-input
+            v-model="reihenfolge"
+            control-variant="hidden"
+            label="Wahlreihenfolge"
+            :rules="nichtNegativeZahlRules"
+            data-test="wahl-reihenfolge"
+          />
+        </div>
         <div class="text-subtitle-2 mb-1">Wahlfarbe</div>
         <v-color-picker
           v-model="farbeHex"
@@ -66,6 +70,7 @@ import {
   VCardTitle,
   VColorPicker,
   VDialog,
+  VNumberInput,
   VSpacer,
   VTextField,
 } from "vuetify/components";
@@ -82,12 +87,16 @@ defineExpose({ showDialog, hideDialog });
 
 const visible = ref(false);
 const workingCopy = reactive<WahlDTO>(createEmptyWahl());
+// VNumberInput liefert beim Leeren null, WahlDTO erlaubt aber nur number –
+// daher eigene, nullbare Refs für die editierbaren Zahlenfelder.
+const waehlerverzeichnisNummer = ref<number | null>(null);
+const reihenfolge = ref<number | null>(null);
 const farbeHex = ref("#000000");
 
 const isFormValid = computed(
   () =>
-    istNichtNegativeZahl(workingCopy.waehlerverzeichnisNummer) &&
-    istNichtNegativeZahl(workingCopy.reihenfolge)
+    istNichtNegativeZahl(waehlerverzeichnisNummer.value) &&
+    istNichtNegativeZahl(reihenfolge.value)
 );
 
 const nichtNegativeZahlRules = [
@@ -98,8 +107,17 @@ const nichtNegativeZahlRules = [
 
 function showDialog(wahl: WahlDTO) {
   Object.assign(workingCopy, wahl);
+  waehlerverzeichnisNummer.value = wahl.waehlerverzeichnisNummer;
+  reihenfolge.value = wahl.reihenfolge;
   farbeHex.value = farbeToHex(wahl.farbe);
   visible.value = true;
+}
+
+function onNumberFieldKeydown(event: KeyboardEvent) {
+  if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }
 
 function hideDialog() {
@@ -123,8 +141,8 @@ function onSaveClicked() {
   }
   const updatedWahl: WahlDTO = {
     ...workingCopy,
-    waehlerverzeichnisNummer: Number(workingCopy.waehlerverzeichnisNummer),
-    reihenfolge: Number(workingCopy.reihenfolge),
+    waehlerverzeichnisNummer: Number(waehlerverzeichnisNummer.value),
+    reihenfolge: Number(reihenfolge.value),
     farbe: hexToFarbe(farbeHex.value),
   };
   emit("save", updatedWahl);

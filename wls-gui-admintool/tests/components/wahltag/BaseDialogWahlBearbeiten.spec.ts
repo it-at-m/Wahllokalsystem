@@ -130,6 +130,30 @@ describe("BaseDialogWahlBearbeiten.vue", () => {
       });
     });
 
+    describe("input restriction (ADR002)", () => {
+      it("should_notChangeValue_when_arrowKeysPressed", async () => {
+        wrapper.vm.showDialog(wahlDto);
+        await wrapper.vm.$nextTick();
+
+        const field = wrapper.findComponent(
+          `[data-test="wahl-waehlerverzeichnisnummer"]`
+        );
+        const input = field.find("input");
+        // Nur erhöhen, damit der Test ohne Unterbindung fehlschlagen würde
+        // (sonst würde ArrowUp/ArrowDown sich gegenseitig aufheben).
+        await input.trigger("keydown", { key: "ArrowUp" });
+        await input.trigger("keydown", { key: "ArrowUp" });
+        await wrapper.vm.$nextTick();
+
+        await wrapper.findComponent(BaseButtonConfirm).trigger("click");
+
+        // Pfeiltasten dürfen den Wert nicht verändern – er bleibt beim
+        // Ausgangswert aus dem geöffneten Datensatz.
+        const savedWahl = wrapper.emitted("save")?.[0]?.[0] as WahlDTO;
+        expect(savedWahl.waehlerverzeichnisNummer).toBe(10);
+      });
+    });
+
     describe("visibility", () => {
       it("should_reopenDialog_when_reshownAfterExternalClose", async () => {
         const dialog = wrapper.findComponent(VDialog);

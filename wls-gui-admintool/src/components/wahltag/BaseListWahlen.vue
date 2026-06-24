@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Name der Wahl</th>
-            <th>Nummer des Wählerverzeichnis</th>
+            <th>Nummer des Wählerverzeichnisses</th>
             <th>Wahlreihenfolge</th>
             <th>Wahlfarbe</th>
             <th class="text-right">Aktion</th>

@@ -9,6 +9,13 @@
         @click="onOverrideWahltagClicked"
         >Überschreiben</v-btn
       >
+      <!-- camelCase :wahltagID ist Absicht: Kebab-Case :wahltag-id würde zu
+           "wahltagId" normalisiert, das Prop "wahltagID" nicht treffen und als
+           Fallthrough-Attribut landen. Nicht zu :wahltag-id ändern. -->
+      <base-step-wahllokal-benutzer
+        class="mt-4"
+        :wahltagID="wahltagEvent.wahltagID"
+      />
     </div>
     <div v-if="wahlterminDatenExists === false">
       <v-btn
@@ -39,6 +46,7 @@ import { useTemplateRef } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseStepWahllokalBenutzer from "@/components/wahltag/BaseStepWahllokalBenutzer.vue";
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";
 
 const {

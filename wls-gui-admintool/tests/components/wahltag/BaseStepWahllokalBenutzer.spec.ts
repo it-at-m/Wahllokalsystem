@@ -5,7 +5,7 @@ import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
 } from "@tests/utils/testutils.ts";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import {
   afterAll,
   afterEach,
@@ -172,6 +172,60 @@ describe("BaseStepWahllokalBenutzer.vue", () => {
       expect(dialogHideSpy).toHaveBeenCalledTimes(1);
 
       dialogHideSpy.mockRestore();
+    });
+
+    it("should_displayBenutzerList_when_generateSucceeds", async () => {
+      mockDefinitions.generateBenutzer.mockResolvedValue(
+        "kueh-0001\nmfpz-0002"
+      );
+
+      await wrapper
+        .findComponent('[data-test="generate-benutzer"]')
+        .trigger("click");
+      await flushPromises();
+
+      expect(
+        wrapper.find('[data-test="list-wahllokalbenutzer"]').exists()
+      ).toBe(true);
+    });
+
+    it("should_displayBenutzerList_when_exportSucceeds", async () => {
+      mockDefinitions.exportBenutzer.mockResolvedValue("kueh-0001\nmfpz-0002");
+
+      await wrapper
+        .findComponent('[data-test="export-benutzer"]')
+        .trigger("click");
+      await flushPromises();
+
+      expect(
+        wrapper.find('[data-test="list-wahllokalbenutzer"]').exists()
+      ).toBe(true);
+    });
+
+    it("should_clearBenutzerList_when_deleteConfirmed", async () => {
+      mockDefinitions.generateBenutzer.mockResolvedValue("kueh-0001");
+
+      await wrapper
+        .findComponent('[data-test="generate-benutzer"]')
+        .trigger("click");
+      await flushPromises();
+      expect(
+        wrapper.find('[data-test="list-wahllokalbenutzer"]').exists()
+      ).toBe(true);
+
+      await wrapper
+        .findComponent('[data-test="delete-benutzer"]')
+        .trigger("click");
+      const referencedConfirmDialog = wrapper.vm.$refs
+        .benutzerDeleteConfirmationDialog as InstanceType<
+        typeof BaseDialogWahllokalBenutzerDeleteConfirmation
+      >;
+      referencedConfirmDialog.$emit("confirmDelete");
+      await flushPromises();
+
+      expect(
+        wrapper.find('[data-test="list-wahllokalbenutzer"]').exists()
+      ).toBe(false);
     });
   });
 });

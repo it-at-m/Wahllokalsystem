@@ -20,14 +20,16 @@ export function useWahllokalBenutzerService() {
   const isExporting = ref(false);
   const isDeleting = ref(false);
 
-  async function generateBenutzer(wahltagID: string) {
+  async function generateBenutzer(wahltagID: string): Promise<string> {
     isGenerating.value = true;
     try {
-      await wahllokalBenutzerAPI.generateWahllokalbenutzer(wahltagID);
+      const response =
+        await wahllokalBenutzerAPI.generateWahllokalbenutzer(wahltagID);
       addNotification(
         "Wahllokalbenutzer wurden erstellt",
         UserNotificationCategoryEnum.SUCCESS
       );
+      return response.data.csv;
     } catch (error) {
       addNotification(
         "Erstellen der Wahllokalbenutzer fehlgeschlagen",
@@ -39,7 +41,7 @@ export function useWahllokalBenutzerService() {
     }
   }
 
-  async function exportBenutzer(wahltagID: string) {
+  async function exportBenutzer(wahltagID: string): Promise<string> {
     isExporting.value = true;
     try {
       const response =
@@ -49,7 +51,9 @@ export function useWahllokalBenutzerService() {
       const csvFiles = Array.isArray(response.data)
         ? response.data
         : [response.data];
-      downloadCsv(csvFiles.map((csvFile) => csvFile.csv).join("\n"), wahltagID);
+      const csvContent = csvFiles.map((csvFile) => csvFile.csv).join("\n");
+      downloadCsv(csvContent, wahltagID);
+      return csvContent;
     } catch (error) {
       addNotification(
         "Export der Wahllokalbenutzer fehlgeschlagen",

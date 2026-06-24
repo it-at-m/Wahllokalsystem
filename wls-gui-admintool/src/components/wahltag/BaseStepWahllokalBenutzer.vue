@@ -27,6 +27,12 @@
       >Benutzer löschen</v-btn
     >
 
+    <base-list-wahllokal-benutzer
+      v-if="benutzerCsv"
+      :csv="benutzerCsv"
+      class="mt-4"
+    />
+
     <base-dialog-wahllokal-benutzer-delete-confirmation
       ref="benutzerDeleteConfirmationDialog"
       @confirmDelete="onDeleteDialogConfirmDelete"
@@ -35,10 +41,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useTemplateRef } from "vue";
+import { ref, useTemplateRef } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseDialogWahllokalBenutzerDeleteConfirmation from "@/components/wahltag/BaseDialogWahllokalBenutzerDeleteConfirmation.vue";
+import BaseListWahllokalBenutzer from "@/components/wahltag/BaseListWahllokalBenutzer.vue";
 import { useWahllokalBenutzerService } from "@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts";
 
 const {
@@ -61,12 +68,14 @@ const templateRefBenutzerDeleteConfirmationDialog = useTemplateRef<
   InstanceType<typeof BaseDialogWahllokalBenutzerDeleteConfirmation>
 >("benutzerDeleteConfirmationDialog");
 
+const benutzerCsv = ref("");
+
 async function onGenerateBenutzerClicked() {
-  await generateBenutzer(props.wahltagId);
+  benutzerCsv.value = await generateBenutzer(props.wahltagId);
 }
 
 async function onExportBenutzerClicked() {
-  await exportBenutzer(props.wahltagId);
+  benutzerCsv.value = await exportBenutzer(props.wahltagId);
 }
 
 function onDeleteBenutzerClicked() {
@@ -76,6 +85,7 @@ function onDeleteBenutzerClicked() {
 async function onDeleteDialogConfirmDelete() {
   templateRefBenutzerDeleteConfirmationDialog.value?.hideDialog();
   await deleteBenutzer(props.wahltagId);
+  benutzerCsv.value = "";
 }
 
 function onDeleteDialogCancelDelete() {

@@ -48,6 +48,9 @@ describe("wahllokalbenutzerService.ts", () => {
     window.URL.createObjectURL = createObjectURLMock;
     window.URL.revokeObjectURL = revokeObjectURLMock;
     HTMLAnchorElement.prototype.click = anchorClickMock;
+    mockDefinitions.apiGenerateWahllokalbenutzer.mockResolvedValue({
+      data: { csv: "username1\nusername2" },
+    });
   });
 
   afterEach(() => {
@@ -74,6 +77,16 @@ describe("wahllokalbenutzerService.ts", () => {
           expect.any(String),
           "Success",
         ]);
+      });
+
+      it("should_returnCsvFromResponse_when_succeeded", async () => {
+        mockDefinitions.apiGenerateWahllokalbenutzer.mockResolvedValue({
+          data: { csv: "kueh-0001\nmfpz-0002" },
+        });
+
+        const result = await unitUnderTest.generateBenutzer("wahltagID");
+
+        expect(result).toBe("kueh-0001\nmfpz-0002");
       });
 
       it("should_addErrorNotification_when_exceptionOccurred", async () => {
@@ -142,6 +155,16 @@ describe("wahllokalbenutzerService.ts", () => {
         await unitUnderTest.exportBenutzer("wahltagID");
 
         expect(anchorClickMock).toHaveBeenCalledTimes(1);
+      });
+
+      it("should_returnJoinedCsv_when_succeeded", async () => {
+        mockDefinitions.apiExportWahllokalBenutzer.mockResolvedValue({
+          data: [{ csv: "kueh-0001" }, { csv: "mfpz-0002" }],
+        });
+
+        const result = await unitUnderTest.exportBenutzer("wahltagID");
+
+        expect(result).toBe("kueh-0001\nmfpz-0002");
       });
 
       it("should_addErrorNotification_when_exceptionOccurred", async () => {

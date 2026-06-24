@@ -27,40 +27,14 @@
           data-test="wahl-reihenfolge"
         />
         <div class="text-subtitle-2 mb-1">Wahlfarbe</div>
-        <div class="d-flex align-center ga-2">
-          <div
-            class="wahl-farbe-preview"
-            :style="{ backgroundColor: farbeCssColor }"
-            data-test="wahl-farbe-preview"
-          />
-          <v-text-field
-            v-model.number="farbe.r"
-            type="number"
-            min="0"
-            max="255"
-            label="R"
-            density="compact"
-            data-test="wahl-farbe-r"
-          />
-          <v-text-field
-            v-model.number="farbe.g"
-            type="number"
-            min="0"
-            max="255"
-            label="G"
-            density="compact"
-            data-test="wahl-farbe-g"
-          />
-          <v-text-field
-            v-model.number="farbe.b"
-            type="number"
-            min="0"
-            max="255"
-            label="B"
-            density="compact"
-            data-test="wahl-farbe-b"
-          />
-        </div>
+        <v-color-picker
+          v-model="farbeHex"
+          mode="rgb"
+          :modes="['rgb', 'hex']"
+          hide-inputs
+          width="100%"
+          data-test="wahl-farbe"
+        />
       </v-card-text>
       <v-card-actions>
         <base-button-cancel @click="onCancelClicked" />
@@ -72,12 +46,13 @@
 <script setup lang="ts">
 import type { FarbeDTO, WahlDTO } from "@/api/wls-clients/generated-admin-api";
 
-import { computed, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import {
   VCard,
   VCardActions,
   VCardText,
   VCardTitle,
+  VColorPicker,
   VDialog,
   VTextField,
 } from "vuetify/components";
@@ -94,19 +69,11 @@ defineExpose({ showDialog, hideDialog });
 
 const visible = ref(false);
 const workingCopy = reactive<WahlDTO>(createEmptyWahl());
-const farbe = reactive<FarbeDTO>({ r: 0, g: 0, b: 0 });
-
-const farbeCssColor = computed(
-  () => `rgb(${Number(farbe.r)}, ${Number(farbe.g)}, ${Number(farbe.b)})`
-);
+const farbeHex = ref("#000000");
 
 function showDialog(wahl: WahlDTO) {
   Object.assign(workingCopy, wahl);
-  Object.assign(farbe, {
-    r: wahl.farbe?.r ?? 0,
-    g: wahl.farbe?.g ?? 0,
-    b: wahl.farbe?.b ?? 0,
-  });
+  farbeHex.value = farbeToHex(wahl.farbe);
   visible.value = true;
 }
 
@@ -123,13 +90,26 @@ function onSaveClicked() {
     ...workingCopy,
     waehlerverzeichnisNummer: Number(workingCopy.waehlerverzeichnisNummer),
     reihenfolge: Number(workingCopy.reihenfolge),
-    farbe: {
-      r: Number(farbe.r),
-      g: Number(farbe.g),
-      b: Number(farbe.b),
-    },
+    farbe: hexToFarbe(farbeHex.value),
   };
   emit("save", updatedWahl);
+}
+
+function farbeToHex(farbe?: FarbeDTO): string {
+  const toHex = (value?: number) =>
+    Math.min(255, Math.max(0, Math.round(Number(value) || 0)))
+      .toString(16)
+      .padStart(2, "0");
+  return `#${toHex(farbe?.r)}${toHex(farbe?.g)}${toHex(farbe?.b)}`;
+}
+
+function hexToFarbe(hex: string): FarbeDTO {
+  const normalized = hex.replace("#", "").slice(0, 6).padEnd(6, "0");
+  return {
+    r: parseInt(normalized.slice(0, 2), 16),
+    g: parseInt(normalized.slice(2, 4), 16),
+    b: parseInt(normalized.slice(4, 6), 16),
+  };
 }
 
 function createEmptyWahl(): WahlDTO {
@@ -143,12 +123,3 @@ function createEmptyWahl(): WahlDTO {
   };
 }
 </script>
-<style scoped>
-.wahl-farbe-preview {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  border: 1px solid rgba(var(--v-theme-on-surface), 0.2);
-  flex: 0 0 auto;
-}
-</style>

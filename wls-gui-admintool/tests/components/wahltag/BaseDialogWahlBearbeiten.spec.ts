@@ -8,11 +8,21 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { VColorPicker } from "vuetify/components";
 
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
 import BaseDialogWahlBearbeiten from "@/components/wahltag/BaseDialogWahlBearbeiten.vue";
 import vuetify from "@/plugins/vuetify.ts";
+
+const ResizeObserverMock = vi.fn(
+  class MockedResizeObserverMock {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
+  } as never
+);
+vi.stubGlobal("ResizeObserver", ResizeObserverMock);
 
 const wahlDto: WahlDTO = {
   wahlID: "wahl-1",
@@ -72,9 +82,8 @@ describe("BaseDialogWahlBearbeiten.vue", () => {
 
         await setFieldValue("wahl-waehlerverzeichnisnummer", "99");
         await setFieldValue("wahl-reihenfolge", "3");
-        await setFieldValue("wahl-farbe-r", "10");
-        await setFieldValue("wahl-farbe-g", "20");
-        await setFieldValue("wahl-farbe-b", "30");
+        // Farbe über den Color-Picker setzen (#0A141E entspricht r=10, g=20, b=30).
+        await setColorPickerValue("#0A141E");
 
         await wrapper.findComponent(BaseButtonConfirm).trigger("click");
 
@@ -126,6 +135,11 @@ describe("BaseDialogWahlBearbeiten.vue", () => {
     // Komponentenbaum (findComponent) statt über das DOM des Wrappers suchen.
     const field = wrapper.findComponent(`[data-test="${dataTest}"]`);
     await field.find("input").setValue(value);
+  }
+
+  async function setColorPickerValue(hex: string) {
+    wrapper.findComponent(VColorPicker).vm.$emit("update:modelValue", hex);
+    await wrapper.vm.$nextTick();
   }
 });
 

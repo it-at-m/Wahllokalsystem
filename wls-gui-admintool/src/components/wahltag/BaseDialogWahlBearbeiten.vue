@@ -3,6 +3,7 @@
     :model-value="visible"
     width="500"
     data-test="dialog-wahl-bearbeiten"
+    @update:model-value="onVisibilityChanged"
   >
     <v-card>
       <v-card-title>Wahl bearbeiten</v-card-title>
@@ -18,12 +19,14 @@
           v-model.number="workingCopy.waehlerverzeichnisNummer"
           type="number"
           label="Nummer des Wählerverzeichnis"
+          :rules="nichtNegativeZahlRules"
           data-test="wahl-waehlerverzeichnisnummer"
         />
         <v-text-field
           v-model.number="workingCopy.reihenfolge"
           type="number"
           label="Wahlreihenfolge"
+          :rules="nichtNegativeZahlRules"
           data-test="wahl-reihenfolge"
         />
         <div class="text-subtitle-2 mb-1">Wahlfarbe</div>
@@ -45,6 +48,7 @@
         <base-button-confirm
           color="primary"
           variant="elevated"
+          :disabled="!isFormValid"
           @click="onSaveClicked"
         />
       </v-card-actions>
@@ -54,7 +58,7 @@
 <script setup lang="ts">
 import type { FarbeDTO, WahlDTO } from "@/api/wls-clients/generated-admin-api";
 
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import {
   VCard,
   VCardActions,
@@ -80,6 +84,18 @@ const visible = ref(false);
 const workingCopy = reactive<WahlDTO>(createEmptyWahl());
 const farbeHex = ref("#000000");
 
+const isFormValid = computed(
+  () =>
+    istNichtNegativeZahl(workingCopy.waehlerverzeichnisNummer) &&
+    istNichtNegativeZahl(workingCopy.reihenfolge)
+);
+
+const nichtNegativeZahlRules = [
+  (value: unknown) =>
+    istNichtNegativeZahl(value) ||
+    "Bitte eine Zahl größer oder gleich 0 eingeben",
+];
+
 function showDialog(wahl: WahlDTO) {
   Object.assign(workingCopy, wahl);
   farbeHex.value = farbeToHex(wahl.farbe);
@@ -90,11 +106,21 @@ function hideDialog() {
   visible.value = false;
 }
 
+function onVisibilityChanged(value: boolean) {
+  // Hält den lokalen Zustand mit Vuetify synchron, wenn der Dialog über ESC
+  // oder Klick außerhalb geschlossen wird – sonst ließe er sich nicht erneut
+  // öffnen.
+  visible.value = value;
+}
+
 function onCancelClicked() {
   emit("cancel");
 }
 
 function onSaveClicked() {
+  if (!isFormValid.value) {
+    return;
+  }
   const updatedWahl: WahlDTO = {
     ...workingCopy,
     waehlerverzeichnisNummer: Number(workingCopy.waehlerverzeichnisNummer),
@@ -102,6 +128,10 @@ function onSaveClicked() {
     farbe: hexToFarbe(farbeHex.value),
   };
   emit("save", updatedWahl);
+}
+
+function istNichtNegativeZahl(value: unknown): boolean {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
 }
 
 function farbeToHex(farbe?: FarbeDTO): string {

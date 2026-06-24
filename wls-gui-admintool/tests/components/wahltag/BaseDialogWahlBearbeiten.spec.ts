@@ -8,7 +8,7 @@ import {
 } from "@tests/utils/testutils.ts";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { VColorPicker } from "vuetify/components";
+import { VColorPicker, VDialog } from "vuetify/components";
 
 import BaseButtonCancel from "@/components/common/BaseButtonCancel.vue";
 import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
@@ -100,6 +100,53 @@ describe("BaseDialogWahlBearbeiten.vue", () => {
         expect(savedWahl.name).toBe("Bundestagswahl");
         expect(savedWahl.wahlart).toBe("BTW");
         expect(savedWahl.wahltag).toBe("2026-09-27");
+      });
+    });
+
+    describe("validation", () => {
+      it("should_notEmitSave_when_numericFieldIsCleared", async () => {
+        wrapper.vm.showDialog(wahlDto);
+        await wrapper.vm.$nextTick();
+
+        // Pflichtfeld leeren -> v-model.number liefert "" -> ungültig.
+        await setFieldValue("wahl-waehlerverzeichnisnummer", "");
+
+        await wrapper.findComponent(BaseButtonConfirm).trigger("click");
+
+        expect(wrapper.emitted("save")).toBeUndefined();
+      });
+
+      it("should_emitSave_when_numericFieldsAreValidAgain", async () => {
+        wrapper.vm.showDialog(wahlDto);
+        await wrapper.vm.$nextTick();
+
+        await setFieldValue("wahl-waehlerverzeichnisnummer", "");
+        await setFieldValue("wahl-waehlerverzeichnisnummer", "42");
+
+        await wrapper.findComponent(BaseButtonConfirm).trigger("click");
+
+        const savedWahl = wrapper.emitted("save")?.[0]?.[0] as WahlDTO;
+        expect(savedWahl.waehlerverzeichnisNummer).toBe(42);
+      });
+    });
+
+    describe("visibility", () => {
+      it("should_reopenDialog_when_reshownAfterExternalClose", async () => {
+        const dialog = wrapper.findComponent(VDialog);
+
+        wrapper.vm.showDialog(wahlDto);
+        await wrapper.vm.$nextTick();
+        expect(dialog.props("modelValue")).toBe(true);
+
+        // Vuetify schließt den Dialog von außen (ESC / Klick auf das Overlay).
+        dialog.vm.$emit("update:modelValue", false);
+        await wrapper.vm.$nextTick();
+        expect(dialog.props("modelValue")).toBe(false);
+
+        // Erneutes Öffnen muss weiterhin funktionieren.
+        wrapper.vm.showDialog(wahlDto);
+        await wrapper.vm.$nextTick();
+        expect(dialog.props("modelValue")).toBe(true);
       });
     });
 

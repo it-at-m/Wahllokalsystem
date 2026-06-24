@@ -103,12 +103,24 @@ function onEditWahlClicked(wahl: WahlDTO) {
 }
 
 async function onDialogSave(updatedWahl: WahlDTO) {
-  templateRefWahlBearbeitenDialog.value?.hideDialog();
+  // Reentrante Speichervorgänge verhindern: Ein zweiter Aufruf würde
+  // mergedWahlen aus dem noch nicht aktualisierten wahlen.value bauen und damit
+  // die gerade laufende Speicherung überschreiben.
+  if (isSaving.value) {
+    return;
+  }
   const mergedWahlen = wahlen.value.map((wahl) =>
     wahl.wahlID === updatedWahl.wahlID ? updatedWahl : wahl
   );
-  await updateWahlen(props.wahltagId, mergedWahlen);
+  try {
+    await updateWahlen(props.wahltagId, mergedWahlen);
+  } catch {
+    // Fehler wurde im Service bereits als Benachrichtigung gemeldet; Dialog
+    // bleibt zum erneuten Speichern geöffnet.
+    return;
+  }
   wahlen.value = mergedWahlen;
+  templateRefWahlBearbeitenDialog.value?.hideDialog();
 }
 
 function onDialogCancel() {

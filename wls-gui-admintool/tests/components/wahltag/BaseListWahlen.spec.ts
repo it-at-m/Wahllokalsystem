@@ -162,6 +162,47 @@ describe("BaseListWahlen.vue", () => {
       hideSpy.mockRestore();
     });
 
+    it("should_keepDialogOpenAndNotApplyEdit_when_saveFails", async () => {
+      mockDefinitions.getWahlen.mockResolvedValue([wahl1, wahl2]);
+      mockDefinitions.updateWahlen.mockRejectedValue(new Error("boom"));
+      wrapper = await mountComponent();
+
+      const referencedDialog = wrapper.vm.$refs
+        .wahlBearbeitenDialog as InstanceType<typeof BaseDialogWahlBearbeiten>;
+      const hideSpy = vi.spyOn(referencedDialog, "hideDialog");
+
+      referencedDialog.$emit("save", {
+        ...wahl1,
+        waehlerverzeichnisNummer: 99,
+      });
+      await flushPromises();
+
+      expect(mockDefinitions.updateWahlen).toHaveBeenCalledTimes(1);
+      // Dialog bleibt offen, damit die Eingaben nicht verloren gehen.
+      expect(hideSpy).not.toHaveBeenCalled();
+      hideSpy.mockRestore();
+    });
+
+    it("should_ignoreSecondSave_when_aSaveIsAlreadyInProgress", async () => {
+      mockDefinitions.getWahlen.mockResolvedValue([wahl1, wahl2]);
+      mockDefinitions.updateWahlen.mockResolvedValue(undefined);
+      wrapper = await mountComponent();
+
+      // Laufende Speicherung simulieren.
+      isSavingRef.value = true;
+
+      const referencedDialog = wrapper.vm.$refs
+        .wahlBearbeitenDialog as InstanceType<typeof BaseDialogWahlBearbeiten>;
+      referencedDialog.$emit("save", {
+        ...wahl1,
+        waehlerverzeichnisNummer: 99,
+      });
+      await flushPromises();
+
+      // Kein zweiter Speichervorgang, der den laufenden überschreiben würde.
+      expect(mockDefinitions.updateWahlen).toHaveBeenCalledTimes(0);
+    });
+
     it("should_notUpdateWahlen_when_dialogCanceled", async () => {
       mockDefinitions.getWahlen.mockResolvedValue([wahl1]);
       wrapper = await mountComponent();

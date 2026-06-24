@@ -28,7 +28,7 @@ vi.mock(import("@/composables/kopfdaten/kopfdatenService.ts"), () => ({
   }),
 }));
 
-vi.mock(import("@/stores/wahlenStore.ts"), () => ({
+vi.mock("@/stores/wahlenStore.ts", () => ({
   useWahlenStore: () => ({
     wahlenActions: {
       getWahlOrUndefinedById: mockWahlenDefinitions.getWahlOrUndefinedById,

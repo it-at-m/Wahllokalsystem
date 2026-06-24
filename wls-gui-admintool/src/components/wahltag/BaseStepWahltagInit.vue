@@ -9,6 +9,10 @@
         @click="onOverrideWahltagClicked"
         >Überschreiben</v-btn
       >
+      <base-step-wahllokal-benutzer
+        class="mt-4"
+        :wahltag-id="wahltagEvent.wahltagID"
+      />
     </div>
     <div v-if="wahlterminDatenExists === false">
       <v-btn
@@ -39,6 +43,7 @@ import { useTemplateRef } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
+import BaseStepWahllokalBenutzer from "@/components/wahltag/BaseStepWahllokalBenutzer.vue";
 import { useWahltermindatenService } from "@/composables/wahltermindaten/wahltermindatenService.ts";
 
 const {

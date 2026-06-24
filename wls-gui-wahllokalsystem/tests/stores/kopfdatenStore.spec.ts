@@ -83,9 +83,7 @@ describe("kopfdatenStore.ts", () => {
         new Error("service call failed")
       );
 
-      await expect(
-        async () => await unitUnderTest.initKopfdaten()
-      ).rejects.toThrow();
+      await expect(unitUnderTest.initKopfdaten()).rejects.toThrow();
     });
 
     it("should_throwError_when_mbW_missing_maximalErlaubteStimmenProWaehler", async () => {

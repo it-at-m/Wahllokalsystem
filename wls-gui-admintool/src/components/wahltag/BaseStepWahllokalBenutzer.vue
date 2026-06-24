@@ -2,14 +2,17 @@
   <div data-test="step-wahllokalbenutzer">
     <div class="text-subtitle-1 mb-2">Wahllokalbenutzer</div>
     <v-btn
-      :loading="isGenerating"
+      :loading="isGenerating || isLoading"
       active
       class="mb-2 mr-2"
       data-test="generate-benutzer"
       @click="onGenerateBenutzerClicked"
-      >Benutzer erstellen</v-btn
+      >{{
+        benutzerExist ? "Benutzer überschreiben" : "Benutzer erstellen"
+      }}</v-btn
     >
     <v-btn
+      v-if="benutzerExist"
       :loading="isExporting"
       active
       class="mb-2 mr-2"
@@ -18,6 +21,7 @@
       >Benutzer exportieren</v-btn
     >
     <v-btn
+      v-if="benutzerExist"
       :loading="isDeleting"
       active
       class="mb-2"
@@ -28,7 +32,7 @@
     >
 
     <base-list-wahllokal-benutzer
-      v-if="benutzerCsv"
+      v-if="benutzerExist"
       :csv="benutzerCsv"
       class="mt-4"
     />
@@ -41,21 +45,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, useTemplateRef } from "vue";
+import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseDialogWahllokalBenutzerDeleteConfirmation from "@/components/wahltag/BaseDialogWahllokalBenutzerDeleteConfirmation.vue";
 import BaseListWahllokalBenutzer from "@/components/wahltag/BaseListWahllokalBenutzer.vue";
+import { useWahllokalBenutzerFormatter } from "@/composables/wahllokalbenutzer/wahllokalbenutzerFormatter.ts";
 import { useWahllokalBenutzerService } from "@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts";
 
 const {
   generateBenutzer,
   exportBenutzer,
   deleteBenutzer,
+  loadBenutzer,
   isGenerating,
   isExporting,
   isDeleting,
+  isLoading,
 } = useWahllokalBenutzerService();
+const { parseBenutzer } = useWahllokalBenutzerFormatter();
 
 const props = defineProps({
   wahltagId: {
@@ -69,6 +77,20 @@ const templateRefBenutzerDeleteConfirmationDialog = useTemplateRef<
 >("benutzerDeleteConfirmationDialog");
 
 const benutzerCsv = ref("");
+const benutzerExist = computed(
+  () => parseBenutzer(benutzerCsv.value).length > 0
+);
+
+onMounted(loadExistingBenutzer);
+watch(() => props.wahltagId, loadExistingBenutzer);
+
+async function loadExistingBenutzer() {
+  try {
+    benutzerCsv.value = await loadBenutzer(props.wahltagId);
+  } catch {
+    benutzerCsv.value = "";
+  }
+}
 
 async function onGenerateBenutzerClicked() {
   benutzerCsv.value = await generateBenutzer(props.wahltagId);

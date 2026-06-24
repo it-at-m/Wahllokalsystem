@@ -120,5 +120,28 @@ describe("BaseListWahllokalBenutzer.vue", () => {
 
       expect(clipboardWriteMock).toHaveBeenCalledWith(csvWithUsers);
     });
+
+    it("should_paginateRows_when_moreThanOnePage", async () => {
+      const manyUsersCsv = Array.from(
+        { length: 120 },
+        (_, index) => `kueh-${String(index + 1).padStart(4, "0")}`
+      ).join("\n");
+
+      await wrapper.setProps({ csv: manyUsersCsv });
+
+      expect(wrapper.findAll('[data-test="benutzer-row"]')).toHaveLength(50);
+      expect(wrapper.find('[data-test="benutzer-pagination"]').exists()).toBe(
+        true
+      );
+      expect(wrapper.find('[data-test="benutzer-range"]').text()).toContain(
+        "1–50 von 120"
+      );
+    });
+
+    it("should_notRenderPagination_when_singlePage", () => {
+      expect(wrapper.find('[data-test="benutzer-pagination"]').exists()).toBe(
+        false
+      );
+    });
   });
 });

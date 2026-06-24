@@ -40,22 +40,42 @@
       data-test="search-benutzer"
     />
 
-    <div
-      v-if="filteredRows.length > 0"
-      class="benutzer-ledger__rows"
-      role="list"
-    >
+    <template v-if="filteredRows.length > 0">
       <div
-        v-for="row in filteredRows"
-        :key="row.username"
-        class="benutzer-ledger__row"
-        role="listitem"
-        data-test="benutzer-row"
+        class="benutzer-ledger__rows"
+        role="list"
       >
-        <span class="benutzer-ledger__wahlbezirk">{{ row.wahlbezirk }}</span>
-        <span class="benutzer-ledger__username">{{ row.username }}</span>
+        <div
+          v-for="row in pagedRows"
+          :key="row.username"
+          class="benutzer-ledger__row"
+          role="listitem"
+          data-test="benutzer-row"
+        >
+          <span class="benutzer-ledger__wahlbezirk">{{ row.wahlbezirk }}</span>
+          <span class="benutzer-ledger__username">{{ row.username }}</span>
+        </div>
       </div>
-    </div>
+
+      <div
+        class="d-flex align-center justify-space-between flex-wrap ga-2 mt-2"
+      >
+        <span
+          class="text-caption text-medium-emphasis"
+          data-test="benutzer-range"
+        >
+          {{ rangeStart }}–{{ rangeEnd }} von {{ filteredRows.length }}
+        </span>
+        <v-pagination
+          v-if="pageCount > 1"
+          v-model="page"
+          :length="pageCount"
+          :total-visible="5"
+          density="comfortable"
+          data-test="benutzer-pagination"
+        />
+      </div>
+    </template>
     <div
       v-else
       class="text-medium-emphasis py-4 text-center"
@@ -67,15 +87,15 @@
 </template>
 <script setup lang="ts">
 import { mdiCheck, mdiContentCopy, mdiMagnify } from "@mdi/js";
-import { computed, ref } from "vue";
-import { VBtn, VTextField } from "vuetify/components";
+import { computed, ref, watch } from "vue";
+import { VBtn, VPagination, VTextField } from "vuetify/components";
 
-/**
- * Antwort des Backends, wenn zum Wahltag keine Benutzer existieren. Wird nicht
- * als Benutzername interpretiert.
- */
-const NO_USERS_MESSAGE = "Keine Nutzer zum angegebenen Wahltag gefunden.";
+import { useWahllokalBenutzerFormatter } from "@/composables/wahllokalbenutzer/wahllokalbenutzerFormatter.ts";
+
+const PAGE_SIZE = 50;
 const COPIED_RESET_DELAY_MS = 2000;
+
+const { parseBenutzer } = useWahllokalBenutzerFormatter();
 
 const props = defineProps({
   csv: {
@@ -86,25 +106,9 @@ const props = defineProps({
 
 const searchTerm = ref("");
 const copied = ref(false);
+const page = ref(1);
 
-const rows = computed(() =>
-  props.csv
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0 && line !== NO_USERS_MESSAGE)
-    .map((username) => {
-      const separatorIndex = username.lastIndexOf("-");
-      return {
-        username,
-        wahlbezirk:
-          separatorIndex >= 0 ? username.slice(separatorIndex + 1) : username,
-        kennung: separatorIndex >= 0 ? username.slice(0, separatorIndex) : "",
-      };
-    })
-    .sort((rowA, rowB) =>
-      rowA.wahlbezirk.localeCompare(rowB.wahlbezirk, "de", { numeric: true })
-    )
-);
+const rows = computed(() => parseBenutzer(props.csv));
 
 const userCount = computed(() => rows.value.length);
 const wahlbezirkCount = computed(
@@ -121,6 +125,24 @@ const filteredRows = computed(() => {
       row.username.toLowerCase().includes(term) ||
       row.wahlbezirk.toLowerCase().includes(term)
   );
+});
+
+const pageCount = computed(() =>
+  Math.max(1, Math.ceil(filteredRows.value.length / PAGE_SIZE))
+);
+const pagedRows = computed(() =>
+  filteredRows.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE)
+);
+const rangeStart = computed(() =>
+  filteredRows.value.length === 0 ? 0 : (page.value - 1) * PAGE_SIZE + 1
+);
+const rangeEnd = computed(() =>
+  Math.min(page.value * PAGE_SIZE, filteredRows.value.length)
+);
+
+// Bei neuer Suche oder neuen Daten zurück auf die erste Seite.
+watch([searchTerm, () => props.csv], () => {
+  page.value = 1;
 });
 
 async function onCopyClicked() {
@@ -142,8 +164,6 @@ async function onCopyClicked() {
 }
 
 .benutzer-ledger__rows {
-  max-height: 360px;
-  overflow-y: auto;
   border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
 }
 

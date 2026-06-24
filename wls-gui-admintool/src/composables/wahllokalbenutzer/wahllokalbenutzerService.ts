@@ -19,6 +19,22 @@ export function useWahllokalBenutzerService() {
   const isGenerating = ref(false);
   const isExporting = ref(false);
   const isDeleting = ref(false);
+  const isLoading = ref(false);
+
+  async function loadBenutzer(wahltagID: string): Promise<string> {
+    isLoading.value = true;
+    try {
+      return await fetchBenutzerCsv(wahltagID);
+    } catch (error) {
+      addNotification(
+        "Laden der Wahllokalbenutzer fehlgeschlagen",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   async function generateBenutzer(wahltagID: string): Promise<string> {
     isGenerating.value = true;
@@ -44,14 +60,7 @@ export function useWahllokalBenutzerService() {
   async function exportBenutzer(wahltagID: string): Promise<string> {
     isExporting.value = true;
     try {
-      const response =
-        await wahllokalBenutzerAPI.exportWahllokalBenutzer(wahltagID);
-      // Die OpenAPI-Spezifikation deklariert ein Array, die Backend-Implementierung
-      // kann jedoch ein einzelnes DTO liefern -> defensiv auf ein Array normalisieren.
-      const csvFiles = Array.isArray(response.data)
-        ? response.data
-        : [response.data];
-      const csvContent = csvFiles.map((csvFile) => csvFile.csv).join("\n");
+      const csvContent = await fetchBenutzerCsv(wahltagID);
       downloadCsv(csvContent, wahltagID);
       return csvContent;
     } catch (error) {
@@ -63,6 +72,17 @@ export function useWahllokalBenutzerService() {
     } finally {
       isExporting.value = false;
     }
+  }
+
+  async function fetchBenutzerCsv(wahltagID: string): Promise<string> {
+    const response =
+      await wahllokalBenutzerAPI.exportWahllokalBenutzer(wahltagID);
+    // Die OpenAPI-Spezifikation deklariert ein Array, die Backend-Implementierung
+    // kann jedoch ein einzelnes DTO liefern -> defensiv auf ein Array normalisieren.
+    const csvFiles = Array.isArray(response.data)
+      ? response.data
+      : [response.data];
+    return csvFiles.map((csvFile) => csvFile.csv).join("\n");
   }
 
   async function deleteBenutzer(wahltagID: string) {
@@ -112,5 +132,7 @@ export function useWahllokalBenutzerService() {
     isDeleting,
     isExporting,
     isGenerating,
+    isLoading,
+    loadBenutzer,
   };
 }

@@ -24,8 +24,9 @@ const sampleCsv = [
 ].join("\n");
 
 const prefixes = ["kueh", "mfpz", "qrla", "tbxn", "wjcd", "ploe", "hgua"];
+// Mehr als eine Seite (Seitengröße 50), damit die Pagination sichtbar ist.
 const manyUsersCsv = Array.from(
-  { length: 48 },
+  { length: 120 },
   (_, index) =>
     `${prefixes[index % prefixes.length]}-${String(index + 1).padStart(4, "0")}`
 ).join("\n");

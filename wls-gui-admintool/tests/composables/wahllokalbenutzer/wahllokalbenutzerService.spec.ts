@@ -205,6 +205,35 @@ describe("wahllokalbenutzerService.ts", () => {
       });
     });
 
+    describe("loadBenutzer", () => {
+      it("should_returnJoinedCsvWithoutDownload_when_called", async () => {
+        mockDefinitions.apiExportWahllokalBenutzer.mockResolvedValue({
+          data: [{ csv: "kueh-0001" }, { csv: "mfpz-0002" }],
+        });
+
+        const result = await unitUnderTest.loadBenutzer("wahltagID");
+
+        expect(mockDefinitions.apiExportWahllokalBenutzer).toHaveBeenCalledWith(
+          "wahltagID"
+        );
+        expect(result).toBe("kueh-0001\nmfpz-0002");
+        expect(anchorClickMock).toHaveBeenCalledTimes(0);
+      });
+
+      it("should_addErrorNotification_when_exceptionOccurred", async () => {
+        mockDefinitions.apiExportWahllokalBenutzer.mockRejectedValue(
+          new Error("api call failed")
+        );
+
+        await expect(unitUnderTest.loadBenutzer("wahltagID")).rejects.toThrow();
+
+        expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+          expect.any(String),
+          "Error",
+        ]);
+      });
+    });
+
     describe("deleteBenutzer", () => {
       it("should_triggerApiCallWithWahltagID_when_called", async () => {
         const wahltagID = "wahltagID";

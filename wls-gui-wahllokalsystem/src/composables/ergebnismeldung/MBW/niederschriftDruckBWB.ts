@@ -4,6 +4,24 @@
 import type { NiederschriftDruckInputBWB } from "@/types/ergebnismeldung/MBW/niederschrift/NiederschriftDruckInputBWB.ts";
 
 export function useNiederschriftDruckBWB() {
+  function buildNiederschriftTemplateFromData(
+    data: NiederschriftDruckInputBWB
+  ) {
+    return `
+    <!DOCTYPE html>
+            <html lang="de">
+           ${_dataForHeader(data)}
+            ${_dataForChapterOneWahlvorstand(data)}
+            ${_dataForChapterTwo(data)}
+            ${_dataForChapterThree(data)}
+            ${_dataForChapterFour(data)}
+            ${_dataForChapterFive(data)}
+            </body>
+            <div class="footer">${data.footer}</div>
+            </html>
+    `;
+  }
+
   function _dataForHeader(data: NiederschriftDruckInputBWB) {
     return `
      <head>
@@ -16,7 +34,7 @@ export function useNiederschriftDruckBWB() {
                 <rect width="1000" height="25" style="fill: #ffffff;" />
             </svg>
             <!-- Title -->
-            <div class="width_100 textAlignCenter marginTop_1_15"><span class="bold fontSize_11">V1a MigBW</span></div>
+            <div class="width_100 textAlignCenter"><span class="bold fontSize_11">V1a MigBW</span></div>
             
             <!-- Header -->
             <div class="gridContainer_3_column_header marginTop_2 marginBottom_5">
@@ -57,6 +75,7 @@ export function useNiederschriftDruckBWB() {
             </div>
     `;
   }
+
   function _dataForChapterOneWahlvorstand(data: NiederschriftDruckInputBWB) {
     return `
   <div class="fontSize_12 bold marginTop_2">Wahlhandlung</div>
@@ -161,6 +180,7 @@ export function useNiederschriftDruckBWB() {
             </div>
     `;
   }
+
   function _dataForChapterTwo(data: NiederschriftDruckInputBWB) {
     return `
      <!-- 2. -->
@@ -270,12 +290,8 @@ export function useNiederschriftDruckBWB() {
                 </div>
             </div>
 
-            <svg class="page_break" height="25px" width="100%">
-                <rect width="1000" height="25" style="fill:#ffffff;" />
-            </svg>
-
             <!-- 2.5 -->
-            <div class="horizontal marginBottom_5 paddingTopNewPage">
+            <div class="horizontal marginBottom_5">
                 <div class="widthNumber bold">2.5</div>
                 <div class="bold">Zurückweisung von Wahlbriefen:</div>
             </div>
@@ -297,7 +313,11 @@ export function useNiederschriftDruckBWB() {
                 </div>
             </div>
 
-            <div class="horizontal marginBottom_5">
+            <svg class="page_break" height="25px" width="100%">
+                <rect width="1000" height="25" style="fill:#ffffff;" />
+            </svg>
+
+            <div class="horizontal marginBottom_5 paddingTopNewPage">
                     <div class="widthNumber">2.5.1.1</div>
                     <div>
                         Davon wurden durch Beschluss des Briefwahlvorstands <b>zurückgewiesen</b></br>
@@ -413,6 +433,7 @@ export function useNiederschriftDruckBWB() {
 
     `;
   }
+
   function _dataForChapterThree(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 3 -->
@@ -597,7 +618,7 @@ export function useNiederschriftDruckBWB() {
                     </div>
                     <div class="horizontal marginBottom_5">
                         <div class="widthNumber"></div>
-                        <div><span class="bold lilatext">(Stapel gemäß 3.3 Buchst. e) &#8594; lila</span></div>
+                        <div><span class="bold purpurtext">(Stapel gemäß 3.3 Buchst. e) &#8594; lila</span></div>
                     </div>
                     <div class="horizontal marginBottom_5">
                         <div class="widthNumber">3.5.1</div>
@@ -891,6 +912,7 @@ export function useNiederschriftDruckBWB() {
             </svg>
     `;
   }
+
   function _dataForChapterFour(data: NiederschriftDruckInputBWB) {
     return `
 <!-- 4. -->
@@ -1217,6 +1239,7 @@ export function useNiederschriftDruckBWB() {
               .join("")}
     `;
   }
+
   function _dataForChapterFive(data: NiederschriftDruckInputBWB) {
     return `
     <!-- 5. -->
@@ -1458,7 +1481,7 @@ export function useNiederschriftDruckBWB() {
                 <div class="widthNumber">5.6.4</div>
                 <div class="backendDataColor fontSize_14 marginCheckbox">&#9744;</div>
                 <div class="paddingLeft">
-                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) wurden spätestens jetzt in die Wahlverhandlungstasche eingelegt (Stapel gemäß 3.3 → <span class="bold lilatext">Stapel e</span>),
+                    die beschlussmäßig behandelten Stimmzettel (gültig und ungültig) wurden spätestens jetzt in die Wahlverhandlungstasche eingelegt (Stapel gemäß 3.3 → <span class="bold purpurtext">Stapel e</span>),
                 </div>
             </div>
             
@@ -1566,13 +1589,14 @@ export function useNiederschriftDruckBWB() {
       
     `;
   }
+
   function _getStyling() {
     return `
     <style type="text/css">
                     /****** Print Header ******/
                     @page {
                         size: A4;
-                        margin-top: 0.0cm;
+                        margin-top: 1cm;
                         margin-left: 0;
                         margin-right: 0;
                     }
@@ -1585,6 +1609,40 @@ export function useNiederschriftDruckBWB() {
                             left: 1cm;
                             font-size: x-small;
                             z-index: 0;
+                        }
+                        
+                        /**
+                          * Background Colors
+                          * 
+                          * this inner shadow is a workaround to avoid that background colors are only being printed 
+                          * when "Hintergrund drucken" Checkbox is selected in browser (see Issue #2913)
+                          */
+                        .blueGrayBG {
+                          box-shadow: inset 0 0 0 9999px #e6e6ff !important;
+                        }
+                         
+                        .yellowBG {
+                          box-shadow: inset 0 0 0 9999px #ffff99 !important;
+                        }
+                        
+                        .whiteBG {
+                          box-shadow: inset 0 0 0 9999px #ffffff !important;
+                        }
+                             
+                        .greenBG {
+                          box-shadow: inset 0 0 0 9999px #99ff66 !important;
+                        }
+                        
+                        .green_3_BG {
+                          box-shadow: inset 0 0 0 9999px #29cc29 !important;
+                        }
+    
+                        .redBG {
+                          box-shadow: inset 0 0 0 9999px #ff3333 !important;
+                        }
+    
+                        .purpurBG {
+                          box-shadow: inset 0 0 0 9999px #9900ff !important;
                         }
                     }
 
@@ -1880,11 +1938,6 @@ export function useNiederschriftDruckBWB() {
                         font-size: 14pt;
                     }
 
-                    /****** BackgroundColor ******/
-                    .blueGrayBG {
-                        background-color: #e6e6ff;
-                    }
-
                     /****** Width ******/
                     .width_100 {
                         width: 100%;
@@ -1973,10 +2026,6 @@ export function useNiederschriftDruckBWB() {
                         margin-top: 0.1cm;
                     }
 
-                    .marginTop_1_15 {
-                        margin-top: 1.15cm;
-                    }
-
                     .marginTop_2 {
                         margin-top: 0.2cm;
                     }
@@ -2031,31 +2080,6 @@ export function useNiederschriftDruckBWB() {
                         color: #546e7a;
                     }
 
-                    .whiteBG {
-                        background-color: #ffffff !important;
-                    }
-
-                    .yellowBG {
-                        background-color: #ffff99;
-                        
-                    }
-
-                    .greenBG {
-                        background-color: #99ff66;
-                    }
-
-                    .green_3_BG {
-                        background-color: #29cc29;
-                    }
-
-                    .redBG {
-                        background-color: #ff3333;
-                    }
-
-                    .purpurBG {
-                        background-color: #9900ff;
-                    }
-
                     .greentext {
                         color: #99ff66;
                     }
@@ -2068,8 +2092,8 @@ export function useNiederschriftDruckBWB() {
                         color: #ff0000;
                     }
 
-                    .lilatext {
-                        color: #a37acc;
+                    .purpurtext {
+                        color: #9900ff;
                     }
 
                     /****** Page Break ******/
@@ -2077,24 +2101,6 @@ export function useNiederschriftDruckBWB() {
                         page-break-before: always;
                     }
                 </style>
-    `;
-  }
-
-  function buildNiederschriftTemplateFromData(
-    data: NiederschriftDruckInputBWB
-  ) {
-    return `
-    <!DOCTYPE html>
-            <html lang="de">
-           ${_dataForHeader(data)}
-            ${_dataForChapterOneWahlvorstand(data)}
-            ${_dataForChapterTwo(data)}
-            ${_dataForChapterThree(data)}
-            ${_dataForChapterFour(data)}
-            ${_dataForChapterFive(data)}
-            </body>
-            <div class="footer">${data.footer}</div>
-            </html>
     `;
   }
 

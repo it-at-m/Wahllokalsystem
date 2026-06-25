@@ -37,12 +37,14 @@
   </v-menu>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import BaseInfoHelpListItem from "@/components/basisdaten/BaseInfoHelpListItem.vue";
 import { useHandbuchService } from "@/composables/basisdaten/handbuchService.ts";
 import { useHelpIconCallbacks } from "@/composables/basisdaten/helpIconCallbacks.ts";
 import { WAHLHOTLINE } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { downloadHandbuch } = useHandbuchService();
 
@@ -50,15 +52,20 @@ const {
   openWahlraumfinder,
   openWaehlerverzeichnis,
   isWaehlerverzeichnisUrlAvailable,
+  isWahlraumfinderUrlAvailable,
   startFernzugriff,
   printTestdruck,
 } = useHelpIconCallbacks();
 
+const { isUWB } = storeToRefs(useUserStore());
+
+const WAHLHOTLINE_TITLE = "Wahl-Hotline";
 const WAEHLERVERZEICHNIS_TITLE = "Wählerverzeichnis";
+const WAHLRAUMFINDER_TITLE = "Wahlraumfinder";
 
 const infoHelpData = computed(() => {
   const allItems = [
-    { icon: "$phone", title: "Wahl-Hotline", text: WAHLHOTLINE },
+    { icon: "$phone", title: WAHLHOTLINE_TITLE, text: WAHLHOTLINE },
     {
       icon: "$fileDocument",
       title: "Schulungsunterlagen",
@@ -66,7 +73,7 @@ const infoHelpData = computed(() => {
     },
     {
       icon: "$mapSearch",
-      title: "Wahlraumfinder",
+      title: WAHLRAUMFINDER_TITLE,
       text: "Zuständigen Wahlraum suchen",
       callback: openWahlraumfinder,
     },
@@ -90,9 +97,12 @@ const infoHelpData = computed(() => {
   ];
 
   return allItems.filter((item) => {
-    //Filter bei Wählerverzeichnis nach Vorhandensein der URL
-    if (item.title === WAEHLERVERZEICHNIS_TITLE) {
-      return isWaehlerverzeichnisUrlAvailable();
+    if (item.title === WAHLHOTLINE_TITLE) {
+      return isUWB.value;
+    } else if (item.title === WAHLRAUMFINDER_TITLE) {
+      return isWahlraumfinderUrlAvailable();
+    } else if (item.title === WAEHLERVERZEICHNIS_TITLE) {
+      return isWaehlerverzeichnisUrlAvailable() && isUWB.value;
     }
     //Rest wird immer angezeigt
     return true;

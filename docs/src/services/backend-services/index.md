@@ -136,7 +136,7 @@ __`Stimmzettelgebiet`__ – Bei der Stadtratswahl ist das gesamte Gebiet der Lan
 
 __Abbildung im Modell:__ Die zur Wahl stehenden Listen werden als `Wahlvorschläge` und die darauf geführten Bewerberinnen und Bewerber als `Listenkandidaten` abgebildet. Die besonderen Regeln zur Stimmenvergabe, beispielsweise Kumulieren, Panaschieren oder Streichen, betreffen die Auswertung des Stimmzettels, ändern aber nicht die grundlegende Struktur des Datenmodells.
 
-#### Migrationsbeiratswahl
+### Migrationsbeiratswahl
 
 __`Stimmzettelgebiet`__ – Bei der Migrationsbeiratswahl ist das gesamte Gebiet der Landeshauptstadt München ein Stimmzettelgebiet.
 

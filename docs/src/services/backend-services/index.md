@@ -105,7 +105,7 @@ __Abbildung im Modell:__ Die Wahlkreisvorschläge werden als `Wahlvorschläge` m
 
 [Mehr Informationen zur Bundestagswahl](https://stadt.muenchen.de/infos/bundestagswahlen.html)
 
-#### Landtagswahl und Bezirkswahl
+### Landtagswahl und Bezirkswahl
 
 __`Stimmzettelgebiet`__ – Bei der Landtagswahl entspricht das Stimmzettelgebiet dem Stimmkreis. Für die Bezirkswahl wird dieselbe räumliche Einteilung verwendet.
 

@@ -61,6 +61,12 @@
         >
           <v-list-item-title>Wahlen bearbeiten</v-list-item-title>
         </v-list-item>
+        <v-list-item
+          :to="{ name: ROUTES_KONFIGURATION }"
+          data-test="navigation-item-konfiguration"
+        >
+          <v-list-item-title>Konfigurationsparameter</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
@@ -103,6 +109,7 @@ import {
   ROUTES_GETSTARTED,
   ROUTES_INIT_WAHLTAG,
   ROUTES_WAHLEN,
+  ROUTES_KONFIGURATION,
 } from "@/constants";
 import { useUserStore } from "@/stores/userStore.ts";
 import { User, UserLocalDevelopment } from "@/types/User";

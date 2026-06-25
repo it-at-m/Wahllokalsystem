@@ -6,11 +6,13 @@ import {
   ROUTES_HOME,
   ROUTES_INIT_WAHLTAG,
   ROUTES_WAHLEN,
+  ROUTES_KONFIGURATION,
 } from "@/constants";
 import GetStartedView from "@/views/GetStartedView.vue";
 import HomeView from "@/views/HomeView.vue";
 import InitWahltagView from "@/views/InitWahltagView.vue";
 import WahlenView from "@/views/WahlenView.vue";
+import KonfigurationParameterView from "@/views/KonfigurationParameterView.vue";
 
 const routes = [
   {
@@ -33,6 +35,11 @@ const routes = [
     path: "/wahlen",
     name: ROUTES_WAHLEN,
     component: WahlenView,
+  },
+  {
+    path: "/konfiguration",
+    name: ROUTES_KONFIGURATION,
+    component: KonfigurationParameterView,
   },
   { path: "/:catchAll(.*)*", redirect: "/" }, // CatchAll route
 ];

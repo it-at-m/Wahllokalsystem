@@ -54,5 +54,20 @@ describe("BaseCardConfigParameterDisplay.vue", () => {
       expect(emitted).toBeDefined();
       expect(emitted?.[0]?.[0]).toBe(configParameter[0]?.name);
     });
+
+    it("should_showUpdatedValueAndKeepEditButton_when_configParameterPropChanges", async () => {
+      const updatedConfigParameter: InfomanagementConfigParameter = {
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        ...configParameter[0]!,
+        wert: "Neuer gespeicherter Wert",
+      };
+
+      await wrapper.setProps({ configParameter: updatedConfigParameter });
+
+      expect(wrapper.html()).toContain("Neuer gespeicherter Wert");
+      expect(wrapper.find('[data-test="click-edit-button"]').exists()).toBe(
+        true
+      );
+    });
   });
 });

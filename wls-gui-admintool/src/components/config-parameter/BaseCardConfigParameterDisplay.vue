@@ -14,7 +14,7 @@
           <v-divider class="card-divider" />
           <v-card-text>
             {{ item.key }}
-            <v-card-actions v-if="item.key === props.configParameter.wert">
+            <v-card-actions v-if="item.editable">
               <v-btn
                 icon="$edit"
                 @click="onConfigParameterEditClicked"
@@ -33,7 +33,7 @@
 import type { InfomanagementConfigParameter } from "@/types/config/InfomanagementConfigParameter.ts";
 import type { PropType } from "vue";
 
-import { defineEmits, defineProps, ref } from "vue";
+import { computed, defineEmits, defineProps } from "vue";
 import {
   VBtn,
   VCard,
@@ -51,11 +51,23 @@ const props = defineProps({
   },
 });
 
-const configParameterItems = ref([
-  { subtitle: "Konfigurationsparameter", key: props.configParameter.name },
-  { subtitle: "Beschreibung", key: props.configParameter.beschreibung },
-  { subtitle: "Wert", key: props.configParameter.wert },
-  { subtitle: "Standardwert", key: props.configParameter.defaultValue },
+const configParameterItems = computed(() => [
+  {
+    subtitle: "Konfigurationsparameter",
+    key: props.configParameter.name,
+    editable: false,
+  },
+  {
+    subtitle: "Beschreibung",
+    key: props.configParameter.beschreibung,
+    editable: false,
+  },
+  { subtitle: "Wert", key: props.configParameter.wert, editable: true },
+  {
+    subtitle: "Standardwert",
+    key: props.configParameter.defaultValue,
+    editable: false,
+  },
 ]);
 
 const emit = defineEmits<(event: "clickEdit", name: string) => void>();

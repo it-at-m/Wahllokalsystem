@@ -62,7 +62,7 @@ Die folgenden Wahl- und Abstimmungsarten sind abzubilden. Wahlarten, die im Date
 | Wahl- oder Abstimmungsart | Stimmzettelgebiet                                                   | Abbildung im Datenmodell                                          |
 |---------------------------|---------------------------------------------------------------------|-------------------------------------------------------------------|
 | Europawahl                | für München ein Stimmzettelgebiet                                   | Wahlvorschläge mit Listenkandidaten                               |
-| Bundestagswahl            | Wahlkreis                                                           | Wahlvorschläge mit Listenkandidaten und Landeslisten              |
+| Bundestagswahl            | Wahlkreis                                                           | Wahlvorschläge mit Direktkandidaten und Landeslisten              |
 | Landtagswahl              | Stimmkreis                                                          | Wahlvorschläge mit Direkt- und Listenkandidaten                   |
 | Bezirkswahl               | Stimmkreis; strukturell wie Landtagswahl                            |                                                                   |
 | Oberbürgermeisterwahl     | gesamtes Stadtgebiet                                                | Wahlvorschläge mit jeweils einer Direktkandidatur (Wahlvorschlag) |

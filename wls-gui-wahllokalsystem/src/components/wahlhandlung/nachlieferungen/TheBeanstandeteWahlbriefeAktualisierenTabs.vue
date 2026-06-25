@@ -48,7 +48,7 @@ import TheBeanstandeteWahlbriefeAktualisierenCard from "@/components/wahlhandlun
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
-const tab = ref(null);
+const tab = ref("one");
 
 const props = defineProps<{
   nachtraeglichUeberbrachtValid: boolean | null;

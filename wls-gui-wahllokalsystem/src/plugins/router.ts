@@ -57,6 +57,7 @@ const {
   requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
   requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
   requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
+  requiresIsNachlieferungsbezirk,
 } = useNavigationGuards();
 
 const routes = [
@@ -147,6 +148,7 @@ const routes = [
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
       permitNavigationWhenWahlbriefeZulassenIsErfasst,
+      requiresIsNachlieferungsbezirk,
     ],
   },
   {

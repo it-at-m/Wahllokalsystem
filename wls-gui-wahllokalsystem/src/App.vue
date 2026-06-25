@@ -94,7 +94,6 @@ onMounted(async () => {
     isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    console.debug("App.vue: ", isBWB.value);
     if (isBWB.value) {
       await isNachlieferungsbezirk(
         currentUserWahltagID.value,

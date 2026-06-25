@@ -9,8 +9,6 @@ import { useUserStore } from "@/stores/userStore.ts";
 const workflowStoreId = "workflow";
 
 export const useWorkflowStore = defineStore(workflowStoreId, () => {
-  const { isNachlieferungsbezirk } = storeToRefs(useUserStore());
-
   // bwb + uwb
   const isWahlvorstandErfasst = ref(false);
   const isWahlumgebungErfasst = ref(false);
@@ -21,15 +19,17 @@ export const useWorkflowStore = defineStore(workflowStoreId, () => {
   const isNachlieferungenBearbeitenErfasst = ref(false);
   const isWahlbriefeZulassenErfasst = ref(false);
   const isAnzahlWahlscheineErfasst = ref(false);
-  const isWahlbriefzulassungErfasst = computed(
-    () =>
+  const isWahlbriefzulassungErfasst = computed(() => {
+    const { isNachlieferungsbezirk } = storeToRefs(useUserStore());
+    return (
       isWahleroeffnungErfasst.value &&
       isWahlumgebungErfasst.value &&
       isWahlbriefeErfassenErfasst.value &&
       isWahlbriefeZulassenErfasst.value &&
       (!isNachlieferungsbezirk.value ||
         isNachlieferungenBearbeitenErfasst.value)
-  );
+    );
+  });
   // uwb specific
   const isWaehlerverzeichnisErfasst = ref(false);
   const isStimmabgabeErfasst = ref(false);

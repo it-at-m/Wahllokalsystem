@@ -128,7 +128,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
@@ -207,6 +207,14 @@ const gruendeStimmzettel = [
 ];
 
 onMounted(() => {
+  updateBeanstandeteWahlbriefe();
+});
+
+onActivated(() => {
+  updateBeanstandeteWahlbriefe();
+});
+
+function updateBeanstandeteWahlbriefe() {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     let wahlscheinZurueckweisungsgrund;
     if (wahlenState.value.wahlen) {
@@ -231,7 +239,7 @@ onMounted(() => {
       }
     }
   }
-});
+}
 
 function onZulassungsgrundWahlscheinChanged(
   newValue: string,

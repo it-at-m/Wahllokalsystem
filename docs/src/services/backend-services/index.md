@@ -100,7 +100,7 @@ Jeder Münchner Stimmbezirk und Briefwahlbezirk wird für die Bundestagswahl gen
 __Abbildung im Modell:__ Die Wahlkreisvorschläge werden als `Wahlvorschläge` mit `Direktkandidaten` abgebildet. Daneben enthält der Stimmzettel die Landeslisten.
 
 ![Wahlkreise in der Landeshauptstadt München](/fachlichesDatenmodell/Wahlkreiskarte_BTW2025.png)
-*__Abbildung 2:__ Wahlkreise zur Bundestagswahl in München (Beispiel Bundestagwahl 2025).*
+*__Abbildung 2:__ Wahlkreise zur Bundestagswahl in München (Beispiel Bundestagswahl 2025).*
 
 [Mehr Informationen zur Bundestagswahl](https://stadt.muenchen.de/infos/bundestagswahlen.html)
 

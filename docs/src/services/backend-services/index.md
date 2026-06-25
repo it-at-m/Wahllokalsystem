@@ -91,10 +91,10 @@ __Abbildung im Modell:__ Die Europawahl wird als `Wahl` geführt. Die auf dem St
 __`Stimmzettelgebiet`__ – Bei der Bundestagswahl entspricht das Stimmzettelgebiet dem Wahlkreis. Der Stimmzettel unterscheidet sich insbesondere durch die im Wahlkreis antretenden Direktkandidatinnen und Direktkandidaten.
 
 Bei der Bundestagswahl 2025 umfasste die Landeshauptstadt München vier Wahlkreise:
-• 216 - München-Nord
-• 217 - München-Ost
-• 218 - München-Süd
-• 219 - München-West/Mitte
+- 216 - München-Nord
+- 217 - München-Ost
+- 218 - München-Süd
+- 219 - München-West/Mitte
 
 Jeder Münchner Stimmbezirk und Briefwahlbezirk wird für die Bundestagswahl genau einem dieser Wahlkreise zugeordnet. Die geografische Zugehörigkeit zu einem der 25 Stadtbezirke ist dafür nicht maßgeblich.
 

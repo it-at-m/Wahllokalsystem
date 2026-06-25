@@ -1,6 +1,7 @@
 export const ROUTES_HOME = "home";
 export const ROUTES_GETSTARTED = "getstarted";
 export const ROUTES_INIT_WAHLTAG = "initWahltag";
+export const ROUTES_WAHLEN = "wahlen";
 export const ROUTES_KONFIGURATION = "konfiguration";
 
 export const APPSWITCHER_URL = import.meta.env.VITE_APPSWITCHER_URL;

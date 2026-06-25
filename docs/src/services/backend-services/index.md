@@ -150,7 +150,7 @@ __Abbildung im Modell:__ Die Bezirksausschusswahl wird strukturell wie die Stadt
 
 Bei einer gleichzeitig stattfindenden Kommunalwahl ist ein `Wahlbezirk` daher für die Oberbürgermeisterwahl und die Stadtratswahl jeweils einem stadtweiten `Stimmzettelgebiet`, für die Bezirksausschusswahl aber dem `Stimmzettelgebiet` seines Stadtbezirks zugeordnet.
 
-#### Volksentscheid
+### Volksentscheid
 
 __`Stimmzettelgebiet`__ – Bei einem bayerischen Volksentscheid ist der Freistaat Bayern das Stimmzettelgebiet. Für die Durchführung in München wird daher ein einheitlicher Stimmzettelinhalt verwendet.
 

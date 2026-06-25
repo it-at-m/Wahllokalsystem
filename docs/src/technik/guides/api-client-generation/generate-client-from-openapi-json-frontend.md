@@ -87,6 +87,31 @@ openapi-generator-cli generate -i src/resources/openapis/openapi.broadcast.0.2.0
 
 :::
 
+::: details Errorhandling
+Möglicherweise ist die Generierung nicht erfolgreich, und diese Fehlermeldung tritt auf:
+
+```shell
+Error: Error: Unable to access jarfile { path-to-project }\WLS 3.0\node_modules\@openapitools\openapi-generator-cli\versions\7.10.0.jar
+
+    at { path-to-project }\WLS 3.0\node_modules\@openapitools\openapi-generator-cli\main.js:2:47463
+    at ChildProcess.exithandler (node:child_process:427:5)
+    at ChildProcess.emit (node:events:518:28)
+    at maybeClose (node:internal/child_process:1104:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:304:5)
+
+Node.js v22.11.0
+
+Process finished with exit code 1
+```
+
+In diesem Fall muss zusätzlich noch mit folgendem Befehl der https-Proxy konfiguriert werden:
+
+```shell
+export HTTPS_PROXY=<proxy url>
+```
+
+:::
+
 ### 2) Ausführen des Skripts `gen:<domain>-api`
 
 In der `package.json` kann der oben genannte Befehl als Skript hinzugefügt werden. Das sieht dann so aus:
@@ -127,10 +152,10 @@ Node.js v22.11.0
 Process finished with exit code 1
 ```
 
-In diesem Fall muss bitte nach Möglichkeit 1 - [Ausführen des Befehls im Terminal](#1-ausführen-des-befehls-im-terminal)
-verfahren werden.
+In diesem Fall muss zusätzlich noch der https-Proxy konfiguriert werden. In der IDE kann dieser über die Environment-Variable in der Run-Config gesetzt werden.
 
-🚧 -> Die behebung dieses Problems wird in [diesem Issue](https://github.com/it-at-m/Wahllokalsystem/issues/809) behandelt.
+![RunConfig in IDE bearbeiten](/tipsAndTricks/IdeRunConfigProxy.png)
+
 :::
 
 ## Nutzung des generierten Codes

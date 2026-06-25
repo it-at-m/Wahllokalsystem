@@ -156,7 +156,7 @@ __`Stimmzettelgebiet`__ – Bei einem bayerischen Volksentscheid ist der Freista
 
 __Abbildung im Modell:__ Die zur Abstimmung gestellte Frage oder Vorlage wird als `ReferendumVorlage` und die auswählbaren Antworten werden als `ReferendumOptionen` abgebildet. Finden mehrere Abstimmungen gleichzeitig statt oder ist eine Stichfrage erforderlich, werden mehrere `Vorlagen` geführt.
 
-#### Bürgerentscheid
+### Bürgerentscheid
 
 __`Stimmzettelgebiet`__ – Bei einem Bürgerentscheid ist grundsätzlich das Gebiet der Gemeinde das Stimmzettelgebiet. Für einen Bürgerentscheid der Landeshauptstadt München ist dies regelmäßig das gesamte Stadtgebiet.
 

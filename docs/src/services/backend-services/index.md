@@ -142,7 +142,7 @@ __`Stimmzettelgebiet`__ – Bei der Migrationsbeiratswahl ist das gesamte Gebiet
 
 __Abbildung im Modell:__ Die Migrationsbeiratswahl wird strukturell wie die Stadtratswahl abgebildet: `Wahlvorschläge` enthalten `Listenkandidaten`. Sie bleibt jedoch eine eigenständige `Wahl`. Da sich der Kreis der Wahlberechtigten von anderen Wahlen unterscheidet, kann sie in einem gesonderten `Wahltermin` mit eigenen `Wahlbezirken` organisiert werden.
 
-#### Bezirksausschusswahl
+### Bezirksausschusswahl
 
 __`Stimmzettelgebiet`__ – Bei der Bezirksausschusswahl entspricht das Stimmzettelgebiet dem jeweiligen Stadtbezirk. München besitzt 25 Stadtbezirke und damit für die Bezirksausschusswahl 25 unterschiedliche Stimmzettelgebiete.
 

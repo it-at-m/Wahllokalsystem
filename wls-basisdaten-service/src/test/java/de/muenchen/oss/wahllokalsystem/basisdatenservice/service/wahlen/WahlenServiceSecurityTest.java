@@ -114,6 +114,50 @@ public class WahlenServiceSecurityTest {
   }
 
   @Nested
+  class GetExistingWahlenOrderedByReihenfolge {
+
+    @Test
+    void should_grantAccess_when_authoritiesArePresent() {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHLTAG,
+          Authorities.REPOSITORY_READ_WAHLTAG,
+          Authorities.REPOSITORY_WRITE_WAHL);
+      var searchingForWahltag =
+          new Wahltag("wahltagID", LocalDate.now().plusMonths(1), "beschreibung1", "1");
+      List<Wahl> mockedListOfEntities = createWahlEntities();
+      wahltagRepository.save(searchingForWahltag);
+      wahlRepository.saveAll(mockedListOfEntities);
+
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_WAHLEN);
+      Assertions.assertThatNoException()
+          .isThrownBy(() -> wahlenService.getExistingWahlenOrderedByReihenfolge("wahltagID"));
+    }
+
+    @ParameterizedTest(name = "{index} - {1} missing")
+    @MethodSource("getMissingAuthoritiesVariations")
+    void should_denyAccess_when_anyAuthorityIsMissing(final ArgumentsAccessor argumentsAccessor) {
+      SecurityUtils.runWith(
+          Authorities.REPOSITORY_WRITE_WAHLTAG, Authorities.REPOSITORY_WRITE_WAHL);
+      var searchingForWahltag = new Wahltag("wahltagID", LocalDate.now(), "beschreibung10", "1");
+      wahltagRepository.save(searchingForWahltag);
+      val mockedListOfEntities = createWahlEntities();
+      wahlRepository.saveAll(mockedListOfEntities);
+
+      SecurityUtils.runWith(ArrayUtils.addAll(argumentsAccessor.get(0, String[].class)));
+      Assertions.assertThatThrownBy(
+              () ->
+                  wahlenService.getExistingWahlenOrderedByReihenfolge(
+                      searchingForWahltag.getWahltagID()))
+          .isInstanceOf(AccessDeniedException.class);
+    }
+
+    private static Stream<Arguments> getMissingAuthoritiesVariations() {
+      return SecurityUtils.buildArgumentsForMissingAuthoritiesVariations(
+          Authorities.ALL_AUTHORITIES_GET_WAHLEN);
+    }
+  }
+
+  @Nested
   class PostWahlen {
 
     @Test

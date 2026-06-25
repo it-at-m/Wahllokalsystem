@@ -5,24 +5,26 @@ export function useServiceWorkerUtils() {
   const { logDebug } = useLogging("useServiceWorkerUtils");
 
   function isServiceWorkerActive() {
-    return !!navigator.serviceWorker.controller;
+    return !!navigator.serviceWorker?.controller;
   }
 
   function sendMessage(message: ServiceWorkerMessage) {
-    if (navigator.serviceWorker.controller) {
+    if (navigator.serviceWorker?.controller) {
       logDebug(`sending message of type ${message.type}`);
-      navigator.serviceWorker.controller.postMessage(message);
+      navigator.serviceWorker?.controller.postMessage(message);
     }
   }
 
   async function awaitServiceWorkerActive(
     countTries = 3,
-    retryDelayInMilliseconds = 100
+    retryDelayInMilliseconds = 100,
+    multiplier = 2
   ) {
     let numberOfChecker = 1;
     while (!isServiceWorkerActive() && numberOfChecker < countTries) {
       await _sleep(retryDelayInMilliseconds);
       numberOfChecker++;
+      retryDelayInMilliseconds *= multiplier;
     }
     const result = isServiceWorkerActive();
     logDebug(

@@ -1,8 +1,13 @@
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
+import type { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
+import type { Vermerke } from "@/types/stimmabgabevermerke/Vermerke.ts";
 
 export interface Stimmabgabevermerke {
+  wahlID: string;
   waehlerverzeichnisNummer: number;
-  anzahlBlaetter: number;
-  wahldaten: Wahldaten[];
   wahlbezirkID: string;
+  eingenommeneWahlscheine: Map<
+    EingenommenerWahlscheinStimmzettelartEnum,
+    number
+  >;
+  vermerke: Vermerke[];
 }

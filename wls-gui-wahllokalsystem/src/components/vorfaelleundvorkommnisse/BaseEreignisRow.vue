@@ -84,12 +84,13 @@ const { dateOnly, timeOnly, dateAndTimeCombined } =
 
 watch(dateAndTimeCombined, (newValue) => {
   if (ereignisModel.value.uhrzeit?.getTime() !== newValue?.getTime()) {
-    ereignisModel.value.uhrzeit = newValue ?? undefined;
+    emit("uhrzeitChanged", newValue ?? undefined);
   }
 });
 
 const emit = defineEmits<{
   delete: [erreignisPayload: EreignisPayload];
+  uhrzeitChanged: [newUhrzeit: Date | undefined];
 }>();
 
 function onDeleteIconClicked() {

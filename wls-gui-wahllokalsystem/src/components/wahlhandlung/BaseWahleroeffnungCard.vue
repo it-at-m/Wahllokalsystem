@@ -19,10 +19,10 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :loading="eroeffnungsuhrzeitState.eroeffnungsuhrzeitIsSaving"
           :disabled="isSaveButtonDisabled"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveEroeffnungsuhrzeitClicked"
         />
       </v-card-actions>
@@ -31,16 +31,20 @@
       :visible="isZuSpaet"
       dialogtitle="Verspäteter Beginn der Wahlhandlung"
       :is-save-disabled="!isBegruendungValid"
-      save-text="Speichern und Weiter"
+      :save-text="SAVE_CONTINUE"
       data-test="zuSpaetDialog"
       @cancel="onCancelBegruendung"
       @confirm="onConfirmBegruendung"
     >
       <div class="mb-3">
         Die eingetragene Uhrzeit ist nach
-        {{ toHhMm(createTodayWithTime(spaetesteEroeffnungsuhrzeit)) }} Uhr,
-        bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in Form
-        eines besonderen Vorfalls.
+        {{
+          toTimeWithHoursAndOptionalMinutes(
+            createTodayWithTime(spaetesteEroeffnungsuhrzeit)
+          )
+        }}
+        Uhr, bitte begründen Sie die verspätete Eröffnung der Wahlhandlung in
+        Form eines besonderen Vorfalls.
       </div>
       <v-textarea
         v-model="begruendung"
@@ -65,7 +69,7 @@
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
@@ -75,6 +79,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
+  SAVE_CONTINUE,
 } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -90,7 +95,7 @@ const {
   maxLength,
 } = useRules();
 
-const { toHhMm } = useDateTimeFormatter();
+const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
 const { getNextRoute } = useNavigationUtils();
 

@@ -21,6 +21,7 @@
       </ENTRIES>
     </extension>
     <option name="WORKING_DIRECTORY" value="file://$MODULE_WORKING_DIR$" />
+    <option name="VM_PARAMETERS" value="-Djava.rmi.server.hostname=localhost" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

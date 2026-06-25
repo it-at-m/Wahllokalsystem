@@ -78,6 +78,8 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -92,6 +94,9 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
+      await nextTick();
 
       const successExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-success"]'
@@ -103,7 +108,6 @@ describe("BaseOfflineLoading.vue", () => {
       const successExpansionPanelText = successExpansionPanel.findComponent(
         '[data-test="expansion-panel-tasklist"]'
       );
-      await nextTick();
 
       expect(successExpansionPanelText.isVisible()).toBe(true);
       expect(successExpansionPanelText.text()).toContain(taskName);
@@ -118,6 +122,8 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -132,6 +138,9 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.failedTasks.push(createTask(taskName));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 1;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
+      await nextTick();
 
       const failedExpansionPanel = wrapper.findComponent(
         '[data-test="base-progress-failed"]'
@@ -143,7 +152,6 @@ describe("BaseOfflineLoading.vue", () => {
       const failedExpansionPanelText = failedExpansionPanel.findComponent(
         '[data-test="expansion-panel-tasklist"]'
       );
-      await nextTick();
 
       expect(failedExpansionPanelText.isVisible()).toBe(true);
       expect(failedExpansionPanelText.text()).toContain(taskName);
@@ -158,6 +166,8 @@ describe("BaseOfflineLoading.vue", () => {
       taskManagerStore.successfullyTasks.push(createTask("test"));
       // @ts-expect-error: cannot set readonly
       taskManagerStore.numberOfTasksToRun = 5;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = true;
 
       await nextTick();
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -212,7 +222,7 @@ describe("BaseOfflineLoading.vue", () => {
 
       await nextTick();
 
-      expect(pushMock).toHaveBeenCalledWith(ROUTE_WAHLVORSTAND);
+      expect(pushMock).toHaveBeenCalledWith({ name: ROUTE_WAHLVORSTAND });
     });
 
     it("should_callOnRefreshClicked_when_refreshButtonIsClicked", async () => {
@@ -226,6 +236,19 @@ describe("BaseOfflineLoading.vue", () => {
       await refreshButton.trigger("click");
 
       expect(taskManagerStore.rerunFailedTasks).toHaveBeenCalled();
+    });
+
+    it("should_disableWeiterButton_when_hasNoTasksToRun", async () => {
+      const taskManagerStore = useInitTaskManagerStore();
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.numberOfTasksToRun = 0;
+      // @ts-expect-error: cannot set readonly
+      taskManagerStore.hasTasksToRun = false;
+
+      await nextTick();
+
+      const weiterButton = wrapper.find('[data-test="weiter-button"]');
+      expect(weiterButton.element.hasAttribute("disabled")).toStrictEqual(true);
     });
   });
 });

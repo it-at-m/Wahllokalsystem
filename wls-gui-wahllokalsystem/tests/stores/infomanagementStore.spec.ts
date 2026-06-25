@@ -14,16 +14,20 @@ const mockDefinitions = vi.hoisted(() => ({
   getKonfigurationsparameter: vi.fn(),
 }));
 
-vi.mock("@/composables/infomanagement/konfigurationsparameterService", () => ({
-  useKonfigurationsparameterService: () => ({
-    getKonfigurationsparameter: mockDefinitions.getKonfigurationsparameter,
-  }),
-}));
+vi.mock(
+  import("@/composables/infomanagement/konfigurationsparameterService.ts"),
+  () => ({
+    useKonfigurationsparameterService: () => ({
+      getKonfigurationsparameter: mockDefinitions.getKonfigurationsparameter,
+    }),
+  })
+);
 
 const { createKonfigurationsparameterList, prepareKonfigurationsparameter } =
   useKonfigurationsparameterTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 
 describe("infomanagementStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useInfomanagementStore>;
@@ -69,6 +73,95 @@ describe("infomanagementStore.ts", () => {
         unitUnderTest.initKonfigurationsparameter()
       ).rejects.toThrowError();
       expect(unitUnderTest.konfigurationsparameter).toStrictEqual(null);
+    });
+  });
+
+  describe("delayBeforeInactiveLogoutInMilliseconds", () => {
+    const expectedDefaultValue = 7200000;
+    const configKey = "WLK_TIME_OUT";
+
+    it("should_returnConfigValueAsNumber_when_theStringIsAValidNumber", async () => {
+      const configValue = generateRandomNumber(4);
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`${configValue}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(configValue);
+    });
+
+    it("should_returnDefaultValue_when_valueIsZero", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`0`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_valueIsBelowZero", async () => {
+      const configValue = generateRandomNumber(4);
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`-${configValue}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsMissing", async () => {
+      unitUnderTest.konfigurationsparameter = [];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsEmptyString", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter().schluessel(configKey).wert("").build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
+    });
+
+    it("should_returnDefaultValue_when_configValueIsNotAValidNumber", async () => {
+      unitUnderTest.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel(configKey)
+          .wert(`String${generateRandomString(4)}`)
+          .build(),
+      ];
+
+      await flushPromises();
+
+      expect(
+        unitUnderTest.delayBeforeInactiveLogoutInMilliseconds
+      ).toStrictEqual(expectedDefaultValue);
     });
   });
 
@@ -544,6 +637,108 @@ describe("infomanagementStore.ts", () => {
       expect(infomanagementStore.fruehesteSchliessungsuhrzeit).toStrictEqual(
         DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW
       );
+    });
+  });
+
+  describe("waehlerverzeichnis", () => {
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnValue_when_waehlerverzeichnisKonfigKeyHasValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert("test")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual("test");
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyHasEmptyValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyHasUndefinedValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAEHLERVERZEICHNIS_URL")
+          .wert(undefined)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_waehlerverzeichnisKonfigKeyNotAvailable", () => {
+      expect(infomanagementStore.waehlerverzeichnisUrl).toStrictEqual(null);
+    });
+  });
+
+  describe("wahllokalfinder", () => {
+    let infomanagementStore: ReturnType<typeof useInfomanagementStore>;
+
+    beforeEach(() => {
+      infomanagementStore = useInfomanagementStore();
+    });
+
+    it("should_returnValue_when_wahlraumKonfigKeyHasValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert("test")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual("test");
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyHasEmptyValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert("")
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyHasUndefinedValue", async () => {
+      infomanagementStore.konfigurationsparameter = [
+        prepareKonfigurationsparameter()
+          .schluessel("WAHLLOKALFINDER_URL")
+          .wert(undefined)
+          .build(),
+      ];
+
+      await nextTick();
+
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
+    });
+
+    it("should_returnNull_when_wahlraumKonfigKeyNotAvailable", () => {
+      expect(infomanagementStore.wahlraumUrl).toStrictEqual(null);
     });
   });
 });

@@ -39,7 +39,7 @@
           />
           <wls-clock class="navbar-text mx-2 mt-1" />
           <the-wls-online-offline-menu />
-          <the-info-help-icon />
+          <the-app-support-menu />
           <v-btn
             icon="$logout"
             variant="text"
@@ -57,29 +57,52 @@
         <wls-clock class="navbar-text mx-2 mt-1" />
       </v-col>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
+    <v-navigation-drawer
+      v-model="drawer"
+      permanent
+      :width="320"
+    >
       <the-root-navigation-list />
     </v-navigation-drawer>
+    <offline-syncer-dialog
+      :is-dialog-visible="isOfflineSyncDialogVisible"
+      @sync-success="onSyncSuccess"
+      @sync-error="onSyncError"
+    />
+    <base-dialog
+      :visible="isSyncErrorDialogVisible"
+      dialogtitle="Fehler bei der Synchronisation"
+      confirmtext="Hinweis schließen"
+      icon="$information"
+      @confirm="isSyncErrorDialogVisible = false"
+    >
+      <div class="mb-4">
+        Bei der Synchronisation der Offline-Daten ist ein Fehler aufgetreten. Um
+        zu verhindern, dass Daten verloren gehen, wurde die Abmeldung
+        abgebrochen.
+      </div>
+    </base-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { computed, nextTick, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
-import TheInfoHelpIcon from "@/components/basisdaten/TheInfoHelpIcon.vue";
+import TheAppSupportMenu from "@/components/basisdaten/TheAppSupportMenu.vue";
+import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import BaseIconWahlbezirksart from "@/components/common/icons/BaseIconWahlbezirksart.vue";
 import TheWaehleranzahlCountButton from "@/components/monitoring/TheWaehleranzahlCountButton.vue";
 import TheRootNavigationList from "@/components/navigation/TheRootNavigationList.vue";
+import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.vue";
 import TheWlsOnlineOfflineMenu from "@/components/wlsComponents/TheWlsOnlineOfflineMenu.vue";
 import WlsClock from "@/components/wlsComponents/WlsClock.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogoutService } from "@/composables/user/logoutService.ts";
-import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import { createLogoutRoute } from "@/plugins/router/commonRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { eroeffnungsuhrzeitState, schliessungsuhrzeitState } =
   storeToRefs(useWahlbezirkStore());
@@ -89,6 +112,7 @@ const {
   user,
   currentUserWahltag,
   currentUserWahlbezirkNummer,
+  currentUserWahlbezirkID,
   isUWB,
   isUserLoggedIn,
 } = storeToRefs(useUserStore());
@@ -96,7 +120,9 @@ const { hasAllTasksRun } = storeToRefs(useInitTaskManagerStore());
 
 const [drawer, toggleDrawer] = useToggle();
 const { logout } = useLogoutService();
-const { addNotification } = useUserNotificationService();
+
+const isOfflineSyncDialogVisible = ref(false);
+const isSyncErrorDialogVisible = ref(false);
 
 const wahltermin = computed(() =>
   user ? toGermanDate(currentUserWahltag.value ?? "") : ""
@@ -105,21 +131,30 @@ const wahlbezirknummer = computed(() =>
   user ? currentUserWahlbezirkNummer.value : ""
 );
 
-async function onLogoutClicked() {
-  try {
-    await logout();
-  } catch {
-    addNotification(
-      "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
-      UserNotificationCategoryEnum.ERROR
-    );
-  }
+function onLogoutClicked() {
+  isOfflineSyncDialogVisible.value = true;
+}
+
+async function onSyncSuccess() {
+  isOfflineSyncDialogVisible.value = false;
+  await logout(currentUserWahlbezirkID.value, createLogoutRoute());
+}
+
+function onSyncError() {
+  isOfflineSyncDialogVisible.value = false;
+  isSyncErrorDialogVisible.value = true;
 }
 
 watch(isUserLoggedIn, async () => {
   await nextTick();
   if (!isUserLoggedIn.value && drawer.value) {
     toggleDrawer(false);
+  }
+});
+
+watch(hasAllTasksRun, () => {
+  if (hasAllTasksRun.value) {
+    toggleDrawer(true);
   }
 });
 </script>

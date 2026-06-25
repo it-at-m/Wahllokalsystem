@@ -6,6 +6,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
@@ -22,7 +24,7 @@ import {
 import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -30,11 +32,18 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 const mockDefinitions = vi.hoisted(() => ({
   postBeanstandeteWahlbriefe: vi.fn(),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+      }),
+    };
+  }
+);
 
 describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   let wrapper: VueWrapper;
@@ -42,14 +51,8 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   const { prepareWahl } = useWahlTestDataFactory();
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-
-  vi.stubGlobal("visualViewport", new EventTarget());
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();
@@ -70,7 +73,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         },
       });
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -101,7 +104,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(true);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -132,7 +135,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises();
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
 
       expect(saveButton.props("disabled")).toBe(false);
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -182,7 +185,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await flushPromises(); // wait for save button to be enabled
 
-      const saveButton = wrapper.findComponent<typeof VBtn>(BaseButtonSave);
+      const saveButton = wrapper.findComponent<typeof VBtn>(BaseWlsButtonSave);
       expect(saveButton.props("disabled")).toBe(false);
 
       await saveButton.trigger("click");

@@ -8,14 +8,16 @@
       >
         <base-number-input
           :model-value="wahlscheinnummer"
-          :rules="[required, minNumber(1), maxNumber(9999999)]"
+          :min-valid="1"
+          :max-valid="9999999"
+          :rules="[required]"
           label="Wahlscheinnummer"
           max-width="300"
           data-test="number-input-wahlscheinnummer"
           @update:model-value="onWahlscheinnummerChanged"
         />
 
-        <base-input-feedback-card
+        <base-feedback-card
           v-if="feedbackWahlscheinIsGueltigIsVisible"
           title="Wahlschein ist gültig"
           :type="InputFeedbackTypeEnum.success"
@@ -34,9 +36,9 @@
               Wählerverzeichnis.
             </li>
           </ul>
-        </base-input-feedback-card>
+        </base-feedback-card>
 
-        <base-input-feedback-card
+        <base-feedback-card
           v-if="feedbackWahlscheinIsUngueltigIsVisible"
           :title="titleFeedbackWahlscheinUngueltig"
           :type="InputFeedbackTypeEnum.error"
@@ -72,7 +74,7 @@
                 </v-form>
               </v-col>
               <v-col>
-                <base-button-save
+                <base-wls-button-save
                   class="mt-2 ml-5"
                   save-text="Beschluss speichern"
                   :disabled="!isAbstimmungsergebnisFormValid"
@@ -82,7 +84,7 @@
               <v-spacer />
             </v-row>
           </template>
-        </base-input-feedback-card>
+        </base-feedback-card>
         <v-img
           position="left"
           style="height: 40mm"
@@ -90,19 +92,19 @@
           :src="wahlscheinExampleImage"
         />
 
-        <base-input-feedback-card
+        <base-feedback-card
           v-if="feedbackLoadingFailedIsVisible"
           title="Liste ungültiger Wahlscheine nicht verfügbar"
           :type="InputFeedbackTypeEnum.error"
           >Die ungültigen Wahlscheine konnten nicht geladen
-          werden.</base-input-feedback-card
+          werden.</base-feedback-card
         >
-        <base-input-feedback-card
+        <base-feedback-card
           v-if="feedbackNoDataAvailableIsVisible"
           title="Liste ungültiger Wahlscheine nicht verfügbar"
           :type="InputFeedbackTypeEnum.error"
           >Der Inhalt der Datei mit den ungültigen Wahlscheinen ist
-          leer.</base-input-feedback-card
+          leer.</base-feedback-card
         >
       </v-form>
     </v-card-text>
@@ -132,9 +134,9 @@ import { computed, ref, useTemplateRef } from "vue";
 
 import wahlscheinExampleImage from "@/assets/previewWahlscheinnummerOnWahlschein.png";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { MAX_LENGTH_FOR_TEXT_INPUT } from "@/constants.ts";
@@ -142,7 +144,7 @@ import { useEreignisStore } from "@/stores/ereignisStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required, maxLength, minLength } = useRules();
+const { required, maxLength, minLength } = useRules();
 const { addEreignis, sendEreignisse } = useEreignisStore();
 
 const isFormValid = ref<boolean | null>(null);

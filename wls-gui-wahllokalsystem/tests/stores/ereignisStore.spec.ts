@@ -1,10 +1,9 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 
 import { createTestingPinia } from "@pinia/testing";
-import { spyOn } from "@storybook/test";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { useVorfaelleundvorkommnisseTestDataFactory } from "@tests/utils/vorfaelleundvorkommnisse/VorfaelleundvorkommnisseTestDataFactory";
-import { flushPromises } from "@vue/test-utils";
+import { spyOn } from "storybook/test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
@@ -21,21 +20,24 @@ const mockDefinitions = vi.hoisted(() => ({
   saveEreignisse: vi.fn(),
 }));
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
-  useEreignisService: () => ({
-    getEreignisse: mockDefinitions.getEreignisse,
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  () => ({
+    useEreignisService: () => ({
+      getEreignisse: mockDefinitions.getEreignisse,
+      saveEreignisse: mockDefinitions.saveEreignisse,
+    }),
+  })
+);
 
 const mockedNow = new Date();
 
-const { createEreignis } = useVorfaelleundvorkommnisseTestDataFactory();
+const { prepareEreignis, prepareWahlbezirkEreignisse } =
+  useVorfaelleundvorkommnisseTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
 
 describe("ereignisStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useEreignisStore>;
-  let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let userStore: ReturnType<typeof useUserStore>;
 
   const BESCHREIBUNG = "Beschreibung";
@@ -47,7 +49,6 @@ describe("ereignisStore.ts", () => {
       createSpy: vi.fn,
     });
     unitUnderTest = useEreignisStore(testPinia);
-    wahlbezirkStore = useWahlbezirkStore(testPinia);
     userStore = useUserStore(testPinia);
 
     vi.useFakeTimers({
@@ -435,9 +436,11 @@ describe("ereignisStore.ts", () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      unitUnderTest.isVorfaelleMaintained = false;
 
-      const mockedWahlbezirkEreignisse =
-        WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse();
+      const mockedWahlbezirkEreignisse = prepareWahlbezirkEreignisse()
+        .ereigniseintraege([])
+        .build();
       mockDefinitions.getEreignisse.mockReturnValue(mockedWahlbezirkEreignisse);
 
       await unitUnderTest.loadEreignisse();
@@ -445,11 +448,15 @@ describe("ereignisStore.ts", () => {
       expect(unitUnderTest.wahlbezirkEreignisse).toStrictEqual(
         mockedWahlbezirkEreignisse
       );
+      expect(unitUnderTest.isVorfaelleMaintained).toStrictEqual(
+        mockedWahlbezirkEreignisse.keineVorfaelle
+      );
     });
 
     it("should_handleError_when_getEreignisseThrowsError", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
+      unitUnderTest.isVorfaelleMaintained = false;
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
 
       const mockedError = new Error("Network error");
@@ -457,14 +464,20 @@ describe("ereignisStore.ts", () => {
 
       await unitUnderTest.loadEreignisse();
       expect(unitUnderTest.error).equals("Fehler beim Laden der Ereignisse");
+      expect(unitUnderTest.isVorfaelleMaintained).toBeFalsy();
     });
   });
 
   describe("sendEreignisse", () => {
-    it("should_sendEreignisse_when_wahlbezirkIDIsGiven", () => {
+    it("should_sendEreignisse_when_wahlbezirkIDIsGiven", async () => {
       const userStore = useUserStore();
       const wahlbezirkID = "wahlbezirkID";
       userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      unitUnderTest.isVorfaelleMaintained = false;
+      unitUnderTest.wahlbezirkEreignisse = prepareWahlbezirkEreignisse()
+        .keineVorfaelle(true)
+        .ereigniseintraege([])
+        .build();
 
       const mockedDatetime = new Date();
 
@@ -472,13 +485,32 @@ describe("ereignisStore.ts", () => {
         Promise.resolve({ updateDatetime: mockedDatetime })
       );
 
-      unitUnderTest.sendEreignisse();
+      await unitUnderTest.sendEreignisse();
 
+      await nextTick();
       expect(mockDefinitions.saveEreignisse).toHaveBeenCalledWith(
         wahlbezirkID,
         unitUnderTest.wahlbezirkEreignisse,
         true
       );
+      expect(unitUnderTest.isVorfaelleMaintained).toBeTruthy();
+    });
+
+    it("should_notChangeVorfaelleMaintained_when_postCallFailed", async () => {
+      const userStore = useUserStore();
+      const wahlbezirkID = "wahlbezirkID";
+      userStore.setUser(prepareUser().wahlbezirkID(wahlbezirkID).build());
+      unitUnderTest.isVorfaelleMaintained = false;
+
+      mockDefinitions.saveEreignisse.mockRejectedValue(
+        new Error("error in service")
+      );
+
+      await unitUnderTest.sendEreignisse();
+
+      await nextTick();
+
+      expect(unitUnderTest.isVorfaelleMaintained).toBeFalsy();
     });
   });
 
@@ -591,35 +623,72 @@ describe("ereignisStore.ts", () => {
     });
   });
 
-  describe("watch", () => {
-    describe("schliessungsuhrzeitSent", () => {
-      it("should_updateEreignisart_when_schliessungsuhrzeitSentHasChanged", async () => {
-        const schliessungsuhrzeitSend = new Date();
+  describe("onSchliessungsuhrzeitSentChanged", () => {
+    it("should_setKeinVorfaelleTrue_when_schliessungsuhrzeitSentHasChangedAndOnlyVorkommnisseAreGiven", async () => {
+      const schliessungsuhrzeitSend = new Date();
 
-        const ereignisEintraege = [
-          createEreignis(),
-          createEreignis(),
-          createEreignis(),
-        ];
-        unitUnderTest.wahlbezirkEreignisse.ereigniseintraege =
-          ereignisEintraege;
+      const ereignisEintraege = [
+        prepareEreignis()
+          .ereignisart(EreignisartEnum.Vorkommnis)
+          .uhrzeit(new Date(schliessungsuhrzeitSend.getTime() + 1))
+          .build(),
+        prepareEreignis()
+          .ereignisart(EreignisartEnum.Vorkommnis)
+          .uhrzeit(new Date(schliessungsuhrzeitSend.getTime() + 2))
+          .build(),
+      ];
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = ereignisEintraege;
 
-        wahlbezirkStore.schliessungsuhrzeitState.schliessungsuhrzeitSent =
-          schliessungsuhrzeitSend;
+      const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
+        ImportAllFromEreignisArt,
+        "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
+      );
 
-        const spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit = spyOn(
-          ImportAllFromEreignisArt,
-          "getEreignisArtForDateRelatedToSchliessungsuhrzeit"
-        );
+      await unitUnderTest.onSchliessungsuhrzeitSentChanged(
+        schliessungsuhrzeitSend
+      );
 
-        await flushPromises();
+      expect(
+        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls.length
+      ).toStrictEqual(ereignisEintraege.length);
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
 
-        expect(
-          spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mock.calls.length
-        ).toStrictEqual(ereignisEintraege.length);
+      spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
+    });
 
-        spyGetEreignisArtForDateRelatedToSchliessungsuhrzeit.mockRestore();
-      });
+    it("should_setKeinVorfaelleTrue_when_schliessungsuhrzeitSentHasChangedAndNoEreignisseAreGiven", async () => {
+      const schliessungsuhrzeitSend = new Date();
+
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [];
+
+      await unitUnderTest.onSchliessungsuhrzeitSentChanged(
+        schliessungsuhrzeitSend
+      );
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        true
+      );
+    });
+
+    it("should_setKeinVorfaelleFalse_when_schliessungsuhrzeitSentHasChangedAndVorfaelleAreGiven", async () => {
+      const schliessungsuhrzeitSend = new Date();
+
+      unitUnderTest.wahlbezirkEreignisse.ereigniseintraege = [
+        prepareEreignis()
+          .ereignisart(EreignisartEnum.Vorfall)
+          .uhrzeit(new Date(schliessungsuhrzeitSend.getTime()))
+          .build(),
+      ];
+
+      await unitUnderTest.onSchliessungsuhrzeitSentChanged(
+        schliessungsuhrzeitSend
+      );
+
+      expect(unitUnderTest.wahlbezirkEreignisse.keineVorfaelle).toStrictEqual(
+        false
+      );
     });
   });
 });

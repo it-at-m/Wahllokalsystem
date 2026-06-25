@@ -38,7 +38,6 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
   const {
     createStimmabgabevermerke,
-    prepareWahldaten,
     prepareStimmabgabevermerke,
     prepareVermerk,
     prepareStimmzettel,
@@ -62,6 +61,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
   describe("loadStimmabgabevermerke", () => {
     it("should_addStimmabgabevermerkeToState_when_serviceReturnsData", async () => {
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
       const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
@@ -74,6 +74,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer
       );
 
@@ -85,6 +86,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
     it("should_addDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataAndUserHasWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
       const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
@@ -110,6 +112,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer
       );
 
@@ -121,6 +124,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
     it("should_notAddDefaultStimmabgabevermerkeToState_when_serviceReturnsNoDataButUserHasNotThatWahlbezirkID", async () => {
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
       const waehlerverzeichnisNummer = generateRandomNumber(3);
 
       const existingStimmabgabevermerke = createStimmabgabevermerke();
@@ -146,6 +150,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       await unitUnderTest.loadStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer
       );
 
@@ -158,16 +163,25 @@ describe("stimmabgabevermerkeStore.ts", () => {
       'should_callServiceWithSendNotification"$sendNotification"_when_notificationParameterIsUsed',
       async (argument) => {
         const wahlbezirkID = "wahlbezirkID";
+        const wahlID = generateRandomString(10);
         const waehlerverzeichnisNummer = 1;
 
         await unitUnderTest.loadStimmabgabevermerke(
           wahlbezirkID,
+          wahlID,
           waehlerverzeichnisNummer,
           argument.sendNotification
         );
 
         expect(mockDefinitions.getStimmabgabevermerke.mock.calls).toStrictEqual(
-          [[wahlbezirkID, waehlerverzeichnisNummer, argument.sendNotification]]
+          [
+            [
+              wahlbezirkID,
+              wahlID,
+              waehlerverzeichnisNummer,
+              argument.sendNotification,
+            ],
+          ]
         );
       }
     );
@@ -182,7 +196,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
     });
 
     it("should_returnFalse_when_rowsToRemoveContainOnlyNullOrZero", () => {
-      const wahldaten = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk().blattnummer(2).build(),
           prepareVermerk()
@@ -195,11 +209,18 @@ describe("stimmabgabevermerkeStore.ts", () => {
             .build(),
         ])
         .build();
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldaten])
-        .build();
       const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldaten])
+        .vermerke([
+          prepareVermerk().blattnummer(2).build(),
+          prepareVermerk()
+            .blattnummer(3)
+            .stimmzettel([prepareStimmzettel().anzahl(null).build()])
+            .build(),
+          prepareVermerk()
+            .blattnummer(4)
+            .stimmzettel([prepareStimmzettel().anzahl(0).build()])
+            .build(),
+        ])
         .build();
       unitUnderTest.stimmabgabevermerke = [
         stimmabgabevermerkeOne,
@@ -214,7 +235,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
     it.each([
       {
         description: "should_returnEmptyArray_when_rowsToDeleteAreEmpty",
-        wahldaten: prepareWahldaten()
+        stimmabgabevermerke: prepareStimmabgabevermerke()
           .vermerke([
             prepareVermerk().blattnummer(2).build(),
             prepareVermerk()
@@ -232,7 +253,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       },
       {
         description: "should_returnBlattnummern_when_allRowsToDeleteAreFilled",
-        wahldaten: prepareWahldaten()
+        stimmabgabevermerke: prepareStimmabgabevermerke()
           .vermerke([
             prepareVermerk().blattnummer(2).build(),
             prepareVermerk().blattnummer(3).build(),
@@ -244,7 +265,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       },
       {
         description: "should_returnBlattnummern_when_someRowsToDeleteAreFilled",
-        wahldaten: prepareWahldaten()
+        stimmabgabevermerke: prepareStimmabgabevermerke()
           .vermerke([
             prepareVermerk().blattnummer(2).build(),
             prepareVermerk()
@@ -258,10 +279,9 @@ describe("stimmabgabevermerkeStore.ts", () => {
         expectedBlattnummern: [4],
       },
     ])("$description", (testCaseParameter) => {
-      const stimmabgabevermerk = prepareStimmabgabevermerke()
-        .wahldaten([testCaseParameter.wahldaten])
-        .build();
-      unitUnderTest.stimmabgabevermerke = [stimmabgabevermerk];
+      unitUnderTest.stimmabgabevermerke = [
+        testCaseParameter.stimmabgabevermerke,
+      ];
 
       const result = unitUnderTest.getBlattnummernThatPreventDeletion(2);
 
@@ -270,7 +290,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
     });
 
     it("should_returnBlattnummern_when_someRowsToDeleteAreFilledInDifferentStimmabgabevermerke", () => {
-      const wahldatenOne = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk().blattnummer(2).build(),
           prepareVermerk()
@@ -280,10 +300,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
           prepareVermerk().blattnummer(4).build(),
         ])
         .build();
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenOne])
-        .build();
-      const wahldatenTwo = prepareWahldaten()
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk().blattnummer(2).build(),
           prepareVermerk().blattnummer(3).build(),
@@ -292,9 +309,6 @@ describe("stimmabgabevermerkeStore.ts", () => {
             .stimmzettel([prepareStimmzettel().anzahl(null).build()])
             .build(),
         ])
-        .build();
-      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenTwo])
         .build();
       unitUnderTest.stimmabgabevermerke = [
         stimmabgabevermerkeOne,
@@ -315,7 +329,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(2);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(1);
+        expect(stimmabgabevermerke.vermerke.length).toBe(1);
       });
     });
 
@@ -325,15 +339,13 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(5);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(4);
+        expect(stimmabgabevermerke.vermerke.length).toBe(4);
 
         const expectedBlattnummern = [2, 3, 4, 5];
 
-        stimmabgabevermerke.wahldaten[0]?.vermerke?.forEach(
-          (vermerk, index) => {
-            expect(vermerk.blattnummer).toBe(expectedBlattnummern[index]);
-          }
-        );
+        stimmabgabevermerke.vermerke?.forEach((vermerk, index) => {
+          expect(vermerk.blattnummer).toBe(expectedBlattnummern[index]);
+        });
       });
     });
 
@@ -343,7 +355,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
       unitUnderTest.changeRowCount(3);
 
       unitUnderTest.stimmabgabevermerke.forEach((stimmabgabevermerke) => {
-        expect(stimmabgabevermerke.wahldaten[0]?.vermerke.length).toBe(2);
+        expect(stimmabgabevermerke.vermerke.length).toBe(2);
       });
     });
   });
@@ -358,27 +370,20 @@ describe("stimmabgabevermerkeStore.ts", () => {
     });
 
     it("should_calculateTheLowest_when_allWahldatenHaveDifferentNumberOfVermerke", () => {
-      const wahldatenOne = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk().blattnummer(2).build(),
           prepareVermerk().blattnummer(3).build(),
           prepareVermerk().blattnummer(4).build(),
         ])
         .build();
-
-      const wahldatenTwo = prepareWahldaten()
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk().blattnummer(2).build(),
           prepareVermerk().blattnummer(3).build(),
           prepareVermerk().blattnummer(4).build(),
           prepareVermerk().blattnummer(5).build(),
         ])
-        .build();
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenOne])
-        .build();
-      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenTwo])
         .build();
       unitUnderTest.stimmabgabevermerke = [
         stimmabgabevermerkeOne,
@@ -392,7 +397,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
   });
   describe("stimmabgabevermerkeTableTotalEachWahldaten", () => {
     it("should_calculateCorrectArrayOfTotalVermerkeForWahldaten_when_givenStimmabgabevermerke", () => {
-      const wahldatenOne = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk()
             .blattnummer(2)
@@ -408,8 +413,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
             .build(),
         ])
         .build();
-
-      const wahldatenTwo = prepareWahldaten()
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk()
             .blattnummer(2)
@@ -426,13 +430,6 @@ describe("stimmabgabevermerkeStore.ts", () => {
         ])
         .build();
 
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenOne])
-        .build();
-      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenTwo])
-        .build();
-
       unitUnderTest.stimmabgabevermerke = [
         stimmabgabevermerkeOne,
         stimmabgabevermerkeTwo,
@@ -446,7 +443,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
   describe("sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl", () => {
     it("should_returnMapWithCalculatedValuesForEachWahl_when_givenStimmabgabevermerke", () => {
-      const wahldatenOne = prepareWahldaten()
+      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk()
             .blattnummer(2)
@@ -465,8 +462,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
           new Map([[StimmzettelStimmzettelartEnum.Klein, 20]])
         )
         .build();
-
-      const wahldatenTwo = prepareWahldaten()
+      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
         .vermerke([
           prepareVermerk()
             .blattnummer(2)
@@ -486,13 +482,6 @@ describe("stimmabgabevermerkeStore.ts", () => {
         )
         .build();
 
-      const stimmabgabevermerkeOne = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenOne])
-        .build();
-      const stimmabgabevermerkeTwo = prepareStimmabgabevermerke()
-        .wahldaten([wahldatenTwo])
-        .build();
-
       unitUnderTest.stimmabgabevermerke = [
         stimmabgabevermerkeOne,
         stimmabgabevermerkeTwo,
@@ -501,8 +490,8 @@ describe("stimmabgabevermerkeStore.ts", () => {
       const result =
         unitUnderTest.sumEingenommeneWahlscheineAndStimmabgabevermerkeForEachWahl;
 
-      expect(result.get(wahldatenOne.wahlID)).toStrictEqual(80);
-      expect(result.get(wahldatenTwo.wahlID)).toStrictEqual(85);
+      expect(result.get(stimmabgabevermerkeOne.wahlID)).toStrictEqual(80);
+      expect(result.get(stimmabgabevermerkeTwo.wahlID)).toStrictEqual(85);
     });
   });
 
@@ -520,6 +509,7 @@ describe("stimmabgabevermerkeStore.ts", () => {
 
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
         stimmabgabevermerke.wahlbezirkID,
+        stimmabgabevermerke.wahlID,
         stimmabgabevermerke.waehlerverzeichnisNummer,
         stimmabgabevermerke
       );

@@ -2,13 +2,26 @@
   <v-number-input
     v-model="modelValue"
     :label="props.label"
-    :rules="props.rules"
+    :rules="[
+      ...props.rules,
+      minNumber(props.minValid),
+      maxNumber(props.maxValid),
+    ]"
     control-variant="hidden"
     @keydown.capture="onKeyDownCapture"
+    @keydown.enter.prevent
   />
 </template>
 
 <script setup lang="ts">
+import { useRules } from "@/composables/common/rules.ts";
+import {
+  NUMBER_INPUT_DEFAULT_MAX,
+  NUMBER_INPUT_DEFAULT_MIN,
+} from "@/constants.ts";
+
+const { minNumber, maxNumber } = useRules();
+
 const modelValue = defineModel<number | null | undefined>({ required: true });
 
 const props = defineProps({
@@ -21,6 +34,16 @@ const props = defineProps({
     type: Array<(value: number) => string | boolean>,
     required: false,
     default: [],
+  },
+  minValid: {
+    type: Number,
+    required: false,
+    default: NUMBER_INPUT_DEFAULT_MIN,
+  },
+  maxValid: {
+    type: Number,
+    required: false,
+    default: NUMBER_INPUT_DEFAULT_MAX,
   },
 });
 

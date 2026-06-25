@@ -8,23 +8,24 @@
       <slot />
     </div>
     <v-card-actions>
-      <base-button-save
+      <base-wls-button-save
         :save-text="`${title} senden`"
         prepend-icon="$cloudUpload"
         :disabled="!isSendenActive"
         :loading="isSending"
         @click="$emit('save')"
       />
-      <base-button-save
+      <base-wls-button-save
         :save-text="`${title} korrigieren`"
         prepend-icon="$edit"
         :disabled="!isKorrigierenActive"
         @click="$emit('edit')"
       />
-      <base-button-save
+      <base-wls-button-save
         :save-text="`${title} drucken und weiter`"
         prepend-icon="$printer"
         :disabled="!isDruckenActive"
+        :enabled-after-elections-finished="true"
         :loading="isDruckenLoading"
         @click="$emit('print')"
       />
@@ -33,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 
 defineProps<{
   title: string;

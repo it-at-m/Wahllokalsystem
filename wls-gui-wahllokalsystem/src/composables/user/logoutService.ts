@@ -1,19 +1,28 @@
+import type { RouteLocationRaw } from "vue-router";
+
 import { storeToRefs } from "pinia";
 
 import {
   AuthServerControllerApi,
   Configuration,
 } from "@/api/wls-clients/generated-auth-api";
+import { WahllokalZustandControllerApi } from "@/api/wls-clients/generated-monitoring-api";
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useLogging } from "@/composables/common/logging.ts";
-import { AUTH_SERVICE_API_URL, ROUTE_LOGOUT } from "@/constants.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
+import {
+  AUTH_SERVICE_API_URL,
+  MONITORING_SERVICE_API_URL,
+} from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useSchedulerStore } from "@/stores/schedulerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { axiosConfigWrapper } = useCommonApiUtils();
 
 const { logDebug, logError } = useLogging("logoutService");
+const { addNotification } = useUserNotificationService();
 
 export function useLogoutService() {
   const { isUserLoggedIn } = storeToRefs(useUserStore());
@@ -25,13 +34,28 @@ export function useLogoutService() {
     })
   );
 
-  async function logout() {
+  const wahllokalZustandControllerApi = new WahllokalZustandControllerApi(
+    new Configuration({
+      basePath: MONITORING_SERVICE_API_URL,
+    })
+  );
+
+  async function logout(
+    wahlbezirkID: string,
+    routingTargetAfterSuccessfulLogout: RouteLocationRaw
+  ) {
     try {
       const logoutUrl = (
         await authServerControllerApi.getLogoutUrl(
           axiosConfigWrapper().requestAsOnlineOnly()
         )
       ).data.url;
+
+      await wahllokalZustandControllerApi.postLetzteAbmeldung(
+        wahlbezirkID,
+        axiosConfigWrapper().requestAsOnlineOnly()
+      );
+
       const request = new Request(logoutUrl, {
         method: "GET",
         credentials: "include",
@@ -57,10 +81,13 @@ export function useLogoutService() {
       stopAll();
       isUserLoggedIn.value = false;
 
-      await router.push(ROUTE_LOGOUT);
+      await router.push(routingTargetAfterSuccessfulLogout);
     } catch (error) {
       logError(`fehler bei logout`, error);
-      throw error;
+      addNotification(
+        "Logout fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+        UserNotificationCategoryEnum.ERROR
+      );
     }
   }
 

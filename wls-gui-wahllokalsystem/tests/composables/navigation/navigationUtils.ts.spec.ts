@@ -18,6 +18,7 @@ import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts"
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_FINISHED,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -25,7 +26,6 @@ import {
   ROUTE_WAHLUMGEBUNG,
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
   ROUTE_WAHLVORSTAND,
-  ROUTES_HOME,
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -43,7 +43,7 @@ const mockDefinitions = vi.hoisted(() => ({
   mbwGetNextRouteOrNull: vi.fn(),
 }));
 
-vi.mock("@/types/navigation/NextStepImplConstants.ts", () => ({
+vi.mock(import("@/types/navigation/NextStepImplConstants.ts"), () => ({
   MBWNextStepImpl: {
     getNextRouteOrNull: mockDefinitions.mbwGetNextRouteOrNull,
   },
@@ -68,7 +68,7 @@ describe("navigationUtils.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("routeWithName", () => {
@@ -128,7 +128,7 @@ describe("navigationUtils.ts", () => {
       expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_WAHLVORSTAND));
     });
 
-    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsUWB", () => {
+    it("should_returnRouteToFinished_when_noElectionsAreGivenAndUsersWahlbezirksArtIsUWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.UWB)
         .wahlMetaData([])
@@ -141,10 +141,10 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
-      expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_FINISHED));
     });
 
-    it("should_returnRouteToHome_when_noElectionsAreGivenAndUsersWahlbezirksArtIsBWB", () => {
+    it("should_returnRouteToFinished_when_noElectionsAreGivenAndUsersWahlbezirksArtIsBWB", () => {
       useUserStore().user = prepareUser()
         .wahlbezirksArt(WahlbezirksArtEnum.BWB)
         .wahlMetaData([])
@@ -157,10 +157,10 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isAnzahlWahlscheineErfasst = true;
 
       const result = unitUnderTest.getNextRoute();
-      expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_FINISHED));
     });
 
-    it("should_returnRouteToHome_when_allElectionFinished", () => {
+    it("should_returnRouteToFinished_when_allElectionFinished", () => {
       const wahlID1 = "wahlID1";
       const wahlbezirkID1 = "wahlbezirkID1";
 
@@ -194,7 +194,7 @@ describe("navigationUtils.ts", () => {
       ];
 
       const result = unitUnderTest.getNextRoute();
-      expect(result).toEqual(unitUnderTest.routeWithName(ROUTES_HOME));
+      expect(result).toEqual(unitUnderTest.routeWithName(ROUTE_FINISHED));
     });
 
     it("should_returnRouteOfMbwNextStepHandler_when_mbwIstNotDone", () => {

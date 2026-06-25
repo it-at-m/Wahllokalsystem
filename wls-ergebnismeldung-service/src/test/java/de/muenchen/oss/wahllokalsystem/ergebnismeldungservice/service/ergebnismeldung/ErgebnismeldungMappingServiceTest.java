@@ -10,6 +10,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stap
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnis;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmzettelumschlaege.Stimmzettelumschlaege;
@@ -25,13 +26,10 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Sta
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.StapelartModelMapper;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnisse.WahlartPredicateHolder;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -52,6 +50,7 @@ class ErgebnismeldungMappingServiceTest {
   @Mock StimmzettelumschlaegeRepository stimmzettelumschlaegeRepo;
   @Mock StimmabgabevermerkeRepository stimmabgabevermerkeRepo;
   @Mock AWerteRepository aWerteRepo;
+  @Mock MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
 
   @Mock AuthenticationService authenticationService;
   @Mock ErgebnisseRepository ergebnisseRepo;
@@ -92,14 +91,22 @@ class ErgebnismeldungMappingServiceTest {
         val mockedInvalidErgebnisse = createErgebnisse(wahlID, wahlbezirkID, mockedInvalidStapel);
         val mockedErgebnisse = List.of(mockedValidErgebnisse, mockedInvalidErgebnisse);
         val mockedInvalidErgebnisseMappedToUngueltigeStimmzettel =
-            Set.of(
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()));
+            new HashSet<>(
+                Set.of(
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString())));
         val mockedAWerteEntity = new AWerte();
         val mockedAWerteMappedToDTO = new AWerteDTO().a1(12L).a2(21L);
         val mockedStimmabgabevermerke =
             createStimmabgabevermerke(wahlID, wahlbezirkID, waehlverzeichnisNummer);
+        val anzahlUngueltigeBedenklicheStimmzettel = 2L;
+        val mockedUngueltigeBedenklicheStimzettel =
+            new UngueltigeStimmzettelDTO()
+                .anzahl(anzahlUngueltigeBedenklicheStimmzettel)
+                .stimmenart("MBW_E_UNGUELTIG");
+        mockedInvalidErgebnisseMappedToUngueltigeStimmzettel.add(
+            mockedUngueltigeBedenklicheStimzettel);
 
         Mockito.when(mapping.toWahlartDTO(wahlart)).thenReturn(mockedMappedWahlart);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
@@ -108,7 +115,8 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(mockedErgebnisse);
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlverzeichnisNummer)))
             .thenReturn(Optional.of(mockedStimmabgabevermerke));
         Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
             .thenReturn(stapelart -> !stapelart.equals(mockedValidStapelModel));
@@ -123,6 +131,10 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(mockedValidStapelModel);
         Mockito.when(stapelArtModelMapper.toModel(mockedInvalidStapel))
             .thenReturn(mockedInvalidStapelModel);
+        Mockito.when(
+                mbwBedenklicheStimmzettelService.getAnzahlUngueltigeBedenklicheStimmzettel(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(anzahlUngueltigeBedenklicheStimmzettel);
 
         val result =
             unitUnderTest.createErgebnismeldung(
@@ -178,7 +190,8 @@ class ErgebnismeldungMappingServiceTest {
             .thenReturn(Optional.of(mockedStimmzettelumschlaege));
         Mockito.when(
                 stimmabgabevermerkeRepo.findById(
-                    new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlverzeichnisNummer)))
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlverzeichnisNummer)))
             .thenReturn(Optional.of(new Stimmabgabevermerke()));
         Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
             .thenReturn(stapelart -> true);
@@ -227,6 +240,78 @@ class ErgebnismeldungMappingServiceTest {
 
         Assertions.assertThat(result.getaWerte()).isNull();
       }
+
+      @Test
+      void
+          should_returnErgebnismeldungWithUngueltigeBedenklicheStimmzettel_when_noOtherUngueltigeStimmzettelArePresent() {
+        val wahlart = WahlartModel.LTW;
+        val wahlID = "wahlID";
+        val wahlbezirkID = "wahlbezirkID";
+        val waehlverzeichnisNummer = 0L;
+        val meldungsart = ErgebnismeldungDTO.MeldungsartEnum.NIEDERSCHRIFT;
+        val hauptwahlbezirkID = "hauptwahlbezirkID";
+
+        val mockedMappedWahlart = ErgebnismeldungDTO.WahlartEnum.LTW;
+        val mockedUserWahlbezirkart = WahlbezirkArtModel.UWB;
+        val mockedValidStapel = Stapelart.LTW_BZW_A;
+        val mockedValidStapelModel = StapelartModel.LTW_BZW_A;
+        val mockedInvalidStapel = Stapelart.BTW_B_I_UNGUELTIG;
+        val mockedInvalidStapelModel = StapelartModel.BTW_B_I_UNGUELTIG;
+        val mockedValidErgebnisse = createErgebnisse(wahlID, wahlbezirkID, mockedValidStapel);
+        val mockedValidErgebniseMappedToDTO =
+            Set.of(
+                new ErgebnisDTO().wahlvorschlagID(UUID.randomUUID().toString()),
+                new ErgebnisDTO().wahlvorschlagID(UUID.randomUUID().toString()));
+        val mockedInvalidErgebnisse = createErgebnisse(wahlID, wahlbezirkID, mockedInvalidStapel);
+        val mockedErgebnisse = List.of(mockedValidErgebnisse, mockedInvalidErgebnisse);
+        val mockedAWerteEntity = new AWerte();
+        val mockedAWerteMappedToDTO = new AWerteDTO().a1(12L).a2(21L);
+        val mockedStimmabgabevermerke =
+            createStimmabgabevermerke(wahlID, wahlbezirkID, waehlverzeichnisNummer);
+        val anzahlUngueltigeBedenklicheStimmzettel = 2L;
+        val mockedUngueltigeBedenklicheStimzettel =
+            new UngueltigeStimmzettelDTO()
+                .anzahl(anzahlUngueltigeBedenklicheStimmzettel)
+                .stimmenart("MBW_E_UNGUELTIG");
+
+        Mockito.when(mapping.toWahlartDTO(wahlart)).thenReturn(mockedMappedWahlart);
+        Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
+            .thenReturn(mockedUserWahlbezirkart);
+        Mockito.when(ergebnisseRepo.findByWahlbezirkIDAndWahlD(wahlbezirkID, wahlID))
+            .thenReturn(mockedErgebnisse);
+        Mockito.when(
+                stimmabgabevermerkeRepo.findById(
+                    new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                        wahlbezirkID, wahlID, waehlverzeichnisNummer)))
+            .thenReturn(Optional.of(mockedStimmabgabevermerke));
+        Mockito.when(wahlartPredicateHolder.getPredicateForStapelWithInvalidErgebnisse(wahlart))
+            .thenReturn(stapelart -> !stapelart.equals(mockedValidStapelModel));
+        Mockito.when(aWerteRepo.findById(new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(Optional.of(mockedAWerteEntity));
+        Mockito.when(mapping.toClientDTO(mockedAWerteEntity)).thenReturn(mockedAWerteMappedToDTO);
+        Mockito.when(mapping.toDtoErgebnisseSet(List.of(mockedValidErgebnisse)))
+            .thenReturn(mockedValidErgebniseMappedToDTO);
+        Mockito.when(stapelArtModelMapper.toModel(mockedValidStapel))
+            .thenReturn(mockedValidStapelModel);
+        Mockito.when(stapelArtModelMapper.toModel(mockedInvalidStapel))
+            .thenReturn(mockedInvalidStapelModel);
+        Mockito.when(
+                mbwBedenklicheStimmzettelService.getAnzahlUngueltigeBedenklicheStimmzettel(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(anzahlUngueltigeBedenklicheStimmzettel);
+
+        val result =
+            unitUnderTest.createErgebnismeldung(
+                wahlart,
+                wahlID,
+                wahlbezirkID,
+                waehlverzeichnisNummer,
+                meldungsart,
+                hauptwahlbezirkID);
+
+        Assertions.assertThat(result.getUngueltigeStimmzettels())
+            .isEqualTo(Set.of(mockedUngueltigeBedenklicheStimzettel));
+      }
     }
 
     @Nested
@@ -256,12 +341,20 @@ class ErgebnismeldungMappingServiceTest {
         val mockedInvalidErgebnisse = createErgebnisse(wahlID, wahlbezirkID, mockedInvalidStapel);
         val mockedErgebnisse = List.of(mockedValidErgebnisse, mockedInvalidErgebnisse);
         val mockedInvalidErgebnisseMappedToUngueltigeStimmzettel =
-            Set.of(
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
-                new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()));
+            new HashSet<>(
+                Set.of(
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString()),
+                    new UngueltigeStimmzettelDTO().wahlvorschlagID(UUID.randomUUID().toString())));
         val mockedStimmzettelumschlaege = createStimmzettelumschlaege(10);
         val mockedBriefwahlClientResponse = 23L;
+        val anzahlUngueltigeBedenklicheStimmzettel = 2L;
+        val mockedUngueltigeBedenklicheStimzettel =
+            new UngueltigeStimmzettelDTO()
+                .anzahl(anzahlUngueltigeBedenklicheStimmzettel)
+                .stimmenart("MBW_E_UNGUELTIG");
+        mockedInvalidErgebnisseMappedToUngueltigeStimmzettel.add(
+            mockedUngueltigeBedenklicheStimzettel);
 
         Mockito.when(mapping.toWahlartDTO(wahlart)).thenReturn(mockedMappedWahlart);
         Mockito.when(authenticationService.getWahlbezirkArtOfCurrentAuthenticationOrThrow())
@@ -286,6 +379,10 @@ class ErgebnismeldungMappingServiceTest {
                       eq(hauptwahlbezirkID), eq(wahlID), eq(waehlverzeichnisNummer)))
               .thenReturn(mockedBriefwahlClientResponse);
         }
+        Mockito.when(
+                mbwBedenklicheStimmzettelService.getAnzahlUngueltigeBedenklicheStimmzettel(
+                    new BezirkUndWahlID(wahlID, wahlbezirkID)))
+            .thenReturn(anzahlUngueltigeBedenklicheStimmzettel);
 
         val result =
             unitUnderTest.createErgebnismeldung(
@@ -324,14 +421,9 @@ class ErgebnismeldungMappingServiceTest {
 
   private Stimmabgabevermerke createStimmabgabevermerke(
       final String wahlID, final String wahlbezirkID, final Long waehlerverzeichnisNummer) {
-    val stimmabgabevermerke = new Stimmabgabevermerke();
 
-    val wahldaten =
-        Testdaten.Wahldaten.createEntity(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
-
-    stimmabgabevermerke.setWahldaten(Set.of(wahldaten));
-
-    return stimmabgabevermerke;
+    return Testdaten.Stimmabgabevermerke.createEntity(
+        wahlbezirkID, wahlID, waehlerverzeichnisNummer);
   }
 
   private Ergebnisse createErgebnisse(

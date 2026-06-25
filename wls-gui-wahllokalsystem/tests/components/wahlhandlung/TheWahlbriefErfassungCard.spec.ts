@@ -7,12 +7,13 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheWahlbriefErfassungCard from "@/components/wahlhandlung/TheWahlbriefErfassungCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
@@ -31,23 +32,25 @@ const mockDefinitions = vi.hoisted(() => ({
   postWahlbriefdaten: vi.fn(),
 }));
 
-vi.mock("@/composables/briefwahl/briefwahlService", () => ({
-  useBriefwahlService: () => ({
-    postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postWahlbriefdaten: mockDefinitions.postWahlbriefdaten,
+      }),
+    };
+  }
+);
 
 describe("TheWahlbriefErfassungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof TheWahlbriefErfassungCard>>;
   let wahlbezirkStore: ReturnType<typeof useWahlbezirkStore>;
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   const validWahlbriefDaten = {
     wahlbriefe: 1,
@@ -87,7 +90,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWahlbriefErfassungCardWithDisabledSave_when_mounted", async (context) => {
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -100,7 +103,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
 
       await nextTick();
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(false);
 
       await expect(wrapper.html()).toMatchFileSnapshot(
@@ -185,7 +188,7 @@ describe("TheWahlbriefErfassungCard.vue", () => {
         "sendWahlbriefdaten"
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postWahlbriefdaten.mockResolvedValue(Promise.resolve());

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-card>
       <v-card-title>Zahl der Wahlurnen</v-card-title>
       <v-card-text class="pb-0 pt-2">
@@ -35,7 +35,8 @@
                     .anzahlWahltische
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max-valid="99"
+                :rules="[required]"
                 min-width="30rem"
                 data-test="numberInputAnzahlWahltische"
                 label="Anzahl der Tische mit Sichtblenden"
@@ -48,7 +49,8 @@
                     .anzahlNebenraeume
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max-valid="99"
+                :rules="[required]"
                 data-test="numberInputAnzahlNebenraeume"
                 label="Anzahl der Nebenräume im Wahlraum"
                 min-width="30rem"
@@ -61,7 +63,8 @@
                     .anzahlWahlkabinen
                 "
                 class="mr-4"
-                :rules="[required, minNumber(0), maxNumber(99)]"
+                :max-valid="99"
+                :rules="[required]"
                 data-test="numberInputAnzahlWahlkabinen"
                 label="Anzahl der Wahlkabinen"
                 min-width="30rem"
@@ -69,7 +72,7 @@
             </div>
           </div>
         </v-form>
-        <base-input-feedback-card
+        <base-feedback-card
           v-show="isMinimumRequired"
           title="Ungültige Eingaben"
           :type="InputFeedbackTypeEnum.error"
@@ -77,36 +80,37 @@
         >
           Die Summe der Kabinen, Tische und Nebenräume muss mindestens 1
           betragen.
-        </base-input-feedback-card>
+        </base-feedback-card>
       </v-card-text>
       <v-card-actions>
-        <base-button-save
+        <base-wls-button-save
           :disabled="isSaveButtonDisabled"
           :loading="urnenwahlVorbereitungState.urnenwahlVorbereitungIsSaving"
-          save-text="Speichern und Weiter"
+          :save-text="SAVE_CONTINUE"
           @click="onSaveWahlumgebungUWBClicked"
         />
       </v-card-actions>
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
-import BaseInputFeedbackCard from "@/components/common/cards/BaseInputFeedbackCard.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 
-const { maxNumber, minNumber, required } = useRules();
+const { required } = useRules();
 const { getNextRoute } = useNavigationUtils();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);

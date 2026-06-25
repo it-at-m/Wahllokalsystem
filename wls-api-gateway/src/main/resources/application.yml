@@ -3,6 +3,10 @@ spring:
     name: "@project.artifactId@"
     group: "@project.groupId@"
     version: "@project.version@"
+  profiles:
+    group:
+      local:
+        - plainTextLogging
   main:
     web-application-type: reactive
     banner-mode: console
@@ -26,6 +30,9 @@ spring:
             - RemoveRequestHeader=cookie
             - RemoveRequestHeader=x-xsrf-token
             - TokenRelay=
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
 
 server:
   forward-headers-strategy: native
@@ -33,6 +40,7 @@ server:
     include-message: always
     whitelabel:
       enabled: false
+
 
 management:
   endpoints:
@@ -67,22 +75,6 @@ management:
     readinessstate:
       enabled: true
 
-logging:
-  level:
-    root: info
-  structured:
-    format:
-      console: logstash
-    json:
-      stacktrace:
-        root: first
-        # default max size of one log line in docker is 16kb - UTF8 ~ 1 Character = 1 Byte
-        # therefore limit stack traces to a maximum of 8192 characters (to leave room for the rest of the message)
-        max-length: 8192
-      add:
-        application_name: ${spring.application.name}
-        application_group: ${spring.application.group}
-
 info:
   application:
     name: ${spring.application.name}
@@ -93,5 +85,9 @@ info:
     java.version: "@java.version@"
     spring-cloud.version: "@spring-cloud-dependencies.version@"
 
-config:
-  map5xxto400: true
+service:
+  info:
+    oid: WLS-API-GATEWAY
+  generic500Exception:
+    code: "000"
+    message: "unstructured foreign exception received"

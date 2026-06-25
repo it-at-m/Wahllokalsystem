@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.MessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.util.BroadcastExceptionKonstanten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +30,8 @@ public class BroadcastService {
   private final BroadcastDTOMapper broadcastMapper;
 
   private final ExceptionFactory exceptionFactory;
+
+  private final BezirkIDPermissionEvaluator bezirkIdPermissionEvaluator;
 
   @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_Broadcast')")
   public void broadcast(final BroadcastMessageDTO messageToBroadcast) {
@@ -47,8 +52,10 @@ public class BroadcastService {
     messageRepo.saveAll(messagesToSave);
   }
 
-  @PreAuthorize("hasAuthority('Broadcast_BUSINESSACTION_GetMessage')")
-  public MessageDTO getOldestMessage(String wahlbezirkID) {
+  @PreAuthorize(
+      "hasAuthority('Broadcast_BUSINESSACTION_GetMessage')"
+          + " and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#wahlbezirkID, authentication)")
+  public MessageDTO getOldestMessage(@P("wahlbezirkID") String wahlbezirkID) {
     log.debug("#nachrichtenAbrufen wahlbezirkID {} length {}", wahlbezirkID, wahlbezirkID.length());
 
     if (StringUtils.isEmpty(wahlbezirkID) || StringUtils.isBlank(wahlbezirkID)) {
@@ -73,9 +80,27 @@ public class BroadcastService {
           BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_EMPTY_NACHRICHTID);
     }
 
+    val nachrichtUUID = toUUID(nachrichtID);
+    val messageFromRepo = messageRepo.findById(nachrichtUUID);
+    if (messageFromRepo.isEmpty()) {
+      return;
+    }
+
+    throwSecurityExceptionWhenCurrentUserIsNotOwnerOfMessage(messageFromRepo.get());
+    messageRepo.deleteById(nachrichtUUID);
+  }
+
+  private void throwSecurityExceptionWhenCurrentUserIsNotOwnerOfMessage(final Message message) {
+    if (!bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(
+        message.getWahlbezirkID(), SecurityContextHolder.getContext().getAuthentication())) {
+      throw exceptionFactory.createSicherheitsWlsException(
+          BroadcastExceptionKonstanten.USER_NOT_OWNER_OF_MESSAGE);
+    }
+  }
+
+  private UUID toUUID(String uuidAsString) {
     try {
-      UUID nachrichtUUID = java.util.UUID.fromString(nachrichtID);
-      messageRepo.deleteById(nachrichtUUID);
+      return java.util.UUID.fromString(uuidAsString);
     } catch (IllegalArgumentException e) {
       throw exceptionFactory.createFachlicheWlsException(
           BroadcastExceptionKonstanten.BROADCAST_PARAMETER_UNVOLLSTAENDIG_BAD_FORMAT_UUID);

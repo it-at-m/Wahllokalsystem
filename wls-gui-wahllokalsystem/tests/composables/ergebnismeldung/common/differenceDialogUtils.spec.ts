@@ -15,8 +15,7 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 const { prepareWahl } = useWahlTestDataFactory();
 const { prepareWahlscheine } = useWahlscheineTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
-const { prepareWahldaten, prepareStimmabgabevermerke } =
-  useStimmabgabevermerkeTestDataFactory();
+const { prepareStimmabgabevermerke } = useStimmabgabevermerkeTestDataFactory();
 
 const mockDefinitions = vi.hoisted(() => ({
   getWahlOrUndefinedById: vi.fn(),
@@ -66,25 +65,20 @@ describe("differenceDialogUtils.ts", () => {
 
       const eingenommeneWahlscheineAnzahl = 5;
       const testStimmabgabevermerke = prepareStimmabgabevermerke()
-        .wahldaten([
-          prepareWahldaten()
-            .wahlID(WAHL_ID)
-            .eingenommeneWahlscheine(
-              new Map([
-                [
-                  StimmzettelStimmzettelartEnum.Klein,
-                  eingenommeneWahlscheineAnzahl,
-                ],
-              ])
-            )
-            .build(),
-        ])
+        .wahlID(WAHL_ID)
+        .eingenommeneWahlscheine(
+          new Map([
+            [
+              StimmzettelStimmzettelartEnum.Klein,
+              eingenommeneWahlscheineAnzahl,
+            ],
+          ])
+        )
         .build();
 
       stimmabgabevermerkeStore.stimmabgabevermerke = [testStimmabgabevermerke];
 
-      // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-      const vermerkeSum = testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
+      const vermerkeSum = testStimmabgabevermerke.vermerke.reduce(
         (sum, vermerk) => {
           const kleinStimmzettel = vermerk.stimmzettel.find(
             (s) => s.stimmzettelart === StimmzettelStimmzettelartEnum.Klein
@@ -186,36 +180,30 @@ describe("differenceDialogUtils.ts", () => {
         userStore.user.wahlbezirksArt = WahlbezirksArtEnum.UWB;
 
         const testStimmabgabevermerke = prepareStimmabgabevermerke()
-          .wahldaten([
-            prepareWahldaten()
-              .wahlID(WAHL_ID)
-              .eingenommeneWahlscheine(
-                new Map([
-                  [
-                    StimmzettelStimmzettelartEnum.Klein,
-                    eingenommeneWahlscheineAnzahl,
-                  ],
-                ])
-              )
-              .build(),
-          ])
+          .wahlID(WAHL_ID)
+          .eingenommeneWahlscheine(
+            new Map([
+              [
+                StimmzettelStimmzettelartEnum.Klein,
+                eingenommeneWahlscheineAnzahl,
+              ],
+            ])
+          )
           .build();
 
         stimmabgabevermerkeStore.stimmabgabevermerke = [
           testStimmabgabevermerke,
         ];
 
-        const vermerkeSum =
-          // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-          testStimmabgabevermerke.wahldaten[0].vermerke.reduce(
-            (sum, vermerk) => {
-              const kleinStimmzettel = vermerk.stimmzettel.find(
-                (s) => s.stimmzettelart === StimmzettelStimmzettelartEnum.Klein
-              );
-              return sum + (kleinStimmzettel?.anzahl ?? 0);
-            },
-            0
-          );
+        const vermerkeSum = testStimmabgabevermerke.vermerke.reduce(
+          (sum, vermerk) => {
+            const kleinStimmzettel = vermerk.stimmzettel.find(
+              (s) => s.stimmzettelart === StimmzettelStimmzettelartEnum.Klein
+            );
+            return sum + (kleinStimmzettel?.anzahl ?? 0);
+          },
+          0
+        );
 
         const totalStimmabgabevermerke =
           eingenommeneWahlscheineAnzahl + vermerkeSum;

@@ -1,57 +1,67 @@
 <template>
-  <v-menu>
-    <template #activator="{ props: menuActivator }">
-      <v-btn
-        v-bind="menuActivator"
-        :icon="activatorButtonIcon"
-        variant="text"
-        density="comfortable"
-        size="x-large"
-        :color="activatorButtonColor"
-        data-test="button-activator-menu-online-offline"
-      />
-    </template>
-    <v-card
-      width="250"
-      max-height="280"
-    >
-      <v-list class="pt-0">
-        <v-list-item>
-          <base-text-button
-            :loading="isCheckingStatus"
-            color="primary"
-            style="width: 100%"
-            @click.stop="onCheckStatusClicked"
-          >
-            Verbindung überprüfen
-          </base-text-button>
-        </v-list-item>
-        <v-list-item active>
-          <v-row
-            class="ma-1"
-            align="center"
-          >
-            <strong>Verbindungsstatus</strong>
-            <v-spacer />
-            <offline-syncer />
-          </v-row>
-        </v-list-item>
-        <v-divider
-          thickness="2"
-          color="black"
+  <div>
+    <v-menu>
+      <template #activator="{ props: menuActivator }">
+        <v-btn
+          v-bind="menuActivator"
+          :icon="activatorButtonIcon"
+          variant="text"
+          density="comfortable"
+          size="x-large"
+          :color="activatorButtonColor"
+          data-test="button-activator-menu-online-offline"
         />
-        <v-list-item> {{ onlineOfflineExplanation }}</v-list-item>
-      </v-list>
-    </v-card>
-  </v-menu>
+      </template>
+      <v-card
+        width="250"
+        max-height="280"
+      >
+        <v-list class="pt-0">
+          <v-list-item>
+            <base-text-button
+              :loading="isCheckingStatus"
+              active
+              style="width: 100%"
+              @click.stop="onCheckStatusClicked"
+            >
+              Verbindung überprüfen
+            </base-text-button>
+          </v-list-item>
+          <v-list-item active>
+            <v-row
+              class="ma-1"
+              align="center"
+            >
+              <strong>Verbindungsstatus</strong>
+              <v-spacer />
+            </v-row>
+          </v-list-item>
+          <v-divider
+            thickness="2"
+            color="black"
+          />
+          <v-list-item> {{ onlineOfflineExplanation }}</v-list-item>
+          <v-list-item>
+            <base-text-button
+              active
+              @click="isOfflineSyncDialogVisible = true"
+            >
+              Daten Synchronisieren
+            </base-text-button>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-menu>
+    <the-manual-offline-data-sync-dialog v-model="isOfflineSyncDialogVisible" />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
-import OfflineSyncer from "@/components/wlsComponents/OfflineSyncer.vue";
+import TheManualOfflineDataSyncDialog from "@/components/common/dialogs/TheManualOfflineDataSyncDialog.vue";
 import { useInterval } from "@/composables/scheduler/interval.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 
@@ -67,6 +77,8 @@ useInterval(
 
 const onlineOfflineStore = useOnlineOfflineStore();
 const { isCheckingStatus, isOnline } = storeToRefs(onlineOfflineStore);
+
+const isOfflineSyncDialogVisible = ref(false);
 
 const activatorButtonColor = computed(() =>
   isOnline.value ? "white" : "error"

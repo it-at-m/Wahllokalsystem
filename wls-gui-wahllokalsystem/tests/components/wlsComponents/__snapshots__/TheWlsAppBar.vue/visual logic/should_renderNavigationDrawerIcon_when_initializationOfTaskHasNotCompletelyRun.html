@@ -1,7 +1,7 @@
 <div class="v-application v-theme--light v-layout v-layout--full-height v-locale--is-ltr">
   <div class="v-application__wrap">
     <div>
-      <header class="v-toolbar v-toolbar--collapse-start v-toolbar--density-default bg-primary v-theme--light v-locale--is-ltr v-app-bar" style="top: 0px; z-index: 1006; transform: translateY(0px); position: fixed; transition: none; left: 0px; width: calc(100% - 0px);">
+      <header class="v-toolbar v-toolbar--collapse-start v-toolbar--density-default bg-primary v-theme--light v-locale--is-ltr v-app-bar" style="top: 0px; z-index: 1006; transform: translateY(0px); position: fixed; transition: none !important; left: 0px; width: calc(100% - 0px);">
         <!---->
         <div class="v-toolbar__content" style="height: 64px;">
           <!---->
@@ -17,12 +17,16 @@
             <div class="v-col v-col-5 d-flex align-center justify-center"></div>
             <div class="v-col v-col-3 d-flex align-center justify-end">
               <!--v-if-->
-              <div class="time navbar-text mx-2 mt-1">07:30:00</div><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-2" aria-owns="v-menu-v-2" data-test="button-activator-menu-online-offline"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
-                <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M21,4H16V20H21V4M14,9H9V20H14V9M7,14H2V20H7V14Z"></path></svg></i></span>
+              <div class="time navbar-text mx-2 mt-1">07:30:00</div>
+              <div><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-2" aria-owns="v-menu-v-2" data-test="button-activator-menu-online-offline"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                  <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M21,4H16V20H21V4M14,9H9V20H14V9M7,14H2V20H7V14Z"></path></svg></i></span>
+                  <!---->
+                  <!---->
+                </button>
                 <!---->
                 <!---->
-              </button>
-              <!----><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-4" aria-owns="v-menu-v-4"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                <!---->
+              </div><button type="button" class="v-btn v-btn--icon v-theme--light text-white v-btn--density-comfortable v-btn--size-x-large v-btn--variant-text" aria-haspopup="menu" aria-expanded="false" aria-controls="v-menu-v-4" aria-owns="v-menu-v-4" aria-label="Hilfe und Support öffnen" title="Hilfe und Support"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
                 <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z"></path></svg></i></span>
                 <!---->
                 <!---->
@@ -40,134 +44,53 @@
           <!---->
         </transition-stub>
       </header>
-      <nav class="v-navigation-drawer v-navigation-drawer--left v-navigation-drawer--temporary v-theme--light v-navigation-drawer--mobile" style="left: 0px; z-index: 1004; transform: translateX(-256px); position: fixed; transition: none; height: calc(100% - 64px); top: 64px; bottom: 0px; width: 256px;" inert="true">
+      <nav class="v-navigation-drawer v-navigation-drawer--left v-theme--light v-navigation-drawer--mobile" style="left: 0px; z-index: 1004; transform: translateX(-320px); position: fixed; transition: none !important; height: calc(100% - 64px); top: 64px; bottom: 0px; width: 320px;" inert="true">
         <!---->
         <!---->
         <div class="v-navigation-drawer__content">
           <div class="v-list v-theme--light bg-transparent v-list--density-default v-list--one-line pt-0" tabindex="0" role="list">
-            <div class="v-list-group v-list-group--prepend bg-primary">
-              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option" id="v-list-group--id-Allgemein"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+            <div class="v-list-item v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
+              <!----><span class="v-list-item__underlay"></span>
+              <!---->
+              <div class="v-list-item__content" data-no-activator="">
                 <!---->
-                <div class="v-list-item__content" data-no-activator="">
-                  <div class="v-list-item-title">Allgemein</div>
-                  <!---->
-                  <!---->
-                </div>
-                <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                      <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
-                    </svg></i>
-                  <!---->
-                  <div class="v-list-item__spacer"></div>
+                <!---->
+                <div class="v-divider__wrapper">
+                  <hr class="v-divider v-theme--light" style="border-top-width: 2px; border-style: solid;" aria-orientation="horizontal" role="separator">
+                  <div class="v-divider__content"><span class="text-medium-emphasis">Allgemein</span></div>
+                  <hr class="v-divider v-theme--light" style="border-top-width: 2px; border-style: solid;" aria-orientation="horizontal" role="separator">
                 </div>
               </div>
-              <transition-stub name="" appear="false" persisted="false" css="false">
-                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Allgemein" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                    <!---->
-                    <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Home</div>
-                      <!---->
-                      <!---->
-                    </div>
-                    <!---->
-                  </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                    <!---->
-                    <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Wahlvorstand</div>
-                      <!---->
-                      <!---->
-                    </div>
-                    <!---->
-                  </a>
-                  <!--v-if-->
-                  <div class="v-list-group v-list-group--prepend">
-                    <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option" id="v-list-group--id-Wahlhandlung"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                      <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                            <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path>
-                          </svg></i>
-                        <div class="v-list-item__spacer"></div>
-                      </div>
-                      <div class="v-list-item__content" data-no-activator="">
-                        <div class="v-list-item-title">Wahlhandlung</div>
-                        <!---->
-                        <!---->
-                      </div>
-                      <div class="v-list-item__append"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true" density="default"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path>
-                          </svg></i>
-                        <!---->
-                        <div class="v-list-item__spacer"></div>
-                      </div>
-                    </div>
-                    <transition-stub name="" appear="false" persisted="false" css="false">
-                      <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Wahlhandlung" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                          <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                                <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"></path>
-                              </svg></i>
-                            <div class="v-list-item__spacer"></div>
-                          </div>
-                          <div class="v-list-item__content" data-no-activator="">
-                            <div class="v-list-item-title">Wahlumgebung</div>
-                            <!---->
-                            <!---->
-                          </div>
-                          <!---->
-                        </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                          <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                                <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path>
-                              </svg></i>
-                            <div class="v-list-item__spacer"></div>
-                          </div>
-                          <div class="v-list-item__content" data-no-activator="">
-                            <div class="v-list-item-title">Wählerverzeichnis</div>
-                            <!---->
-                            <!---->
-                          </div>
-                          <!---->
-                        </a><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
-                          <!----><span class="v-list-item__underlay"></span>
-                          <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                                <path d="M22.11 21.46L2.39 1.73L1.11 3L4.06 5.95C2.78 7.63 2 9.72 2 12C2 17.5 6.5 22 12 22C14.28 22 16.37 21.23 18.05 19.94L20.84 22.73L22.11 21.46M12 20C7.58 20 4 16.42 4 12C4 10.27 4.56 8.68 5.5 7.38L16.62 18.5C15.32 19.45 13.73 20 12 20M8.17 4.97L6.72 3.5C8.25 2.56 10.06 2 12 2C17.5 2 22 6.5 22 12C22 13.94 21.44 15.75 20.5 17.28L19.03 15.83C19.65 14.69 20 13.39 20 12C20 7.58 16.42 4 12 4C10.61 4 9.31 4.35 8.17 4.97Z"></path>
-                              </svg></i>
-                            <div class="v-list-item__spacer"></div>
-                          </div>
-                          <div class="v-list-item__content" data-no-activator="">
-                            <div class="v-list-item-title">Beginn Stimmabgabe</div>
-                            <!---->
-                            <!---->
-                          </div>
-                          <!---->
-                        </a><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
-                          <!----><span class="v-list-item__underlay"></span>
-                          <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
-                                <path d="M22.11 21.46L2.39 1.73L1.11 3L4.06 5.95C2.78 7.63 2 9.72 2 12C2 17.5 6.5 22 12 22C14.28 22 16.37 21.23 18.05 19.94L20.84 22.73L22.11 21.46M12 20C7.58 20 4 16.42 4 12C4 10.27 4.56 8.68 5.5 7.38L16.62 18.5C15.32 19.45 13.73 20 12 20M8.17 4.97L6.72 3.5C8.25 2.56 10.06 2 12 2C17.5 2 22 6.5 22 12C22 13.94 21.44 15.75 20.5 17.28L19.03 15.83C19.65 14.69 20 13.39 20 12C20 7.58 16.42 4 12 4C10.61 4 9.31 4.35 8.17 4.97Z"></path>
-                              </svg></i>
-                            <div class="v-list-item__spacer"></div>
-                          </div>
-                          <div class="v-list-item__content" data-no-activator="">
-                            <div class="v-list-item-title">Stimmabgabe</div>
-                            <!---->
-                            <!---->
-                          </div>
-                          <!---->
-                        </a></div>
-                    </transition-stub>
-                  </div><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                    <!---->
-                    <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Ereignisse</div>
-                      <!---->
-                      <!---->
-                    </div>
-                    <!---->
-                  </a>
-                </div>
-              </transition-stub>
-            </div>
+              <!---->
+            </div><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+              <!---->
+              <div class="v-list-item__content" data-no-activator="">
+                <div class="v-list-item-title">Home</div>
+                <!---->
+                <!---->
+              </div>
+              <!---->
+            </a><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+              <!---->
+              <div class="v-list-item__content" data-no-activator="">
+                <div class="v-list-item-title">Wahlvorstand</div>
+                <!---->
+                <!---->
+              </div>
+              <!---->
+            </a>
+            <!--v-if-->
             <div class="v-list-group v-list-group--prepend">
-              <div class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option" id="v-list-group--id-Ergebnisse"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
-                <!---->
+              <div id="v-list-group--id-Wahlhandlung" class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text v-list-group__header" style="--v-list-prepend-gap: 10px;" tabindex="-2" aria-selected="false" role="option"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small text-warning" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                      <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path>
+                    </svg></i>
+                  <div class="v-list-item__spacer"></div>
+                </div>
                 <div class="v-list-item__content" data-no-activator="">
-                  <div class="v-list-item-title">Ergebnisermittlung</div>
+                  <div class="v-list-item-title">
+                    <div class="text-wrap">Wahlhandlung</div>
+                  </div>
                   <!---->
                   <!---->
                 </div>
@@ -179,8 +102,35 @@
                 </div>
               </div>
               <transition-stub name="" appear="false" persisted="false" css="false">
-                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Ergebnisse" style="display: none;">
-                  <!--v-if--><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
+                <div class="v-list-group__items" role="group" aria-labelledby="v-list-group--id-Wahlhandlung" style="display: none;"><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                    <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small text-success" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                          <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"></path>
+                        </svg></i>
+                      <div class="v-list-item__spacer"></div>
+                    </div>
+                    <div class="v-list-item__content" data-no-activator="">
+                      <div class="v-list-item-title">
+                        <div class="text-wrap">Wahlumgebung</div>
+                      </div>
+                      <!---->
+                      <!---->
+                    </div>
+                    <!---->
+                  </a><a class="v-list-item v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link" tabindex="-2"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+                    <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small text-warning" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                          <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"></path>
+                        </svg></i>
+                      <div class="v-list-item__spacer"></div>
+                    </div>
+                    <div class="v-list-item__content" data-no-activator="">
+                      <div class="v-list-item-title">
+                        <div class="text-wrap">Wählerverzeichnis</div>
+                      </div>
+                      <!---->
+                      <!---->
+                    </div>
+                    <!---->
+                  </a><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
                     <!----><span class="v-list-item__underlay"></span>
                     <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
                           <path d="M22.11 21.46L2.39 1.73L1.11 3L4.06 5.95C2.78 7.63 2 9.72 2 12C2 17.5 6.5 22 12 22C14.28 22 16.37 21.23 18.05 19.94L20.84 22.73L22.11 21.46M12 20C7.58 20 4 16.42 4 12C4 10.27 4.56 8.68 5.5 7.38L16.62 18.5C15.32 19.45 13.73 20 12 20M8.17 4.97L6.72 3.5C8.25 2.56 10.06 2 12 2C17.5 2 22 6.5 22 12C22 13.94 21.44 15.75 20.5 17.28L19.03 15.83C19.65 14.69 20 13.39 20 12C20 7.58 16.42 4 12 4C10.61 4 9.31 4.35 8.17 4.97Z"></path>
@@ -188,14 +138,70 @@
                       <div class="v-list-item__spacer"></div>
                     </div>
                     <div class="v-list-item__content" data-no-activator="">
-                      <div class="v-list-item-title">Stimmabgabevermerke</div>
-                      <div class="v-list-item-subtitle">Wahlhandlung muss abgeschlossen sein.</div>
+                      <div class="v-list-item-title">
+                        <div class="text-wrap">Beginn Stimmabgabe</div>
+                      </div>
+                      <!---->
                       <!---->
                     </div>
                     <!---->
-                  </a>
-                </div>
+                  </a><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
+                    <!----><span class="v-list-item__underlay"></span>
+                    <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                          <path d="M22.11 21.46L2.39 1.73L1.11 3L4.06 5.95C2.78 7.63 2 9.72 2 12C2 17.5 6.5 22 12 22C14.28 22 16.37 21.23 18.05 19.94L20.84 22.73L22.11 21.46M12 20C7.58 20 4 16.42 4 12C4 10.27 4.56 8.68 5.5 7.38L16.62 18.5C15.32 19.45 13.73 20 12 20M8.17 4.97L6.72 3.5C8.25 2.56 10.06 2 12 2C17.5 2 22 6.5 22 12C22 13.94 21.44 15.75 20.5 17.28L19.03 15.83C19.65 14.69 20 13.39 20 12C20 7.58 16.42 4 12 4C10.61 4 9.31 4.35 8.17 4.97Z"></path>
+                        </svg></i>
+                      <div class="v-list-item__spacer"></div>
+                    </div>
+                    <div class="v-list-item__content" data-no-activator="">
+                      <div class="v-list-item-title">
+                        <div class="text-wrap">Stimmabgabe</div>
+                      </div>
+                      <!---->
+                      <!---->
+                    </div>
+                    <!---->
+                  </a></div>
               </transition-stub>
+            </div><a class="v-list-item v-list-item--link v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" tabindex="-2" role="link"><span class="v-list-item__overlay"></span><span class="v-list-item__underlay"></span>
+              <!---->
+              <div class="v-list-item__content" data-no-activator="">
+                <div class="v-list-item-title">Ereignisse</div>
+                <!---->
+                <!---->
+              </div>
+              <!---->
+            </a>
+            <div>
+              <div class="v-list-item v-list-item--prepend v-theme--light v-list-item--density-default v-list-item--one-line rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="listitem">
+                <!----><span class="v-list-item__underlay"></span>
+                <!---->
+                <div class="v-list-item__content" data-no-activator="">
+                  <!---->
+                  <!---->
+                  <div class="v-divider__wrapper">
+                    <hr class="v-divider v-theme--light" style="border-top-width: 2px; border-style: solid;" aria-orientation="horizontal" role="separator">
+                    <div class="v-divider__content"><span class="text-medium-emphasis">Ergebnisermittlung</span></div>
+                    <hr class="v-divider v-theme--light" style="border-top-width: 2px; border-style: solid;" aria-orientation="horizontal" role="separator">
+                  </div>
+                </div>
+                <!---->
+              </div>
+              <!--v-if--><a class="v-list-item v-list-item--disabled v-theme--light v-list-item--density-default rounded-0 v-list-item--variant-text" style="--v-list-prepend-gap: 10px;" role="link">
+                <!----><span class="v-list-item__underlay"></span>
+                <div class="v-list-item__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-small" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                      <path d="M22.11 21.46L2.39 1.73L1.11 3L4.06 5.95C2.78 7.63 2 9.72 2 12C2 17.5 6.5 22 12 22C14.28 22 16.37 21.23 18.05 19.94L20.84 22.73L22.11 21.46M12 20C7.58 20 4 16.42 4 12C4 10.27 4.56 8.68 5.5 7.38L16.62 18.5C15.32 19.45 13.73 20 12 20M8.17 4.97L6.72 3.5C8.25 2.56 10.06 2 12 2C17.5 2 22 6.5 22 12C22 13.94 21.44 15.75 20.5 17.28L19.03 15.83C19.65 14.69 20 13.39 20 12C20 7.58 16.42 4 12 4C10.61 4 9.31 4.35 8.17 4.97Z"></path>
+                    </svg></i>
+                  <div class="v-list-item__spacer"></div>
+                </div>
+                <div class="v-list-item__content" data-no-activator="">
+                  <div class="v-list-item-title">
+                    <div class="text-wrap">Stimmabgabevermerke</div>
+                  </div>
+                  <div class="v-list-item-subtitle">Wahlhandlung muss abgeschlossen sein.</div>
+                  <!---->
+                </div>
+                <!---->
+              </a>
             </div>
           </div>
         </div>
@@ -204,6 +210,10 @@
       <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
         <!---->
       </transition-stub>
+      <!---->
+      <!---->
+      <!---->
+      <!---->
     </div>
   </div>
 </div>

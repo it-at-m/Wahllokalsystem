@@ -10,12 +10,15 @@ const mockDefinitions = vi.hoisted(() => ({
   postWahlscheine: vi.fn(),
 }));
 
-vi.mock("@/composables/ergebnismeldung/common/wahlscheineService.ts", () => ({
-  useWahlscheineService: () => ({
-    getWahlscheine: mockDefinitions.getWahlscheine,
-    postWahlscheine: mockDefinitions.postWahlscheine,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/wahlscheineService.ts"),
+  () => ({
+    useWahlscheineService: () => ({
+      getWahlscheine: mockDefinitions.getWahlscheine,
+      postWahlscheine: mockDefinitions.postWahlscheine,
+    }),
+  })
+);
 
 const mockedNow = new Date();
 
@@ -77,6 +80,26 @@ describe("wahlscheineStore.ts", () => {
         },
       ]);
     });
+
+    it.each([{ sendNotification: true }, { sendNotification: false }])(
+      "should_callServiceWithSendNotification$sendNotification_when_notificationParameterIsUsed",
+      async (argument) => {
+        const wahlID = generateRandomString(10);
+        const wahlbezirkID = generateRandomString(10);
+
+        mockDefinitions.getWahlscheine.mockResolvedValue(null);
+
+        await unitUnderTest.loadWahlscheine(
+          wahlID,
+          wahlbezirkID,
+          argument.sendNotification
+        );
+
+        expect(mockDefinitions.getWahlscheine.mock.calls).toStrictEqual([
+          [wahlID, wahlbezirkID, argument.sendNotification],
+        ]);
+      }
+    );
   });
 
   describe("saveWahlscheine", () => {

@@ -3,12 +3,14 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import BaseWahleroeffnungCard from "@/components/wahlhandlung/BaseWahleroeffnungCard.vue";
 import router from "@/plugins/router.ts";
@@ -30,30 +32,39 @@ const mockDefinitions = vi.hoisted(() => ({
   routerPush: vi.fn(),
 }));
 
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService.ts", () => ({
-  useEreignisService: () => ({
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisService: () => ({
+        ...mod.useEreignisService(),
+        saveEreignisse: mockDefinitions.saveEreignisse,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/wahlhandlung/wahlvorbereitungService", () => ({
-  useWahlvorbereitungService: () => ({
-    postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlhandlung/wahlvorbereitungService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useWahlvorbereitungService: () => ({
+        ...mod.useWahlvorbereitungService(),
+        postEroeffnungsuhrzeit: mockDefinitions.postEroeffnungsuhrzeit,
+      }),
+    };
+  }
+);
 
 router.push = mockDefinitions.routerPush;
 
 describe("BaseWahleroeffnungCard.vue", () => {
   let wrapper: VueWrapper<InstanceType<typeof BaseWahleroeffnungCard>>;
 
-  vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
     const mockedNow = new Date();
@@ -184,7 +195,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         "sendEroeffnungsuhrzeit"
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       mockDefinitions.postEroeffnungsuhrzeit.mockResolvedValue(
@@ -214,7 +225,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       // @ts-expect-error: cannot set readonly
       infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       expect(wrapper.vm.isZuSpaet).toBe(true);
@@ -240,7 +251,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
       // @ts-expect-error: cannot set readonly
       infomanagementStore.spaetesteEroeffnungsuhrzeit = "07:10:00";
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       const cancelButton = wrapper.findComponent(
@@ -283,7 +294,7 @@ describe("BaseWahleroeffnungCard.vue", () => {
         0
       );
 
-      const saveButton = wrapper.findComponent(BaseButtonSave);
+      const saveButton = wrapper.findComponent(BaseWlsButtonSave);
       await saveButton.trigger("click");
 
       await wrapper

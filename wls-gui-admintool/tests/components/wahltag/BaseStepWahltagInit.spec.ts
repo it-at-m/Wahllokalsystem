@@ -35,22 +35,27 @@ const isLoadingRef = ref(isLoadingRefDefaultValue);
 const isDeletingRefDefaultValue = false;
 const isDeletingRef = ref(isDeletingRefDefaultValue);
 
-vi.mock("@/composables/wahltermindaten/wahltermindatenService.ts", () => ({
-  useWahltermindatenService: () => ({
-    importWahlterminDaten: mockDefinitions.importWahlterminDaten,
-    deleteAndImportWahlterminDaten:
-      mockDefinitions.deleteAndImportWahlterminDaten,
-    isLoading: isLoadingRef,
-    isDeleting: isDeletingRef,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahltermindaten/wahltermindatenService.ts"),
+  () => ({
+    useWahltermindatenService: () => ({
+      importWahlterminDaten: mockDefinitions.importWahlterminDaten,
+      deleteAndImportWahlterminDaten:
+        mockDefinitions.deleteAndImportWahlterminDaten,
+      isLoading: isLoadingRef,
+      isDeleting: isDeletingRef,
+    }),
+  })
+);
 
 // Mock the ResizeObserver
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+const ResizeObserverMock = vi.fn(
+  class MockedResizeObserverMock {
+    observe = vi.fn();
+    unobserve = vi.fn();
+    disconnect = vi.fn();
+  } as never
+);
 
 // Stub the global ResizeObserver
 vi.stubGlobal("ResizeObserver", ResizeObserverMock);

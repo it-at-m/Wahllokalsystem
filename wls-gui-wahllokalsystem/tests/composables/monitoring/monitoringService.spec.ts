@@ -17,21 +17,24 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock("@/api/wls-clients/generated-monitoring-api", () => ({
-  WaehleranzahlControllerApi: vi.fn().mockImplementation(() => ({
-    postWahlbeteiligung: mockDefinitions.postWahlbeteiligung,
-    getWahlbeteiligung: mockDefinitions.getWahlbeteiligung,
-  })),
-  WahllokalZustandControllerApi: vi.fn().mockImplementation(() => ({
-    postLastSeen: mockDefinitions.postLastSeen,
-  })),
+  WaehleranzahlControllerApi: class {
+    postWahlbeteiligung = mockDefinitions.postWahlbeteiligung;
+    getWahlbeteiligung = mockDefinitions.getWahlbeteiligung;
+  },
+  WahllokalZustandControllerApi: class {
+    postLastSeen = mockDefinitions.postLastSeen;
+  },
   Configuration: vi.fn(),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
-vi.mock("@/composables/monitoring/wahlbeteiligungMapper.ts", () => ({
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
+vi.mock(import("@/composables/monitoring/wahlbeteiligungMapper.ts"), () => ({
   useWahlbeteiligungMapper: () => ({
     toDto: mockDefinitions.toDto,
     toModel: mockDefinitions.toModel,

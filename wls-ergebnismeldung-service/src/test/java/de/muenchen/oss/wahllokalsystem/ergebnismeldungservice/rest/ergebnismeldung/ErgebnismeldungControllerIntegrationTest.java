@@ -30,7 +30,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.status.Vali
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Wahldaten;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.aou.model.ErgebnismeldungDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.basisdaten.model.WahlDTO;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.infomanagement.model.KonfigurierterWahltagDTO;
@@ -40,7 +39,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Authorities;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionCategory;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
 import java.time.Clock;
@@ -158,7 +156,7 @@ class ErgebnismeldungControllerIntegrationTest {
                       .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(mockedNow);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(mockedNow);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -220,7 +218,7 @@ class ErgebnismeldungControllerIntegrationTest {
           val mockedNow = LocalDateTime.now();
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(mockedNow);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(mockedNow);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -263,7 +261,7 @@ class ErgebnismeldungControllerIntegrationTest {
           statusRepository.save(statusToSend);
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(null);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(null);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -327,7 +325,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 
         val mockedUrnenwahlschliessungsUhrzeit =
-            new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(LocalDateTime.now());
         stubFor(
             get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                 .willReturn(
@@ -360,6 +358,8 @@ class ErgebnismeldungControllerIntegrationTest {
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE),
+                            new SimpleGrantedAuthority(
+                                Authorities.SERVICE_GET_BEDENKLICHE_STIMMZETTEL),
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE))
                         .jwt(
                             jwt ->
@@ -404,7 +404,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 
         val mockedUrnenwahlschliessungsUhrzeit =
-            new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit((LocalDateTime.now()));
         stubFor(
             get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                 .willReturn(
@@ -482,18 +482,13 @@ class ErgebnismeldungControllerIntegrationTest {
         val vermerk = Testdaten.Vermerk.createEntity(1);
         val eigennommeneWahlscheine = Testdaten.EigenommenerWahlschein.createEntity(1);
         val wahldaten =
-            new Wahldaten(
-                null,
+            new Stimmabgabevermerke(
                 new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
                     wahlbezirkID, wahlID, waehlerverzeichnisNummer),
                 Set.of(vermerk),
                 Set.of(eigennommeneWahlscheine));
-        vermerk.setWahldaten(wahldaten);
-        stimmabgabevermerkeRepository.save(
-            new Stimmabgabevermerke(
-                new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer),
-                1,
-                Set.of(wahldaten)));
+        vermerk.setStimmabgabevermerke(wahldaten);
+        stimmabgabevermerkeRepository.save(wahldaten);
 
         // Insert AWerte
         aWerteRepository.save(new AWerte(new BezirkUndWahlID(wahlID, wahlbezirkID), 1L, null));

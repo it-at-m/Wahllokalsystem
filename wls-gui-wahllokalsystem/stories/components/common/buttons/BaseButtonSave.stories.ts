@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 
 const meta = {
-  component: BaseButtonSave,
+  component: BaseWlsButtonSave,
   args: {},
-} satisfies Meta<typeof BaseButtonSave>;
+} satisfies Meta<typeof BaseWlsButtonSave>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

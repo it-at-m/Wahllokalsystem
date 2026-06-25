@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,16 +23,21 @@ public class WaehleranzahlService {
   private final ExceptionFactory exceptionFactory;
   private final WaehleranzahlClient waehleranzahlClient;
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_GetWahlbeteiligung')")
-  public Optional<WaehleranzahlModel> getWahlbeteiligung(BezirkUndWahlID bezirkUndWahlID) {
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_GetWahlbeteiligung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#bezirkUndWahl.wahlbezirkID, authentication)")
+  public Optional<WaehleranzahlModel> getWahlbeteiligung(
+      @P("bezirkUndWahl") BezirkUndWahlID bezirkUndWahlID) {
     waehleranzahlValidator.validWahlIdUndWahlbezirkIDOrThrow(bezirkUndWahlID);
     val waehleranzahlFromRepo = waehleranzahlRepository.findById(bezirkUndWahlID);
 
     return waehleranzahlFromRepo.map(waehleranzahlModelMapper::toModel);
   }
 
-  @PreAuthorize("hasAuthority('Monitoring_BUSINESSACTION_PostWahlbeteiligung')")
-  public void postWahlbeteiligung(WaehleranzahlModel waehleranzahl) {
+  @PreAuthorize(
+      "hasAuthority('Monitoring_BUSINESSACTION_PostWahlbeteiligung')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.bezirkUndWahlID().wahlbezirkID, authentication)")
+  public void postWahlbeteiligung(@P("param") WaehleranzahlModel waehleranzahl) {
     try {
       waehleranzahlRepository.save(waehleranzahlModelMapper.toEntity(waehleranzahl));
     } catch (Exception e) {

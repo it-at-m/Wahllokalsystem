@@ -5,6 +5,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import { storeToRefs } from "pinia";
@@ -24,12 +25,16 @@ const mockDefinitions = vi.hoisted(() => ({
 
 let componentCallback: () => void;
 
-vi.mock("@/plugins/router.ts", () => ({
-  default: {
-    push: mockDefinitions.routerPush,
-  },
-}));
-vi.mock("@/composables/scheduler/dateOfActionTimeout.ts", () => ({
+vi.mock(import("@/plugins/router.ts"), async (importOriginal) => {
+  const mod = await importOriginal();
+  return {
+    default: {
+      ...mod.default,
+      push: mockDefinitions.routerPush,
+    },
+  };
+});
+vi.mock(import("@/composables/scheduler/dateOfActionTimeout.ts"), () => ({
   useDateOfActionTimeout: (
     title: string,
     dateOfAction: Ref<Date | undefined>,
@@ -51,7 +56,8 @@ vi.mock("@/stores/wahlvorstandStore.ts", () => ({
 
 describe("TheWahlvorstandAnwesenheitsCheckPopupDialog.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
+
+  stubVisualViewport();
 
   beforeEach(() => {
     wrapper = mount(TheWahlvorstandAnwesenheitsCheckPopupDialog, {

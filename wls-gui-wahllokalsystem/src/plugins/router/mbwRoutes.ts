@@ -1,3 +1,5 @@
+import type { RouteRecordRawWithoutName } from "@/types/navigation/RouteRecordRawWithoutName.ts";
+
 import {
   type RouteLocationAsRelativeGeneric,
   type RouteRecordRaw,
@@ -11,10 +13,11 @@ import MBWSchnellmeldungView from "@/views/ergebnismeldung/MBW/MBWSchnellmeldung
 import MBWStapelAandBView from "@/views/ergebnismeldung/MBW/MBWStapelAandBView.vue";
 import MBWStapelBCView from "@/views/ergebnismeldung/MBW/MBWStapelBCView.vue";
 import MBWStapelDView from "@/views/ergebnismeldung/MBW/MBWStapelDView.vue";
+import MBWStapelEView from "@/views/ergebnismeldung/MBW/MBWStapelEView.vue";
 
 const {
   isStepDoneInElectionState,
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
@@ -23,10 +26,8 @@ const {
 const BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM =
   "/MBW/wahl/:wahlId/wahlbezirk/:wahlbezirkId";
 
-type RouteRecordRawWithoutName = Omit<RouteRecordRaw, "name">;
-
 const auszaehlungPrerequisiteGuards = [
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   requiresWahlhandlungErfasstWhenWahlbezirksArtUwb,
   requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
   requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
@@ -41,6 +42,15 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     component: ErfassungStimmzettelView,
     beforeEnter: [...auszaehlungPrerequisiteGuards],
   },
+  [MbwRoutesEnum.MBW_STAPEL_E]: {
+    path:
+      BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM + "/stapelE",
+    component: MBWStapelEView,
+    beforeEnter: [
+      ...auszaehlungPrerequisiteGuards,
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+    ],
+  },
   [MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG]: {
     path:
       BASE_PATH_MBW_WAHLBEZIRK_WITH_WAHLID_AND_WAHLBEZIRKID_PARAM +
@@ -49,6 +59,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_E),
     ],
   },
   [MbwRoutesEnum.MBW_STAPEL_A_AND_B]: {
@@ -59,6 +70,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
     ],
   },
@@ -70,6 +82,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
     ],
@@ -81,6 +94,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG),
@@ -94,6 +108,7 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     beforeEnter: [
       ...auszaehlungPrerequisiteGuards,
       isStepDoneInElectionState(MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL),
+      isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_E),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_STAPEL_A_AND_B),
       isStepDoneInElectionState(MbwRoutesEnum.MBW_SCHNELLMELDUNG),

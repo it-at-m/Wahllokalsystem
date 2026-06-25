@@ -8,28 +8,31 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 const mockDefinitions = vi.hoisted(() => ({
   mapDtoToModel: vi.fn(),
   addNotification: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   deleteMessage: vi.fn(),
   getMessage: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-broadcast-api", () => ({
-  BroadcastControllerApi: vi.fn().mockImplementation(() => ({
-    getMessage: mockDefinitions.getMessage,
-    deleteMessage: mockDefinitions.deleteMessage,
-  })),
+  BroadcastControllerApi: class {
+    getMessage = mockDefinitions.getMessage;
+    deleteMessage = mockDefinitions.deleteMessage;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/broadcast/broadcastMapper.ts", () => ({
+vi.mock(import("@/composables/broadcast/broadcastMapper.ts"), () => ({
   useBroadcastMapper: () => ({
     dtoToModel: mockDefinitions.mapDtoToModel,
   }),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { createBroadcastMessage, createMessageDTO } =
   useBroadcastTestDataFactory();
@@ -96,6 +99,22 @@ describe("BroadcastService.ts", () => {
         expect.any(String),
         UserNotificationCategoryEnum.ERROR,
       ]);
+    });
+
+    it("should_notTriggerErrorNotification_when_anExceptionOccurredDuringApiCallButSendNotificationIsFalse", async () => {
+      const wahlbezirkID = "wahlbezirkID";
+
+      mockDefinitions.getMessage.mockRejectedValue(
+        new Error("api called failed")
+      );
+
+      const result = await getMessage(wahlbezirkID, false);
+
+      expect(result).toBeNull();
+
+      expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
+        0
+      );
     });
   });
 

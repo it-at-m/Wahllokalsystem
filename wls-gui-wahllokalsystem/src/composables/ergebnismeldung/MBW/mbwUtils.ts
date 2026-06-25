@@ -14,8 +14,12 @@ import { ref } from "vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useNumberFormatter } from "@/composables/common/numberFormatter.ts";
+import { useAusdruckService } from "@/composables/ergebnismeldung/common/ausdruckService.ts";
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
+import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
+import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
+import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
 import { useMbwErgebnisAndWahlvorschlagMapper } from "@/composables/ergebnismeldung/MBW/mbwErgebnisAndWahlvorschlagMapper.ts";
 import { useStimmabgabevermerkeService } from "@/composables/stimmabgabevermerke/stimmabgabevermerkeService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
@@ -24,7 +28,9 @@ import { useWahlvorschlagUtils } from "@/composables/wahlvorschlaege/wahlvorschl
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
+import { MeldungValidierungsstatusEnum } from "@/types/ergebnismeldung/common/MeldungValidierungsstatusEnum.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
+import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
@@ -33,6 +39,7 @@ const {
   getErgebnisse,
   postSchnellmeldung,
   getStimmzettelumschlaege,
+  postNiederschrift,
 } = useErgebnisService();
 const { getWahlvorschlaege } = useWahlvorschlaegeService();
 const { sortWahlvorschlaegeByOrdnungszahl } = useWahlvorschlagUtils();
@@ -42,6 +49,10 @@ const { logError } = useLogging("mbwUtils");
 const { convertToSixDigitArray } = useNumberFormatter();
 const { toGermanDate, toHhMm } = useDateTimeFormatter();
 const { addNotification } = useUserNotificationService();
+const { postStatus } = useStatusService();
+const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
+const { toYyyyMmDdWithTimeWithoutTimezoneOffset } = useDateTimeFormatter();
+const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
 export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   const { mapErgebnisseFromErgebnisseAndWahlvorschlagListToErgebnisse } =
@@ -56,8 +67,11 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
     currentUserWahlbezirksArt,
   } = storeToRefs(useUserStore());
 
+  const { postAusdruck } = useAusdruckService();
+
   const isErgebnisseSaving = ref<boolean>(false);
   const isSendingSchnellmeldung = ref<boolean>(false);
+  const isSendingNiederschrift = ref<boolean>(false);
 
   async function saveGueltigeErgebnisse(
     ergebnisse: MbwErgebnisseAndWahlvorschlag[]
@@ -165,19 +179,18 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
         if (waehlerverzeichnisNummer) {
           const loadedStimmabgabevermerke = await getStimmabgabevermerke(
             wahlbezirkID,
+            wahlID,
             waehlerverzeichnisNummer
           );
           if (loadedStimmabgabevermerke) {
-            // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-            bWerte.b1 = loadedStimmabgabevermerke.wahldaten[0].vermerke
+            bWerte.b1 = loadedStimmabgabevermerke.vermerke
               .flatMap((vermerk) => vermerk.stimmzettel)
               .reduce(
                 (summe, stimmzettel) => summe + (stimmzettel.anzahl || 0),
                 0
               );
             bWerte.b2 = Array.from(
-              // @ts-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008
-              loadedStimmabgabevermerke.wahldaten[0].eingenommeneWahlscheine.values()
+              loadedStimmabgabevermerke.eingenommeneWahlscheine.values()
             ).reduce((sum, value) => sum + value, 0);
 
             bWerte.b = bWerte.b1 + bWerte.b2;
@@ -205,6 +218,10 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
 
   async function sendSchnellmeldung() {
     isSendingSchnellmeldung.value = true;
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
 
     try {
       const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
@@ -216,7 +233,20 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
           wahlbezirkID,
           currentUserWahlbezirkID.value,
           wahl.waehlerverzeichnisNummer
-        );
+        )
+          .then(() => {
+            status.schnellmeldung.uebermittelt = true;
+          })
+          .catch(() => {
+            status.schnellmeldung.uebermittelt = false;
+          })
+          .finally(async () => {
+            status.schnellmeldung.validierungsstatus =
+              MeldungValidierungsstatusEnum.Valide;
+            status.schnellmeldung.sendeuhrzeit =
+              toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+            await postStatus(wahlID, wahlbezirkID, status, false);
+          });
       }
     } finally {
       isSendingSchnellmeldung.value = false;
@@ -251,7 +281,14 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       StapelArtEnum.MbwDUngueltig,
       false
     );
-    const ungueltigeStimmen = ungueltige?.ergebnisse[0]?.ergebnis ?? 0;
+    const bedenklicheStimmzettel =
+      (await getBedenklicheStimmzettel(wahlID, wahlbezirkID)) ?? [];
+    const ungueltigeBedenklicheStimmzettel = bedenklicheStimmzettel.filter(
+      (stimmzettel) => stimmzettel.validity === ValidityEnum.INVALID
+    );
+    const ungueltigeStimmen =
+      (ungueltige?.ergebnisse[0]?.ergebnis ?? 0) +
+      ungueltigeBedenklicheStimmzettel.length;
 
     const stimmenGesamt = gueltigeStimmenGesamt + ungueltigeStimmen;
 
@@ -274,6 +311,72 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       barcode: jpegUrl,
       sendOk: status.schnellmeldung.uebermittelt || false,
     };
+  }
+
+  async function updateStatusAfterSchnellmeldungDrucken() {
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
+    status.schnellmeldung.gedruckt = true;
+    await postStatus(wahlID, wahlbezirkID, status, false);
+  }
+
+  async function sendNiederschrift() {
+    isSendingNiederschrift.value = true;
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
+
+    try {
+      const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);
+      if (!wahl) {
+        logError(`zur wahlID ${wahlID} existiert keine Wahl`);
+      } else {
+        await postNiederschrift(
+          wahlID,
+          wahlbezirkID,
+          wahl.waehlerverzeichnisNummer,
+          currentUserWahlbezirkID.value
+        )
+          .then(() => {
+            status.niederschrift.uebermittelt = true;
+          })
+          .catch(() => {
+            status.niederschrift.uebermittelt = false;
+          })
+          .finally(async () => {
+            status.niederschrift.validierungsstatus =
+              MeldungValidierungsstatusEnum.Valide;
+            status.niederschrift.sendeuhrzeit =
+              toYyyyMmDdWithTimeWithoutTimezoneOffset(new Date());
+            await postStatus(wahlID, wahlbezirkID, status, false);
+          });
+      }
+    } finally {
+      isSendingNiederschrift.value = false;
+    }
+  }
+
+  async function sendAusdruckNiederschrift(
+    meldungsart: MeldungsartEnum,
+    ausdruck: string
+  ) {
+    const status = await loadStatusByWahlIdAndWahlbezirkId(
+      wahlID,
+      wahlbezirkID
+    );
+    try {
+      await postAusdruck(wahlbezirkID, wahlID, meldungsart, ausdruck).then(
+        async () => {
+          status.niederschrift.gedruckt = true;
+          await postStatus(wahlID, wahlbezirkID, status, false);
+        }
+      );
+    } catch {
+      logError("Fehler beim Speichern des Ausdrucks");
+    }
   }
 
   async function _loadGueltigeErgebnisseByStapelArt(stapelArt: StapelArtEnum) {
@@ -362,11 +465,17 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
   return {
     isErgebnisseSaving,
     isSendingSchnellmeldung,
+    isSendingNiederschrift,
     saveGueltigeErgebnisse,
     loadAndCombineErgebnisseAndWahlvorschlaege,
     getAWerteForWahlbezirkAndWahl,
     getBWerteForWahlbezirkAndWahl,
     sendSchnellmeldung,
     prepareDataForSchnellmeldungDruck,
+    sendAusdruckNiederschrift,
+    _createBarcode,
+    _createFooter,
+    updateStatusAfterSchnellmeldungDrucken,
+    sendNiederschrift,
   };
 }

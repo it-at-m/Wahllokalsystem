@@ -1,19 +1,20 @@
 import { defineStore, storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 
-import { useDataSyncer } from "@/composables/indexDB/dataSyncer.ts";
 import { useMonitoringService } from "@/composables/monitoring/monitoringService.ts";
+import { useDataSyncStore } from "@/stores/dataSyncStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
 const storeID = "onlineOffline";
 
 export const useOnlineOfflineStore = defineStore(storeID, () => {
   const { postLastSeen } = useMonitoringService();
-  const { synchronizeOfflineData } = useDataSyncer();
+  const { synchronizeOfflineData } = useDataSyncStore();
   const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
 
   const isCheckingStatus = ref<boolean>(false);
   const isOnline = ref<boolean>(true); //because when u can load the application you are online
+  const isOfflineCacheReady = ref<null | boolean>(null);
 
   async function checkConnectionState() {
     isCheckingStatus.value = true;
@@ -39,6 +40,7 @@ export const useOnlineOfflineStore = defineStore(storeID, () => {
   return {
     isCheckingStatus,
     isOnline,
+    isOfflineCacheReady,
     checkConnectionState,
   };
 });

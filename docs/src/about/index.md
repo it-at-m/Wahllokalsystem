@@ -92,7 +92,7 @@ die sich daraus berechnen, ob es Einträge mit der entsprechenden Ereignisart gi
 {#infobox-ereignisse-uwb}
 ::: info Ereignisse im Urnenwahlbezirk {data-uwb="true"}
 Im Urnenwahlbezirk wird zwischen Vorfällen, die am Wahltag während oder vor der Stimmabgabe auftreten, und Vorkommnissen, die
-während der Auszählung auftreten, unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
+während der Auszählung auftreten (nach der Schließung), unterschieden. Vorkommnisse können also auch an einem Tag nach der Wahl auftreten und
 erfasst werden. Wird die Uhrzeit eines Vorkommnisses nachträglich auf vor der Wahlschließung gesetzt, passt sich auch
 die Ereignisart des Eintrags entsprechend an und wird zu einem Vorfall, und andersherum. Sobald die Schliessungsuhrzeit
 gespeichert wird, wird die Ereignisart der Ereignisse ebenfalls neu berechnet. Dementsprechend ist die
@@ -218,6 +218,13 @@ zur entsprechenden Seite navigiert werden. Die Uhrzeit für den Dialog wird übe
 Analog zur Öffnung der Wahl, wird sie vor der Auszählung auch wieder geschlossen. Die früheste Zeit zur Schließung
 richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_UW` mit einem Standardwert von 18 Uhr.
 Auch diese darf nicht in der Zukunft liegen.
+Um eine Wahl zu schließen, müssen die Ereignisse mindestens einmal gepflegt werden. Es erscheint ein Feedback-Dialog mit einem Button, der zur Seite
+mit den Ereignissen führt.
+Wurden bereits Ereignisse angelegt oder wurde angegeben, dass es keine Vorfälle gab, erscheint stattdessen ein Information-Dialog.
+Dieser erinnert daran, die Ereignisse vor dem Wahlschluss nochmals zu prüfen, und enthält ebenfalls einen Button zur Ereignisseite.
+Nach dem Speichern der Schließungsuhrzeit erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 ::: info Briefwahlbezirk {data-bwb="true"}
@@ -225,6 +232,9 @@ Im Briefwahlbezirk gibt es keine "Schließung" des Wahllokals. Es wird aber eine
 abgegebener Stimmen` übermittelt, welche der Schliessungsuhrzeit im Urnenwahllokal gleicht. Die früheste Zeit, die
 übermittelt werden kann richtet sich nach dem Konfigurationsparameter `FRUEHESTE_SCHLIESSUNGSUHRZEIT_BW` mit einem
 Standardwert von 18 Uhr.
+Nach dem Speichern der Uhrzeit zur Öffnung der Wahlurne erfolgt die Weiterleitung zur Erfassung der Anwesenheiten.
+Hier muss die Besetzung des Wahlvorstandes erneut erfasst werden, um die Beschlussfähigkeit sicherzustellen und
+mit der Auszählung der Wahl fortfahren zu können.
 :::
 
 📃 **UseCase: `Überprüfung der ungültigen Wahlscheine`**
@@ -260,7 +270,7 @@ Der Wahlvorstand kann über jeden bedenklichen Wahlbrief einen individuellen Bes
 Gültigkeit des gesamten Wahlscheins und anschließend der einzelnen Stimmzettelumschläge unterschieden. Ein Wahlschein
 kann die Werte `Zugelassen`, `Wahlschein ungültig laut Liste`, `Kein Original-Wahlschein`, oder `Unterschrift auf
 Wahlschein fehlt` haben. Für die Stimmzettelumschläge gibt es die Zurückweisungsgründe `Zugelassen`,
-`Stimmzettelumschlag fehlt`, `Lose Stimmzettel`, `Wahlbrief und Stimmzettelumschlag offen`, `Wahlscheine ungleich
+`Stimmzettelumschlag fehlt`, `Wahlbrief und Stimmzettelumschlag offen`, `Wahlscheine ungleich
 Stimmzettelumschläge`, `Nicht-amtlicher Stimmzettelumschlag`, `Stimmzettelumschlag gefährdet Wahlgeheimnis`, `Gegenstand
 im Stimmzettelumschlag` oder `Für diese Wahl nicht wahlberechtigt`.
 
@@ -318,6 +328,8 @@ Stapel für die **Migrationsbeiratswahl**:
   | `B_C`         | Zweifelsfrei gültige Stimmen: verändert, mehrere Wahlvorschläge | Kandidat*innenstimmen     |
   | `D_Ungueltig` | Leere und ungekennzeichnete Stimmzettel                         |                           |
 
+Eine neue Auszählungsmethodik [ohne Stapel](../dse/) wird aktuell getestet.
+
 #### Nach der Auszählung
 
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Schnellmeldung`**
@@ -327,9 +339,36 @@ Ergebnissen nach der Auszählung der Stimmen erstellt.
 
 Die Schnellmeldung wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
 
+Während des Versendens und Druckens der Schnellmeldung wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `schnellmeldung.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `schnellmeldung.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Schnellmeldung
+erfolgt ist, wird `schnellmeldung.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`schnellmeldung.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
+Es kann auch später erneut eine Schnellmeldung gedruckt werden.
+
 📃 **UseCase: `Kontrolle, Übermittlung und Druck der Niederschrift`**
 
 Im Urnenwahl - sowie im Briefwahlbezirk wird von der Schriftführung eine Wahlniederschrift über die
 Wahlhandlung sowie die Ermittlung und Feststellung des Wahlergebnisses erstellt.
 
 Die Niederschrift wird automatisch erstellt, kann dann korrigiert und versendet sowie gedruckt werden.
+
+Während des Versendens und Druckens der Niederschrift wird der Zustand der beiden Vorgänge als Status gepflegt.
+So wird beim Versenden die aktuelle Uhrzeit `niederschrift.sendeuhrzeit` erfasst. War das Senden erfolgreich,
+wird `niederschrift.uebermittelt` auf `true` gesetzt, ansonsten auf `false`. Sobald der Druck der Niederschrift
+erfolgt ist, wird `niederschrift.gedruckt` auf `true` gesetzt.
+Für die Migrationsbeiratswahl gibt es keine spezifischen, fachlichen Regeln, sodass
+`niederschrift.validierungsstatus` immer auf `VALIDE` gesetzt werden kann.
+
+Nach dem Druck der Niederschrift gilt die entsprechende Wahl als abgeschlossen. Alle Speicher-Buttons für Inputs
+dieser Wahl sind deaktiviert und die Nutzer\*innen können keine neuen Werte mehr erfassen. Die erfassten Daten können
+weiterhin eingesehen werden. Es kann auch erneut eine Niederschrift gedruckt werden.
+
+#### Weitere nicht Use-Case-spezifische Anforderungen
+
+##### Abmeldung bei Timeout
+
+Vollzieht der/die Benutzer\*In über einen bestimmten Zeitraum keine Aktionen, erfolgt automatisch eine Abmeldung. Die Wartezeit
+dafür kann [konfiguriert werden](../services/backend-services/infomanagement-service/#konfigurationen).

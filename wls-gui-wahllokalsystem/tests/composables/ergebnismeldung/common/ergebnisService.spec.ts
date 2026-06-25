@@ -21,6 +21,7 @@ import {
   PostErgebnisseStapelartEnum,
   SendErgebnisseMeldungsartEnum,
 } from "@/api/wls-clients/generated-ergebnismeldung-api";
+import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
@@ -35,7 +36,7 @@ const mockDefinitions = vi.hoisted(() => ({
   toErgebnisseDto: vi.fn(),
   toGetErgebnisseStapelartEnum: vi.fn(),
   toPostErgebnisseStapelartEnum: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
   bezirkUndWahlIDStapelartDTOStapelartEnum: vi.fn(),
   getErgebnisseStapelartEnum: vi.fn(),
   postErgebnisseStapelartEnum: vi.fn(),
@@ -64,47 +65,55 @@ vi.mock(
     const mod = await importOriginal();
     return {
       ...(mod as object),
-      ErgebnisseControllerApi: vi.fn().mockImplementation(() => ({
-        getErgebnisse: mockDefinitions.getErgebnisse,
-        postErgebnisse: mockDefinitions.postErgebnisse,
-      })),
-      ErgebnismeldungControllerApi: vi.fn().mockImplementation(() => ({
-        sendErgebnisse: mockDefinitions.sendErgebnisse,
-      })),
+      ErgebnisseControllerApi: class {
+        getErgebnisse = mockDefinitions.getErgebnisse;
+        postErgebnisse = mockDefinitions.postErgebnisse;
+      },
+      ErgebnismeldungControllerApi: class {
+        sendErgebnisse = mockDefinitions.sendErgebnisse;
+      },
       Configuration: mockDefinitions.configurationConstructor,
       BezirkUndWahlIDStapelartDTOStapelartEnum:
         mockDefinitions.bezirkUndWahlIDStapelartDTOStapelartEnum,
       GetErgebnisseStapelartEnum: mockDefinitions.getErgebnisseStapelartEnum,
       PostErgebnisseStapelartEnum: mockDefinitions.postErgebnisseStapelartEnum,
-      StimmzettelumschlaegeControllerApi: vi.fn().mockImplementation(() => ({
-        postStimmzettelumschlaege: mockDefinitions.postStimmzettelumschlaege,
-        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-      })),
-      BegruendungControllerApi: vi.fn().mockImplementation(() => ({
-        getBegruendung: mockDefinitions.getBegruendung,
-        postBegruendung: mockDefinitions.postBegruendung,
-      })),
+      StimmzettelumschlaegeControllerApi: class {
+        postStimmzettelumschlaege = mockDefinitions.postStimmzettelumschlaege;
+        getStimmzettelumschlaege = mockDefinitions.getStimmzettelumschlaege;
+      },
+      BegruendungControllerApi: class {
+        getBegruendung = mockDefinitions.getBegruendung;
+        postBegruendung = mockDefinitions.postBegruendung;
+      },
     };
   }
 );
-vi.mock("@/composables/ergebnismeldung/common/ergebnisMapper.ts", () => ({
-  useErgebnisMapper: () => ({
-    toErgebnisseModel: mockDefinitions.toErgebnisseModel,
-    toErgebnisseDto: mockDefinitions.toErgebnisseDto,
-    toGetErgebnisseStapelartEnum: mockDefinitions.toGetErgebnisseStapelartEnum,
-    toPostErgebnisseStapelartEnum:
-      mockDefinitions.toPostErgebnisseStapelartEnum,
-    toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
-    toStimmzettelumschlaegeModel: mockDefinitions.toStimmzettelumschlaegeModel,
-    toBegruendungModel: mockDefinitions.toBegruendungModel,
-    toBegruendungDto: mockDefinitions.toBegruendungDto,
-  }),
-}));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisMapper.ts"),
+  () => ({
+    useErgebnisMapper: () => ({
+      toErgebnisseModel: mockDefinitions.toErgebnisseModel,
+      toErgebnisseDto: mockDefinitions.toErgebnisseDto,
+      toGetErgebnisseStapelartEnum:
+        mockDefinitions.toGetErgebnisseStapelartEnum,
+      toPostErgebnisseStapelartEnum:
+        mockDefinitions.toPostErgebnisseStapelartEnum,
+      toStimmzettelumschlaegeDto: mockDefinitions.toStimmzettelumschlaegeDto,
+      toStimmzettelumschlaegeModel:
+        mockDefinitions.toStimmzettelumschlaegeModel,
+      toBegruendungModel: mockDefinitions.toBegruendungModel,
+      toBegruendungDto: mockDefinitions.toBegruendungDto,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();
@@ -121,6 +130,7 @@ const { createStimmzettelumschlaege, createStimmzettelumschlaegeDto } =
 const { createWahl } = useWahlTestDataFactory();
 const { createBegruendungDTO, prepareBegruendung } =
   useBegruendungTestDataFactory();
+const { axiosConfigWrapper } = useCommonApiUtils();
 
 describe("ergebnisService.ts", () => {
   const {
@@ -419,6 +429,8 @@ describe("ergebnisService.ts", () => {
             waehlerverzeichnisNummer,
             SendErgebnisseMeldungsartEnum.V3,
             hauptwahlbezirkID,
+            undefined,
+            axiosConfigWrapper().requestAsOnlineOnly(),
           ],
         ]);
 
@@ -433,40 +445,24 @@ describe("ergebnisService.ts", () => {
       }
     );
 
-    it.each([
-      [true, true],
-      [false, false],
-    ])(
-      "should_throwError_when_apiCallFailed",
-      async (sendNotificationParameter, sendNotificationCallIsExpected) => {
-        const wahlID = generateRandomString(10);
-        const wahlbezirkID = generateRandomString(10);
-        const hauptwahlbezirkID = generateRandomString(10);
-        const waehlerverzeichnisNummer = generateRandomNumber(2);
+    it("should_throwError_when_apiCallFailed", async () => {
+      const wahlID = generateRandomString(10);
+      const wahlbezirkID = generateRandomString(10);
+      const hauptwahlbezirkID = generateRandomString(10);
+      const waehlerverzeichnisNummer = generateRandomNumber(2);
 
-        const mockedApiError = new Error("mocked api call failed");
-        mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
+      const mockedApiError = new Error("mocked api call failed");
+      mockDefinitions.sendErgebnisse.mockRejectedValue(mockedApiError);
 
-        await expect(
-          postSchnellmeldung(
-            wahlID,
-            wahlbezirkID,
-            hauptwahlbezirkID,
-            waehlerverzeichnisNummer,
-            sendNotificationParameter
-          )
-        ).rejects.toThrowError(mockedApiError);
-
-        if (sendNotificationCallIsExpected) {
-          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
-          expect(mockDefinitions.addNotification.mock.calls).toEqual([
-            [expect.any(String), UserNotificationCategoryEnum.ERROR],
-          ]);
-        } else {
-          expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);
-        }
-      }
-    );
+      await expect(
+        postSchnellmeldung(
+          wahlID,
+          wahlbezirkID,
+          hauptwahlbezirkID,
+          waehlerverzeichnisNummer
+        )
+      ).rejects.toThrowError(mockedApiError);
+    });
   });
 
   describe("postStimmzettelumschlaege", () => {
@@ -871,6 +867,8 @@ describe("ergebnisService.ts", () => {
           waehlerverzeichnisNummer,
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
+          undefined,
+          axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(1);
@@ -900,6 +898,8 @@ describe("ergebnisService.ts", () => {
           waehlerverzeichnisNummer,
           SendErgebnisseMeldungsartEnum.V1,
           hauptwahlbezirkID,
+          undefined,
+          axiosConfigWrapper().requestAsPostOnlineOnlyButDirtyOnFail(),
         ],
       ]);
       expect(mockDefinitions.addNotification).toHaveBeenCalledTimes(0);

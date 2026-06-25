@@ -6,6 +6,7 @@ import type { RouteLocationAsRelativeGeneric } from "vue-router";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_FINISHED,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -62,6 +63,19 @@ export function useNavigationUtils() {
   }
 
   function getNextRoute(): RouteLocationAsRelativeGeneric {
+    // check all elections in their order
+    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
+      (wahlMetaData) =>
+        !workflowStore.isElectionFinished(
+          wahlMetaData.wahlID,
+          wahlMetaData.wahlbezirkID
+        )
+    );
+
+    if (!metaDataOfFirstUnfinishedElection) {
+      return routeWithName(ROUTE_FINISHED);
+    }
+
     // check if a non election specific step is next
     if (!workflowStore.isWahlvorstandErfasst) {
       return routeWithName(ROUTE_WAHLVORSTAND);
@@ -103,22 +117,11 @@ export function useNavigationUtils() {
       return routeWithName(ROUTE_STIMMABGABEVERMERKE);
     }
 
-    // check all elections in their order
-    const metaDataOfFirstUnfinishedElection = userStore.user.wahlMetaData.find(
-      (wahlMetaData) =>
-        !workflowStore.isElectionFinished(
-          wahlMetaData.wahlID,
-          wahlMetaData.wahlbezirkID
-        )
+    const nextStepOfElection = _getNextStepOfElection(
+      metaDataOfFirstUnfinishedElection
     );
-
-    if (metaDataOfFirstUnfinishedElection) {
-      const nextStepOfElection = _getNextStepOfElection(
-        metaDataOfFirstUnfinishedElection
-      );
-      if (nextStepOfElection) {
-        return nextStepOfElection;
-      }
+    if (nextStepOfElection) {
+      return nextStepOfElection;
     }
 
     return routeWithName(ROUTES_HOME);

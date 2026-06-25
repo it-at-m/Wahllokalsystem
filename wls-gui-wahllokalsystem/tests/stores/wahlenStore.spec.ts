@@ -20,22 +20,36 @@ const mockDefinitions = vi.hoisted(() => ({
   getStimmzettelumschlaege: vi.fn(),
 }));
 
-vi.mock("@/composables/wahl/wahlService.ts", () => ({
+vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),
 }));
-vi.mock("@/composables/briefwahl/briefwahlService.ts", () => ({
-  useBriefwahlService: () => ({
-    postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
-    getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
-  }),
-}));
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/briefwahl/briefwahlService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useBriefwahlService: () => ({
+        ...mod.useBriefwahlService(),
+        postBeanstandeteWahlbriefe: mockDefinitions.postBeanstandeteWahlbriefe,
+        getBeanstandeteWahlbriefe: mockDefinitions.getBeanstandeteWahlbriefe,
+      }),
+    };
+  }
+);
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getStimmzettelumschlaege: mockDefinitions.getStimmzettelumschlaege,
+      }),
+    };
+  }
+);
 
 const { createWahl, prepareWahl } = useWahlTestDataFactory();
 const { generateRandomString } = useCommonTestDataFactory();
@@ -641,22 +655,22 @@ describe("wahlenStore.ts", () => {
       unitUnderTest.wahlenState.wahlen = [
         prepareWahl()
           .beanstandeteWahlbriefe([
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
             null,
             null,
             ZurueckweisungsgrundEnum.ScheinUngueltig,
-            ZurueckweisungsgrundEnum.LoseStimmzettel,
+            ZurueckweisungsgrundEnum.KeinOriginalSchein,
           ])
           .build(),
       ];
 
       const summen =
         unitUnderTest.beanstandeteWahlbriefeGetter.summenZurueckweisungsgruende;
-      const summeLoseStimmzettel = summen.find(
-        (summe) => summe.grund === ZurueckweisungsgrundEnum.LoseStimmzettel
+      const summeKeinOriginalSchein = summen.find(
+        (summe) => summe.grund === ZurueckweisungsgrundEnum.KeinOriginalSchein
       );
-      expect(summeLoseStimmzettel?.summen).toStrictEqual([3]);
+      expect(summeKeinOriginalSchein?.summen).toStrictEqual([3]);
     });
   });
 

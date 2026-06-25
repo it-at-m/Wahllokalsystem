@@ -9,6 +9,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ausdruck.M
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.WahlbezirkArtModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.WahlartModel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.ergebnismeldung.validation.DefaultElectionTypeValidator;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.mbw.MBWBedenklicheStimmzettelService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -32,6 +33,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MbwValidationImplTest {
 
   @Mock DefaultElectionTypeValidator defaultElectionTypeValidator;
+
+  @Mock MBWBedenklicheStimmzettelService mbwBedenklicheStimmzettelService;
 
   @InjectMocks MbwValidationImpl unitUnderTest;
 
@@ -91,23 +94,38 @@ class MbwValidationImplTest {
       Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
     }
 
-    @Test
-    void should_returnResponseOfDefaultValidator_when_isCalled() {
+    @ParameterizedTest
+    @MethodSource("validationParameters")
+    void should_returnResponseOfDefaultValidator_when_isCalled(
+        boolean mockedValidatorResponse,
+        boolean mockedHasBedenklicheStimmzettel,
+        boolean mockedResult) {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 0L;
       val meldungsart = MeldungsartModel.V1;
 
-      val mockedValidatorResponse = true;
       Mockito.when(
               defaultElectionTypeValidator.checkValidation(
                   eq(WahlbezirkArtModel.UWB), anyString(), anyString(), any(), any()))
           .thenReturn(mockedValidatorResponse);
+      if (mockedValidatorResponse) {
+        Mockito.when(mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(any()))
+            .thenReturn(mockedHasBedenklicheStimmzettel);
+      }
 
       val result =
           unitUnderTest.isValidUwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
 
-      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+      Assertions.assertThat(result).isEqualTo(mockedResult);
+    }
+
+    private static Stream<Arguments> validationParameters() {
+      return Stream.of(
+          Arguments.of(true, true, true),
+          Arguments.of(true, false, false),
+          Arguments.of(false, true, false),
+          Arguments.of(false, false, false));
     }
   }
 
@@ -143,23 +161,38 @@ class MbwValidationImplTest {
       Assertions.assertThat(captorStapelList.getValue()).containsExactlyInAnyOrder(expectedStapel);
     }
 
-    @Test
-    void should_returnResponseOfDefaultValidator_when_isCalled() {
+    @ParameterizedTest
+    @MethodSource("validationParameters")
+    void should_returnResponseOfDefaultValidator_when_isCalled(
+        boolean mockedValidatorResponse,
+        boolean mockedHasBedenklicheStimmzettel,
+        boolean mockedResult) {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";
       val waehlerverzeichnisNummer = 0L;
       val meldungsart = MeldungsartModel.V1;
 
-      val mockedValidatorResponse = true;
       Mockito.when(
               defaultElectionTypeValidator.checkValidation(
                   eq(WahlbezirkArtModel.BWB), anyString(), anyString(), any(), any()))
           .thenReturn(mockedValidatorResponse);
+      if (mockedValidatorResponse) {
+        Mockito.when(mbwBedenklicheStimmzettelService.hasBedenklicheStimmzettel(any()))
+            .thenReturn(mockedHasBedenklicheStimmzettel);
+      }
 
       val result =
           unitUnderTest.isValidBwb(wahlbezirkID, wahlID, waehlerverzeichnisNummer, meldungsart);
 
-      Assertions.assertThat(result).isEqualTo(mockedValidatorResponse);
+      Assertions.assertThat(result).isEqualTo(mockedResult);
+    }
+
+    private static Stream<Arguments> validationParameters() {
+      return Stream.of(
+          Arguments.of(true, true, true),
+          Arguments.of(true, false, false),
+          Arguments.of(false, true, false),
+          Arguments.of(false, false, false));
     }
   }
 }

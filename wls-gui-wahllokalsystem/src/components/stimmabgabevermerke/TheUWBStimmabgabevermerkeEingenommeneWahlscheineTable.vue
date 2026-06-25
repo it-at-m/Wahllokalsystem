@@ -4,16 +4,15 @@
       <thead>
         <tr>
           <th class="sav-first-column border-b-0" />
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <th
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="pl-0 font-weight-bold dynamic-column"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             {{
               wahlenActions.getWahlNameOrBlankStringById(
-                stimmabgabevermerk.wahldaten[0].wahlID
+                stimmabgabevermerk.wahlID
               )
             }}
           </th>
@@ -23,26 +22,25 @@
         <tr>
           <!-- placeholder column for spacing -->
           <td />
-          <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
+
           <td
             v-for="stimmabgabevermerk in stimmabgabevermerke"
-            :key="stimmabgabevermerk.wahldaten[0].wahlID"
+            :key="stimmabgabevermerk.wahlID"
             class="pl-0"
           >
-            <!-- @vue-expect-error: noUncheckedIndexedAccess for wahldaten[0] | siehe #2008 -->
             <base-number-input
               max-width="15rem"
-              :rules="[required, minNumber(0)]"
+              :rules="[required]"
               :model-value="
                 getMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                  stimmabgabevermerk.wahldaten[0]
+                  stimmabgabevermerk
                 )
               "
               @update:model-value="
                 setMapValue(
                   EingenommenerWahlscheinStimmzettelartEnum.Klein,
-                  stimmabgabevermerk.wahldaten[0],
+                  stimmabgabevermerk,
                   $event
                 )
               "
@@ -54,7 +52,7 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import type { Wahldaten } from "@/types/stimmabgabevermerke/Wahldaten.ts";
+import type { Stimmabgabevermerke } from "@/types/stimmabgabevermerke/Stimmabgabevermerke.ts";
 
 import { storeToRefs } from "pinia";
 
@@ -64,26 +62,26 @@ import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.t
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { EingenommenerWahlscheinStimmzettelartEnum } from "@/types/stimmabgabevermerke/EingenommenerWahlscheinStimmzettelartEnum.ts";
 
-const { required, minNumber } = useRules();
+const { required } = useRules();
 const { stimmabgabevermerke } = storeToRefs(useStimmabgabevermerkeStore());
 const { wahlenActions } = useWahlenStore();
 
 function getMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
-  wahldaten: Wahldaten
+  stimmabgabevermerke: Stimmabgabevermerke
 ) {
-  return wahldaten.eingenommeneWahlscheine.get(key);
+  return stimmabgabevermerke.eingenommeneWahlscheine.get(key);
 }
 
 function setMapValue(
   key: EingenommenerWahlscheinStimmzettelartEnum,
-  wahldaten: Wahldaten,
+  stimmabgabevermerke: Stimmabgabevermerke,
   value: number | null | undefined
 ) {
   if (value !== null && value !== undefined) {
-    wahldaten.eingenommeneWahlscheine.set(key, value);
+    stimmabgabevermerke.eingenommeneWahlscheine.set(key, value);
   } else {
-    wahldaten.eingenommeneWahlscheine.delete(key);
+    stimmabgabevermerke.eingenommeneWahlscheine.delete(key);
   }
 }
 </script>

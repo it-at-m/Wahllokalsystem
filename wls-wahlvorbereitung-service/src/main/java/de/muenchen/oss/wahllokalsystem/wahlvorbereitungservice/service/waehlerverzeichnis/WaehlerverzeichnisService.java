@@ -46,9 +46,11 @@ public class WaehlerverzeichnisService {
     return waehlerverzeichnisFromRepo;
   }
 
-  @PreAuthorize("hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')")
+  @PreAuthorize(
+      "hasAuthority('Wahlvorbereitung_BUSINESSACTION_PostWaehlerverzeichnis')"
+          + "and @bezirkIdPermissionEvaluator.tokenUserBezirkIdMatches(#param.waehlerverzeichnisReference().wahlbezirkID, authentication)")
   public void setWaehlerverzeichnis(
-      @NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
+      @P("param") @NotNull final WaehlerverzeichnisModel waehlververzeichnisToSet) {
     waehlerverzeichnisValidator.validModelToSetOrThrow(waehlververzeichnisToSet);
 
     try {

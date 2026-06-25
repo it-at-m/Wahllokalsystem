@@ -7,6 +7,8 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { useWahlTestDataFactory } from "@tests/utils/wahl/WahlTestDataFactory.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
@@ -40,14 +42,8 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
   let pinia: TestingPinia;
   const { prepareWahl } = useWahlTestDataFactory();
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-
-  vi.stubGlobal("visualViewport", new EventTarget()); // mocks responsive layouts
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock); // mocks dynamic components
+  mockAndStubResizeObserver();
+  stubVisualViewport();
 
   beforeAll(() => {
     createPinia();
@@ -181,9 +177,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
     describe("onMounted", () => {
       it.each([
         ZurueckweisungsgrundEnum.Zugelassen,
-        ZurueckweisungsgrundEnum.LoseStimmzettel,
         ZurueckweisungsgrundEnum.UmschlagFehlt,
-        ZurueckweisungsgrundEnum.LoseStimmzettel,
         ZurueckweisungsgrundEnum.WahlbriefUndUmschlagOffen,
         ZurueckweisungsgrundEnum.ScheineUngleichUmschlaege,
         ZurueckweisungsgrundEnum.UmschlagNichtAmtlich,
@@ -381,7 +375,7 @@ describe("TheBeanstandeteWahlbriefeTable", () => {
           await nextTick();
 
           const oldZurueckweisungsgrund = "Nicht-amtlicher Stimmzettelumschlag";
-          const newZurueckweisungsgrund = "Lose Stimmzettel";
+          const newZurueckweisungsgrund = "Gegenstand im Stimmzettelumschlag";
 
           const stimmzettelInputWahl1Row0 = wrapper.findComponent<
             typeof VAutocomplete

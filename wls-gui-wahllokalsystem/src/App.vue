@@ -44,8 +44,10 @@ import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
 import { useServiceWorkerPinSyncer } from "@/composables/serviceWorker/serviceWorkerPinSyncer.ts";
 import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorkerUtils.ts";
+import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -59,6 +61,7 @@ const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
 const { isUWB } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
+const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
 const { isTodayOrFuture } = useDateTimeUtils();
 
 const { startBroadcastMessageInterval, stopBroadcastMessageInterval } =
@@ -85,15 +88,17 @@ onMounted(async () => {
 
   try {
     await loadUser();
-    await awaitServiceWorkerActive();
+    isOfflineCacheReady.value = await awaitServiceWorkerActive();
     await syncPin();
     await wahlenActions.initWahlen();
-    startBroadcastMessageInterval();
     await initTasks();
 
     showTestdruckDialog.value = true;
+    useLogoutOnInactivity();
   } catch (error) {
     console.debug(error);
+  } finally {
+    startBroadcastMessageInterval();
   }
 });
 

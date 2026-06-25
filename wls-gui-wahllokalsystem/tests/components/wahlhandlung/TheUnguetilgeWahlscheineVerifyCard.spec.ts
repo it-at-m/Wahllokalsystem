@@ -6,6 +6,7 @@ import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { useWahlbezirkTestDataFactory } from "@tests/utils/wahlbezirk/WahlbezirkTestDataFactory.ts";
 import { flushPromises, mount } from "@vue/test-utils";
@@ -13,7 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { VNumberInput, VTextarea } from "vuetify/components";
 
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheUnguetilgeWahlscheineVerifyCard from "@/components/wahlhandlung/TheUnguetilgeWahlscheineVerifyCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -24,16 +25,26 @@ const mockDefinitions = vi.hoisted(() => ({
   saveEreignisse: vi.fn(),
 }));
 
-vi.mock("@/composables/basisdaten/ungueltigeWahlscheineService", () => ({
-  useUngueltigeWahlscheineService: () => ({
-    getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
-  }),
-}));
-vi.mock("@/composables/vorfaelleundvorkommnisse/ereignisService", () => ({
-  useEreignisService: () => ({
-    saveEreignisse: mockDefinitions.saveEreignisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/basisdaten/ungueltigeWahlscheineService.ts"),
+  () => ({
+    useUngueltigeWahlscheineService: () => ({
+      getUngueltigeWahlscheine: mockDefinitions.getUngueltigeWahlscheine,
+    }),
+  })
+);
+vi.mock(
+  import("@/composables/vorfaelleundvorkommnisse/ereignisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useEreignisService: () => ({
+        ...mod.useEreignisService(),
+        saveEreignisse: mockDefinitions.saveEreignisse,
+      }),
+    };
+  }
+);
 
 const { createUngueltigerWahlschein, prepareUngueltigerWahlschein } =
   useWahlbezirkTestDataFactory();
@@ -46,12 +57,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   let wrapper: VueWrapper;
   let testPinia: TestingPinia;
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   describe(COMPONENT_RENDER_TESTS, () => {
     beforeEach(() => {
@@ -378,7 +384,7 @@ describe("TheUnguetilgeWahlscheineVerifyCard.vue", () => {
   }
 
   function getSaveBeschlussButton() {
-    return wrapper.findComponent(BaseButtonSave);
+    return wrapper.findComponent(BaseWlsButtonSave);
   }
 
   function getRefreshButton() {

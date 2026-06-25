@@ -16,13 +16,16 @@ const { isValidDate } = useDateTimeUtils();
 
 const KONFIG_KEY_CHECK_ANWESENHEIT = "MELDUNGSZEIT_ANWESENHEIT_CHECK";
 const KONFIG_KEY_CHECK_WAHLSCHLUSS = "MELDUNGSZEIT_WAHL_SCHLIESSEN";
-
+const KONFIG_KEY_DELAY_BEFORE_INAKTIV = "WLK_TIME_OUT";
+const KONFIG_KEY_WAEHLERVERZEICHNIS_URL = "WAEHLERVERZEICHNIS_URL";
+const KONFIG_KEY_WAHLLOKALFINDER_URL = "WAHLLOKALFINDER_URL";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_UW = "08:00:00";
 const DEFAULT_FRUEHESTE_EROEFFNUNGSZEIT_BW = "15:00:00";
 const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_UW = "17:59:00";
 const DEFAULT_SPAETESTE_EROEFFNUNGSZEIT_BW = "17:59:00";
 const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_UW = "18:00:00";
 const DEFAULT_FRUEHESTE_SCHLIESSUNGSZEIT_BW = "18:00:00";
+const DEFAULT_DELAY_BEFORE_INAKTIV_LOGOUT_IN_MILLISECONDS = 7200000;
 
 export const useInfomanagementStore = defineStore(storeID, () => {
   const { currentUserWahltag } = storeToRefs(useUserStore());
@@ -69,6 +72,33 @@ export const useInfomanagementStore = defineStore(storeID, () => {
       default:
         return "";
     }
+  });
+
+  const waehlerverzeichnisUrl = computed(() => {
+    const url = _getKonfigParamValue(KONFIG_KEY_WAEHLERVERZEICHNIS_URL);
+    return url ? url : null;
+  });
+
+  const wahlraumUrl = computed(() => {
+    const url = _getKonfigParamValue(KONFIG_KEY_WAHLLOKALFINDER_URL);
+    return url ? url : null;
+  });
+
+  const delayBeforeInactiveLogoutInMilliseconds = computed(() => {
+    const configValueForInactiveDelay = _getKonfigParamValue(
+      KONFIG_KEY_DELAY_BEFORE_INAKTIV
+    );
+    if (!configValueForInactiveDelay) {
+      return DEFAULT_DELAY_BEFORE_INAKTIV_LOGOUT_IN_MILLISECONDS;
+    }
+
+    const configValueParsedAsInteger = Number.parseInt(
+      configValueForInactiveDelay
+    );
+    return Number.isInteger(configValueParsedAsInteger) &&
+      configValueParsedAsInteger > 0
+      ? configValueParsedAsInteger
+      : DEFAULT_DELAY_BEFORE_INAKTIV_LOGOUT_IN_MILLISECONDS;
   });
 
   async function initKonfigurationsparameter(sendNotification = true) {
@@ -127,10 +157,14 @@ export const useInfomanagementStore = defineStore(storeID, () => {
     schluessel: string,
     defaultValue: string
   ) {
+    return _getKonfigParamValue(schluessel) || defaultValue;
+  }
+
+  function _getKonfigParamValue(schluessel: string) {
     const param = konfigurationsparameter.value?.find(
       (param) => param.schluessel === schluessel
     );
-    return param?.wert || defaultValue;
+    return param?.wert;
   }
 
   function _getDateTimeToCheck(configKey: string) {
@@ -149,8 +183,11 @@ export const useInfomanagementStore = defineStore(storeID, () => {
 
   return {
     konfigurationsparameter,
+    delayBeforeInactiveLogoutInMilliseconds,
     dateTimeToCheckAnwesenheit,
     dateTimeToCheckWahlschluss,
+    waehlerverzeichnisUrl,
+    wahlraumUrl,
     initKonfigurationsparameter,
     /** FRUEHESTE_EROEFFNUNGSZEIT bezeichnet den frühesten Wert, zu dem die Wahlhandlung eröffnet werden kann. */
     fruehesteEroeffnungsuhrzeit,

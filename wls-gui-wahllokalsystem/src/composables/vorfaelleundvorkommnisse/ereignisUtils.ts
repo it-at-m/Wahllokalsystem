@@ -1,6 +1,17 @@
 import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
+import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-export function useEreignisComparator() {
+import { EreignisartEnum } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
+
+export function useEreignisUtils() {
+  function hasDoneVorkommnisse(ereignisse: WahlbezirkEreignisse | null) {
+    return (
+      ereignisse?.ereigniseintraege.some(
+        (eintrag) => eintrag.ereignisart === EreignisartEnum.Vorkommnis
+      ) || ereignisse?.keineVorkommnisse
+    );
+  }
+
   function compareEreignisseByUhrzeit(
     ereignis1: Ereignis,
     ereignis2: Ereignis
@@ -16,6 +27,7 @@ export function useEreignisComparator() {
   }
 
   return {
+    hasDoneVorkommnisse,
     compareEreignisseByUhrzeit,
   };
 }

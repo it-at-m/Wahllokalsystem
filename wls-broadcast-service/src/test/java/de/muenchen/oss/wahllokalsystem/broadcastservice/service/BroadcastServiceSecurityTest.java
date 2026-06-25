@@ -3,14 +3,22 @@ package de.muenchen.oss.wahllokalsystem.broadcastservice.service;
 import static de.muenchen.oss.wahllokalsystem.broadcastservice.TestConstants.SPRING_TEST_PROFILE;
 
 import de.muenchen.oss.wahllokalsystem.broadcastservice.MicroServiceApplication;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.domain.MessageRepository;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.rest.BroadcastMessageDTO;
 import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.Authorities;
+import de.muenchen.oss.wahllokalsystem.broadcastservice.utils.TestdataFactory;
+import de.muenchen.oss.wahllokalsystem.wls.common.security.BezirkIDPermissionEvaluator;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,11 +26,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(
     classes = {MicroServiceApplication.class},
@@ -31,11 +44,22 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 public class BroadcastServiceSecurityTest {
 
+  @MockitoBean BezirkIDPermissionEvaluator bezirkIDPermissionEvaluator;
+
+  @Autowired MessageRepository messageRepository;
+
   @Autowired BroadcastService broadcastService;
 
   @BeforeEach
   void setup() {
     Assertions.assertThat(broadcastService).isNotNull();
+    SecurityContextHolder.clearContext();
+  }
+
+  @AfterEach
+  void teardown() {
+    SecurityUtils.runWith(Authorities.REPOSITORY_DELETE_MESSAGE);
+    messageRepository.deleteAll();
     SecurityContextHolder.clearContext();
   }
 
@@ -83,6 +107,9 @@ public class BroadcastServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_runWithDummyRole() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith("ROLE_DUMMY");
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
           .isThrownBy(() -> broadcastService.getOldestMessage(null))
@@ -93,6 +120,9 @@ public class BroadcastServiceSecurityTest {
     @MethodSource("getMissingAuthoritiesVariations")
     void should_throwAccessDeniedException_when_anyAuthorityMissing(
         final ArgumentsAccessor argumentsAccessor) {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
 
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
@@ -107,9 +137,23 @@ public class BroadcastServiceSecurityTest {
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
       Assertions.assertThatThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
           .isNotInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void should_throwException_when_givenAllAuthoritiesButWahlbezirkIDDoesNotMatch() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(false);
+      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_GET_BROADCAST);
+      Assertions.assertThatExceptionOfType(AccessDeniedException.class)
+          .isThrownBy(() -> broadcastService.getOldestMessage("wahlbezirkId"))
+          .withMessageStartingWith("Access Denied");
     }
   }
 
@@ -118,6 +162,9 @@ public class BroadcastServiceSecurityTest {
 
     @Test
     void should_throwAccessDeniedException_when_runWithDummyRole() {
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
       SecurityUtils.runWith("ROLE_DUMMY");
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
           .isThrownBy(() -> broadcastService.deleteMessage(null))
@@ -128,16 +175,68 @@ public class BroadcastServiceSecurityTest {
     @MethodSource("getMissingAuthoritiesVariations")
     void should_throwAccessDeniedException_when_anyAuthorityMissing(
         final ArgumentsAccessor argumentsAccessor) {
-      SecurityUtils.runWith(argumentsAccessor.get(0, String[].class));
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_MESSAGE);
+      val wahlbezirkID = "wahlbezirkId";
+      val message =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "nachricht", LocalDateTime.now());
+      val savedMessage = messageRepository.save(message);
+      SecurityContextHolder.clearContext();
+
+      val userAuthorities =
+          Arrays.stream(argumentsAccessor.get(0, String[].class))
+              .map(SimpleGrantedAuthority::new)
+              .toList();
+      val userJwtAuthenticationToken =
+          new JwtAuthenticationToken(
+              new Jwt(
+                  "tokenValue",
+                  Instant.now(),
+                  Instant.MAX,
+                  Map.of("key", "value"),
+                  Map.of("user_name", "USERNAME", "wahlbezirkID", wahlbezirkID)),
+              userAuthorities);
+
+      SecurityContextHolder.getContext().setAuthentication(userJwtAuthenticationToken);
       Assertions.assertThatExceptionOfType(AccessDeniedException.class)
-          .isThrownBy(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+          .isThrownBy(() -> broadcastService.deleteMessage(savedMessage.getOid().toString()))
           .withMessageStartingWith("Access Denied");
     }
 
     @Test
     void should_notThrowException_when_givenAllAuthorities() {
-      SecurityUtils.runWith(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST);
-      Assertions.assertThatCode(() -> broadcastService.deleteMessage("1-2-3-4-5"))
+      Mockito.when(
+              bezirkIDPermissionEvaluator.tokenUserBezirkIdMatches(Mockito.any(), Mockito.any()))
+          .thenReturn(true);
+      SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_MESSAGE);
+      val wahlbezirkID = "wahlbezirkId";
+      val message =
+          TestdataFactory.CreateMessageEntity.withCustomParams(
+              wahlbezirkID, "nachricht", LocalDateTime.now());
+      val savedMessage = messageRepository.save(message);
+      SecurityContextHolder.clearContext();
+
+      val userAuthorities =
+          Arrays.stream(Authorities.ALL_AUTHORITIES_DELETE_BROADCAST)
+              .map(SimpleGrantedAuthority::new)
+              .toList();
+      val userJwtAuthenticationToken =
+          new JwtAuthenticationToken(
+              new Jwt(
+                  "tokenValue",
+                  Instant.now(),
+                  Instant.MAX,
+                  Map.of("key", "value"),
+                  Map.of("user_name", "USERNAME", "wahlbezirkID", wahlbezirkID)),
+              userAuthorities);
+
+      SecurityContextHolder.getContext().setAuthentication(userJwtAuthenticationToken);
+
+      Assertions.assertThatCode(
+              () -> broadcastService.deleteMessage(savedMessage.getOid().toString()))
           .doesNotThrowAnyException();
     }
 

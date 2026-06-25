@@ -1,6 +1,7 @@
 export const ROUTES_HOME = "home";
 export const ROUTE_NOTFOUND = "404";
 export const ROUTE_LOGOUT = "logout";
+export const ROUTE_FINISHED = "finished";
 export const ROUTE_WAHLVORSTAND = "wahlvorstand";
 export const ROUTE_EREIGNISSE = "ereignisse";
 export const ROUTE_STIMMABGABE = "stimmabgabe";
@@ -16,9 +17,13 @@ export const ROUTE_STAPEL_A = "stapelA";
 export const ROUTE_STAPEL_B = "stapelB";
 export const ROUTE_STAPEL_C = "stapelC";
 
+export const CONTINUE_QUERY_PARAM = "continue";
+export const LOGOUT_BY_INACTIVITY_QUERY_PARAMETER = "inactive";
+
 export const MIN_WAHLVORSTAND_ANWESEND_VOR_SCHLIESSUNG = 3;
 export const MIN_WAHLVORSTAND_ANWESEND_NACH_SCHLIESSUNG = 5;
 
+export const CONTACT_SUPPORT = "Kontaktieren Sie bitte die Wahl-Hotline.";
 export const WAHLHOTLINE = "089 233 96233";
 export const TEAMVIEWER_URL = "KioskControlHandler:teamviewer://";
 
@@ -49,6 +54,8 @@ export const ERGEBNISMELDUNG_SERVICE_API_URL =
 
 export const MIN_LENGTH_FOR_BEGRUENDUNG = 3;
 export const MAX_LENGTH_FOR_TEXT_INPUT = 500;
+export const NUMBER_INPUT_DEFAULT_MIN = 0;
+export const NUMBER_INPUT_DEFAULT_MAX = 9999;
 
 export const PRIMARY_COLOR = "#546e7a";
 
@@ -67,3 +74,5 @@ export const SUBTITLE_WAEHLERANZAHL_IN_ARBEIT = "Wähleranzahl in Arbeit";
 export const SUBTITLE_WAEHLERANZAHL_ERFASST = "Wähleranzahl erfasst";
 export const SUBTITLE_AUSZAEHLUNG_IN_ARBEIT = "Auszählung in Arbeit";
 export const SUBTITLE_AUSZAEHLUNG_ERFASST = "Abgeschlossen";
+
+export const SAVE_CONTINUE = "Speichern und Weiter";

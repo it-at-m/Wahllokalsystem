@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.LinkedHashSet;
@@ -39,9 +40,15 @@ public class Vermerk {
   private UUID id;
 
   @ManyToOne
-  @JoinColumn(name = "wahldatenID")
+  @JoinColumns({
+    @JoinColumn(name = "fk_wahlbezirkID", referencedColumnName = "wahlbezirkID"),
+    @JoinColumn(name = "fk_wahlID", referencedColumnName = "wahlID"),
+    @JoinColumn(
+        name = "fk_waehlerverzeichnisNummer",
+        referencedColumnName = "waehlerverzeichnisNummer")
+  })
   @NotNull @EqualsAndHashCode.Exclude
-  private Wahldaten wahldaten;
+  private Stimmabgabevermerke stimmabgabevermerke;
 
   @NotNull @ToString.Include private long blattnummer;
 

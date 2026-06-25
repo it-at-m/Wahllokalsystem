@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import { fn } from "@storybook/test";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
+import { fn } from "storybook/test";
 
 import BaseCardSnippedErgebnis from "@/components/ergebnismeldung/common/BaseCardSnippedErgebnis.vue";
 
@@ -21,6 +21,7 @@ export const Default: Story = {
   args: {
     modelValue: prepareErgebnis().build(),
     snippedTitle: "Ungültige Stimmzettel",
+    isWahlFinished: false,
   },
 };
 
@@ -30,5 +31,6 @@ export const MinMaxValue: Story = {
     snippedTitle: "Ungültige Stimmzettel",
     minValue: 5,
     maxValue: 20,
+    isWahlFinished: false,
   },
 };

@@ -37,6 +37,10 @@ public class Authorities {
       "Ergebnismeldung_BUSINESSACTION_ForceErgebnisse";
   public static final String SERVICE_SEND_ERGEBNISSE =
       "Ergebnismeldung_BUSINESSACTION_SendErgebnisse";
+  public static final String SERVICE_GET_BEDENKLICHE_STIMMZETTEL =
+      "Ergebnismeldung_BUSINESSACTION_GetBedenklicheStimmzettelService";
+  public static final String SERVICE_SET_BEDENKLICHE_STIMMZETTEL =
+      "Ergebnismeldung_BUSINESSACTION_SetBedenklicheStimmzettelService";
 
   public static final String REPOSITORY_READ_AWERTE = "Ergebnismeldung_READ_AWerte";
   public static final String REPOSITORY_DELETE_AWERTE = "Ergebnismeldung_DELETE_AWerte";
@@ -141,4 +145,36 @@ public class Authorities {
       ArrayUtils.addAll(
           ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_ACCESS_DENIED,
           ALL_AUTHORITIES_SET_ERGEBNISSE_MISSING_WILL_RESULT_IN_WLS_EXCEPTION);
+
+  public static final String[] ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_BWB =
+      ArrayUtils.addAll(
+          ArrayUtils.addAll(
+              new String[] {SERVICE_UPDATE_SENDUNGSZEITEN},
+              ALL_AUTHORITIES_GET_STIMMZETTELUMSCHLAEGE),
+          ALL_AUTHORITIES_GET_STATUS);
+
+  public static final String[] ALL_AUTHORITIES_UPDATESENDUNGSZEITEN_UWB =
+      ArrayUtils.addAll(new String[] {SERVICE_UPDATE_SENDUNGSZEITEN}, ALL_AUTHORITIES_GET_STATUS);
+
+  public static final String[] ALL_AUTHORITIES_SEND_ERGEBNISSE_BWB =
+      new String[] {
+        SERVICE_SEND_ERGEBNISSE,
+        REPOSITORY_READ_ERGEBNISSE,
+        REPOSITORY_READ_WAHLSCHEINE,
+        SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+        REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
+        SERVICE_GET_BEDENKLICHE_STIMMZETTEL
+      };
+
+  public static final String[] ALL_AUTHORITIES_SEND_ERGEBNISSE_UWB =
+      new String[] {
+        SERVICE_SEND_ERGEBNISSE,
+        REPOSITORY_READ_AWERTE,
+        SERVICE_GET_AWERTE,
+        REPOSITORY_READ_ERGEBNISSE,
+        REPOSITORY_READ_STIMMABGABEVERMERKE,
+        SERVICE_GET_STIMMZETTELUMSCHLAEGE,
+        REPOSITORY_READ_STIMMZETTELUMSCHLAEGE,
+        SERVICE_GET_BEDENKLICHE_STIMMZETTEL
+      };
 }

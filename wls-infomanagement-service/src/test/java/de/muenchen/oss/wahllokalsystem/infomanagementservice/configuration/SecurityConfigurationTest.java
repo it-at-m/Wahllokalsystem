@@ -311,6 +311,19 @@ class SecurityConfigurationTest {
 
         api.perform(request).andExpect(status().isOk());
       }
+
+      @Test
+      @WithMockUser
+      void should_returnOk_when_callingAuthenticated() throws Exception {
+        Mockito.when(konfigurationService.getKonfigurationUnauthorized(any()))
+            .thenReturn(Optional.of(KonfigurationModel.builder().build()));
+
+        val request =
+            MockMvcRequestBuilders.get(
+                "/businessActions/konfigurationUnauthorized/WILLKOMMENSTEXT");
+
+        api.perform(request).andExpect(status().isOk());
+      }
     }
   }
 }

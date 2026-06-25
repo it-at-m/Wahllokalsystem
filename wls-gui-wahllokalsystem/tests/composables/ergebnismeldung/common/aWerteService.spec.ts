@@ -12,31 +12,36 @@ import {
 } from "vitest";
 
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
+import { REQUEST_HEADER_OFFLINE_STRATEGY } from "@/constants.ts";
+import { FetchStrategiesEnum } from "@/types/api/FetchStrategiesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   mapToModel: vi.fn(),
   addNotification: vi.fn(),
   getAWerte: vi.fn(),
-  configurationConstructor: vi.fn().mockImplementation(() => ({})),
+  configurationConstructor: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-ergebnismeldung-api", () => ({
-  AWerteControllerApi: vi.fn().mockImplementation(() => ({
-    getAWerte: mockDefinitions.getAWerte,
-  })),
+  AWerteControllerApi: class {
+    getAWerte = mockDefinitions.getAWerte;
+  },
   Configuration: mockDefinitions.configurationConstructor,
 }));
-vi.mock("@/composables/ergebnismeldung/common/aWerteMapper.ts", () => ({
+vi.mock(import("@/composables/ergebnismeldung/common/aWerteMapper.ts"), () => ({
   useAWerteMapper: () => ({
     toModel: mockDefinitions.mapToModel,
   }),
 }));
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { createAxiosResponse } = useAxiosTestDataFactory();
@@ -54,7 +59,7 @@ describe("aWerteService.ts", () => {
   });
 
   afterAll(() => {
-    vi.restoreAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("getAWerte", () => {
@@ -75,9 +80,15 @@ describe("aWerteService.ts", () => {
       const result = await unitUnderTest.getAWerte(wahlbezirkId);
       expect(result).toStrictEqual([mockedAWerteModel, mockedAWerteModel]);
 
-      expect(mockDefinitions.getAWerte.mock.calls).toStrictEqual([
-        [wahlbezirkId],
-      ]);
+      expect(mockDefinitions.getAWerte).toHaveBeenCalledWith(
+        wahlbezirkId,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
       ]);
@@ -101,6 +112,15 @@ describe("aWerteService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
       );
+      expect(mockDefinitions.getAWerte).toHaveBeenCalledWith(
+        wahlbezirkId,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
     });
 
     it("should_throwErrorAndSendNotification_when_apiCallFailed", async () => {
@@ -114,6 +134,15 @@ describe("aWerteService.ts", () => {
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.ERROR],
       ]);
+      expect(mockDefinitions.getAWerte).toHaveBeenCalledWith(
+        wahlbezirkId,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
+      );
     });
 
     it("should_throwErrorAndSendNoNotification_when_apiCallFailedAndSendNotificationIsFalse", async () => {
@@ -126,6 +155,15 @@ describe("aWerteService.ts", () => {
       ).rejects.toThrow(`Get AWerte failed for wahlbezirkId: ${wahlbezirkId}`);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
         0
+      );
+      expect(mockDefinitions.getAWerte).toHaveBeenCalledWith(
+        wahlbezirkId,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            [REQUEST_HEADER_OFFLINE_STRATEGY]:
+              FetchStrategiesEnum.STRATEGY_ONLINE_FIRST,
+          }),
+        })
       );
     });
   });

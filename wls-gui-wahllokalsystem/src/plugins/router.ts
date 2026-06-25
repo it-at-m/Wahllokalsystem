@@ -6,6 +6,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_EREIGNISSE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
+  ROUTE_FINISHED,
   ROUTE_LOGOUT,
   ROUTE_NOTFOUND,
   ROUTE_STAPEL_A,
@@ -20,6 +21,7 @@ import {
   ROUTE_WAHLVORSTAND,
   ROUTES_HOME,
 } from "@/constants";
+import { commonRouteDefinitions } from "@/plugins/router/commonRoutes.ts";
 import { mbwRouteDefinitions } from "@/plugins/router/mbwRoutes.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -29,8 +31,8 @@ import OBWStapelBView from "@/views/ergebnismeldung/OBW/OBWStapelBView.vue";
 import OWBStapelAView from "@/views/ergebnismeldung/OBW/OWBStapelAView.vue";
 import StapelCView from "@/views/ergebnismeldung/OBW/StapelCView.vue";
 import ExampleError404View from "@/views/ExampleError404View.vue";
+import FinishedView from "@/views/FinishedView.vue";
 import HomeView from "@/views/HomeView.vue";
-import LogoutSuccessView from "@/views/LogoutSuccessView.vue";
 import UWBStimmabgabevermerkeView from "@/views/UWBStimmabgabevermerkeView.vue";
 import BWBWahlbriefErfassungView from "@/views/wahlhandlung/BWBWahlbriefErfassungView.vue";
 import BwbWahlbriefZulassungView from "@/views/wahlhandlung/BWBWahlbriefZulassungView.vue";
@@ -44,11 +46,10 @@ const {
   permitNavigationWhenWahlumgebungIsErfasst,
   permitNavigationOnlyForWahlbezirksArtUwb,
   permitNavigationOnlyForWahlbezirksArtBwb,
-  permitNavigationOnlyIfUserIsLoggedOut,
   permitNavigationWhenWahleroeffnungIsErfasst,
   permitNavigationWhenWahlbriefeErfassenIsErfasst,
   permitNavigationWhenWahlbriefeZulassenIsErfasst,
-  permitNavigationWhenWahlvorstandIsErfasst,
+  permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
   permitNavigationWhenWaehlerverzeichnisIsErfasst,
   permitNavigationWhenStimmabgabeIsErfasst,
   requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
@@ -57,6 +58,7 @@ const {
 } = useNavigationGuards();
 
 const routes = [
+  ...commonRouteDefinitions,
   {
     path: "/",
     name: ROUTES_HOME,
@@ -75,7 +77,7 @@ const routes = [
     component: UWBStimmabgabeView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahleroeffnungIsErfasst,
     ],
@@ -85,7 +87,7 @@ const routes = [
     name: ROUTE_WAHLUMGEBUNG,
     component: WahlumgebungView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       requiresWahleroeffnungErfasstWhenWahlbezirksArtBwb,
     ],
   },
@@ -94,7 +96,7 @@ const routes = [
     name: ROUTE_BEGINN_STIMMABGABE,
     component: WahleroeffnungView,
     beforeEnter: [
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       requiresWahlumgebungErfasstWhenWahlbezirksArtUwb,
       requiresWaehlerverzeichnisErfasstWhenWahlbezirksArtUwb,
     ],
@@ -105,7 +107,7 @@ const routes = [
     component: BWBWahlbriefErfassungView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
       permitNavigationWhenWahlumgebungIsErfasst,
     ],
@@ -116,7 +118,7 @@ const routes = [
     component: UWBWaehlerverzeichnisView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
     ],
   },
@@ -126,7 +128,7 @@ const routes = [
     component: BwbWahlbriefZulassungView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
@@ -144,7 +146,7 @@ const routes = [
     component: UWBStimmabgabevermerkeView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtUwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWaehlerverzeichnisIsErfasst,
       permitNavigationWhenWahleroeffnungIsErfasst,
@@ -157,7 +159,7 @@ const routes = [
     component: BWBWahlscheineView,
     beforeEnter: [
       permitNavigationOnlyForWahlbezirksArtBwb,
-      permitNavigationWhenWahlvorstandIsErfasst,
+      permitNavigationWhenWahlvorstandIsErfasstOrAllElectionsAreFinished,
       permitNavigationWhenWahleroeffnungIsErfasst,
       permitNavigationWhenWahlumgebungIsErfasst,
       permitNavigationWhenWahlbriefeErfassenIsErfasst,
@@ -181,10 +183,9 @@ const routes = [
   },
   ...mbwRouteDefinitions,
   {
-    path: "/logout",
-    name: ROUTE_LOGOUT,
-    component: LogoutSuccessView,
-    beforeEnter: permitNavigationOnlyIfUserIsLoggedOut,
+    path: "/finished",
+    name: ROUTE_FINISHED,
+    component: FinishedView,
   },
   {
     path: "/notFound",

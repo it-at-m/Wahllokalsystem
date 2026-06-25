@@ -24,7 +24,7 @@ const mockDefinitions = vi.hoisted(() => ({
   fetch: vi.fn(),
 }));
 
-vi.mock("@/composables/indexDB/indexDB.ts", () => ({
+vi.mock(import("@/composables/indexDB/indexDB.ts"), () => ({
   useIndexDB: vi.fn().mockImplementation(() => ({
     getItemFromIDB: mockDefinitions.getItemFromIDB,
     storeItem: mockDefinitions.storeItem,
@@ -199,7 +199,7 @@ describe("requestStrategies.ts", () => {
     });
   });
 
-  describe("postRequestHandler", () => {
+  describe("onlineFirstPostRequestHandler", () => {
     it("should_fetchRequestAndStoreRequestInIndexDB_when_fetchWasSuccessful", async () => {
       const requestBody = generateRandomString(50);
       const requestContentType = generateRandomString(10);
@@ -219,7 +219,8 @@ describe("requestStrategies.ts", () => {
       });
       mockDefinitions.fetch.mockReturnValue(mockedResponse);
 
-      const result = await unitUnderTest.postRequestHandler(callbackOptions);
+      const result =
+        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(200);
       expect(await result.text()).toStrictEqual(mockedResponseBody);
@@ -254,7 +255,8 @@ describe("requestStrategies.ts", () => {
         new Error("mocked api call failed")
       );
 
-      const result = await unitUnderTest.postRequestHandler(callbackOptions);
+      const result =
+        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(404);
       expect(await result.text()).toStrictEqual("");
@@ -286,9 +288,110 @@ describe("requestStrategies.ts", () => {
         new Response(null, { status: 500 })
       );
 
-      const result = await unitUnderTest.postRequestHandler(callbackOptions);
+      const result =
+        await unitUnderTest.onlineFirstPostRequestHandler(callbackOptions);
 
       expect(result.status).toStrictEqual(200);
+      expect(await result.text()).toStrictEqual("");
+
+      const expectedIndexDBValue = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValue.httpStatus;
+      expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
+        [callbackOptions.request.url, expectedIndexDBValue],
+      ]);
+    });
+  });
+
+  describe("fetchButStoreRequestAsDirtyOnNotOk", () => {
+    it("should_fetchRequestAndNotStore_when_fetchWasSuccessful", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const mockedResponseBody = generateRandomString(40);
+      const mockedContentType = generateRandomString(10);
+      const mockedResponse = new Response(mockedResponseBody, {
+        status: 200,
+        headers: { "Content-Type": mockedContentType },
+      });
+      mockDefinitions.fetch.mockReturnValue(mockedResponse);
+
+      const result =
+        await unitUnderTest.fetchButStoreRequestAsDirtyOnNotOk(callbackOptions);
+
+      expect(result.status).toStrictEqual(200);
+      expect(await result.text()).toStrictEqual(mockedResponseBody);
+      expect(result.headers.get(HTTP_HEADER_CONTENT_TYPE)).toStrictEqual(
+        mockedContentType
+      );
+
+      expect(mockDefinitions.storeItem.mock.calls.length).toStrictEqual(0);
+    });
+
+    it("should_storeRequestAsDirtyInIndexDB_when_fetchFailed", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      mockDefinitions.fetch.mockRejectedValue(
+        new Error("mocked api call failed")
+      );
+
+      const result =
+        await unitUnderTest.fetchButStoreRequestAsDirtyOnNotOk(callbackOptions);
+
+      expect(result.status).toStrictEqual(500);
+      expect(await result.text()).toStrictEqual("");
+
+      const expectedIndexDBValue = prepareIndexDBValue()
+        .data(requestBody)
+        .contentType(requestContentType)
+        .dirty(true)
+        .timestamp(mockedNow.getTime())
+        .build();
+      delete expectedIndexDBValue.httpStatus;
+      expect(mockDefinitions.storeItem.mock.calls).toStrictEqual([
+        [callbackOptions.request.url, expectedIndexDBValue],
+      ]);
+    });
+
+    it("should_storeRequestAsDirtyInIndexDB_when_fetchResponsesWithNotOk", async () => {
+      const requestBody = generateRandomString(50);
+      const requestContentType = generateRandomString(10);
+      const callbackOptions = createRouteHandlerCallbackOptions(
+        "POST",
+        requestBody,
+        new Headers({
+          "Content-Type": requestContentType,
+        })
+      );
+
+      const httpResponseStatus = 400;
+      mockDefinitions.fetch.mockResolvedValue(
+        new Response(null, { status: httpResponseStatus })
+      );
+
+      const result =
+        await unitUnderTest.fetchButStoreRequestAsDirtyOnNotOk(callbackOptions);
+
+      expect(result.status).toStrictEqual(httpResponseStatus);
       expect(await result.text()).toStrictEqual("");
 
       const expectedIndexDBValue = prepareIndexDBValue()

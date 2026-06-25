@@ -5,6 +5,7 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.awerte.AWer
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.common.Stapelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.Ergebnisse;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.ergebnisse.ErgebnisseRepository;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.BezirkUndWahlIDUndWaehlerverzeichnisnummer;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeRepository;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.wahlscheine.WahlscheineRepository;
@@ -14,7 +15,6 @@ import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.common.Wah
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.WlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionDataWrapper;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
-import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkIDUndWaehlerverzeichnisNummer;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +58,9 @@ public class DefaultElectionTypeValidator {
       valid = valid && checkValidationWahlscheine(wahlbezirkID, wahlID);
       log.debug("#sendergebnis defaultvalidator bwb checkvalidation wahlscheine valid {}", valid);
     } else {
-      valid = valid && checkValidationStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer);
+      valid =
+          valid
+              && checkValidationStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer);
       log.debug("#sendergebnis defaultvalidator checkvalidation sav valid {}", valid);
       valid = valid && checkAWerte(wahlbezirkID, wahlID);
       log.debug("#sendergebnis defaultvalidator checkvalidation awerte valid {}", valid);
@@ -97,12 +99,13 @@ public class DefaultElectionTypeValidator {
   }
 
   private boolean checkValidationStimmabgabevermerke(
-      final String wahlbezirkID, final Long waehlerverzeichnisNummer) throws WlsException {
-    val bezirkIDUndWaehlerverzeichnisNummer =
-        new BezirkIDUndWaehlerverzeichnisNummer(wahlbezirkID, waehlerverzeichnisNummer);
+      final String wahlbezirkID, final String wahlID, final Long waehlerverzeichnisNummer)
+      throws WlsException {
 
     Optional<Stimmabgabevermerke> stimmabgabevermerke =
-        stimmabgabevermerkeRepo.findById(bezirkIDUndWaehlerverzeichnisNummer);
+        stimmabgabevermerkeRepo.findById(
+            new BezirkUndWahlIDUndWaehlerverzeichnisnummer(
+                wahlbezirkID, wahlID, waehlerverzeichnisNummer));
 
     // Nur dann Fehlermeldung erzeugen, wenn stimmabgabevermerke null ist.
     boolean stimmabgabevermerkeErfasst = stimmabgabevermerke.isPresent();

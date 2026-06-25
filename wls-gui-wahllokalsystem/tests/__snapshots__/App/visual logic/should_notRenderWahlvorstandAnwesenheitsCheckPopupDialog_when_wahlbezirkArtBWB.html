@@ -1,36 +1,61 @@
 <div class="v-application v-theme--light v-layout v-layout--full-height v-locale--is-ltr">
   <div class="v-application__wrap">
     <!---->
-    <main class="v-main" style="--v-layout-left: 0px; --v-layout-right: 0px; --v-layout-top: 0px; --v-layout-bottom: 0px; transition: none;">
+    <main class="v-main" style="--v-layout-left: 0px; --v-layout-right: 0px; --v-layout-top: 0px; --v-layout-bottom: 0px; transition: none !important;">
       <div class="v-container v-container--fluid v-locale--is-ltr">
         <transition-stub name="fade-transition" mode="out-in" appear="false" persisted="false" css="true">
           <!-- Keep alive is fundamental for our app, to work correctly - see doc for frontend architecture -->
           <div class="v-container v-locale--is-ltr" style="max-width: 800px;">
+            <div class="v-card v-theme--light v-card--density-default v-card--variant-elevated border-lg border-warning">
+              <!---->
+              <div class="v-card__loader">
+                <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+                  <!---->
+                  <div class="v-progress-linear__background bg-primary"></div>
+                  <div class="v-progress-linear__buffer bg-primary" style="width: 0%;"></div>
+                  <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                    <div class="v-progress-linear__indeterminate">
+                      <div class="v-progress-linear__indeterminate long bg-primary"></div>
+                      <div class="v-progress-linear__indeterminate short bg-primary"></div>
+                    </div>
+                  </transition-stub>
+                  <!---->
+                </div>
+              </div>
+              <!---->
+              <!---->
+              <div class="v-card-title bg-grey-lighten-3 border-b border-grey-lighten-1 mb-2 bg-warning font-weight-bold" style="font-size: 1rem;">Service-Worker deaktiviert</div>
+              <div class="v-card-text">
+                <div class="d-flex align-center"><i class="v-icon notranslate v-theme--light v-icon--size-x-large text-warning mr-5" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                      <path d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"></path>
+                    </svg></i>
+                  <div> Sie können aktuell nicht Offline arbeiten. Kontaktieren Sie bitte die Wahl-Hotline.</div>
+                </div>
+                <!--v-if-->
+              </div>
+              <!--v-if-->
+              <!---->
+              <!----><span class="v-card__underlay"></span>
+            </div>
             <div class="v-container v-locale--is-ltr">
               <h1>Offline-Daten wurden heruntergeladen.</h1>
-              <p class="my-4"> Herunterladen der Daten abgeschlossen (0 / 0) </p>
-              <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 50px; --v-progress-linear-height: 50px;" role="progressbar" aria-hidden="false" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
-                <!---->
-                <div class="v-progress-linear__background bg-primary"></div>
-                <div class="v-progress-linear__buffer bg-primary"></div>
-                <transition-stub name="slide-x-transition" appear="false" persisted="false" css="true">
-                  <div class="v-progress-linear__determinate bg-primary"></div>
-                </transition-stub>
-                <!---->
+              <div>
+                <p class="my-3">Herunterladen der Daten abgeschlossen (0 / 0) </p>
+                <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 50px; --v-progress-linear-height: 50px;" role="progressbar" aria-hidden="false" aria-valuemin="0" aria-valuemax="0">
+                  <!---->
+                  <div class="v-progress-linear__background bg-primary"></div>
+                  <div class="v-progress-linear__buffer bg-primary"></div>
+                  <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                    <div class="v-progress-linear__indeterminate">
+                      <div class="v-progress-linear__indeterminate long bg-primary"></div>
+                      <div class="v-progress-linear__indeterminate short bg-primary"></div>
+                    </div>
+                  </transition-stub>
+                  <!---->
+                </div>
               </div>
               <div data-test="base-progress-success">
-                <div class="v-expansion-panels v-theme--light v-expansion-panels--variant-default mt-4">
-                  <div class="v-expansion-panel">
-                    <div class="v-expansion-panel__shadow elevation-0"></div>
-                    <!---->
-                    <!----><button class="v-expansion-panel-title pl-0" type="button" aria-expanded="false"><span class="v-expansion-panel-title__overlay"></span>Erfolgreich heruntergeladen (0 / 0) <span class="v-expansion-panel-title__icon"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path></svg></i></span></button>
-                    <transition-stub name="expand-transition" appear="false" persisted="false" css="true" data-test="expansion-panel-tasklist">
-                      <div class="v-expansion-panel-text" style="display: none;">
-                        <!---->
-                      </div>
-                    </transition-stub>
-                  </div>
-                </div>
+                <p class="my-3">Erfolgreich heruntergeladen (0 / 0) </p>
                 <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 50px; --v-progress-linear-height: 50px;" role="progressbar" aria-hidden="false" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
                   <!---->
                   <div class="v-progress-linear__background bg-success"></div>
@@ -42,18 +67,7 @@
                 </div>
               </div>
               <div data-test="base-progress-failed">
-                <div class="v-expansion-panels v-theme--light v-expansion-panels--variant-default mt-4">
-                  <div class="v-expansion-panel">
-                    <div class="v-expansion-panel__shadow elevation-0"></div>
-                    <!---->
-                    <!----><button class="v-expansion-panel-title pl-0" type="button" aria-expanded="false"><span class="v-expansion-panel-title__overlay"></span>Fehlgeschlagen (0 / 0) <span class="v-expansion-panel-title__icon"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path></svg></i></span></button>
-                    <transition-stub name="expand-transition" appear="false" persisted="false" css="true" data-test="expansion-panel-tasklist">
-                      <div class="v-expansion-panel-text" style="display: none;">
-                        <!---->
-                      </div>
-                    </transition-stub>
-                  </div>
-                </div>
+                <p class="my-3">Fehlgeschlagen (0 / 0) </p>
                 <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 50px; --v-progress-linear-height: 50px;" role="progressbar" aria-hidden="false" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
                   <!---->
                   <div class="v-progress-linear__background bg-warning"></div>
@@ -64,7 +78,7 @@
                   <!---->
                 </div>
               </div>
-              <div class="v-row justify-center mt-4"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button ma-4" data-test="weiter-button"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M4,15V9H12V4.16L19.84,12L12,19.84V15H4Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Weiter</span>
+              <div class="v-row justify-center mt-4"><button data-v-4343c08f="" type="button" class="v-btn v-btn--active v-btn--disabled v-theme--light bg-primary v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button ma-4" disabled="" data-test="weiter-button"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M4,15V9H12V4.16L19.84,12L12,19.84V15H4Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Weiter</span>
                   <!---->
                   <!---->
                 </button><button data-v-4343c08f="" type="button" class="v-btn v-btn--disabled v-theme--light v-btn--density-default v-btn--size-default v-btn--variant-flat base-text-button ma-4" disabled="" data-test="refresh-button"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span><span class="v-btn__prepend"><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"></path></svg></i></span><span class="v-btn__content" data-no-activator="">Fehlgeschlagene wiederholen</span>

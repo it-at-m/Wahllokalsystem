@@ -23,10 +23,10 @@ vi.mock(
       ...(mod as object),
       StimmzettelumschlaegeControllerApi: vi.fn(),
       BegruendungControllerApi: vi.fn(),
-      StimmabgabevermerkeControllerApi: vi.fn().mockImplementation(() => ({
-        getStimmabgabevermerke: mockDefinitions.getStimmabgabevermerke,
-        postStimmabgabevermerke: mockDefinitions.postStimmabgabevermerke,
-      })),
+      StimmabgabevermerkeControllerApi: class {
+        getStimmabgabevermerke = mockDefinitions.getStimmabgabevermerke;
+        postStimmabgabevermerke = mockDefinitions.postStimmabgabevermerke;
+      },
       StimmzettelDTOStimmzettelartEnum: vi.fn(),
       Configuration: vi.fn(),
     };
@@ -42,11 +42,14 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/userNotification/userNotificationService.ts", () => ({
-  useUserNotificationService: () => ({
-    addNotification: mockDefinitions.addNotification,
-  }),
-}));
+vi.mock(
+  import("@/composables/userNotification/userNotificationService.ts"),
+  () => ({
+    useUserNotificationService: () => ({
+      addNotification: mockDefinitions.addNotification,
+    }),
+  })
+);
 
 const { generateRandomString, generateRandomNumber } =
   useCommonTestDataFactory();
@@ -70,6 +73,7 @@ describe("stimmabgabevermerkeService.ts", () => {
     it("should_returnStimmabgabevermerke_when_parameterAreGiven", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
       const mockedStimmabgabevermerke = createStimmabgabevermerke();
 
       mockDefinitions.getStimmabgabevermerke.mockReturnValue(
@@ -81,6 +85,7 @@ describe("stimmabgabevermerkeService.ts", () => {
 
       const result = await getStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer
       );
 
@@ -91,6 +96,7 @@ describe("stimmabgabevermerkeService.ts", () => {
     it("should_returnNull_when_ApiReturned204", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
 
       mockDefinitions.getStimmabgabevermerke.mockReturnValue(
         Promise.resolve({ status: 204, data: {} })
@@ -98,6 +104,7 @@ describe("stimmabgabevermerkeService.ts", () => {
 
       const result = await getStimmabgabevermerke(
         wahlbezirkID,
+        wahlID,
         waehlerverzeichnisNummer
       );
 
@@ -108,13 +115,14 @@ describe("stimmabgabevermerkeService.ts", () => {
     it("should_triggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
 
       mockDefinitions.getStimmabgabevermerke.mockRejectedValue(
         new Error("api called failed")
       );
 
       await expect(async () =>
-        getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer)
+        getStimmabgabevermerke(wahlbezirkID, wahlID, waehlerverzeichnisNummer)
       ).rejects.toThrowError();
       expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
@@ -126,12 +134,19 @@ describe("stimmabgabevermerkeService.ts", () => {
     it("should_notTriggerNotification_when_anExceptionOccurredDuringApiCall", async () => {
       const waehlerverzeichnisNummer = generateRandomNumber(2);
       const wahlbezirkID = generateRandomString(10);
+      const wahlID = generateRandomString(10);
+
       mockDefinitions.getStimmabgabevermerke.mockRejectedValue(
         new Error("api called failed")
       );
 
       await expect(async () =>
-        getStimmabgabevermerke(wahlbezirkID, waehlerverzeichnisNummer, false)
+        getStimmabgabevermerke(
+          wahlbezirkID,
+          wahlID,
+          waehlerverzeichnisNummer,
+          false
+        )
       ).rejects.toThrowError();
       expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(false);
       expect(mockDefinitions.addNotification.mock.calls.length).toStrictEqual(
@@ -146,6 +161,7 @@ describe("stimmabgabevermerkeService.ts", () => {
       const stimmabgabevermerkeDTO = prepareStimmabgabevermerkeDTO()
         .wahlbezirkID(stimmabgabevermerk.wahlbezirkID)
         .waehlerverzeichnisNummer(stimmabgabevermerk.waehlerverzeichnisNummer)
+        .wahlID(stimmabgabevermerk.wahlID)
         .build();
 
       mockDefinitions.postStimmabgabevermerke.mockReturnValue(
@@ -158,6 +174,7 @@ describe("stimmabgabevermerkeService.ts", () => {
 
       await postStimmabgabevermerke(
         stimmabgabevermerk.wahlbezirkID,
+        stimmabgabevermerk.wahlID,
         stimmabgabevermerk.waehlerverzeichnisNummer,
         stimmabgabevermerk
       );
@@ -165,6 +182,7 @@ describe("stimmabgabevermerkeService.ts", () => {
       expect(useWorkflowStore().isStimmabgabevermerkeErfasst).toBe(true);
       expect(mockDefinitions.postStimmabgabevermerke).toHaveBeenCalledWith(
         stimmabgabevermerk.wahlbezirkID,
+        stimmabgabevermerk.wahlID,
         stimmabgabevermerk.waehlerverzeichnisNummer,
         stimmabgabevermerkeDTO
       );
@@ -183,6 +201,7 @@ describe("stimmabgabevermerkeService.ts", () => {
       await expect(
         postStimmabgabevermerke(
           stimmabgabevermerk.wahlbezirkID,
+          stimmabgabevermerk.wahlID,
           stimmabgabevermerk.waehlerverzeichnisNummer,
           stimmabgabevermerk
         )

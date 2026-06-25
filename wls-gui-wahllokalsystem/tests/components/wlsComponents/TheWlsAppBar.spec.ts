@@ -4,6 +4,7 @@ import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
 } from "@tests/utils/testutils.ts";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createPinia } from "pinia";
@@ -25,7 +26,7 @@ import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 
-vi.mock("@/plugins/router.ts", () => {
+vi.mock(import("@/plugins/router.ts"), () => {
   return {};
 });
 
@@ -33,12 +34,7 @@ describe("TheWlsAppBar.vue", () => {
   let wrapper: VueWrapper;
   const mockedDate = new Date("2025-05-23T07:30:00");
 
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  mockAndStubResizeObserver();
 
   beforeAll(() => {
     createPinia();

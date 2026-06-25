@@ -1,9 +1,9 @@
 import type { WahlvorschlagWithKandidatenErgebnissen } from "@/types/ergebnismeldung/common/WahlvorschlagWithKandidatenErgebnissen.ts";
 
-import { spyOn } from "@storybook/test";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useErgebnisseTestDataFactory } from "@tests/utils/ergebnismeldung/common/ergebnisseTestDataFactory.ts";
 import { useWahlvorschlaegeTestDataFactory } from "@tests/utils/wahlvorschlaege/WahlvorschlaegeTestDataFactory.ts";
+import { spyOn } from "storybook/test";
 import {
   afterAll,
   afterEach,
@@ -36,18 +36,28 @@ vi.mock(
   })
 );
 
-vi.mock("@/composables/ergebnismeldung/common/ergebnisService.ts", () => ({
-  useErgebnisService: () => ({
-    getErgebnisse: mockDefinitions.getErgebnisse,
-    postErgebnisse: mockDefinitions.postErgebnisse,
-  }),
-}));
+vi.mock(
+  import("@/composables/ergebnismeldung/common/ergebnisService.ts"),
+  async (importOriginal) => {
+    const mod = await importOriginal();
+    return {
+      useErgebnisService: () => ({
+        ...mod.useErgebnisService(),
+        getErgebnisse: mockDefinitions.getErgebnisse,
+        postErgebnisse: mockDefinitions.postErgebnisse,
+      }),
+    };
+  }
+);
 
-vi.mock("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts", () => ({
-  useWahlvorschlaegeService: () => ({
-    getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
-  }),
-}));
+vi.mock(
+  import("@/composables/wahlvorschlaege/wahlvorschlaegeService.ts"),
+  () => ({
+    useWahlvorschlaegeService: () => ({
+      getWahlvorschlaege: mockDefinitions.getWahlvorschlaege,
+    }),
+  })
+);
 
 const { generateRandomNumber, generateRandomString } =
   useCommonTestDataFactory();

@@ -17,7 +17,7 @@ const mockDefinitions = vi.hoisted(() => ({
   getWahlen: vi.fn(),
 }));
 
-vi.mock("@/composables/wahl/wahlservice", () => ({
+vi.mock(import("@/composables/wahl/wahlService.ts"), () => ({
   useWahlService: () => ({
     getWahlen: mockDefinitions.getWahlen,
   }),

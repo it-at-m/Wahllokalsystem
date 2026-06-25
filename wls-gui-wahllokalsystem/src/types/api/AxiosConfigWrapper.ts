@@ -18,6 +18,13 @@ export class AxiosConfigWrapper implements AxiosRequestConfig {
     return this;
   }
 
+  public requestAsPostOnlineOnlyButDirtyOnFail() {
+    this.withFetchStrategy(
+      FetchStrategiesEnum.STRATEGY_POST_ONLINE_ONLY_BUT_DIRTY_ON_FAIL
+    );
+    return this;
+  }
+
   public requestAsOfflineFirst() {
     this.withFetchStrategy(FetchStrategiesEnum.STRATEGY_OFFLINE_FIRST);
     return this;

@@ -1,29 +1,33 @@
+import type { TestingPinia } from "@pinia/testing";
+
+import { createTestingPinia } from "@pinia/testing";
 import {
   COMPONENT_EVENT_TESTS,
   COMPONENT_RENDER_TESTS,
   getSnapshotFilename,
+  mockAndStubResizeObserver,
+  stubVisualViewport,
 } from "@tests/utils/testutils.ts";
 import { mount, VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import BaseButtonSave from "@/components/common/buttons/BaseButtonSave.vue";
+import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseDialogBegruendung from "@/components/common/dialogs/BaseDialogBegruendung.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
 describe("BaseDialogBegruendung.vue", () => {
   let wrapper: VueWrapper;
-  vi.stubGlobal("visualViewport", new EventTarget());
-  const ResizeObserverMock = vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
-  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+  let pinia: TestingPinia;
+
+  stubVisualViewport();
+  mockAndStubResizeObserver();
 
   beforeEach(() => {
+    pinia = createTestingPinia({ createSpy: vi.fn, stubActions: false });
+
     wrapper = mount(BaseDialogBegruendung, {
       global: {
-        plugins: [vuetify],
+        plugins: [vuetify, pinia],
       },
       props: {
         visible: true,
@@ -70,7 +74,8 @@ describe("BaseDialogBegruendung.vue", () => {
           default: "Es wurde eine Abweichung erkannt.",
         },
       });
-      const saveButton = dialogWithDisabledButton.findComponent(BaseButtonSave);
+      const saveButton =
+        dialogWithDisabledButton.findComponent(BaseWlsButtonSave);
       expect(saveButton.element.hasAttribute("disabled")).toStrictEqual(true);
 
       dialogWithDisabledButton.unmount();

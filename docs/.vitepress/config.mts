@@ -32,6 +32,7 @@ export default withMermaid({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "About", link: "/about/" },
+      { text: "DSE", link: "/dse/" },
       { text: "Services", link: "/services/" },
       { text: "Technik", link: `${PATH_TECHNIK}get_started` },
     ],
@@ -126,6 +127,10 @@ export default withMermaid({
             {
               text: "Gendergerechte Sprache",
               link: `${PATH_ADR}adr-gender-sensitive-language.md`,
+            },
+            {
+              text: "Uhrzeitformat in Texten der Anwendung",
+              link: `${PATH_ADR}adr-time-format.md`,
             },
             {
               text: "UI/UX",

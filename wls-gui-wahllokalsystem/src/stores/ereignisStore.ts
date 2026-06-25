@@ -2,12 +2,12 @@ import type { Ereignis } from "@/types/vorfaelleundvorkommnisse/Ereignis.ts";
 import type { WahlbezirkEreignisse } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
-import { useEreignisComparator } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
+import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import {
@@ -16,12 +16,12 @@ import {
 } from "@/types/vorfaelleundvorkommnisse/Ereignisart.ts";
 import { WahlbezirkEreignisseBuilder } from "@/types/vorfaelleundvorkommnisse/WahlbezirkEreignisse.ts";
 
-const { compareEreignisseByUhrzeit } = useEreignisComparator();
+const { compareEreignisseByUhrzeit } = useEreignisUtils();
 const { getEreignisse, saveEreignisse } = useEreignisService();
 const { registerStoreHMR } = useHmrUpdate();
 
 export const storeID = "vorfaelleundvorkommnisse";
-const { logDebug } = useLogging(`store-${storeID}`);
+const { logDebug } = useLogging("ereignisStore");
 
 interface EreignisCreateTemplate {
   beschreibung?: string;
@@ -35,6 +35,7 @@ export const useEreignisStore = defineStore(storeID, () => {
 
   const error = ref<string | null>(null);
   const isSaving = ref(false);
+  const isVorfaelleMaintained = ref(false);
 
   const wahlbezirkEreignisse = ref<WahlbezirkEreignisse>(
     WahlbezirkEreignisseBuilder.createEmptyWahlbezirkEreignisse()
@@ -57,11 +58,6 @@ export const useEreignisStore = defineStore(storeID, () => {
             schliessungsuhrzeitGetter.value.isAuszaehlungStarted)
       : _isKeineVorkommnisseAndEreigniseintraegeContainsVorkommnisseInconsistent.value;
   });
-
-  watch(
-    () => schliessungsuhrzeitState.value.schliessungsuhrzeitSent,
-    _onSchliessunguhrzeitSentChanged
-  );
 
   function addEreignis(ereignisToAddTemplate?: EreignisCreateTemplate) {
     const ereignisToAdd = _createEreignis(ereignisToAddTemplate);
@@ -123,6 +119,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         currentUserWahlbezirkID.value
       );
       _sortEreignisse(wahlbezirkEreignisse.value.ereigniseintraege);
+      _updateVorfaelleMaintained();
     } catch (e) {
       error.value = "Fehler beim Laden der Ereignisse";
       logDebug("Fehler beim Laden der Ereignisse", e);
@@ -139,6 +136,7 @@ export const useEreignisStore = defineStore(storeID, () => {
         wahlbezirkEreignisse.value,
         sendNotification
       );
+      _updateVorfaelleMaintained();
     } catch (e) {
       error.value = "Fehler beim Speichern der Ereignisse";
       logDebug("Fehler beim Speichern der Ereignisse", e);
@@ -178,13 +176,13 @@ export const useEreignisStore = defineStore(storeID, () => {
     };
   }
 
-  function _hasEintragOfEreignisart(ereginisart: EreignisartEnum): boolean {
+  function _hasEintragOfEreignisart(ereignisart: EreignisartEnum): boolean {
     return wahlbezirkEreignisse.value.ereigniseintraege.some(
-      (eintrag) => eintrag.ereignisart === ereginisart
+      (eintrag) => eintrag.ereignisart === ereignisart
     );
   }
 
-  async function _onSchliessunguhrzeitSentChanged(
+  async function onSchliessungsuhrzeitSentChanged(
     newSchliessungsuhrzeit: Date | undefined
   ) {
     wahlbezirkEreignisse.value.ereigniseintraege.forEach((eintrag) => {
@@ -195,22 +193,37 @@ export const useEreignisStore = defineStore(storeID, () => {
         );
       }
     });
-    _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState();
+    _updateKeineVorfaelleBasedOnCurrentState();
 
     await sendEreignisse(false);
   }
 
+  function _updateKeineVorfaelleBasedOnCurrentState() {
+    wahlbezirkEreignisse.value.keineVorfaelle =
+      isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
+  }
   function _updateKeineVorkommnisseAndKeineVorfaelleBasedOnCurrentState() {
+    _updateKeineVorfaelleBasedOnCurrentState();
+
     if (schliessungsuhrzeitGetter.value.isAuszaehlungStarted) {
       wahlbezirkEreignisse.value.keineVorkommnisse =
         !ereigniseintraegeContainsVorkommnisse.value;
     }
-    wahlbezirkEreignisse.value.keineVorfaelle =
-      isBWB.value || !ereigniseintraegeContainsVorfaelle.value;
   }
 
   function _sortEreignisse(ereigniseintraege: Ereignis[]) {
     return ereigniseintraege.sort(compareEreignisseByUhrzeit);
+  }
+
+  function _updateVorfaelleMaintained() {
+    if (
+      (!wahlbezirkEreignisse.value.keineVorfaelle &&
+        _hasEintragOfEreignisart(EreignisartEnum.Vorfall)) ||
+      (wahlbezirkEreignisse.value.keineVorfaelle &&
+        !_hasEintragOfEreignisart(EreignisartEnum.Vorfall))
+    ) {
+      isVorfaelleMaintained.value = true;
+    }
   }
 
   return {
@@ -227,6 +240,8 @@ export const useEreignisStore = defineStore(storeID, () => {
     updateUhrzeitByIndex,
     updateBeschreibungByIndex,
     error,
+    isVorfaelleMaintained,
+    onSchliessungsuhrzeitSentChanged,
   };
 });
 

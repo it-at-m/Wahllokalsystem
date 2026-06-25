@@ -9,20 +9,15 @@ import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotif
 export function useHelpIconCallbacks() {
   const { buildTemplate } = useTestDruck();
   const { addNotification } = useUserNotificationService();
-  const { konfigurationsparameter, waehlerverzeichnisUrl } = storeToRefs(
+  const { waehlerverzeichnisUrl, wahlraumUrl } = storeToRefs(
     useInfomanagementStore()
   );
 
   function openWahlraumfinder() {
-    if (konfigurationsparameter.value) {
-      const wahllokalfinderParam = konfigurationsparameter.value.find(
-        (param) => param.schluessel === "WAHLLOKALFINDER_URL"
-      );
-      if (wahllokalfinderParam) {
-        const win = window.open(wahllokalfinderParam.wert, "_blank");
-        if (win) {
-          win.focus();
-        }
+    if (wahlraumUrl.value) {
+      const win = window.open(wahlraumUrl.value, "_blank");
+      if (win) {
+        win.focus();
       }
     }
   }
@@ -38,6 +33,10 @@ export function useHelpIconCallbacks() {
 
   function isWaehlerverzeichnisUrlAvailable(): boolean {
     return !!waehlerverzeichnisUrl.value;
+  }
+
+  function isWahlraumfinderUrlAvailable(): boolean {
+    return !!wahlraumUrl.value;
   }
 
   function startFernzugriff() {
@@ -70,6 +69,7 @@ export function useHelpIconCallbacks() {
     openWahlraumfinder,
     openWaehlerverzeichnis,
     isWaehlerverzeichnisUrlAvailable,
+    isWahlraumfinderUrlAvailable,
     startFernzugriff,
     printTestdruck,
   };

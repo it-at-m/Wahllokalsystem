@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 public class LoginInterceptor {
 
   private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
-  private static final String WAHLVORSTAND_AUTHORITY = "WAHLVORSTAND".toLowerCase();
-  private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
 
   @Value("${service.config.loginCheckMessage}")
   private String loginCheckMessage;
@@ -85,12 +83,16 @@ public class LoginInterceptor {
   }
 
   private boolean hasWahllokalAuthority(Collection<String> authorities) {
-    return authorities.stream().anyMatch(ROLE_LOGIN_WLS_WAHLLOKAL::equals);
+    return authorities.stream()
+        .anyMatch(authority -> authority.equals(userService.getSchriftfuehrerinAuthorityName()));
   }
 
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
     for (GrantedAuthority eAuthority : principal.getAuthorities()) {
-      if (eAuthority.getAuthority().toLowerCase().contains(WAHLVORSTAND_AUTHORITY)
+      if (eAuthority
+              .getAuthority()
+              .toLowerCase()
+              .contains(userService.getSchriftfuehrerinAuthorityName().toLowerCase())
           || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {
         return true;
       }

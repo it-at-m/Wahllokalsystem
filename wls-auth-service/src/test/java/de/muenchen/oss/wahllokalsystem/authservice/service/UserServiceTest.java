@@ -385,7 +385,7 @@ class UserServiceTest {
               "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
       val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
 
-      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.schriftfuehrerinAuthorityName = "WahlvorstandAuthorityName";
 
       Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
           .thenReturn(Optional.empty());
@@ -408,7 +408,7 @@ class UserServiceTest {
               "101", LocalDate.now(), "wbzID1", WahlbezirksartModel.UWB, "1_1");
       val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1));
 
-      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.schriftfuehrerinAuthorityName = "WahlvorstandAuthorityName";
 
       val mockedAuthority = new Authority();
       Mockito.when(authorityRepository.findByAuthority("WahlvorstandAuthorityName"))
@@ -430,7 +430,7 @@ class UserServiceTest {
               "102", LocalDate.now(), "wbzID2", WahlbezirksartModel.UWB, "1_2");
       val usersOfWahltag = new UsersOfWahltagModel(wahltagID, List.of(user1, user2));
 
-      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.schriftfuehrerinAuthorityName = "WahlvorstandAuthorityName";
       unitUnderTest.EOL = ";";
 
       val mockedAuthority = new Authority();
@@ -449,7 +449,7 @@ class UserServiceTest {
 
     @Test
     void should_createPin_when_creatingUserEntity() {
-      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.schriftfuehrerinAuthorityName = "WahlvorstandAuthorityName";
       unitUnderTest.countNumbersPin = 4;
       unitUnderTest.anzahlPinBloecke = 3;
 
@@ -474,7 +474,7 @@ class UserServiceTest {
 
     @Test
     void should_createUsername_when_creatingUserEntity() {
-      unitUnderTest.wahlvorstandAuthorityName = "WahlvorstandAuthorityName";
+      unitUnderTest.schriftfuehrerinAuthorityName = "WahlvorstandAuthorityName";
       unitUnderTest.prefixChars = "0123456789";
       unitUnderTest.countCharsPrefix = 6;
 

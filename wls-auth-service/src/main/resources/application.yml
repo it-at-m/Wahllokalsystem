@@ -113,7 +113,7 @@ service:
       csv:
         eol: "\r\n"
       authority:
-        wahlvorstand: WLS_WAHLVORSTAND
+        schriftfuehrerin: WLS_WAHLVORSTAND
       prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:
     oid: AUTH-SERVICE

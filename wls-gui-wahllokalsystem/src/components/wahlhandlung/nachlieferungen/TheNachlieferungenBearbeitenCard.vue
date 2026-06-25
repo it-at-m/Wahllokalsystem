@@ -10,6 +10,21 @@
       Uhr nachgelieferten Wahlbriefe
     </v-card-title>
     <v-card-text>
+      <base-feedback-card
+        title="Nachlieferungen bearbeiten"
+        type="information"
+        class="mb-2"
+      >
+        <div>
+          Bitte warten Sie auf die Lieferung aus der
+          {{
+            toTimeWithHoursAndOptionalMinutes(
+              createTodayWithTime(fruehesteSchliessungsuhrzeit)
+            )
+          }}
+          Uhr Leerung.
+        </div>
+      </base-feedback-card>
       <v-form
         ref="nachtraeglichUeberbrachteForm"
         v-model="nachtraeglichUeberbrachtValuesValid"
@@ -57,6 +72,7 @@ import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten.ts";
 import { storeToRefs } from "pinia";
 import { onActivated, ref } from "vue";
 
+import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import TheBeanstandeteWahlbriefeAktualisierenTabs from "@/components/wahlhandlung/nachlieferungen/TheBeanstandeteWahlbriefeAktualisierenTabs.vue";

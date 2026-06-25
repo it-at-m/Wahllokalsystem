@@ -130,7 +130,7 @@ __Abbildung im Modell:__ Jeder zugelassene `Wahlvorschlag` umfasst eine unmittel
 
 Eine erforderliche Stichwahl findet an einem weiteren Datum statt und wird daher als eigener `Wahltermin` mit einer eigenen `Wahl` geführt.
 
-#### Stadtratswahl
+### Stadtratswahl
 
 __`Stimmzettelgebiet`__ – Bei der Stadtratswahl ist das gesamte Gebiet der Landeshauptstadt München ein Stimmzettelgebiet. Der Stimmzettel ist in allen Münchner Stimmbezirken und Briefwahlbezirken identisch.
 

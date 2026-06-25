@@ -122,7 +122,7 @@ Für jede Wahl gibt es 2 Stimmzettel (klein – mit Direktkandidatur; groß – 
 
 [Mehr Informationen zur Landtagswahl.](https://stadt.muenchen.de/infos/landtagswahlen-und-bezirkswahlen-teil-ii.html)
 
-#### Oberbürgermeisterwahl
+### Oberbürgermeisterwahl
 
 __`Stimmzettelgebiet`__ – Bei der Oberbürgermeisterwahl ist das gesamte Gebiet der Landeshauptstadt München ein Stimmzettelgebiet. In allen Münchner Stimmbezirken und Briefwahlbezirken wird derselbe Stimmzettel verwendet.
 

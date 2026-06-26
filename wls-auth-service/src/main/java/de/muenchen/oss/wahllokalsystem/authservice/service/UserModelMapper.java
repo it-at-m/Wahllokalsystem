@@ -27,6 +27,7 @@ public interface UserModelMapper {
 
     return authorities.stream()
         .flatMap(
+            authority -> {
               val permissionStream =
                   authority.getPermissions().stream().map(Permission::getPermission);
               val roleAsStream = Stream.of(authority.getAuthority());

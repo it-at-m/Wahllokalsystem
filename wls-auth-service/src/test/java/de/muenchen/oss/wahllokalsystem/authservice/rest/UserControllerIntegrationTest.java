@@ -133,7 +133,7 @@ public class UserControllerIntegrationTest {
               null,
               null,
               null,
-              Set.of("permission1", "permission2"),
+              Set.of("permission1", "permission2", testauthorityName),
               null);
 
       Assertions.assertThat(responseBody).isEqualTo(expectedResponseBody);

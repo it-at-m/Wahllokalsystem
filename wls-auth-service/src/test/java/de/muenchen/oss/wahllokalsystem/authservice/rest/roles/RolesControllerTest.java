@@ -23,7 +23,7 @@ class RolesControllerTest {
 
     @Test
     void should_returnRoleMappings_when_called() {
-      val schriftfueherungRole = "schriftfueherin";
+      val schriftfueherungRole = "schriftfuehrung";
       val adminRole = "admin";
 
       Mockito.when(userService.getSchriftfuehrungAuthorityName()).thenReturn(schriftfueherungRole);

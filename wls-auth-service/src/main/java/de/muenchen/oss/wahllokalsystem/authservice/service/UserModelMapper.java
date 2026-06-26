@@ -26,11 +26,10 @@ public interface UserModelMapper {
 
     return authorities.stream()
         .flatMap(
-            authority -> {
-              Stream<String> perms =
+              val permissionStream =
                   authority.getPermissions().stream().map(Permission::getPermission);
-              Stream<String> role = Stream.of(authority.getAuthority());
-              return Stream.concat(role, perms);
+              val roleAsStream = Stream.of(authority.getAuthority());
+              return Stream.concat(roleAsStream, permissionStream);
             })
         .collect(Collectors.toSet());
   }

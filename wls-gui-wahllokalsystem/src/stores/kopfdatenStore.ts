@@ -8,8 +8,8 @@ import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
-import {UserNotificationCategoryEnum} from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const kopfdatenService = useKopfdatenService();
@@ -23,7 +23,11 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
     try {
       const loadedDataAsPromises = currentUserWahlMetadata.value.map(
         (metadata) =>
-          kopfdatenService.getKopfdaten(metadata.wahlID, metadata.wahlbezirkID, sendNotification)
+          kopfdatenService.getKopfdaten(
+            metadata.wahlID,
+            metadata.wahlbezirkID,
+            sendNotification
+          )
       );
       kopfdaten.value = await Promise.all(loadedDataAsPromises);
     } catch {
@@ -39,8 +43,8 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
       ) {
         if (sendNotification) {
           userNotificationService.addNotification(
-              `Fehler beim Laden der Kopfdaten: Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`,
-              UserNotificationCategoryEnum.ERROR
+            `Fehler beim Laden der Kopfdaten: Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`,
+            UserNotificationCategoryEnum.ERROR
           );
         }
         throw Error(

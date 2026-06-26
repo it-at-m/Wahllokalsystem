@@ -8,7 +8,8 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { KopfdatenDTOStimmzettelgebietsartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
-const { generateRandomString, generateRandomNumber } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } =
+  useCommonTestDataFactory();
 
 export function useKopfdatenTestDataFactory() {
   function createKopfdatenDto(): KopfdatenDTO {

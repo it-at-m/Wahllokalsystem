@@ -34,12 +34,10 @@ public class UserService {
 
   @Value("${service.config.user.authority.schriftfuehrerin}")
   @Getter
-  @Setter
   String schriftfuehrerinAuthorityName = "WLS_WAHLVORSTAND";
 
   @Value("${service.config.user.authority.admin}")
   @Getter
-  @Setter
   String adminAuthorityName = "MONITORING_HELPDESK";
 
   @Value("${service.config.user.anzahlPinBloecke}")

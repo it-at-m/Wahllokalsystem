@@ -162,7 +162,8 @@ public class WahltermindatenControllerIntegrationTest {
                   localDateForDataToKeep,
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"));
+                  "1",
+                  "B"));
       val wahlbezirkToKeep =
           wahlbezirkRepository.save(
               new Wahlbezirk(
@@ -364,7 +365,7 @@ public class WahltermindatenControllerIntegrationTest {
 
     private Wahl createWahlToDelete(final String wahlID, final LocalDate wahltag) {
       return wahlRepository.save(
-          new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, new Farbe(0, 0, 0), "1"));
+          new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, new Farbe(0, 0, 0), "1", "B"));
     }
 
     private Collection<Wahlbezirk> createWahlbezirkeToDelete(

@@ -33,7 +33,7 @@ class KopfdatenDTOMapperTest {
               "szgName1",
               "wahlName1",
               "wbzNummer1",
-              null);
+              16);
 
       val dtoExpected =
           new KopfdatenDTO(
@@ -45,7 +45,7 @@ class KopfdatenDTOMapperTest {
               "szgName1",
               "wahlName1",
               "wbzNummer1",
-              null);
+              16);
 
       val result = unitUnderTest.toDTO(kopfdatenModel);
       Assertions.assertThat(result).isEqualTo(dtoExpected);

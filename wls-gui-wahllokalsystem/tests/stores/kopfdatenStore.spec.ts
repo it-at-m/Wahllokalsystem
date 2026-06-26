@@ -86,7 +86,7 @@ describe("kopfdatenStore.ts", () => {
       await expect(unitUnderTest.initKopfdaten()).rejects.toThrow();
     });
 
-    it("should_throwError_when_mbW_missing_maximalErlaubteStimmenProWaehler", async () => {
+    it("should_throwError_when_mbw_missing_maximalErlaubteStimmenProWaehler", async () => {
       const wahlMetaData: WahlMetaData = {
         wahlbezirkID: generateRandomString(10),
         wahlnummer: generateRandomString(10),

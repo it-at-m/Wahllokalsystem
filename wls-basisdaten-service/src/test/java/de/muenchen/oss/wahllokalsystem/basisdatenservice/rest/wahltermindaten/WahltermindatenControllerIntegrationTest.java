@@ -186,7 +186,7 @@ public class WahltermindatenControllerIntegrationTest {
                   "SHZ to keep",
                   wahlToKeep.getName(),
                   wahlbezirkToKeep.getNummer(),
-                  null));
+                  40));
 
       val request =
           MockMvcRequestBuilders.delete(
@@ -404,7 +404,7 @@ public class WahltermindatenControllerIntegrationTest {
                           "SGZ 1_1",
                           wahlbezirk.getWahlID(),
                           wahlbezirk.getWahlbezirkID(),
-                          null)))
+                          40)))
           .toList();
     }
 

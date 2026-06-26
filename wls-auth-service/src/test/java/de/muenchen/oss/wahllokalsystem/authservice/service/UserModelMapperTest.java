@@ -58,7 +58,13 @@ class UserModelMapperTest {
       val result = unitUnderTest.toModel(entityToMap);
 
       val expectedAuthorities =
-          Set.of("permission11", "permission12", "permission21", "permission22");
+          Set.of(
+              "authority1",
+              "authority2",
+              "permission11",
+              "permission12",
+              "permission21",
+              "permission22");
       val expectedResult =
           new UserModel(
               entityToMap.getUsername(),
@@ -78,11 +84,12 @@ class UserModelMapperTest {
   }
 
   @Nested
-  class PermissionsOfAuthoritiesToAuthorities {
+  class PermissionsAndRoleOfAuthoritiesToAuthorities {
 
     @Test
     void should_returnNull_when_nullIsGiven() {
-      Assertions.assertThat(unitUnderTest.permissionsOfAuthoritiesToAuthorities(null)).isNull();
+      Assertions.assertThat(unitUnderTest.permissionsAndRoleOfAuthoritiesToAuthorities(null))
+          .isNull();
     }
 
     @Test
@@ -98,11 +105,16 @@ class UserModelMapperTest {
                   Set.of(new Permission("permission21"), new Permission("permission22")),
                   Collections.emptySet()));
 
-      val result = unitUnderTest.permissionsOfAuthoritiesToAuthorities(authorities);
+      val result = unitUnderTest.permissionsAndRoleOfAuthoritiesToAuthorities(authorities);
 
       Assertions.assertThat(result)
           .containsExactlyInAnyOrder(
-              "permission11", "permission12", "permission21", "permission22");
+              "authority1",
+              "authority2",
+              "permission11",
+              "permission12",
+              "permission21",
+              "permission22");
     }
   }
 

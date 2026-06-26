@@ -91,22 +91,22 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val password = "password";
       val httpServletRequest = createAuthenticationRequest(username, password, clientId);
 
-      val authoritySchriftfuehrerin = "WAHLVORSTAND";
+      val authoritySchriftfuehrung = "WAHLVORSTAND";
       val authorityAdmin = "MONITORING_HELPDESK";
       val mockedUserDetails =
           new User(
               username,
               password,
               List.of(
-                  new SimpleGrantedAuthority(authoritySchriftfuehrerin),
+                  new SimpleGrantedAuthority(authoritySchriftfuehrung),
                   new SimpleGrantedAuthority(authorityAdmin)));
       val mockedAuthentication = Mockito.mock(Authentication.class);
 
       Mockito.when(userService.isLocked(username)).thenReturn(false);
       Mockito.when(userService.getUserDetails(username)).thenReturn(mockedUserDetails);
       if (clientId.equals(WAHLLOKAL_GUI_CLIENT_ID)) {
-        Mockito.when(userService.getSchriftfuehrerinAuthorityName())
-            .thenReturn(authoritySchriftfuehrerin);
+        Mockito.when(userService.getSchriftfuehrungAuthorityName())
+            .thenReturn(authoritySchriftfuehrung);
       } else if (clientId.equals(ADMIN_GUI_CLIENT_ID)) {
         Mockito.when(userService.getAdminAuthorityName()).thenReturn(authorityAdmin);
       }
@@ -125,7 +125,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val httpServletRequest =
           createAuthenticationRequest(username, password, WAHLLOKAL_GUI_CLIENT_ID);
 
-      val authoritySchriftfuehrerin = "WAHLVORSTAND";
+      val authoritySchriftfuehrung = "WAHLVORSTAND";
       val mockedUserDetails =
           new User(
               username,
@@ -134,7 +134,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
               true,
               true,
               false,
-              List.of(new SimpleGrantedAuthority(authoritySchriftfuehrerin)));
+              List.of(new SimpleGrantedAuthority(authoritySchriftfuehrung)));
       val mockedAuthentication = Mockito.mock(Authentication.class);
       val mockedLoginAttempts =
           new LoginAttemptModel(UUID.randomUUID(), username, 1, LocalDateTime.now().minusYears(1));
@@ -143,8 +143,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       Mockito.when(userService.getUserDetails(username)).thenReturn(mockedUserDetails);
       Mockito.when(userService.getUserAttempts(username))
           .thenReturn(Optional.of(mockedLoginAttempts));
-      Mockito.when(userService.getSchriftfuehrerinAuthorityName())
-          .thenReturn(authoritySchriftfuehrerin);
+      Mockito.when(userService.getSchriftfuehrungAuthorityName())
+          .thenReturn(authoritySchriftfuehrung);
       Mockito.when(authenticationManager.authenticate(any())).thenReturn(mockedAuthentication);
 
       val result =
@@ -240,7 +240,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
 
       Mockito.when(userService.isLocked(username)).thenReturn(false);
       if (stringContainedInRedirectURL.equals(WAHLLOKAL_GUI_CLIENT_ID)) {
-        Mockito.when(userService.getSchriftfuehrerinAuthorityName()).thenReturn(StringUtils.EMPTY);
+        Mockito.when(userService.getSchriftfuehrungAuthorityName()).thenReturn(StringUtils.EMPTY);
       } else if (stringContainedInRedirectURL.equals(ADMIN_GUI_CLIENT_ID)) {
         Mockito.when(userService.getAdminAuthorityName()).thenReturn(StringUtils.EMPTY);
       }

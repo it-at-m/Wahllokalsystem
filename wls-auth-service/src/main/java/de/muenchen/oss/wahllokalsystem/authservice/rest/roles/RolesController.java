@@ -33,6 +33,6 @@ public class RolesController {
   @GetMapping("mappings")
   public RoleMappingsDTO getRoleMappings() {
     return new RoleMappingsDTO(
-        userService.getSchriftfuehrerinAuthorityName(), userService.getAdminAuthorityName());
+        userService.getSchriftfuehrungAuthorityName(), userService.getAdminAuthorityName());
   }
 }

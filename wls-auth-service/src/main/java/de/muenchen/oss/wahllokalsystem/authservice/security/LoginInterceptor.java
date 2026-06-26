@@ -82,7 +82,7 @@ public class LoginInterceptor {
 
   private boolean hasWahllokalAuthority(Collection<String> authorities) {
     return authorities.stream()
-        .anyMatch(authority -> authority.equals(userService.getSchriftfuehrerinAuthorityName()));
+        .anyMatch(authority -> authority.equals(userService.getSchriftfuehrungAuthorityName()));
   }
 
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
@@ -90,7 +90,7 @@ public class LoginInterceptor {
       if (eAuthority
               .getAuthority()
               .toLowerCase()
-              .contains(userService.getSchriftfuehrerinAuthorityName().toLowerCase())
+              .contains(userService.getSchriftfuehrungAuthorityName().toLowerCase())
           || eAuthority
               .getAuthority()
               .toLowerCase()

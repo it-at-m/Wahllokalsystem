@@ -113,7 +113,7 @@ service:
       csv:
         eol: "\r\n"
       authority:
-        schriftfuehrerin: WLS_WAHLVORSTAND
+        schriftfuehrung: WLS_WAHLVORSTAND
         admin: MONITORING_HELPDESK
       prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:

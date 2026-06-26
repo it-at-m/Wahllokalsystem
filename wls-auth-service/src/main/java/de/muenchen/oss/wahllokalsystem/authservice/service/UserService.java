@@ -32,9 +32,9 @@ public class UserService {
   @Value("${service.config.user.csv.eol}")
   String EOL = "\r\n";
 
-  @Value("${service.config.user.authority.schriftfuehrerin}")
+  @Value("${service.config.user.authority.schriftfuehrung}")
   @Getter
-  String schriftfuehrerinAuthorityName = "WLS_WAHLVORSTAND";
+  String schriftfuehrungAuthorityName = "WLS_WAHLVORSTAND";
 
   @Value("${service.config.user.authority.admin}")
   @Getter
@@ -164,13 +164,13 @@ public class UserService {
   public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
     val authorityWahlvorstand =
         authorityRepository
-            .findByAuthority(schriftfuehrerinAuthorityName)
+            .findByAuthority(schriftfuehrungAuthorityName)
             .orElseThrow(
                 () ->
                     new HttpServerErrorException(
                         HttpStatus.INTERNAL_SERVER_ERROR,
                         "Keine Authority <"
-                            + schriftfuehrerinAuthorityName
+                            + schriftfuehrungAuthorityName
                             + "> gefunden, kann keine Benutzer für Wahltag-ID <"
                             + usersOfWahltag.wahltagID()
                             + "> anlegen"));

@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK,
     properties = {
-      "service.config.user.authority.schriftfuehrerin="
+      "service.config.user.authority.schriftfuehrung="
           + RolesControllerIntegrationTest.ROLE_SCHRIFTFUEHERIN,
       "service.config.user.authority.admin=" + RolesControllerIntegrationTest.ROLE_ADMIN
     })

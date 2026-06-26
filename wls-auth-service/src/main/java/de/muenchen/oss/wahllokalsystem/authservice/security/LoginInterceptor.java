@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoginInterceptor {
 
-  private static final String MONITORING_AUTHORITY = "MONITORING".toLowerCase();
-
   @Value("${service.config.loginCheckMessage}")
   private String loginCheckMessage;
 
@@ -93,7 +91,10 @@ public class LoginInterceptor {
               .getAuthority()
               .toLowerCase()
               .contains(userService.getSchriftfuehrerinAuthorityName().toLowerCase())
-          || eAuthority.getAuthority().toLowerCase().contains(MONITORING_AUTHORITY)) {
+          || eAuthority
+              .getAuthority()
+              .toLowerCase()
+              .contains(userService.getAdminAuthorityName().toLowerCase())) {
         return true;
       }
     }

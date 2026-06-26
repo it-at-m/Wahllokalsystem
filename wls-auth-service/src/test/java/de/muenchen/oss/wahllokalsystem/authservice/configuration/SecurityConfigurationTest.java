@@ -239,4 +239,20 @@ class SecurityConfigurationTest {
       api.perform(get("/authserver/logouturl")).andExpect(status().isOk());
     }
   }
+
+  @Nested
+  class Roles {
+
+    @Test
+    @WithAnonymousUser
+    void should_denyAccess_when_roleMappingsUnauthorized() throws Exception {
+      api.perform(get("/roles/mappings")).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser()
+    void should_permitAccess_when_roleMappingsAuthorized() throws Exception {
+      api.perform(get("/roles/mappings")).andExpect(status().isOk());
+    }
+  }
 }

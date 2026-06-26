@@ -65,7 +65,7 @@ describe("kopfdatenStore.ts", () => {
       await unitUnderTest.initKopfdaten();
 
       expect(mockDefinitions.getKopfdaten.mock.calls).toStrictEqual([
-        [wahlMetaData.wahlID, wahlMetaData.wahlbezirkID],
+        [wahlMetaData.wahlID, wahlMetaData.wahlbezirkID, true],
       ]);
     });
 

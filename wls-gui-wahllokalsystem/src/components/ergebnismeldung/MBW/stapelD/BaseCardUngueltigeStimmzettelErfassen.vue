@@ -10,7 +10,11 @@
                 class="descriptionCol"
                 style="padding-bottom: 20px"
               >
-                Anzahl ungültiger Stimmzettel
+                {{
+                  isUWB
+                    ? "Anzahl leerer Stimmzettel"
+                    : "Anzahl leerer Stimmzettel und Stimmzettelumschläge"
+                }}
               </td>
               <td class="valueCol pr-0">
                 <base-number-input
@@ -56,14 +60,17 @@
 <script setup lang="ts">
 import type { Ergebnis } from "@/types/ergebnismeldung/common/Ergebnis.ts";
 
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const { required } = useRules();
+const { isUWB } = storeToRefs(useUserStore());
 
 const isFormValid = ref<null | boolean>(null);
 

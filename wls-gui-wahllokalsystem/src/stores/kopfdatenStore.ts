@@ -5,22 +5,25 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import {UserNotificationCategoryEnum} from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const kopfdatenService = useKopfdatenService();
+const userNotificationService = useUserNotificationService();
 
 export const useKopfdatenStore = defineStore("kopfdaten", () => {
   const kopfdaten = ref<Kopfdaten[]>([]);
   const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
-  async function initKopfdaten() {
+  async function initKopfdaten(sendNotification = true) {
     try {
       const loadedDataAsPromises = currentUserWahlMetadata.value.map(
         (metadata) =>
-          kopfdatenService.getKopfdaten(metadata.wahlID, metadata.wahlbezirkID)
+          kopfdatenService.getKopfdaten(metadata.wahlID, metadata.wahlbezirkID, sendNotification)
       );
       kopfdaten.value = await Promise.all(loadedDataAsPromises);
     } catch {
@@ -31,10 +34,15 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
     for (const kd of kopfdaten.value) {
       const wahl = wahlenStore.wahlenActions.getWahlOrUndefinedById(kd.wahlID);
       if (
-        wahl &&
-        wahl.wahlart === WahlWahlartEnum.Mbw &&
-        (kd as Kopfdaten).maximalErlaubteStimmenProWaehler == null
+        wahl?.wahlart === WahlWahlartEnum.Mbw &&
+        kd.maximalErlaubteStimmenProWaehler == null
       ) {
+        if (sendNotification) {
+          userNotificationService.addNotification(
+              `Fehler beim Laden der Kopfdaten: Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`,
+              UserNotificationCategoryEnum.ERROR
+          );
+        }
         throw Error(
           `Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`
         );

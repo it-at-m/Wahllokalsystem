@@ -109,14 +109,14 @@ class WahldatenMapperTest {
               szgName,
               Stimmzettelgebietsart.SK,
               new Wahl(null, null, new Wahltag(wahltag, null, null)),
-              null);
+              42);
       entityToMap.setId(szgID);
 
       val result = unitUnderTest.toDTO(entityToMap);
 
       val expectedResult =
           new StimmzettelgebietDTO(
-              szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK, null);
+              szgID.toString(), szgNummer, szgName, wahltag, StimmzettelgebietsartDTO.SK, 42);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }

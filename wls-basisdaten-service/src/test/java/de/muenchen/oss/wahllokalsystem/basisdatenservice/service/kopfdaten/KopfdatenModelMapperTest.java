@@ -24,7 +24,7 @@ class KopfdatenModelMapperTest {
             "120",
             "Bundestagswahl",
             "1201",
-            null);
+            11);
     val kopfdatenEntity2 =
         MockDataFactory.createKopfdatenEntityFor(
             "wahlID2",
@@ -34,7 +34,7 @@ class KopfdatenModelMapperTest {
             "121",
             "Bundestagswahl",
             "1202",
-            null);
+            12);
     val entitiesToMap = List.of(kopfdatenEntity1, kopfdatenEntity2);
     val result = unitUnderTest.fromListOfEntitiesToListOfModels(entitiesToMap);
 
@@ -47,7 +47,7 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "Bundestagswahl",
             "1201",
-            null);
+            11);
     val kopfdatenModel2 =
         MockDataFactory.createKopfdatenModelFor(
             "wahlID2",
@@ -57,7 +57,7 @@ class KopfdatenModelMapperTest {
             "Munich2",
             "Bundestagswahl",
             "1202",
-            null);
+            12);
     val expectedResult = List.of(kopfdatenModel1, kopfdatenModel2);
 
     Assertions.assertThat(result).isEqualTo(expectedResult);
@@ -74,7 +74,7 @@ class KopfdatenModelMapperTest {
             "120",
             "Bundestagswahl",
             "1201",
-            null);
+            21);
     val result = unitUnderTest.toModel(kopfdatenEntity1);
 
     val kopfdatenModel1 =
@@ -86,7 +86,7 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "Bundestagswahl",
             "1201",
-            null);
+            21);
 
     Assertions.assertThat(result).isEqualTo(kopfdatenModel1);
   }
@@ -102,7 +102,7 @@ class KopfdatenModelMapperTest {
             "Munich1",
             "Bundestagswahl",
             "1201",
-            null);
+            31);
     val result = unitUnderTest.toEntity(kopfdatenModel1);
 
     val kopfdatenEntity1 =
@@ -114,7 +114,7 @@ class KopfdatenModelMapperTest {
             "120",
             "Bundestagswahl",
             "1201",
-            null);
+            31);
 
     Assertions.assertThat(result).isEqualTo(kopfdatenEntity1);
   }

@@ -16,7 +16,7 @@ export function useKopfdatenMapper() {
       wahlname: dto.wahlname,
       wahlbezirknummer: dto.wahlbezirknummer,
       maximalErlaubteStimmenProWaehler:
-        dto.maximalErlaubteStimmenProWaehler ?? undefined,
+        dto.maximalErlaubteStimmenProWaehler ?? null,
     };
   }
 

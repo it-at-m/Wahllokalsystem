@@ -8,7 +8,7 @@ import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFact
 import { KopfdatenDTOStimmzettelgebietsartEnum } from "@/api/wls-clients/generated-basisdaten-api";
 import { KopfdatenStimmzettelgebietsartEnum } from "@/types/kopfdaten/KopfdatenStimmzettelgebietsartEnum.ts";
 
-const { generateRandomString } = useCommonTestDataFactory();
+const { generateRandomString, generateRandomNumber } = useCommonTestDataFactory();
 
 export function useKopfdatenTestDataFactory() {
   function createKopfdatenDto(): KopfdatenDTO {
@@ -21,7 +21,7 @@ export function useKopfdatenTestDataFactory() {
       wahlbezirkID: generateRandomString(20),
       wahlbezirknummer: generateRandomString(10),
       wahlname: generateRandomString(10),
-      maximalErlaubteStimmenProWaehler: 40,
+      maximalErlaubteStimmenProWaehler: generateRandomNumber(2),
     };
   }
 
@@ -35,7 +35,7 @@ export function useKopfdatenTestDataFactory() {
       wahlbezirkID: generateRandomString(20),
       wahlbezirknummer: generateRandomString(10),
       wahlname: generateRandomString(10),
-      maximalErlaubteStimmenProWaehler: 40,
+      maximalErlaubteStimmenProWaehler: generateRandomNumber(2),
     };
   }
 

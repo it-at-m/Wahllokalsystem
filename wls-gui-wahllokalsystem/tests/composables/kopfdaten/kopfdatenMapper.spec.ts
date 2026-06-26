@@ -26,12 +26,24 @@ describe("kopfdatenMapper.ts", () => {
         stimmzettelgebietsname: dto.stimmzettelgebietsname,
         wahlname: dto.wahlname,
         wahlbezirknummer: dto.wahlbezirknummer,
-        maximalErlaubteStimmenProWaehler: dto.maximalErlaubteStimmenProWaehler,
+        maximalErlaubteStimmenProWaehler: dto.maximalErlaubteStimmenProWaehler ?? null,
       };
 
       const result = toModel(dto);
 
       expect(result).toStrictEqual(model);
+    });
+
+    it("should_mapUndefined_maximalErlaubteStimmenProWaehler_to_null", () => {
+      const dto = prepareKopfdatenDto()
+        .stimmzettelgebietsart(KopfdatenDTOStimmzettelgebietsartEnum.Sg)
+        .build();
+
+      delete dto.maximalErlaubteStimmenProWaehler;
+
+      const result = toModel(dto);
+
+      expect(result.maximalErlaubteStimmenProWaehler).toBeNull();
     });
   });
 });

@@ -32,7 +32,6 @@
     <v-card-actions>
       <base-text-button
         prepend-icon="$add"
-        active
         @click="onAddBedenklicherStimmzettelClicked()"
         >Neuen Beschluss erfassen</base-text-button
       >

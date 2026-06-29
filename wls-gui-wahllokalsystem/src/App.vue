@@ -47,6 +47,7 @@ import { useServiceWorkerUtils } from "@/composables/serviceWorker/serviceWorker
 import { useLogoutOnInactivity } from "@/composables/user/logoutOnInactivity.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
+import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { useOnlineOfflineStore } from "@/stores/onlineOfflineStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -94,6 +95,7 @@ onMounted(async () => {
     if (isBWB.value) {
       await initIsNachlieferungsbezirk();
     }
+    await useKopfdatenStore().initKopfdaten();
     await initTasks();
 
     showTestdruckDialog.value = true;

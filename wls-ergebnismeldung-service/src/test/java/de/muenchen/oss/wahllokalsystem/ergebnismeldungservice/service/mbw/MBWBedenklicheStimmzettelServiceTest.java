@@ -178,4 +178,52 @@ class MBWBedenklicheStimmzettelServiceTest {
           .isSameAs(mockedTechnischeWlsException);
     }
   }
+
+  @Nested
+  class HasBedenklicheStimmzettel {
+
+    @Test
+    void should_returnTrue_when_hasBedenklicheStimmzettelForBezirkUndWahlID() {
+      val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val mockedEntity = new BedenklicheStimmzettelErfassung();
+
+      Mockito.when(repository.findById(Mockito.eq(bezirkUndWahlId)))
+          .thenReturn(Optional.of(mockedEntity));
+
+      val result = unitUnderTest.hasBedenklicheStimmzettel(bezirkUndWahlId);
+
+      Assertions.assertThat(result).isTrue();
+    }
+
+    @Test
+    void should_returnFalse_when_hasNoBedenklicheStimmzettelForBezirkUndWahlID() {
+      val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+
+      Mockito.when(repository.findById(Mockito.eq(bezirkUndWahlId))).thenReturn(Optional.empty());
+
+      val result = unitUnderTest.hasBedenklicheStimmzettel(bezirkUndWahlId);
+
+      Assertions.assertThat(result).isFalse();
+    }
+  }
+
+  @Nested
+  class GetAnzahlUngueltigeBedenklicheStimmzettel {
+
+    @Test
+    void should_returnAnzahl_when_hasBedenklicheStimmzettelForBezirkUndWahlID() {
+      val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+      val mockedAnzahl = 2L;
+
+      Mockito.when(
+              repository.countInvalidBedenklicheStimmzettelForWahlbezirkIDAndWahlID(
+                  Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
+                  Mockito.eq(bezirkUndWahlId.getWahlID())))
+          .thenReturn(mockedAnzahl);
+
+      val result = unitUnderTest.getAnzahlUngueltigeBedenklicheStimmzettel(bezirkUndWahlId);
+
+      Assertions.assertThat(result).isEqualTo(mockedAnzahl);
+    }
+  }
 }

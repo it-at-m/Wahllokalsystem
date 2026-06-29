@@ -156,7 +156,7 @@ class ErgebnismeldungControllerIntegrationTest {
                       .willReturn(aResponse().withStatus(HttpStatus.OK.value())));
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(mockedNow);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(mockedNow);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -218,7 +218,7 @@ class ErgebnismeldungControllerIntegrationTest {
           val mockedNow = LocalDateTime.now();
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(mockedNow);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(mockedNow);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -261,7 +261,7 @@ class ErgebnismeldungControllerIntegrationTest {
           statusRepository.save(statusToSend);
 
           val mockedUrnenwahlschliessungsUhrzeit =
-              new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(null);
+              new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(null);
           stubFor(
               get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                   .willReturn(
@@ -325,7 +325,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 
         val mockedUrnenwahlschliessungsUhrzeit =
-            new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit(LocalDateTime.now());
         stubFor(
             get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                 .willReturn(
@@ -358,6 +358,8 @@ class ErgebnismeldungControllerIntegrationTest {
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_AWERTE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_READ_ERGEBNISSE),
                             new SimpleGrantedAuthority(Authorities.REPOSITORY_WRITE_ERGEBNISSE),
+                            new SimpleGrantedAuthority(
+                                Authorities.SERVICE_GET_BEDENKLICHE_STIMMZETTEL),
                             new SimpleGrantedAuthority(Authorities.SERVICE_GET_ERGEBNISSE))
                         .jwt(
                             jwt ->
@@ -402,7 +404,7 @@ class ErgebnismeldungControllerIntegrationTest {
                 .willReturn(createWireMockResponse(mockedWahlenOfWahltag, HttpStatus.OK)));
 
         val mockedUrnenwahlschliessungsUhrzeit =
-            new UrnenwahlSchliessungsUhrzeitDTO().urnenwahlSchliessungsUhrzeit(LocalDateTime.now());
+            new UrnenwahlSchliessungsUhrzeitDTO().schliessungsuhrzeit((LocalDateTime.now()));
         stubFor(
             get(createURIUrnenwahlSchliessungsUhrzeit(wahlbezirkID))
                 .willReturn(

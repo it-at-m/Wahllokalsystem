@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.client.BeanstandeteWahlbriefeControllerApi;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.BeanstandeteWahlbriefeDTO;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.eai.briefwahl.model.Zurueckweisungsgrund;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.exception.ExceptionConstants;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
@@ -43,10 +42,10 @@ class BriefwahlClientImplTest {
               .putBeanstandeteWahlbriefeItem(
                   wahlID,
                   List.of(
-                      Zurueckweisungsgrund.SCHEINE_UNGLEICH_UMSCHLAEGE,
-                      Zurueckweisungsgrund.ZUGELASSEN,
-                      Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN,
-                      Zurueckweisungsgrund.SCHEIN_UNGUELTIG));
+                      BeanstandeteWahlbriefeDTO.InnerEnum.SCHEINE_UNGLEICH_UMSCHLAEGE,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.ZUGELASSEN,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.KEIN_ORIGINAL_SCHEIN,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.SCHEIN_UNGUELTIG));
       Mockito.when(
               beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(
                   eq(wahlbezirkID), eq(waehlerverzeichnissNummer)))
@@ -114,10 +113,10 @@ class BriefwahlClientImplTest {
               .putBeanstandeteWahlbriefeItem(
                   "other" + wahlID,
                   List.of(
-                      Zurueckweisungsgrund.SCHEINE_UNGLEICH_UMSCHLAEGE,
-                      Zurueckweisungsgrund.ZUGELASSEN,
-                      Zurueckweisungsgrund.KEIN_ORIGINAL_SCHEIN,
-                      Zurueckweisungsgrund.SCHEIN_UNGUELTIG));
+                      BeanstandeteWahlbriefeDTO.InnerEnum.SCHEINE_UNGLEICH_UMSCHLAEGE,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.ZUGELASSEN,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.KEIN_ORIGINAL_SCHEIN,
+                      BeanstandeteWahlbriefeDTO.InnerEnum.SCHEIN_UNGUELTIG));
       Mockito.when(
               beanstandeteWahlbriefeControllerApi.getBeanstandeteWahlbriefe(
                   eq(wahlbezirkID), eq(waehlerverzeichnissNummer)))

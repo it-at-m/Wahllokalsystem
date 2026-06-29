@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-ergebnismeldung-service</artifactId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.2-SNAPSHOT</version>
     <name>wls_ergebnismeldung_service</name>
 
     <properties>
@@ -13,8 +13,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>3.5.14</spring.boot.version>
-        <spring.cloud.version>2025.0.2</spring.cloud.version>
+        <spring.boot.version>3.5.16</spring.boot.version>
+        <spring.cloud.version>2025.0.3</spring.cloud.version>
         <logstash.encoder>9.0</logstash.encoder>
         <apache.commons.collections4>4.5.0</apache.commons.collections4>
         <apache.commons.csv>1.14.1</apache.commons.csv>
@@ -477,7 +477,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.0.1-SNAPSHOT.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.briefwahl.0.3.13.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.briefwahl.model</modelPackage>
@@ -489,7 +489,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.1.1-Beta1.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.wahlvorbereitung.0.4.14.json</inputSpec>
 
                             <apiPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.client</apiPackage>
                             <modelPackage>${project.groupId}.ergebnismeldungservice.eai.wahlvorbereitung.model</modelPackage>

@@ -39,21 +39,31 @@ ist man wieder im gewohnten Prozess.
 
 Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtliche Gründe.
 
-### Stimmzettel vorbereiten
+### Neuer Prozess zur DSE
+
+Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams, sowie Wahlbezirke eingeführt:
+
+![Statusübersicht während des DSE-Prozesses](/dse/DseStatusDiagramm.drawio.png)
+
+#### Stimmzettel vorbereiten
 
 In diesem Schritt erfolgen vorbereitende Maßnahmen, um die Erfassung zu erleichtern. Der Stimmzettel wird z.B. vollständig
 entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen findet.
 
-### Stimmzettel erfassen
+#### Stimmzettel erfassen
 
-In diesem Schritt erfolgt die Erfassung der Stimmzettel im System. Stimmzettel, über die der gesamte Wahlvorstand einen
-Beschluss fassen muss, werden entsprechend markiert.
+Sobald sich ein Erfassungs-Team im System eingeloggt hat, ist es "registriert" und kann mit der Stimmzettelerfassung
+starten, woraufhin der Status "in Bearbeitung" gespeichert wird. Das Schriftführungsteam muss zuvor die Stimmzettel
+und Wahlscheine gezählt haben.
+Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss, werden entsprechend markiert.
 
-### Stimmzettel ablegen
+#### Stimmzettel ablegen
 
 Die erfassten Stimmzettel werden entsprechend der Regeln der Wahl für die Ablage vorbereitet. Stimmzettel, über die noch
 ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 
-### Beschlüsse zu Stimmzetteln fassen
+#### Beschlüsse zu Stimmzetteln fassen
 
+Sind alle Teams mit der Erfassung fertig und der Status "abgeschlossen" wurde erfolgreich übermittelt, startet die
+Beschlussdokumentation.
 Der Wahlvorstand fasst die Beschlüsse zu den zuvor markierten Stimmzetteln, und überträgt die Ergebnisse ins System.

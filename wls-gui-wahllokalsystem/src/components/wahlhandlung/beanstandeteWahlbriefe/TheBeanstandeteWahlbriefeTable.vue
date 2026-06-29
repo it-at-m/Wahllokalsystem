@@ -128,7 +128,7 @@
 import type { Wahl } from "@/types/wahl/Wahl.ts";
 
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onActivated, onMounted, ref } from "vue";
 
 import BaseDialog from "@/components/common/dialogs/BaseDialog.vue";
 import TheBeanstandeteWahlbriefeRowStatusIcon from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeRowStatusIcon.vue";
@@ -207,13 +207,23 @@ const gruendeStimmzettel = [
 ];
 
 onMounted(() => {
+  updateWahlscheinGruende();
+});
+
+onActivated(() => {
+  updateWahlscheinGruende();
+});
+
+function updateWahlscheinGruende() {
   for (const row of Array.from({ length: maxRows.value }, (_, i) => i)) {
     let wahlscheinZurueckweisungsgrund;
+    let isEmpty = false;
     if (wahlenState.value.wahlen) {
       const hasAnyWahlAnyWahlscheinGrund = wahlenState.value.wahlen.some(
         (wahl) => {
           const grund = wahl.beanstandeteWahlbriefe[row];
           wahlscheinZurueckweisungsgrund = grund;
+          isEmpty = grund === null;
           return (
             grund &&
             gruendeWahlscheine.includes(
@@ -226,18 +236,23 @@ onMounted(() => {
 
       if (hasAnyWahlAnyWahlscheinGrund) {
         wahlscheinGruende.value[row] = wahlscheinZurueckweisungsgrund;
-      } else {
+      } else if (!isEmpty) {
         wahlscheinGruende.value[row] = ZurueckweisungsgrundEnum.Zugelassen;
       }
     }
   }
-});
+}
 
 function onZulassungsgrundWahlscheinChanged(
   newValue: string,
   rowIndex: number
 ) {
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
+  console.debug(
+    "onZulassungsgrundWahlscheinChanged: ",
+    newValue,
+    selectedValue
+  );
   wahlscheinGruende.value[rowIndex] = selectedValue;
 
   if (
@@ -261,6 +276,11 @@ function onZulassungsgrundStimmzettelChanged(
   wahl: Wahl
 ) {
   const selectedValue = zurueckweisungsgrundStringToEnumValue(newValue);
+  console.debug(
+    "onZulassungsgrundStimmzettelChanged: ",
+    newValue,
+    selectedValue
+  );
   wahl.beanstandeteWahlbriefe[rowIndex] = selectedValue;
 
   if (wahlenState.value.wahlen) {

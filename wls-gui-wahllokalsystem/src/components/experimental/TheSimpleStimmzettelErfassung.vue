@@ -38,44 +38,45 @@
         <v-card class="mb-1">
           <v-card-title>Eingabehistorie</v-card-title>
           <v-card-text>
-            <div class="d-flex align-center ga-1 font-weight-bold">
-              <v-icon icon="$stimmzettelCommandAddVote" />
-              <div>
-                <div>105 +1</div>
-                <div>Max Müller</div>
+            <div v-if="firstHistoryItem">
+              <div class="d-flex align-center ga-1 font-weight-bold">
+                <input-history-icon :input-type="firstHistoryItem.type" />
+                <div>
+                  <div
+                    v-for="text in firstHistoryItem.text"
+                    :key="text"
+                  >
+                    {{ text }}
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="my-4"><v-divider thickness="4" /></div>
-            <div class="d-flex align-center ga-1">
-              <v-icon icon="$stimmzettelCommandAcceptList" />
-              <div>
-                <div>Wahlvorschlag Nr. 2</div>
-              </div>
+            <div
+              v-if="nextFiveItems.length > 0"
+              class="my-4"
+            >
+              <v-divider thickness="4" />
             </div>
-            <div class="my-2"><v-divider thickness="1" /></div>
-            <div class="d-flex align-center ga-1">
-              <v-icon icon="$stimmzettelCommandDiscardKandidat" />
-              <div>
-                <div>202</div>
-                <div>Hassan Al-Rashid</div>
+
+            <template
+              v-for="(item, index) in nextFiveItems"
+              :key="index"
+            >
+              <div class="d-flex align-center ga-1">
+                <input-history-icon :input-type="item.type" />
+                <div>
+                  <div
+                    v-for="text in item.text"
+                    :key="text"
+                  >
+                    {{ text }}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div class="my-2"><v-divider thickness="1" /></div>
-            <div class="d-flex align-center ga-1 mt-3">
-              <v-icon icon="$stimmzettelCommandRemoveVote" />
-              <div>
-                <div>105 +7</div>
-                <div>Max Müller</div>
+              <div class="my-2">
+                <v-divider thickness="1" />
               </div>
-            </div>
-            <div class="my-2"><v-divider thickness="1" /></div>
-            <div class="d-flex align-center ga-1 mt-3">
-              <v-icon icon="$stimmzettelCommandAddVote" />
-              <div>
-                <div>105 +7</div>
-                <div>Max Müller</div>
-              </div>
-            </div>
+            </template>
           </v-card-text>
         </v-card>
       </v-col>
@@ -145,6 +146,7 @@
 
 <script setup lang="ts">
 import type { AbstractCommandEvent } from "@/types/experimental/AbstractCommandEvent.ts";
+import type { InputHistoryItem } from "@/types/experimental/InputHistoryItem.ts";
 import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
 import type { PropType } from "vue";
 
@@ -153,10 +155,15 @@ import { computed } from "vue";
 import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
+import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
 
-const { votesOnly } = defineProps({
+const { votesOnly, changeHistory } = defineProps({
   votesOnly: {
     type: Array as PropType<StimmzettelWahlvorschlag[]>,
+    required: true,
+  },
+  changeHistory: {
+    type: Array as PropType<InputHistoryItem[]>,
     required: true,
   },
 });
@@ -173,6 +180,13 @@ const wahlvorschlaegeWithDecisions = computed(() =>
         (kandidat) => kandidat.votesByVoter > 0 || kandidat.isDiscarded
       )
   )
+);
+
+const firstHistoryItem = computed(() =>
+  changeHistory.length > 0 ? changeHistory[0] : null
+);
+const nextFiveItems = computed(() =>
+  changeHistory.filter((_, index) => index < 5 && index > 0)
 );
 
 function getKandidatenWithVotes(wahlvorschlag: StimmzettelWahlvorschlag) {

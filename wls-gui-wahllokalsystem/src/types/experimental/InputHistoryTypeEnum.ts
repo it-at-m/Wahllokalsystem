@@ -1,0 +1,10 @@
+export const InputHistoryTypeEnum = {
+  ADD_USER_VOTE: "ADD_USER_VOTE",
+  REMOVE_USER_VOTE: "REMOVE_USER_VOTE",
+  DISCARD_KANDIDAT: "DISCARD_KANDIDAT",
+  REVOKE_DISCARDED_KANDIDAT: "REVOKE_DISCARDED_KANDIDAT",
+  SET_WAHLVORSCHLAG: "SET_WAHLVORSCHLAG",
+  REVOKE_WAHLVORSCHLAG: "REVOKE_WAHLVORSCHLAG",
+} as const;
+export type InputHistoryTypeEnum =
+  (typeof InputHistoryTypeEnum)[keyof typeof InputHistoryTypeEnum];

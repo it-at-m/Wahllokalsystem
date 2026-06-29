@@ -1,3 +1,4 @@
+import type { InputHistoryItem } from "@/types/experimental/InputHistoryItem.ts";
 import type { StimmzettelKandidat } from "@/types/experimental/StimmzettelKandidat.ts";
 import type { StimmzettelKandidatSnapshot } from "@/types/experimental/StimmzettelKandidatSnapshot.ts";
 import type { StimmzettelSnapshot } from "@/types/experimental/StimmzettelSnapshot.ts";
@@ -9,6 +10,7 @@ import type { Ref } from "vue";
 import { computed, ref } from "vue";
 
 import { useLogging } from "@/composables/common/logging.ts";
+import { InputHistoryTypeEnum } from "@/types/experimental/InputHistoryTypeEnum.ts";
 
 type StimmzettelManagerHash = string;
 
@@ -109,6 +111,8 @@ export function useStimmzettelManager(
     }
   );
 
+  const changeHistory = ref([] as InputHistoryItem[]);
+
   const totalKandidatenScoresByVoter = computed(() =>
     stimmzettelKandidaten.value.reduce(
       (acc, curr) => acc + curr.votesByVoter,
@@ -202,6 +206,7 @@ export function useStimmzettelManager(
         kandidat.isDiscarded = false;
       });
     });
+    changeHistory.value = [];
   }
 
   function setWahlvorschlaege(wahlvorschlaege: Wahlvorschlag[]) {
@@ -220,6 +225,10 @@ export function useStimmzettelManager(
     );
     if (wahlvorschlag) {
       wahlvorschlag.isSelected = true;
+      changeHistory.value.push({
+        type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
+        text: [wahlvorschlag.kurzname],
+      });
     }
 
     _refreshWahlvorschlaegeVotes();
@@ -230,6 +239,10 @@ export function useStimmzettelManager(
     );
     if (wahlvorschlag) {
       wahlvorschlag.isSelected = true;
+      changeHistory.value.push({
+        type: InputHistoryTypeEnum.SET_WAHLVORSCHLAG,
+        text: [wahlvorschlag.kurzname],
+      });
     }
 
     _refreshWahlvorschlaegeVotes();
@@ -241,6 +254,10 @@ export function useStimmzettelManager(
     );
     if (wahlvorschlag) {
       wahlvorschlag.isSelected = false;
+      changeHistory.value.push({
+        type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
+        text: [wahlvorschlag.kurzname],
+      });
 
       //alle Wahlvorschlagsstimmen der Kandidaten entfernen
       wahlvorschlag.kandidaten.forEach(
@@ -274,6 +291,25 @@ export function useStimmzettelManager(
     if (kandidat) {
       const currentNumberOfVotes = kandidat.votesByVoter;
       if (currentNumberOfVotes != countVotes) {
+        const delta = countVotes - currentNumberOfVotes;
+        if (delta > 0) {
+          changeHistory.value.push({
+            type: InputHistoryTypeEnum.ADD_USER_VOTE,
+            text: [
+              `${kandidat.wahlvorschlag.ordnungszahl * 100 + kandidat.listenposition}`,
+              kandidat.name,
+            ],
+          });
+        } else if (delta < 0) {
+          changeHistory.value.push({
+            type: InputHistoryTypeEnum.REMOVE_USER_VOTE,
+            text: [
+              `${kandidat.wahlvorschlag.ordnungszahl * 100 + kandidat.listenposition}`,
+              kandidat.name,
+            ],
+          });
+        }
+
         kandidat.votesByVoter = countVotes;
         _refreshWahlvorschlaegeVotes();
       }
@@ -386,6 +422,23 @@ export function useStimmzettelManager(
     );
     if (kandidat) {
       kandidat.isDiscarded = newDiscardState;
+      if (newDiscardState) {
+        changeHistory.value.push({
+          type: InputHistoryTypeEnum.DISCARD_KANDIDAT,
+          text: [
+            `${kandidat.wahlvorschlag.ordnungszahl * 100 + kandidat.listenposition}`,
+            kandidat.name,
+          ],
+        });
+      } else {
+        changeHistory.value.push({
+          type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
+          text: [
+            `${kandidat.wahlvorschlag.ordnungszahl * 100 + kandidat.listenposition}`,
+            kandidat.name,
+          ],
+        });
+      }
       _refreshWahlvorschlaegeVotes();
     }
   }
@@ -410,6 +463,8 @@ export function useStimmzettelManager(
     isAtLeastOneValidScoreGiven,
     isStimmzettelValid,
     isMaxVotesFulfilled,
+
+    changeHistory: computed(() => changeHistory.value),
 
     stimmzettelWahlvorschlaege: computed(
       () => stimmzettelWahlvorschlaege.value

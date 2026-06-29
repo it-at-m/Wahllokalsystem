@@ -11,6 +11,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./cache/tsconfig.app.tsbuildinfo",
+    "lib": ["ES2023"],
     "paths": {
       "@/*": ["./src/*"],
       "@tests/*": ["./tests/*"]

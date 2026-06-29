@@ -30,6 +30,7 @@
         <v-tabs-window-item value="4">
           <the-simple-stimmzettel-erfassung
             :votes-only="stimmzettelWahlvorschlaege"
+            :change-history="changeHistory"
             @command="onQuickInputCommand"
           />
         </v-tabs-window-item>
@@ -86,7 +87,7 @@ import type { Wahlvorschlaege } from "@/types/wahlvorschlaege/Wahlvorschlaege.ts
 import type { PropType } from "vue";
 
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed } from "vue";
 
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseWahlvorschlagScoresCard from "@/components/experimental/BaseWahlvorschlagScoresCard.vue";
@@ -147,6 +148,9 @@ stimmzettelManager.setWahlvorschlaege(props.wahlvorschlaege.wahlvorschlaege);
 
 const stimmzettelWahlvorschlaege =
   stimmzettelManager.stimmzettelWahlvorschlaege;
+const changeHistory = computed(() =>
+  stimmzettelManager.changeHistory.value.toReversed()
+);
 const totalUserVotes = stimmzettelManager.totalKandidatenScores;
 
 function onLoadStimmzettelSnapshotClicked(snapshot: StimmzettelSnapshot) {

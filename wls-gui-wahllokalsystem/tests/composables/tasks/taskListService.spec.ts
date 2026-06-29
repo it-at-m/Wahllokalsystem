@@ -9,7 +9,6 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
-  createTasksKopfdaten: vi.fn(),
   createTasksKonfigurationsparameter: vi.fn(),
   createTasksUngueltigeWahlscheine: vi.fn(),
   createWaehlerverzeichnisTasks: vi.fn(),
@@ -41,15 +40,6 @@ vi.mock(
   () => ({
     useKonfigurationsparameterTaskFactory: vi.fn().mockImplementation(() => ({
       createTasks: mockDefinitions.createTasksKonfigurationsparameter,
-    })),
-  })
-);
-
-vi.mock(
-  import("@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts"),
-  () => ({
-    useKopfdatenTaskFactory: vi.fn().mockImplementation(() => ({
-      createTasks: mockDefinitions.createTasksKopfdaten,
     })),
   })
 );
@@ -301,7 +291,6 @@ describe("taskListService.ts", () => {
       _mockReturnValuesForUWBTasks(currentUserWahlbezirksArt.value);
 
       const expectedTaskNames = [
-        "Kopfdaten - " + mockedWahl.name,
         "Waehlerverzeichnis",
         "UngültigeWahlscheine",
         "Wahlvorstand",
@@ -345,7 +334,6 @@ describe("taskListService.ts", () => {
       _mockReturnValuesForBWBTasks(currentUserWahlbezirksArt.value);
 
       const expectedTaskNames = [
-        "Kopfdaten - " + mockedWahl.name,
         "Wahlvorstand",
         "Eröffnungsuhrzeit",
         "Konfigurationsparameter",
@@ -465,13 +453,6 @@ describe("taskListService.ts", () => {
           ? "Stimmzettel"
           : "Stimmzettelumschläge";
 
-      // all wahlbezirke
-      mockDefinitions.createTasksKopfdaten.mockReturnValue([
-        {
-          name: "Kopfdaten - " + mockedWahl.name,
-          callback: () => Promise.resolve(),
-        },
-      ]);
       mockDefinitions.createTasksWahlvorstand.mockReturnValue([
         {
           name: "Wahlvorstand",

@@ -2,7 +2,7 @@
   <div class="ms-1">
     <v-row class="d-flex flex-row align-items-center w-100">
       <v-col
-        cols="4"
+        cols="2"
         class="d-flex flex-column ga-2"
       >
         <v-expansion-panels>
@@ -149,7 +149,6 @@ import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelW
 import type { PropType } from "vue";
 
 import { computed } from "vue";
-import { VListItem } from "vuetify/components";
 
 import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";

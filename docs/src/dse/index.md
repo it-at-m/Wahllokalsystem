@@ -41,7 +41,7 @@ Die separate Übermittlung einer Schnellmeldung und Niederschrift hat wahlrechtl
 
 ### Neuer Prozess zur DSE
 
-Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams, sowie Wahlbezirke eingeführt:
+Mit dem neuen Prozess wurden neue Statuswerte für die einzelnen Erfassungsteams sowie Wahlbezirke eingeführt:
 
 ![Statusübersicht während des DSE-Prozesses](/dse/DseStatusDiagramm.drawio.png)
 
@@ -52,7 +52,7 @@ entfaltet, und es werden Markierungen vorgenommen, die zeigen, wo man Stimmen fi
 
 #### Stimmzettel erfassen
 
-Sobald sich ein Erfassungs-Team im System eingeloggt hat, ist es "registriert" und kann mit der Stimmzettelerfassung
+Sobald sich ein Erfassungsteam im System eingeloggt hat, ist es "registriert" und kann mit der Stimmzettelerfassung
 starten, woraufhin der Status "in Bearbeitung" gespeichert wird. Das Schriftführungsteam muss zuvor die Stimmzettel
 und Wahlscheine gezählt haben.
 Stimmzettel, über die der gesamte Wahlvorstand einen Beschluss fassen muss, werden entsprechend markiert.
@@ -66,4 +66,4 @@ ein Beschluss zu fassen ist, landen so auf einem separaten Stapel.
 
 Sind alle Teams mit der Erfassung fertig und der Status "abgeschlossen" wurde erfolgreich übermittelt, startet die
 Beschlussdokumentation.
-Der Wahlvorstand fasst die Beschlüsse zu den zuvor markierten Stimmzetteln, und überträgt die Ergebnisse ins System.
+Der Wahlvorstand fasst die Beschlüsse zu den zuvor markierten Stimmzetteln und überträgt die Ergebnisse ins System.

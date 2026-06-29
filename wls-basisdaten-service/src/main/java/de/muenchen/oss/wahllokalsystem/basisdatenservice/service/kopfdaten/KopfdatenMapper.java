@@ -72,7 +72,8 @@ public class KopfdatenMapper {
         stimmzettelgebiet.nummer(),
         stimmzettelgebiet.name(),
         wahl.name(),
-        wahlbezirk.nummer());
+        wahlbezirk.nummer(),
+        stimmzettelgebiet.maximalErlaubteStimmenProWaehler());
   }
 
   private FachlicheWlsException createMissingDataForKopfdatenException() {

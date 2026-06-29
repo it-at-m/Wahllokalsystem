@@ -203,7 +203,7 @@ describe("useSingleDifferenceDialogUtils.ts", () => {
 
       unitUnderTest.dialog.value = DIALOG;
       const expected =
-        "Die Anzahl der Wahlscheine (10) unterscheidet sich um 5 von der Anzahl der Stimmzettelumschläge (5)";
+        "Die Anzahl der Wahlscheine (10) unterscheidet sich um 5 von der Anzahl der Stimmzettel\u00adumschläge (5)";
       expect(unitUnderTest.getDialogContent()).toBe(expected);
     });
   });

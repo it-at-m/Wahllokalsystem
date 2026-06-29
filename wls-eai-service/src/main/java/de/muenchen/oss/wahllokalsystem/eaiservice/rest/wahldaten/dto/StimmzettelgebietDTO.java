@@ -10,4 +10,5 @@ public record StimmzettelgebietDTO(
     String nummer,
     String name,
     LocalDate wahltag,
-    @NotNull StimmzettelgebietsartDTO stimmzettelgebietsart) {}
+    @NotNull StimmzettelgebietsartDTO stimmzettelgebietsart,
+    Integer maximalErlaubteStimmenProWaehler) {}

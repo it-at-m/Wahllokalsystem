@@ -181,6 +181,12 @@ function onQuickInputCommand(command: AbstractCommandEvent) {
         }
         break;
       }
+      case KandidatEventTypeEnum.REMOVE_VOTE: {
+        if (command.count !== undefined) {
+          stimmzettelManager.removeKandidatVote(kandidatId, command.count);
+        }
+        break;
+      }
       case KandidatEventTypeEnum.SET_VOTE: {
         if (command.count !== undefined) {
           stimmzettelManager.setKandidatVote(kandidatId, command.count);

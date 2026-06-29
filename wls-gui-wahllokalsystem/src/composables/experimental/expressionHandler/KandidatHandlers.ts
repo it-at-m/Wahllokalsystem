@@ -7,6 +7,7 @@ import { KandidatEventTypeEnum } from "@/types/experimental/KandidatEventTypeEnu
 export function useKandidatHandlers() {
   const REGEX_SET_VOTES = /^(\d+)$/;
   const REGEX_ADD_VOTES = /^(\d+)\+(\d*)$/;
+  const REGEX_REMOVE_VOTES = /^(\d+)\-(\d*)$/;
   const REGEX_DISCARD_KANDIDAT = /^(\d+)x$/;
   const REGEX_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY = /^-(\d+)$/;
 
@@ -42,6 +43,26 @@ export function useKandidatHandlers() {
       const countVotes = match[2] ? Number.parseInt(match[2]) : 1;
       return {
         type: KandidatEventTypeEnum.ADD_VOTE,
+        count: countVotes,
+        kandidatNummer,
+      } as KandidatEvent;
+    } else {
+      logger.log(`no match`);
+      return null;
+    }
+  };
+
+  const handleRemoveVotesExpression: AbstractExpressionHandlerFunction = (
+    expression: string
+  ) => {
+    logger.log(`processing expression > ${expression}`);
+    const match = REGEX_REMOVE_VOTES.exec(expression);
+
+    if (match && match[1] !== undefined) {
+      const kandidatNummer = Number.parseInt(match[1]);
+      const countVotes = match[2] ? Number.parseInt(match[2]) : 1;
+      return {
+        type: KandidatEventTypeEnum.REMOVE_VOTE,
         count: countVotes,
         kandidatNummer,
       } as KandidatEvent;
@@ -100,5 +121,6 @@ export function useKandidatHandlers() {
     handleAddVotesExpression,
     handleDiscardKandidatExpression,
     handleSetVotesExpression,
+    handleRemoveVotesExpression,
   };
 }

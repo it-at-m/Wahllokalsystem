@@ -10,12 +10,14 @@ export function useStimmzettelQuickInputHandler() {
     handleSetVotesExpression,
     handleAddVotesExpression,
     handleDiscardKandidatExpression,
+    handleRemoveVotesExpression,
   } = useKandidatHandlers();
   const handlers: AbstractExpressionHandlerFunction[] = [
     handleSetExpression,
     handleDiscardKandidatExpression,
     handleSetVotesExpression,
     handleAddVotesExpression,
+    handleRemoveVotesExpression,
   ];
 
   function handleQuickInput(

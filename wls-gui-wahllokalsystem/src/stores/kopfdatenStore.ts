@@ -43,7 +43,7 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
       ) {
         if (sendNotification) {
           userNotificationService.addNotification(
-            `Fehler beim Laden der Kopfdaten: Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`,
+            `Fehler: Erlaubte Stimmen pro Wähler für Wahl oder Wahlart konnten nicht geladen werden.`,
             UserNotificationCategoryEnum.ERROR
           );
         }

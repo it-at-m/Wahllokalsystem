@@ -16,10 +16,14 @@
       <tr>
         <th><!-- Ordnungszahl --></th>
         <th><!-- Wahlvorschlag --></th>
-        <th class="font-weight-bold text-right smallText">Stapel a</th>
-        <th class="font-weight-bold text-right smallText">Stapel b</th>
-        <th class="font-weight-bold text-right smallText">
-          Stapel a + Stapel b
+        <th class="font-weight-bold text-right smallText no-line-break">
+          Stapel a
+        </th>
+        <th class="font-weight-bold text-right smallText no-line-break">
+          Stapel b
+        </th>
+        <th class="font-weight-bold text-right smallText no-line-break">
+          Stapel a + b
         </th>
         <th class="font-weight-bold text-right smallText">
           Gültig kumulierte und panaschierte
@@ -124,3 +128,8 @@ const totalSumStapelB = computed(() =>
   }, 0)
 );
 </script>
+<style scoped>
+.no-line-break {
+  white-space: nowrap;
+}
+</style>

@@ -29,6 +29,7 @@
       >
         <base-kandidat-score
           :kandidat="kandidat"
+          :show-kandidat-name="kandidatScoreShowName"
           :listennummer="wahlvorschlag.ordnungszahl"
         />
         <v-divider
@@ -45,10 +46,12 @@
 import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
 import type { PropType } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import BaseKandidatScore from "@/components/experimental/BaseKandidatScore.vue";
 import { getStimmzettelManger } from "@/composables/experimental/stimmzettelManager.ts";
+import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
 const props = defineProps({
   wahlvorschlag: {
@@ -74,6 +77,8 @@ const props = defineProps({
     required: false,
   },
 });
+
+const { kandidatScoreShowName } = storeToRefs(useExperimentalFeaturesStore());
 
 const stimmzettelManager = getStimmzettelManger({
   wahlbezirkId: "wahlbezirkId",

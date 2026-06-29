@@ -34,6 +34,8 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   const beschlussStimmzettelFailureListenkreuzen = ref(false);
   const beschlussStimmzettelFailureZuVieleStimmen = ref(false);
 
+  const kandidatScoreShowName = ref(true);
+
   watch(hasStimmzettelSummaryItems, (newValue) => {
     if (newValue) {
       stimmzettelSummaryItems.value = _createStimmzettelSummaryItems(150);
@@ -66,6 +68,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
     beschlussGueltigkeit3IsSelectable,
     beschlussStimmzettelFailureListenkreuzen,
     beschlussStimmzettelFailureZuVieleStimmen,
+    kandidatScoreShowName,
     stimmzettelSummaryItems,
     hasStimmzettelSummaryItems,
     subViewBeschlussfassung,

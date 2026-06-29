@@ -1,6 +1,7 @@
 <template>
   <v-checkbox
     v-model="modelValue"
+    density="compact"
     hide-details
     :color="iconColor"
     :base-color="iconColor"

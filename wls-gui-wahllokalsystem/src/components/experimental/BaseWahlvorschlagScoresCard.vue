@@ -5,6 +5,7 @@
       <div class="d-flex align-center justify-space-between">
         <v-checkbox
           v-model="wahlvorschlagSelected"
+          density="compact"
           hide-details
         />
         <div class="d-flex flex-row ga-1">

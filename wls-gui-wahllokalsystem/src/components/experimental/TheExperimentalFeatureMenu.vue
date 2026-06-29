@@ -88,6 +88,14 @@
               hide-details
             />
           </v-list-item>
+          <v-list-item title="Kandidatenscore">
+            <v-checkbox
+              v-model="kandidatScoreShowName"
+              density="compact"
+              label="Name anzeigen"
+              hide-details
+            />
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -108,6 +116,7 @@ const {
   beschlussStimmzettelFailureListenkreuzen,
   beschlussStimmzettelFailureZuVieleStimmen,
   hasStimmzettelSummaryItems,
+  kandidatScoreShowName,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,
 } = storeToRefs(useExperimentalFeaturesStore());

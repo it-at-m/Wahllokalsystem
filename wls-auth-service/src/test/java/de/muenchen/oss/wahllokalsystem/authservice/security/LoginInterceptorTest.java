@@ -30,6 +30,9 @@ import org.springframework.security.ldap.userdetails.LdapUserDetails;
 @ExtendWith(MockitoExtension.class)
 class LoginInterceptorTest {
 
+  private static final String ADMIN_AUTHORITY = "admin";
+  private static final String AUTHORITY_SCHRIFTFUEHRUNG = "schriftfuehrung";
+
   @Mock LoginTimeClient loginTimeClient;
 
   @Mock WahltagClient wahltagClient;
@@ -45,6 +48,10 @@ class LoginInterceptorTest {
     void should_notThrowException_when_loginTimeIsNotToCheck() {
       val ldapUserDetails = new TestLdapUserDetails("");
 
+      Mockito.when(userService.getSchriftfuehrungAuthorityName())
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
+
       Assertions.assertThatNoException()
           .isThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails));
     }
@@ -53,16 +60,16 @@ class LoginInterceptorTest {
     void should_throwDisabledException_when_userIsNotAssignedToActiveWahltag() {
       val wahltagID = "wahltagID";
       val username = "username";
-      val authoritySchriftfuehrung = "WAHLVORSTAND";
-      val ldapUserDetails = new TestLdapUserDetails(username, authoritySchriftfuehrung);
+      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
-      val mockedUserModelFromUserService = createUserModel(wahltagID, authoritySchriftfuehrung);
+      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
 
       Mockito.when(wahltagClient.isWahltagActive(wahltagID)).thenReturn(false);
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(authoritySchriftfuehrung);
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
           .isInstanceOf(DisabledException.class);
@@ -72,10 +79,9 @@ class LoginInterceptorTest {
     void should_throwDisabledException_when_userLoginIsAfterLatestAllowedLoginTime() {
       val wahltagID = "wahltagID";
       val username = "username";
-      val authoritySchriftfuehrung = "WAHLVORSTAND";
-      val ldapUserDetails = new TestLdapUserDetails(username, authoritySchriftfuehrung);
+      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
-      val mockedUserModelFromUserService = createUserModel(wahltagID, authoritySchriftfuehrung);
+      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
       val mockedLegalLoginInterval =
           new LegalLoginIntervalModel(
               LocalDateTime.now().minusYears(1), LocalDateTime.now().minusMinutes(1));
@@ -84,7 +90,8 @@ class LoginInterceptorTest {
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(authoritySchriftfuehrung);
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
@@ -95,10 +102,9 @@ class LoginInterceptorTest {
     void should_throwDisabledException_when_userLoginIsBeforeEarliestAllowedLoginTime() {
       val wahltagID = "wahltagID";
       val username = "username";
-      val authoritySchriftfuehrung = "WAHLVORSTAND";
-      val ldapUserDetails = new TestLdapUserDetails(username, authoritySchriftfuehrung);
+      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
-      val mockedUserModelFromUserService = createUserModel(wahltagID, authoritySchriftfuehrung);
+      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
       val mockedLegalLoginInterval =
           new LegalLoginIntervalModel(
               LocalDateTime.now().plusMinutes(1), LocalDateTime.now().plusYears(1));
@@ -107,7 +113,8 @@ class LoginInterceptorTest {
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(authoritySchriftfuehrung);
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatThrownBy(() -> unitUnderTest.validateLoginOrThrow(ldapUserDetails))
@@ -118,10 +125,9 @@ class LoginInterceptorTest {
     void should_catchWlsException_when_retrievingLegalLoginTimeFails() {
       val wahltagID = "wahltagID";
       val username = "username";
-      val authoritySchriftfuehrung = "WAHLVORSTAND";
-      val ldapUserDetails = new TestLdapUserDetails(username, authoritySchriftfuehrung);
+      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
-      val mockedUserModelFromUserService = createUserModel(wahltagID, authoritySchriftfuehrung);
+      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
       val mockedLegalLoginClientException =
           InfrastrukturelleWlsException.withCode("")
               .buildWithMessage("getting legal login interval failed");
@@ -130,7 +136,8 @@ class LoginInterceptorTest {
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(authoritySchriftfuehrung);
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.doThrow(mockedLegalLoginClientException)
           .when(loginTimeClient)
           .getLegalLoginInterval();
@@ -143,10 +150,9 @@ class LoginInterceptorTest {
     void should_notThrowException_when_infomanagementClientThrowsExceptionOnWahltagIsActiveCheck() {
       val wahltagID = "wahltagID";
       val username = "username";
-      val authoritySchriftfuehrung = "WAHLVORSTAND";
-      val ldapUserDetails = new TestLdapUserDetails(username, authoritySchriftfuehrung);
+      val ldapUserDetails = new TestLdapUserDetails(username, AUTHORITY_SCHRIFTFUEHRUNG);
 
-      val mockedUserModelFromUserService = createUserModel(wahltagID, authoritySchriftfuehrung);
+      val mockedUserModelFromUserService = createUserModel(wahltagID, AUTHORITY_SCHRIFTFUEHRUNG);
       val mockedWahltagClientIsWahltagActiveException =
           InfrastrukturelleWlsException.withCode("")
               .buildWithMessage("checking wahltag is active failed");
@@ -160,7 +166,8 @@ class LoginInterceptorTest {
       Mockito.when(userService.getUser(username))
           .thenReturn(Optional.of(mockedUserModelFromUserService));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
-          .thenReturn(authoritySchriftfuehrung);
+          .thenReturn(AUTHORITY_SCHRIFTFUEHRUNG);
+      Mockito.when(userService.getAdminAuthorityName()).thenReturn(ADMIN_AUTHORITY);
       Mockito.when(loginTimeClient.getLegalLoginInterval()).thenReturn(mockedLegalLoginInterval);
 
       Assertions.assertThatNoException()

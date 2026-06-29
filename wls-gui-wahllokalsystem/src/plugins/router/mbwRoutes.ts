@@ -1,9 +1,6 @@
 import type { RouteRecordRawWithoutName } from "@/types/navigation/RouteRecordRawWithoutName.ts";
 
-import {
-  type RouteLocationAsRelativeGeneric,
-  type RouteRecordRaw,
-} from "vue-router";
+import { type RouteRecordRaw } from "vue-router";
 
 import { useNavigationGuards } from "@/composables/navigation/navigationGuards.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
@@ -116,20 +113,6 @@ const mbwRoutesRecord: Record<MbwRoutesEnum, RouteRecordRawWithoutName> = {
     ],
   },
 };
-
-export function createMbwRoute(
-  routeName: MbwRoutesEnum,
-  wahlId: string,
-  wahlbezirkId: string
-): RouteLocationAsRelativeGeneric {
-  return {
-    name: routeName,
-    params: {
-      wahlId,
-      wahlbezirkId,
-    },
-  };
-}
 
 export const mbwRouteDefinitions: RouteRecordRaw[] = Object.entries(
   mbwRoutesRecord

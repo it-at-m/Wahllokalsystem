@@ -1,7 +1,7 @@
-import type { RouteLocationAsRelativeGeneric } from "vue-router";
+import type { RouteLocationAsRelativeGenericWithStringName } from "@/types/navigation/RouteLocationAsRelativeGenericWithStringName.ts";
 
 export interface NavigationDefinition {
   title: string;
-  targetRoute: RouteLocationAsRelativeGeneric;
+  targetRoute: RouteLocationAsRelativeGenericWithStringName;
   disabled: boolean;
 }

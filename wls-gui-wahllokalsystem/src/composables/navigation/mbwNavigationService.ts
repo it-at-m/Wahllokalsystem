@@ -1,11 +1,11 @@
 import type { NavigationDefinition } from "@/types/navigation/NavigationDefinition.ts";
+import type { RouteLocationAsRelativeGenericWithStringName } from "@/types/navigation/RouteLocationAsRelativeGenericWithStringName.ts";
 import type { ComputedRef } from "vue";
 
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
-import { createMbwRoute } from "@/plugins/router/mbwRoutes.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 
@@ -28,7 +28,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     return [
       {
         title: `Zählen der ${getStimmzettelTermForWahlID(wahlID)}`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL,
           wahlID,
           wahlbezirkID
@@ -37,7 +37,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Bedenkliche Stimmzettel`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_E,
           wahlID,
           wahlbezirkID
@@ -50,7 +50,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Ungültige Stimmzettel`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG,
           wahlID,
           wahlbezirkID
@@ -61,7 +61,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Gültige Stimmzettel`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_A_AND_B,
           wahlID,
           wahlbezirkID
@@ -72,7 +72,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Schnellmeldung`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_SCHNELLMELDUNG,
           wahlID,
           wahlbezirkID
@@ -83,7 +83,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Kandidatinnen- und Kandidatenstimmen`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_STAPEL_BC,
           wahlID,
           wahlbezirkID
@@ -94,7 +94,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
       },
       {
         title: `Niederschrift`,
-        targetRoute: createMbwRoute(
+        targetRoute: _createMbwRoute(
           MbwRoutesEnum.MBW_NIEDERSCHRIFT,
           wahlID,
           wahlbezirkID
@@ -106,7 +106,32 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
     ];
   });
 
+  function getNextRouteOrNull() {
+    const navigationWithStepNotDone = navigation.value.find(
+      (navigationValue) =>
+        !mbwWorkflow.value?.stepsDone[navigationValue.targetRoute.name]
+    );
+    return navigationWithStepNotDone
+      ? navigationWithStepNotDone.targetRoute
+      : null;
+  }
+
+  function _createMbwRoute(
+    routeName: MbwRoutesEnum,
+    wahlId: string,
+    wahlbezirkId: string
+  ): RouteLocationAsRelativeGenericWithStringName {
+    return {
+      name: routeName,
+      params: {
+        wahlId,
+        wahlbezirkId,
+      },
+    };
+  }
+
   return {
     navigation,
+    getNextRouteOrNull,
   };
 }

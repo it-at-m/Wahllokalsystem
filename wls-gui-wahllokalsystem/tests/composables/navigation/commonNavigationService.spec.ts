@@ -232,17 +232,6 @@ describe("commonNavigationService.ts", () => {
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
-
-      const mbwStatus = createStatusWithNiederschriftGedruckt(
-        mbwWahlID,
-        mbwWahlbezirkID,
-        false
-      );
-      useWorkflowStore().electionWorkflowsStates = [
-        createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
-        mbwStatus,
-        createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
-      ];
       useWorkflowStore().isElectionFinished = vi
         .fn()
         .mockImplementation(
@@ -265,7 +254,7 @@ describe("commonNavigationService.ts", () => {
       const result = unitUnderTest.getNextRoute();
       expect(result).toStrictEqual(mockedNextMbwRoute);
       expect(mockDefinitions.mbwGetNextRouteOrNull.mock.calls).toStrictEqual([
-        [mbwStatus],
+        [mbwWahlID, mbwWahlbezirkID],
       ]);
     });
 

@@ -1,4 +1,3 @@
-// Die Reihenfolge im Enum bestimmt den Navigationsablauf
 export const MbwRoutesEnum = {
   MBW_AUSZAEHLUNG_STIMMZETTEL: "MBW_AUSZAEHLUNG_STIMMZETTEL",
   MBW_STAPEL_E: "MBW_STAPEL_E",

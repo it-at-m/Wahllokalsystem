@@ -60,9 +60,9 @@ public class DummyClientImpl
                 true,
                 Set.of(
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true),
+                        UUID.randomUUID().toString(), "kandidat11", 1L, true, 1L, true, 1),
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false))),
+                        UUID.randomUUID().toString(), "kandidat21", 2L, false, 1L, false, 1))),
             new WahlvorschlagModel(
                 UUID.randomUUID().toString(),
                 2L,
@@ -70,9 +70,9 @@ public class DummyClientImpl
                 true,
                 Set.of(
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true),
+                        UUID.randomUUID().toString(), "kandidat21", 1L, true, 1L, true, 2),
                     new KandidatModel(
-                        UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false)))));
+                        UUID.randomUUID().toString(), "kandidat22", 2L, false, 1L, false, 3)))));
   }
 
   @Override

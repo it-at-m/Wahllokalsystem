@@ -21,7 +21,7 @@ export function useTextFormatter() {
     const { isBWB, currentUserHauptWahlID } = storeToRefs(useUserStore());
 
     return isBWB.value && wahlId === currentUserHauptWahlID.value
-      ? "Stimmzettelumschläge"
+      ? "Stimmzettel\u00adumschläge"
       : "Stimmzettel";
   }
 

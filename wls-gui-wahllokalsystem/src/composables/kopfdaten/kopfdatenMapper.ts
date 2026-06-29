@@ -15,6 +15,8 @@ export function useKopfdatenMapper() {
       stimmzettelgebietsname: dto.stimmzettelgebietsname,
       wahlname: dto.wahlname,
       wahlbezirknummer: dto.wahlbezirknummer,
+      maximalErlaubteStimmenProWaehler:
+        dto.maximalErlaubteStimmenProWaehler ?? null,
     };
   }
 

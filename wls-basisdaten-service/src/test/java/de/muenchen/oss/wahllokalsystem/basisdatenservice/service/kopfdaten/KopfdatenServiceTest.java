@@ -89,7 +89,8 @@ class KopfdatenServiceTest {
               "Munich-Repo",
               "120",
               "Bundestagswahl",
-              "1201");
+              "1201",
+              null);
 
       val expectedKopfdaten =
           MockDataFactory.createKopfdatenModelFor(
@@ -99,7 +100,8 @@ class KopfdatenServiceTest {
               "120",
               "Munich-Repo",
               "Bundestagswahl",
-              "1201");
+              "1201",
+              null);
 
       Mockito.when(kopfdatenRepository.findById(bezirkUndWahlId))
           .thenReturn(Optional.of(kopfdatenEntityInRepo));

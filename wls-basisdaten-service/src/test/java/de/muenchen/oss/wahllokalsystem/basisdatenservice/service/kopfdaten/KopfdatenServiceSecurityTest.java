@@ -216,7 +216,8 @@ public class KopfdatenServiceSecurityTest {
               "Munich",
               "120",
               "Bundestagswahl",
-              "1201"));
+              "1201",
+              null));
     }
   }
 }

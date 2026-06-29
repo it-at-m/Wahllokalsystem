@@ -9,4 +9,5 @@ export interface Kopfdaten {
   stimmzettelgebietsname: string;
   wahlname: string;
   wahlbezirknummer: string;
+  maximalErlaubteStimmenProWaehler: number | null;
 }

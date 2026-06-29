@@ -41,12 +41,13 @@ class KopfdatenRepositoryTest {
             "101",
             "München-Hadern",
             "Bundestagswahl",
-            "1901");
+            "1901",
+            null);
 
     kopfdatenRepository.save(original);
     Optional<Kopfdaten> persisted =
         kopfdatenRepository.findById(new BezirkUndWahlID("wahlID1", "wahlbezirkID1"));
-    Assertions.assertThat(original).isEqualTo(persisted.get());
+    Assertions.assertThat(persisted).isPresent().contains(original);
   }
 
   @Test
@@ -59,7 +60,8 @@ class KopfdatenRepositoryTest {
             "101",
             "München-Hadern",
             "Landtagswahl",
-            "1901");
+            "1901",
+            null);
     val kopfdaten_2 =
         MockDataFactory.createKopfdatenEntityFor(
             "wahlID1",
@@ -68,7 +70,8 @@ class KopfdatenRepositoryTest {
             "101",
             "München-Hadern",
             "Landtagswahl",
-            "1901");
+            "1901",
+            null);
     val kopfdaten_3 =
         MockDataFactory.createKopfdatenEntityFor(
             "wahlID2",
@@ -77,7 +80,8 @@ class KopfdatenRepositoryTest {
             "101",
             "München-Hadern",
             "Landtagswahl",
-            "1901");
+            "1901",
+            null);
 
     kopfdatenRepository.save(kopfdaten_1);
     kopfdatenRepository.save(kopfdaten_2);
@@ -87,6 +91,6 @@ class KopfdatenRepositoryTest {
 
     List<Kopfdaten> persisted = kopfdatenRepository.findAll();
     Assertions.assertThat(persisted).hasSize(1);
-    Assertions.assertThat(persisted.get(0)).isEqualTo(kopfdaten_3);
+    Assertions.assertThat(persisted.getFirst()).isEqualTo(kopfdaten_3);
   }
 }

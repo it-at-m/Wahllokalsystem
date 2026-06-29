@@ -226,13 +226,15 @@ public class DummyClientImpl
                 "120",
                 "Munich",
                 wahltagWithNummerModel.wahltag(),
-                StimmzettelgebietsartModel.SG),
+                StimmzettelgebietsartModel.SG,
+                null),
             new StimmzettelgebietModel(
                 "szgIDOther",
                 "920",
                 "Munich Center",
                 wahltagWithNummerModel.wahltag(),
-                StimmzettelgebietsartModel.SB)));
+                StimmzettelgebietsartModel.SB,
+                40)));
   }
 
   @Override

@@ -87,7 +87,7 @@ public class WahldatenControllerIntegrationTest {
       val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
       val stimmzettelgebiet =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
+              new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl, null));
       val wahlbezirkToFind =
           wahlbezirkRepository.save(
               new Wahlbezirk(WahlbezirkArt.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));
@@ -243,7 +243,7 @@ public class WahldatenControllerIntegrationTest {
       val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag1));
       val stimmzettelgebiet =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("nummer", "name", Stimmzettelgebietsart.SK, wahl));
+              new Stimmzettelgebiet("nummer", "name", Stimmzettelgebietsart.SK, wahl, null));
 
       val wahlbezirk1 =
           wahlbezirkRepository.save(
@@ -443,7 +443,7 @@ public class WahldatenControllerIntegrationTest {
       val wahl = wahlRepository.save(new Wahl("wahl", Wahlart.BTW, wahltag));
       val stimmzettelgebiet =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl));
+              new Stimmzettelgebiet("sgz1", "sgz1", Stimmzettelgebietsart.SK, wahl, 40));
       val wahlbezirkToFind =
           wahlbezirkRepository.save(
               new Wahlbezirk(WahlbezirkArt.UWB, "nummer", stimmzettelgebiet, 10, 11, 12));

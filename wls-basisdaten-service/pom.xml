@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-basisdaten-service</artifactId>
-    <version>0.5.15-SNAPSHOT</version>
+    <version>0.6.0-SNAPSHOT</version>
     <name>wls_basisdaten_service</name>
 
     <properties>
@@ -396,7 +396,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.8.6.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapis/openapi.eai.0.9.0.json</inputSpec>
 
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>

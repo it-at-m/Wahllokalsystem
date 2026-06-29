@@ -49,16 +49,16 @@ class WahlvorschlaegeDTOMapperTest {
                   "kurzname1",
                   true,
                   Set.of(
-                      new KandidatDTO("kandidatID1", "name1", 1L, true, 1L, true),
-                      new KandidatDTO("kandidatID2", "name2", 2L, false, 2L, false))),
+                      new KandidatDTO("kandidatID1", "name1", 1L, true, 1L, true, 1),
+                      new KandidatDTO("kandidatID2", "name2", 2L, false, 2L, false, 1))),
               new WahlvorschlagDTO(
                   "id2",
                   2L,
                   "kurzname2",
                   false,
                   Set.of(
-                      new KandidatDTO("kandidatID3", "name3", 1L, true, 1L, true),
-                      new KandidatDTO("kandidatID4", "name4", 2L, false, 2L, false)))));
+                      new KandidatDTO("kandidatID3", "name3", 1L, true, 1L, true, 2),
+                      new KandidatDTO("kandidatID4", "name4", 2L, false, 2L, false, 3)))));
     }
 
     private WahlvorschlaegeModel createWahlvorschlaegeModel(

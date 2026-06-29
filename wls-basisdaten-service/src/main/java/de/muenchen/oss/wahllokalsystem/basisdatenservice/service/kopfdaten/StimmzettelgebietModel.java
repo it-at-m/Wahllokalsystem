@@ -11,4 +11,5 @@ public record StimmzettelgebietModel(
     String nummer,
     String name,
     LocalDate wahltag,
-    @NotNull StimmzettelgebietsartModel stimmzettelgebietsart) {}
+    @NotNull StimmzettelgebietsartModel stimmzettelgebietsart,
+    Integer maximalErlaubteStimmenProWaehler) {}

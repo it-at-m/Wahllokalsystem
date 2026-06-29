@@ -12,4 +12,5 @@ public record KopfdatenDTO(
     @NotNull String stimmzettelgebietsnummer,
     @NotNull String stimmzettelgebietsname,
     @NotNull String wahlname,
-    @NotNull String wahlbezirknummer) {}
+    @NotNull String wahlbezirknummer,
+    Integer maximalErlaubteStimmenProWaehler) {}

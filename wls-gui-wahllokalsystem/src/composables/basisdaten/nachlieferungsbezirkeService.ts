@@ -4,7 +4,6 @@ import {
 } from "@/api/wls-clients/generated-basisdaten-api";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { BASISDATEN_SERVICE_API_URL } from "@/constants.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useNachlieferungsbezirkeService() {
@@ -16,20 +15,18 @@ export function useNachlieferungsbezirkeService() {
     );
 
   const { addNotification } = useUserNotificationService();
-  const { setNachlieferungsbezirk } = useUserStore();
 
   async function loadIsNachlieferungsbezirk(
     wahltagID: string,
     wahlbezirkID: string
   ) {
     try {
-      const isNachlieferungsbezirk = (
+      return (
         await nachlieferungsbezirkeControllerApi.isNachlieferungsbezirk(
           wahltagID,
           wahlbezirkID
         )
       ).data;
-      setNachlieferungsbezirk(isNachlieferungsbezirk);
     } catch (error) {
       addNotification(
         "Fehler beim Laden der Information zu den Nachlieferungsbezirken",

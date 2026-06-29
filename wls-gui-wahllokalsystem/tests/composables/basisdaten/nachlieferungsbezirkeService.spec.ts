@@ -9,7 +9,6 @@ const mockDefinitions = vi.hoisted(() => ({
   addNotification: vi.fn(),
   configurationConstructor: vi.fn(),
   isNachlieferungsbezirk: vi.fn(),
-  setNachlieferungsbezirk: vi.fn(),
 }));
 
 vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
@@ -26,11 +25,6 @@ vi.mock(
     }),
   })
 );
-vi.mock("@/stores/userStore.ts", () => ({
-  useUserStore: () => ({
-    setNachlieferungsbezirk: mockDefinitions.setNachlieferungsbezirk,
-  }),
-}));
 
 describe("nachlieferungsbezirkeService.ts", () => {
   const { generateRandomString } = useCommonTestDataFactory();
@@ -50,7 +44,7 @@ describe("nachlieferungsbezirkeService.ts", () => {
   });
 
   describe("isNachlieferungsbezirk", () => {
-    it("should_setIsNachlieferungsbezirk_when_apiCallSucceeded", async () => {
+    it("should_returnBool_when_apiCallSucceeded", async () => {
       const wahltagID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
       const mockedResult = false;
@@ -60,15 +54,16 @@ describe("nachlieferungsbezirkeService.ts", () => {
         data: mockedResult,
       });
 
-      await unitUnderTest.loadIsNachlieferungsbezirk(wahltagID, wahlbezirkID);
+      const result = await unitUnderTest.loadIsNachlieferungsbezirk(
+        wahltagID,
+        wahlbezirkID
+      );
 
       expect(mockDefinitions.isNachlieferungsbezirk).toHaveBeenCalledWith(
         wahltagID,
         wahlbezirkID
       );
-      expect(mockDefinitions.setNachlieferungsbezirk).toHaveBeenCalledWith(
-        mockedResult
-      );
+      expect(result).toStrictEqual(mockedResult);
     });
 
     it("should_addNotification_when_apiCallFailed", async () => {

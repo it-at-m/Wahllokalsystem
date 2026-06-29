@@ -326,16 +326,4 @@ describe("userStore.ts", () => {
       expect(unitUnderTest.isNachlieferungsbezirk).toStrictEqual(false);
     });
   });
-
-  describe("setNachlieferungsbezirk", () => {
-    it("should_setNachlieferungsbezirk_when_valueIsGiven", () => {
-      unitUnderTest.setUser(
-        prepareUser().isNachlieferungsbezirk(false).build()
-      );
-
-      unitUnderTest.setNachlieferungsbezirk(true);
-
-      expect(unitUnderTest.user.isNachlieferungsbezirk).toStrictEqual(true);
-    });
-  });
 });

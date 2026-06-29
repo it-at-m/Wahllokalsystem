@@ -70,7 +70,7 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function initIsNachlieferungsbezirk() {
-    await loadIsNachlieferungsbezirk(
+    user.value.isNachlieferungsbezirk = await loadIsNachlieferungsbezirk(
       currentUserWahltagID.value,
       currentUserWahlbezirkID.value
     );
@@ -135,10 +135,6 @@ export const useUserStore = defineStore("user", () => {
     user.value = payload;
   }
 
-  function setNachlieferungsbezirk(isNachlieferungsbezirk: boolean) {
-    user.value.isNachlieferungsbezirk = isNachlieferungsbezirk;
-  }
-
   return {
     user,
     loadUser,
@@ -155,7 +151,6 @@ export const useUserStore = defineStore("user", () => {
     isBWB,
     isUserLoggedIn,
     isNachlieferungsbezirk,
-    setNachlieferungsbezirk,
     initIsNachlieferungsbezirk,
   };
 });

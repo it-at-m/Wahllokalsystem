@@ -70,7 +70,7 @@
 import type { Wahlbriefdaten } from "@/types/briefwahl/Wahlbriefdaten.ts";
 
 import { storeToRefs } from "pinia";
-import { onActivated, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
@@ -107,7 +107,7 @@ const wahlbriefdaten = ref<Wahlbriefdaten>({
   zeitNachtraeglichUeberbrachte: undefined,
 });
 
-onActivated(async () => {
+onMounted(async () => {
   wahlbriefdaten.value = await getWahlbriefdaten(currentUserWahlbezirkID.value);
 });
 

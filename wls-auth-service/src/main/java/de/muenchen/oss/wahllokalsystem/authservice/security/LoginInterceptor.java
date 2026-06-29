@@ -85,15 +85,18 @@ public class LoginInterceptor {
   }
 
   private boolean isLoginTimeToCheck(LdapUserDetails principal) {
+    val schriftfuehrungAuthorityName = userService.getSchriftfuehrungAuthorityName().toLowerCase();
+    val adminAuthorityName = userService.getAdminAuthorityName().toLowerCase();
+
     for (GrantedAuthority eAuthority : principal.getAuthorities()) {
       if (eAuthority
               .getAuthority()
               .toLowerCase()
-              .contains(userService.getSchriftfuehrungAuthorityName().toLowerCase())
+              .contains(schriftfuehrungAuthorityName)
           || eAuthority
               .getAuthority()
               .toLowerCase()
-              .contains(userService.getAdminAuthorityName().toLowerCase())) {
+              .contains(adminAuthorityName)) {
         return true;
       }
     }

@@ -43,7 +43,7 @@ export const useKopfdatenStore = defineStore("kopfdaten", () => {
       ) {
         if (sendNotification) {
           userNotificationService.addNotification(
-            `Fehler: Erlaubte Stimmen pro Wähler für Wahl oder Wahlart konnten nicht geladen werden.`,
+            `Fehler beim Laden der maximalen Stimmenanzahl je Wähler für die MBW`,
             UserNotificationCategoryEnum.ERROR
           );
         }

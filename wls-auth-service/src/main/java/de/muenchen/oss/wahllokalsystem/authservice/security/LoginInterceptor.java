@@ -89,14 +89,8 @@ public class LoginInterceptor {
     val adminAuthorityName = userService.getAdminAuthorityName().toLowerCase();
 
     for (GrantedAuthority eAuthority : principal.getAuthorities()) {
-      if (eAuthority
-              .getAuthority()
-              .toLowerCase()
-              .contains(schriftfuehrungAuthorityName)
-          || eAuthority
-              .getAuthority()
-              .toLowerCase()
-              .contains(adminAuthorityName)) {
+      if (eAuthority.getAuthority().toLowerCase().contains(schriftfuehrungAuthorityName)
+          || eAuthority.getAuthority().toLowerCase().contains(adminAuthorityName)) {
         return true;
       }
     }

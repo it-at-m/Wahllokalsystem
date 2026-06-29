@@ -125,10 +125,8 @@ export function useBriefwahlService() {
         useWorkflowStore().isWahlbriefeErfassenErfasst = true;
         if (useUserStore().isNachlieferungsbezirk) {
           useWorkflowStore().isNachlieferungenBearbeitenErfasst =
-            responseData.nachtraeglichUeberbrachte !== undefined &&
-            responseData.nachtraeglichUeberbrachte !== null &&
-            responseData.zeitNachtraeglichUeberbrachte !== undefined &&
-            responseData.zeitNachtraeglichUeberbrachte !== null;
+            Number.isInteger(responseData.nachtraeglichUeberbrachte) &&
+            !!responseData.zeitNachtraeglichUeberbrachte;
         }
         return toWahlbriefdatenModel(responseData);
       } else {

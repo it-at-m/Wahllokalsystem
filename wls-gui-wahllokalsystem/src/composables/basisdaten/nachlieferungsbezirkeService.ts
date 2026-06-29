@@ -18,7 +18,7 @@ export function useNachlieferungsbezirkeService() {
   const { addNotification } = useUserNotificationService();
   const { setNachlieferungsbezirk } = useUserStore();
 
-  async function isNachlieferungsbezirk(
+  async function loadIsNachlieferungsbezirk(
     wahltagID: string,
     wahlbezirkID: string
   ) {
@@ -40,6 +40,6 @@ export function useNachlieferungsbezirkeService() {
   }
 
   return {
-    isNachlieferungsbezirk,
+    loadIsNachlieferungsbezirk,
   };
 }

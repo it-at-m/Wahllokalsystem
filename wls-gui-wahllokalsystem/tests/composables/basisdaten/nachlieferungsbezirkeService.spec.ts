@@ -60,7 +60,7 @@ describe("nachlieferungsbezirkeService.ts", () => {
         data: mockedResult,
       });
 
-      await unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID);
+      await unitUnderTest.loadIsNachlieferungsbezirk(wahltagID, wahlbezirkID);
 
       expect(mockDefinitions.isNachlieferungsbezirk).toHaveBeenCalledWith(
         wahltagID,
@@ -81,7 +81,7 @@ describe("nachlieferungsbezirkeService.ts", () => {
       mockDefinitions.isNachlieferungsbezirk.mockRejectedValue(apiCallError);
 
       await expect(
-        unitUnderTest.isNachlieferungsbezirk(wahltagID, wahlbezirkID)
+        unitUnderTest.loadIsNachlieferungsbezirk(wahltagID, wahlbezirkID)
       ).rejects.toThrow(apiCallError);
 
       expect(mockDefinitions.addNotification.mock.calls).toEqual([

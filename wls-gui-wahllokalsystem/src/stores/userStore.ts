@@ -3,6 +3,7 @@ import type { User } from "@/types/User.ts";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useNachlieferungsbezirkeService } from "@/composables/basisdaten/nachlieferungsbezirkeService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
@@ -17,6 +18,7 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
   const { initElectionWorkflowState } = useWorkflowStore();
+  const { loadIsNachlieferungsbezirk } = useNachlieferungsbezirkeService();
 
   const defaultUser: User = {
     username: "",
@@ -65,6 +67,13 @@ export const useUserStore = defineStore("user", () => {
 
       indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }
+  }
+
+  async function initIsNachlieferungsbezirk() {
+    await loadIsNachlieferungsbezirk(
+      currentUserWahltagID.value,
+      currentUserWahlbezirkID.value
+    );
   }
 
   const currentUserWahlbezirkID = computed((): string => {
@@ -147,6 +156,7 @@ export const useUserStore = defineStore("user", () => {
     isUserLoggedIn,
     isNachlieferungsbezirk,
     setNachlieferungsbezirk,
+    initIsNachlieferungsbezirk,
   };
 });
 

@@ -82,7 +82,7 @@
       </v-col>
       <v-col>
         <base-form-stimmzettel-quick-input @command="onQuickInputCommand" />
-        <div class="d-flex ga-2 flex-row">
+        <div class="d-flex ga-2 flex-row mb-1">
           <template v-if="wahlvorschlaegeWithDecisions.length > 0">
             <v-card
               v-for="(wahlvorschlag, index) in wahlvorschlaegeWithDecisions"

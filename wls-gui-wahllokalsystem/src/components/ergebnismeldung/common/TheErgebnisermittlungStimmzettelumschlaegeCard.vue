@@ -78,7 +78,7 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useSingleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/singleDifferenceDialogUtils.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
@@ -114,7 +114,7 @@ const {
   updateValidationStateForBegruendung,
   getDialogContent,
 } = useSingleDifferenceDialogUtils(props.wahlId, props.wahlbezirkId);
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { resetAllAnwesenheiten } = useWahlvorstandStore();
 const { isBWB } = storeToRefs(useUserStore());

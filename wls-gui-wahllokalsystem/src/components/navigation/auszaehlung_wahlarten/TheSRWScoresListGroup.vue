@@ -28,11 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
-const { routeWithNameAndParams } = useNavigationUtils();
+const { routeWithNameAndParams } = useCommonNavigationService();
 
 defineProps<{
   titleStimmenZaehlen: string;

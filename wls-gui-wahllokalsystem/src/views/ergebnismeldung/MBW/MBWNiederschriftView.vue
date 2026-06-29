@@ -85,7 +85,7 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
@@ -107,7 +107,7 @@ const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();

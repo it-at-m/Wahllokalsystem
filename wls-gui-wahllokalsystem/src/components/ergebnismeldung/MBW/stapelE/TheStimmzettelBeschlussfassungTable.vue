@@ -57,7 +57,7 @@ import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseStimmzettelBeschlussfassungRows from "@/components/ergebnismeldung/MBW/stapelE/BaseStimmzettelBeschlussfassungRows.vue";
 import { useLogging } from "@/composables/common/logging.ts";
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
@@ -67,7 +67,7 @@ const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const route = useRoute();
 const router = useRouter();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 const { logError } = useLogging("theStimmzettelBeschlussfassungTable");
 const { saveBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 

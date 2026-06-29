@@ -73,7 +73,7 @@ import OfflineSyncerDialog from "@/components/wlsComponents/OfflineSyncerDialog.
 import { useStatusUtils } from "@/composables/ergebnismeldung/common/statusUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useSchnellmeldungDruck } from "@/composables/ergebnismeldung/MBW/schnellmeldungDruck.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -100,7 +100,7 @@ const {
 } = useMbwUtils(wahlID, wahlbezirkID);
 const { buildSchnellmeldungTemplateFromData } = useSchnellmeldungDruck();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 const { loadStatusByWahlIdAndWahlbezirkId } = useStatusUtils();
 
 // button logic to be implemented

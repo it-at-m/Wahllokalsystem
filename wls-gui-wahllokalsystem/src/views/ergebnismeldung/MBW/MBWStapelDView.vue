@@ -20,7 +20,7 @@ import BaseCardUngueltigeStimmzettelErfassen from "@/components/ergebnismeldung/
 import { useLogging } from "@/composables/common/logging.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { ROUTE_NOTFOUND } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
@@ -37,7 +37,7 @@ const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getErgebnisse, postErgebnisse } = useErgebnisService();
 const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 const { logError } = useLogging("mbwStapelDView");
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 
 const wahlID = route.params.wahlId as string;
 const wahl = wahlenActions.getWahlOrUndefinedById(wahlID);

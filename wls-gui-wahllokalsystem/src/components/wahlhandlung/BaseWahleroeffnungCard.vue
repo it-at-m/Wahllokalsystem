@@ -75,7 +75,7 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
@@ -97,7 +97,7 @@ const {
 
 const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();
 const { createTodayWithTime } = useDateTimeUtils();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 
 const { eroeffnungsuhrzeitActions } = useWahlbezirkStore();
 const { eroeffnungsuhrzeitState } = storeToRefs(useWahlbezirkStore());

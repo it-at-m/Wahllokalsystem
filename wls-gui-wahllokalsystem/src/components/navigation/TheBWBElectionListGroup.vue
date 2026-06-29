@@ -59,7 +59,7 @@
 import { storeToRefs } from "pinia";
 
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
@@ -79,7 +79,7 @@ defineProps({
   },
 });
 
-const { routeWithName } = useNavigationUtils();
+const { routeWithName } = useCommonNavigationService();
 const {
   areAllElectionsFinished,
   isWahlumgebungErfasst,

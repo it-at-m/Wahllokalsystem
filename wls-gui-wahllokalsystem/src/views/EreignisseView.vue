@@ -39,7 +39,7 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { CONTINUE_QUERY_PARAM, SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
@@ -52,7 +52,7 @@ const {
 } = storeToRefs(ereignisStore);
 const { addEreignis, sendEreignisse } = ereignisStore;
 const route = useRoute();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useCommonNavigationService();
 
 const ereignisseValidForm: Ref<null | boolean> = ref(null);
 

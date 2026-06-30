@@ -158,7 +158,7 @@ class WahlenValidatorTest {
     }
 
     private WahlModel createEmptyWahlModel() {
-      return new WahlModel(null, null, null, null, null, null, null, null);
+      return new WahlModel(null, null, null, null, null, null, null, null, "");
     }
   }
 }

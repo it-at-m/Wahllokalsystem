@@ -10,6 +10,7 @@ export function useKandidatHandlers() {
   const REGEX_REMOVE_VOTES = /^(\d+)\-(\d*)$/;
   const REGEX_DISCARD_KANDIDAT = /^(\d+)x$/;
   const REGEX_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY = /^-(\d+)$/;
+  const REGEX_REMOVE_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY = /^\+(\d+)$/;
 
   const logger = useLogging("useKandidatHandlers");
 
@@ -82,6 +83,12 @@ export function useKandidatHandlers() {
     );
   };
 
+  const handleRevokeDiscardKandidatExpression: AbstractExpressionHandlerFunction =
+    (expression: string) => {
+      logger.log(`processing expression > ${expression}`);
+      return _handleRevokeDiscardKandidatExpressionWithNumblockOnly(expression);
+    };
+
   const _handleDiscardKandidatExpression: AbstractExpressionHandlerFunction = (
     expression: string
   ) => {
@@ -117,9 +124,28 @@ export function useKandidatHandlers() {
       }
     };
 
+  const _handleRevokeDiscardKandidatExpressionWithNumblockOnly: AbstractExpressionHandlerFunction =
+    (expression: string) => {
+      logger.log(`processing expression > ${expression}`);
+      const match =
+        REGEX_REMOVE_DISCARD_KANDIDAT_WITH_NUMBLOCK_ONLY.exec(expression);
+
+      if (match && match[1] !== undefined) {
+        const kandidatNummer = Number.parseInt(match[1]);
+        return {
+          type: KandidatEventTypeEnum.REMOVE_DISCARD,
+          kandidatNummer,
+        } as KandidatEvent;
+      } else {
+        logger.log(`no match`);
+        return null;
+      }
+    };
+
   return {
     handleAddVotesExpression,
     handleDiscardKandidatExpression,
+    handleRevokeDiscardKandidatExpression,
     handleSetVotesExpression,
     handleRemoveVotesExpression,
   };

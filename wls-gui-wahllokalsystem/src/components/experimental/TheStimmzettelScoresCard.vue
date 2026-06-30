@@ -203,6 +203,10 @@ function onQuickInputCommand(command: AbstractCommandEvent) {
         stimmzettelManager.discardKandidat(kandidatId);
         break;
       }
+      case KandidatEventTypeEnum.REMOVE_DISCARD: {
+        stimmzettelManager.revokeDiscardedKandidat(kandidatId);
+        break;
+      }
     }
   } else if (isStimmzettelEvent(command)) {
     saveCurrentStimmzettelSnapshot();

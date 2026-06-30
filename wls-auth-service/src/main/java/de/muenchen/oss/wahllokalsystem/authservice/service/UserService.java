@@ -40,6 +40,10 @@ public class UserService {
   @Getter
   String adminAuthorityName = "MONITORING_HELPDESK";
 
+  @Value("${service.config.user.authority.erfassungsteam}")
+  @Getter
+  String erfassungsteamAuthorityName = "ERFASSUNGSTEAM";
+
   @Value("${service.config.user.anzahlPinBloecke}")
   int anzahlPinBloecke;
 

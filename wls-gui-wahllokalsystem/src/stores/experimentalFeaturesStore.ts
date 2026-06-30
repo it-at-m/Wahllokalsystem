@@ -24,7 +24,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
   const hasStimmzettelSummaryItems = ref(false);
 
   const subViewBeschlussfassung = ref("overview");
-  const subViewStimmzettelerfassung = ref("1");
+  const subViewStimmzettelerfassung = ref("4");
 
   const beschlussFortschrittMax = ref(20);
   const beschlussFortschrittCurrent = ref(7);

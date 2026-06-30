@@ -32,6 +32,7 @@
       </div>
       <div>Total Discarded Kandidaten: {{ discardedKandidaten.length }}</div>
       <div
+        v-if="showDebugDiscardedKandidaten"
         v-for="kandidat in discardedKandidaten"
         :key="kandidat.identifikator"
       >
@@ -60,13 +61,22 @@ import { getStimmzettelManger } from "@/composables/experimental/stimmzettelMana
 const wahlId = "wahlId";
 const wahlbezirkId = "wahlbezirkId";
 
-const { showAllKandidaten, showDebugSelectedWahlvorschlaege } = defineProps({
+const {
+  showAllKandidaten,
+  showDebugSelectedWahlvorschlaege,
+  showDebugDiscardedKandidaten,
+} = defineProps({
   showAllKandidaten: {
     type: Boolean,
     required: false,
     default: false,
   },
   showDebugSelectedWahlvorschlaege: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  showDebugDiscardedKandidaten: {
     type: Boolean,
     required: false,
     default: false,

@@ -99,6 +99,15 @@
                     style="min-width: 30px"
                   />
                   Wahlvorschlag Nr. {{ wahlvorschlag.ordnungszahl }}
+
+                  <v-chip
+                    v-if="
+                      compactSimpleWahlvorschlag &&
+                      getCountVotesViaListe(wahlvorschlag) > 0
+                    "
+                    color="info"
+                    >{{ getCountVotesViaListe(wahlvorschlag) }}</v-chip
+                  >
                 </div>
               </v-card-title>
               <v-card-text>
@@ -108,7 +117,14 @@
                   )"
                   :key="index"
                 >
-                  <div class="d-flex align-center ga-2">
+                  <div
+                    v-if="
+                      !(
+                        kandidat.votesByVoter == 0 && compactSimpleWahlvorschlag
+                      )
+                    "
+                    class="d-flex align-center ga-2"
+                  >
                     <div>{{ kandidat.listenposition }}</div>
                     <div>{{ kandidat.name }}</div>
                     <base-kandidate-votes :kandidat="kandidat" />
@@ -158,6 +174,7 @@ import type { InputHistoryItem } from "@/types/experimental/InputHistoryItem.ts"
 import type { StimmzettelWahlvorschlag } from "@/types/experimental/StimmzettelWahlvorschlag.ts";
 import type { PropType } from "vue";
 
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
@@ -165,6 +182,7 @@ import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormSti
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
 import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
+import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
 
 const { votesOnly, changeHistory } = defineProps({
   votesOnly: {
@@ -180,6 +198,10 @@ const { votesOnly, changeHistory } = defineProps({
 const emit = defineEmits<{
   command: [command: AbstractCommandEvent];
 }>();
+
+const { compactSimpleWahlvorschlag } = storeToRefs(
+  useExperimentalFeaturesStore()
+);
 
 const wahlvorschlaegeWithDecisions = computed(() =>
   votesOnly.filter(
@@ -197,6 +219,10 @@ const firstHistoryItem = computed(() =>
 const nextFiveItems = computed(() =>
   changeHistory.filter((_, index) => index < 5 && index > 0)
 );
+
+function getCountVotesViaListe(Wahlvorschlag: StimmzettelWahlvorschlag) {
+  return Wahlvorschlag.kandidaten.filter((k) => k.votesByWahlvorschlag).length;
+}
 
 function getKandidatenWithVotes(wahlvorschlag: StimmzettelWahlvorschlag) {
   return wahlvorschlag.kandidaten.filter(

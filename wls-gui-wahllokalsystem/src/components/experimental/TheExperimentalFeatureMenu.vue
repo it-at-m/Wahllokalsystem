@@ -96,6 +96,14 @@
               hide-details
             />
           </v-list-item>
+          <v-list-item title="Simple Erfassung">
+            <v-checkbox
+              v-model="compactSimpleWahlvorschlag"
+              density="compact"
+              label="kompakte Ansicht"
+              hide-details
+            />
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -117,6 +125,7 @@ const {
   beschlussStimmzettelFailureZuVieleStimmen,
   hasStimmzettelSummaryItems,
   kandidatScoreShowName,
+  compactSimpleWahlvorschlag,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,
 } = storeToRefs(useExperimentalFeaturesStore());

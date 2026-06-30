@@ -3,12 +3,14 @@
     <v-card-title>Wahlvorschläge</v-card-title>
     <v-card-text>
       <div
+        v-if="selectedWahlvorschlaege.length > 0"
         v-for="wahlvorschlag in selectedWahlvorschlaege"
         :key="wahlvorschlag.identifikator"
       >
-        {{ wahlvorschlag.identifikator }}
+        {{ wahlvorschlag.ordnungszahl }} - {{ wahlvorschlag.kurzname }}
       </div>
-      <div>
+      <div v-else>Keine Listenkreuze gesetzt</div>
+      <div v-if="showDebugSelectedWahlvorschlaege">
         Required votes left to fulfil selected wahlvorschlaege:
         {{ requiredVotesLeftToFulfilListenkreuze }}
       </div>
@@ -22,6 +24,7 @@
       </div>
       <div>Total Valid Kandidaten Votes: {{ totalValidKandidatenScores }}</div>
       <div
+        v-if="showAllKandidaten"
         v-for="kandidat in stimmzettelKandidaten"
         :key="kandidat.identifikator"
       >
@@ -58,6 +61,19 @@ import { getStimmzettelManger } from "@/composables/experimental/stimmzettelMana
 
 const wahlId = "wahlId";
 const wahlbezirkId = "wahlbezirkId";
+
+const { showAllKandidaten, showDebugSelectedWahlvorschlaege } = defineProps({
+  showAllKandidaten: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  showDebugSelectedWahlvorschlaege: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+});
 
 const {
   isStimmzettelValid,

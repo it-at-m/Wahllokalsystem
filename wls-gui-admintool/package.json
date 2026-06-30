@@ -53,7 +53,7 @@
     "jsdom": "29.1.1",
     "msw": "2.14.6",
     "msw-storybook-addon": "2.0.7",
-    "prettier": "3.8.4",
+    "prettier": "3.8.5",
     "storybook": "10.4.4",
     "typescript": "5.9.3",
     "unplugin-fonts": "2.0.0",

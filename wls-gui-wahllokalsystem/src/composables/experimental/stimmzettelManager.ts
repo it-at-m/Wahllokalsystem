@@ -462,6 +462,13 @@ export function useStimmzettelManager(
     );
     if (kandidat) {
       kandidat.isDiscarded = false;
+      changeHistory.value.push({
+        type: InputHistoryTypeEnum.REVOKE_DISCARDED_KANDIDAT,
+        text: [
+          `${kandidat.wahlvorschlag.ordnungszahl * 100 + kandidat.listenposition}`,
+          kandidat.name,
+        ],
+      });
       _refreshWahlvorschlaegeVotes();
     }
   }

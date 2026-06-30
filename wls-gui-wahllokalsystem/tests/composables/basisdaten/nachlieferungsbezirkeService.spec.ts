@@ -1,5 +1,4 @@
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
-import { createPinia, setActivePinia } from "pinia";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useNachlieferungsbezirkeService } from "@/composables/basisdaten/nachlieferungsbezirkeService.ts";
@@ -27,12 +26,12 @@ vi.mock(
 );
 
 describe("nachlieferungsbezirkeService.ts", () => {
-  const { generateRandomString } = useCommonTestDataFactory();
+  const { generateRandomString, generateRandomBoolean } =
+    useCommonTestDataFactory();
 
   let unitUnderTest: ReturnType<typeof useNachlieferungsbezirkeService>;
 
   beforeEach(() => {
-    setActivePinia(createPinia());
     unitUnderTest = useNachlieferungsbezirkeService();
     globalThis.URL.createObjectURL = vi.fn();
     globalThis.URL.revokeObjectURL = vi.fn();
@@ -47,7 +46,7 @@ describe("nachlieferungsbezirkeService.ts", () => {
     it("should_returnBool_when_apiCallSucceeded", async () => {
       const wahltagID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
-      const mockedResult = false;
+      const mockedResult = generateRandomBoolean();
 
       mockDefinitions.isNachlieferungsbezirk.mockReturnValue({
         status: 200,

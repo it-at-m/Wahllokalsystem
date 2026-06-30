@@ -140,6 +140,14 @@
           <div v-else>Es wurden noch keine Stimmen vergeben.</div>
         </div>
       </v-col>
+      <v-col cols="2">
+        <v-card>
+          <v-card-title>Zusammenfassung</v-card-title>
+          <v-card-text>
+            <the-stimmzettel-summary-card />
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -156,6 +164,7 @@ import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandi
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
 import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
+import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 
 const { votesOnly, changeHistory } = defineProps({
   votesOnly: {

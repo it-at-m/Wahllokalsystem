@@ -109,6 +109,12 @@
               label="Abstände wenn Kandidaten nicht direkt aufeinander folgen"
               hide-details
             />
+            <v-checkbox
+              v-model="useKandidatScoreComponentInSimpleErfassung"
+              density="compact"
+              label="Interaktionskomponte in simpler Erfassung"
+              hide-details
+            />
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -133,6 +139,7 @@ const {
   kandidatScoreShowName,
   compactSimpleWahlvorschlag,
   spacesBetweenNonDirectFollowingKandidatenVotes,
+  useKandidatScoreComponentInSimpleErfassung,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,
 } = storeToRefs(useExperimentalFeaturesStore());

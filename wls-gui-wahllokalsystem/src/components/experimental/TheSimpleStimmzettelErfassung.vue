@@ -110,7 +110,7 @@
                   >
                 </div>
               </v-card-title>
-              <v-card-text>
+              <v-card-text v-if="!useKandidatScoreComponentInSimpleErfassung">
                 <div
                   v-for="(kandidat, index) in getKandidatenWithVotes(
                     wahlvorschlag
@@ -164,6 +164,18 @@
                   </div>
                 </div>
               </v-card-text>
+              <v-card-text v-else>
+                <div
+                  v-for="(kandidat, index) in wahlvorschlag.kandidaten"
+                  :key="index"
+                >
+                  <base-kandidat-score
+                    :kandidat="kandidat"
+                    :listennummer="wahlvorschlag.ordnungszahl"
+                    :show-kandidat-name="kandidatScoreShowName"
+                  />
+                </div>
+              </v-card-text>
             </v-card>
           </template>
           <div v-else>Es wurden noch keine Stimmen vergeben.</div>
@@ -193,6 +205,7 @@ import { computed } from "vue";
 import BaseButtonKandidatDiscard from "@/components/experimental/BaseButtonKandidatDiscard.vue";
 import BaseFormStimmzettelQuickInput from "@/components/experimental/BaseFormStimmzettelQuickInput.vue";
 import BaseKandidateVotes from "@/components/experimental/BaseKandidateVotes.vue";
+import BaseKandidatScore from "@/components/experimental/BaseKandidatScore.vue";
 import InputHistoryIcon from "@/components/experimental/InputHistoryIcon.vue";
 import TheStimmzettelSummaryCard from "@/components/experimental/TheStimmzettelSummaryCard.vue";
 import { useExperimentalFeaturesStore } from "@/stores/experimentalFeaturesStore.ts";
@@ -215,6 +228,8 @@ const emit = defineEmits<{
 const {
   compactSimpleWahlvorschlag,
   spacesBetweenNonDirectFollowingKandidatenVotes,
+  useKandidatScoreComponentInSimpleErfassung,
+  kandidatScoreShowName,
 } = storeToRefs(useExperimentalFeaturesStore());
 
 const wahlvorschlaegeWithDecisions = computed(() =>

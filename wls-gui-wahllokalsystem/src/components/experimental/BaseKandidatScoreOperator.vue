@@ -4,7 +4,7 @@
       v-model="modelVotes"
       :persistent-clear="false"
       :clearable="false"
-      control-variant="split"
+      control-variant="stacked"
       density="compact"
       hide-details
       :min="0"

@@ -42,8 +42,6 @@ public class CustomUsernamePasswordAuthenticationFilter
   private static final int SECONDS_PER_MINUTE = 60;
 
   private static final String SPRING_SECURITY_SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-  private static final String ROLE_LOGIN_ADMINTOOL_POLYMER = "MONITORING_HELPDESK";
-  private static final String ROLE_LOGIN_WLS_WAHLLOKAL = "WLS_WAHLVORSTAND";
 
   @Value("${service.config.oauth2.clients.wahllokalgui.id}")
   String wahllokalguiClientId;
@@ -210,9 +208,9 @@ public class CustomUsernamePasswordAuthenticationFilter
     }
 
     if (savedRequest.getRedirectUrl().contains(wahllokalguiClientId)) {
-      return hasRequiredAuthority(userDetails, ROLE_LOGIN_WLS_WAHLLOKAL);
+      return hasRequiredAuthority(userDetails, userService.getSchriftfuehrungAuthorityName());
     } else if (savedRequest.getRedirectUrl().contains(adminguiClientId)) {
-      return hasRequiredAuthority(userDetails, ROLE_LOGIN_ADMINTOOL_POLYMER);
+      return hasRequiredAuthority(userDetails, userService.getAdminAuthorityName());
     }
 
     return false;

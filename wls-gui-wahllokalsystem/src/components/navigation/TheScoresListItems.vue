@@ -36,7 +36,6 @@ import { computed } from "vue";
 import BaseDividerListItem from "@/components/navigation/common/BaseDividerListItem.vue";
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
 import TheScoresListGroupSelector from "@/components/navigation/TheScoresListGroupSelector.vue";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   DISABLED_SUBTITLE_WAHLBRIEFZULASSUNG_MISSING,
   DISABLED_SUBTITLE_WAHLHANDLUNG_MISSING,
@@ -49,8 +48,9 @@ import {
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
-const { routeWithName } = useCommonNavigationService();
+const { routeWithName } = useNavigationService();
 
 const { isBWB, isUWB } = storeToRefs(useUserStore());
 const { wahlenState } = storeToRefs(useWahlenStore());

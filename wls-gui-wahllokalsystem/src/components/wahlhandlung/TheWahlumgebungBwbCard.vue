@@ -39,13 +39,13 @@ import { computed, ref } from "vue";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseWahlumgebungWahlurnenDiv from "@/components/wahlhandlung/BaseWahlumgebungWahlurnenDiv.vue";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 
 const anzahlWahlurnenValidForm = ref<null | boolean>(null);
 

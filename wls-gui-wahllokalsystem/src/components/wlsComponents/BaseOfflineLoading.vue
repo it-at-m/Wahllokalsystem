@@ -62,13 +62,13 @@ import { useRouter } from "vue-router";
 import BaseButtonRefresh from "@/components/common/buttons/BaseButtonRefresh.vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseProgressLinear from "@/components/common/progressLinear/BaseProgressLinear.vue";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 const router = useRouter();
 
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 
 const {
   numberOfTasksToRun,

@@ -31,14 +31,14 @@ import { computed } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useNavigationService } from "../../../composables/navigation/navigationService.ts";
 
 const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const { beanstandeteWahlbriefeActions } = useWahlenStore();
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 
 const isSaveButtonDisabled = computed(
   () => !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid

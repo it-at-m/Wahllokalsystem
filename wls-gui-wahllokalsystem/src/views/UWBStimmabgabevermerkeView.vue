@@ -68,7 +68,6 @@ import TheUWBStimmabgabevermerkeErfassenCard from "@/components/stimmabgabeverme
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useMultipleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/multipleDifferenceDialogUtils.ts";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
@@ -77,6 +76,7 @@ import {
 import router from "@/plugins/router.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { useNavigationService } from "../composables/navigation/navigationService.ts";
 
 const { minLength, maxLength } = useRules();
 const { wahlenActions } = useWahlenStore();
@@ -92,7 +92,7 @@ const {
   updateValidationStateForBegruendung,
   getDialogContent,
 } = useMultipleDifferenceDialogUtils();
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 
 const stimmabgabevermerkeModel = ref(false);
 

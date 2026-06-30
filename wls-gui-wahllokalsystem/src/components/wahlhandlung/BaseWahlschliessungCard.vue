@@ -57,7 +57,6 @@ import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   CONTINUE_QUERY_PARAM,
   ROUTE_EREIGNISSE,
@@ -69,9 +68,10 @@ import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
+import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 const { required, timeGreaterOrEqual, timeNotInFuture } = useRules();
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 const { onSchliessungsuhrzeitSentChanged } = useEreignisStore();
 
 const { schliessungsuhrzeitActions } = useWahlbezirkStore();

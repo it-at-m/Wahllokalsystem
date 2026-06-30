@@ -59,7 +59,6 @@
 import { storeToRefs } from "pinia";
 
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_STIMMABGABE,
@@ -67,6 +66,7 @@ import {
   ROUTE_WAHLVORBEREITUNG_WAEHLERVERZEICHNIS,
 } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
+import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 defineProps({
   disabled: {
@@ -79,7 +79,7 @@ defineProps({
   },
 });
 
-const { routeWithName } = useCommonNavigationService();
+const { routeWithName } = useNavigationService();
 const {
   isWahlvorstandErfasst,
   isWahlumgebungErfasst,

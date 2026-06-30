@@ -14,7 +14,7 @@ import {
   vi,
 } from "vitest";
 
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
@@ -52,15 +52,15 @@ vi.mock(import("@/types/navigation/NextStepImplConstants.ts"), () => ({
   },
 }));
 
-describe("commonNavigationService.ts", () => {
-  let unitUnderTest: ReturnType<typeof useCommonNavigationService>;
+describe("navigationService.ts", () => {
+  let unitUnderTest: ReturnType<typeof useNavigationService>;
 
   beforeEach(() => {
     createTestingPinia({
       createSpy: vi.fn,
       stubActions: false,
     });
-    unitUnderTest = useCommonNavigationService();
+    unitUnderTest = useNavigationService();
   });
 
   afterEach(() => {

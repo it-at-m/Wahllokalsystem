@@ -41,7 +41,7 @@ const electionSpecificNextStepHandlers: Record<
   VE: NullNextStepImpl,
 };
 
-export function useCommonNavigationService() {
+export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();

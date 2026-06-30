@@ -85,7 +85,6 @@ import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMbtUtilsNiederschrift } from "@/composables/ergebnismeldung/MBW/mbwUtilsNiederschrift.ts";
 import { useNiederschriftDruckBWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckBWB.ts";
 import { useNiederschriftDruckUWB } from "@/composables/ergebnismeldung/MBW/niederschriftDruckUWB.ts";
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useEreignisService } from "@/composables/vorfaelleundvorkommnisse/ereignisService.ts";
 import { useEreignisUtils } from "@/composables/vorfaelleundvorkommnisse/ereignisUtils.ts";
@@ -97,6 +96,7 @@ import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import { useNavigationService } from "../../../composables/navigation/navigationService.ts";
 import { MbwStepsEnum } from "../../../types/navigation/MbwStepsEnum.ts";
 
 const route = useRoute();
@@ -107,7 +107,7 @@ const { addNotification } = useUserNotificationService();
 const { hasDoneVorkommnisse } = useEreignisUtils();
 const { getEreignisse } = useEreignisService();
 const { setStepDone, getElectionWorkflowState } = useWorkflowStore();
-const { getNextRoute } = useCommonNavigationService();
+const { getNextRoute } = useNavigationService();
 
 // button logic to be implemented
 const isKorrigierenValid = ref<null | boolean>();

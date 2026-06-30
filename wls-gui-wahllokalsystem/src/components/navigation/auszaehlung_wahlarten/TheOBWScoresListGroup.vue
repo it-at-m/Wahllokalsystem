@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import {
   ROUTE_AUSZAEHLUNG_STIMMZETTEL,
   ROUTE_STAPEL_A,
@@ -44,8 +43,9 @@ import {
   ROUTE_STAPEL_C,
 } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
+import { useNavigationService } from "../../../composables/navigation/navigationService.ts";
 
-const { routeWithNameAndParams } = useCommonNavigationService();
+const { routeWithNameAndParams } = useNavigationService();
 
 defineProps<{
   titleStimmenZaehlen: string;

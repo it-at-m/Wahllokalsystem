@@ -162,9 +162,15 @@ function onQuickInputCommand(command: AbstractCommandEvent) {
 
   if (isWahlvorschlagEvent(command)) {
     logger.log(`isWahlvorschlagEvent`);
-    stimmzettelManager.selectWahlvorschlagByOrdnungszahl(
-      command.wahlvorschlagOrdnungszahl
-    );
+    if (command.type === WahlvorschlagEventTypeEnum.SELECT) {
+      stimmzettelManager.selectWahlvorschlagByOrdnungszahl(
+        command.wahlvorschlagOrdnungszahl
+      );
+    } else if (command.type === WahlvorschlagEventTypeEnum.DESELECT) {
+      stimmzettelManager.deselectWahlvorschlagByOrdnungszahl(
+        command.wahlvorschlagOrdnungszahl
+      );
+    }
   } else if (isKandidatEvent(command)) {
     logger.log(`isKandidatEvent`);
     const kandidatId = stimmzettelManager.getKandidatIdForKandidatNummer(

@@ -266,6 +266,20 @@ export function useStimmzettelManager(
       _refreshWahlvorschlaegeVotes();
     }
   }
+  function deselectWahlvorschlagByOrdnungszahl(ordnungszahl: number) {
+    const wahlvorschlag = stimmzettelWahlvorschlaege.value.find(
+      (wahlvorschlag) => wahlvorschlag.ordnungszahl === ordnungszahl
+    );
+    if (wahlvorschlag) {
+      wahlvorschlag.isSelected = false;
+      changeHistory.value.push({
+        type: InputHistoryTypeEnum.REVOKE_WAHLVORSCHLAG,
+        text: [wahlvorschlag.kurzname],
+      });
+    }
+
+    _refreshWahlvorschlaegeVotes();
+  }
 
   function addKandidatVote(kandidatId: string, countVotes = 1) {
     const kandidat = stimmzettelKandidaten.value.find(
@@ -488,6 +502,7 @@ export function useStimmzettelManager(
     selectWahlvorschlag,
     selectWahlvorschlagByOrdnungszahl,
     deselectWahlvorschlag,
+    deselectWahlvorschlagByOrdnungszahl,
 
     setWahlvorschlaege,
   };

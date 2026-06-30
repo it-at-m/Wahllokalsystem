@@ -5,7 +5,8 @@ import { useKandidatHandlers } from "@/composables/experimental/expressionHandle
 import { useWahlvorschlagHandlers } from "@/composables/experimental/expressionHandler/WahlvorschlagHandlers.ts";
 
 export function useStimmzettelQuickInputHandler() {
-  const { handleSetExpression } = useWahlvorschlagHandlers();
+  const { handleSetExpression, handleUnsetExpression } =
+    useWahlvorschlagHandlers();
   const {
     handleSetVotesExpression,
     handleAddVotesExpression,
@@ -14,6 +15,7 @@ export function useStimmzettelQuickInputHandler() {
   } = useKandidatHandlers();
   const handlers: AbstractExpressionHandlerFunction[] = [
     handleSetExpression,
+    handleUnsetExpression,
     handleDiscardKandidatExpression,
     handleSetVotesExpression,
     handleAddVotesExpression,

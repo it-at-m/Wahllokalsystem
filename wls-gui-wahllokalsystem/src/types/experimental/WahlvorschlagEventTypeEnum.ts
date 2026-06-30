@@ -1,5 +1,6 @@
 export const WahlvorschlagEventTypeEnum = {
   SELECT: "SELECT",
+  DESELECT: "DESELECT",
 } as const;
 
 export type WahlvorschlagEventTypeEnum =

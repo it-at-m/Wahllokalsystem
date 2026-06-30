@@ -18,7 +18,7 @@ const typeMapping: Record<InputHistoryTypeEnum, string> = {
   DISCARD_KANDIDAT: "$stimmzettelCommandDiscardKandidat",
   REMOVE_USER_VOTE: "$stimmzettelCommandRemoveVote",
   REVOKE_DISCARDED_KANDIDAT: "$stimmzettelCommandRevokeDiscardKandidat",
-  REVOKE_WAHLVORSCHLAG: "$",
+  REVOKE_WAHLVORSCHLAG: "$stimmzettelCommandRemoveAcceptList",
   SET_WAHLVORSCHLAG: "$stimmzettelCommandAcceptList",
 };
 

@@ -90,7 +90,7 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "../../../types/navigation/MbwStepsEnum.ts";
 
 const { required, timeGreaterOrEqual, timeNotInFuture, minLength, maxLength } =
   useRules();
@@ -146,7 +146,7 @@ async function continueInWorkflow() {
   setStepDone(
     props.wahlId,
     props.wahlbezirkId,
-    MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+    MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
   );
   if (isBWB.value) {
     resetAllAnwesenheiten();

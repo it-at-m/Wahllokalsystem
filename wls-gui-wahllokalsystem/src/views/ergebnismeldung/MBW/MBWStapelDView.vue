@@ -27,7 +27,7 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
 import { ValidityEnum } from "@/types/ergebnismeldung/MBW/bedenklicheStimmzettel/ValidityEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "../../../types/navigation/MbwStepsEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -121,7 +121,7 @@ async function onSave() {
         ergebnisseToSend,
         true
       );
-      setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG);
+      setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG);
       await router.push(getNextRoute());
     }
   } catch (error) {

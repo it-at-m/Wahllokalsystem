@@ -154,7 +154,7 @@ import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapel
 import { useCommonNavigationService } from "@/composables/navigation/commonNavigationService.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "../../../../types/navigation/MbwStepsEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
@@ -265,7 +265,7 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
 }
 
 async function onContinueClicked() {
-  setStepDone(props.wahlID, props.wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_BC);
+  setStepDone(props.wahlID, props.wahlbezirkID, MbwStepsEnum.MBW_STAPEL_BC);
   await router.push(getNextRoute());
 }
 

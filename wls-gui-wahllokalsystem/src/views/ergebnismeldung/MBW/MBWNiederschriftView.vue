@@ -95,9 +95,9 @@ import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { InputFeedbackTypeEnum } from "@/types/common/InputFeedbackTypeEnum.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+import { MbwStepsEnum } from "../../../types/navigation/MbwStepsEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -213,7 +213,7 @@ async function onDruckenClicked() {
     setStepDone(
       wahlID,
       currentUserWahlbezirkID,
-      MbwRoutesEnum.MBW_NIEDERSCHRIFT
+      MbwStepsEnum.MBW_NIEDERSCHRIFT
     );
     if (workflowState.value) {
       workflowState.value.isNiederschriftDone = true;

@@ -80,8 +80,8 @@ import { useUserStore } from "@/stores/userStore.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MeldungsArtEnum } from "@/types/ergebnismeldung/common/MeldungsartEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { MbwStepsEnum } from "../../../types/navigation/MbwStepsEnum.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -190,7 +190,7 @@ async function onDruckenClicked() {
 
         await updateStatusAfterSchnellmeldungDrucken();
 
-        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
+        setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_SCHNELLMELDUNG);
         await router.push(getNextRoute());
 
         if (workflowState.value) {

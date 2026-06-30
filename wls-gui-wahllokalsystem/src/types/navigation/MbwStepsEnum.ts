@@ -1,4 +1,4 @@
-export const MbwRoutesEnum = {
+export const MbwStepsEnum = {
   MBW_AUSZAEHLUNG_STIMMZETTEL: "MBW_AUSZAEHLUNG_STIMMZETTEL",
   MBW_STAPEL_E: "MBW_STAPEL_E",
   MBW_STAPEL_D_UNGUELTIG: "MBW_STAPEL_D_UNGUELTIG",
@@ -7,4 +7,4 @@ export const MbwRoutesEnum = {
   MBW_STAPEL_BC: "MBW_STAPEL_BC",
   MBW_NIEDERSCHRIFT: "MBW_NIEDERSCHRIFT",
 } as const;
-export type MbwRoutesEnum = (typeof MbwRoutesEnum)[keyof typeof MbwRoutesEnum];
+export type MbwStepsEnum = (typeof MbwStepsEnum)[keyof typeof MbwStepsEnum];

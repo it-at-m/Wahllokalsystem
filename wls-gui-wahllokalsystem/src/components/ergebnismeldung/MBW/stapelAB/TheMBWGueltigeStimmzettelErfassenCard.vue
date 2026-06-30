@@ -35,7 +35,7 @@ import { useCommonNavigationService } from "@/composables/navigation/commonNavig
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "../../../../types/navigation/MbwStepsEnum.ts";
 
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getNextRoute } = useCommonNavigationService();
@@ -71,7 +71,7 @@ async function onSaveClicked() {
   setStepDone(
     props.wahlID,
     props.wahlbezirkID,
-    MbwRoutesEnum.MBW_STAPEL_A_AND_B
+    MbwStepsEnum.MBW_STAPEL_A_AND_B
   );
   await router.push(getNextRoute());
 }

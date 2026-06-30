@@ -9,22 +9,22 @@
           <v-expansion-panel>
             <v-expansion-panel-title>Kurzbefehle</v-expansion-panel-title>
             <v-expansion-panel-text>
-              <div>Befehle bestehen aus &lt;Object&gt; und &lt;action&gt;</div>
-              <strong>Objects</strong>
+              <strong>Kandidaten</strong>
               <ul>
-                <li><em>&lt;Ordnungszahl&gt;</em> ... Kandidat</li>
-                <li><em>&lt;OZ1&gt;,,&lt;OZ2&gt;</em> ... Kandidatenbereich</li>
+                <li><em>&lt;101&gt;</em> ... Setzt 1 Stimme</li>
+                <li><em>&lt;101&gt;+</em> ... Ergänzt 1 Stimme</li>
+                <li><em>&lt;101&gt;+&lt;Zahl&gt;</em> ... Ergänzt n Stimmen</li>
+                <li><em>&lt;101&gt;-</em> ... Entfernt 1 Stimme</li>
                 <li>
-                  <em>&lt;OZx&gt;,&lt;OZy&gt;,&lt;OZn&gt;</em> ... Liste an
-                  Kandidaten
+                  <em>&lt;101&gt;-&lt;Zahl&gt;</em> ... Entfernt n Stimmen
                 </li>
-                <li><em>&lt;Listennummer&gt;</em> ... Wahlvorschlag</li>
+                <li>-<em>&lt;101&gt;</em> ... Streicht den Kandidat</li>
+                <li>+<em>&lt;101&gt;</em> ... Nimmt Streichung zurück</li>
               </ul>
-              <strong>Actions</strong>
+              <strong>Wahvorschlag</strong>
               <ul>
-                <li><em>+</em> ... 1 Stimmen setzen</li>
-                <li><em>+x</em> ... x Stimmen setzen</li>
-                <li><em>--</em> ... Streichen/Entfernen</li>
+                <li>-W<em>&lt;1&gt;</em> ... Setzt Listemkreuz</li>
+                <li>+W<em>&lt;101&gt;</em> ... Nimmt Streichung zurück</li>
               </ul>
               <strong>sonstige Befehle</strong>
               <ul>

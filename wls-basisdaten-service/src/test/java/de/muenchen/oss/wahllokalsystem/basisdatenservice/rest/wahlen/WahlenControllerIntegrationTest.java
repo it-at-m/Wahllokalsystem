@@ -422,7 +422,8 @@ public class WahlenControllerIntegrationTest {
             searchingForWahltag.getWahltag(),
             WahlartDTO.BAW,
             new FarbeDTO(1, 1, 1),
-            "1");
+            "1",
+            "B");
     val wahl2 =
         new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
             "wahlID2",
@@ -432,7 +433,8 @@ public class WahlenControllerIntegrationTest {
             searchingForWahltag.getWahltag(),
             WahlartDTO.BAW,
             new FarbeDTO(1, 1, 1),
-            "2");
+            "2",
+            "B");
     val wahl3 =
         new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
             "wahlID3",
@@ -442,7 +444,8 @@ public class WahlenControllerIntegrationTest {
             LocalDate.now().plusMonths(2),
             WahlartDTO.BAW,
             new FarbeDTO(1, 1, 1),
-            "3");
+            "3",
+            "B");
 
     return Stream.of(wahl1, wahl2, wahl3)
         .filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag())))
@@ -459,6 +462,7 @@ public class WahlenControllerIntegrationTest {
     wahl1.setReihenfolge(1);
     wahl1.setWaehlerverzeichnisNummer(1);
     wahl1.setWahltag(LocalDate.now().plusMonths(1));
+    wahl1.setKennzeichen("B");
 
     val wahl2 = new Wahl();
     wahl2.setWahlID("wahlid2");
@@ -469,6 +473,7 @@ public class WahlenControllerIntegrationTest {
     wahl2.setReihenfolge(2);
     wahl2.setWaehlerverzeichnisNummer(2);
     wahl2.setWahltag(LocalDate.now().plusMonths(2));
+    wahl2.setKennzeichen("L");
 
     val wahl3 = new Wahl();
     wahl3.setWahlID("wahlid3");
@@ -479,6 +484,7 @@ public class WahlenControllerIntegrationTest {
     wahl3.setReihenfolge(3);
     wahl3.setWaehlerverzeichnisNummer(3);
     wahl3.setWahltag(LocalDate.now().plusMonths(3));
+    wahl3.setKennzeichen("E");
 
     return List.of(wahl1, wahl2, wahl3);
   }
@@ -493,7 +499,15 @@ public class WahlenControllerIntegrationTest {
   private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO
       createMinimalWahlDTO() {
     return new de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO(
-        "wahlID", "wahlname", 0L, 1L, LocalDate.now(), WahlartDTO.LTW, new FarbeDTO(0, 1, 2), null);
+        "wahlID",
+        "wahlname",
+        0L,
+        1L,
+        LocalDate.now(),
+        WahlartDTO.LTW,
+        new FarbeDTO(0, 1, 2),
+        null,
+        "L");
   }
 
   private static de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlen.WahlDTO
@@ -506,6 +520,7 @@ public class WahlenControllerIntegrationTest {
         LocalDate.now(),
         WahlartDTO.LTW,
         new FarbeDTO(0, 1, 2),
-        "nummer");
+        "nummer",
+        "L");
   }
 }

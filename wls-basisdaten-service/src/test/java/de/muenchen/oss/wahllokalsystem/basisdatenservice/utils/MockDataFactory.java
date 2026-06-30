@@ -124,7 +124,8 @@ public class MockDataFactory {
                 forDate,
                 WahlartModel.BTW,
                 new FarbeModel(0, 1, 2),
-                "0"),
+                "0",
+                "B"),
             new WahlModel(
                 "wahlID2",
                 "Europawahl",
@@ -133,7 +134,8 @@ public class MockDataFactory {
                 forDate,
                 WahlartModel.EUW,
                 new FarbeModel(3, 4, 5),
-                "1")),
+                "1",
+                "E")),
         Set.of(
             new WahlbezirkModel(
                 "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
@@ -322,6 +324,7 @@ public class MockDataFactory {
     wahl1.setReihenfolge(1);
     wahl1.setWaehlerverzeichnisNummer(1);
     wahl1.setWahltag(LocalDate.now().plusMonths(1));
+    wahl1.setKennzeichen("B");
 
     val wahl2 = new Wahl();
     wahl2.setWahlID("wahlID2");
@@ -332,6 +335,7 @@ public class MockDataFactory {
     wahl2.setReihenfolge(2);
     wahl2.setWaehlerverzeichnisNummer(2);
     wahl2.setWahltag(LocalDate.now().plusMonths(1));
+    wahl2.setKennzeichen("E");
 
     val wahl3 = new Wahl();
     wahl3.setWahlID("wahlID3");
@@ -342,6 +346,7 @@ public class MockDataFactory {
     wahl3.setReihenfolge(3);
     wahl3.setWaehlerverzeichnisNummer(3);
     wahl3.setWahltag(LocalDate.now().plusMonths(3));
+    wahl3.setKennzeichen("E");
 
     return List.of(wahl1, wahl2, wahl3);
   }
@@ -356,7 +361,8 @@ public class MockDataFactory {
             forDate,
             WahlartModel.BTW,
             new FarbeModel(0, 1, 2),
-            "0"),
+            "0",
+            "B"),
         new WahlModel(
             praefix + "wahlID2",
             "Europawahl",
@@ -365,7 +371,8 @@ public class MockDataFactory {
             forDate,
             WahlartModel.EUW,
             new FarbeModel(3, 4, 5),
-            "1"));
+            "1",
+            "E"));
   }
 
   public static Set<WahlbezirkDTO> createSetOfClientWahlbezirkDTO(LocalDate aDate) {

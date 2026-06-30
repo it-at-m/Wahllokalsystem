@@ -235,6 +235,7 @@ public class WahlenServiceSecurityTest {
     wahl1.setReihenfolge(1);
     wahl1.setWaehlerverzeichnisNummer(1);
     wahl1.setWahltag(LocalDate.now().plusMonths(1));
+    wahl1.setKennzeichen("B");
 
     Wahl wahl2 = new Wahl();
     wahl2.setWahlID("wahlid2");
@@ -245,6 +246,7 @@ public class WahlenServiceSecurityTest {
     wahl2.setReihenfolge(2);
     wahl2.setWaehlerverzeichnisNummer(2);
     wahl2.setWahltag(LocalDate.now().plusMonths(2));
+    wahl2.setKennzeichen("L");
 
     Wahl wahl3 = new Wahl();
     wahl3.setWahlID("wahlid3");
@@ -255,6 +257,7 @@ public class WahlenServiceSecurityTest {
     wahl3.setReihenfolge(3);
     wahl3.setWaehlerverzeichnisNummer(3);
     wahl3.setWahltag(LocalDate.now().plusMonths(3));
+    wahl3.setKennzeichen("E");
     List<Wahl> lw = new ArrayList<>();
     lw.add(wahl1);
     lw.add(wahl2);
@@ -273,7 +276,8 @@ public class WahlenServiceSecurityTest {
             LocalDate.now().plusMonths(1),
             WahlartModel.BAW,
             new FarbeModel(1, 1, 1),
-            "0");
+            "0",
+            "B");
     WahlModel wahl2 =
         new WahlModel(
             "wahlid2",
@@ -283,7 +287,8 @@ public class WahlenServiceSecurityTest {
             LocalDate.now().plusMonths(2),
             WahlartModel.LTW,
             new FarbeModel(2, 2, 2),
-            "1");
+            "1",
+            "L");
     WahlModel wahl3 =
         new WahlModel(
             "wahlid3",
@@ -293,7 +298,8 @@ public class WahlenServiceSecurityTest {
             LocalDate.now().plusMonths(3),
             WahlartModel.LTW,
             new FarbeModel(3, 3, 3),
-            "2");
+            "2",
+            "L");
     List<WahlModel> lw = new ArrayList<>();
     lw.add(wahl1);
     lw.add(wahl2);

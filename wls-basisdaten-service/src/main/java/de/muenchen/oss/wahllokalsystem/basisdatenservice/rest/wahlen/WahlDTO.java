@@ -10,4 +10,5 @@ public record WahlDTO(
     @NotNull java.time.LocalDate wahltag,
     @NotNull WahlartDTO wahlart,
     @NotNull FarbeDTO farbe,
-    String nummer) {}
+    String nummer,
+    @NotNull String kennzeichen) {}

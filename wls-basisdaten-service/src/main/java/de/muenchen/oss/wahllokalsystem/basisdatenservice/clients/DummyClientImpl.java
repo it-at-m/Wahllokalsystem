@@ -100,7 +100,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.BTW,
             new FarbeModel(0, 1, 2),
-            "1"),
+            "1",
+            "B"),
         new WahlModel(
             "wahl2",
             "remoteWahl 1",
@@ -109,7 +110,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.EUW,
             new FarbeModel(3, 4, 5),
-            "1"),
+            "1",
+            "E"),
         new WahlModel(
             "wahl3",
             "remoteWahl 2",
@@ -118,7 +120,8 @@ public class DummyClientImpl
             wahltagWithNummerModel.wahltag(),
             WahlartModel.LTW,
             new FarbeModel(6, 7, 8),
-            "1"));
+            "1",
+            "L"));
   }
 
   @Override
@@ -174,7 +177,8 @@ public class DummyClientImpl
                 wahltagWithNummerModel.wahltag(),
                 WahlartModel.BTW,
                 new FarbeModel(0, 1, 2),
-                "0"),
+                "0",
+                "B"),
             new WahlModel(
                 "wahlID2",
                 "Europawahl",
@@ -183,7 +187,8 @@ public class DummyClientImpl
                 wahltagWithNummerModel.wahltag(),
                 WahlartModel.EUW,
                 new FarbeModel(3, 4, 5),
-                "1")),
+                "1",
+                "E")),
         Set.of(
             new WahlbezirkModel(
                 "wahlbezirkID1_1",

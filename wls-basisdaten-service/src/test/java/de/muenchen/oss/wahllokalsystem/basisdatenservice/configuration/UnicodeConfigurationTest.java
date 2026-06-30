@@ -84,7 +84,8 @@ class UnicodeConfigurationTest {
             searchingForWahltag.getWahltag(),
             WahlartDTO.BAW,
             new FarbeDTO(1, 1, 1),
-            "1");
+            "1",
+            "B");
 
     return Stream.of(wahl1)
         .filter(wahl -> (wahl.wahltag().equals(searchingForWahltag.getWahltag())))

@@ -129,6 +129,19 @@
                     <div>{{ kandidat.name }}</div>
                     <base-kandidate-votes :kandidat="kandidat" />
                   </div>
+                  <div
+                    v-if="
+                      spacesBetweenNonDirectFollowingKandidatenVotes &&
+                      index <
+                        getKandidatenWithVotes(wahlvorschlag).length - 1 &&
+                      getKandidatenWithVotes(wahlvorschlag)[index]
+                        .listenposition -
+                        getKandidatenWithVotes(wahlvorschlag)[index + 1]
+                          .listenposition !==
+                        -1
+                    "
+                    class="mb-3"
+                  />
                 </div>
                 <v-divider
                   thickness="2"
@@ -199,9 +212,10 @@ const emit = defineEmits<{
   command: [command: AbstractCommandEvent];
 }>();
 
-const { compactSimpleWahlvorschlag } = storeToRefs(
-  useExperimentalFeaturesStore()
-);
+const {
+  compactSimpleWahlvorschlag,
+  spacesBetweenNonDirectFollowingKandidatenVotes,
+} = storeToRefs(useExperimentalFeaturesStore());
 
 const wahlvorschlaegeWithDecisions = computed(() =>
   votesOnly.filter(

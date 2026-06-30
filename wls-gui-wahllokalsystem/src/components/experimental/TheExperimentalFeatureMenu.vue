@@ -103,6 +103,12 @@
               label="kompakte Ansicht"
               hide-details
             />
+            <v-checkbox
+              v-model="spacesBetweenNonDirectFollowingKandidatenVotes"
+              density="compact"
+              label="Abstände wenn Kandidaten nicht direkt aufeinander folgen"
+              hide-details
+            />
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -126,6 +132,7 @@ const {
   hasStimmzettelSummaryItems,
   kandidatScoreShowName,
   compactSimpleWahlvorschlag,
+  spacesBetweenNonDirectFollowingKandidatenVotes,
   subViewBeschlussfassung,
   subViewStimmzettelerfassung,
 } = storeToRefs(useExperimentalFeaturesStore());

@@ -36,6 +36,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
 
   const kandidatScoreShowName = ref(true);
   const compactSimpleWahlvorschlag = ref(false);
+  const spacesBetweenNonDirectFollowingKandidatenVotes = ref(true);
 
   watch(hasStimmzettelSummaryItems, (newValue) => {
     if (newValue) {
@@ -71,6 +72,7 @@ export const useExperimentalFeaturesStore = defineStore(storeID, () => {
     beschlussStimmzettelFailureZuVieleStimmen,
     kandidatScoreShowName,
     compactSimpleWahlvorschlag,
+    spacesBetweenNonDirectFollowingKandidatenVotes,
     stimmzettelSummaryItems,
     hasStimmzettelSummaryItems,
     subViewBeschlussfassung,

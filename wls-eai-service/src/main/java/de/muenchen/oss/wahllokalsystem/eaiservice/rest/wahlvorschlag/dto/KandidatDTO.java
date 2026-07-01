@@ -1,6 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.eaiservice.rest.wahlvorschlag.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record KandidatDTO(
@@ -9,4 +10,5 @@ public record KandidatDTO(
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long listenposition,
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean direktkandidat,
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED) long tabellenSpalteInNiederschrift,
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean einzelbewerber) {}
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) boolean einzelbewerber,
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED) @Min(1) int anzahlNennungen) {}

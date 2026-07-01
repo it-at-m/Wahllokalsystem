@@ -32,7 +32,10 @@ class WahlvorschlaegeModelMapperTest {
     val result = unitUnderTest.toModel(entityToMap);
     val expectedResult = createWahlvorschlaegeModel();
 
-    Assertions.assertThat(result).isEqualTo(expectedResult);
+    Assertions.assertThat(result)
+        .usingRecursiveComparison()
+        .ignoringCollectionOrder()
+        .isEqualTo(expectedResult);
   }
 
   private Wahlvorschlaege createWahlvorschlaegeEntity() {
@@ -40,15 +43,17 @@ class WahlvorschlaegeModelMapperTest {
         new Wahlvorschlaege(
             null, new BezirkUndWahlID("wahlID", "wahlbezirkID"), "stimmzettelgebietID", null);
     val wahlvorschlag1 = new Wahlvorschlag(null, "id1", entity, 1L, "kurzname1", true, null);
-    val kandidat1 = new Kandidat(null, "kandidatID1", wahlvorschlag1, "name1", 1L, true, 1L, true);
+    val kandidat1 =
+        new Kandidat(null, "kandidatID1", wahlvorschlag1, "name1", 1L, true, 1L, true, 1);
     val kandidat2 =
-        new Kandidat(null, "kandidatID2", wahlvorschlag1, "name2", 2L, false, 2L, false);
+        new Kandidat(null, "kandidatID2", wahlvorschlag1, "name2", 2L, false, 2L, false, 1);
     wahlvorschlag1.setKandidaten(Set.of(kandidat1, kandidat2));
 
     val wahlvorschlag2 = new Wahlvorschlag(null, "id2", entity, 2L, "kurzname2", false, null);
-    val kandidat3 = new Kandidat(null, "kandidatID3", wahlvorschlag2, "name3", 1L, true, 1L, true);
+    val kandidat3 =
+        new Kandidat(null, "kandidatID3", wahlvorschlag2, "name3", 1L, true, 1L, true, 2);
     val kandidat4 =
-        new Kandidat(null, "kandidatID4", wahlvorschlag2, "name4", 2L, false, 2L, false);
+        new Kandidat(null, "kandidatID4", wahlvorschlag2, "name4", 2L, false, 2L, false, 3);
     wahlvorschlag2.setKandidaten(Set.of(kandidat3, kandidat4));
 
     entity.setWahlvorschlaege(Set.of(wahlvorschlag1, wahlvorschlag2));
@@ -67,15 +72,15 @@ class WahlvorschlaegeModelMapperTest {
                 "kurzname1",
                 true,
                 Set.of(
-                    new KandidatModel("kandidatID1", "name1", 1L, true, 1L, true),
-                    new KandidatModel("kandidatID2", "name2", 2L, false, 2L, false))),
+                    new KandidatModel("kandidatID1", "name1", 1L, true, 1L, true, 1),
+                    new KandidatModel("kandidatID2", "name2", 2L, false, 2L, false, 1))),
             new WahlvorschlagModel(
                 "id2",
                 2L,
                 "kurzname2",
                 false,
                 Set.of(
-                    new KandidatModel("kandidatID3", "name3", 1L, true, 1L, true),
-                    new KandidatModel("kandidatID4", "name4", 2L, false, 2L, false)))));
+                    new KandidatModel("kandidatID3", "name3", 1L, true, 1L, true, 2),
+                    new KandidatModel("kandidatID4", "name4", 2L, false, 2L, false, 3)))));
   }
 }

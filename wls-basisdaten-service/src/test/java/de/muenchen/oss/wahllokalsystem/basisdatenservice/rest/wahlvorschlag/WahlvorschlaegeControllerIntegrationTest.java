@@ -251,6 +251,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
     kandidat11.setName("name11");
     kandidat11.setListenposition(1L);
     kandidat11.setTabellenSpalteInNiederschrift(1L);
+    kandidat11.setAnzahlNennungen(1);
 
     val kandidat12 =
         new de.muenchen.oss.wahllokalsystem.basisdatenservice.eai.aou.model.KandidatDTO();
@@ -260,6 +261,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
     kandidat12.setName("name12");
     kandidat12.setListenposition(2L);
     kandidat12.setTabellenSpalteInNiederschrift(2L);
+    kandidat12.setAnzahlNennungen(1);
     wahlvorschlag1.setKandidaten(Set.of(kandidat11, kandidat12));
 
     val wahlvorschlag2 = new WahlvorschlagDTO();
@@ -276,6 +278,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
     kandidat21.setName("name21");
     kandidat21.setListenposition(3L);
     kandidat21.setTabellenSpalteInNiederschrift(3L);
+    kandidat21.setAnzahlNennungen(2);
 
     val kandidat22 = new KandidatDTO();
     kandidat22.setIdentifikator("kandidat22");
@@ -284,6 +287,7 @@ public class WahlvorschlaegeControllerIntegrationTest {
     kandidat22.setName("name22");
     kandidat22.setListenposition(4L);
     kandidat22.setTabellenSpalteInNiederschrift(4L);
+    kandidat22.setAnzahlNennungen(3);
     wahlvorschlag2.setKandidaten(Set.of(kandidat21, kandidat22));
 
     val wahlvorschlaege = Set.of(wahlvorschlag1, wahlvorschlag2);

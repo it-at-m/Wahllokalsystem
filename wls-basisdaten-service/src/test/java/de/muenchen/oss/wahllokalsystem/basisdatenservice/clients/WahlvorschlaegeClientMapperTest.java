@@ -46,6 +46,7 @@ class WahlvorschlaegeClientMapperTest {
       kandidat11.setName("name11");
       kandidat11.setListenposition(1L);
       kandidat11.setTabellenSpalteInNiederschrift(1L);
+      kandidat11.setAnzahlNennungen(1);
 
       val kandidat12 = new KandidatDTO();
       kandidat12.setIdentifikator("kandidat12");
@@ -54,6 +55,7 @@ class WahlvorschlaegeClientMapperTest {
       kandidat12.setName("name12");
       kandidat12.setListenposition(2L);
       kandidat12.setTabellenSpalteInNiederschrift(2L);
+      kandidat12.setAnzahlNennungen(1);
       wahlvorschlag1.setKandidaten(Set.of(kandidat11, kandidat12));
 
       val wahlvorschlag2 = new WahlvorschlagDTO();
@@ -69,6 +71,7 @@ class WahlvorschlaegeClientMapperTest {
       kandidat21.setName("name21");
       kandidat21.setListenposition(3L);
       kandidat21.setTabellenSpalteInNiederschrift(3L);
+      kandidat21.setAnzahlNennungen(2);
 
       val kandidat22 = new KandidatDTO();
       kandidat22.setIdentifikator("kandidat22");
@@ -77,6 +80,7 @@ class WahlvorschlaegeClientMapperTest {
       kandidat22.setName("name22");
       kandidat22.setListenposition(4L);
       kandidat22.setTabellenSpalteInNiederschrift(4L);
+      kandidat22.setAnzahlNennungen(3);
       wahlvorschlag2.setKandidaten(Set.of(kandidat21, kandidat22));
 
       val wahlvorschlaege = Set.of(wahlvorschlag1, wahlvorschlag2);
@@ -93,16 +97,16 @@ class WahlvorschlaegeClientMapperTest {
                   "kurzname1",
                   true,
                   Set.of(
-                      new KandidatModel("kandidat11", "name11", 1L, true, 1L, true),
-                      new KandidatModel("kandidat12", "name12", 2L, false, 2L, false))),
+                      new KandidatModel("kandidat11", "name11", 1L, true, 1L, true, 1),
+                      new KandidatModel("kandidat12", "name12", 2L, false, 2L, false, 1))),
               new WahlvorschlagModel(
                   "identifikator2",
                   2L,
                   "kurzname2",
                   false,
                   Set.of(
-                      new KandidatModel("kandidat21", "name21", 3L, true, 3L, true),
-                      new KandidatModel("kandidat22", "name22", 4L, false, 4L, false))));
+                      new KandidatModel("kandidat21", "name21", 3L, true, 3L, true, 2),
+                      new KandidatModel("kandidat22", "name22", 4L, false, 4L, false, 3))));
       val expectedResult =
           new WahlvorschlaegeModel(
               new BezirkUndWahlID(wahlID, wahlbezirkID),

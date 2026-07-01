@@ -450,11 +450,27 @@ public class WahltermindatenControllerIntegrationTest {
       wahlvorschlaege.addWahlvorschlag(wahlvorschlag1);
       val kandidat1Vorschlag1 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag1,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              1);
       wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
       val kandidat2Vorschlag1 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag1,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              1);
       wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
 
       val wahlvorschlag2 =
@@ -469,11 +485,27 @@ public class WahltermindatenControllerIntegrationTest {
       wahlvorschlaege.addWahlvorschlag(wahlvorschlag2);
       val kandidat1Vorschlag2 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag2,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              2);
       wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
       val kandidat2Vorschlag2 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag2,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              3);
       wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
       return wahlvorschlaegeRepository.save(wahlvorschlaege);

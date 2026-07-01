@@ -14,9 +14,8 @@
     </template>
     <v-card
       width="275"
-      height="395"
     >
-      <v-list class="pt-0">
+      <v-list class="pt-0 mb-2">
         <v-list-item class="list-header">
           <strong>Hilfe und Support</strong>
         </v-list-item>

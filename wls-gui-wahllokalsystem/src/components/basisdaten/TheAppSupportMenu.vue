@@ -12,10 +12,7 @@
         color="white"
       />
     </template>
-    <v-card
-      width="275"
-      height="395"
-    >
+    <v-card width="275">
       <v-list class="pt-0">
         <v-list-item class="list-header">
           <strong>Hilfe und Support</strong>

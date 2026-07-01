@@ -246,8 +246,8 @@ class AsyncWahltermindatenServiceTest {
         final LocalDate wahltagDate, final WahlartModel wahlArt) {
       val wahlenModels =
           Set.of(
-              new WahlModel("wahlID1", "wahl1", 1L, 1L, wahltagDate, wahlArt, null, "1"),
-              new WahlModel("wahlID2", "wahl2", 2L, 2L, wahltagDate, wahlArt, null, "2"));
+              new WahlModel("wahlID1", "wahl1", 1L, 1L, wahltagDate, wahlArt, null, "1", "A"),
+              new WahlModel("wahlID2", "wahl2", 2L, 2L, wahltagDate, wahlArt, null, "2", "B"));
 
       val wahlbezirkeModels =
           Set.of(

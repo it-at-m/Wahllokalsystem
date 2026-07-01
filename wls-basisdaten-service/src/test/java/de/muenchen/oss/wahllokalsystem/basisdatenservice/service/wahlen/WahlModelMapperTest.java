@@ -45,7 +45,8 @@ class WahlModelMapperTest {
             LocalDate.now().minusMonths(1),
             Wahlart.BAW,
             new Farbe(1, 1, 1),
-            "1");
+            "1",
+            "B");
     val wahl2 =
         new Wahl(
             "wahlID2",
@@ -55,7 +56,8 @@ class WahlModelMapperTest {
             LocalDate.now().plusMonths(1),
             Wahlart.EUW,
             new Farbe(2, 2, 2),
-            "2");
+            "2",
+            "E");
     val wahl3 =
         new Wahl(
             "wahlID3",
@@ -65,7 +67,8 @@ class WahlModelMapperTest {
             LocalDate.now().minusMonths(1),
             Wahlart.VE,
             new Farbe(3, 3, 3),
-            "3");
+            "3",
+            "V");
 
     return Arrays.asList(wahl1, wahl2, wahl3);
   }
@@ -80,7 +83,8 @@ class WahlModelMapperTest {
             LocalDate.now().minusMonths(1),
             WahlartModel.BAW,
             new FarbeModel(1, 1, 1),
-            "1");
+            "1",
+            "B");
     val wahl2 =
         new WahlModel(
             "wahlID2",
@@ -90,7 +94,8 @@ class WahlModelMapperTest {
             LocalDate.now().plusMonths(1),
             WahlartModel.EUW,
             new FarbeModel(2, 2, 2),
-            "2");
+            "2",
+            "E");
     val wahl3 =
         new WahlModel(
             "wahlID3",
@@ -100,7 +105,8 @@ class WahlModelMapperTest {
             LocalDate.now().minusMonths(1),
             WahlartModel.VE,
             new FarbeModel(3, 3, 3),
-            "3");
+            "3",
+            "V");
 
     return List.of(wahl1, wahl2, wahl3);
   }

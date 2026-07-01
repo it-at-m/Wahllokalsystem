@@ -34,9 +34,9 @@ class WahlvorschlagMapperTest {
 
       @Test
       void should_returnWahlvorschlagDTO_when_givenWahlvorschlagEntity() {
-        val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+        val kandidat1 = new Kandidat("name1", 1, false, 1, false, 1);
         kandidat1.setId(UUID.randomUUID());
-        val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+        val kandidat2 = new Kandidat("name2", 2, true, 2, true, 2);
         kandidat2.setId(UUID.randomUUID());
         val kandidaten = Set.of(kandidat1, kandidat2);
         val entityToMap = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten);
@@ -52,14 +52,16 @@ class WahlvorschlagMapperTest {
                     kandidat1.getListenposition(),
                     kandidat1.isDirektkandidat(),
                     kandidat1.getTabellenSpalteInNiederschrift(),
-                    kandidat1.isEinzelbewerber()),
+                    kandidat1.isEinzelbewerber(),
+                    kandidat1.getAnzahlNennungen()),
                 new KandidatDTO(
                     kandidat2.getId().toString(),
                     kandidat2.getName(),
                     kandidat2.getListenposition(),
                     kandidat2.isDirektkandidat(),
                     kandidat2.getTabellenSpalteInNiederschrift(),
-                    kandidat2.isEinzelbewerber()));
+                    kandidat2.isEinzelbewerber(),
+                    kandidat2.getAnzahlNennungen()));
         val expectedResult =
             new WahlvorschlagDTO(
                 entityToMap.getId().toString(),
@@ -73,17 +75,17 @@ class WahlvorschlagMapperTest {
 
       @Test
       void should_returnWahlvorschlaegeDTO_when_givenWahlvorschlaegeEntity() {
-        val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+        val kandidat1 = new Kandidat("name1", 1, false, 1, false, 1);
         kandidat1.setId(UUID.randomUUID());
-        val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+        val kandidat2 = new Kandidat("name2", 2, true, 2, true, 1);
         kandidat2.setId(UUID.randomUUID());
         val kandidaten1 = Set.of(kandidat1, kandidat2);
         val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
         wahlvorschlag1.setId(UUID.randomUUID());
 
-        val kandidat3 = new Kandidat("name3", 1, false, 1, false);
+        val kandidat3 = new Kandidat("name3", 1, false, 1, false, 2);
         kandidat3.setId(UUID.randomUUID());
-        val kandidat4 = new Kandidat("name4", 2, true, 2, true);
+        val kandidat4 = new Kandidat("name4", 2, true, 2, true, 3);
         kandidat4.setId(UUID.randomUUID());
         val kandidaten2 = Set.of(kandidat3, kandidat4);
         val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, kandidaten2);
@@ -106,14 +108,16 @@ class WahlvorschlagMapperTest {
                     kandidat1.getListenposition(),
                     kandidat1.isDirektkandidat(),
                     kandidat1.getTabellenSpalteInNiederschrift(),
-                    kandidat1.isEinzelbewerber()),
+                    kandidat1.isEinzelbewerber(),
+                    kandidat1.getAnzahlNennungen()),
                 new KandidatDTO(
                     kandidat2.getId().toString(),
                     kandidat2.getName(),
                     kandidat2.getListenposition(),
                     kandidat2.isDirektkandidat(),
                     kandidat2.getTabellenSpalteInNiederschrift(),
-                    kandidat2.isEinzelbewerber()));
+                    kandidat2.isEinzelbewerber(),
+                    kandidat2.getAnzahlNennungen()));
         val expectedWahlvorschlag1 =
             new WahlvorschlagDTO(
                 wahlvorschlag1.getId().toString(),
@@ -129,14 +133,16 @@ class WahlvorschlagMapperTest {
                     kandidat3.getListenposition(),
                     kandidat3.isDirektkandidat(),
                     kandidat3.getTabellenSpalteInNiederschrift(),
-                    kandidat3.isEinzelbewerber()),
+                    kandidat3.isEinzelbewerber(),
+                    kandidat3.getAnzahlNennungen()),
                 new KandidatDTO(
                     kandidat4.getId().toString(),
                     kandidat4.getName(),
                     kandidat4.getListenposition(),
                     kandidat4.isDirektkandidat(),
                     kandidat4.getTabellenSpalteInNiederschrift(),
-                    kandidat4.isEinzelbewerber()));
+                    kandidat4.isEinzelbewerber(),
+                    kandidat4.getAnzahlNennungen()));
         val expectedWahlvorschlag2 =
             new WahlvorschlagDTO(
                 wahlvorschlag2.getId().toString(),
@@ -156,17 +162,17 @@ class WahlvorschlagMapperTest {
 
       @Test
       void should_returnWahlvorschlaegeListeDTO_when_givenWahlvorschlaegeListeEntity() {
-        val kandidat1 = new Kandidat("name1", 1, false, 1, false);
+        val kandidat1 = new Kandidat("name1", 1, false, 1, false, 3);
         kandidat1.setId(UUID.randomUUID());
-        val kandidat2 = new Kandidat("name2", 2, true, 2, true);
+        val kandidat2 = new Kandidat("name2", 2, true, 2, true, 1);
         kandidat2.setId(UUID.randomUUID());
         val kandidaten1 = Set.of(kandidat1, kandidat2);
         val wahlvorschlag1 = new Wahlvorschlag(1, "wahlvorschlag1", true, kandidaten1);
         wahlvorschlag1.setId(UUID.randomUUID());
 
-        val kandidat3 = new Kandidat("name3", 1, false, 1, false);
+        val kandidat3 = new Kandidat("name3", 1, false, 1, false, 2);
         kandidat3.setId(UUID.randomUUID());
-        val kandidat4 = new Kandidat("name4", 2, true, 2, true);
+        val kandidat4 = new Kandidat("name4", 2, true, 2, true, 1);
         kandidat4.setId(UUID.randomUUID());
         val kandidaten2 = Set.of(kandidat3, kandidat4);
         val wahlvorschlag2 = new Wahlvorschlag(1, "wahlvorschlag2", true, kandidaten2);
@@ -192,14 +198,16 @@ class WahlvorschlagMapperTest {
                     kandidat1.getListenposition(),
                     kandidat1.isDirektkandidat(),
                     kandidat1.getTabellenSpalteInNiederschrift(),
-                    kandidat1.isEinzelbewerber()),
+                    kandidat1.isEinzelbewerber(),
+                    kandidat1.getAnzahlNennungen()),
                 new KandidatDTO(
                     kandidat2.getId().toString(),
                     kandidat2.getName(),
                     kandidat2.getListenposition(),
                     kandidat2.isDirektkandidat(),
                     kandidat2.getTabellenSpalteInNiederschrift(),
-                    kandidat2.isEinzelbewerber()));
+                    kandidat2.isEinzelbewerber(),
+                    kandidat2.getAnzahlNennungen()));
         val expectedWahlvorschlag1 =
             new WahlvorschlagDTO(
                 wahlvorschlag1.getId().toString(),
@@ -215,14 +223,16 @@ class WahlvorschlagMapperTest {
                     kandidat3.getListenposition(),
                     kandidat3.isDirektkandidat(),
                     kandidat3.getTabellenSpalteInNiederschrift(),
-                    kandidat3.isEinzelbewerber()),
+                    kandidat3.isEinzelbewerber(),
+                    kandidat3.getAnzahlNennungen()),
                 new KandidatDTO(
                     kandidat4.getId().toString(),
                     kandidat4.getName(),
                     kandidat4.getListenposition(),
                     kandidat4.isDirektkandidat(),
                     kandidat4.getTabellenSpalteInNiederschrift(),
-                    kandidat4.isEinzelbewerber()));
+                    kandidat4.isEinzelbewerber(),
+                    kandidat4.getAnzahlNennungen()));
         val expectedWahlvorschlag2 =
             new WahlvorschlagDTO(
                 wahlvorschlag2.getId().toString(),

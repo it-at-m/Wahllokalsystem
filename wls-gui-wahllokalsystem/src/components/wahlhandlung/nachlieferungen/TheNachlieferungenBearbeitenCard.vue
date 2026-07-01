@@ -58,14 +58,12 @@
           </div>
         </div>
       </v-form>
-      <the-beanstandete-wahlbriefe-tabs
+      <beanstandete-wahlbriefe-tabs
         title-tab-one="Wahlbriefezulassungen aktualisieren"
-      >
-        <the-beanstandete-wahlbriefe-aktualisieren-card
-            :nachtraeglich-ueberbracht-valid="nachtraeglichUeberbrachtValuesValid"
-            @save="onSaveClicked"
-        />
-      </the-beanstandete-wahlbriefe-tabs>
+        :triggers-navigation="false"
+        :nachtraeglich-ueberbracht-valid="nachtraeglichUeberbrachtValuesValid"
+        @save="onSaveClicked"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -79,7 +77,7 @@ import { onMounted, ref } from "vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
-import TheBeanstandeteWahlbriefeTabs from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTabs.vue";
+import BeanstandeteWahlbriefeTabs from "@/components/wahlhandlung/beanstandeteWahlbriefe/BeanstandeteWahlbriefeTabs.vue";
 import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
@@ -89,8 +87,6 @@ import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import TheBeanstandeteWahlbriefeAktualisierenCard
-  from "@/components/wahlhandlung/nachlieferungen/TheBeanstandeteWahlbriefeAktualisierenCard.vue";
 
 const { fruehesteSchliessungsuhrzeit } = storeToRefs(useInfomanagementStore());
 const { toTimeWithHoursAndOptionalMinutes } = useDateTimeFormatter();

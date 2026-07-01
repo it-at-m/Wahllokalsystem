@@ -25,7 +25,7 @@ import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
-import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
+import BeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BeanstandeteWahlbriefeCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -45,7 +45,7 @@ vi.mock(
   }
 );
 
-describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
+describe("BeanstandeteWahlbriefeCard", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
 
@@ -67,9 +67,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEnabledSaveButton_when_noRowsGiven", async (context) => {
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: true,
         },
       });
 
@@ -96,9 +99,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: false,
         },
       });
 
@@ -127,9 +133,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: true,
         },
       });
 
@@ -144,9 +153,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
     });
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: false,
         },
       });
 
@@ -177,9 +189,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: true,
         },
       });
 
@@ -212,9 +227,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         "addBeanstandeterWahlbriefEntry"
       );
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          triggersNavigation: true,
         },
       });
 

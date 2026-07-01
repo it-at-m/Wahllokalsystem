@@ -40,8 +40,20 @@ const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const { beanstandeteWahlbriefeActions } = useWahlenStore();
 const { getNextRoute } = useNavigationUtils();
 
-const isSaveButtonDisabled = computed(
-  () => !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid
+const props = defineProps<{
+  triggersNavigation: boolean;
+  nachtraeglichUeberbrachtValid?: boolean | null;
+}>();
+
+const emit = defineEmits<{
+  save: [];
+}>();
+
+const isSaveButtonDisabled = computed(() =>
+  props.triggersNavigation
+    ? !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid
+    : !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid ||
+      !props.nachtraeglichUeberbrachtValid
 );
 const isSaving = computed(
   () => beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeSaving
@@ -53,6 +65,10 @@ function onAddBeanstandeterWahlbriefClicked() {
 
 async function onSaveClicked() {
   await beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
-  await router.push(getNextRoute());
+  if (props.triggersNavigation) {
+    await router.push(getNextRoute());
+  } else {
+    emit("save");
+  }
 }
 </script>

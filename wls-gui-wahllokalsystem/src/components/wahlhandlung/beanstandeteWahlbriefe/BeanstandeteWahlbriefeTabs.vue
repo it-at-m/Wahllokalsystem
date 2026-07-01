@@ -27,7 +27,11 @@
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <slot/>
+        <beanstandete-wahlbriefe-card
+          :triggers-navigation="triggersNavigation"
+          :nachtraeglich-ueberbracht-valid="nachtraeglichUeberbrachtValid"
+          @save="emit('save')"
+        />
       </v-tabs-window-item>
       <v-tabs-window-item value="two">
         <the-beanstandete-wahlbriefe-beschlussergebnis />
@@ -40,6 +44,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
+import BeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BeanstandeteWahlbriefeCard.vue";
 import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -48,5 +53,11 @@ const tab = ref("one");
 
 defineProps<{
   titleTabOne: string;
+  triggersNavigation: boolean;
+  nachtraeglichUeberbrachtValid?: boolean | null;
+}>();
+
+const emit = defineEmits<{
+  save: [];
 }>();
 </script>

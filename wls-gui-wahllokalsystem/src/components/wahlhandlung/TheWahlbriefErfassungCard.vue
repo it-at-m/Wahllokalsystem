@@ -118,12 +118,12 @@ import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 const { required, timeNotInFuture, timeGreaterOrEqual } = useRules();
 const { currentTime } = useCurrentTime();

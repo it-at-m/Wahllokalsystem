@@ -31,11 +31,11 @@ import { computed, ref } from "vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { useNavigationService } from "../../../../composables/navigation/navigationService.ts";
-import { MbwStepsEnum } from "../../../../types/navigation/MbwStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { setStepDone, isElectionFinished } = useWorkflowStore();
 const { getNextRoute } = useNavigationService();

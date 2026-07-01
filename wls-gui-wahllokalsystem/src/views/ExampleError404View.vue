@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { ROUTES_HOME } from "@/constants";
-import { useNavigationService } from "../composables/navigation/navigationService.ts";
 
 const { routeWithName } = useNavigationService();
 </script>

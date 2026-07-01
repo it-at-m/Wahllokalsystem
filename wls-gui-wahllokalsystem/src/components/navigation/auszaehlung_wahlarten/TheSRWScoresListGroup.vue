@@ -28,9 +28,9 @@
 </template>
 
 <script setup lang="ts">
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { ROUTE_AUSZAEHLUNG_STIMMZETTEL } from "@/constants.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
-import { useNavigationService } from "../../../composables/navigation/navigationService.ts";
 
 const { routeWithNameAndParams } = useNavigationService();
 

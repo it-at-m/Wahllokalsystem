@@ -90,6 +90,7 @@ import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
 import { useRules } from "@/composables/common/rules.ts";
 import { useTextFormatter } from "@/composables/common/textFormatter.ts";
 import { useMultipleDifferenceDialogUtils } from "@/composables/ergebnismeldung/common/multipleDifferenceDialogUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import {
   MAX_LENGTH_FOR_TEXT_INPUT,
   MIN_LENGTH_FOR_BEGRUENDUNG,
@@ -98,7 +99,6 @@ import {
 import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWahlscheineStore } from "@/stores/wahlscheineStore.ts";
-import { useNavigationService } from "../composables/navigation/navigationService.ts";
 
 const { wahlenActions } = useWahlenStore();
 const { required, minLength, maxLength } = useRules();

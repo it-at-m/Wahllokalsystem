@@ -1,3 +1,4 @@
+G
 <template>
   <v-card>
     <v-card-title>Eingetretene Ereignisse</v-card-title>
@@ -39,10 +40,10 @@ import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheEreignisseNoEventsCheckboxes from "@/components/vorfaelleundvorkommnisse/TheEreignisseNoEventsCheckboxes.vue";
 import TheEreignisseRows from "@/components/vorfaelleundvorkommnisse/TheEreignisseRows.vue";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { CONTINUE_QUERY_PARAM, SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
-import { useNavigationService } from "../composables/navigation/navigationService.ts";
 
 const ereignisStore = useEreignisStore();
 const {

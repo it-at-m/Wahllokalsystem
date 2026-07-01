@@ -59,6 +59,7 @@
 import { storeToRefs } from "pinia";
 
 import BaseWorkflowListItem from "@/components/navigation/common/BaseWorkflowListItem.vue";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
@@ -66,7 +67,6 @@ import {
   ROUTE_WAHLUMGEBUNG,
 } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 defineProps({
   disabled: {

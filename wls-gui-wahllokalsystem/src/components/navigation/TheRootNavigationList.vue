@@ -38,6 +38,7 @@ import BaseDividerListItem from "@/components/navigation/common/BaseDividerListI
 import TheBWBElectionListGroup from "@/components/navigation/TheBWBElectionListGroup.vue";
 import TheScoresListItems from "@/components/navigation/TheScoresListItems.vue";
 import TheUWBElectionListGroup from "@/components/navigation/TheUWBElectionListGroup.vue";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import {
   DISABLED_SUBTITLE_WAHLVORSTAND_REQUIRED,
   ROUTE_EREIGNISSE,
@@ -46,7 +47,6 @@ import {
 } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 const { routeWithName } = useNavigationService();
 const { isUWB, isBWB } = storeToRefs(useUserStore());

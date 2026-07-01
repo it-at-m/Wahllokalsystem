@@ -94,10 +94,10 @@ import { storeToRefs } from "pinia";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseFeedbackCard from "@/components/common/cards/BaseFeedbackCard.vue";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
-import { useNavigationService } from "../../composables/navigation/navigationService.ts";
 
 const TEXT_MITTEILUNG_UEBER_UNGUELTIGE_WAHLSCHEINE =
   "Der Wahlvorstand wurde unterrichtet, dass folgende Wahlscheine für ungültig erklärt worden sind (gemäß Anlage).";

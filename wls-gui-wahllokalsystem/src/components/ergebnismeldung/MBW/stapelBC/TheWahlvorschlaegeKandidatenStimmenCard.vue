@@ -151,10 +151,10 @@ import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { useNavigationService } from "../../../../composables/navigation/navigationService.ts";
-import { MbwStepsEnum } from "../../../../types/navigation/MbwStepsEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();

@@ -1,4 +1,5 @@
 import type { User } from "@/types/User.ts";
+import type { RoleMapping } from "@/types/user/RoleMapping.ts";
 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -6,6 +7,7 @@ import { computed, ref } from "vue";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
+import { useRolesService } from "@/composables/user/rolesService.ts";
 import { useUserService } from "@/composables/user/userService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { createUserLocalDevelopment } from "@/types/User.ts";
@@ -17,6 +19,7 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
   const { initElectionWorkflowState } = useWorkflowStore();
+  const { createEmptyMapping, getRoles } = useRolesService();
 
   const defaultUser: User = {
     username: "",
@@ -40,9 +43,11 @@ export const useUserStore = defineStore("user", () => {
   const user = ref<User>(defaultUser);
 
   const isUserLoggedIn = ref<boolean>(true);
+  const roleMapping = ref<RoleMapping>(createEmptyMapping());
 
   async function loadUser() {
     try {
+      roleMapping.value = await getRoles();
       user.value = await getUser();
       user.value.wahlMetaData.forEach((wahlMetaData) =>
         initElectionWorkflowState(
@@ -78,6 +83,22 @@ export const useUserStore = defineStore("user", () => {
   const currentUserWahltag = computed((): string => {
     return user.value.wahltag;
   });
+
+  const hasRoleAdmin = computed(() =>
+    user.value.authorities.some(
+      (authority) => authority === roleMapping.value.admin
+    )
+  );
+  const hasRoleErfassungsteam = computed(() =>
+    user.value.authorities.some(
+      (authority) => authority === roleMapping.value.erfassungsteam
+    )
+  );
+  const hasRoleSchriftfuehrung = computed(() =>
+    user.value.authorities.some(
+      (authority) => authority === roleMapping.value.schriftfuehrung
+    )
+  );
 
   const isUWB = computed((): boolean => {
     return user.value.wahlbezirksArt === WahlbezirksArtEnum.UWB;
@@ -134,6 +155,9 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlbezirkNummer,
     currentUserHauptWahlID,
     currentUserWahlMetadata,
+    hasRoleAdmin,
+    hasRoleErfassungsteam,
+    hasRoleSchriftfuehrung,
     isUWB,
     isBWB,
     isUserLoggedIn,

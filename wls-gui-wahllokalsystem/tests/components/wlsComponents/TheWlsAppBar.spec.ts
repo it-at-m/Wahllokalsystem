@@ -71,6 +71,8 @@ describe("TheWlsAppBar.vue", () => {
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
       userStore.isUserLoggedIn = true;
+      // @ts-expect-error: cannot set readonly
+      userStore.hasRoleSchriftfuehrung = true;
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
 
@@ -89,6 +91,8 @@ describe("TheWlsAppBar.vue", () => {
       // @ts-expect-error: cannot set readonly
       taskManagerStore.hasTasksToRun = true;
       userStore.isUserLoggedIn = true;
+      // @ts-expect-error: cannot set readonly
+      userStore.hasRoleSchriftfuehrung = true;
       useWorkflowStore().isWahlvorstandErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
 

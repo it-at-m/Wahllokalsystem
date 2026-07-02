@@ -450,7 +450,7 @@ export function useMbwUtils(wahlID: string, wahlbezirkID: string) {
       meldungsart == MeldungsArtEnum.Schnellmeldung ? "S" : "N";
     const wahlbezirkNummer = parseInt(currentUserWahlbezirkNummer.value, 10);
     const wahlDatum = toGermanDate(wahl.wahltag);
-    if (wahlbezirkNummer && wahlDatum) {
+    if (wahl.kennzeichen && wahlbezirkNummer && wahlDatum) {
       return `${wahl.kennzeichen}${wahlDatum}-${meldungsartKurzbezeichnung}-${wahlbezirkKurzbezeichnung}-${wahlbezirkNummer}`;
     } else {
       addNotification(

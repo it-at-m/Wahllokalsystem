@@ -37,6 +37,7 @@ export function useWahlTestDataFactory() {
       wahlart: getRandomItem(Object.values(WahlDTOWahlartEnum)),
       farbe: _createRandomFarbeDTO(),
       nummer: generateRandomString(5),
+      kennzeichen: generateRandomString(1),
     };
   }
 
@@ -52,6 +53,7 @@ export function useWahlTestDataFactory() {
       nummer: generateRandomString(5),
       beanstandeteWahlbriefe: createRandomBeanstandeteWahlbriefeValues(),
       stimmzettelumschlaege: createStimmzettelumschlaege(),
+      kennzeichen: generateRandomString(1),
     };
   }
 

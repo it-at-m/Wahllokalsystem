@@ -22,9 +22,9 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
 import de.muenchen.oss.wahllokalsystem.wls.common.testing.SecurityUtils;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import java.util.Set;
-import javax.annotation.Nullable;
 import lombok.val;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

@@ -43,11 +43,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class MBWBedenklicheStimmzettelControllerIntegrationTest {
 

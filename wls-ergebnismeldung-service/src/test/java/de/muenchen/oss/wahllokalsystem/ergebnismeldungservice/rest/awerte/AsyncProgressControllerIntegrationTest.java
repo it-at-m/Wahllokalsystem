@@ -23,9 +23,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 public class AsyncProgressControllerIntegrationTest {
 

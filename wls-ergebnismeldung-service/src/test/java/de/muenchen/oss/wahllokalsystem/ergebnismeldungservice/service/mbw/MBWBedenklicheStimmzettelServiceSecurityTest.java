@@ -19,8 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
+@EnableWireMock
 @ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
 class MBWBedenklicheStimmzettelServiceSecurityTest {
 

@@ -13,13 +13,13 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExcept
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.rest.model.WlsExceptionDTO;
 import de.muenchen.refarch.gateway.OAuthSecurityMockConfiguration;
 import lombok.val;
-import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -55,14 +55,14 @@ class GlobalBackendErrorFilterTest {
                     .willReturn(aResponse()
                             .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .withHeaders(new HttpHeaders(
-                                    new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType()),
+                                    new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE),
                                     new HttpHeader(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE,
                                             "Bearer realm=\"Access to the staging site\", charset=\"UTF-8\"")))
                             .withBody(wlsExceptionDTOAsString)));
 
             webTestClient.get().uri("/api/refarch-gateway-backend-service/remote").exchange()
                     .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType())
+                    .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .expectHeader().doesNotExist(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE)
                     .expectBody()
                     .jsonPath("$.code").isEqualTo(wlsExceptionDTO.code())
@@ -78,14 +78,14 @@ class GlobalBackendErrorFilterTest {
                     .willReturn(aResponse()
                             .withStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .withHeaders(new HttpHeaders(
-                                    new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType()),
+                                    new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE),
                                     new HttpHeader(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE,
                                             "Bearer realm=\"Access to the staging site\", charset=\"UTF-8\"")))
                             .withBody("some strange string")));
 
             webTestClient.get().uri("/api/refarch-gateway-backend-service/remote").exchange()
                     .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType())
+                    .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .expectHeader().doesNotExist(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE)
                     .expectBody()
                     .jsonPath("$.code").isEqualTo("1234567890")
@@ -102,14 +102,14 @@ class GlobalBackendErrorFilterTest {
                 .willReturn(aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeaders(new HttpHeaders(
-                                new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType()),
+                                new HttpHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE),
                                 new HttpHeader(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE,
                                         "Bearer realm=\"Access to the staging site\", charset=\"UTF-8\"")))
                         .withBody("{ \"testkey\" : \"testvalue\" }")));
 
         webTestClient.get().uri("/api/refarch-gateway-backend-service/remote").exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.getMimeType())
+                .expectHeader().valueMatches(org.springframework.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .expectHeader().doesNotExist(org.springframework.http.HttpHeaders.WWW_AUTHENTICATE)
                 .expectBody()
                 .jsonPath("$.testkey").isEqualTo("testvalue");

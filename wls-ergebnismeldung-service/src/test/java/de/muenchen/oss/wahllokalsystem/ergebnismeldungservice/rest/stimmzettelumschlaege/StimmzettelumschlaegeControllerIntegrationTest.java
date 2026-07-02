@@ -33,9 +33,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @AutoConfigureMockMvc
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 public class StimmzettelumschlaegeControllerIntegrationTest {
 

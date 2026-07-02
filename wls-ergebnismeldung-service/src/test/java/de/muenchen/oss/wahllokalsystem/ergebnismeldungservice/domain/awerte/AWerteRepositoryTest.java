@@ -15,8 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(classes = {MicroServiceApplication.class})
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 @Slf4j
 class AWerteRepositoryTest {

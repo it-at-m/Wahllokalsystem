@@ -40,7 +40,6 @@ export function useRolesService() {
     return {
       schriftfuehrung: "",
       erfassungsteam: "",
-      admin: "",
     };
   }
 

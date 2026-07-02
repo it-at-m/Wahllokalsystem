@@ -21,7 +21,6 @@ const {
 export function useUserTestDataFactory() {
   function createRoleMapping(): RoleMapping {
     return {
-      admin: generateRandomString(10),
       erfassungsteam: generateRandomString(10),
       schriftfuehrung: generateRandomString(10),
     };

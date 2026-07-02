@@ -289,64 +289,6 @@ describe("userStore.ts", () => {
     });
   });
 
-  describe("hasRoleAdmin", () => {
-    it("should_returnTrue_when_authoritiesContainsRequiredValue", async () => {
-      const adminAuthority = "adminAuthority";
-      const user = prepareUser()
-        .authorities([
-          generateRandomString(10),
-          adminAuthority,
-          generateRandomString(10),
-        ])
-        .build();
-      mockDefinitions.getUser.mockResolvedValue(user);
-
-      const mockedRoleMapping = prepareRoleMapping()
-        .admin(adminAuthority)
-        .build();
-      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
-      await unitUnderTest.loadUser();
-
-      const result = unitUnderTest.hasRoleAdmin;
-
-      expect(result).toStrictEqual(true);
-    });
-
-    it("should_returnFalse_when_authoritiesNotContainsRequiredValue", async () => {
-      const adminAuthority = "adminAuthority";
-      const user = prepareUser()
-        .authorities([generateRandomString(10), generateRandomString(10)])
-        .build();
-      mockDefinitions.getUser.mockResolvedValue(user);
-
-      const mockedRoleMapping = prepareRoleMapping()
-        .admin(adminAuthority)
-        .build();
-      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
-      await unitUnderTest.loadUser();
-
-      const result = unitUnderTest.hasRoleAdmin;
-
-      expect(result).toStrictEqual(false);
-    });
-
-    it("should_returnFalse_when_authoritiesIsEmpty", async () => {
-      const adminAuthority = "adminAuthority";
-      const user = prepareUser().authorities([]).build();
-      mockDefinitions.getUser.mockResolvedValue(user);
-
-      const mockedRoleMapping = prepareRoleMapping()
-        .admin(adminAuthority)
-        .build();
-      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
-      await unitUnderTest.loadUser();
-
-      const result = unitUnderTest.hasRoleAdmin;
-
-      expect(result).toStrictEqual(false);
-    });
-  });
-
   describe("hasRoleErfassungsteam", () => {
     const erfassungteamAuthority = "adminAuthority";
 

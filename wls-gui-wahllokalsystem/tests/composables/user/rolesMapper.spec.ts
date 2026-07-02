@@ -23,7 +23,6 @@ describe("rolesMapper.ts", () => {
       const expectedResult: RoleMapping = {
         schriftfuehrung: dtoToMap.schriftfuehrung,
         erfassungsteam: dtoToMap.erfassungsteam,
-        admin: dtoToMap.admin,
       };
       expect(result).toEqual(expectedResult);
     });

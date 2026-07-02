@@ -84,11 +84,6 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahltag;
   });
 
-  const hasRoleAdmin = computed(() =>
-    user.value.authorities.some(
-      (authority) => authority === roleMapping.value.admin
-    )
-  );
   const hasRoleErfassungsteam = computed(() =>
     user.value.authorities.some(
       (authority) => authority === roleMapping.value.erfassungsteam
@@ -155,7 +150,6 @@ export const useUserStore = defineStore("user", () => {
     currentUserWahlbezirkNummer,
     currentUserHauptWahlID,
     currentUserWahlMetadata,
-    hasRoleAdmin,
     hasRoleErfassungsteam,
     hasRoleSchriftfuehrung,
     isUWB,

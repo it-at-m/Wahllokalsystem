@@ -2,8 +2,10 @@ import { createTestingPinia } from "@pinia/testing";
 import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useCommonErgebnismeldungTestDataFactory } from "@tests/utils/ergebnismeldung/common/commonErgebnismeldungTestDataFactory.ts";
 import { useWorkflowTestDataFactory } from "@tests/utils/navigation/NavigationTestDataFactory.ts";
+import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
@@ -11,6 +13,7 @@ const { generateRandomString, generateRandomBoolean } =
   useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
 const { prepareBezirkUndWahlID } = useCommonErgebnismeldungTestDataFactory();
+const { prepareUser } = useUserTestDataFactory();
 
 describe("workflowStore.ts", () => {
   beforeEach(() => {
@@ -443,6 +446,9 @@ describe("workflowStore.ts", () => {
 
   describe("isWahlbriefzulassungErfasst", () => {
     it("should_returnTrue_when_allRequiredStepsAreTrue", () => {
+      useUserStore().setUser(
+        prepareUser().isNachlieferungsbezirk(false).build()
+      );
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isWahlumgebungErfasst = true;
       useWorkflowStore().isWahlbriefeErfassenErfasst = true;
@@ -452,10 +458,39 @@ describe("workflowStore.ts", () => {
     });
 
     it("should_returnFalse_when_atLeastOneRequiredStepIsFalse", () => {
+      useUserStore().setUser(
+        prepareUser().isNachlieferungsbezirk(false).build()
+      );
       useWorkflowStore().isWahleroeffnungErfasst = false;
       useWorkflowStore().isWahlumgebungErfasst = generateRandomBoolean();
       useWorkflowStore().isWahlbriefeErfassenErfasst = generateRandomBoolean();
       useWorkflowStore().isWahlbriefeZulassenErfasst = generateRandomBoolean();
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(false);
+    });
+
+    it("should_returnTrue_when_nachlieferungenBearbeitenIsTrue", () => {
+      useUserStore().setUser(
+        prepareUser().isNachlieferungsbezirk(true).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isNachlieferungenBearbeitenErfasst = true;
+
+      expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(true);
+    });
+
+    it("should_returnFalse_when_nachlieferungenAreMissingForBWB", () => {
+      useUserStore().setUser(
+        prepareUser().isNachlieferungsbezirk(true).build()
+      );
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isNachlieferungenBearbeitenErfasst = false;
 
       expect(useWorkflowStore().isWahlbriefzulassungErfasst).toBe(false);
     });

@@ -4,6 +4,7 @@ import type { RoleMapping } from "@/types/user/RoleMapping.ts";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { useNachlieferungsbezirkeService } from "@/composables/basisdaten/nachlieferungsbezirkeService.ts";
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useCryptoUtils } from "@/composables/crypto/cryptoUtils.ts";
 import { useIndexDB } from "@/composables/indexDB/indexDB.ts";
@@ -19,6 +20,7 @@ const { registerStoreHMR } = useHmrUpdate();
 
 export const useUserStore = defineStore("user", () => {
   const { initElectionWorkflowState } = useWorkflowStore();
+  const { loadIsNachlieferungsbezirk } = useNachlieferungsbezirkeService();
   const { createEmptyMapping, getRoles } = useRolesService();
 
   const defaultUser: User = {
@@ -70,6 +72,13 @@ export const useUserStore = defineStore("user", () => {
 
       indexDBSingleton.clearIndexDBWhenOwnerNotMatches(user.value.username);
     }
+  }
+
+  async function initIsNachlieferungsbezirk() {
+    user.value.isNachlieferungsbezirk = await loadIsNachlieferungsbezirk(
+      currentUserWahltagID.value,
+      currentUserWahlbezirkID.value
+    );
   }
 
   const currentUserWahlbezirkID = computed((): string => {
@@ -126,6 +135,10 @@ export const useUserStore = defineStore("user", () => {
     return user.value.wahlMetaData;
   });
 
+  const isNachlieferungsbezirk = computed(() => {
+    return user.value.isNachlieferungsbezirk;
+  });
+
   function getWahlbezirkIdFromWahlMetaDataByWahlId(wahlID: string) {
     const metadata = currentUserWahlMetadata.value.find((metadata) => {
       return metadata.wahlID === wahlID;
@@ -155,6 +168,8 @@ export const useUserStore = defineStore("user", () => {
     isUWB,
     isBWB,
     isUserLoggedIn,
+    isNachlieferungsbezirk,
+    initIsNachlieferungsbezirk,
   };
 });
 

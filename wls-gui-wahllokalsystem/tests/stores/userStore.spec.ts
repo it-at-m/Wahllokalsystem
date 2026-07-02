@@ -438,4 +438,20 @@ describe("userStore.ts", () => {
       expect(unitUnderTest.isBWB).toStrictEqual(false);
     });
   });
+
+  describe("isNachlieferungsbezirk", () => {
+    it("should_returnTrue_when_isNachlieferungsbezirk", () => {
+      unitUnderTest.setUser(prepareUser().isNachlieferungsbezirk(true).build());
+
+      expect(unitUnderTest.isNachlieferungsbezirk).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_isNoNachlieferungsbezirk", () => {
+      unitUnderTest.setUser(
+        prepareUser().isNachlieferungsbezirk(false).build()
+      );
+
+      expect(unitUnderTest.isNachlieferungsbezirk).toStrictEqual(false);
+    });
+  });
 });

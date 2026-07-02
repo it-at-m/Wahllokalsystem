@@ -14,12 +14,19 @@ const mockDefinitions = vi.hoisted(() => ({
   getHandbuch: vi.fn(),
 }));
 
-vi.mock("@/api/wls-clients/generated-basisdaten-api", () => ({
-  HandbuchControllerApi: class {
-    getHandbuch = mockDefinitions.getHandbuch;
-  },
-  Configuration: mockDefinitions.configurationConstructor,
-}));
+vi.mock(
+  "@/api/wls-clients/generated-basisdaten-api",
+  async (importOriginal) => {
+    const mod = (await importOriginal()) as object;
+    return {
+      ...mod,
+      HandbuchControllerApi: class {
+        getHandbuch = mockDefinitions.getHandbuch;
+      },
+      Configuration: mockDefinitions.configurationConstructor,
+    };
+  }
+);
 vi.mock(
   import("@/composables/userNotification/userNotificationService.ts"),
   () => ({

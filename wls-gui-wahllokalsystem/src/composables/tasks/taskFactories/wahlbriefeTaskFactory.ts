@@ -7,7 +7,8 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useWahlbriefeTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    return taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.BWB
+    return taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.BWB &&
+      taskFactoryContext.isSchriftfuehrung
       ? [_createTask()]
       : [];
   }

@@ -9,7 +9,8 @@ export function useWaehlerTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const { loadWaehler } = useMonitoringStore();
 
-    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
+    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB &&
+      taskFactoryContext.isSchriftfuehrung
       ? [
           {
             name: "Wahlbeteiligung",

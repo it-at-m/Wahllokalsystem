@@ -9,7 +9,8 @@ export function useUrnenwahlSchliessungsuhrzeitTaskFactory(): TaskFactory {
   const { schliessungsuhrzeitActions } = useWahlbezirkStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
+    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB &&
+      taskFactoryContext.isSchriftfuehrung
       ? [
           {
             name: "Schließungsuhrzeit",

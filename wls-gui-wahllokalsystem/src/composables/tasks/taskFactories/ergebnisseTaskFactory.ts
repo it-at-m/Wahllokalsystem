@@ -15,6 +15,10 @@ export function useErgebnisseTaskFactory(): TaskFactory {
   const { loadErgebnisseByStapelArt } = useErgebnismeldungStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     const tasksForWahlen: Task[] = [];
 
     taskFactoryContext.extendedWahlMetaData

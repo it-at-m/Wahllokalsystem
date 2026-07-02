@@ -10,7 +10,10 @@ export function useAWerteTaskFactory(): TaskFactory {
   const { getAWerte } = useAWerteService();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (taskFactoryContext.wahlbezirkArt !== WahlbezirksArtEnum.UWB) {
+    if (
+      taskFactoryContext.wahlbezirkArt !== WahlbezirksArtEnum.UWB ||
+      !taskFactoryContext.isSchriftfuehrung
+    ) {
       return [];
     }
 

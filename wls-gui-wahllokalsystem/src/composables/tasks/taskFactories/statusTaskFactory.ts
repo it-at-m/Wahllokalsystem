@@ -7,6 +7,10 @@ import { useStatusStore } from "@/stores/statusStore.ts";
 
 export function useStatusTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     return taskFactoryContext.extendedWahlMetaData.map(_createTask);
   }
 

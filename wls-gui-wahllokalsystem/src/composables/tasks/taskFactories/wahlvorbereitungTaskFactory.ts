@@ -9,6 +9,10 @@ export function useWahlvorbereitungTaskFactory(): TaskFactory {
   const WAHLVORBEREITUNG = "Wahlvorbereitung";
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     return taskFactoryContext.wahlbezirkArt == WahlbezirksArtEnum.UWB
       ? [_createTaskUrnenwahlvorbereitung()]
       : [_createTaskBriefwahlvorbereitung()];

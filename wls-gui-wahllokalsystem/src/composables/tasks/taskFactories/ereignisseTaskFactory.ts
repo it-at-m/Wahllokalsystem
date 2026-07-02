@@ -1,10 +1,15 @@
 import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
+import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useEreignisStore } from "@/stores/ereignisStore.ts";
 
 export function useEreignisseTaskFactory(): TaskFactory {
-  function createTasks(): Task[] {
+  function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     return [_createTask()];
   }
 

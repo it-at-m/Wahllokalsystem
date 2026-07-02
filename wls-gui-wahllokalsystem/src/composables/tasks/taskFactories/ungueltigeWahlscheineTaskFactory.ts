@@ -7,6 +7,10 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useUngueltigeWahlscheineTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     const isUwb = taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB;
     return isUwb ? [_createTask()] : [];
   }

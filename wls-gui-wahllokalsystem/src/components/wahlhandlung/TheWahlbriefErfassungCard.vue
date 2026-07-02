@@ -51,51 +51,6 @@
         />
       </v-form>
     </v-card-text>
-    <v-card-title>
-      Anzahl der nach
-      {{
-        toTimeWithHoursAndOptionalMinutes(
-          createTodayWithTime(fruehesteSchliessungsuhrzeit)
-        )
-      }}
-      Uhr nachgelieferten Wahlbriefe
-    </v-card-title>
-    <v-card-text>
-      <v-form
-        ref="nachtraeglichUeberbrachteForm"
-        v-model="anzahlNachtraeglichUeberbrachteValid"
-        data-test="nachtraeglichUeberbrachteForm"
-      >
-        <div class="d-flex flex-wrap justify-start">
-          <div>
-            <base-number-input
-              v-model="
-                wahlbriefDatenState.wahlbriefDaten.nachtraeglichUeberbrachte
-              "
-              class="mr-4"
-              data-test="textFieldNachtraeglichUeberbrachteAnzahl"
-              label="Anzahl Wahlbriefe"
-              :min-width="WIDTH"
-              :max-width="WIDTH"
-              :disabled="isAnzahlNachtraeglichUeberbrachteInputDisabled"
-            />
-          </div>
-          <div>
-            <base-time-input
-              v-model="
-                wahlbriefDatenState.wahlbriefDaten.zeitNachtraeglichUeberbrachte
-              "
-              class="mr-4"
-              :min-width="WIDTH"
-              :max-width="WIDTH"
-              data-test="timeInputZeitNachtraeglichUeberbrachteAnzahl"
-              :rules="getDateRules()"
-              :disabled="!isZeitNachtraegelichUeberbrachtRequired()"
-            />
-          </div>
-        </div>
-      </v-form>
-    </v-card-text>
     <v-card-actions>
       <base-wls-button-save
         data-test="button-save"
@@ -110,23 +65,20 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import BaseNumberInput from "@/components/common/inputs/BaseNumberInput.vue";
-import BaseTimeInput from "@/components/common/inputs/BaseTimeInput.vue";
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
 import { useNavigationService } from "@/composables/navigation/navigationService.ts";
-import { useCurrentTime } from "@/composables/useCurrentTime.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useWahlbezirkStore } from "@/stores/wahlbezirkStore.ts";
 
-const { required, timeNotInFuture, timeGreaterOrEqual } = useRules();
-const { currentTime } = useCurrentTime();
+const { required } = useRules();
 
 const { wahlbriefDatenActions } = useWahlbezirkStore();
 const { wahlbriefDatenState } = storeToRefs(useWahlbezirkStore());
@@ -138,58 +90,16 @@ const { getNextRoute } = useNavigationService();
 const anzahlWahlbriefeValid = ref<null | boolean>(null);
 const anzahlVerzeichnisseValid = ref<null | boolean>(null);
 const anzahlNachtraegeValid = ref<null | boolean>(null);
-const anzahlNachtraeglichUeberbrachteValid = ref<null | boolean>(null);
-
-const nachtraeglichUeberbrachteForm = ref<HTMLFormElement>();
 
 const WIDTH = 300;
-
-const getDateRules = () => {
-  const rules = [];
-  if (isZeitNachtraegelichUeberbrachtRequired()) {
-    rules.push(required);
-  }
-  rules.push(timeNotInFuture);
-  rules.push(timeGreaterOrEqual(fruehesteSchliessungsuhrzeit.value));
-  return rules;
-};
-
-watch(
-  () => wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte,
-  (newValue) => {
-    if (newValue === undefined || newValue < 1) {
-      nachtraeglichUeberbrachteForm.value?.resetValidation();
-      wahlbriefDatenState.value.wahlbriefDaten.zeitNachtraeglichUeberbrachte =
-        undefined;
-    } else {
-      nachtraeglichUeberbrachteForm.value?.validate();
-    }
-  }
-);
-
-const isAnzahlNachtraeglichUeberbrachteInputDisabled = computed(() => {
-  return (
-    currentTime.value < createTodayWithTime(fruehesteSchliessungsuhrzeit.value)
-  );
-});
 
 const isSaveButtonDisabled = computed(() => {
   return (
     anzahlWahlbriefeValid.value !== true ||
     anzahlVerzeichnisseValid.value !== true ||
-    anzahlNachtraegeValid.value !== true ||
-    (anzahlNachtraeglichUeberbrachteValid.value !== true &&
-      isZeitNachtraegelichUeberbrachtRequired())
+    anzahlNachtraegeValid.value !== true
   );
 });
-
-function isZeitNachtraegelichUeberbrachtRequired() {
-  return (
-    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte !==
-      undefined &&
-    wahlbriefDatenState.value.wahlbriefDaten.nachtraeglichUeberbrachte > 0
-  );
-}
 
 async function onSaveBriefwahldatenClicked() {
   await wahlbriefDatenActions.sendWahlbriefdaten();

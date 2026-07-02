@@ -23,15 +23,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK,
     properties = {
       "service.config.user.authority.schriftfuehrung="
-          + RolesControllerIntegrationTest.ROLE_SCHRIFTFUEHERUNG,
-      "service.config.user.authority.admin=" + RolesControllerIntegrationTest.ROLE_ADMIN
+          + RolesControllerIntegrationTest.ROLE_SCHRIFTFUEHRUNG,
+      "service.config.user.authority.admin=" + RolesControllerIntegrationTest.ROLE_ADMIN,
+      "service.config.user.authority.erfassungsteam="
+          + RolesControllerIntegrationTest.ROLE_ERFASSUNGSTEAM
     })
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE, Profiles.DUMMY_CLIENTS})
 class RolesControllerIntegrationTest {
 
-  public static final String ROLE_SCHRIFTFUEHERUNG = "ROLE_SCHRIFTFUEHRERUNG";
+  public static final String ROLE_SCHRIFTFUEHRUNG = "ROLE_SCHRIFTFUEHRUNG";
   public static final String ROLE_ADMIN = "ROLE_ADMIN";
+  public static final String ROLE_ERFASSUNGSTEAM = "ROLE_ERFASSUNGSTEAM";
 
   @Autowired MockMvc api;
 
@@ -49,7 +52,8 @@ class RolesControllerIntegrationTest {
           objectMapper.readValue(
               performedRequest.getResponse().getContentAsString(), RoleMappingsDTO.class);
 
-      val expectedResponseBody = new RoleMappingsDTO(ROLE_SCHRIFTFUEHERUNG, ROLE_ADMIN);
+      val expectedResponseBody =
+          new RoleMappingsDTO(ROLE_SCHRIFTFUEHRUNG, ROLE_ADMIN, ROLE_ERFASSUNGSTEAM);
       Assertions.assertThat(responseBodyAsDTO).isEqualTo(expectedResponseBody);
     }
   }

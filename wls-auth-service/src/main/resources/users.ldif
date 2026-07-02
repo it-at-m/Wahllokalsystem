@@ -68,6 +68,26 @@ sn: bwb
 uid: wls_mbw_bwb
 userPassword: test
 
+dn: uid=wls_mbw_erf_uwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_mbw_erf_uwb
+sn: uwb
+uid: wls_mbw_erf_uwb
+userPassword: test
+
+dn: uid=wls_mbw_erf_bwb,ou=people,dc=springframework,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: wls_mbw_erf_bwb
+sn: bwb
+uid: wls_mbw_erf_bwb
+userPassword: test
+
 dn: cn=user,ou=groups,dc=springframework,dc=org
 objectclass: top
 objectclass: groupOfNames
@@ -78,3 +98,5 @@ member: uid=wls_komw_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_komw_bwb,ou=people,dc=springframework,dc=org
 member: uid=wls_mbw_uwb,ou=people,dc=springframework,dc=org
 member: uid=wls_mbw_bwb,ou=people,dc=springframework,dc=org
+member: uid=wls_mbw_erf_uwb,ou=people,dc=springframework,dc=org
+member: uid=wls_mbw_erf_bwb,ou=people,dc=springframework,dc=org

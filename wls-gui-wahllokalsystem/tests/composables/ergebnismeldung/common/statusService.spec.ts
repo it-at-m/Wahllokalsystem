@@ -3,7 +3,7 @@ import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useStatusService } from "@/composables/ergebnismeldung/common/statusService.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { createStatusDTO, createStatus, prepareStatusDTO, prepareMeldungDTO } =
@@ -86,7 +86,7 @@ describe("statusService.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_SCHNELLMELDUNG
+        MbwStepsEnum.MBW_SCHNELLMELDUNG
       );
     });
 
@@ -108,7 +108,7 @@ describe("statusService.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_NIEDERSCHRIFT
+        MbwStepsEnum.MBW_NIEDERSCHRIFT
       );
     });
 

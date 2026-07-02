@@ -1,30 +1,19 @@
 import type { ElectionSpecificNextStep } from "@/types/navigation/ElectionSpecificNextStep.ts";
-import type { ElectionWorkflowState } from "@/types/navigation/ElectionWorkflowState.ts";
-import type { RouteLocationAsRelativeGeneric } from "vue-router";
+import type { RouteLocationAsRelativeGenericWithStringName } from "@/types/navigation/RouteLocationAsRelativeGenericWithStringName.ts";
 
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 
 export const NullNextStepImpl: ElectionSpecificNextStep = {
-  getNextRouteOrNull(): RouteLocationAsRelativeGeneric | null {
+  getNextRouteOrNull(): RouteLocationAsRelativeGenericWithStringName | null {
     return null;
   },
 };
 
 export const MBWNextStepImpl: ElectionSpecificNextStep = {
   getNextRouteOrNull(
-    wahlstatus: ElectionWorkflowState
-  ): RouteLocationAsRelativeGeneric | null {
-    for (const route of Object.values(MbwRoutesEnum)) {
-      if (!wahlstatus.stepsDone[route]) {
-        return {
-          name: route,
-          params: {
-            wahlId: wahlstatus.bezirkUndWahlID.wahlID,
-            wahlbezirkId: wahlstatus.bezirkUndWahlID.wahlbezirkID,
-          },
-        };
-      }
-    }
-    return null;
+    wahlID: string,
+    wahlbezirkID: string
+  ): RouteLocationAsRelativeGenericWithStringName | null {
+    return useMbwNavigationService(wahlID, wahlbezirkID).getNextRouteOrNull();
   },
 };

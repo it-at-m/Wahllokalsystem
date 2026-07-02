@@ -4,7 +4,7 @@
 
     <groupId>de.muenchen.oss.wahllokalsystem</groupId>
     <artifactId>wls-briefwahl-service</artifactId>
-    <version>0.3.15-SNAPSHOT</version>
+    <version>0.3.15</version>
     <name>wls_briefwahl_service</name>
 
 
@@ -292,7 +292,7 @@
         <url>https://github.com/it-at-m/Wahllokalsystem</url>
         <connection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</connection>
         <developerConnection>scm:git:https://github.com/it-at-m/Wahllokalsystem.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>wls-briefwahl-service/0.3.15</tag>
     </scm>
 
 

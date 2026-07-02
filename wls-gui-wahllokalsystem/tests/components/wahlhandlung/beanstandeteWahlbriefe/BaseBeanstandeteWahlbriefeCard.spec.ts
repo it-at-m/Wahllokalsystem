@@ -25,7 +25,7 @@ import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
-import BeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BeanstandeteWahlbriefeCard.vue";
+import BaseBeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BaseBeanstandeteWahlbriefeCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -45,7 +45,7 @@ vi.mock(
   }
 );
 
-describe("BeanstandeteWahlbriefeCard", () => {
+describe("BaseBeanstandeteWahlbriefeCard", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
 
@@ -67,12 +67,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEnabledSaveButton_when_noRowsGiven", async (context) => {
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: true,
+          hasNachlieferungen: false,
         },
       });
 
@@ -99,12 +99,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
           .build(),
       ];
 
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: false,
+          hasNachlieferungen: true,
         },
       });
 
@@ -133,12 +133,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
           .build(),
       ];
 
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: true,
+          hasNachlieferungen: false,
         },
       });
 
@@ -153,12 +153,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
     });
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: false,
+          hasNachlieferungen: true,
         },
       });
 
@@ -174,7 +174,7 @@ describe("BeanstandeteWahlbriefeCard", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_callSendBeanstandeteWahlbriefe_when_saveButtonIsClicked", async () => {
+    it("should_emitsSaveEvent_when_saveButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlenState.wahlen = [
         prepareWahl()
@@ -189,12 +189,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
           .build(),
       ];
 
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: true,
+          hasNachlieferungen: false,
         },
       });
 
@@ -205,11 +205,7 @@ describe("BeanstandeteWahlbriefeCard", () => {
 
       await saveButton.trigger("click");
 
-      mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
-        Promise.resolve()
-      );
-
-      expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalled();
+      expect(wrapper.emitted()).toHaveProperty("save");
     });
 
     it("should_callAddBeanstandeteWahlbriefe_when_addRowButtonIsClicked", async () => {
@@ -227,12 +223,12 @@ describe("BeanstandeteWahlbriefeCard", () => {
         "addBeanstandeterWahlbriefEntry"
       );
 
-      wrapper = mount(BeanstandeteWahlbriefeCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
         },
         props: {
-          triggersNavigation: true,
+          hasNachlieferungen: false,
         },
       });
 

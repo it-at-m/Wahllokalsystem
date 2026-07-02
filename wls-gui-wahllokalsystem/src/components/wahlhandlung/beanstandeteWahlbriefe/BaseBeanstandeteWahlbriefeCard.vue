@@ -19,7 +19,7 @@
         :loading="isSaving"
         :disabled="isSaveButtonDisabled"
         :save-text="SAVE_CONTINUE"
-        @click="onSaveClicked"
+        @click="emit('save')"
       />
     </v-card-actions>
   </v-card>
@@ -31,17 +31,14 @@ import { computed } from "vue";
 import BaseTextButton from "@/components/common/buttons/BaseTextButton.vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheBeanstandeteWahlbriefeTable from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeTable.vue";
-import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
-import router from "@/plugins/router.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
 const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const { beanstandeteWahlbriefeActions } = useWahlenStore();
-const { getNextRoute } = useNavigationService();
 
 const props = defineProps<{
-  triggersNavigation: boolean;
+  hasNachlieferungen: boolean;
   nachtraeglichUeberbrachtValid?: boolean | null;
 }>();
 
@@ -50,7 +47,7 @@ const emit = defineEmits<{
 }>();
 
 const isSaveButtonDisabled = computed(() =>
-  props.triggersNavigation
+  !props.hasNachlieferungen
     ? !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid
     : !beanstandeteWahlbriefeState.value.isBeanstandeteWahlbriefeTableValid ||
       !props.nachtraeglichUeberbrachtValid
@@ -61,14 +58,5 @@ const isSaving = computed(
 
 function onAddBeanstandeterWahlbriefClicked() {
   beanstandeteWahlbriefeActions.addBeanstandeterWahlbriefEntry();
-}
-
-async function onSaveClicked() {
-  await beanstandeteWahlbriefeActions.saveBeanstandeteWahlbriefe();
-  if (props.triggersNavigation) {
-    await router.push(getNextRoute());
-  } else {
-    emit("save");
-  }
 }
 </script>

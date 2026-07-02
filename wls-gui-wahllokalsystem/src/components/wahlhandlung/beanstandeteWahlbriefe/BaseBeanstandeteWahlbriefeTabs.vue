@@ -16,7 +16,7 @@
         "
         data-test="wahlbriefe-zulassen-tab"
       >
-        {{ titleTabOne }}
+        {{ titleTabDataInput }}
       </v-tab>
       <v-tab
         value="two"
@@ -27,8 +27,8 @@
     </v-tabs>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="one">
-        <beanstandete-wahlbriefe-card
-          :triggers-navigation="triggersNavigation"
+        <base-beanstandete-wahlbriefe-card
+          :has-nachlieferungen="hasNachlieferungen"
           :nachtraeglich-ueberbracht-valid="nachtraeglichUeberbrachtValid"
           @save="emit('save')"
         />
@@ -44,7 +44,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import BeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BeanstandeteWahlbriefeCard.vue";
+import BaseBeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BaseBeanstandeteWahlbriefeCard.vue";
 import TheBeanstandeteWahlbriefeBeschlussergebnis from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeBeschlussergebnis.vue";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -52,8 +52,8 @@ const { beanstandeteWahlbriefeState } = storeToRefs(useWahlenStore());
 const tab = ref("one");
 
 defineProps<{
-  titleTabOne: string;
-  triggersNavigation: boolean;
+  titleTabDataInput: string;
+  hasNachlieferungen: boolean;
   nachtraeglichUeberbrachtValid?: boolean | null;
 }>();
 

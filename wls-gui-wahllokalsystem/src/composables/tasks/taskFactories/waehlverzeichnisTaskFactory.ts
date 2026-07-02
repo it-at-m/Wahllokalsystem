@@ -9,7 +9,8 @@ export function useWaehlverzeichnisTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
     const { pflegeWaehlerverzeichnisActions } = useWahlbezirkStore();
 
-    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB
+    return taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB &&
+      taskFactoryContext.isSchriftfuehrung
       ? [
           {
             name: "Wählerverzeichnis",

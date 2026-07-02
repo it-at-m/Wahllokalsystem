@@ -19,6 +19,10 @@ export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
   const ergebnismeldungsStore = useErgebnismeldungStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     const tasks: Task[] = [];
     taskFactoryContext.extendedWahlMetaData.forEach((extendedWahlMetaData) => {
       if (extendedWahlMetaData.wahlArt === WahlWahlartEnum.Mbw) {

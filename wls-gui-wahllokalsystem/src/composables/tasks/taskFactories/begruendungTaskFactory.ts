@@ -11,6 +11,10 @@ export function useBegruendungTaskFactory(): TaskFactory {
   const { getStimmzettelTermForWahl } = useTextFormatter();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     return taskFactoryContext.extendedWahlMetaData.map(_createTask);
   }
   function _createTask(taskFactoryMetaData: ExtendedWahlMetaData): Task {

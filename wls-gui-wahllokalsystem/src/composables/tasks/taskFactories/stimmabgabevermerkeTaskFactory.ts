@@ -8,7 +8,10 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 export function useStimmabgabevermerkeTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB) {
+    if (
+      taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB &&
+      taskFactoryContext.isSchriftfuehrung
+    ) {
       return taskFactoryContext.extendedWahlMetaData.map(createTask);
     }
     return [];

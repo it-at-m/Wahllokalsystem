@@ -10,6 +10,10 @@ export function useStimmzettelumschlaegeTaskFactory(): TaskFactory {
   const { stimmzettelumschlaegeActions, wahlenActions } = useWahlenStore();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     return taskFactoryContext.extendedWahlMetaData.map(_createTask);
   }
 

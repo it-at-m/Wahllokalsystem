@@ -9,6 +9,10 @@ const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
 export function useStapelETaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
+    if (!taskFactoryContext.isSchriftfuehrung) {
+      return [];
+    }
+
     const mbws = taskFactoryContext.extendedWahlMetaData.filter(
       (metaData) => metaData.wahlArt === WahlWahlartEnum.Mbw
     );

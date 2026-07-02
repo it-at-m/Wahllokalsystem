@@ -31,14 +31,14 @@ import { computed, ref } from "vue";
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
 import TheMBWGueltigeStimmzettelErfassenTable from "@/components/ergebnismeldung/MBW/stapelAB/TheMBWGueltigeStimmzettelErfassenTable.vue";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { setStepDone, isElectionFinished } = useWorkflowStore();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useNavigationService();
 
 const modelValue = defineModel({
   type: Object as PropType<MbwErgebnisseAndWahlvorschlag[]>,
@@ -71,7 +71,7 @@ async function onSaveClicked() {
   setStepDone(
     props.wahlID,
     props.wahlbezirkID,
-    MbwRoutesEnum.MBW_STAPEL_A_AND_B
+    MbwStepsEnum.MBW_STAPEL_A_AND_B
   );
   await router.push(getNextRoute());
 }

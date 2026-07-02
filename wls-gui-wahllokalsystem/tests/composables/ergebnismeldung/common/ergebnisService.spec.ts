@@ -24,7 +24,7 @@ import {
 import { useCommonApiUtils } from "@/composables/api/commonApiUtils.ts";
 import { useErgebnisService } from "@/composables/ergebnismeldung/common/ergebnisService.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -253,7 +253,7 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG
+        MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG
       );
     });
 
@@ -289,7 +289,7 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_STAPEL_A_AND_B
+        MbwStepsEnum.MBW_STAPEL_A_AND_B
       );
     });
 
@@ -325,7 +325,7 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.setStepDone).not.toHaveBeenCalledWith(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_STAPEL_A_AND_B
+        MbwStepsEnum.MBW_STAPEL_A_AND_B
       );
     });
   });
@@ -567,7 +567,7 @@ describe("ergebnisService.ts", () => {
       expect(mockDefinitions.setStepDone).toHaveBeenCalledWith(
         wahl.wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+        MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
       );
     });
 

@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(
     classes = {MicroServiceApplication.class},
@@ -28,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
       "spring.datasource.url=jdbc:h2:mem:testexample;DB_CLOSE_ON_EXIT=FALSE",
       "refarch.gracefulshutdown.pre-wait-seconds=0"
     })
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE, SPRING_NO_SECURITY_PROFILE})
 class CacheControlConfigurationTest {
 

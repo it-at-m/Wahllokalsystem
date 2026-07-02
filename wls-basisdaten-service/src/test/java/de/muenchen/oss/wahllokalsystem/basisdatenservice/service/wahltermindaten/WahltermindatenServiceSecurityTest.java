@@ -42,7 +42,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -51,6 +50,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(
     classes = {
@@ -58,7 +58,7 @@ import org.springframework.test.context.ActiveProfiles;
       WahltermindatenServiceSecurityTest.TestConfiguration.class
     })
 @ActiveProfiles({TestConstants.SPRING_TEST_PROFILE})
-@AutoConfigureWireMock
+@EnableWireMock
 public class WahltermindatenServiceSecurityTest {
 
   @Configuration

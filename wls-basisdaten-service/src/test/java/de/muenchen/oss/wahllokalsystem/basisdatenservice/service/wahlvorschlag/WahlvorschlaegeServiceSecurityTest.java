@@ -27,15 +27,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(classes = MicroServiceApplication.class)
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
-@AutoConfigureWireMock
+@EnableWireMock
 public class WahlvorschlaegeServiceSecurityTest {
 
   @Autowired WahlvorschlaegeService wahlvorschlaegeService;

@@ -17,12 +17,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.wiremock.spring.EnableWireMock;
 
 @SpringBootTest(
     classes = MicroServiceApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureObservability
+@EnableWireMock
 @ActiveProfiles(profiles = {SPRING_TEST_PROFILE})
 class SwaggerConfigurationTest {
 

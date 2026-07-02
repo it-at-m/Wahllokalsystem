@@ -13,7 +13,7 @@ import {
 
 import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts";
 import { getStapelForWahlart } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -183,7 +183,7 @@ describe("mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts", () => {
         [
           mbwMetaData.wahlID,
           mbwMetaData.wahlbezirkID,
-          MbwRoutesEnum.MBW_STAPEL_BC,
+          MbwStepsEnum.MBW_STAPEL_BC,
         ],
       ]);
     });

@@ -10,7 +10,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 export function useStatusService() {
@@ -45,10 +45,10 @@ export function useStatusService() {
       }
       const responseData = getNullOn204OrElseResponseData(response);
       if (responseData?.schnellmeldung.gedruckt) {
-        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_SCHNELLMELDUNG);
+        setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_SCHNELLMELDUNG);
       }
       if (responseData?.niederschrift.gedruckt) {
-        setStepDone(wahlID, wahlbezirkID, MbwRoutesEnum.MBW_NIEDERSCHRIFT);
+        setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_NIEDERSCHRIFT);
       }
       return responseData ? toModel(responseData) : null;
     } catch {

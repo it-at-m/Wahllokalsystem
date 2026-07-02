@@ -42,7 +42,7 @@ const electionSpecificNextStepHandlers: Record<
   VE: NullNextStepImpl,
 };
 
-export function useNavigationUtils() {
+export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();
@@ -142,16 +142,11 @@ export function useNavigationUtils() {
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {
-      const statusOfElection = useWorkflowStore().getElectionWorkflowState(
+      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
+      return nextHandlerForWahl.getNextRouteOrNull(
         metaDataOfFirstUnfinishedElection.wahlID,
         metaDataOfFirstUnfinishedElection.wahlbezirkID
       );
-      if (!statusOfElection) {
-        return null;
-      }
-
-      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
-      return nextHandlerForWahl.getNextRouteOrNull(statusOfElection);
     } else {
       return null;
     }

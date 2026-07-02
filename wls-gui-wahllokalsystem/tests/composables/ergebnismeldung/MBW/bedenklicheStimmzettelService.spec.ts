@@ -4,7 +4,7 @@ import { useBedenklicherStimmzettelTestDataFactory } from "@tests/utils/ergebnis
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
@@ -106,7 +106,7 @@ describe("bedenklicheStimmzettelService.ts", () => {
         [mockedApiResponse[0]],
       ]);
       expect(mockDefinitions.setStepDone.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E],
+        [wahlID, wahlbezirkID, MbwStepsEnum.MBW_STAPEL_E],
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],
@@ -243,7 +243,7 @@ describe("bedenklicheStimmzettelService.ts", () => {
         [bedenklicheStimmzettelToSave[0]],
       ]);
       expect(mockDefinitions.setStepDone.mock.calls).toStrictEqual([
-        [wahlID, wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_E],
+        [wahlID, wahlbezirkID, MbwStepsEnum.MBW_STAPEL_E],
       ]);
       expect(mockDefinitions.addNotification.mock.calls).toEqual([
         [expect.any(String), UserNotificationCategoryEnum.SUCCESS],

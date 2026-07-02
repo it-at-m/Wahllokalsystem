@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { generateRandomString, generateRandomBoolean } =
   useCommonTestDataFactory();
@@ -83,7 +83,7 @@ describe("workflowStore.ts", () => {
         useWorkflowStore().getWorkflowStateForRoute(
           wahlID,
           wahlbezirkID,
-          MbwRoutesEnum.MBW_NIEDERSCHRIFT
+          MbwStepsEnum.MBW_NIEDERSCHRIFT
         )
       ).toBe(false);
     });
@@ -107,7 +107,7 @@ describe("workflowStore.ts", () => {
     it("should_returnTrue_when_workflowSateFourRouteNameIsDone", () => {
       const wahlID = generateRandomString(10);
       const wahlbezirkID = generateRandomString(10);
-      const step = MbwRoutesEnum.MBW_NIEDERSCHRIFT;
+      const step = MbwStepsEnum.MBW_NIEDERSCHRIFT;
 
       const workflowToFind = createWorkflow(wahlID, wahlbezirkID);
       workflowToFind.stepsDone[step] = true;

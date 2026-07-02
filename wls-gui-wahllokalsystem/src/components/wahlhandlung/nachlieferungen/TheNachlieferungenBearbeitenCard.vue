@@ -82,7 +82,7 @@ import { useBriefwahlService } from "@/composables/briefwahl/briefwahlService.ts
 import { useDateTimeFormatter } from "@/composables/common/dateTimeFormatter.ts";
 import { useDateTimeUtils } from "@/composables/common/dateTimeUtils.ts";
 import { useRules } from "@/composables/common/rules.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
@@ -94,7 +94,7 @@ const { createTodayWithTime } = useDateTimeUtils();
 const { getWahlbriefdaten, postWahlbriefdaten } = useBriefwahlService();
 const { required, timeNotInFuture, timeGreaterOrEqual, minNumber } = useRules();
 const { currentUserWahlbezirkID } = storeToRefs(useUserStore());
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useNavigationService();
 const { isNachlieferungenBearbeitenErfasst } = storeToRefs(useWorkflowStore());
 
 const WIDTH = 300;

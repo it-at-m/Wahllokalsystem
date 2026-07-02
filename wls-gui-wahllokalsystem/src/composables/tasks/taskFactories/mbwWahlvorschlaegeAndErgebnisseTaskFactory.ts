@@ -11,7 +11,7 @@ import {
   getStapelForWahlart,
   StapelArtEnum,
 } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
@@ -74,7 +74,7 @@ export function useMBWWahlvorschlaegeAndErgebnisseTaskFactory(): TaskFactory {
           useWorkflowStore().setStepDone(
             taskFactoryMetaData.wahlID,
             taskFactoryMetaData.wahlbezirkID,
-            MbwRoutesEnum.MBW_STAPEL_BC
+            MbwStepsEnum.MBW_STAPEL_BC
           );
         }
       },

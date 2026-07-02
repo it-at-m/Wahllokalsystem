@@ -1,5 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.basisdatenservice.rest.wahlvorschlag;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record KandidatDTO(
@@ -8,4 +9,5 @@ public record KandidatDTO(
     @NotNull Long listenposition,
     @NotNull Boolean direktkandidat,
     @NotNull Long tabellenSpalteInNiederschrift,
-    @NotNull Boolean einzelbewerber) {}
+    @NotNull Boolean einzelbewerber,
+    @NotNull @Min(1) Integer anzahlNennungen) {}

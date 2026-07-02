@@ -19,7 +19,7 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
 import { StapelArtEnum } from "@/types/ergebnismeldung/common/StapelArtEnum.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const {
@@ -87,7 +87,7 @@ export function useErgebnisService() {
             setStepDone(
               wahlID,
               wahlbezirkID,
-              MbwRoutesEnum.MBW_STAPEL_D_UNGUELTIG
+              MbwStepsEnum.MBW_STAPEL_D_UNGUELTIG
             );
             break;
           case StapelArtEnum.MbwA:
@@ -95,7 +95,7 @@ export function useErgebnisService() {
               setStepDone(
                 wahlID,
                 wahlbezirkID,
-                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+                MbwStepsEnum.MBW_STAPEL_A_AND_B
               );
             } else {
               useWorkflowStore().isMbwStapelAErfasst = true;
@@ -106,7 +106,7 @@ export function useErgebnisService() {
               setStepDone(
                 wahlID,
                 wahlbezirkID,
-                MbwRoutesEnum.MBW_STAPEL_A_AND_B
+                MbwStepsEnum.MBW_STAPEL_A_AND_B
               );
             } else {
               useWorkflowStore().isMbwStapelBErfasst = true;
@@ -244,7 +244,7 @@ export function useErgebnisService() {
         setStepDone(
           wahl.wahlID,
           wahlbezirkID,
-          MbwRoutesEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
+          MbwStepsEnum.MBW_AUSZAEHLUNG_STIMMZETTEL
         );
       }
       return responseData ? toStimmzettelumschlaegeModel(responseData) : null;

@@ -25,13 +25,15 @@ class RolesControllerTest {
     void should_returnRoleMappings_when_called() {
       val schriftfueherungRole = "schriftfuehrung";
       val adminRole = "admin";
+      val erfassungsteamRole = "erfassungsteam";
 
       Mockito.when(userService.getSchriftfuehrungAuthorityName()).thenReturn(schriftfueherungRole);
       Mockito.when(userService.getAdminAuthorityName()).thenReturn(adminRole);
+      Mockito.when(userService.getErfassungsteamAuthorityName()).thenReturn(erfassungsteamRole);
 
       val result = unitUnderTest.getRoleMappings();
 
-      val expectedResult = new RoleMappingsDTO(schriftfueherungRole, adminRole);
+      val expectedResult = new RoleMappingsDTO(schriftfueherungRole, adminRole, erfassungsteamRole);
       Assertions.assertThat(result).isEqualTo(expectedResult);
     }
   }

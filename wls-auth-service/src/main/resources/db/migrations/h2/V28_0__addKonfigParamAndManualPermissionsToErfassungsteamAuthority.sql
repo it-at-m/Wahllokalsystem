@@ -1,4 +1,4 @@
--- Konfigurationsparametedr
+-- Konfigurationsparameter
 -- Service getAll
 INSERT INTO Secauthorities_Secpermissions
 VALUES ('00000000-0000-0000-0004-000000000001', '00000000-0000-0000-0006-000000000005');

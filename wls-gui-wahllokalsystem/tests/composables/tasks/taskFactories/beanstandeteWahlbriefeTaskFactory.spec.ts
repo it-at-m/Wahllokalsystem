@@ -32,27 +32,46 @@ describe("beanstandeteWahlbriefeTaskFactory.ts", () => {
   });
 
   describe("createTasks", () => {
-    it("should_returnTaskListWithTask_when_wahlbezirkIsBWB", async () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-        .build();
+    describe("userHasRoleSchriftuehrung", () => {
+      it("should_returnTaskListWithTask_when_wahlbezirkIsBWBAndUserHasRoleSchriftfuehrung", async () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+          .isSchriftfuehrung(true)
+          .build();
 
-      const result = unitUnderTest.createTasks(taskFactoryContext);
+        const result = unitUnderTest.createTasks(taskFactoryContext);
 
-      expect(result.length).toStrictEqual(1);
-      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      expect(result[0]!.name).toStrictEqual("Zugelassene Wahlbriefe");
+        expect(result.length).toStrictEqual(1);
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        expect(result[0]!.name).toStrictEqual("Zugelassene Wahlbriefe");
 
-      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      await result[0]!.callback();
-      expect(mockDefinitions.initBeanstandeteWahlbriefe).toHaveBeenCalledWith(
-        false
-      );
+        // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+        await result[0]!.callback();
+        expect(mockDefinitions.initBeanstandeteWahlbriefe).toHaveBeenCalledWith(
+          false
+        );
+      });
+
+      it("should_returnEmptyList_when_wahlbezirkIsUWB", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+          .build();
+
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+
+        expect(result.length).toStrictEqual(0);
+        expect(
+          mockDefinitions.initBeanstandeteWahlbriefe
+        ).not.toHaveBeenCalled();
+      });
     });
+  });
 
-    it("should_returnEmptyList_when_wahlbezirkIsUWB", () => {
+  describe("userHasNotRoleSchriftuehrung", () => {
+    it("should_returnEmptyList_when_wahlbezirkIsBWBButUserHasNotRoleSchriftfuehrung", () => {
       const taskFactoryContext = prepareTaskFactoryContext()
         .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+        .isSchriftfuehrung(false)
         .build();
 
       const result = unitUnderTest.createTasks(taskFactoryContext);

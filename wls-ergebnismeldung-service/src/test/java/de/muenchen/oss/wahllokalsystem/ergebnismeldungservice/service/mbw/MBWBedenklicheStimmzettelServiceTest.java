@@ -7,6 +7,7 @@ import de.muenchen.oss.wahllokalsystem.wls.common.exception.FachlicheWlsExceptio
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.TechnischeWlsException;
 import de.muenchen.oss.wahllokalsystem.wls.common.exception.util.ExceptionFactory;
 import de.muenchen.oss.wahllokalsystem.wls.common.security.domain.BezirkUndWahlID;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,24 @@ class MBWBedenklicheStimmzettelServiceTest {
     }
 
     @Test
-    void should_returnEmptyOptional_when_noEntitiesWereFound() {
+    void should_returnMappedModelWithEmptyList_when_noEntitiesWereFound() {
+      val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
+
+      val mockedEntity = new BedenklicheStimmzettelErfassung();
+
+      Mockito.when(
+              repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
+                      Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
+                      Mockito.eq(bezirkUndWahlId.getWahlID())))
+              .thenReturn(Optional.of(mockedEntity));
+
+      val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
+
+      Assertions.assertThat(result.map(Collection::isEmpty));
+    }
+
+    @Test
+    void should_returnEmptyOptional_when_noBedenklicheStimmzettelErfassungFound() {
       val bezirkUndWahlId = new BezirkUndWahlID("wahlID", "wahlbezirkID");
 
       Mockito.when(

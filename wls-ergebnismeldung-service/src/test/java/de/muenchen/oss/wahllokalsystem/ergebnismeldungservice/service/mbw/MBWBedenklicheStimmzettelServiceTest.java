@@ -73,7 +73,7 @@ class MBWBedenklicheStimmzettelServiceTest {
           .thenReturn(Optional.of(mockedEntity));
 
       Mockito.when(modelMapper.toModel(mockedEntity.getBedenklicheStimmzettel()))
-                        .thenReturn(Collections.emptyList());
+          .thenReturn(Collections.emptyList());
 
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
 

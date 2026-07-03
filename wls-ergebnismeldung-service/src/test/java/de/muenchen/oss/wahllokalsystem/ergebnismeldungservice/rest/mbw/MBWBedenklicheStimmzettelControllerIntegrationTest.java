@@ -94,7 +94,7 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
 
     @Test
     void
-        should_returnEmptyCollectionOfBedenklicheStimmzettel_when_noBedenklicheStimmzettelExistButHaveBeenSaved()
+        should_returnEmptyCollectionOfBedenklicheStimmzettel_when_noBedenklicheStimmzettelExistButErfassungHaveBeenSaved()
             throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";

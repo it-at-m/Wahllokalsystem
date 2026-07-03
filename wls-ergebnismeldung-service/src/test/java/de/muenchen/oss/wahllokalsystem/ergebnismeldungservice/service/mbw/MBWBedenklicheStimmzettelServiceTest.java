@@ -72,9 +72,12 @@ class MBWBedenklicheStimmzettelServiceTest {
                   Mockito.eq(bezirkUndWahlId.getWahlID())))
           .thenReturn(Optional.of(mockedEntity));
 
+      Mockito.when(modelMapper.toModel(mockedEntity.getBedenklicheStimmzettel()))
+                        .thenReturn(Collections.emptyList());
+
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
 
-      Assertions.assertThat(result.map(Collection::isEmpty));
+      Assertions.assertThat(result.map(Collection::isEmpty)).contains(true);
     }
 
     @Test

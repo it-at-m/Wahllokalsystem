@@ -10,11 +10,12 @@
           :model-value="wahlscheinnummer"
           :min-valid="1"
           :max-valid="9999999"
-          :rules="[required]"
+          :rules="[requiredWahlscheinnummer]"
           label="Wahlscheinnummer"
           max-width="300"
           data-test="number-input-wahlscheinnummer"
           @update:model-value="onWahlscheinnummerChanged"
+          @blur="resetWahlscheinnummerValidation"
         />
 
         <base-feedback-card
@@ -111,7 +112,6 @@
     <v-card-actions>
       <base-text-button
         active
-        :disabled="isSearchButtonDisabled"
         data-test="button-search"
         @click="onSearchClicked"
         >{{ searchButtonLabel }}</base-text-button
@@ -150,7 +150,6 @@ const { addEreignis, sendEreignisse } = useEreignisStore();
 const isFormValid = ref<boolean | null>(null);
 const isAbstimmungsergebnisFormValid = ref<boolean | null>(null);
 
-const isSearchButtonDisabled = computed(() => !isFormValid.value);
 const wahlscheinValidationForm = useTemplateRef(
   "wahlscheinValidationForm"
 ) as Readonly<ShallowRef<InstanceType<typeof VForm>>>;
@@ -202,14 +201,33 @@ const ereignisBeschreibungWahlscheinUnguelttig = computed(() => {
 });
 
 function onRefreshClicked() {
+  resetWahlscheinnummerValidation();
   ungueltigeWahlscheineActions.loadUngueltigeWahlscheine();
 }
 
-function onSearchClicked() {
+const wahlscheinnummerTouched = ref(false);
+const requiredWahlscheinnummer = (v: number | null | undefined) => {
+  if (!wahlscheinnummerTouched.value) return true;
+  return v === null || v === undefined
+    ? "Bitte Wahlscheinnummer angeben"
+    : true;
+};
+
+async function onSearchClicked() {
   if (ungueltigerWahlschein.value !== undefined) {
+    wahlscheinnummerTouched.value = false;
     resetUngueltigerWahlschein();
     wahlscheinValidationForm.value.reset();
-  } else if (wahlscheinnummer.value !== null) {
+    isFormValid.value = null;
+    return;
+  }
+
+  wahlscheinnummerTouched.value = true;
+  const validationResult = await wahlscheinValidationForm.value.validate?.();
+  const isValid = validationResult?.valid ?? false;
+  isFormValid.value = isValid;
+
+  if (isValid && wahlscheinnummer.value !== null) {
     ungueltigerWahlschein.value =
       ungueltigeWahlscheineActions.getUngueltigerWahlscheinByWahlscheinnummer(
         `${wahlscheinnummer.value}`
@@ -235,6 +253,13 @@ function onWahlscheinnummerChanged(newValue: number | null | undefined) {
     wahlscheinnummer.value = null;
   }
   resetUngueltigerWahlschein();
+}
+
+function resetWahlscheinnummerValidation() {
+  if (wahlscheinnummer.value === null || wahlscheinnummer.value === undefined) {
+    wahlscheinnummerTouched.value = false;
+    wahlscheinValidationForm.value.resetValidation?.();
+  }
 }
 
 function resetUngueltigerWahlschein() {

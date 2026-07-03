@@ -68,9 +68,9 @@ class MBWBedenklicheStimmzettelServiceTest {
 
       Mockito.when(
               repository.findByBezirkUndWahlIDOrderbyOrderIndexAsc(
-                      Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
-                      Mockito.eq(bezirkUndWahlId.getWahlID())))
-              .thenReturn(Optional.of(mockedEntity));
+                  Mockito.eq(bezirkUndWahlId.getWahlbezirkID()),
+                  Mockito.eq(bezirkUndWahlId.getWahlID())))
+          .thenReturn(Optional.of(mockedEntity));
 
       val result = unitUnderTest.getBedenklicheStimmzettelOrderedByOrderIndexAsc(bezirkUndWahlId);
 

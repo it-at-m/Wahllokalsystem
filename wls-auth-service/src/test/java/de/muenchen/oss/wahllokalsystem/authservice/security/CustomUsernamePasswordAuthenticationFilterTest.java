@@ -92,6 +92,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       val httpServletRequest = createAuthenticationRequest(username, password, clientId);
 
       val authoritySchriftfuehrung = "WAHLVORSTAND";
+      val authorityErfassungsteam = "ERFASSUNGSTEAM";
       val authorityAdmin = "MONITORING_HELPDESK";
       val mockedUserDetails =
           new User(
@@ -107,6 +108,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       if (clientId.equals(WAHLLOKAL_GUI_CLIENT_ID)) {
         Mockito.when(userService.getSchriftfuehrungAuthorityName())
             .thenReturn(authoritySchriftfuehrung);
+        Mockito.when(userService.getErfassungsteamAuthorityName())
+            .thenReturn(authorityErfassungsteam);
       } else if (clientId.equals(ADMIN_GUI_CLIENT_ID)) {
         Mockito.when(userService.getAdminAuthorityName()).thenReturn(authorityAdmin);
       }
@@ -126,6 +129,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
           createAuthenticationRequest(username, password, WAHLLOKAL_GUI_CLIENT_ID);
 
       val authoritySchriftfuehrung = "WAHLVORSTAND";
+      val authorityErfassungsteam = "ERFASSUNGSTEAM";
       val mockedUserDetails =
           new User(
               username,
@@ -145,6 +149,8 @@ class CustomUsernamePasswordAuthenticationFilterTest {
           .thenReturn(Optional.of(mockedLoginAttempts));
       Mockito.when(userService.getSchriftfuehrungAuthorityName())
           .thenReturn(authoritySchriftfuehrung);
+      Mockito.when(userService.getErfassungsteamAuthorityName())
+          .thenReturn(authorityErfassungsteam);
       Mockito.when(authenticationManager.authenticate(any())).thenReturn(mockedAuthentication);
 
       val result =
@@ -241,6 +247,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
       Mockito.when(userService.isLocked(username)).thenReturn(false);
       if (stringContainedInRedirectURL.equals(WAHLLOKAL_GUI_CLIENT_ID)) {
         Mockito.when(userService.getSchriftfuehrungAuthorityName()).thenReturn(StringUtils.EMPTY);
+        Mockito.when(userService.getErfassungsteamAuthorityName()).thenReturn(StringUtils.EMPTY);
       } else if (stringContainedInRedirectURL.equals(ADMIN_GUI_CLIENT_ID)) {
         Mockito.when(userService.getAdminAuthorityName()).thenReturn(StringUtils.EMPTY);
       }
@@ -319,7 +326,7 @@ class CustomUsernamePasswordAuthenticationFilterTest {
     }
 
     @Test
-    void should_throwException_when_loginInterceptorThrewValidationException() throws Exception {
+    void should_throwException_when_loginInterceptorThrewValidationException() {
       val username = "username";
       val password = "password";
       val httpServletRequest = createAuthenticationRequest(username, password, "");

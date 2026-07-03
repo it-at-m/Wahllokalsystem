@@ -151,14 +151,14 @@ import { useViewportUtils } from "@/composables/common/viewportUtils.ts";
 import { useErgebnisAndKandidatUtils } from "@/composables/ergebnismeldung/common/ergebnisAndKandidatUtils.ts";
 import { useMbwUtils } from "@/composables/ergebnismeldung/MBW/mbwUtils.ts";
 import { useMwbStapelBCUtils } from "@/composables/ergebnismeldung/MBW/mwbStapelBCUtils.ts";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import router from "@/plugins/router.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { scrollIntoView } = useViewportUtils();
 const { setStepDone, isElectionFinished } = useWorkflowStore();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useNavigationService();
 
 const COLUMN_COUNT_FULL_COL_SPAN = 8;
 
@@ -265,7 +265,7 @@ async function onSaveWahlvorschlag(rowIndex: number, save: () => void) {
 }
 
 async function onContinueClicked() {
-  setStepDone(props.wahlID, props.wahlbezirkID, MbwRoutesEnum.MBW_STAPEL_BC);
+  setStepDone(props.wahlID, props.wahlbezirkID, MbwStepsEnum.MBW_STAPEL_BC);
   await router.push(getNextRoute());
 }
 

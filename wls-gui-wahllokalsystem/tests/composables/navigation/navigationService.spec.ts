@@ -14,11 +14,12 @@ import {
   vi,
 } from "vitest";
 
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_FINISHED,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -52,15 +53,15 @@ vi.mock(import("@/types/navigation/NextStepImplConstants.ts"), () => ({
   },
 }));
 
-describe("navigationUtils.ts", () => {
-  let unitUnderTest: ReturnType<typeof useNavigationUtils>;
+describe("navigationService.ts", () => {
+  let unitUnderTest: ReturnType<typeof useNavigationService>;
 
   beforeEach(() => {
     createTestingPinia({
       createSpy: vi.fn,
       stubActions: false,
     });
-    unitUnderTest = useNavigationUtils();
+    unitUnderTest = useNavigationService();
   });
 
   afterEach(() => {
@@ -232,17 +233,6 @@ describe("navigationUtils.ts", () => {
       useWorkflowStore().isWahleroeffnungErfasst = true;
       useWorkflowStore().isStimmabgabeErfasst = true;
       useWorkflowStore().isStimmabgabevermerkeErfasst = true;
-
-      const mbwStatus = createStatusWithNiederschriftGedruckt(
-        mbwWahlID,
-        mbwWahlbezirkID,
-        false
-      );
-      useWorkflowStore().electionWorkflowsStates = [
-        createStatusWithNiederschriftGedruckt(wahlID1, wahlbezirkID1),
-        mbwStatus,
-        createStatusWithNiederschriftGedruckt(wahlID2, wahlbezirkID2),
-      ];
       useWorkflowStore().isElectionFinished = vi
         .fn()
         .mockImplementation(
@@ -265,7 +255,7 @@ describe("navigationUtils.ts", () => {
       const result = unitUnderTest.getNextRoute();
       expect(result).toStrictEqual(mockedNextMbwRoute);
       expect(mockDefinitions.mbwGetNextRouteOrNull.mock.calls).toStrictEqual([
-        [mbwStatus],
+        [mbwWahlID, mbwWahlbezirkID],
       ]);
     });
 
@@ -326,6 +316,25 @@ describe("navigationUtils.ts", () => {
       const result = unitUnderTest.getNextRoute();
       expect(result).toEqual(
         unitUnderTest.routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN)
+      );
+    });
+
+    it("should_returnRouteToNachlieferungenBearbeiten_when_allPreviousStepsAreDoneAndNachlieferungenBearbeitenIsNotSetAndUserHasWahlbezirksArtBWBAndIsNachlieferungsbezirk", () => {
+      useUserStore().user = prepareUser()
+        .wahlbezirksArt(WahlbezirksArtEnum.BWB)
+        .isNachlieferungsbezirk(true)
+        .build();
+
+      useWorkflowStore().isWahlvorstandErfasst = true;
+      useWorkflowStore().isWahleroeffnungErfasst = true;
+      useWorkflowStore().isWahlumgebungErfasst = true;
+      useWorkflowStore().isWahlbriefeErfassenErfasst = true;
+      useWorkflowStore().isWahlbriefeZulassenErfasst = true;
+      useWorkflowStore().isNachlieferungenBearbeitenErfasst = false;
+
+      const result = unitUnderTest.getNextRoute();
+      expect(result).toEqual(
+        unitUnderTest.routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN)
       );
     });
 

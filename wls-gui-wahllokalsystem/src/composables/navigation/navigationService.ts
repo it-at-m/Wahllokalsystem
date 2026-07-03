@@ -7,6 +7,7 @@ import {
   ROUTE_BEGINN_STIMMABGABE,
   ROUTE_ERFASSUNG_WAHLBRIEFE,
   ROUTE_FINISHED,
+  ROUTE_NACHLIEFERUNGEN_BEARBEITEN,
   ROUTE_STIMMABGABE,
   ROUTE_STIMMABGABEVERMERKE,
   ROUTE_WAHLBRIEFE_ZULASSEN,
@@ -41,7 +42,7 @@ const electionSpecificNextStepHandlers: Record<
   VE: NullNextStepImpl,
 };
 
-export function useNavigationUtils() {
+export function useNavigationService() {
   const workflowStore = useWorkflowStore();
   const wahlenStore = useWahlenStore();
   const userStore = useUserStore();
@@ -94,6 +95,13 @@ export function useNavigationUtils() {
     if (userStore.isBWB && !workflowStore.isWahlbriefeZulassenErfasst) {
       return routeWithName(ROUTE_WAHLBRIEFE_ZULASSEN);
     }
+    if (
+      userStore.isBWB &&
+      userStore.isNachlieferungsbezirk &&
+      !workflowStore.isNachlieferungenBearbeitenErfasst
+    ) {
+      return routeWithName(ROUTE_NACHLIEFERUNGEN_BEARBEITEN);
+    }
 
     // check wahlhandlung steps (UWB)
     if (userStore.isUWB && !workflowStore.isWahlumgebungErfasst) {
@@ -134,16 +142,11 @@ export function useNavigationUtils() {
       metaDataOfFirstUnfinishedElection.wahlID
     );
     if (wahl) {
-      const statusOfElection = useWorkflowStore().getElectionWorkflowState(
+      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
+      return nextHandlerForWahl.getNextRouteOrNull(
         metaDataOfFirstUnfinishedElection.wahlID,
         metaDataOfFirstUnfinishedElection.wahlbezirkID
       );
-      if (!statusOfElection) {
-        return null;
-      }
-
-      const nextHandlerForWahl = electionSpecificNextStepHandlers[wahl.wahlart];
-      return nextHandlerForWahl.getNextRouteOrNull(statusOfElection);
     } else {
       return null;
     }

@@ -72,6 +72,9 @@ export function useNavigationGuards() {
         ? useWorkflowStore().isAnzahlWahlscheineErfasst
         : true;
 
+  const requiresIsNachlieferungsbezirk: NavigationGuard = () =>
+    useUserStore().isNachlieferungsbezirk;
+
   const permitNavigationOnlyForWahlbezirksArtUwb: NavigationGuard = () =>
     useUserStore().isUWB;
 
@@ -116,5 +119,6 @@ export function useNavigationGuards() {
     requiresWahlbriefzulassungErfasstWhenWahlbezirksArtBwb,
     requiresStimmabgabevermerkeErfasstWhenWahlbezirksArtUwb,
     requiresAnzahlWahlscheineErfasstWhenWahlbezirksArtBwb,
+    requiresIsNachlieferungsbezirk,
   };
 }

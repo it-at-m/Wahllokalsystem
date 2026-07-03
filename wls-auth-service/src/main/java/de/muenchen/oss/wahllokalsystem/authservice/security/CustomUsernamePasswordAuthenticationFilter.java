@@ -208,7 +208,8 @@ public class CustomUsernamePasswordAuthenticationFilter
     }
 
     if (savedRequest.getRedirectUrl().contains(wahllokalguiClientId)) {
-      return hasRequiredAuthority(userDetails, userService.getSchriftfuehrungAuthorityName());
+      return hasRequiredAuthority(userDetails, userService.getSchriftfuehrungAuthorityName())
+          | hasRequiredAuthority(userDetails, userService.getErfassungsteamAuthorityName());
     } else if (savedRequest.getRedirectUrl().contains(adminguiClientId)) {
       return hasRequiredAuthority(userDetails, userService.getAdminAuthorityName());
     }

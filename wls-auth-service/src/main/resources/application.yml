@@ -115,6 +115,7 @@ service:
       authority:
         schriftfuehrung: WLS_WAHLVORSTAND
         admin: MONITORING_HELPDESK
+        erfassungsteam: ERFASSUNGSTEAM
       prefixChars: "23456789abcdefghjkmnpqrstuvwxyz"
   info:
     oid: AUTH-SERVICE

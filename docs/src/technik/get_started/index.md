@@ -73,14 +73,16 @@ oder `Run Configurations` (IntelliJ) ausgeführt werden.
 
 ## Benutzerkonten
 
-| Name         | Passwort | Beschreibung                                                                                                                |
-|--------------|----------|-----------------------------------------------------------------------------------------------------------------------------|
-| wls_all_bwb  | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
-| wls_all_uwb  | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
-| wls_komw_bwb | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
-| wls_komw_uwb | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
-| wls_mbw_bwb  | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
-| wls_mbw_uwb  | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
+| Name            | Passwort | Beschreibung                                                                                                                |
+|-----------------|----------|-----------------------------------------------------------------------------------------------------------------------------|
+| wls_all_bwb     | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_all_uwb     | test     | Ein Benutzerkonto mit der Rolle Monitoring_Helpdesk für das Admintool                                                       |
+| wls_komw_bwb    | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt BWB (Briefwahl) |
+| wls_komw_uwb    | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Kommunalwahl mit OBW und SRW sowie der WahlbezirksArt UWB (Urnenwahl) |
+| wls_mbw_bwb     | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)          |
+| wls_mbw_uwb     | test     | Ein Benutzerkonto mit der Rolle Wahlvorstand für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)          |
+| wls_mbw_erf_bwb | test     | Ein Benutzerkonto mit der Rolle Erfassungsteam für eine Migrationsbeiratswahl und der WahlbezirksArt BWB (Briefwahl)        |
+| wls_mbw_erf_uwb | test     | Ein Benutzerkonto mit der Rolle Erfassungsteam für eine Migrationsbeiratswahl und der WahlbezirksArt UWB (Urnenwahl)        |
 
 > [!CAUTION]
 > Für die Anmeldung am WLS muss das Benutzerkonto die Rolle `WLS_WAHLVORSTAND` haben.

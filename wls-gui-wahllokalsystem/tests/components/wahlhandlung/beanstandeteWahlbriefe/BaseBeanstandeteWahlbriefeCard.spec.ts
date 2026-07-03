@@ -25,7 +25,7 @@ import { nextTick } from "vue";
 import { VBtn } from "vuetify/components";
 
 import BaseWlsButtonSave from "@/components/common/buttons/BaseWlsButtonSave.vue";
-import TheBeanstandeteWahlbriefeErfassenCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/TheBeanstandeteWahlbriefeErfassenCard.vue";
+import BaseBeanstandeteWahlbriefeCard from "@/components/wahlhandlung/beanstandeteWahlbriefe/BaseBeanstandeteWahlbriefeCard.vue";
 import vuetify from "@/plugins/vuetify.ts";
 import { useWahlenStore } from "@/stores/wahlenStore.ts";
 
@@ -45,7 +45,7 @@ vi.mock(
   }
 );
 
-describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
+describe("BaseBeanstandeteWahlbriefeCard", () => {
   let wrapper: VueWrapper;
   let pinia: TestingPinia;
 
@@ -67,9 +67,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
   describe(COMPONENT_RENDER_TESTS, () => {
     it("should_renderWithEnabledSaveButton_when_noRowsGiven", async (context) => {
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: false,
         },
       });
 
@@ -96,9 +99,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: true,
         },
       });
 
@@ -127,9 +133,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: false,
         },
       });
 
@@ -144,9 +153,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
     });
 
     it("should_renderWithSaveButtonInLoadingState_when_isSavingIsTrue", async (context) => {
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: true,
         },
       });
 
@@ -162,7 +174,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
   });
 
   describe(COMPONENT_EVENT_TESTS, () => {
-    it("should_callSendBeanstandeteWahlbriefe_when_saveButtonIsClicked", async () => {
+    it("should_emitsSaveEvent_when_saveButtonIsClicked", async () => {
       const wahlenStore = useWahlenStore();
       wahlenStore.wahlenState.wahlen = [
         prepareWahl()
@@ -177,9 +189,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
           .build(),
       ];
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: false,
         },
       });
 
@@ -190,11 +205,7 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
 
       await saveButton.trigger("click");
 
-      mockDefinitions.postBeanstandeteWahlbriefe.mockReturnValue(
-        Promise.resolve()
-      );
-
-      expect(mockDefinitions.postBeanstandeteWahlbriefe).toHaveBeenCalled();
+      expect(wrapper.emitted()).toHaveProperty("save");
     });
 
     it("should_callAddBeanstandeteWahlbriefe_when_addRowButtonIsClicked", async () => {
@@ -212,9 +223,12 @@ describe("TheBeanstandeteWahlbriefeErfassenCard", () => {
         "addBeanstandeterWahlbriefEntry"
       );
 
-      wrapper = mount(TheBeanstandeteWahlbriefeErfassenCard, {
+      wrapper = mount(BaseBeanstandeteWahlbriefeCard, {
         global: {
           plugins: [pinia, vuetify],
+        },
+        props: {
+          hasNachlieferungen: false,
         },
       });
 

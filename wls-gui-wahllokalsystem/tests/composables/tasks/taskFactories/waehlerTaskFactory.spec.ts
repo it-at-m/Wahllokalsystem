@@ -39,27 +39,42 @@ describe("waehlerTaskFactory.ts", () => {
     vi.resetAllMocks();
   });
   describe("createTasks", () => {
-    it("should_returnTask_when_wahlbezirksArtIsUWB", async () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
-        .build();
+    describe("userHasRoleSchriftfuehrung", () => {
+      it("should_returnTask_when_wahlbezirksArtIsUWB", async () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+          .build();
 
-      const result = unitUnderTest.createTasks(taskFactoryContext);
-      await result[0]?.callback();
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+        await result[0]?.callback();
 
-      expect(result.length).toStrictEqual(1);
-      expect(result[0]?.name).toStrictEqual("Wahlbeteiligung");
-      expect(mockDefinitions.loadWaehler.mock.calls).toStrictEqual([[]]);
+        expect(result.length).toStrictEqual(1);
+        expect(result[0]?.name).toStrictEqual("Wahlbeteiligung");
+        expect(mockDefinitions.loadWaehler.mock.calls).toStrictEqual([[]]);
+      });
+
+      it("should_returnNoTask_when_wahlbezirksArtIsBWB", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
+          .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+          .build();
+
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+
+        expect(result).toStrictEqual([]);
+      });
     });
 
-    it("should_returnNoTask_when_wahlbezirksArtIsBWB", () => {
-      const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
-        .build();
+    describe("userHasNotRoleSchriftfuehrung", () => {
+      it("should_returnNoTask_when_called", () => {
+        const taskFactoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(false)
+          .build();
 
-      const result = unitUnderTest.createTasks(taskFactoryContext);
-
-      expect(result).toStrictEqual([]);
+        const result = unitUnderTest.createTasks(taskFactoryContext);
+        expect(result.length).toStrictEqual(0);
+      });
     });
   });
 });

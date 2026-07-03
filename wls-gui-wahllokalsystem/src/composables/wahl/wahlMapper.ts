@@ -22,6 +22,7 @@ export function useWahlMapper() {
       nummer: dto.nummer,
       beanstandeteWahlbriefe: [],
       stimmzettelumschlaege: StimmzettelumschlaegeBuilder.create(),
+      kennzeichen: dto.kennzeichen,
     };
   }
 

@@ -169,6 +169,12 @@ export interface KandidatDTO {
      * @memberof KandidatDTO
      */
     'einzelbewerber': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof KandidatDTO
+     */
+    'anzahlNennungen': number;
 }
 /**
  * 
@@ -376,6 +382,12 @@ export interface WahlDTO {
      * @memberof WahlDTO
      */
     'nummer'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WahlDTO
+     */
+    'kennzeichen': string;
 }
 
 export const WahlDTOWahlartEnum = {

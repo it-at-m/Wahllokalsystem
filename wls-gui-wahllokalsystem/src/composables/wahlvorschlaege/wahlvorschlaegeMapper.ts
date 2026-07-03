@@ -53,6 +53,7 @@ export function useWahlvorschlaegeMapper() {
         tabellenSpalteInNiederschrift:
           kandidatDto.tabellenSpalteInNiederschrift,
         einzelbewerber: kandidatDto.einzelbewerber,
+        anzahlNennungen: kandidatDto.anzahlNennungen,
       });
     }
 

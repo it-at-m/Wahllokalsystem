@@ -43,6 +43,7 @@ describe("TheWahlumgebungUwbCard.vue", () => {
       nummer: undefined,
       beanstandeteWahlbriefe: [],
       stimmzettelumschlaege: { anzahlWaehler: null },
+      kennzeichen: "B",
     },
     {
       wahlID: "wahlID2",
@@ -55,6 +56,8 @@ describe("TheWahlumgebungUwbCard.vue", () => {
       nummer: undefined,
       beanstandeteWahlbriefe: [],
       stimmzettelumschlaege: { anzahlWaehler: null },
+
+      kennzeichen: "O",
     },
   ];
 

@@ -93,6 +93,27 @@ class MBWBedenklicheStimmzettelControllerIntegrationTest {
     }
 
     @Test
+    void
+        should_returnEmptyCollectionOfBedenklicheStimmzettel_when_noBedenklicheStimmzettelExistButErfassungHaveBeenSaved()
+            throws Exception {
+      val wahlbezirkID = "wahlbezirkID";
+      val wahlID = "wahlID";
+      final var entityToFind =
+          new BedenklicheStimmzettelErfassung(
+              new BezirkUndWahlID(wahlID, wahlbezirkID), new ArrayList<>());
+      bedenklicheStimmzettelRepository.save(entityToFind);
+
+      val request = createGetRequest(wahlID, wahlbezirkID, wahlbezirkID);
+      val response = api.perform(request).andExpect(status().isOk()).andReturn();
+      val responseBodyDTO =
+          objectMapper.readValue(
+              response.getResponse().getContentAsString(), BedenklicherStimmzettelDTO[].class);
+
+      val expectedResponse = new BedenklicherStimmzettelDTO[] {};
+      Assertions.assertThat(responseBodyDTO).isEqualTo(expectedResponse);
+    }
+
+    @Test
     void should_return204_when_noBedenklicheStimmzettelExist() throws Exception {
       val wahlbezirkID = "wahlbezirkID";
       val wahlID = "wahlID";

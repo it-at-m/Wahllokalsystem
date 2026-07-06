@@ -1,19 +1,15 @@
 package de.muenchen.oss.wahllokalsystem.authservice.service;
 
-import de.muenchen.oss.wahllokalsystem.authservice.domain.AuthorityRepository;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttempt;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.LoginAttemptRepository;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.User;
-import de.muenchen.oss.wahllokalsystem.authservice.domain.UserRepository;
+import de.muenchen.oss.wahllokalsystem.authservice.domain.*;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.StreamSupport;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -55,6 +51,11 @@ public class UserService {
 
   @Value("${service.config.user.countNumbersPin}")
   int countNumbersPin;
+
+  @Value("${service.config.user.sizeOfTeam:5}")
+  int sizeOfTeam;
+
+  private static final int MAX_SIZE_OF_TEAM = 26;
 
   private final UserRepository userRepository;
 
@@ -166,22 +167,29 @@ public class UserService {
   @Transactional
   @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
   public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
+    if (sizeOfTeam < 1) {
+      throw new HttpServerErrorException(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          "Die Anzahl der Benutzer im Erfassungsteam muss größer oder gleich 1 sein.");
+    } else if (sizeOfTeam > MAX_SIZE_OF_TEAM) {
+      log.warn(
+          "Die Anzahl der Benutzer für das Erfassungsteam ({}) ist größer "
+              + MAX_SIZE_OF_TEAM
+              + ". Es werden jedoch nur "
+              + MAX_SIZE_OF_TEAM
+              + " Benutzer erzeugt.",
+          sizeOfTeam);
+      sizeOfTeam = MAX_SIZE_OF_TEAM;
+    }
+
+    val startSuffix = 'A';
+
     val authorityWahlvorstand =
-        authorityRepository
-            .findByAuthority(schriftfuehrungAuthorityName)
-            .orElseThrow(
-                () ->
-                    new HttpServerErrorException(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        "Keine Authority <"
-                            + schriftfuehrungAuthorityName
-                            + "> gefunden, kann keine Benutzer für Wahltag-ID <"
-                            + usersOfWahltag.wahltagID()
-                            + "> anlegen"));
+        getAuthority(schriftfuehrungAuthorityName, usersOfWahltag.wahltagID());
 
     deleteWahllokalBenutzer(usersOfWahltag.wahltagID());
 
-    val newUserAuthorities = Set.of(authorityWahlvorstand);
+    val newSchriftfuehrerAuthorities = Set.of(authorityWahlvorstand);
     val newUsers =
         usersOfWahltag.users().stream()
             .map(
@@ -189,12 +197,35 @@ public class UserService {
                     userModelMapper.toUser(
                         usersOfWahltag.wahltagID(),
                         user,
-                        newUserAuthorities,
+                        newSchriftfuehrerAuthorities,
                         generatePin(),
-                        generateName(user.wahlbezirknummer())))
+                        generateName(user.wahlbezirknummer()) + "-" + startSuffix))
             .toList();
-    val persistedUsers = userRepository.saveAll(newUsers);
-    return usersToCSVString(persistedUsers);
+    val persistedSchriftfuehrer = userRepository.saveAll(newUsers);
+
+    val authorityErfassung = getAuthority(erfassungsteamAuthorityName, usersOfWahltag.wahltagID());
+
+    val newErfassungUserAuthorities = Set.of(authorityErfassung);
+
+    List<User> newErfassungUsers = new ArrayList<>();
+
+    for (val user : usersOfWahltag.users()) {
+      for (int i = 1; i < sizeOfTeam; i++) {
+        val suffixChar = (char) (startSuffix + i);
+        newErfassungUsers.add(
+            userModelMapper.toUser(
+                usersOfWahltag.wahltagID(),
+                user,
+                newErfassungUserAuthorities,
+                generatePin(),
+                generateName(user.wahlbezirknummer()) + "-" + suffixChar));
+      }
+    }
+
+    val persistedErfassungUsers = userRepository.saveAll(newErfassungUsers);
+
+    return usersToCSVString(
+        IterableUtils.chainedIterable(persistedSchriftfuehrer, persistedErfassungUsers));
   }
 
   @Transactional
@@ -232,5 +263,19 @@ public class UserService {
         .map(User::getUsername)
         .reduce((s, s2) -> s + EOL + s2)
         .orElse("Keine Nutzer zum angegebenen Wahltag gefunden.");
+  }
+
+  private Authority getAuthority(String authorityName, String wahltagID) {
+    return authorityRepository
+        .findByAuthority(authorityName)
+        .orElseThrow(
+            () ->
+                new HttpServerErrorException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Keine Authority <"
+                        + authorityName
+                        + "> gefunden, kann keine Benutzer für Wahltag-ID <"
+                        + wahltagID
+                        + "> anlegen"));
   }
 }

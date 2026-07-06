@@ -210,7 +210,7 @@ export default withMermaid({
             },
             { text: "Datenbankzugriff", link: `${PATH_GUIDES}db-access.md` },
             {
-              text: "Erfassten Nutzerdaten bereinigen",
+              text: "Erfasste Nutzerdaten bereinigen",
               link: `${PATH_GUIDES}user-data-cleanup.md`,
             },
             {

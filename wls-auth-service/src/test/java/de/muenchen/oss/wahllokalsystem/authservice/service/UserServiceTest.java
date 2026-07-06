@@ -531,7 +531,8 @@ class UserServiceTest {
       Mockito.verify(userModelMapper, Mockito.times(5))
           .toUser(eq(wahltagID), eq(user1), any(), pinCaptor.capture(), any());
 
-      Assertions.assertThat(pinCaptor.getValue()).matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d");
+      Assertions.assertThat(pinCaptor.getAllValues())
+          .allMatch(pin -> pin.matches("\\d\\d\\d\\d-\\d\\d\\d\\d-\\d\\d\\d\\d"));
     }
 
     @Test
@@ -562,8 +563,10 @@ class UserServiceTest {
       Mockito.verify(userModelMapper, Mockito.times(5))
           .toUser(eq(wahltagID), eq(user1), any(), any(), usernameCaptor.capture());
 
-      Assertions.assertThat(usernameCaptor.getValue())
-          .matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer() + "-[A-Z]");
+      Assertions.assertThat(usernameCaptor.getAllValues())
+          .allMatch(
+              username ->
+                  username.matches("\\d\\d\\d\\d\\d\\d-" + user1.wahlbezirknummer() + "-[A-Z]"));
     }
   }
 

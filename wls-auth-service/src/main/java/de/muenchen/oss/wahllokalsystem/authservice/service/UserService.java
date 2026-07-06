@@ -167,7 +167,8 @@ public class UserService {
   @Transactional
   @PreAuthorize("hasAuthority('ROLE_ADMIN_ADMIN')")
   public String generateWahllokalBenutzer(UsersOfWahltagModel usersOfWahltag) {
-    if (sizeOfTeam < 1) {
+    int effectiveSizeOfTeam = sizeOfTeam;
+    if (effectiveSizeOfTeam < 1) {
       throw new HttpServerErrorException(
           HttpStatus.INTERNAL_SERVER_ERROR,
           "Die Anzahl der Benutzer im Erfassungsteam muss größer oder gleich 1 sein.");
@@ -179,7 +180,7 @@ public class UserService {
               + MAX_SIZE_OF_TEAM
               + " Benutzer erzeugt.",
           sizeOfTeam);
-      sizeOfTeam = MAX_SIZE_OF_TEAM;
+      effectiveSizeOfTeam = MAX_SIZE_OF_TEAM;
     }
 
     val startSuffix = 'A';
@@ -210,7 +211,7 @@ public class UserService {
     List<User> newErfassungUsers = new ArrayList<>();
 
     for (val user : usersOfWahltag.users()) {
-      for (int i = 1; i < sizeOfTeam; i++) {
+      for (int i = 1; i < effectiveSizeOfTeam; i++) {
         val suffixChar = (char) (startSuffix + i);
         newErfassungUsers.add(
             userModelMapper.toUser(

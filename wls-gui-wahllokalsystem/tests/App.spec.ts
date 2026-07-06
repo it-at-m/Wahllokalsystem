@@ -14,7 +14,11 @@ import { defineComponent } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import App from "@/App.vue";
-import { ROUTE_WAHLVORSTAND, ROUTES_HOME } from "@/constants.ts";
+import {
+  AUTHORITY_WAHLVORSTAND,
+  ROUTE_WAHLVORSTAND,
+  ROUTES_HOME,
+} from "@/constants.ts";
 import vuetify from "@/plugins/vuetify";
 import { useInfomanagementStore } from "@/stores/infomanagementStore.ts";
 import { useInitTaskManagerStore } from "@/stores/initTaskManagerStore.ts";
@@ -208,10 +212,34 @@ describe("App", () => {
       expect(loadUser).toHaveBeenCalled();
     });
 
-    it("should_callStartBroadcastMessageInterval_when_mounted", async () => {
+    it("should_callStartBroadcastMessageInterval_when_isSchriftfuehrer", async () => {
+      const store = useUserStore();
+      store.user.authorities = [AUTHORITY_WAHLVORSTAND];
+
+      mount(App, {
+        global: {
+          plugins: [vuetify, router],
+        },
+      });
+
       await flushPromises();
 
       expect(startBroadcastMessageIntervalMock).toHaveBeenCalled();
+    });
+
+    it("should_notCallStartBroadcastMessageInterval_when_isNoSchriftfuehrer", async () => {
+      const store = useUserStore();
+      store.user.authorities = ["NO_" + AUTHORITY_WAHLVORSTAND];
+
+      mount(App, {
+        global: {
+          plugins: [vuetify, router],
+        },
+      });
+
+      await flushPromises();
+
+      expect(startBroadcastMessageIntervalMock).not.toHaveBeenCalled();
     });
 
     it("should_callInitTasks_when_mounted", async () => {

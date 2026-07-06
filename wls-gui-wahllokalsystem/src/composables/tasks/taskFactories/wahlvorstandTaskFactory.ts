@@ -1,15 +1,13 @@
 import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
-import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore.ts";
 
-export function useWahlvorstandTaskFactory(): TaskFactory {
-  function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (!taskFactoryContext.isSchriftfuehrung) {
-      return [];
-    }
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
+export function useWahlvorstandTaskFactory(): TaskFactory {
+  function createTasks(): Task[] {
     return [createTask()];
   }
 
@@ -23,7 +21,5 @@ export function useWahlvorstandTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

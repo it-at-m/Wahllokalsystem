@@ -4,16 +4,16 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useAWerteService } from "@/composables/ergebnismeldung/common/aWerteService.ts";
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
+
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
 
 export function useAWerteTaskFactory(): TaskFactory {
   const { getAWerte } = useAWerteService();
 
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (
-      taskFactoryContext.wahlbezirkArt !== WahlbezirksArtEnum.UWB ||
-      !taskFactoryContext.isSchriftfuehrung
-    ) {
+    if (taskFactoryContext.wahlbezirkArt !== WahlbezirksArtEnum.UWB) {
       return [];
     }
 
@@ -29,7 +29,5 @@ export function useAWerteTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

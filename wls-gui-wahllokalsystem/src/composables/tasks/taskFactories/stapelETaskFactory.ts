@@ -3,16 +3,15 @@ import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.
 import type { Task } from "@/types/tasks/Task.ts";
 
 import { useBedenklicheStimmzettelService } from "@/composables/ergebnismeldung/MBW/bedenklicheStimmzettelService.ts";
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { getBedenklicheStimmzettel } = useBedenklicheStimmzettelService();
 
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
+
 export function useStapelETaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (!taskFactoryContext.isSchriftfuehrung) {
-      return [];
-    }
-
     const mbws = taskFactoryContext.extendedWahlMetaData.filter(
       (metaData) => metaData.wahlArt === WahlWahlartEnum.Mbw
     );
@@ -28,7 +27,5 @@ export function useStapelETaskFactory(): TaskFactory {
     }));
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

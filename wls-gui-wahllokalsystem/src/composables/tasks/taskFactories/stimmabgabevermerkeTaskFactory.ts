@@ -3,15 +3,15 @@ import type { TaskFactory } from "@/composables/tasks/TaskFactory.ts";
 import type { TaskFactoryContext } from "@/composables/tasks/TaskFactoryContext.ts";
 import type { Task } from "@/types/tasks/Task.ts";
 
+import { useTaskFactoryBuilder } from "@/composables/tasks/TaskFactoryBuilder.ts";
 import { useStimmabgabevermerkeStore } from "@/stores/stimmabgabevermerkeStore.ts";
 import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
+const { whenUserIsSchriftfuehrung } = useTaskFactoryBuilder();
+
 export function useStimmabgabevermerkeTaskFactory(): TaskFactory {
   function createTasks(taskFactoryContext: TaskFactoryContext): Task[] {
-    if (
-      taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB &&
-      taskFactoryContext.isSchriftfuehrung
-    ) {
+    if (taskFactoryContext.wahlbezirkArt === WahlbezirksArtEnum.UWB) {
       return taskFactoryContext.extendedWahlMetaData.map(createTask);
     }
     return [];
@@ -31,7 +31,5 @@ export function useStimmabgabevermerkeTaskFactory(): TaskFactory {
     };
   }
 
-  return {
-    createTasks,
-  };
+  return whenUserIsSchriftfuehrung(createTasks);
 }

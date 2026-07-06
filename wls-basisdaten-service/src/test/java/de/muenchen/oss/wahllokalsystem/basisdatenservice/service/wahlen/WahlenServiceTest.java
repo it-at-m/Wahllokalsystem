@@ -275,7 +275,8 @@ class WahlenServiceTest {
             LocalDate.now().plusMonths(1),
             WahlartModel.BAW,
             new FarbeModel(1, 1, 1),
-            "0");
+            "0",
+            "B");
     WahlModel wahl2 =
         new WahlModel(
             "wahlid2",
@@ -285,7 +286,8 @@ class WahlenServiceTest {
             LocalDate.now().plusMonths(2),
             WahlartModel.LTW,
             new FarbeModel(2, 2, 2),
-            "1");
+            "1",
+            "L");
     WahlModel wahl3 =
         new WahlModel(
             "wahlid3",
@@ -295,7 +297,8 @@ class WahlenServiceTest {
             LocalDate.now().plusMonths(3),
             WahlartModel.LTW,
             new FarbeModel(3, 3, 3),
-            "2");
+            "2",
+            "L");
     List<WahlModel> lw = new ArrayList<>();
     lw.add(wahl1);
     lw.add(wahl2);

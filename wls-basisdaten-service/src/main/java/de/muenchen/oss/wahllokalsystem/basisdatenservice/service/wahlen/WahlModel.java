@@ -13,4 +13,5 @@ public record WahlModel(
     @NotNull LocalDate wahltag,
     @NotNull WahlartModel wahlart,
     @NotNull FarbeModel farbe,
-    String nummer) {}
+    String nummer,
+    @NotNull String kennzeichen) {}

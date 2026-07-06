@@ -8,6 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useKopfdatenStore } from "@/stores/kopfdatenStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { createKopfdaten } = useKopfdatenTestDataFactory();
 const { prepareUser } = useUserTestDataFactory();
@@ -17,9 +18,21 @@ const mockDefinitions = vi.hoisted(() => ({
   getKopfdaten: vi.fn(),
 }));
 
+const mockWahlenDefinitions = vi.hoisted(() => ({
+  getWahlOrUndefinedById: vi.fn(),
+}));
+
 vi.mock(import("@/composables/kopfdaten/kopfdatenService.ts"), () => ({
   useKopfdatenService: () => ({
     getKopfdaten: mockDefinitions.getKopfdaten,
+  }),
+}));
+
+vi.mock("@/stores/wahlenStore.ts", () => ({
+  useWahlenStore: () => ({
+    wahlenActions: {
+      getWahlOrUndefinedById: mockWahlenDefinitions.getWahlOrUndefinedById,
+    },
   }),
 }));
 
@@ -52,7 +65,7 @@ describe("kopfdatenStore.ts", () => {
       await unitUnderTest.initKopfdaten();
 
       expect(mockDefinitions.getKopfdaten.mock.calls).toStrictEqual([
-        [wahlMetaData.wahlID, wahlMetaData.wahlbezirkID],
+        [wahlMetaData.wahlID, wahlMetaData.wahlbezirkID, true],
       ]);
     });
 
@@ -71,6 +84,28 @@ describe("kopfdatenStore.ts", () => {
       );
 
       await expect(unitUnderTest.initKopfdaten()).rejects.toThrow();
+    });
+
+    it("should_throwError_when_mbw_missing_maximalErlaubteStimmenProWaehler", async () => {
+      const wahlMetaData: WahlMetaData = {
+        wahlbezirkID: generateRandomString(10),
+        wahlnummer: generateRandomString(10),
+        wahlID: generateRandomString(10),
+      };
+      useUserStore().setUser(
+        prepareUser().wahlMetaData([wahlMetaData]).build()
+      );
+
+      const mockedKopfdaten = { wahlID: wahlMetaData.wahlID };
+      mockDefinitions.getKopfdaten.mockReturnValue(mockedKopfdaten);
+
+      mockWahlenDefinitions.getWahlOrUndefinedById.mockReturnValue({
+        wahlart: WahlWahlartEnum.Mbw,
+      });
+
+      await expect(unitUnderTest.initKopfdaten()).rejects.toThrow(
+        "maximalErlaubteStimmenProWaehler"
+      );
     });
   });
 });

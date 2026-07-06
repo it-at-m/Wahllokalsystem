@@ -162,7 +162,8 @@ public class WahltermindatenControllerIntegrationTest {
                   localDateForDataToKeep,
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"));
+                  "1",
+                  "B"));
       val wahlbezirkToKeep =
           wahlbezirkRepository.save(
               new Wahlbezirk(
@@ -185,7 +186,8 @@ public class WahltermindatenControllerIntegrationTest {
                   "3",
                   "SHZ to keep",
                   wahlToKeep.getName(),
-                  wahlbezirkToKeep.getNummer()));
+                  wahlbezirkToKeep.getNummer(),
+                  40));
 
       val request =
           MockMvcRequestBuilders.delete(
@@ -364,7 +366,7 @@ public class WahltermindatenControllerIntegrationTest {
 
     private Wahl createWahlToDelete(final String wahlID, final LocalDate wahltag) {
       return wahlRepository.save(
-          new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, new Farbe(0, 0, 0), "1"));
+          new Wahl(wahlID, wahlID, 1, 1, wahltag, Wahlart.BTW, new Farbe(0, 0, 0), "1", "B"));
     }
 
     private Collection<Wahlbezirk> createWahlbezirkeToDelete(
@@ -402,7 +404,8 @@ public class WahltermindatenControllerIntegrationTest {
                           "1",
                           "SGZ 1_1",
                           wahlbezirk.getWahlID(),
-                          wahlbezirk.getWahlbezirkID())))
+                          wahlbezirk.getWahlbezirkID(),
+                          40)))
           .toList();
     }
 
@@ -447,11 +450,27 @@ public class WahltermindatenControllerIntegrationTest {
       wahlvorschlaege.addWahlvorschlag(wahlvorschlag1);
       val kandidat1Vorschlag1 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag1,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              1);
       wahlvorschlag1.addKandidat(kandidat1Vorschlag1);
       val kandidat2Vorschlag1 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag1, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag1,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              1);
       wahlvorschlag1.addKandidat(kandidat2Vorschlag1);
 
       val wahlvorschlag2 =
@@ -466,11 +485,27 @@ public class WahltermindatenControllerIntegrationTest {
       wahlvorschlaege.addWahlvorschlag(wahlvorschlag2);
       val kandidat1Vorschlag2 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag2,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              2);
       wahlvorschlag2.addKandidat(kandidat1Vorschlag2);
       val kandidat2Vorschlag2 =
           new Kandidat(
-              null, UUID.randomUUID().toString(), wahlvorschlag2, "kandidat1", 1, false, 1L, false);
+              null,
+              UUID.randomUUID().toString(),
+              wahlvorschlag2,
+              "kandidat1",
+              1,
+              false,
+              1L,
+              false,
+              3);
       wahlvorschlag2.addKandidat(kandidat2Vorschlag2);
 
       return wahlvorschlaegeRepository.save(wahlvorschlaege);

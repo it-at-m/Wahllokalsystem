@@ -10,7 +10,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useMbwNavigationService } from "@/composables/navigation/mbwNavigationService.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
 const { generateRandomString } = useCommonTestDataFactory();
 const { prepareElectionWorkflow } = useWorkflowTestDataFactory();
@@ -83,7 +83,7 @@ describe("mbwNavigationService.ts", () => {
       wahlID: string,
       wahlbezirkID: string
     ) {
-      const expectedRouteNames = Object.values(MbwRoutesEnum);
+      const expectedRouteNames = Object.values(MbwStepsEnum);
       expect(navigation.value.length).toStrictEqual(expectedRouteNames.length);
       expectedRouteNames.forEach((expectedRouteName) => {
         expect(navigation.value).satisfy(

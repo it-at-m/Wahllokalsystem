@@ -45,13 +45,13 @@ import TheWahlvorstandAnwesenheitRequirementCard from "@/components/wahlvorstand
 import TheWahlvorstandLastSendDiv from "@/components/wahlvorstand/TheWahlvorstandLastSendDiv.vue";
 import TheWahlvorstandLatestLoadDiv from "@/components/wahlvorstand/TheWahlvorstandLatestLoadDiv.vue";
 import TheWahlvorstandMitgliederTable from "@/components/wahlvorstand/TheWahlvorstandMitgliederTable.vue";
-import { useNavigationUtils } from "@/composables/navigation/navigationUtils.ts";
+import { useNavigationService } from "@/composables/navigation/navigationService.ts";
 import { SAVE_CONTINUE } from "@/constants.ts";
 import router from "@/plugins/router.ts";
 import { useWahlvorstandStore } from "@/stores/wahlvorstandStore";
 
 const { forceLoadWahlvorstand, sendWahlvorstand } = useWahlvorstandStore();
-const { getNextRoute } = useNavigationUtils();
+const { getNextRoute } = useNavigationService();
 
 const {
   isWahlvorstandAusreichendAnwesend,

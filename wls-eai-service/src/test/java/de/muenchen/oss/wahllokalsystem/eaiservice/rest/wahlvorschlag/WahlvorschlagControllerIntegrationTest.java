@@ -88,16 +88,16 @@ public class WahlvorschlagControllerIntegrationTest {
               "wahlvorschlag1",
               true,
               Set.of(
-                  new Kandidat("name1", 1, false, 1, false),
-                  new Kandidat("name2", 2, true, 2, true)));
+                  new Kandidat("name1", 1, false, 1, false, 1),
+                  new Kandidat("name2", 2, true, 2, true, 1)));
       val wahlvorschlag2 =
           new Wahlvorschlag(
               1,
               "wahlvorschlag2",
               true,
               Set.of(
-                  new Kandidat("name3", 1, false, 1, false),
-                  new Kandidat("name4", 2, true, 2, true)));
+                  new Kandidat("name3", 1, false, 1, false, 2),
+                  new Kandidat("name4", 2, true, 2, true, 3)));
 
       val wahlvorschlaege1 =
           new Wahlvorschlaege(
@@ -195,16 +195,16 @@ public class WahlvorschlagControllerIntegrationTest {
               "wahlvorschlag1",
               true,
               Set.of(
-                  new Kandidat("name1", 1, false, 1, false),
-                  new Kandidat("name2", 2, true, 2, true)));
+                  new Kandidat("name1", 1, false, 1, false, 1),
+                  new Kandidat("name2", 2, true, 2, true, 1)));
       val wahlvorschlag2 =
           new Wahlvorschlag(
               1,
               "wahlvorschlag2",
               true,
               Set.of(
-                  new Kandidat("name3", 1, false, 1, false),
-                  new Kandidat("name4", 2, true, 2, true)));
+                  new Kandidat("name3", 1, false, 1, false, 2),
+                  new Kandidat("name4", 2, true, 2, true, 3)));
       val wahlvorschlaege1 =
           new Wahlvorschlaege(
               "wahlbezirkID1",
@@ -218,16 +218,16 @@ public class WahlvorschlagControllerIntegrationTest {
               "wahlvorschlag1",
               true,
               Set.of(
-                  new Kandidat("name5", 1, false, 1, false),
-                  new Kandidat("name6", 2, true, 2, true)));
+                  new Kandidat("name5", 1, false, 1, false, 1),
+                  new Kandidat("name6", 2, true, 2, true, 1)));
       val wahlvorschlag4 =
           new Wahlvorschlag(
               1,
               "wahlvorschlag2",
               true,
               Set.of(
-                  new Kandidat("name7", 1, false, 1, false),
-                  new Kandidat("name8", 2, true, 2, true)));
+                  new Kandidat("name7", 1, false, 1, false, 2),
+                  new Kandidat("name8", 2, true, 2, true, 3)));
       val wahlvorschlaege2 =
           new Wahlvorschlaege(
               "wahlbezirkID2",

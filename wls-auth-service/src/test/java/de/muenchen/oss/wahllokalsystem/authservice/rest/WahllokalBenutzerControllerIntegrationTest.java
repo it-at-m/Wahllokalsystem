@@ -1,6 +1,6 @@
 package de.muenchen.oss.wahllokalsystem.authservice.rest;
 
-import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerControllerIntegrationTest.PROP_USER_AUTHORITY_WAHLVORSTAND;
+import static de.muenchen.oss.wahllokalsystem.authservice.rest.WahllokalBenutzerControllerIntegrationTest.PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +33,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest(
     classes = MicroServiceApplication.class,
-    properties = {"service.config.user.authority.wahlvorstand=" + PROP_USER_AUTHORITY_WAHLVORSTAND})
+    properties = {
+      "service.config.user.authority.schriftfuehrung=" + PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG
+    })
 @AutoConfigureMockMvc
 @ActiveProfiles({
   TestConstants.SPRING_TEST_PROFILE,
@@ -42,7 +44,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 })
 class WahllokalBenutzerControllerIntegrationTest {
 
-  public static final String PROP_USER_AUTHORITY_WAHLVORSTAND = "WLS_USER_AUTHORITY_WAHLVORSTAND";
+  public static final String PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG =
+      "WLS_USER_AUTHORITY_WAHLVORSTAND";
 
   @Autowired EntityManager entityManager;
 
@@ -83,7 +86,9 @@ class WahllokalBenutzerControllerIntegrationTest {
 
       authorityRepository.save(
           new Authority(
-              PROP_USER_AUTHORITY_WAHLVORSTAND, Collections.emptySet(), Collections.emptySet()));
+              PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG,
+              Collections.emptySet(),
+              Collections.emptySet()));
 
       val request =
           MockMvcRequestBuilders.post("/generateAndExportWahllokalbenutzer/" + wahltagID)
@@ -129,7 +134,9 @@ class WahllokalBenutzerControllerIntegrationTest {
 
       authorityRepository.save(
           new Authority(
-              PROP_USER_AUTHORITY_WAHLVORSTAND, Collections.emptySet(), Collections.emptySet()));
+              PROP_USER_AUTHORITY_SCHRIFTFUEHRERUNG,
+              Collections.emptySet(),
+              Collections.emptySet()));
 
       val request =
           MockMvcRequestBuilders.post("/generateAndExportWahllokalbenutzer/" + wahltagID)

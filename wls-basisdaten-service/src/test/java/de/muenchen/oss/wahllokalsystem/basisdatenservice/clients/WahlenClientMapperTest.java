@@ -43,7 +43,8 @@ class WahlenClientMapperTest {
               aNowMoment,
               WahlartModel.BAW,
               new FarbeModel(0, 0, 0),
-              "nummerWahl1");
+              "nummerWahl1",
+              "B");
 
       Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(expectedWahl);
     }
@@ -92,7 +93,8 @@ class WahlenClientMapperTest {
                   LocalDate.now(),
                   WahlartModel.BAW,
                   new FarbeModel(0, 0, 0),
-                  "nummerWahl1"),
+                  "nummerWahl1",
+                  "B"),
               new WahlModel(
                   "identifikatorWahl2",
                   "nameWahl2",
@@ -101,7 +103,8 @@ class WahlenClientMapperTest {
                   LocalDate.now(),
                   WahlartModel.BAW,
                   new FarbeModel(0, 0, 0),
-                  "nummerWahl2"),
+                  "nummerWahl2",
+                  "B"),
               new WahlModel(
                   "identifikatorWahl3",
                   "nameWahl3",
@@ -110,7 +113,8 @@ class WahlenClientMapperTest {
                   LocalDate.now(),
                   WahlartModel.BAW,
                   new FarbeModel(0, 0, 0),
-                  "nummerWahl3"));
+                  "nummerWahl3",
+                  "B"));
 
       Assertions.assertThat(result).containsExactlyInAnyOrderElementsOf(expectedWahltage);
     }

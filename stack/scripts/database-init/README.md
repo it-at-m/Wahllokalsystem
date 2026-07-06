@@ -13,7 +13,7 @@ Die Namen der Unterordner mit den Flyway-Konfigurationen müssen identisch sein 
 
 ## Anleitung
 
-1. in diesen Ornder mit dem Skript wechsel4
+1. in diesen Ordner mit dem Skript wechseln
 2. dort `./run-migrations.sh <umgebungsname> [<Skriptordner>]`
 
 ### Parameterbeschreibung

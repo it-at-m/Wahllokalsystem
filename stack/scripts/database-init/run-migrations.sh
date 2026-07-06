@@ -34,15 +34,15 @@ for SERVICE_DIR in "$BASE_DIR"/*; do
     if [ -d "$SERVICE_DIR" ]; then
         SERVICE_NAME=$(basename "$SERVICE_DIR")
         # Pfad zur flyway.conf-Datei
-        flywayConfigFiles="$ENVIRONMENT/$SERVICE_NAME/flyway.conf"
-        flywayLocations="filesystem:$PATH_TO_SCRIPTS/$SERVICE_NAME"
+        FLYWAY_CONFIG_FILES="$ENVIRONMENT/$SERVICE_NAME/flyway.conf"
+        FLYWAY_LOCATIONS="filesystem:$PATH_TO_SCRIPTS/$SERVICE_NAME"
         echo "Parameter to run with:"
-        echo "flywayConfigFiles: $flywayConfigFiles"
-        echo "flywayLocations: $flywayLocations"
+        echo "FLYWAY_CONFIG_FILES: $FLYWAY_CONFIG_FILES"
+        echo "FLYWAY_LOCATIONS: $FLYWAY_LOCATIONS"
 
         # Überprüfen, ob die flyway.conf existiert
-        if [ ! -f "$flywayConfigFiles" ]; then
-            echo "Die Datei 'flyway.conf' existiert nicht in $flywayConfigFiles."
+        if [ ! -f "$FLYWAY_CONFIG_FILES" ]; then
+            echo "Die Datei 'flyway.conf' existiert nicht in $FLYWAY_CONFIG_FILES."
             continue
         fi
 
@@ -50,7 +50,7 @@ for SERVICE_DIR in "$BASE_DIR"/*; do
 
         # Flyway-Befehl ausführen
 
-        mvn flyway:migrate -Dflyway.configFiles="$flywayConfigFiles" -Dflyway.locations="$flywayLocations"
+        mvn flyway:migrate -Dflyway.configFiles="$FLYWAY_CONFIG_FILES" -Dflyway.locations="$FLYWAY_LOCATIONS"
 
         if [ $? -ne 0 ]; then
             echo "Fehler beim Ausführen von Flyway für ${SERVICE_DIR}"

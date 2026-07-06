@@ -22,7 +22,7 @@ describe("statusTaskFactory.ts", () => {
   const statusNamePrefix = "Druckstatus - ";
 
   describe("createTasks", () => {
-    describe("userHaseRoleSchriftfuehrung", () => {
+    describe("userHasRoleSchriftfuehrung", () => {
       it("should_returnTaskListWithFourElements_when_calledWithFourWahldataElements", () => {
         const extendedWahlMetaDataOne = createExtendedWahlMetaData();
         const extendedWahlMetaDataTwo = createExtendedWahlMetaData();

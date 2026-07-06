@@ -68,9 +68,9 @@ describe("beanstandeteWahlbriefeTaskFactory.ts", () => {
   });
 
   describe("userHasNotRoleSchriftuehrung", () => {
-    it("should_returnEmptyList_when_wahlbezirkIsBWBButUserHasNotRoleSchriftfuehrung", () => {
+    it("should_returnEmptyList_when_wahlbezirkIsBWB", () => {
       const taskFactoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
+        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
         .isSchriftfuehrung(false)
         .build();
 

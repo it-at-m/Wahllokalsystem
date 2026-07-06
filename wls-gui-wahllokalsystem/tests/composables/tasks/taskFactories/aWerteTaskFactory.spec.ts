@@ -76,6 +76,7 @@ describe("aWerteTaskFactory.ts", () => {
 
       it("should_returnNoTask_when_wahlbezirkArtIsBWB", () => {
         const factoryContext = prepareTaskFactoryContext()
+          .isSchriftfuehrung(true)
           .wahlbezirkArt(WahlbezirksArtEnum.BWB)
           .extendedWahlMetaData([
             createExtendedWahlMetaData(),
@@ -91,9 +92,9 @@ describe("aWerteTaskFactory.ts", () => {
   });
 
   describe("userHasNotRoleSchriftfuehrung", () => {
-    it("should_returnNoTask_when_wahlbezirkArtIsUWBButUserHasNotRoleSchriftfuehrung", () => {
+    it("should_returnNoTask_when_wahlbezirkArtIsUWB", () => {
       const factoryContext = prepareTaskFactoryContext()
-        .wahlbezirkArt(WahlbezirksArtEnum.BWB)
+        .wahlbezirkArt(WahlbezirksArtEnum.UWB)
         .isSchriftfuehrung(false)
         .extendedWahlMetaData([
           createExtendedWahlMetaData(),

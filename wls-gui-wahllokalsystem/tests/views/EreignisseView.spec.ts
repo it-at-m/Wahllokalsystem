@@ -31,12 +31,12 @@ const mockDefinitions = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  import("@/composables/navigation/navigationUtils.ts"),
+  import("@/composables/navigation/navigationService.ts"),
   async (importOriginal) => {
     const mod = await importOriginal();
     return {
-      useNavigationUtils: () => ({
-        ...mod.useNavigationUtils(),
+      useNavigationService: () => ({
+        ...mod.useNavigationService(),
         getNextRoute: mockDefinitions.getNextRoute,
       }),
     };

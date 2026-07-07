@@ -5,24 +5,52 @@ import { ref } from "vue";
 
 import { useHmrUpdate } from "@/composables/common/hmrUpdate.ts";
 import { useKopfdatenService } from "@/composables/kopfdaten/kopfdatenService.ts";
+import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { useWahlenStore } from "@/stores/wahlenStore.ts";
+import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
+import { WahlWahlartEnum } from "@/types/wahl/WahlWahlartEnum.ts";
 
 const { registerStoreHMR } = useHmrUpdate();
 const kopfdatenService = useKopfdatenService();
+const userNotificationService = useUserNotificationService();
 
 export const useKopfdatenStore = defineStore("kopfdaten", () => {
   const kopfdaten = ref<Kopfdaten[]>([]);
   const { currentUserWahlMetadata } = storeToRefs(useUserStore());
 
-  async function initKopfdaten() {
+  async function initKopfdaten(sendNotification = true) {
     try {
       const loadedDataAsPromises = currentUserWahlMetadata.value.map(
         (metadata) =>
-          kopfdatenService.getKopfdaten(metadata.wahlID, metadata.wahlbezirkID)
+          kopfdatenService.getKopfdaten(
+            metadata.wahlID,
+            metadata.wahlbezirkID,
+            sendNotification
+          )
       );
       kopfdaten.value = await Promise.all(loadedDataAsPromises);
     } catch {
       throw Error("Fehler beim Resolven der Promises");
+    }
+    const wahlenStore = useWahlenStore();
+
+    for (const kd of kopfdaten.value) {
+      const wahl = wahlenStore.wahlenActions.getWahlOrUndefinedById(kd.wahlID);
+      if (
+        wahl?.wahlart === WahlWahlartEnum.Mbw &&
+        kd.maximalErlaubteStimmenProWaehler == null
+      ) {
+        if (sendNotification) {
+          userNotificationService.addNotification(
+            `Fehler beim Laden der maximalen Stimmenanzahl je Wähler für die MBW`,
+            UserNotificationCategoryEnum.ERROR
+          );
+        }
+        throw Error(
+          `Fehlende Angabe 'maximalErlaubteStimmenProWaehler' in Kopfdaten für MBW (wahlID=${kd.wahlID})`
+        );
+      }
     }
   }
 

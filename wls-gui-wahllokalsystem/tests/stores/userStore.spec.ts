@@ -1,3 +1,4 @@
+import { useCommonTestDataFactory } from "@tests/utils/common/CommonTestDataFactory.ts";
 import { useUserTestDataFactory } from "@tests/utils/user/UserTestDataFactory.ts";
 import { createPinia, setActivePinia } from "pinia";
 import {
@@ -16,9 +17,16 @@ import { WahlbezirksArtEnum } from "@/types/wahlbezirksArtEnum.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
   getUser: vi.fn(),
+  getRoles: vi.fn(),
   initElectionWorkflowState: vi.fn(),
 }));
 
+vi.mock(import("@/composables/user/rolesService.ts"), () => ({
+  useRolesService: () => ({
+    getRoles: mockDefinitions.getRoles,
+    createEmptyMapping: vi.fn(),
+  }),
+}));
 vi.mock(import("@/composables/user/userService"), () => ({
   useUserService: () => ({
     getUser: mockDefinitions.getUser,
@@ -30,7 +38,9 @@ vi.mock("@/stores/workflowStore.ts", () => ({
   }),
 }));
 
-const { prepareUser } = useUserTestDataFactory();
+const { generateRandomString } = useCommonTestDataFactory();
+const { createRoleMapping, prepareRoleMapping, prepareUser } =
+  useUserTestDataFactory();
 
 describe("userStore.ts", () => {
   let unitUnderTest: ReturnType<typeof useUserStore>;
@@ -52,6 +62,7 @@ describe("userStore.ts", () => {
   });
 
   afterEach(() => {
+    vi.clearAllMocks();
     vi.unstubAllEnvs();
   });
 
@@ -70,6 +81,8 @@ describe("userStore.ts", () => {
       const user = createUserLocalDevelopment();
       mockDefinitions.getUser.mockResolvedValue(user);
 
+      mockDefinitions.getRoles.mockResolvedValue(createRoleMapping());
+
       await unitUnderTest.loadUser();
 
       expect(unitUnderTest.user).toStrictEqual(user);
@@ -78,6 +91,7 @@ describe("userStore.ts", () => {
       ).toStrictEqual([
         [user.wahlMetaData[0]?.wahlID, user.wahlMetaData[0]?.wahlbezirkID],
       ]);
+      expect(mockDefinitions.getRoles).toHaveBeenCalledOnce();
     });
   });
 
@@ -275,6 +289,120 @@ describe("userStore.ts", () => {
     });
   });
 
+  describe("hasRoleErfassungsteam", () => {
+    const erfassungteamAuthority = "adminAuthority";
+
+    it("should_returnTrue_when_authoritiesContainsRequiredValue", async () => {
+      const user = prepareUser()
+        .authorities([
+          generateRandomString(10),
+          erfassungteamAuthority,
+          generateRandomString(10),
+        ])
+        .build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .erfassungsteam(erfassungteamAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleErfassungsteam;
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_authoritiesNotContainsRequiredValue", async () => {
+      const user = prepareUser()
+        .authorities([generateRandomString(10), generateRandomString(10)])
+        .build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .erfassungsteam(erfassungteamAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleErfassungsteam;
+
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_authoritiesIsEmpty", async () => {
+      const user = prepareUser().authorities([]).build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .erfassungsteam(erfassungteamAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleErfassungsteam;
+
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe("hasRoleSchriftfuehrung", () => {
+    const schriftfuehrungAuthority = "schriftfuehrungAuthority";
+
+    it("should_returnTrue_when_authoritiesContainsRequiredValue", async () => {
+      const user = prepareUser()
+        .authorities([
+          generateRandomString(10),
+          schriftfuehrungAuthority,
+          generateRandomString(10),
+        ])
+        .build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .schriftfuehrung(schriftfuehrungAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleSchriftfuehrung;
+
+      expect(result).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_authoritiesNotContainsRequiredValue", async () => {
+      const user = prepareUser()
+        .authorities([generateRandomString(10), generateRandomString(10)])
+        .build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .schriftfuehrung(schriftfuehrungAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleSchriftfuehrung;
+
+      expect(result).toStrictEqual(false);
+    });
+
+    it("should_returnFalse_when_authoritiesIsEmpty", async () => {
+      const user = prepareUser().authorities([]).build();
+      mockDefinitions.getUser.mockResolvedValue(user);
+
+      const mockedRoleMapping = prepareRoleMapping()
+        .schriftfuehrung(schriftfuehrungAuthority)
+        .build();
+      mockDefinitions.getRoles.mockResolvedValue(mockedRoleMapping);
+      await unitUnderTest.loadUser();
+
+      const result = unitUnderTest.hasRoleSchriftfuehrung;
+
+      expect(result).toStrictEqual(false);
+    });
+  });
+
   describe("isUWB", () => {
     it("should_returnTrue_when_wahlbezirksArtIsUWB", () => {
       unitUnderTest.setUser(
@@ -308,6 +436,22 @@ describe("userStore.ts", () => {
       );
 
       expect(unitUnderTest.isBWB).toStrictEqual(false);
+    });
+  });
+
+  describe("isNachlieferungsbezirk", () => {
+    it("should_returnTrue_when_isNachlieferungsbezirk", () => {
+      unitUnderTest.setUser(prepareUser().isNachlieferungsbezirk(true).build());
+
+      expect(unitUnderTest.isNachlieferungsbezirk).toStrictEqual(true);
+    });
+
+    it("should_returnFalse_when_isNoNachlieferungsbezirk", () => {
+      unitUnderTest.setUser(
+        prepareUser().isNachlieferungsbezirk(false).build()
+      );
+
+      expect(unitUnderTest.isNachlieferungsbezirk).toStrictEqual(false);
     });
   });
 });

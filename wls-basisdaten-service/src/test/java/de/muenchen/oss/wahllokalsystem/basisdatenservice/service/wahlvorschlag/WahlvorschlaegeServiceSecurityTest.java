@@ -148,6 +148,7 @@ public class WahlvorschlaegeServiceSecurityTest {
       kandidat1.setEinzelbewerber(true);
       kandidat1.setDirektkandidat(true);
       kandidat1.setIdentifikator("kandidatID");
+      kandidat1.setAnzahlNennungen(1);
       wahlvorschlag1.setKandidaten(Set.of(kandidat1));
       dto.setWahlvorschlaege(Set.of(wahlvorschlag1));
 

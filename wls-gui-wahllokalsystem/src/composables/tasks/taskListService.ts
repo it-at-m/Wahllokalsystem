@@ -10,7 +10,6 @@ import { useErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/erge
 import { useEroeffnungsuhrzeitTaskFactory } from "@/composables/tasks/taskFactories/eroeffnungsuhrzeitTaskFactory.ts";
 import { useHandbuchTaskFactory } from "@/composables/tasks/taskFactories/handbuchTaskFactory.ts";
 import { useKonfigurationsparameterTaskFactory } from "@/composables/tasks/taskFactories/konfigurationsparameterTaskFactory.ts";
-import { useKopfdatenTaskFactory } from "@/composables/tasks/taskFactories/kopfdatenTaskFactory.ts";
 import { useMBWWahlvorschlaegeAndErgebnisseTaskFactory } from "@/composables/tasks/taskFactories/mbwWahlvorschlaegeAndErgebnisseTaskFactory.ts";
 import { useStapelETaskFactory } from "@/composables/tasks/taskFactories/stapelETaskFactory.ts";
 import { useStatusTaskFactory } from "@/composables/tasks/taskFactories/statusTaskFactory.ts";
@@ -33,7 +32,6 @@ export function useTaskListService() {
   const { currentUserWahlMetadata, currentUserWahlbezirksArt } =
     storeToRefs(useUserStore());
 
-  const { createTasks: createKopfdatenTasks } = useKopfdatenTaskFactory();
   const { createTasks: createWahlvorstandTasks } = useWahlvorstandTaskFactory();
   const { createTasks: createEroeffnungsuhrzeitTasks } =
     useEroeffnungsuhrzeitTaskFactory();
@@ -71,7 +69,6 @@ export function useTaskListService() {
   function initTasklist() {
     const taskFactoryData = _createTaskFactoryData();
     return [
-      ...createKopfdatenTasks(taskFactoryData),
       ...createWaehlerverzeichnisTasks(taskFactoryData),
       ...createUngueltigeWahlscheineTasks(taskFactoryData),
       ...createWahlvorstandTasks(taskFactoryData),

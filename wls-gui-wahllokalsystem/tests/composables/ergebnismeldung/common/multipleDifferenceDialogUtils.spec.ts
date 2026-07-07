@@ -305,7 +305,7 @@ describe("useMultipleDifferenceDialogUtils.ts", () => {
       );
 
       const expected =
-        "Die Anzahl der Wahlscheine (2) unterscheidet sich um 1 von der Anzahl der Stimmzettelumschläge (3)";
+        "Die Anzahl der Wahlscheine (2) unterscheidet sich um 1 von der Anzahl der Stimmzettel\u00adumschläge (3)";
       expect(unitUnderTest.getDialogContent(DIALOG.differenceBegruendung)).toBe(
         expected
       );

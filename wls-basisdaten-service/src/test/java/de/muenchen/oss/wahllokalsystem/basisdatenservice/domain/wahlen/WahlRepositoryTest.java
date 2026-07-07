@@ -66,7 +66,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind,
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"),
+                  "1",
+                  "B"),
               new Wahl(
                   "wahltagID2",
                   "name2",
@@ -75,7 +76,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind.plusDays(1),
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"));
+                  "1",
+                  "B"));
       repository.saveAll(wahlenToSave);
 
       Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
@@ -94,7 +96,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind,
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"),
+                  "1",
+                  "B"),
               new Wahl(
                   "wahltagID11",
                   "name11",
@@ -103,7 +106,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind,
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "2"),
+                  "2",
+                  "B"),
               new Wahl(
                   "wahltagID2",
                   "name2",
@@ -112,7 +116,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind.plusDays(1),
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"));
+                  "1",
+                  "B"));
       repository.saveAll(wahlenToSave);
 
       Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isTrue();
@@ -131,7 +136,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind.minusDays(1),
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"),
+                  "1",
+                  "B"),
               new Wahl(
                   "wahltagID2",
                   "name2",
@@ -140,7 +146,8 @@ class WahlRepositoryTest {
                   wahltagDateToFind.plusDays(1),
                   Wahlart.BTW,
                   new Farbe(0, 0, 0),
-                  "1"));
+                  "1",
+                  "B"));
       repository.saveAll(wahlenToSave);
 
       Assertions.assertThat(repository.existsByWahltag(wahltagDateToFind)).isFalse();
@@ -161,7 +168,8 @@ class WahlRepositoryTest {
                 wahltagDateToFind,
                 Wahlart.BTW,
                 new Farbe(0, 0, 0),
-                "0"),
+                "0",
+                "B"),
             new Wahl(
                 "wahltagID2",
                 "name2_first",
@@ -170,7 +178,8 @@ class WahlRepositoryTest {
                 wahltagDateToFind,
                 Wahlart.BTW,
                 new Farbe(0, 0, 0),
-                "1"));
+                "1",
+                "B"));
     val wahlenToSave_Second =
         List.of(
             new Wahl(
@@ -181,7 +190,8 @@ class WahlRepositoryTest {
                 wahltagDateToFind.plusDays(1),
                 Wahlart.BTW,
                 new Farbe(0, 0, 0),
-                "0"),
+                "0",
+                "B"),
             new Wahl(
                 "wahltagID2",
                 "name2_second",
@@ -190,7 +200,8 @@ class WahlRepositoryTest {
                 wahltagDateToFind.minusDays(1),
                 Wahlart.BTW,
                 new Farbe(0, 0, 0),
-                "1"));
+                "1",
+                "B"));
     repository.saveAll(wahlenToSave_First);
     repository.saveAll(wahlenToSave_Second);
 
@@ -209,7 +220,8 @@ class WahlRepositoryTest {
             LocalDate.now().minusMonths(1),
             Wahlart.BAW,
             new Farbe(1, 1, 1),
-            "1");
+            "1",
+            "B");
     val wahl2 =
         new Wahl(
             "wahlID2",
@@ -219,7 +231,8 @@ class WahlRepositoryTest {
             LocalDate.now().plusMonths(1),
             Wahlart.EUW,
             new Farbe(2, 2, 2),
-            "2");
+            "2",
+            "E");
     val wahl3 =
         new Wahl(
             "wahlID3",
@@ -229,7 +242,8 @@ class WahlRepositoryTest {
             LocalDate.now().minusMonths(1),
             Wahlart.VE,
             new Farbe(3, 3, 3),
-            "3");
+            "3",
+            "V");
     val wahl4 =
         new Wahl(
             "wahlID4",
@@ -239,7 +253,8 @@ class WahlRepositoryTest {
             LocalDate.now().minusMonths(1),
             Wahlart.LTW,
             new Farbe(3, 3, 3),
-            "0");
+            "0",
+            "L");
 
     return Arrays.asList(wahl1, wahl2, wahl3, wahl4);
   }

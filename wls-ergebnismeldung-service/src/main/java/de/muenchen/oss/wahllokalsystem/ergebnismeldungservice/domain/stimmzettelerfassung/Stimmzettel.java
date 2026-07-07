@@ -11,7 +11,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.NaturalId;
 
 @Getter
 @Setter
@@ -19,7 +18,7 @@ import org.hibernate.annotations.NaturalId;
 @ToString(onlyExplicitlyIncluded = true)
 public class Stimmzettel {
 
-  @NaturalId @EmbeddedId @ToString.Include private StimmzettelCombinedID combinedId;
+  @EmbeddedId @ToString.Include private StimmzettelID id;
 
   @Convert(converter = IntArrayToStringConverter.class)
   @NotNull private List<Integer> selectedWahlvorschlaegeOrdnungszahlen;
@@ -30,7 +29,8 @@ public class Stimmzettel {
       joinColumns = {
         @JoinColumn(name = "fk_wahlbezirkID", referencedColumnName = "wahlbezirkID"),
         @JoinColumn(name = "fk_wahlID", referencedColumnName = "wahlID"),
-        @JoinColumn(name = "fk_teamID", referencedColumnName = "teamID")
+        @JoinColumn(name = "fk_teamID", referencedColumnName = "teamID"),
+        @JoinColumn(name = "fk_stimmzettelkennung", referencedColumnName = "stimmzettelkennung")
       })
   private List<StimmzettelKandidat> kandidaten;
 }

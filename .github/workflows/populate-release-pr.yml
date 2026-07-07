@@ -45,46 +45,72 @@ jobs:
             // Für jeden Service die Links generieren
             for (const serviceName of services) {
               try {
-                // Hole Paket-Informationen vom Container Registry
-                const packageResponse = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
-                  org: 'it-at-m',
-                  package_name: `wahllokalsystem-${serviceName}`,
-                  package_type: 'container',
+                // 1. Hole den neuesten Release-Tag (hat die semantische Version)
+                const releases = await github.rest.repos.listReleases({
+                  owner: 'it-at-m',
+                  repo: 'Wahllokalsystem',
                   per_page: 100
                 });
             
-                // Version mit 'latest'-Tag finden
-                let latestVersion = null;
-                let latestVersionNumber = null;
+                // Finde den neuesten Release für diesen Service
+                const latestRelease = releases.data.find(r => 
+                  r.tag_name.startsWith(`${serviceName}/`)
+                );
             
-                for (const version of packageResponse.data) {
-                  if (version.metadata && version.metadata.container && version.metadata.container.tags) {
-                    if (version.metadata.container.tags.includes('latest')) {
-                      latestVersion = version;
-                      latestVersionNumber = version.name;
-                      break;
+                if (!latestRelease) {
+                  console.warn(`⚠ ${serviceName}: Kein Release gefunden`);
+                  continue;
+                }
+            
+                const tag = latestRelease.tag_name;
+                // Extrahiere die Version aus dem Tag (z.B. "wls-admin-service/0.4.16" → "0.4.16")
+                const versionNumber = tag.split('/')[1];
+                        
+                // 2. Hole jetzt die Package-ID vom Container Registry
+                let packageId = null;
+                try {
+                  const packageResponse = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                    org: 'it-at-m',
+                    package_name: `wahllokalsystem-${serviceName}`,
+                    package_type: 'container',
+                    per_page: 100
+                  });
+            
+                  // Finde die Version mit Tag 'latest'
+                  for (const version of packageResponse.data) {
+                    if (version.metadata && version.metadata.container && version.metadata.container.tags) {
+                      if (version.metadata.container.tags.includes('latest')) {
+                        packageId = version.id;
+                        console.log(`  Package ID: ${packageId}`);
+                        break;
+                      }
                     }
                   }
+                } catch (pkgError) {
+                  console.warn(`⚠ Konnte Package-ID für ${serviceName} nicht abrufen:`, pkgError.message);
                 }
             
-                if (latestVersion && latestVersionNumber) {
-                  const packageId = latestVersion.id;
+                // 3. Generiere die Links mit semantischer Version
+                const releaseUrl = `https://github.com/it-at-m/Wahllokalsystem/releases/tag/${serviceName}%2F${versionNumber}`;
             
-                  const releaseUrl = `https://github.com/it-at-m/Wahllokalsystem/releases/tag/${serviceName}%2F${latestVersionNumber}`;
-                  const imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}/${packageId}?tag=${latestVersionNumber}`;
-            
-                  // Platzhalter in PR Template ersetzen
-                  body = body.replace(
-                    `[${serviceName}-release]`, 
-                    releaseUrl
-                  );
-                  body = body.replace(
-                    `[${serviceName}-image]`, 
-                    imageUrl
-                  );
+                let imageUrl;
+                if (packageId) {
+                  imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}/${packageId}?tag=${versionNumber}`;
                 } else {
-                  console.warn(`⚠ ${serviceName}: Keine Version mit Tag 'latest' gefunden`);
+                  // Fallback wenn Package-ID nicht gefunden
+                  imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}?tag=${versionNumber}`;
                 }
+            
+                // 4. Platzhalter in PR Template ersetzen
+                body = body.replace(
+                  `[${serviceName}-release]: #`,
+                  `[${serviceName}-release]: ${releaseUrl}`
+                );
+                body = body.replace(
+                  `[${serviceName}-image]: #`,
+                  `[${serviceName}-image]: ${imageUrl}`
+                );
+                
               } catch (error) {
                 console.error(`✗ Fehler bei ${serviceName}:`, error.message);
               }

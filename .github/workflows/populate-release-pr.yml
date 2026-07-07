@@ -109,6 +109,33 @@ jobs:
                   `[${serviceName}-image]: #`,
                   `[${serviceName}-image]: ${imageUrl}`
                 );
+            
+               // 5. replace version number in service heading
+              const serviceHeadings = {
+                'wls-admin-service': 'Admin-Service',
+                'wls-auth-service': 'Auth-Service',
+                'wls-basisdaten-service': 'Basisdaten-Service',
+                'wls-briefwahl-service': 'Briefwahl-Service',
+                'wls-broadcast-service': 'Broadcast-Service',
+                'wls-eai-service': 'EAI-Service',
+                'wls-ergebnismeldung-service': 'Ergebnismeldung-Service',
+                'wls-infomanagement-service': 'Infomanagement-Service',
+                'wls-monitoring-service': 'Monitoring-Service',
+                'wls-vorfaelleundvorkommnisse-service': 'Vorfaelle-Service',
+                'wls-wahlvorbereitung-service': 'Wahlvorbereitung-Service',
+                'wls-wahlvorstand-service': 'Wahlvorstand-Service',
+                'wls-api-gateway': 'API-Gateway-Service',
+                'wls-gui-admintool': 'Admin-Tool GUI',
+                'wls-gui-wahllokalsystem': 'Wahllokalsystem GUI'
+              };
+                  
+              const heading = serviceHeadings[serviceName];
+              if (heading) {
+                body = body.replaceAll(
+                `## ${heading}`,
+                `## ${heading} (${versionNumber})`
+                );
+              }
                 
               } catch (error) {
                 console.error(`✗ Error in ${serviceName}:`, error.message);

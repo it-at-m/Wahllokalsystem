@@ -15,4 +15,5 @@ export interface Wahl {
   nummer: string | undefined;
   beanstandeteWahlbriefe: (ZurueckweisungsgrundEnum | null)[];
   stimmzettelumschlaege: Stimmzettelumschlaege;
+  kennzeichen: string;
 }

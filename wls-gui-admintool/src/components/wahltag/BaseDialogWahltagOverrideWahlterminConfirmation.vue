@@ -6,11 +6,10 @@
     <v-card>
       <v-card-title>Wahltermindaten erneut anlegen</v-card-title>
       <v-card-text>
-        <div data-test="div-confirm-information">
-          Für diesen Wahltag existieren bereits Wahltermindaten. Bitte geben Sie
-          "{{ requiredConfirmText }}" in das Eingabefeld ein und bestätigen Sie,
-          um die alten Wahltermindaten zu löschen und neue zu erstellen.
-        </div>
+        <div
+          data-test="div-confirm-information"
+          v-text="confirmationText"
+        />
         <v-text-field
           v-model="confirmText"
           ref="confirmTextField"
@@ -49,6 +48,11 @@ import BaseButtonConfirm from "@/components/common/BaseButtonConfirm.vue";
 import { useRules } from "@/composables/common/rules.ts";
 
 const props = defineProps({
+  confirmationText: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
   requiredConfirmText: {
     type: String,
     required: false,
@@ -75,6 +79,11 @@ const confirmTextField = useTemplateRef("confirmTextField") as Readonly<
 
 const confirmTextFieldLabel = computed(
   () => `Bitte geben sie "${props.requiredConfirmText}" ein`
+);
+const confirmationText = computed(
+  () =>
+    props.confirmationText ??
+    `Für diesen Wahltag existieren bereits Wahltermindaten. Bitte geben Sie "${props.requiredConfirmText}" in das Eingabefeld ein und bestätigen Sie, um die alten Wahltermindaten zu löschen und neue zu erstellen.`
 );
 const hasUserEnteredConfirmText = computed(
   () => props.requiredConfirmText === confirmText.value

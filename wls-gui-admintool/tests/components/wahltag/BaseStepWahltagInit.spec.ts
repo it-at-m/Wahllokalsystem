@@ -23,6 +23,9 @@ import BaseStepWahltagInit from "@/components/wahltag/BaseStepWahltagInit.vue";
 import vuetify from "@/plugins/vuetify.ts";
 
 const mockDefinitions = vi.hoisted(() => ({
+  deleteBenutzer: vi.fn(),
+  exportBenutzer: vi.fn(),
+  generateBenutzer: vi.fn(),
   importWahlterminDaten: vi.fn(),
   deleteAndImportWahlterminDaten: vi.fn(),
   isLoading: true,
@@ -34,6 +37,23 @@ const isLoadingRef = ref(isLoadingRefDefaultValue);
 
 const isDeletingRefDefaultValue = false;
 const isDeletingRef = ref(isDeletingRefDefaultValue);
+const isGeneratingBenutzerRef = ref(false);
+const isExportingBenutzerRef = ref(false);
+const isDeletingBenutzerRef = ref(false);
+
+vi.mock(
+  import("@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts"),
+  () => ({
+    useWahllokalBenutzerService: () => ({
+      deleteBenutzer: mockDefinitions.deleteBenutzer,
+      exportBenutzer: mockDefinitions.exportBenutzer,
+      generateBenutzer: mockDefinitions.generateBenutzer,
+      isDeleting: isDeletingBenutzerRef,
+      isExporting: isExportingBenutzerRef,
+      isGenerating: isGeneratingBenutzerRef,
+    }),
+  })
+);
 
 vi.mock(
   import("@/composables/wahltermindaten/wahltermindatenService.ts"),
@@ -75,6 +95,9 @@ describe("BaseStepWahltagInit.vue", () => {
     });
     isDeletingRef.value = isDeletingRefDefaultValue;
     isLoadingRef.value = isLoadingRefDefaultValue;
+    isDeletingBenutzerRef.value = false;
+    isExportingBenutzerRef.value = false;
+    isGeneratingBenutzerRef.value = false;
   });
 
   afterEach(() => {
@@ -151,6 +174,22 @@ describe("BaseStepWahltagInit.vue", () => {
           getSnapshotFilename(context)
         );
       });
+
+      it("should_renderWahllokalBenutzerButtons_when_wahlterminDatenExistsIsTrue", async () => {
+        await wrapper.setProps({
+          wahlterminDatenExists: true,
+        });
+
+        expect(
+          wrapper.findComponent('[data-test="generate-users"]').exists()
+        ).toBe(true);
+        expect(
+          wrapper.findComponent('[data-test="export-users"]').exists()
+        ).toBe(true);
+        expect(
+          wrapper.findComponent('[data-test="delete-users"]').exists()
+        ).toBe(true);
+      });
     });
 
     describe("wahlterminDatenExists is undefined", () => {
@@ -163,6 +202,16 @@ describe("BaseStepWahltagInit.vue", () => {
           getSnapshotFilename(context)
         );
       });
+    });
+
+    it("should_renderDisabledHint_when_wahlterminDatenDoesNotExist", async () => {
+      await wrapper.setProps({
+        wahlterminDatenExists: false,
+      });
+
+      expect(wrapper.find('[data-test="users-disabled-hint"]').exists()).toBe(
+        true
+      );
     });
   });
 
@@ -244,6 +293,92 @@ describe("BaseStepWahltagInit.vue", () => {
       expect(dialogHideSpy).toHaveBeenCalledTimes(1);
 
       expect(wrapper.emitted()).not.toHaveProperty("importWahlterminDatenDone");
+
+      dialogHideSpy.mockRestore();
+    });
+
+    it("should_triggerGenerateBenutzer_when_generateButtonWasClicked", async () => {
+      const wahltagEvent = prepareWahltagEvent().build();
+      await wrapper.setProps({
+        wahlterminDatenExists: true,
+        wahltagEvent: wahltagEvent,
+      });
+
+      await wrapper
+        .findComponent('[data-test="generate-users"]')
+        .trigger("click");
+
+      expect(mockDefinitions.generateBenutzer).toHaveBeenCalledWith(
+        wahltagEvent.wahltagID
+      );
+    });
+
+    it("should_triggerExportBenutzer_when_exportButtonWasClicked", async () => {
+      const wahltagEvent = prepareWahltagEvent().build();
+      await wrapper.setProps({
+        wahlterminDatenExists: true,
+        wahltagEvent: wahltagEvent,
+      });
+
+      await wrapper
+        .findComponent('[data-test="export-users"]')
+        .trigger("click");
+
+      expect(mockDefinitions.exportBenutzer).toHaveBeenCalledWith(
+        wahltagEvent.wahltagID
+      );
+    });
+
+    it("should_triggerDeleteBenutzer_when_deleteWasClickedAndConfirmed", async () => {
+      const wahltagEvent = prepareWahltagEvent().build();
+      await wrapper.setProps({
+        wahlterminDatenExists: true,
+        wahltagEvent: wahltagEvent,
+      });
+
+      await wrapper
+        .findComponent('[data-test="delete-users"]')
+        .trigger("click");
+
+      const referencedConfirmDialog = wrapper.vm.$refs
+        .wahllokalBenutzerDeleteConfirmationDialog as InstanceType<
+        typeof BaseDialogWahltagOverrideWahlterminConfirmation
+      >;
+      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
+
+      referencedConfirmDialog.$emit("confirmDelete");
+
+      await nextTick();
+
+      expect(mockDefinitions.deleteBenutzer).toHaveBeenCalledWith(
+        wahltagEvent.wahltagID
+      );
+      expect(dialogHideSpy).toHaveBeenCalledTimes(1);
+
+      dialogHideSpy.mockRestore();
+    });
+
+    it("should_notTriggerDeleteBenutzer_when_deleteWasClickedButConfirmWasCanceled", async () => {
+      await wrapper.setProps({
+        wahlterminDatenExists: true,
+      });
+
+      await wrapper
+        .findComponent('[data-test="delete-users"]')
+        .trigger("click");
+
+      const referencedConfirmDialog = wrapper.vm.$refs
+        .wahllokalBenutzerDeleteConfirmationDialog as InstanceType<
+        typeof BaseDialogWahltagOverrideWahlterminConfirmation
+      >;
+      const dialogHideSpy = vi.spyOn(referencedConfirmDialog, "hideDialog");
+
+      referencedConfirmDialog.$emit("cancelDelete");
+
+      await nextTick();
+
+      expect(mockDefinitions.deleteBenutzer).toHaveBeenCalledTimes(0);
+      expect(dialogHideSpy).toHaveBeenCalledTimes(1);
 
       dialogHideSpy.mockRestore();
     });

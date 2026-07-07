@@ -47,7 +47,7 @@ UPDATE Wlsuser
 SET wahlbezirkID     = 'e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b',
     email            = 'wls_mbw_erf_bwb@email.de',
     wahltagID        = '5f10d96a-855e-44ec-afdb-7e95484c8e2f',
-    wahltag          = TO_TIMESTAMP('2026-10-10', 'yyyy-MM-dd'),
+    wahltag          = '2026-10-10',
     wahlbezirkNummer = '5678',
     pin              = 'dummyPin',
     wbid_wahlnummer  = '{"wbid_wahlnummer": [{"wahlbezirkID": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b", "wahlnummer": "0", "wahlID": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"}]}'
@@ -58,7 +58,7 @@ UPDATE Wlsuser
 SET wahlbezirkID     = 'd4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a',
     email            = 'wls_mbw_erf_uwb@email.de',
     wahltagID        = '5f10d96a-855e-44ec-afdb-7e95484c8e2f',
-    wahltag          = TO_TIMESTAMP('2026-10-10', 'yyyy-MM-dd'),
+    wahltag          = '2026-10-10',
     wahlbezirkNummer = '9012',
     pin              = 'dummyPin',
     wbid_wahlnummer  = '{"wbid_wahlnummer": [{"wahlbezirkID": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a", "wahlnummer": "0", "wahlID": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e"}]}'

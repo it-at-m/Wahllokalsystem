@@ -123,7 +123,7 @@ jobs:
             // (... more code ... )
 ```
 
-```md {17-20,30-31-33} [.github/PULL_REQUEST_TEMPLATE/release-pr.md]
+```md {17-20,30-31} [.github/PULL_REQUEST_TEMPLATE/release-pr.md]
 # Beschreibung:
 
 Releases für den Sprint XX erstellt.

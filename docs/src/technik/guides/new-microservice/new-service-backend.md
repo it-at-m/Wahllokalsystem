@@ -151,7 +151,7 @@ jobs:
               const serviceHeadings = {
                 'wls-admin-service': 'Admin-Service',
                 // further services,
-                'wls-<domain>-service': '<Domain>-Service
+                'wls-<domain>-service': '<Domain>-Service'
               };
 
             // (... more code ... )

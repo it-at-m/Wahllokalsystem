@@ -208,10 +208,34 @@ describe("App", () => {
       expect(loadUser).toHaveBeenCalled();
     });
 
-    it("should_callStartBroadcastMessageInterval_when_mounted", async () => {
+    it("should_callStartBroadcastMessageInterval_when_hasRoleSchriftfuehrer", async () => {
+      const store = useUserStore();
+      store.user.authorities = [""]; //empty default mapping for schriftfuehrung
+
+      mount(App, {
+        global: {
+          plugins: [vuetify, router],
+        },
+      });
+
       await flushPromises();
 
       expect(startBroadcastMessageIntervalMock).toHaveBeenCalled();
+    });
+
+    it("should_notCallStartBroadcastMessageInterval_when_hasNoRoleSchriftfuehrer", async () => {
+      const store = useUserStore();
+      store.user.authorities = ["WRONG_ROLE"];
+
+      mount(App, {
+        global: {
+          plugins: [vuetify, router],
+        },
+      });
+
+      await flushPromises();
+
+      expect(startBroadcastMessageIntervalMock).not.toHaveBeenCalled();
     });
 
     it("should_callInitTasks_when_mounted", async () => {

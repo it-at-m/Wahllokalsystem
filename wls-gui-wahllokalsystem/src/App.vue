@@ -59,7 +59,7 @@ const { loadUser, initIsNachlieferungsbezirk } = useUserStore();
 const { dateTimeToCheckAnwesenheit, dateTimeToCheckWahlschluss } = storeToRefs(
   useInfomanagementStore()
 );
-const { isUWB, isBWB } = storeToRefs(useUserStore());
+const { isUWB, isBWB, hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 const { initTasks } = useInitTaskManagerStore();
 const { wahlenActions } = useWahlenStore();
 const { isOfflineCacheReady } = storeToRefs(useOnlineOfflineStore());
@@ -103,7 +103,9 @@ onMounted(async () => {
   } catch (error) {
     console.debug(error);
   } finally {
-    startBroadcastMessageInterval();
+    if (hasRoleSchriftfuehrung.value) {
+      startBroadcastMessageInterval();
+    }
   }
 });
 

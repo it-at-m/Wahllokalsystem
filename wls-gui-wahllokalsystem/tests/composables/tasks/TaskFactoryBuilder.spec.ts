@@ -28,7 +28,8 @@ describe("TaskFactoryBuilder.ts", () => {
       const createdTasks = result.createTasks(context);
 
       expect(createdTasks).toStrictEqual(mockedCreatedTasks);
-      expect(taskCreatorFunctionMock.mock.calls).toStrictEqual([[context]]);
+      expect(taskCreatorFunctionMock).toHaveBeenCalledOnce();
+      expect(taskCreatorFunctionMock).toHaveBeenCalledWith(context);
     });
 
     it("should_createTaskFactoryThatNotCallsTaskCreatorFunction_when_userIsNotSchriftfuehrung", () => {
@@ -42,8 +43,8 @@ describe("TaskFactoryBuilder.ts", () => {
       );
       const createdTasks = result.createTasks(context);
 
-      expect(createdTasks.length).toStrictEqual(0);
-      expect(taskCreatorFunctionMock.mock.calls.length).toStrictEqual(0);
+      expect(createdTasks).toHaveLength(0);
+      expect(taskCreatorFunctionMock).not.toHaveBeenCalled();
     });
   });
 });

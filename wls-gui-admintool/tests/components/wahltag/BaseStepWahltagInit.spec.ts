@@ -26,8 +26,10 @@ const mockDefinitions = vi.hoisted(() => ({
   deleteBenutzer: vi.fn(),
   exportBenutzer: vi.fn(),
   generateBenutzer: vi.fn(),
+  clearBenutzer: vi.fn(),
   importWahlterminDaten: vi.fn(),
   deleteAndImportWahlterminDaten: vi.fn(),
+  loadBenutzer: vi.fn(),
   isLoading: true,
   isDeleting: false,
 }));
@@ -40,17 +42,23 @@ const isDeletingRef = ref(isDeletingRefDefaultValue);
 const isGeneratingBenutzerRef = ref(false);
 const isExportingBenutzerRef = ref(false);
 const isDeletingBenutzerRef = ref(false);
+const isLoadingBenutzerRef = ref(false);
+const benutzerRef = ref([{ benutzername: "user-0001" }]);
 
 vi.mock(
   import("@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts"),
   () => ({
     useWahllokalBenutzerService: () => ({
+      benutzer: benutzerRef,
+      clearBenutzer: mockDefinitions.clearBenutzer,
       deleteBenutzer: mockDefinitions.deleteBenutzer,
       exportBenutzer: mockDefinitions.exportBenutzer,
       generateBenutzer: mockDefinitions.generateBenutzer,
       isDeleting: isDeletingBenutzerRef,
       isExporting: isExportingBenutzerRef,
       isGenerating: isGeneratingBenutzerRef,
+      isLoading: isLoadingBenutzerRef,
+      loadBenutzer: mockDefinitions.loadBenutzer,
     }),
   })
 );
@@ -98,6 +106,8 @@ describe("BaseStepWahltagInit.vue", () => {
     isDeletingBenutzerRef.value = false;
     isExportingBenutzerRef.value = false;
     isGeneratingBenutzerRef.value = false;
+    isLoadingBenutzerRef.value = false;
+    benutzerRef.value = [{ benutzername: "user-0001" }];
   });
 
   afterEach(() => {
@@ -189,6 +199,12 @@ describe("BaseStepWahltagInit.vue", () => {
         expect(
           wrapper.findComponent('[data-test="delete-users"]').exists()
         ).toBe(true);
+        expect(
+          wrapper.findComponent('[data-test="user-search"]').exists()
+        ).toBe(true);
+        expect(wrapper.findComponent('[data-test="user-table"]').exists()).toBe(
+          true
+        );
       });
     });
 
@@ -381,6 +397,30 @@ describe("BaseStepWahltagInit.vue", () => {
       expect(dialogHideSpy).toHaveBeenCalledTimes(1);
 
       dialogHideSpy.mockRestore();
+    });
+
+    it("should_loadBenutzer_when_wahlterminDatenExistsIsTrue", async () => {
+      const wahltagEvent = prepareWahltagEvent().build();
+      await wrapper.setProps({
+        wahlterminDatenExists: true,
+        wahltagEvent: wahltagEvent,
+      });
+
+      await nextTick();
+
+      expect(mockDefinitions.loadBenutzer).toHaveBeenCalledWith(
+        wahltagEvent.wahltagID
+      );
+    });
+
+    it("should_clearBenutzer_when_wahlterminDatenDoesNotExist", async () => {
+      await wrapper.setProps({
+        wahlterminDatenExists: false,
+      });
+
+      await nextTick();
+
+      expect(mockDefinitions.clearBenutzer).toHaveBeenCalled();
     });
   });
 });

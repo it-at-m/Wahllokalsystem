@@ -10,6 +10,10 @@ import { useUserNotificationService } from "@/composables/userNotification/userN
 import { ADMIN_SERVICE_API_URL } from "@/constants.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
+export interface WahllokalBenutzer {
+  benutzername: string;
+}
+
 const adminWahllokalBenutzerAPI = new WahllokalBenutzerControllerApi(
   new Configuration({
     basePath: ADMIN_SERVICE_API_URL,
@@ -18,15 +22,35 @@ const adminWahllokalBenutzerAPI = new WahllokalBenutzerControllerApi(
 const { addNotification } = useUserNotificationService();
 
 export function useWahllokalBenutzerService() {
+  const benutzer = ref<WahllokalBenutzer[]>([]);
+  const isLoading = ref(false);
   const isGenerating = ref(false);
   const isExporting = ref(false);
   const isDeleting = ref(false);
+
+  async function loadBenutzer(wahltagID: string) {
+    isLoading.value = true;
+    try {
+      const response =
+        await adminWahllokalBenutzerAPI.exportWahllokalBenutzer(wahltagID);
+      benutzer.value = parseBenutzer(toCsvFileDTOArray(response.data));
+    } catch (error) {
+      addNotification(
+        "Laden der Wahllokalbenutzer fehlgeschlagen",
+        UserNotificationCategoryEnum.ERROR
+      );
+      throw error;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   async function generateBenutzer(wahltagID: string) {
     isGenerating.value = true;
     try {
       const response =
         await adminWahllokalBenutzerAPI.generateWahllokalbenutzer(wahltagID);
+      benutzer.value = parseBenutzer([response.data]);
       downloadCsvFiles([response.data], wahltagID);
       addNotification(
         "Wahllokalbenutzer wurden erstellt",
@@ -68,6 +92,7 @@ export function useWahllokalBenutzerService() {
     isDeleting.value = true;
     try {
       await adminWahllokalBenutzerAPI.deleteWahllokalBenutzer(wahltagID);
+      benutzer.value = [];
       addNotification(
         "Wahllokalbenutzer wurden gelöscht",
         UserNotificationCategoryEnum.SUCCESS
@@ -84,13 +109,21 @@ export function useWahllokalBenutzerService() {
   }
 
   return {
+    benutzer,
+    clearBenutzer,
     deleteBenutzer,
     exportBenutzer,
     generateBenutzer,
     isDeleting,
     isExporting,
     isGenerating,
+    isLoading,
+    loadBenutzer,
   };
+
+  function clearBenutzer() {
+    benutzer.value = [];
+  }
 }
 
 function toCsvFileDTOArray(
@@ -112,6 +145,17 @@ function downloadCsvFiles(csvFileDTOs: CsvFileDTO[], wahltagID: string) {
       `wahllokalbenutzer-${wahltagID}${csvFileDTOs.length > 1 ? `-${index + 1}` : ""}.csv`
     );
   });
+}
+
+function parseBenutzer(csvFileDTOs: CsvFileDTO[]): WahllokalBenutzer[] {
+  return csvFileDTOs
+    .flatMap((csvFileDTO) => csvFileDTO.csv.split(/\r?\n/))
+    .map((csvLine) => csvLine.trim().replace(/^\uFEFF/, ""))
+    .filter((csvLine) => csvLine.length > 0)
+    .map((csvLine) => ({ benutzername: csvLine }))
+    .sort((firstBenutzer, secondBenutzer) =>
+      firstBenutzer.benutzername.localeCompare(secondBenutzer.benutzername)
+    );
 }
 
 function downloadCsvFile(csv: string, filename: string) {

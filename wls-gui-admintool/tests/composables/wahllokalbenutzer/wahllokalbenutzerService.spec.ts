@@ -72,6 +72,9 @@ describe("wahllokalbenutzerService.ts", () => {
         `wahllokalbenutzer-${wahltagID}.csv`
       );
       expect(linkMock.click).toHaveBeenCalledTimes(1);
+      expect(unitUnderTest.benutzer.value).toStrictEqual([
+        { benutzername: "username;pin" },
+      ]);
       expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
         expect.any(String),
         "Success",
@@ -156,6 +159,60 @@ describe("wahllokalbenutzerService.ts", () => {
     });
   });
 
+  describe("loadBenutzer", () => {
+    it("should_loadSortedBenutzer_when_apiReturnsCsv", async () => {
+      const wahltagID = "wahltagID";
+      mockDefinitions.apiExportWahllokalBenutzer.mockResolvedValue({
+        data: { csv: "user-0003\r\nuser-0001\r\nuser-0002\r\n" },
+      });
+
+      await unitUnderTest.loadBenutzer(wahltagID);
+
+      expect(mockDefinitions.apiExportWahllokalBenutzer).toHaveBeenCalledWith(
+        wahltagID
+      );
+      expect(unitUnderTest.benutzer.value).toStrictEqual([
+        { benutzername: "user-0001" },
+        { benutzername: "user-0002" },
+        { benutzername: "user-0003" },
+      ]);
+    });
+
+    it("should_loadBenutzer_when_apiReturnsCsvFileArray", async () => {
+      mockDefinitions.apiExportWahllokalBenutzer.mockResolvedValue({
+        data: [{ csv: "user-0002" }, { csv: "user-0001" }],
+      });
+
+      await unitUnderTest.loadBenutzer("wahltagID");
+
+      expect(unitUnderTest.benutzer.value).toStrictEqual([
+        { benutzername: "user-0001" },
+        { benutzername: "user-0002" },
+      ]);
+    });
+
+    it("should_addNotificationAndResetLoading_when_exceptionOccurred", async () => {
+      const spyOnValueSetterOfRef = spyOn(
+        unitUnderTest.isLoading,
+        "value",
+        "set"
+      );
+      mockDefinitions.apiExportWahllokalBenutzer.mockRejectedValue(
+        new Error("api call failed")
+      );
+
+      await expect(unitUnderTest.loadBenutzer("wahltagID")).rejects.toThrow();
+
+      expect(mockDefinitions.addNotification.mock.calls[0]).toEqual([
+        expect.any(String),
+        "Error",
+      ]);
+      expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([[true], [false]]);
+
+      spyOnValueSetterOfRef.mockRestore();
+    });
+  });
+
   describe("deleteBenutzer", () => {
     it("should_triggerApiCallWithWahltagID_when_called", async () => {
       const wahltagID = "wahltagID";
@@ -169,6 +226,7 @@ describe("wahllokalbenutzerService.ts", () => {
         expect.any(String),
         "Success",
       ]);
+      expect(unitUnderTest.benutzer.value).toStrictEqual([]);
     });
 
     it("should_addNotificationAndResetLoading_when_exceptionOccurred", async () => {
@@ -190,6 +248,19 @@ describe("wahllokalbenutzerService.ts", () => {
       expect(spyOnValueSetterOfRef.mock.calls).toStrictEqual([[true], [false]]);
 
       spyOnValueSetterOfRef.mockRestore();
+    });
+  });
+
+  describe("clearBenutzer", () => {
+    it("should_clearBenutzer_when_called", async () => {
+      mockDefinitions.apiExportWahllokalBenutzer.mockResolvedValue({
+        data: { csv: "user-0001" },
+      });
+      await unitUnderTest.loadBenutzer("wahltagID");
+
+      unitUnderTest.clearBenutzer();
+
+      expect(unitUnderTest.benutzer.value).toStrictEqual([]);
     });
   });
 

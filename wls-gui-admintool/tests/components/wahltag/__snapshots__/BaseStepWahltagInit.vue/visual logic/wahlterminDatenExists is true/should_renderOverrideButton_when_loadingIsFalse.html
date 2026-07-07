@@ -21,7 +21,175 @@
         <!----><span class="v-btn__content" data-no-activator="">Löschen</span>
         <!---->
         <!---->
-      </button></div>
+      </button>
+      <div class="v-input v-input--horizontal v-input--center-affix v-input--density-default v-theme--light v-locale--is-ltr v-text-field mt-2" data-test="user-search">
+        <!---->
+        <div class="v-input__control">
+          <div class="v-field v-field--appended v-field--center-affix v-field--variant-filled v-theme--light v-locale--is-ltr">
+            <div class="v-field__overlay"></div>
+            <div class="v-field__loader">
+              <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+                <!---->
+                <div class="v-progress-linear__background"></div>
+                <div class="v-progress-linear__buffer" style="width: 0%;"></div>
+                <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                  <div class="v-progress-linear__indeterminate">
+                    <div class="v-progress-linear__indeterminate long"></div>
+                    <div class="v-progress-linear__indeterminate short"></div>
+                  </div>
+                </transition-stub>
+                <!---->
+              </div>
+            </div>
+            <!---->
+            <div class="v-field__field" data-no-activator=""><label class="v-label v-field-label v-field-label--floating" aria-hidden="true">
+                <!---->Benutzer suchen
+              </label><label class="v-label v-field-label" id="input-v-5-label" aria-hidden="false" for="input-v-5">
+                <!---->Benutzer suchen
+              </label>
+              <!----><input size="1" type="text" aria-labelledby="input-v-5-label" id="input-v-5" aria-describedby="input-v-5-messages" class="v-field__input" value="">
+              <!---->
+            </div>
+            <transition-stub name="expand-x-transition" appear="false" persisted="false" css="true">
+              <div class="v-field__clearable" style="display: none;"><i class="v-icon notranslate v-theme--light v-icon--size-default v-icon--clickable" role="button" aria-hidden="false" tabindex="-1" aria-label="Benutzer suchen leeren"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                    <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"></path>
+                  </svg></i></div>
+            </transition-stub>
+            <div class="v-field__append-inner">
+              <!---->
+            </div>
+            <div class="v-field__outline">
+              <!---->
+              <!---->
+            </div>
+          </div>
+        </div>
+        <!---->
+        <div id="input-v-5-messages" class="v-input__details" role="alert" aria-live="polite">
+          <transition-group-stub name="slide-y-transition" tag="div" appear="false" persisted="false" css="true" class="v-messages">
+            <!---->
+          </transition-group-stub>
+          <!---->
+        </div>
+      </div>
+      <div class="v-table v-table--has-top v-table--has-bottom v-theme--light v-table--density-default v-data-table" data-test="user-table">
+        <!---->
+        <div class="v-table__wrapper">
+          <table>
+            <!---->
+            <thead>
+              <tr>
+                <th class="v-data-table__td v-data-table-column--align-start v-data-table__th--sortable v-data-table__th--sorted v-data-table__th" colspan="1" rowspan="1" tabindex="0">
+                  <div class="v-data-table-header__content"><span>Benutzername</span><i class="v-icon notranslate v-theme--light v-icon--size-default v-data-table-header__sort-icon" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                        <path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z"></path>
+                      </svg></i>
+                    <!---->
+                  </div>
+                </th>
+              </tr>
+              <!---->
+            </thead>
+            <!---->
+            <tbody>
+              <!---->
+              <tr class="v-data-table__tr">
+                <td class="v-data-table__td v-data-table-column--align-start">user-0001</td>
+              </tr>
+              <!---->
+              <!---->
+            </tbody>
+            <!---->
+            <!---->
+          </table>
+        </div>
+        <hr class="v-divider v-theme--light" style="border-style: solid;" aria-orientation="horizontal" role="separator">
+        <div class="v-data-table-footer">
+          <!---->
+          <div class="v-data-table-footer__items-per-page"><span>Elemente pro Seite:</span>
+            <div class="v-input v-input--horizontal v-input--center-affix v-input--density-compact v-theme--light v-locale--is-ltr v-input--dirty v-text-field v-select v-select--single v-select--selected">
+              <!---->
+              <div class="v-input__control">
+                <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--no-label v-field--variant-outlined v-theme--light v-locale--is-ltr" role="combobox">
+                  <div class="v-field__overlay"></div>
+                  <div class="v-field__loader">
+                    <div class="v-progress-linear v-theme--light v-locale--is-ltr" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100">
+                      <!---->
+                      <div class="v-progress-linear__background"></div>
+                      <div class="v-progress-linear__buffer" style="width: 0%;"></div>
+                      <transition-stub name="fade-transition" appear="false" persisted="false" css="true">
+                        <div class="v-progress-linear__indeterminate">
+                          <div class="v-progress-linear__indeterminate long"></div>
+                          <div class="v-progress-linear__indeterminate short"></div>
+                        </div>
+                      </transition-stub>
+                      <!---->
+                    </div>
+                  </div>
+                  <!---->
+                  <div class="v-field__field" data-no-activator="">
+                    <!---->
+                    <!---->
+                    <!---->
+                    <div class="v-field__input" data-no-activator=""><select hidden="">
+                        <option selected="" value="50"></option>
+                      </select>
+                      <!---->
+                      <!---->
+                      <div class="v-select__selection"><span class="v-select__selection-text">50<!----></span></div><input size="1" role="combobox" type="text" aria-labelledby="input-v-10-label" id="input-v-10" inputmode="none" aria-expanded="false" aria-controls="menu-v-8" aria-label="Elemente pro Seite:" value="50">
+                    </div>
+                    <!---->
+                  </div>
+                  <!---->
+                  <div class="v-field__append-inner">
+                    <!----><i class="v-icon notranslate v-theme--light v-icon--size-default v-select__menu-icon" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true">
+                        <path d="M7,10L12,15L17,10H7Z"></path>
+                      </svg></i>
+                    <!---->
+                  </div>
+                  <div class="v-field__outline">
+                    <div class="v-field__outline__start"></div>
+                    <!---->
+                    <div class="v-field__outline__end"></div>
+                    <!---->
+                  </div>
+                </div>
+              </div>
+              <!---->
+              <!---->
+            </div>
+          </div>
+          <div class="v-data-table-footer__info">
+            <div>1-1 von 1</div>
+          </div>
+          <div class="v-data-table-footer__pagination">
+            <nav class="v-pagination v-theme--light" role="navigation" aria-label="Seitennavigation" data-test="v-pagination-root">
+              <ul class="v-pagination__list">
+                <li class="v-pagination__first" data-test="v-pagination-first"><button type="button" class="v-btn v-btn--disabled v-btn--icon v-theme--light v-btn--density-comfortable v-btn--rounded v-btn--size-default v-btn--variant-plain" disabled="" aria-label="Erste Seite" aria-disabled="true"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                    <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M18.41,16.59L13.82,12L18.41,7.41L17,6L11,12L17,18L18.41,16.59M6,6H8V18H6V6Z"></path></svg></i></span>
+                    <!---->
+                    <!---->
+                  </button></li>
+                <li class="v-pagination__prev" data-test="v-pagination-prev"><button type="button" class="v-btn v-btn--disabled v-btn--icon v-theme--light v-btn--density-comfortable v-btn--rounded v-btn--size-default v-btn--variant-plain" disabled="" aria-label="Vorherige Seite" aria-disabled="true"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                    <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path></svg></i></span>
+                    <!---->
+                    <!---->
+                  </button></li>
+                <li class="v-pagination__next" data-test="v-pagination-next"><button type="button" class="v-btn v-btn--disabled v-btn--icon v-theme--light v-btn--density-comfortable v-btn--rounded v-btn--size-default v-btn--variant-plain" disabled="" aria-label="Nächste Seite" aria-disabled="true"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                    <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg></i></span>
+                    <!---->
+                    <!---->
+                  </button></li>
+                <li class="v-pagination__last" data-test="v-pagination-last"><button type="button" class="v-btn v-btn--disabled v-btn--icon v-theme--light v-btn--density-comfortable v-btn--rounded v-btn--size-default v-btn--variant-plain" disabled="" aria-label="Letzte Seite" aria-disabled="true"><span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                    <!----><span class="v-btn__content" data-no-activator=""><i class="v-icon notranslate v-theme--light v-icon--size-default" aria-hidden="true"><svg class="v-icon__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M5.59,7.41L10.18,12L5.59,16.59L7,18L13,12L7,6L5.59,7.41M16,6H18V18H16V6Z"></path></svg></i></span>
+                    <!---->
+                    <!---->
+                  </button></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <!---->
   <!---->

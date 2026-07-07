@@ -54,6 +54,25 @@
           @click="onDeleteBenutzerClicked"
           >Löschen</v-btn
         >
+
+        <v-text-field
+          v-model="benutzerSearch"
+          class="mt-2"
+          clearable
+          data-test="user-search"
+          label="Benutzer suchen"
+        />
+        <v-data-table
+          :headers="benutzerHeaders"
+          :items="benutzer"
+          :items-per-page="benutzerItemsPerPage"
+          :items-per-page-options="benutzerItemsPerPageOptions"
+          :loading="isLoadingBenutzer"
+          :search="benutzerSearch"
+          :sort-by="benutzerSortBy"
+          data-test="user-table"
+          no-data-text="Keine Wahllokalbenutzer vorhanden"
+        />
       </div>
       <div
         v-else
@@ -81,8 +100,8 @@
 import type { WahltagEvent } from "@/types/wahltag/WahltagEvent.ts";
 import type { PropType } from "vue";
 
-import { computed, ref, useTemplateRef } from "vue";
-import { VBtn, VDivider } from "vuetify/components";
+import { computed, ref, useTemplateRef, watch } from "vue";
+import { VBtn, VDataTable, VDivider, VTextField } from "vuetify/components";
 
 import BaseDialogWahltagOverrideWahlterminConfirmation from "@/components/wahltag/BaseDialogWahltagOverrideWahlterminConfirmation.vue";
 import { useWahllokalBenutzerService } from "@/composables/wahllokalbenutzer/wahllokalbenutzerService.ts";
@@ -95,12 +114,16 @@ const {
   isDeleting,
 } = useWahltermindatenService();
 const {
+  benutzer,
+  clearBenutzer,
   deleteBenutzer,
   exportBenutzer,
   generateBenutzer,
   isDeleting: isDeletingBenutzer,
   isExporting: isExportingBenutzer,
   isGenerating: isGeneratingBenutzer,
+  isLoading: isLoadingBenutzer,
+  loadBenutzer,
 } = useWahllokalBenutzerService();
 
 const props = defineProps({
@@ -126,6 +149,11 @@ const templateRefWahllokalBenutzerDeleteConfirmationDialog = useTemplateRef<
 >("wahllokalBenutzerDeleteConfirmationDialog");
 
 const wahlterminDatenWereImported = ref(false);
+const benutzerSearch = ref("");
+const benutzerItemsPerPage = 50;
+const benutzerItemsPerPageOptions = [50];
+const benutzerHeaders = [{ title: "Benutzername", key: "benutzername" }];
+const benutzerSortBy = [{ key: "benutzername", order: "asc" as const }];
 const wahllokalBenutzerDeleteConfirmationText =
   'Für diesen Wahltag existieren möglicherweise bereits Wahllokalbenutzer. Bitte geben Sie "Benutzer löschen" in das Eingabefeld ein und bestätigen Sie, um die Wahllokalbenutzer zu löschen.';
 const canManageWahllokalBenutzer = computed(
@@ -138,6 +166,23 @@ async function onInitWahltagClicked() {
   wahlterminDatenWereImported.value = true;
   emits("importWahlterminDatenDone");
 }
+
+watch(
+  () =>
+    [props.wahltagEvent.wahltagID, canManageWahllokalBenutzer.value] as const,
+  async ([wahltagID, canManageBenutzer]) => {
+    if (canManageBenutzer) {
+      try {
+        await loadBenutzer(wahltagID);
+      } catch {
+        // The service already shows a user notification for failed automatic loads.
+      }
+    } else {
+      clearBenutzer();
+    }
+  },
+  { immediate: true }
+);
 
 async function onOverrideDialogConfirmDelete() {
   templateRefWahltagDeleteConfirmationDialog.value?.hideDialog();

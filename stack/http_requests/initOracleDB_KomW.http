@@ -33,7 +33,7 @@ Content-Type: application/json
   "nummer": "nummer2"
 }
 
-### POST stimmabgabevermerke | user wls_all_uwb | wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280171/1
+### POST stimmabgabevermerke | user wls_komw_uwb | wahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280171/1
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280171/28039463-3d3d-4ce5-acc1-0bef931a4409/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

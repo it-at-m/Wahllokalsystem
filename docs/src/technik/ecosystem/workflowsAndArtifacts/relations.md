@@ -31,7 +31,7 @@ flowchart LR
     anyPR --> labeler
     anyPR --> auto-assign
     anyPR --> populate-release-pr-links
-    populate-release-pr-links --> note[/Nur wenn im PR Namen "Release" vorkommt/] 
+    populate-release-pr-links --> note[/Nur wenn im PR Namen "Release" vorkommt,<br/>und das Release-PR-Template verwendet wurde/] 
     
     classDef text fill:#ffffff,font-style:italic,stroke:#4f4f4f
     class note text

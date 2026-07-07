@@ -1,7 +1,7 @@
 package de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.service.stimmabgabevermerke;
 
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmabgabevermerke;
-import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettel;
+import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.StimmabgabevermerkeStimmzettel;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Stimmzettelart;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.domain.stimmabgabevermerke.Vermerk;
 import de.muenchen.oss.wahllokalsystem.ergebnismeldungservice.utils.Testdaten;
@@ -49,7 +49,7 @@ class StimmabgabevermerkeModelMapperTest {
               null,
               Set.of(
                   new Vermerk(
-                      UUID.randomUUID(), null, 0L, Set.of(new Stimmzettel(0L, stimmzettelart)))),
+                      UUID.randomUUID(), null, 0L, Set.of(new StimmabgabevermerkeStimmzettel(0L, stimmzettelart)))),
               Collections.emptySet());
 
       val result = unitUnderTest.toModel(entityToMap);

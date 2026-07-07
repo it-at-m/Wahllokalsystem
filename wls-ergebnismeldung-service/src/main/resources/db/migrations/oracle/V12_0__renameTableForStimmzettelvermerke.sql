@@ -1,0 +1,1 @@
+RENAME Stimmzettel TO StimmabgabevermerkeStimmzettel;

@@ -1,0 +1,99 @@
+name: Populate Release PR Links
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: read
+  packages: read
+  pull-requests: write
+
+jobs:
+  populate-links:
+    # Nur bei Release-PRs ausführen (mit Label "release" oder "Release" im Titel)
+    if: contains(github.event.pull_request.title, 'Release') || contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update PR with Release Links
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const services = [
+              'wls-admin-service',
+              'wls-auth-service',
+              'wls-basisdaten-service',
+              'wls-briefwahl-service',
+              'wls-broadcast-service',
+              'wls-eai-service',
+              'wls-ergebnismeldung-service',
+              'wls-infomanagement-service',
+              'wls-monitoring-service',
+              'wls-vorfaelleundvorkommnisse-service',
+              'wls-wahlvorbereitung-service',
+              'wls-wahlvorstand-service',
+              'wls-api-gateway',
+              'wls-gui-admintool',
+              'wls-gui-wahllokalsystem'
+            ];
+            
+            let body = context.payload.pull_request.body;
+                        
+            // Für jeden Service die Links generieren
+            for (const serviceName of services) {
+              try {
+                // Hole Paket-Informationen vom Container Registry
+                const packageResponse = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                  org: 'it-at-m',
+                  package_name: `wahllokalsystem-${serviceName}`,
+                  package_type: 'container',
+                  per_page: 100
+                });
+            
+                // Version mit 'latest'-Tag finden
+                let latestVersion = null;
+                let latestVersionNumber = null;
+            
+                for (const version of packageResponse.data) {
+                  if (version.metadata && version.metadata.container && version.metadata.container.tags) {
+                    if (version.metadata.container.tags.includes('latest')) {
+                      latestVersion = version;
+                      latestVersionNumber = version.name;
+                      break;
+                    }
+                  }
+                }
+            
+                if (latestVersion && latestVersionNumber) {
+                  const packageId = latestVersion.id;
+            
+                  const releaseUrl = `https://github.com/it-at-m/Wahllokalsystem/releases/tag/${serviceName}%2F${latestVersionNumber}`;
+                  const imageUrl = `https://github.com/orgs/it-at-m/packages/container/wahllokalsystem-${serviceName}/${packageId}?tag=${latestVersionNumber}`;
+            
+                  // Platzhalter in PR Template ersetzen
+                  body = body.replace(
+                    `[${serviceName}-release]`, 
+                    releaseUrl
+                  );
+                  body = body.replace(
+                    `[${serviceName}-image]`, 
+                    imageUrl
+                  );
+                } else {
+                  console.warn(`⚠ ${serviceName}: Keine Version mit Tag 'latest' gefunden`);
+                }
+              } catch (error) {
+                console.error(`✗ Fehler bei ${serviceName}:`, error.message);
+              }
+            }
+            
+            // Update PR mit den neuen Links
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: body
+            });

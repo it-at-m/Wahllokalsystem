@@ -395,7 +395,7 @@ class UserServiceTest {
       val expectedException =
           new HttpServerErrorException(
               HttpStatus.INTERNAL_SERVER_ERROR,
-              "Keine Authority <WahlvorstandAuthorityName> gefunden, kann keine Benutzer für Wahltag-ID <wahltagID> anlegen");
+              "Keine Authority <WahlvorstandAuthorityName> gefunden, kann keine Benutzer anlegen");
       Assertions.assertThatException()
           .isThrownBy(() -> unitUnderTest.generateWahllokalBenutzer(usersOfWahltag))
           .usingRecursiveComparison()
@@ -481,7 +481,7 @@ class UserServiceTest {
 
     @Test
     void should_create26User_when_sizeOfTeamIsGreaterThan26() {
-      unitUnderTest.sizeOfTeam = 30;
+      unitUnderTest.sizeOfTeam = 27;
 
       unitUnderTest.schriftfuehrungAuthorityName = "WahlvorstandAuthorityName";
       unitUnderTest.erfassungsteamAuthorityName = "ErfassungAuthorityName";

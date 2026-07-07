@@ -73,7 +73,7 @@ Content-Type: application/json
   ]
 }
 
-### POST stimmabgabevermerke | user wls_all_uwb | WahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280172
+### POST stimmabgabevermerke | user wls_komw_uwb | WahlbezirkID 9899cae4-df9a-4ffc-a940-f20cf2280172
 POST {{ WLS_ERGEBNISMELDUNG_SERVICE_URL }}/businessActions/stimmabgabevermerke/9899cae4-df9a-4ffc-a940-f20cf2280172/d8d2dd22-cbf6-488e-b9bc-b8c2b0ab31a1/1
 Authorization: Bearer {{$auth.token("auth-service")}}
 Content-Type: application/json

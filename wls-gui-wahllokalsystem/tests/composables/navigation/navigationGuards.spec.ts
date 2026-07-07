@@ -737,14 +737,14 @@ describe("navigationGuards.ts", () => {
   });
 
   describe("requireRoleSchriftfuehrung", () => {
-    it("should_returnTrue_when_userHasRoleErfassungsTeam", () => {
+    it("should_returnTrue_when_userHasRoleSchriftfuehrung", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().hasRoleSchriftfuehrung = true;
       expect(
         requireRoleSchriftfuehrung(DUMMY_TO, DUMMY_FROM, DUMMY_NEXT_GUARD)
       ).toStrictEqual(true);
     });
-    it("should_returnFalse_when_userHasNoRoleErfassungsTeam", () => {
+    it("should_returnFalse_when_userHasNoRoleSchriftfuehrung", () => {
       // @ts-expect-error: cannot set readonly
       useUserStore().hasRoleSchriftfuehrung = false;
       expect(

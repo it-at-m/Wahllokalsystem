@@ -14,7 +14,7 @@ export function useMbwNavigationService(wahlID: string, wahlbezirkID: string) {
   const { getStimmzettelTermForWahlID } = useTextFormatter();
 
   const { electionWorkflowsStates } = storeToRefs(useWorkflowStore());
-  const { hasRoleSchriftfuehrung } = useUserStore();
+  const { hasRoleSchriftfuehrung } = storeToRefs(useUserStore());
 
   const mbwWorkflow = computed(() =>
     electionWorkflowsStates.value.find(

@@ -8,6 +8,7 @@ import {
 import { enableAutoUnmount, mount, VueWrapper } from "@vue/test-utils";
 import { createPinia } from "pinia";
 import {
+  afterAll,
   afterEach,
   beforeAll,
   beforeEach,
@@ -83,6 +84,10 @@ describe("BaseOfflineLoading.vue", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.resetAllMocks();
   });
 
   enableAutoUnmount(afterEach);

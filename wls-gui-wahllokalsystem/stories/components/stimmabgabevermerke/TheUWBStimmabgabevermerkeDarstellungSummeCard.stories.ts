@@ -94,6 +94,7 @@ export const Default: Story = {
         stimmzettelumschlaege: {
           anzahlWaehler: 0,
         },
+        kennzeichen: "M",
       },
       {
         beanstandeteWahlbriefe: [],
@@ -108,6 +109,7 @@ export const Default: Story = {
         stimmzettelumschlaege: {
           anzahlWaehler: 0,
         },
+        kennzeichen: "M",
       },
     ];
   },

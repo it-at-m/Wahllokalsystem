@@ -61,9 +61,8 @@ import { useNavigationService } from "@/composables/navigation/navigationService
 import { SAVE_CONTINUE } from "@/constants.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 
-const { setStepDone, isElectionFinished } = useWorkflowStore();
+const { isElectionFinished } = useWorkflowStore();
 const { getWahlbezirkIdFromWahlMetaDataByWahlId } = useUserStore();
 const route = useRoute();
 const router = useRouter();
@@ -114,7 +113,6 @@ async function onSave() {
         bedenklicheStimmzettel.value,
         true
       );
-      setStepDone(wahlID, wahlbezirkID, MbwStepsEnum.MBW_STAPEL_E);
       await router.push(getNextRoute());
     }
   } catch (error) {

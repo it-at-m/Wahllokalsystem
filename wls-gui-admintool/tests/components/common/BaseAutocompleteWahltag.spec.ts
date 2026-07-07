@@ -27,6 +27,7 @@ const wahltage: Wahltag[] = [
   },
   {
     wahltag: new Date("2025-01-01"),
+    isActive: true,
     events: [
       {
         wahltagID: "2",
@@ -79,6 +80,16 @@ describe("BaseAutocompleteWahltag.vue", () => {
       await expect(wrapper.html()).toMatchFileSnapshot(
         getSnapshotFilename(context)
       );
+    });
+
+    it("should_renderActiveMarker_when_selectedWahltagIsActive", async (context) => {
+      const tag = wahltage[1];
+      await wrapper.setProps({ modelValue: tag });
+
+      await expect(wrapper.html()).toMatchFileSnapshot(
+        getSnapshotFilename(context)
+      );
+      expect(wrapper.text()).toContain("Aktiv");
     });
   });
 

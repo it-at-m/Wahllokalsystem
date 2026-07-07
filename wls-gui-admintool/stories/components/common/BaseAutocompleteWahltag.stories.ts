@@ -52,6 +52,7 @@ const wahltage: Wahltag[] = [
   },
   {
     wahltag: new Date("1998-01-31"),
+    isActive: true,
     events: [
       {
         wahltagID: "2",
@@ -110,19 +111,22 @@ export const Default: Story = {
   },
 };
 
-/**
- * Ein Wahltag ist vorausgewählt.
- */
-export const PreSelect: Story = {
+export const ActiveWahltagMarked: Story = {
   args: {
     ...Default.args,
-    modelValue: wahltage[2],
   },
 };
 
-export const NoData: Story = {
+export const EmptyList: Story = {
   args: {
     ...Default.args,
     items: [],
+  },
+};
+
+export const SelectedWahltag: Story = {
+  args: {
+    ...Default.args,
+    modelValue: wahltage[2],
   },
 };

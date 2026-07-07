@@ -46,16 +46,16 @@ class StimmzettelgebietRepositoryTest {
 
       val sgz1ToFind =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl1));
+              new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl1, 40));
       val sgz2ToFind =
           stimmzettelgebietRepository.save(
-              new Stimmzettelgebiet("sgz2", "", Stimmzettelgebietsart.SK, wahl1));
+              new Stimmzettelgebiet("sgz2", "", Stimmzettelgebietsart.SK, wahl1, null));
       stimmzettelgebietRepository.save(
-          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl2));
+          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl2, 40));
       stimmzettelgebietRepository.save(
-          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl3));
+          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl3, null));
       stimmzettelgebietRepository.save(
-          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl4));
+          new Stimmzettelgebiet("sgz1", "", Stimmzettelgebietsart.SK, wahl4, null));
 
       val result =
           stimmzettelgebietRepository.findByWahlWahltagTagAndWahlWahltagNummer(wahltag, nummer);

@@ -35,6 +35,7 @@ describe("wahlMapper", () => {
         nummer: dto.nummer,
         beanstandeteWahlbriefe: [],
         stimmzettelumschlaege: StimmzettelumschlaegeBuilder.create(),
+        kennzeichen: dto.kennzeichen,
       };
 
       const model: Wahl = toModel(dto);
@@ -63,6 +64,7 @@ describe("wahlMapper", () => {
         nummer: undefined,
         beanstandeteWahlbriefe: [],
         stimmzettelumschlaege: StimmzettelumschlaegeBuilder.create(),
+        kennzeichen: dto.kennzeichen,
       };
 
       const model: Wahl = toModel(dto);

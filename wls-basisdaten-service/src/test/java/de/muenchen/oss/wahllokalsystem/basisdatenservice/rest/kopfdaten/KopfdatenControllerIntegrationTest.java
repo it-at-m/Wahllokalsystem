@@ -126,7 +126,8 @@ public class KopfdatenControllerIntegrationTest {
               "120",
               "Munich",
               "Bundestagswahl",
-              "1201");
+              "1201",
+              null);
       Assertions.assertThat(responseBodyAsDTO).isNotNull();
       Assertions.assertThat(responseBodyAsDTO)
           .usingRecursiveComparison()
@@ -174,7 +175,8 @@ public class KopfdatenControllerIntegrationTest {
               "Munich",
               "120",
               "Bundestagswahl",
-              "1201");
+              "1201",
+              null);
 
       api.perform(createGetRequest(wahlID1, wahlbezirkID1, wahlbezirkID1))
           .andExpect(status().isOk());
@@ -203,7 +205,8 @@ public class KopfdatenControllerIntegrationTest {
               "Munich-Repo1",
               "120",
               "Bundestagswahl",
-              "1201");
+              "1201",
+              null);
       val kopfdatenEntity2 =
           MockDataFactory.createKopfdatenEntityFor(
               "wahlID2",
@@ -212,7 +215,8 @@ public class KopfdatenControllerIntegrationTest {
               "Munich-Repo2",
               "121",
               "Bundestagswahl",
-              "1202");
+              "1202",
+              null);
       SecurityUtils.runWith(Authorities.REPOSITORY_WRITE_KOPFDATEN);
       kopfdatenRepository.saveAll(List.of(kopfdatenEntity1, kopfdatenEntity2));
 

@@ -9,7 +9,7 @@ import { useBedenklicherStimmzettelMapper } from "@/composables/ergebnismeldung/
 import { useUserNotificationService } from "@/composables/userNotification/userNotificationService.ts";
 import { ERGEBNISMELDUNG_SERVICE_API_URL } from "@/constants.ts";
 import { useWorkflowStore } from "@/stores/workflowStore.ts";
-import { MbwRoutesEnum } from "@/types/navigation/MbwRoutesEnum.ts";
+import { MbwStepsEnum } from "@/types/navigation/MbwStepsEnum.ts";
 import { UserNotificationCategoryEnum } from "@/types/userNotification/UserNotificationCategoryEnum.ts";
 
 const { getNullOn204OrElseResponseData } = useCommonApiUtils();
@@ -47,7 +47,7 @@ export function useBedenklicheStimmzettelService() {
         useWorkflowStore().setStepDone(
           wahlID,
           wahlbezirkID,
-          MbwRoutesEnum.MBW_STAPEL_E
+          MbwStepsEnum.MBW_STAPEL_E
         );
         return responseData.map((dto) => toModel(dto));
       } else {
@@ -83,7 +83,7 @@ export function useBedenklicheStimmzettelService() {
       useWorkflowStore().setStepDone(
         wahlID,
         wahlbezirkID,
-        MbwRoutesEnum.MBW_STAPEL_E
+        MbwStepsEnum.MBW_STAPEL_E
       );
       if (sendNotification) {
         addNotification(

@@ -22,7 +22,7 @@ Daher hat sich die Frage gestellt zur vorherigen
 
 ## Entscheidung
 
-Da `defienModel()` die aktuell empfohlene Vue 3 Best-Practice ist und weniger Code erfordert, wurde entschieden das two-
+Da `defineModel()` die aktuell empfohlene Vue 3 Best-Practice ist und weniger Code erfordert, wurde entschieden das two-
 way-binding damit zu implementieren. Um die Dokumentation trotzdem vollständig und korrekt zu halten, müssen im
 Storybook-Code folgende Elemente hinzugefügt werden:
 

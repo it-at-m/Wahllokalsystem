@@ -44,7 +44,8 @@ public class MockDataFactory {
       String szGebietsNummer,
       String szGebietsName,
       String wahlname,
-      String wahlbezirkNummer) {
+      String wahlbezirkNummer,
+      Integer maximalErlaubteStimmenProWaehler) {
     return new KopfdatenDTO(
         wahlID,
         wahlbezirkID,
@@ -53,11 +54,12 @@ public class MockDataFactory {
         szGebietsNummer,
         szGebietsName,
         wahlname,
-        wahlbezirkNummer);
+        wahlbezirkNummer,
+        maximalErlaubteStimmenProWaehler);
   }
 
   public static KopfdatenModel createKopfdatenModelFor(String wahlID, String wahlbezirkID) {
-    return createKopfdatenModelFor(wahlID, wahlbezirkID, null, null, null, null, null);
+    return createKopfdatenModelFor(wahlID, wahlbezirkID, null, null, null, null, null, null);
   }
 
   public static KopfdatenModel createKopfdatenModelFor(
@@ -67,7 +69,8 @@ public class MockDataFactory {
       String szGebietsNummer,
       String szGebietsName,
       String wahlname,
-      String wahlbezirkNummer) {
+      String wahlbezirkNummer,
+      Integer maximalErlaubteStimmenProWaehler) {
     return new KopfdatenModel(
         new BezirkUndWahlID(wahlID, wahlbezirkID),
         "LHM",
@@ -75,11 +78,12 @@ public class MockDataFactory {
         szGebietsNummer,
         szGebietsName,
         wahlname,
-        wahlbezirkNummer);
+        wahlbezirkNummer,
+        maximalErlaubteStimmenProWaehler);
   }
 
   public static Kopfdaten createKopfdatenEntityFor(String wahlID, String wahlbezirkID) {
-    return createKopfdatenEntityFor(wahlID, wahlbezirkID, null, null, null, null, null);
+    return createKopfdatenEntityFor(wahlID, wahlbezirkID, null, null, null, null, null, null);
   }
 
   public static Kopfdaten createKopfdatenEntityFor(
@@ -89,7 +93,8 @@ public class MockDataFactory {
       String szGebietsName,
       String szGebietsNummer,
       String wahlname,
-      String wahlbezirkNummer) {
+      String wahlbezirkNummer,
+      Integer maximalErlaubteStimmenProWaehler) {
     Kopfdaten kopfdaten = new Kopfdaten();
     kopfdaten.setBezirkUndWahlID(new BezirkUndWahlID(wahlID, wahlbezirkID));
     kopfdaten.setGemeinde("LHM");
@@ -98,6 +103,7 @@ public class MockDataFactory {
     kopfdaten.setStimmzettelgebietsnummer(szGebietsNummer);
     kopfdaten.setWahlbezirknummer(wahlbezirkNummer);
     kopfdaten.setWahlname(wahlname);
+    kopfdaten.setMaximalErlaubteStimmenProWaehler(maximalErlaubteStimmenProWaehler);
     return kopfdaten;
   }
 
@@ -118,7 +124,8 @@ public class MockDataFactory {
                 forDate,
                 WahlartModel.BTW,
                 new FarbeModel(0, 1, 2),
-                "0"),
+                "0",
+                "B"),
             new WahlModel(
                 "wahlID2",
                 "Europawahl",
@@ -127,7 +134,8 @@ public class MockDataFactory {
                 forDate,
                 WahlartModel.EUW,
                 new FarbeModel(3, 4, 5),
-                "1")),
+                "1",
+                "E")),
         Set.of(
             new WahlbezirkModel(
                 "wahlbezirkID1_1", WahlbezirkArtModel.UWB, "1201", forDate, "0", "wahlID1"),
@@ -141,9 +149,14 @@ public class MockDataFactory {
                 "wahlbezirkID2_1", WahlbezirkArtModel.BWB, "1252", forDate, "1", "wahlID2")),
         Set.of(
             new StimmzettelgebietModel(
-                "szgID", "120", "Munich", forDate, StimmzettelgebietsartModel.SG),
+                "szgID", "120", "Munich", forDate, StimmzettelgebietsartModel.SG, null),
             new StimmzettelgebietModel(
-                "szgIDOther", "920", "Munich Center", forDate, StimmzettelgebietsartModel.SB)));
+                "szgIDOther",
+                "920",
+                "Munich Center",
+                forDate,
+                StimmzettelgebietsartModel.SB,
+                null)));
   }
 
   public static BasisdatenDTO createClientBasisdatenDTO(LocalDate aDate) {
@@ -311,6 +324,7 @@ public class MockDataFactory {
     wahl1.setReihenfolge(1);
     wahl1.setWaehlerverzeichnisNummer(1);
     wahl1.setWahltag(LocalDate.now().plusMonths(1));
+    wahl1.setKennzeichen("B");
 
     val wahl2 = new Wahl();
     wahl2.setWahlID("wahlID2");
@@ -321,6 +335,7 @@ public class MockDataFactory {
     wahl2.setReihenfolge(2);
     wahl2.setWaehlerverzeichnisNummer(2);
     wahl2.setWahltag(LocalDate.now().plusMonths(1));
+    wahl2.setKennzeichen("E");
 
     val wahl3 = new Wahl();
     wahl3.setWahlID("wahlID3");
@@ -331,6 +346,7 @@ public class MockDataFactory {
     wahl3.setReihenfolge(3);
     wahl3.setWaehlerverzeichnisNummer(3);
     wahl3.setWahltag(LocalDate.now().plusMonths(3));
+    wahl3.setKennzeichen("E");
 
     return List.of(wahl1, wahl2, wahl3);
   }
@@ -345,7 +361,8 @@ public class MockDataFactory {
             forDate,
             WahlartModel.BTW,
             new FarbeModel(0, 1, 2),
-            "0"),
+            "0",
+            "B"),
         new WahlModel(
             praefix + "wahlID2",
             "Europawahl",
@@ -354,7 +371,8 @@ public class MockDataFactory {
             forDate,
             WahlartModel.EUW,
             new FarbeModel(3, 4, 5),
-            "1"));
+            "1",
+            "E"));
   }
 
   public static Set<WahlbezirkDTO> createSetOfClientWahlbezirkDTO(LocalDate aDate) {

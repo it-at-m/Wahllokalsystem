@@ -319,7 +319,8 @@ public class WahltermindatenServiceSecurityTest {
                             new KandidatDTO()
                                 .identifikator(UUID.randomUUID().toString())
                                 .name("kandidat")
-                                .direktkandidat(true))));
+                                .direktkandidat(true)
+                                .anzahlNennungen(1))));
     WireMock.stubFor(
         WireMock.get(WireMock.urlPathMatching("/vorschlaege/wahl/.*/.*"))
             .willReturn(

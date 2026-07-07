@@ -16,6 +16,8 @@ export const StapelArtEnum = {
   MbwB: "MBW_B",
   MbwAB: "MBW_A_B",
   MbwBC: "MBW_B_C",
+  //Stapel E nutzt eine andere Ressource und darf daher nicht hier aufgeführt werden. Siehe `bedenklicheStimmzettelService.ts`
+  //MbwE: "MBW_E",
   StimmzettelUmschlaege: "STIMMZETTEL_UMSCHLAEGE",
 } as const;
 

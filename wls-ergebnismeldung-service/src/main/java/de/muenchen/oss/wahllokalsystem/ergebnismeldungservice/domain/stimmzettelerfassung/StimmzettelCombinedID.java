@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class StimmzettelCombinedID {
-    private String wahlbezirkID;
-    private String wahlID;
-    private String teamID;
+  private String wahlbezirkID;
+  private String wahlID;
+  private String teamID;
 }

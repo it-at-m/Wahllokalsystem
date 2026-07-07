@@ -19,18 +19,18 @@ import org.hibernate.annotations.NaturalId;
 @ToString(onlyExplicitlyIncluded = true)
 public class Stimmzettel {
 
-    @NaturalId @EmbeddedId @ToString.Include private StimmzettelCombinedID combinedId;
+  @NaturalId @EmbeddedId @ToString.Include private StimmzettelCombinedID combinedId;
 
-    @Convert(converter = IntArrayToStringConverter.class)
-    @NotNull private List<Integer> selectedWahlvorschlaegeOrdnungszahlen;
+  @Convert(converter = IntArrayToStringConverter.class)
+  @NotNull private List<Integer> selectedWahlvorschlaegeOrdnungszahlen;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "Stimmzettel_Kandidat",
-            joinColumns = {
-                    @JoinColumn(name = "fk_wahlbezirkID", referencedColumnName = "wahlbezirkID"),
-                    @JoinColumn(name = "fk_wahlID", referencedColumnName = "wahlID"),
-                    @JoinColumn(name = "fk_teamID", referencedColumnName = "teamID")
-            })
-    private List<StimmzettelKandidat> kandidaten;
+  @ElementCollection
+  @CollectionTable(
+      name = "Stimmzettel_Kandidat",
+      joinColumns = {
+        @JoinColumn(name = "fk_wahlbezirkID", referencedColumnName = "wahlbezirkID"),
+        @JoinColumn(name = "fk_wahlID", referencedColumnName = "wahlID"),
+        @JoinColumn(name = "fk_teamID", referencedColumnName = "teamID")
+      })
+  private List<StimmzettelKandidat> kandidaten;
 }

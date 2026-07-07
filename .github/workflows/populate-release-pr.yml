@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   populate-links:
-    # Nur bei Release-PRs ausführen (mit Label "release" oder "Release" im Titel)
+    # Nur bei Release-PRs ausführen (mit "Release" im Titel)
     if: contains(github.event.pull_request.title, 'Release')
     runs-on: ubuntu-latest
 
@@ -45,14 +45,14 @@ jobs:
             // Für jeden Service die Links generieren
             for (const serviceName of services) {
               try {
-                // 1. Hole den neuesten Release-Tag (hat die semantische Version)
+                // 1. Releases holen
                 const releases = await github.rest.repos.listReleases({
                   owner: 'it-at-m',
                   repo: 'Wahllokalsystem',
                   per_page: 100
                 });
             
-                // Finde den neuesten Release für diesen Service
+                // neuesten Release für diesen Service finden
                 const latestRelease = releases.data.find(r => 
                   r.tag_name.startsWith(`${serviceName}/`)
                 );
@@ -63,10 +63,10 @@ jobs:
                 }
             
                 const tag = latestRelease.tag_name;
-                // Extrahiere die Version aus dem Tag (z.B. "wls-admin-service/0.4.16" → "0.4.16")
+                // Extrahiere Version aus dem Tag (z.B. "wls-admin-service/0.4.16" → "0.4.16")
                 const versionNumber = tag.split('/')[1];
                         
-                // 2. Hole jetzt die Package-ID vom Container Registry
+                // 2. Package-ID vom Container Registry holen
                 let packageId = null;
                 try {
                   const packageResponse = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
@@ -76,7 +76,7 @@ jobs:
                     per_page: 100
                   });
             
-                  // Finde die Version mit Tag 'latest'
+                  // Version mit 'latest'-Tag finden
                   for (const version of packageResponse.data) {
                     if (version.metadata && version.metadata.container && version.metadata.container.tags) {
                       if (version.metadata.container.tags.includes('latest')) {
@@ -89,7 +89,7 @@ jobs:
                   console.warn(`⚠ Konnte Package-ID für ${serviceName} nicht abrufen:`, pkgError.message);
                 }
             
-                // 3. Generiere die Links mit semantischer Version
+                // 3. Links generieren
                 const releaseUrl = `https://github.com/it-at-m/Wahllokalsystem/releases/tag/${serviceName}%2F${versionNumber}`;
             
                 let imageUrl;
